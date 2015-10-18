@@ -11,6 +11,7 @@ var fs = require('fs');
 var runSequence = require('run-sequence');
 var path = require('path');
 var Server = require('karma').Server;
+var babel = require('gulp-babel');
 
 gulp.task("client:scss", function () {
     return gulp.src(parameters.client.scss_src_path + "/**/*.scss")
@@ -72,9 +73,11 @@ gulp.task('client:build', function(callback) {
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', function() {
     gulp.src(parameters.server.server_app_path + "/src/**/*.js")
+    .pipe(babel())
     .pipe(gulp.dest(parameters.server.dist_folder));
 
     gulp.src(parameters.server.server_app_path + "/src/" + parameters.server.server_js_file)
+    .pipe(babel())
     .pipe(gulp.dest(parameters.server.dist_server_js_folder));
 });
 
@@ -86,8 +89,16 @@ gulp.task('server:clean', function () {
         .pipe(clean());
 });
 
+gulp.task('server:test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.server.js',
+    singleRun: true
+  }, done).start();
+});
+
 gulp.task('server:build', ['server:copy-js']);
 
 // -------------------------------common tasks -------------------------------------------
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
+gulp.task('test', ['client:test', 'server:test']);
