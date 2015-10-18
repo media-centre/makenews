@@ -14,51 +14,51 @@ var Server = require('karma').Server;
 var babel = require('gulp-babel');
 
 gulp.task("client:scss", function () {
-    return gulp.src(parameters.client.scss_src_path + "/**/*.scss")
+    return gulp.src(parameters.client.scssSrcPath + "/**/*.scss")
           .pipe(scss({
             noCache: true,
             compass: false,
             bundleExec: true,
             sourcemap: false
           }))
-          .pipe(concat(parameters.client.css_main_file))
-          .pipe(gulp.dest(parameters.client.dist_folder));
+          .pipe(concat(parameters.client.cssMainFile))
+          .pipe(gulp.dest(parameters.client.distFolder));
 });
 
 gulp.task('client:javascript', function () {
-  return browserify(parameters.client.src_path +'/index.js', {debug: true})
+  return browserify(parameters.client.srcPath +'/index.js', {debug: true})
         .transform(babelify)
         .bundle()
-        .pipe(fs.createWriteStream(parameters.client.dist_folder + '/' + parameters.client.app_main_file));
+        .pipe(fs.createWriteStream(parameters.client.distFolder + '/' + parameters.client.appMainFile));
 });
 
 gulp.task('client:riot-tags', function() {
-  return gulp.src(parameters.client.src_path + "/**/*.tag")
+  return gulp.src(parameters.client.srcPath + "/**/*.tag")
       .pipe(riot())
-      .pipe(concat(parameters.client.templates_file))
-      .pipe(gulp.dest(parameters.client.dist_folder));
+      .pipe(concat(parameters.client.templatesFile))
+      .pipe(gulp.dest(parameters.client.distFolder));
 });
 
 //only riot has to do this way. need to figure out later on how can we avoid copying.
 gulp.task('client:copy_dependents', function() {
-    return gulp.src(parameters.client.client_app_path + "/../node_modules/riot/riot.min.js")
-        .pipe(gulp.dest(parameters.client.dist_folder + "/riot"));
+    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot.min.js")
+        .pipe(gulp.dest(parameters.client.distFolder + "/riot"));
 
 });
 
 gulp.task('client:copy-index-html', function() {
-    return gulp.src(parameters.client.client_app_path + "/src/index.html")
-    .pipe(gulp.dest(parameters.client.dist_folder));
+    return gulp.src(parameters.client.clientAppPath + "/src/index.html")
+    .pipe(gulp.dest(parameters.client.distFolder));
 });
 
 gulp.task('client:clean', function () {
-    return gulp.src(parameters.client.dist_folder, {read: false})
+    return gulp.src(parameters.client.distFolder, {read: false})
         .pipe(clean());
 });
 
 gulp.task('client:test', function (done) {
   new Server({
-    configFile: __dirname + '/karma.conf.client.js',
+    configFile: __dirname + '/config/karma.conf.client.js',
     singleRun: true
   }, done).start();
 });
@@ -72,26 +72,28 @@ gulp.task('client:build', function(callback) {
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', function() {
-    gulp.src(parameters.server.server_app_path + "/src/**/*.js")
+    gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
     .pipe(babel())
-    .pipe(gulp.dest(parameters.server.dist_folder));
+    .pipe(gulp.dest(parameters.server.distFolder));
 
-    gulp.src(parameters.server.server_app_path + "/src/" + parameters.server.server_js_file)
+    gulp.src(parameters.server.serverAppPath + "/src/" + parameters.server.serverJsFile)
     .pipe(babel())
-    .pipe(gulp.dest(parameters.server.dist_server_js_folder));
+    .pipe(gulp.dest(parameters.server.distServerJsFolder));
 });
 
 gulp.task('server:clean', function () {
-    gulp.src(parameters.server.dist_folder, {read: false})
+    gulp.src(parameters.server.distFolder, {read: false})
     .pipe(clean());
 
-    gulp.src(parameters.server.dist_server_js_folder + "/" + parameters.server.server_js_file, {read: false})
+    gulp.src(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile, {read: false})
         .pipe(clean());
 });
 
 gulp.task('server:test', function (done) {
+  console.log(__dirname + '/config/karma.conf.server.js');
+
   new Server({
-    configFile: __dirname + '/karma.conf.server.js',
+    configFile: __dirname + '/config/karma.conf.server.js',
     singleRun: true
   }, done).start();
 });
