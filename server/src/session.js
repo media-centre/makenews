@@ -26,11 +26,11 @@ var Session = {
     request.get({
       url: 'http://localhost:5984/_session',
       headers: {
-        'Cookie': token
+        'Cookie': "AuthSession="+token
       }
     }, function (error, response, body) {
       var userJson = JSON.parse(body);
-      if(userJson["userCtx"]["name"] != undefined){
+      if(userJson["userCtx"] && userJson["userCtx"]["name"] != undefined){
         deferred.resolve(userJson["userCtx"]["name"]);
       }
       else {

@@ -35,7 +35,8 @@ describe("SessionSpec", function(){
       var password = "password";
       var createUser = helper.createUser(username, password);
       var login = Session.login(username, password);
-      createUser.then(login.then(function(token){
+      createUser.then(login.then(function(cookie){
+        token = cookie.split(";")[0].substring(12);
         Session.currentUser(token).then(function(name){
           expect(name).to.eq(username);
           done();
