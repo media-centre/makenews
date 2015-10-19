@@ -13,7 +13,11 @@ app.use(function(req, res, next){
     err.status = 401;
     next(err);
   };
-  if(req.cookies['AuthSession']) {
+  var allowedUrls = ['/'];
+  if(allowedUrls.indexOf(req.originalUrl) != -1) {
+    next();
+  }
+  else if(req.cookies['AuthSession']) {
     Session.currentUser(req.cookies['AuthSession'])
       .then(function (username) {
         next();
@@ -27,6 +31,9 @@ app.use(function(req, res, next){
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static(path.join(__dirname, '../../client')));
+app.get('/welcome', function(req,res, next){
+  res.send("welcome");
+});
 
 app.use(function (err, req, res, next) {
   if(err.status != 401) {

@@ -24,7 +24,7 @@ var Session = {
     var deferred = q.defer();
 
     request.get({
-      url: 'http://localhost:5984/_session',
+      url: config.dbUrl + '/_session',
       headers: {
         'Cookie': "AuthSession="+token
       }
