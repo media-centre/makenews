@@ -2,10 +2,16 @@
   "name": "content_discovery",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "start": "node server/src/server.js",
+    "test": "mocha -R spec server/test/"
+  },
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "~4.13.1",
     "jquery": "^2.1.4",
+    "q": "^1.4.1",
+    "request": "^2.65.0",
     "riot": "^2.2.4"
   },
   "devDependencies": {
@@ -30,6 +36,7 @@
     "phantomjs": "^1.9.18",
     "riotify": "^0.1.2",
     "run-sequence": "^1.1.4",
-    "sinon": "^1.17.1"
+    "sinon": "^1.17.1",
+    "supertest": "^1.1.0"
   }
 }
