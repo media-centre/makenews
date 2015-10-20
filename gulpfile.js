@@ -103,4 +103,4 @@ gulp.task('server:build', ['server:copy-js']);
 // -------------------------------common tasks -------------------------------------------
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
-gulp.task('test', ['client:test', 'server:test']);
+gulp.task('test', ['client:test']);

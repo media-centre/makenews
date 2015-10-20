@@ -7,14 +7,13 @@ describe("SessionSpec", function(){
       var username = "srk";
       var password = "password";
       var createUser = helper.createUser(username, password);
-      var login = Session.login(username, password);
-      var test = function(token){
-        expect(token).to.not.equal(undefined);
-        expect(token).to.have.string("AuthSession");
-        done();
-      };
-
-      createUser.then(login.then(test));
+      createUser.then(function(){
+        Session.login(username, password).then(function(token){
+          expect(token).to.not.equal(undefined);
+          expect(token).to.have.string("AuthSession");
+          done();
+        });
+      });
     });
 
     it("should fail if username/password are invalid", function(done){
@@ -25,7 +24,7 @@ describe("SessionSpec", function(){
         done();
       };
 
-      login.fail(test);
+      login.catch(test);
     });
   });
 
@@ -34,18 +33,19 @@ describe("SessionSpec", function(){
       var username = "srk";
       var password = "password";
       var createUser = helper.createUser(username, password);
-      var login = Session.login(username, password);
-      createUser.then(login.then(function(cookie){
-        token = cookie.split(";")[0].substring(12);
-        Session.currentUser(token).then(function(name){
-          expect(name).to.eq(username);
-          done();
-        });
-      }));
+      createUser.then(function () {
+        Session.login(username, password).then(function (cookie) {
+          token = cookie.split(";")[0].substring(12);
+          Session.currentUser(token).then(function (name) {
+            expect(name).to.eq(username);
+            done();
+          });
+        })
+      });
     });
 
     it("should return undefined if user is not logged in", function (done) {
-        Session.currentUser("token").fail(function(err){
+        Session.currentUser("token").catch(function(err){
           done();
         });
     });

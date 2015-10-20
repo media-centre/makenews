@@ -1,5 +1,4 @@
 var request = require('supertest');
-var q = require('q');
 var sinon = require('sinon');
 var Session = require('../src/session');
 
@@ -25,10 +24,10 @@ describe('loading express', function () {
   describe('Urls that require login', function() {
     it('responds 200 if user is logged in', function (done) {
       var token = "token";
-      var deferred = q.defer();
-      var userPromise = deferred.promise;
+      var userPromise = new Promise(function (resolve, reject) {
+        resolve("username");
+      });
       sandbox.stub(Session, "currentUser").withArgs(token).returns(userPromise);
-      deferred.resolve("username");
 
       request(server)
         .get('/welcome')
@@ -37,10 +36,10 @@ describe('loading express', function () {
     });
 
     it('responds with 401 if cookie is invalid', function (done) {
-      var deferred = q.defer();
-      var invalidUserPromise = deferred.promise;
+      var invalidUserPromise = new Promise(function (resolve, reject) {
+        reject("oops");
+      });
       sandbox.stub(Session, "currentUser").withArgs("invalid_token").returns(invalidUserPromise);
-      deferred.reject("oops");
 
       request(server)
         .get('/welcome')
