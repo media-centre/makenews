@@ -53,4 +53,33 @@ describe('loading express', () => {
         .expect(401, done);
     });
   });
+
+  describe('login', () => {
+    it('should login and return token from couch on success', (done) => {
+      var userCredentials = { username : 'marcus', password : 'password'};
+      var cookie = "AuthSession=token";
+      var cookiePromise = new Promise((resolve, reject) => {
+          resolve(cookie);
+        });
+      sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(cookiePromise);
+      request(server)
+        .post('/login')
+        .send(userCredentials)
+        .expect(200)
+        .expect('Set-Cookie', cookie, done);
+    });
+
+    it('should return error json on invalid login', (done) => {
+      var userCredentials = { username : 'invalid_username', password : 'password'};
+      var rejectedPromise = new Promise((resolve, reject) => {
+          reject("err");
+      });
+      sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(rejectedPromise);
+      request(server)
+        .post('/login')
+        .send(userCredentials)
+        .expect(401)
+        .expect({"error":"unauthorized"}, done);
+    });
+  });
 });
