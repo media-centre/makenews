@@ -45,9 +45,9 @@ describe("SessionSpec", () => {
     });
 
     it("should return undefined if user is not logged in", (done) => {
-        Session.currentUser("token").catch((err) => {
-          done();
-        });
+      Session.currentUser("token").catch((err) => {
+        done();
+      });
     });
   });
 });

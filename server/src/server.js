@@ -14,10 +14,10 @@ app.use((req, res, next) => {
     next(err);
   };
   var allowedUrls = ['/', '/login'];
-  if(allowedUrls.indexOf(req.originalUrl) != -1) {
+  if (allowedUrls.indexOf(req.originalUrl) != -1) {
     next();
   }
-  else if(req.cookies['AuthSession']) {
+  else if (req.cookies['AuthSession']) {
     Session.currentUser(req.cookies['AuthSession'])
       .then((username) => {
         next();
@@ -29,24 +29,24 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', express.static(path.join(__dirname, '../../client')));
-app.get('/welcome', (req,res, next) => {
+app.get('/welcome', (req, res, next) => {
   res.send("welcome");
 });
 
 app.post('/login', (req, res, next) => {
   Session.login(req.body.username, req.body.password)
-  .then((token) => {
-    res.status(200).append('Set-Cookie', token).send("done");
-  })
-  .catch(() => {
-    res.status(401).send({"error":"unauthorized"});
-  });
+    .then((token) => {
+      res.status(200).append('Set-Cookie', token).send("done");
+    })
+    .catch(() => {
+      res.status(401).send({"error": "unauthorized"});
+    });
 });
 
 app.use((err, req, res, next) => {
-  if(err.status != 401) {
+  if (err.status != 401) {
     next();
   }
   res.status(401);
