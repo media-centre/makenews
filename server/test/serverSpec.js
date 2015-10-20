@@ -2,29 +2,29 @@ var request = require('supertest');
 var sinon = require('sinon');
 var Session = require('../src/session');
 
-describe('loading express', function () {
+describe('loading express', () => {
   var server, sandbox;
-  beforeEach(function () {
+  beforeEach(() => {
     server = require('../src/server');
     sandbox = sinon.sandbox.create();
   });
-  afterEach(function () {
+  afterEach(() => {
     sandbox.restore();
     server.close();
   });
 
-  describe('publicUrls', function(){
-    it('responds to / even without cookie', function testSlash(done) {
+  describe('publicUrls', () => {
+    it('responds to / even without cookie', (done) => {
       request(server)
         .get('/')
         .expect(200, done);
     });
   });
 
-  describe('Urls that require login', function() {
-    it('responds 200 if user is logged in', function (done) {
+  describe('Urls that require login', () =>  {
+    it('responds 200 if user is logged in', (done) => {
       var token = "token";
-      var userPromise = new Promise(function (resolve, reject) {
+      var userPromise = new Promise((resolve, reject) => {
         resolve("username");
       });
       sandbox.stub(Session, "currentUser").withArgs(token).returns(userPromise);
@@ -35,8 +35,8 @@ describe('loading express', function () {
         .expect(200, done);
     });
 
-    it('responds with 401 if cookie is invalid', function (done) {
-      var invalidUserPromise = new Promise(function (resolve, reject) {
+    it('responds with 401 if cookie is invalid', (done) => {
+      var invalidUserPromise = new Promise((resolve, reject) => {
         reject("oops");
       });
       sandbox.stub(Session, "currentUser").withArgs("invalid_token").returns(invalidUserPromise);
@@ -47,7 +47,7 @@ describe('loading express', function () {
         .expect(401, done);
     });
 
-    it('responds with 401 if no cookie is sent', function (done) {
+    it('responds with 401 if no cookie is sent', (done) => {
       request(server)
         .get('/welcome')
         .expect(401, done);

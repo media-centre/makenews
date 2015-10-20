@@ -3,12 +3,12 @@ var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 var Session = require('./session');
 app.use(cookieParser());
 
-app.use(function(req, res, next){
-  var unAuthorisedError = function(errMsg){
+app.use((req, res, next) => {
+  var unAuthorisedError = (errMsg) => {
     var err = new Error();
     err.status = 401;
     next(err);
@@ -19,7 +19,7 @@ app.use(function(req, res, next){
   }
   else if(req.cookies['AuthSession']) {
     Session.currentUser(req.cookies['AuthSession'])
-      .then(function (username) {
+      .then((username) => {
         next();
       }).catch(unAuthorisedError);
   }
@@ -31,11 +31,11 @@ app.use(function(req, res, next){
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static(path.join(__dirname, '../../client')));
-app.get('/welcome', function(req,res, next){
+app.get('/welcome', (req,res, next) => {
   res.send("welcome");
 });
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if(err.status != 401) {
     next();
   }

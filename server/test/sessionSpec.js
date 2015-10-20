@@ -1,14 +1,14 @@
 var helper = require('./helpers/spec_helper');
 var Session = require('../src/session');
 
-describe("SessionSpec", function(){
-  describe("login", function(){
-    it("should login user with given username and password", function(done){
+describe("SessionSpec", () => {
+  describe("login", () => {
+    it("should login user with given username and password", (done) => {
       var username = "srk";
       var password = "password";
       var createUser = helper.createUser(username, password);
-      createUser.then(function(){
-        Session.login(username, password).then(function(token){
+      createUser.then(() => {
+        Session.login(username, password).then((token) => {
           expect(token).to.not.equal(undefined);
           expect(token).to.have.string("AuthSession");
           done();
@@ -16,11 +16,11 @@ describe("SessionSpec", function(){
       });
     });
 
-    it("should fail if username/password are invalid", function(done){
+    it("should fail if username/password are invalid", (done) => {
       var username = "dummy";
       var password = "invalid_password";
       var login = Session.login(username, password);
-      var test = function(){
+      var test = () => {
         done();
       };
 
@@ -28,15 +28,15 @@ describe("SessionSpec", function(){
     });
   });
 
-  describe("currentUser", function() {
-    it("should return current user name", function (done) {
+  describe("currentUser", () => {
+    it("should return current user name", (done) => {
       var username = "srk";
       var password = "password";
       var createUser = helper.createUser(username, password);
-      createUser.then(function () {
-        Session.login(username, password).then(function (cookie) {
+      createUser.then(() => {
+        Session.login(username, password).then((cookie) => {
           token = cookie.split(";")[0].substring(12);
-          Session.currentUser(token).then(function (name) {
+          Session.currentUser(token).then((name) => {
             expect(name).to.eq(username);
             done();
           });
@@ -44,8 +44,8 @@ describe("SessionSpec", function(){
       });
     });
 
-    it("should return undefined if user is not logged in", function (done) {
-        Session.currentUser("token").catch(function(err){
+    it("should return undefined if user is not logged in", (done) => {
+        Session.currentUser("token").catch((err) => {
           done();
         });
     });

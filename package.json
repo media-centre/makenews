@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server/src/server.js",
-    "test": "mocha -R spec server/test/"
+    "start": "node --harmony server/src/server.js",
+    "test": "mocha --harmony -R spec server/test/"
   },
   "dependencies": {
     "body-parser": "^1.14.1",
