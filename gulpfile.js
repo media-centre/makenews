@@ -1,7 +1,7 @@
 var gulp   = require('gulp');
 var parameters = require('./config/parameters')
 var scss = require("gulp-scss");
-var gulp = require('gulp');
+var exec = require('gulp-exec');
 var riot = require('gulp-riot');
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
@@ -89,13 +89,12 @@ gulp.task('server:clean', function () {
         .pipe(clean());
 });
 
-gulp.task('server:test', function (done) {
-  console.log(__dirname + '/config/karma.conf.server.js');
-
-  new Server({
-    configFile: __dirname + '/config/karma.conf.server.js',
-    singleRun: true
-  }, done).start();
+gulp.task('server:test', function () {
+  gulp.src(parameters.server.testPath + "**/*.js", {read: false})
+    .pipe(exec('mocha --harmony -R spec server/test/', function (err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+    }));
 });
 
 gulp.task('server:build', ['server:copy-js']);

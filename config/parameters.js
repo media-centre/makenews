@@ -13,6 +13,7 @@ clientConfig = {
 serverConfig = {
   serverAppPath: './server',
   srcPath: './server/src',
+  testPath: './server/test',
   distFolder: './dist/server',
   distServerJsFolder: './dist',
   serverJsFile: 'server.js'
