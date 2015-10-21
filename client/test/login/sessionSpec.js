@@ -11,16 +11,23 @@ describe('Session', () => {
         successCallback("done");
       };
       var username = "vinod";
-      Session.login(username, "123");
-
+      var successPromise = Session.login(username, "123");
+      successPromise.done(function(msg){
+        expect(msg).to.equal("Logged in successfully")
+      });
       expect(localStorage.getItem("user")).to.equal(username);
-      // new pouch with userdb
-      // riot tag
     });
 
     it('should show error on invalid login', () => {
-      // fail
-      // show error in the login tag
+      $.ajax = function(options) {
+        var failureCallback = options.error;
+        failureCallback("{Error:'unauthorized'}");
+      };
+      var rejectedPromise = Session.login("InvalidUser", "qwerty");
+      rejectedPromise.fail(function(error){
+        expect(error).to.equal("Username or password invalid");
+      });
+      expect(rejectedPromise).to.be.rejected;
     });
   });
 });

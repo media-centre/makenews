@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import riot from 'riot';
+var Session = require('./session.js');
 
-$(function() {
+$( document ).ready(function() {
+  riot.mount("login", { session_model: Session });
 });
