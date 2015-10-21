@@ -41,13 +41,13 @@ gulp.task('client:riot-tags', function() {
 
 //only riot has to do this way. need to figure out later on how can we avoid copying.
 gulp.task('client:copy_dependents', function() {
-    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot.min.js")
+    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot+compiler.min.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/riot"));
 
 });
 
 gulp.task('client:copy-index-html', function() {
-    return gulp.src(parameters.client.clientAppPath + "/src/index.html")
+    return gulp.src(parameters.client.clientAppPath + "/index.html")
     .pipe(gulp.dest(parameters.client.distFolder));
 });
 
@@ -72,13 +72,8 @@ gulp.task('client:build', function(callback) {
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', function() {
-    gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
-    .pipe(babel())
+    gulp.src(parameters.server.serverAppPath + "/**/*")
     .pipe(gulp.dest(parameters.server.distFolder));
-
-    gulp.src(parameters.server.serverAppPath + "/src/" + parameters.server.serverJsFile)
-    .pipe(babel())
-    .pipe(gulp.dest(parameters.server.distServerJsFolder));
 });
 
 gulp.task('server:clean', function () {
