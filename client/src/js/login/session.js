@@ -3,7 +3,7 @@ import q from 'q';
 export let Session = {
   login: (username, password) => {
     var deferred = q.defer();
-    if(username == "" || password == ""){
+    if(username === "" || password === ""){
       deferred.reject("Please enter username and password");
     }
     else {
@@ -11,11 +11,11 @@ export let Session = {
         type: 'POST',
         url: 'http://localhost:5000/login',
         data: {username: username, password: password},
-        success: function (data, textStatus, request) {
+        success: function () {
           localStorage.setItem("user", username);
           deferred.resolve("Logged in successfully");
         },
-        error: function (request, textStatus, errorThrown) {
+        error: function () {
           deferred.reject("Username or password invalid");
         }
       });

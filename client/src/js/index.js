@@ -1,2 +1,2 @@
-var LoginPresenter = require('./login/login_presenter.js');
+require('./login/login_presenter.js');
 

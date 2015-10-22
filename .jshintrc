@@ -1,0 +1,14 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "undef": true,
+  "esnext": true,
+  "node": true,
+  "unused": true,
+  "mocha": true,
+  "globals": {
+    "riot": true,
+    "localStorage": true,
+    "expect": true
+  }
+}

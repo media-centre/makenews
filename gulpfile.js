@@ -12,6 +12,7 @@ var runSequence = require('run-sequence');
 var path = require('path');
 var Server = require('karma').Server;
 var babel = require('gulp-babel');
+var jshint = require('gulp-jshint');
 
 gulp.task("client:scss", function () {
     return gulp.src(parameters.client.scssSrcPath + "/**/*.scss")
@@ -95,6 +96,17 @@ gulp.task('server:test', function () {
 gulp.task('server:build', ['server:copy-js']);
 
 // -------------------------------common tasks -------------------------------------------
+
+gulp.task('jshint', function() {
+  gulp.src(parameters.client.clientAppPath + "/**/*.js")
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'));
+
+  gulp.src(parameters.server.serverAppPath + "/**/*.js")
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
 gulp.task('test', ['client:test']);

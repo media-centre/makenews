@@ -1,5 +1,4 @@
 import { Session } from '../../src/js/login/session';
-import sinon from 'sinon';
 import $ from 'jquery';
 
 describe('Session', () => {
@@ -12,7 +11,7 @@ describe('Session', () => {
       var username = "vinod";
       var successPromise = Session.login(username, "123");
       successPromise.done((msg) => {
-        expect(msg).to.equal("Logged in successfully")
+        expect(msg).to.equal("Logged in successfully");
       });
       expect(localStorage.getItem("user")).to.equal(username);
     });

@@ -8,18 +8,18 @@ var Session = require('./session');
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  var unAuthorisedError = (errMsg) => {
+  var unAuthorisedError = () => {
     var err = new Error();
     err.status = 401;
     next(err);
   };
   var allowedUrls = ['/', '/login', '/app.js', '/app.tags.js', '/riot/riot+compiler.min.js'];
-  if (allowedUrls.indexOf(req.originalUrl) != -1) {
+  if (allowedUrls.indexOf(req.originalUrl) !== -1) {
     next();
   }
-  else if (req.cookies['AuthSession']) {
-    Session.currentUser(req.cookies['AuthSession'])
-      .then((username) => {
+  else if (req.cookies.AuthSession) {
+    Session.currentUser(req.cookies.AuthSession)
+      .then(() => {
         next();
       }).catch(unAuthorisedError);
   }
@@ -32,14 +32,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', express.static(path.join(__dirname, '../../client')));
 app.use('/riot', express.static(path.join(__dirname, '../../../client/riot')));
-app.get('/welcome', (req, res, next) => {
+app.get('/welcome', (req, res) => {
   res.send("welcome");
 });
 
-app.post('/login', (req, res, next) => {
-  if(req.body.username == "" || req.body.password == "")
+app.post('/login', (req, res) => {
+  if(req.body.username === "" || req.body.password === "") {
     res.status(401).send({"error": "cannot_be_blank"});
-
+  }
   Session.login(req.body.username, req.body.password)
     .then((token) => {
       res.status(200).append('Set-Cookie', token).send("done");
@@ -50,7 +50,7 @@ app.post('/login', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.status != 401) {
+  if (err.status !== 401) {
     next();
   }
   res.status(401);

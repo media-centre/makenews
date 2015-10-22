@@ -35,17 +35,17 @@ describe("SessionSpec", () => {
       var createUser = helper.createUser(username, password);
       createUser.then(() => {
         Session.login(username, password).then((cookie) => {
-          token = cookie.split(";")[0].substring(12);
+          var token = cookie.split(";")[0].substring(12);
           Session.currentUser(token).then((name) => {
             expect(name).to.eq(username);
             done();
           });
-        })
+        });
       });
     });
 
     it("should return undefined if user is not logged in", (done) => {
-      Session.currentUser("token").catch((err) => {
+      Session.currentUser("cmlub2Q6NTYyOEM0Q0Y674hIiGA9xPnFJn-vr75SIjlPJYc").catch(() => {
         done();
       });
     });

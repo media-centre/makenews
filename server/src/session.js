@@ -9,8 +9,8 @@ var Session = {
           headers: {'content-type': 'application/x-www-form-urlencoded'},
           body: require('querystring').stringify({name: username, password: password})
         },
-        (error, response, body) => {
-          if (response.statusCode == 200) {
+        (error, response) => {
+          if (response.statusCode === 200) {
             resolve(response.headers['set-cookie'][0]);
           }
           else {
@@ -29,8 +29,8 @@ var Session = {
         }
       }, (error, response, body) => {
         var userJson = JSON.parse(body);
-        if (userJson["userCtx"] && userJson["userCtx"]["name"] != undefined) {
-          resolve(userJson["userCtx"]["name"]);
+        if (userJson.userCtx && userJson.userCtx.name !== null) {
+          resolve(userJson.userCtx.name);
         }
         else {
           reject("null");

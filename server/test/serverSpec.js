@@ -24,7 +24,7 @@ describe('loading express', () => {
   describe('Urls that require login', () => {
     it('responds 200 if user is logged in', (done) => {
       var token = "token";
-      var userPromise = new Promise((resolve, reject) => {
+      var userPromise = new Promise((resolve) => {
         resolve("username");
       });
       sandbox.stub(Session, "currentUser").withArgs(token).returns(userPromise);
@@ -58,7 +58,7 @@ describe('loading express', () => {
     it('should login and return token from couch on success', (done) => {
       var userCredentials = {username: 'marcus', password: 'password'};
       var cookie = "AuthSession=token";
-      var cookiePromise = new Promise((resolve, reject) => {
+      var cookiePromise = new Promise((resolve) => {
         resolve(cookie);
       });
       sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(cookiePromise);
