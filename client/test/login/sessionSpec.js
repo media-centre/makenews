@@ -1,7 +1,6 @@
 import { Session } from '../../src/js/login/session';
 import sinon from 'sinon';
 import $ from 'jquery';
-import riot from 'riot';
 
 describe('Session', () => {
   describe('login', () => {

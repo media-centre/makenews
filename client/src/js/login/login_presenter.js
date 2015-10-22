@@ -2,5 +2,6 @@ import $ from 'jquery';
 var Session = require('./session.js');
 
 $( document ).ready(function() {
-  riot.mount("login", { session_model: Session });
+  if(localStorage.getItem("user") == undefined)
+    riot.mount("login", { session_model: Session });
 });
