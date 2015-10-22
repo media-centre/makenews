@@ -37,6 +37,9 @@ app.get('/welcome', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
+  if(req.body.username == "" || req.body.password == "")
+    res.status(401).send({"error": "cannot_be_blank"});
+
   Session.login(req.body.username, req.body.password)
     .then((token) => {
       res.status(200).append('Set-Cookie', token).send("done");

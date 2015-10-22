@@ -81,5 +81,23 @@ describe('loading express', () => {
         .expect(401)
         .expect({"error": "unauthorized"}, done);
     });
+
+    it('should return error json if username is empty', (done) => {
+      var userCredentials = {username: "", password: 'password'};
+      request(server)
+        .post('/login')
+        .send(userCredentials)
+        .expect(401)
+        .expect({"error": "cannot_be_blank"}, done);
+    });
+
+    it('should return error json if password is empty', (done) => {
+      var userCredentials = {username: "username", password: ''};
+      request(server)
+        .post('/login')
+        .send(userCredentials)
+        .expect(401)
+        .expect({"error": "cannot_be_blank"}, done);
+    });
   });
 });
