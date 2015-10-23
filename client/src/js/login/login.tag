@@ -12,6 +12,7 @@
         var that = this;
         opts.session_model.login(this.user_name.value, this.password.value).then(function(){
           that.unmount();
+          riot.mount("home");
         }).fail(function(msg){
           that.update({error: msg});
         });

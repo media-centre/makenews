@@ -42,8 +42,11 @@ gulp.task('client:riot-tags', function() {
 
 //only riot has to do this way. need to figure out later on how can we avoid copying.
 gulp.task('client:copy_dependents', function() {
-    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot+compiler.min.js")
+    gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot+compiler.min.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/riot"));
+
+    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riotgear-router/dist/rg-router.min.js")
+        .pipe(gulp.dest(parameters.client.distFolder + "/riotgear-router"));
 
 });
 
@@ -102,7 +105,7 @@ gulp.task('jshint', function() {
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 
-  gulp.src(parameters.server.serverAppPath + "/**/*.js")
+  return gulp.src(parameters.server.serverAppPath + "/**/*.js")
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });

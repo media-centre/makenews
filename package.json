@@ -14,7 +14,8 @@
     "jquery": "^2.1.4",
     "q": "^1.4.1",
     "request": "^2.65.0",
-    "riot": "^2.2.4"
+    "riot": "^2.2.4",
+    "riotgear-router": "^1.2.0"
   },
   "devDependencies": {
     "babel-plugin-espower": "^1.0.0",

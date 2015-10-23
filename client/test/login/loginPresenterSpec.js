@@ -11,15 +11,15 @@ describe('LoginPresenter', () => {
 
   it('should mount login is session is undefined', () => {
     localStorage.removeItem("user");
-    var riotSpy = sandbox.spy(riot, "mount");
+    var riotSpy = sandbox.spy(riot, "mount").withArgs("login");
     loginPresenter();
     expect(riotSpy.calledOnce).to.be.true;
   });
 
-  it('should not mount login is session is present', () => {
+  it('should mount home is session is present', () => {
     localStorage.setItem("user", "username");
-    var riotSpy = sandbox.spy(riot, "mount");
+    var riotSpy = sandbox.spy(riot, "mount").withArgs("home");
     loginPresenter();
-    expect(riotSpy.called).to.be.false;
+    expect(riotSpy.calledOnce).to.be.true;
   });
 });
