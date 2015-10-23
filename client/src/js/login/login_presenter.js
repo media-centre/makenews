@@ -1,8 +1,7 @@
-import $ from 'jquery';
-var Session = require('./session.js');
+import { Session } from './session.js';
 
-$(function() {
+export function loginPresenter() {
   if(localStorage.getItem("user") === null) {
     riot.mount("login", {session_model: Session});
   }
-});
+}

@@ -1,2 +1,6 @@
-require('./login/login_presenter.js');
+import $ from 'jquery';
+import { loginPresenter } from './login/login_presenter.js';
 
+$(function(){
+  loginPresenter();
+});

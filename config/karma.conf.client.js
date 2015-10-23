@@ -2,8 +2,9 @@
 module.exports = function(config) {
   config.set({
     basePath: '../client',
-    frameworks: ['mocha', 'chai', 'browserify'],
+    frameworks: ['mocha', 'chai', 'browserify', 'sinon'],
     files: [
+      '../node_modules/riot/riot+compiler.min.js',
       'src/js/**/*.js',
       'test/**/*.js',
       'src/js/**/*.tag'
