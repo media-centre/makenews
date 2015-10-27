@@ -6,6 +6,7 @@ clientConfig = {
   cssMainFile: 'app.css',
   templatesFile: 'app.tags.js',
   scssSrcPath: './client/src/scss',
+  imgSrcPath: './client/src/images',
   srcPath: './client/src/js',
   distFolder: './dist/client'
 };

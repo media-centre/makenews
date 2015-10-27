@@ -1,0 +1,62 @@
+@import "variable";
+
+html, body {
+  margin: 0px;
+  font-family: $font-family;
+  font-size: $medium-font-size;
+  font-weight: 100;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear-fix:after {
+  content: " ";
+  display: block;
+  float: none;
+  clear: both;
+}
+
+.box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.bottom-box-shadow {
+  -webkit-box-shadow: 0px 0px 10px #403E3E;
+  -moz-box-shadow: 0px 0px 10px #403E3E;
+  -ms-box-shadow: 0px 0px 10px #403E3E;
+  box-shadow: 0px 0px 10px #403E3E;
+}
+
+img {
+  vertical-align: top;
+}
+
+.border {
+  border: 1px solid $input-border-color;
+}
+
+.border-higlight {
+  border: 1px solid $input-border-focus;
+}
+
+input[type='text'] {
+  outline: none;
+  padding: 10px;
+  @extend .border;
+
+  &:focus {
+    @extend .border-higlight;
+  }
+
+}
+
+

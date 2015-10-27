@@ -1,6 +1,6 @@
 var gulp   = require('gulp');
 var parameters = require('./config/parameters')
-var scss = require("gulp-scss");
+var sass = require("gulp-sass");
 var exec = require('gulp-exec');
 var riot = require('gulp-riot');
 var concat = require('gulp-concat');
@@ -16,14 +16,14 @@ var jshint = require('gulp-jshint');
 
 gulp.task("client:scss", function () {
     return gulp.src(parameters.client.scssSrcPath + "/**/*.scss")
-          .pipe(scss({
-            noCache: true,
-            compass: false,
-            bundleExec: true,
-            sourcemap: false
-          }))
+          .pipe(sass())
           .pipe(concat(parameters.client.cssMainFile))
           .pipe(gulp.dest(parameters.client.distFolder));
+});
+
+gulp.task("client:images", function () {
+    return gulp.src(parameters.client.imgSrcPath + "/**/*.*")
+          .pipe(gulp.dest(parameters.client.distFolder + "/images"));
 });
 
 gulp.task('client:javascript', function () {
@@ -68,7 +68,7 @@ gulp.task('client:test', function (done) {
 });
 
 gulp.task('client:build', function(callback) {
-  runSequence('client:copy-index-html', 'client:copy_dependents', 'client:riot-tags', 'client:javascript', 'client:scss', callback);
+  runSequence('client:copy-index-html', 'client:copy_dependents', 'client:riot-tags', 'client:javascript', 'client:scss', 'client:images', callback);
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 

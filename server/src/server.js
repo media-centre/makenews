@@ -13,7 +13,7 @@ app.use((req, res, next) => {
     err.status = 401;
     next(err);
   };
-  var allowedUrls = ['/', '/login', '/app.js', '/app.tags.js', '/riot/riot+compiler.min.js', '/riotgear-router/rg-router.min.js'];
+  var allowedUrls = ['/', '/login', '/app.js', '/app.tags.js', '/app.css', '/images/newspaper.jpg'];
   if (allowedUrls.indexOf(req.originalUrl) !== -1) {
     next();
   }

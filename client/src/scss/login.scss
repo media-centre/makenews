@@ -1,0 +1,23 @@
+@import "variable";
+
+.login.app-header {
+  background: $app-bg-color;
+  padding: 30px;
+  @extend .bottom-box-shadow;
+
+  .app-logo {
+    color: $secondary-font-color;
+    font-size: $extra-large-font-size;
+  }
+
+  .description {
+    font-size: $small-font-size;
+    color: $primary-font-color;
+  }
+}
+
+.login.app-section {
+  img {
+    width: 100%;
+  }
+}
