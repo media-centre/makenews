@@ -1,6 +1,8 @@
-import $ from 'jquery';
-import { loginPresenter } from './login/login_presenter.js';
+import Login from './login/Login.js';
+import ReactDOM from 'react-dom';
+import React from 'react';
 
-$(function(){
-  loginPresenter();
-});
+ReactDOM.render(
+    <Login products={[]} />,
+    document.getElementById('login')
+);
