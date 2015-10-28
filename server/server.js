@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
-var path = require('path');
 
-require('./server/routes/Routes')(app);
+import routers from './server/routes/Routes';
+routers(app);
 
 const port = process.env.PORT || 5000;
 

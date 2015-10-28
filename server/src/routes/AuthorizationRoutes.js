@@ -1,8 +1,8 @@
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var session = require('../session');
+import Session from '../session';
 
-module.exports = function (app) {
+export default function authorizationRoutes(app) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(cookieParser());
@@ -11,7 +11,7 @@ module.exports = function (app) {
     if(req.body.username === "" || req.body.password === "") {
       res.status(401).json({"status":"error", "message": "cannot be blank"});
     }
-    session.login(req.body.username, req.body.password)
+    Session.login(req.body.username, req.body.password)
       .then((token) => {
         res.status(200).append('Set-Cookie', token).json({"status":"success", "message": ""});
       })
@@ -25,7 +25,7 @@ module.exports = function (app) {
     if(allowedUrls.indexOf(req.originalUrl) !== -1) {
       next();
     } else if (req.cookies.AuthSession) {
-      session.currentUser(req.cookies.AuthSession)
+      Session.currentUser(req.cookies.AuthSession)
         .then(() => {
           next();
         }).catch(unAuthorisedError);

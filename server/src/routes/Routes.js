@@ -1,3 +1,5 @@
-module.exports = function (app) {
-  require('./AuthorizationRoutes')(app);
+import authorizationRoutes from "./authorizationRoutes";
+
+export default function routers(app) {
+  authorizationRoutes(app);
 }
