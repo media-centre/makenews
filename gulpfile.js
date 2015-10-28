@@ -33,23 +33,6 @@ gulp.task('client:javascript', function () {
         .pipe(fs.createWriteStream(parameters.client.distFolder + '/' + parameters.client.appMainFile));
 });
 
-gulp.task('client:riot-tags', function() {
-  return gulp.src(parameters.client.srcPath + "/**/*.tag")
-      .pipe(riot())
-      .pipe(concat(parameters.client.templatesFile))
-      .pipe(gulp.dest(parameters.client.distFolder));
-});
-
-//only riot has to do this way. need to figure out later on how can we avoid copying.
-gulp.task('client:copy_dependents', function() {
-    gulp.src(parameters.client.clientAppPath + "/../node_modules/riot/riot+compiler.min.js")
-        .pipe(gulp.dest(parameters.client.distFolder + "/riot"));
-
-    return gulp.src(parameters.client.clientAppPath + "/../node_modules/riotgear-router/dist/rg-router.min.js")
-        .pipe(gulp.dest(parameters.client.distFolder + "/riotgear-router"));
-
-});
-
 gulp.task('client:copy-index-html', function() {
     return gulp.src(parameters.client.clientAppPath + "/index.html")
     .pipe(gulp.dest(parameters.client.distFolder));
@@ -68,7 +51,7 @@ gulp.task('client:test', function (done) {
 });
 
 gulp.task('client:build', function(callback) {
-  runSequence('client:copy-index-html', 'client:copy_dependents', 'client:riot-tags', 'client:javascript', 'client:scss', 'client:images', callback);
+  runSequence('client:copy-index-html', 'client:javascript', 'client:scss', 'client:images', callback);
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 
