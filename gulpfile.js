@@ -93,6 +93,14 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
+gulp.task('watch', function() {
+  gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ['client:scss']);
+  gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ['client:images']);
+  gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:javascript', 'client:test', 'jshint']);
+  gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'jshint']);
+  gulp.watch(parameters.client.clientAppPath + "/index.html", ['client:copy-index-html']);
+});
+
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
 gulp.task('test', ['client:test']);

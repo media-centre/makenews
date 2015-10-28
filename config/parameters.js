@@ -8,6 +8,7 @@ clientConfig = {
   scssSrcPath: './client/src/scss',
   imgSrcPath: './client/src/images',
   srcPath: './client/src/js',
+  testPath: './client/test',
   distFolder: './dist/client'
 };
 
