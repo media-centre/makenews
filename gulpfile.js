@@ -59,8 +59,13 @@ gulp.task('client:build', function(callback) {
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', function() {
-    gulp.src(parameters.server.serverAppPath + "/**/*")
+    gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
     .pipe(gulp.dest(parameters.server.distFolder));
+
+    gulp.src(parameters.server.serverAppPath + "/" + parameters.server.serverJsFile)
+    .pipe(babel())
+    .pipe(gulp.dest(parameters.server.distServerJsFolder));
+
 });
 
 gulp.task('server:clean', function () {
