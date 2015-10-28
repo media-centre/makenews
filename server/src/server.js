@@ -38,9 +38,11 @@ app.get('/welcome', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+  console.log(req.body);
   if(req.body.username === "" || req.body.password === "") {
     res.status(401).json({"status":"error", "message": "cannot be blank"});
   }
+  console.log(req.body.username + " " + req.body.password);
   Session.login(req.body.username, req.body.password)
     .then((token) => {
       res.status(200).append('Set-Cookie', token).json({"status":"success", "message": ""});

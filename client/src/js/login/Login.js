@@ -13,6 +13,6 @@ export default class Login extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onLoginClick('test', 'test');
+    this.props.onLoginClick('vikram', 'password');
   }
 }
