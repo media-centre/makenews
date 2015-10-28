@@ -39,14 +39,14 @@ app.get('/welcome', (req, res) => {
 
 app.post('/login', (req, res) => {
   if(req.body.username === "" || req.body.password === "") {
-    res.status(401).send({"error": "cannot_be_blank"});
+    res.status(401).json({"status":"error", "message": "cannot be blank"});
   }
   Session.login(req.body.username, req.body.password)
     .then((token) => {
-      res.status(200).append('Set-Cookie', token).send("done");
+      res.status(200).append('Set-Cookie', token).json({"status":"success", "message": ""});
     })
     .catch(() => {
-      res.status(401).send({"error": "unauthorized"});
+      res.status(401).json({"status":"error", "message": "unauthorized"});
     });
 });
 

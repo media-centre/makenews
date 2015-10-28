@@ -4,9 +4,15 @@ import App from './App.js'
 import contentDiscoveryApp from './Reducers.js'
 import ReactDOM from 'react-dom';
 import React from 'react';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import 'babel/polyfill';
 
-let store = createStore(contentDiscoveryApp);
+const createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware, // lets us dispatch() functions
+)(createStore);
+
+let store = createStoreWithMiddleware(contentDiscoveryApp);
 
 ReactDOM.render(
   <Provider store={store}>
