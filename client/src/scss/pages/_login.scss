@@ -8,25 +8,17 @@
 
   .app-logo {
     color: $secondary-font-color;
-    font-size: $extra-large-font-size;
+    @extend .extra-large-font;
     margin-bottom: 30px;
   }
 
-  .description {
-    font-size: $small-font-size;
-  }
-
   form {
-    button, input {
+    .input-container > div {
       margin-right: 10px;
     }
-    div.help-panel {
-      margin-top: 5px;
-      margin-right: 90px;
 
-      span.help-login {
-        text-align: right;
-      }
+    p {
+      margin: 6px 0px;
     }
   }
 }

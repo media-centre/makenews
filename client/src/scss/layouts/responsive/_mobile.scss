@@ -1,0 +1,62 @@
+@media (max-width: 600px) {
+
+  .extra-small-text {
+    font-size: $small-font-size;
+  }
+
+  .small-text {
+    font-size: $medium-font-size;
+  }
+
+  .medium-text {
+    font-size: $large-font-size;
+  }
+
+  .extra-large-text {
+    font-size: $max-font-size;
+  }
+
+  input[type='text'], input[type='password'], button {
+    padding: 8px;
+  }
+
+  button {
+    padding: 8px 16px;
+  }
+
+  .m-block {
+    float: none;
+    clear: both;
+    display: block;
+  }
+
+  .m-input-block {
+    display: block;
+    width: 100%;
+  }
+
+  .m-t-center {
+    text-align: center;
+  }
+
+  .login.app-header .form-container .login-form-container form .input-container > div {
+    margin-right: 0px;
+  }
+  .app-header {
+    .form-container {
+      margin: 2em;
+    }
+
+    .input-container {
+      .password-container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .description {
+      text-align: justify;
+    }
+  }
+
+}

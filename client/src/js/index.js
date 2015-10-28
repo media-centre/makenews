@@ -12,5 +12,5 @@ ReactDOM.render(
   <Provider store={store}>
     <App name = {'vikram'}/>
   </Provider>,
-  document.getElementById('login')
+  document.getElementById('login-form-container')
 );

@@ -67,7 +67,7 @@ input[type='text'], input[type='password'], button {
 button {
   background: none;
   color: $primary-font-color;
-  padding: 8px 16px;
+  padding: 6px 16px;
   cursor: pointer;
 
   &:hover {
@@ -92,16 +92,33 @@ button {
   color: $body-font-color;
 }
 
-.small-text {
-  font-size: $small-font-size;
-}
-
 .extra-small-text {
   font-size: $extra-small-font-size;
 }
 
+.small-text {
+  font-size: $small-font-size;
+}
+
+.medium-text {
+  font-size: $medium-font-size;
+}
+
+.extra-large-text {
+  font-size: $extra-large-font-size;
+}
+
+
+
 .error {
   color: $error-color;
+}
+
+.t-center {
+  text-align: center;
+}
+.t-right {
+  text-align: right;
 }
 
 
