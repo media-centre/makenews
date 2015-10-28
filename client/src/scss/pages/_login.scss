@@ -2,17 +2,32 @@
 
 .login.app-header {
   background: $app-bg-color;
+  color: $primary-font-color;
   padding: 30px;
   @extend .bottom-box-shadow;
 
   .app-logo {
     color: $secondary-font-color;
     font-size: $extra-large-font-size;
+    margin-bottom: 30px;
   }
 
   .description {
     font-size: $small-font-size;
-    color: $primary-font-color;
+  }
+
+  form {
+    button, input {
+      margin-right: 10px;
+    }
+    div.help-panel {
+      margin-top: 5px;
+      margin-right: 90px;
+
+      span.help-login {
+        text-align: right;
+      }
+    }
   }
 }
 

@@ -44,19 +44,65 @@ img {
   border: 1px solid $input-border-color;
 }
 
-.border-higlight {
+.border-highlight {
   border: 1px solid $input-border-focus;
 }
 
-input[type='text'] {
+input[type='text'], input[type='password'] {
+  color: $body-font-color;
+}
+
+input[type='text'], input[type='password'], button {
   outline: none;
-  padding: 10px;
+  padding: 6px;
+  @extend .small-text;
   @extend .border;
 
   &:focus {
-    @extend .border-higlight;
+    @extend .border-highlight;
   }
 
 }
+
+button {
+  background: none;
+  color: $primary-font-color;
+  padding: 8px 16px;
+  cursor: pointer;
+
+  &:hover {
+    @extend .border-highlight;
+    color: $secondary-font-color;
+  }
+}
+
+::-webkit-input-placeholder {
+  color: $body-font-color;
+}
+
+:-moz-placeholder {
+  color: $body-font-color;
+}
+
+::-moz-placeholder {
+  color: $body-font-color;
+}
+
+:-ms-input-placeholder {
+  color: $body-font-color;
+}
+
+.small-text {
+  font-size: $small-font-size;
+}
+
+.extra-small-text {
+  font-size: $extra-small-font-size;
+}
+
+.error {
+  color: $error-color;
+}
+
 
 
