@@ -8,7 +8,7 @@ export default class Login extends Component {
 
               <div className="left m-block">
                   <input type="text" id="user_name" placeholder='username' ref='user_name' name="userName" className="m-input-block box small-text"/>
-                  <p className="error extra-small-text">Invalid password or password</p>
+                  <p className="error extra-small-text">{this.props.errorMessage}</p>
               </div>
 
               <div className="left m-block password-container">
@@ -28,6 +28,8 @@ export default class Login extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onLoginClick('vikram', 'password');
+    let  userName = this.refs.user_name.value.trim();
+    let  password = this.refs.password.value.trim();
+    this.props.onLoginClick(userName, password);
   }
 }

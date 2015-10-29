@@ -1,10 +1,16 @@
-import { USER_LOGEDIN } from './Actions';
+import { USER_LOGEDIN, LOGIN_FAILED, LOGIN_SUCCESS } from './Actions';
 import { combineReducers } from 'redux';
 
-function login(state={}, action) {
+function login(state={"errorMessage":""}, action) {
   switch (action.type) {
-    case USER_LOGEDIN:
-      return action.json;
+    case LOGIN_FAILED:
+      return {
+        errorMessage: action.responseMessage
+      };
+    case LOGIN_SUCCESS:
+      return {
+        errorMessage: ""
+      };
     default:
       return state;
   }

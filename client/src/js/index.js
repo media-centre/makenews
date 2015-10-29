@@ -9,14 +9,14 @@ import thunkMiddleware from 'redux-thunk';
 import 'babel/polyfill';
 
 const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware, // lets us dispatch() functions
+  thunkMiddleware
 )(createStore);
 
 let store = createStoreWithMiddleware(contentDiscoveryApp);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App name = {'vikram'}/>
+    <App />
   </Provider>,
   document.getElementById('login-form-container')
 );
