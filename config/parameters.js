@@ -1,4 +1,4 @@
-var app_path, config;
+var clientConfig, serverConfig;
 
 clientConfig = {
   clientAppPath: './client',

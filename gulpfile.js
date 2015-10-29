@@ -1,8 +1,6 @@
 var gulp   = require('gulp');
-var parameters = require('./config/parameters')
+var parameters = require('./config/parameters');
 var sass = require("gulp-sass");
-var exec = require('gulp-exec');
-var riot = require('gulp-riot');
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
 var browserify = require('browserify');
@@ -13,6 +11,8 @@ var path = require('path');
 var Server = require('karma').Server;
 var babel = require('gulp-babel');
 var jshint = require('gulp-jshint');
+var mocha = require('gulp-mocha');
+require('babel/register');
 
 gulp.task("client:scss", function () {
     return gulp.src(parameters.client.scssSrcPath + "/**/*.scss")
@@ -51,14 +51,14 @@ gulp.task('client:test', function (done) {
 });
 
 gulp.task('client:build', function(callback) {
-  runSequence('client:copy-index-html', 'client:javascript', 'client:scss', 'client:images', callback);
+  runSequence('client:clean', 'client:copy-index-html', 'client:javascript', 'client:scss', 'client:images', callback);
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 
 
 
 // -------------------------------server tasks -------------------------------------------
-gulp.task('server:copy-js', function() {
+gulp.task('server:copy-js', ['server:clean'], function() {
     gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distFolder + "/src"));
@@ -78,11 +78,8 @@ gulp.task('server:clean', function () {
 });
 
 gulp.task('server:test', function () {
-  gulp.src(parameters.server.testPath + "**/*.js", {read: false})
-    .pipe(exec('mocha --harmony -R spec server/test/', function (err, stdout, stderr) {
-      console.log(stdout);
-      console.log(stderr);
-    }));
+  return gulp.src(parameters.server.testPath + "**/*.js", {read: false})
+    .pipe(mocha());
 });
 
 gulp.task('server:build', ['server:copy-js']);
@@ -100,13 +97,19 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('watch', function() {
+  //client
   gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ['client:scss']);
   gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ['client:images']);
   gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:javascript', 'client:test', 'jshint']);
   gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'jshint']);
   gulp.watch(parameters.client.clientAppPath + "/index.html", ['client:copy-index-html']);
+
+  //server
+  gulp.watch(parameters.server.srcPath + '/**/*.js', ['server:test', 'jshint', 'server:copy-js']);
+  gulp.watch(parameters.server.serverJsFile, ['server:test', 'jshint', 'server:copy-js']);
+  gulp.watch(parameters.server.testPath +'/**/*.js', ['server:test', 'jshint']);
 });
 
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
-gulp.task('test', ['client:test']);
+gulp.task('test', ['client:test', 'server:test']);

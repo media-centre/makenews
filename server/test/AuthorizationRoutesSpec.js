@@ -11,6 +11,7 @@ describe('AuthorizationRoutesSpec', () => {
   });
   afterEach(() => {
     sandbox.restore();
+    server.close();
   });
 
   describe('publicUrls', () => {

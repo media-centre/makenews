@@ -19,6 +19,6 @@ app.get('/welcome', (req, res) => {
 });
 
 routeErrorHandler(app);
-app.listen(port);
-export default app;
+let server = app.listen(port);
+export default server;
 console.log('listening on port ' + port);
