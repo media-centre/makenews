@@ -15,7 +15,7 @@ export default function (app) {
   });
 
   app.use((req, res, next) => {
-    var allowedUrls = ['/', '/login', '/app.js', '/app.css', '/images/newspaper.jpg'];
+    let allowedUrls = ['/', '/login', '/app.js', '/app.css', '/images/newspaper.jpg'];
     if(allowedUrls.indexOf(req.originalUrl) !== -1) {
       next();
     } else if (req.cookies.AuthSession) {
@@ -28,8 +28,8 @@ export default function (app) {
     } else {
       unAuthorisedError();
     }
-    var unAuthorisedError = () => {
-      var error = new Error();
+    let unAuthorisedError = () => {
+      let error = new Error();
       error.status = 401;
       next(error);
     };

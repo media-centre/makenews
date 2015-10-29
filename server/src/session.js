@@ -1,5 +1,6 @@
-import { dbUrl } from './config';
+import { dbUrl } from './config/DbConfig';
 import request from 'request';
+import querystring from 'querystring';
 
 export default class Session {
   static login(username, password) {
@@ -7,7 +8,7 @@ export default class Session {
       request.post({
           uri: dbUrl + '/_session',
           headers: {'content-type': 'application/x-www-form-urlencoded'},
-          body: require('querystring').stringify({name: username, password: password})
+          body: querystring.stringify({name: username, password: password})
         },
         (error, response) => {
           if (response.statusCode === 200) {

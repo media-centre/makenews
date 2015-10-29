@@ -4,7 +4,7 @@ import Session from '../src/session';
 import server from '../../server';
 
 describe('AuthorizationRoutesSpec', () => {
-  var sandbox;
+  let sandbox;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -24,8 +24,8 @@ describe('AuthorizationRoutesSpec', () => {
 
   describe('Urls that require login', () => {
     it('responds 200 if user is logged in', (done) => {
-      var token = "token";
-      var userPromise = new Promise((resolve) => {
+      let token = "token";
+      let userPromise = new Promise((resolve) => {
         resolve("username");
       });
       sandbox.stub(Session, "currentUser").withArgs(token).returns(userPromise);
@@ -37,7 +37,7 @@ describe('AuthorizationRoutesSpec', () => {
     });
 
     it('responds with 401 if cookie is invalid', (done) => {
-      var invalidUserPromise = new Promise((resolve, reject) => {
+      let invalidUserPromise = new Promise((resolve, reject) => {
         reject("oops");
       });
       sandbox.stub(Session, "currentUser").withArgs("invalid_token").returns(invalidUserPromise);
@@ -57,9 +57,9 @@ describe('AuthorizationRoutesSpec', () => {
 
   describe('login', () => {
     it('should login and return token from couch on success', (done) => {
-      var userCredentials = {username: 'marcus', password: 'password'};
-      var cookie = "AuthSession=token";
-      var cookiePromise = new Promise((resolve) => {
+      let userCredentials = {username: 'marcus', password: 'password'};
+      let cookie = "AuthSession=token";
+      let cookiePromise = new Promise((resolve) => {
         resolve(cookie);
       });
       sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(cookiePromise);
@@ -71,8 +71,8 @@ describe('AuthorizationRoutesSpec', () => {
     });
 
     it('should return error json on invalid login', (done) => {
-      var userCredentials = {username: 'invalid_username', password: 'password'};
-      var rejectedPromise = new Promise((resolve, reject) => {
+      let userCredentials = {username: 'invalid_username', password: 'password'};
+      let rejectedPromise = new Promise((resolve, reject) => {
         reject("err");
       });
       sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(rejectedPromise);
@@ -84,7 +84,7 @@ describe('AuthorizationRoutesSpec', () => {
     });
 
     it('should return error json if username is empty', (done) => {
-      var userCredentials = {username: "", password: 'password'};
+      let userCredentials = {username: "", password: 'password'};
       request(server)
         .post('/login')
         .send(userCredentials)
@@ -93,7 +93,7 @@ describe('AuthorizationRoutesSpec', () => {
     });
 
     it('should return error json if password is empty', (done) => {
-      var userCredentials = {username: "username", password: ''};
+      let userCredentials = {username: "username", password: ''};
       request(server)
         .post('/login')
         .send(userCredentials)

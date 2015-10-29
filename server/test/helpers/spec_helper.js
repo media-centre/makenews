@@ -1,11 +1,12 @@
-var request = require('request');
-var config = require('../../src/config');
-require('./chai');
-var Helper = {
-  createUser: (username, password) => {
+import request from 'request';
+import './chai';
+
+let dbAdminUrl = "http://vikram:password@localhost:5984";
+export default class Helper {
+  static createUser(username, password) {
     return new Promise((resolve) => {
       request.put({
-          uri: config.dbAdminUrl + '/_users/org.couchdb.user:' + username,
+          uri: dbAdminUrl + '/_users/org.couchdb.user:' + username,
           headers: {'content-type': 'application/json'},
           body: JSON.stringify({type: "user", name: username, password: password, roles: []})
         },
@@ -14,6 +15,4 @@ var Helper = {
         });
     });
   }
-};
-
-module.exports = {createUser: Helper.createUser};
+}
