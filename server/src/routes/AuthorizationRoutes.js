@@ -1,6 +1,6 @@
 import Session from '../session';
 
-export default function authorizationRoutes(app) {
+export default function (app) {
   app.post('/login', (req, res) => {
     if(req.body.username === "" || req.body.password === "") {
       res.status(401).json({"status":"error", "message": "cannot be blank"});

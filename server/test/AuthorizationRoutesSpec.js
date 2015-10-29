@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import Session from '../src/session';
 import server from '../../server';
 
-describe('loading express', () => {
+describe('AuthorizationRoutesSpec', () => {
   var sandbox;
 
   beforeEach(() => {

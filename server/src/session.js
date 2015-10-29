@@ -1,12 +1,11 @@
-var config = require('./config');
+import { dbUrl } from './config';
 import request from 'request';
-// import config from './config.js';
 
 export default class Session {
   static login(username, password) {
     return new Promise((resolve, reject) => {
       request.post({
-          uri: config.dbUrl + '/_session',
+          uri: dbUrl + '/_session',
           headers: {'content-type': 'application/x-www-form-urlencoded'},
           body: require('querystring').stringify({name: username, password: password})
         },
@@ -24,12 +23,12 @@ export default class Session {
   static currentUser(token) {
     return new Promise((resolve, reject) => {
       request.get({
-        url: config.dbUrl + '/_session',
+        url: dbUrl + '/_session',
         headers: {
           'Cookie': "AuthSession=" + token
         }
       }, (error, response, body) => {
-        var userJson = JSON.parse(body);
+        let userJson = JSON.parse(body);
         if (userJson.userCtx && userJson.userCtx.name !== null) {
           resolve(userJson.userCtx.name);
         }

@@ -1,4 +1,4 @@
-export default function routeErrorHandler(app) {
+export default function (app) {
   app.use((err, req, res, next) => {
     if (err.status !== 401) {
       next();
