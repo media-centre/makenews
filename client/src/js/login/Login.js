@@ -28,6 +28,6 @@ export default class Login extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onLoginClick('vikram', 'swa');
+    this.props.onLoginClick('vikram', 'password');
   }
 }

@@ -1,8 +1,9 @@
-var request = require('request');
 var config = require('./config');
-var Session = {
+import request from 'request';
+// import config from './config.js';
 
-  login: (username, password) => {
+export default class Session {
+  static login(username, password) {
     return new Promise((resolve, reject) => {
       request.post({
           uri: config.dbUrl + '/_session',
@@ -18,9 +19,9 @@ var Session = {
           }
         });
     });
-  },
+  }
 
-  currentUser: (token) => {
+  static currentUser(token) {
     return new Promise((resolve, reject) => {
       request.get({
         url: config.dbUrl + '/_session',
@@ -38,5 +39,4 @@ var Session = {
       });
     });
   }
-};
-module.exports = Session;
+}
