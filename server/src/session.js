@@ -1,5 +1,6 @@
-var request = require('request');
 var config = require('./config');
+import request from 'request';
+// import config from './config.js';
 
 export default class Session {
   static login(username, password) {

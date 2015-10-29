@@ -1,5 +1,5 @@
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import Session from '../session';
 
 export default function authorizationRoutes(app) {
