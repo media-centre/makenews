@@ -61,9 +61,9 @@ gulp.task('client:build', function(callback) {
 gulp.task('server:copy-js', function() {
     gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
     .pipe(babel())
-    .pipe(gulp.dest(parameters.server.distFolder));
+    .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
-    gulp.src(parameters.server.serverAppPath + "/" + parameters.server.serverJsFile)
+    gulp.src("./" + parameters.server.serverJsFile)
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distServerJsFolder));
 

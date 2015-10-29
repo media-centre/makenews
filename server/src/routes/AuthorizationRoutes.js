@@ -1,12 +1,6 @@
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import Session from '../session';
 
 export default function authorizationRoutes(app) {
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: true}));
-  app.use(cookieParser());
-
   app.post('/login', (req, res) => {
     if(req.body.username === "" || req.body.password === "") {
       res.status(401).json({"status":"error", "message": "cannot be blank"});
@@ -28,7 +22,9 @@ export default function authorizationRoutes(app) {
       Session.currentUser(req.cookies.AuthSession)
         .then(() => {
           next();
-        }).catch(unAuthorisedError);
+        }).catch(() => {
+          unAuthorisedError();
+        });
     } else {
       unAuthorisedError();
     }
@@ -38,13 +34,4 @@ export default function authorizationRoutes(app) {
       next(error);
     };
   });
-
-  app.use((err, req, res, next) => {
-    if (err.status !== 401) {
-      next();
-    }
-    res.status(401);
-    res.send("Unauthorised");
-  });
-
 }

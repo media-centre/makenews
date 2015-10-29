@@ -9,7 +9,7 @@ import thunkMiddleware from 'redux-thunk';
 import 'babel/polyfill';
 
 const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware, // lets us dispatch() functions
+  thunkMiddleware // lets us dispatch() functions
 )(createStore);
 
 let store = createStoreWithMiddleware(contentDiscoveryApp);

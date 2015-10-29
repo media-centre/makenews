@@ -1,16 +1,16 @@
-var request = require('supertest');
-var sinon = require('sinon');
-var Session = require('../src/session');
+import request from 'supertest';
+import sinon from 'sinon';
+import Session from '../src/session';
+import server from '../../server';
 
 describe('loading express', () => {
-  var server, sandbox;
+  var sandbox;
+
   beforeEach(() => {
-    server = require('../src/server');
     sandbox = sinon.sandbox.create();
   });
   afterEach(() => {
     sandbox.restore();
-    server.close();
   });
 
   describe('publicUrls', () => {
@@ -79,7 +79,7 @@ describe('loading express', () => {
         .post('/login')
         .send(userCredentials)
         .expect(401)
-        .expect({"error": "unauthorized"}, done);
+        .expect({"status":"error", "message": "unauthorized"}, done);
     });
 
     it('should return error json if username is empty', (done) => {
@@ -88,7 +88,7 @@ describe('loading express', () => {
         .post('/login')
         .send(userCredentials)
         .expect(401)
-        .expect({"error": "cannot_be_blank"}, done);
+        .expect({"status":"error", "message": "cannot be blank"}, done);
     });
 
     it('should return error json if password is empty', (done) => {
@@ -97,7 +97,7 @@ describe('loading express', () => {
         .post('/login')
         .send(userCredentials)
         .expect(401)
-        .expect({"error": "cannot_be_blank"}, done);
+        .expect({"status":"error", "message": "cannot be blank"}, done);
     });
   });
 });
