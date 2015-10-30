@@ -55,6 +55,14 @@ gulp.task('client:build', function(callback) {
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 
+gulp.task('client:watch', function() {
+    gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ['client:scss']);
+    gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ['client:images']);
+    gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:javascript', 'client:test', 'jshint']);
+    gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'jshint']);
+    gulp.watch(parameters.client.clientAppPath + "/index.html", ['client:copy-index-html']);
+});
+
 
 
 // -------------------------------server tasks -------------------------------------------
@@ -84,6 +92,12 @@ gulp.task('server:test', function () {
 
 gulp.task('server:build', ['server:copy-js']);
 
+gulp.task('server:watch', function() {
+    gulp.watch(parameters.server.srcPath + '/**/*.js', ['server:test', 'jshint', 'server:copy-js']);
+    gulp.watch(parameters.server.serverJsFile, ['server:test', 'jshint', 'server:copy-js']);
+    gulp.watch(parameters.server.testPath +'/**/*.js', ['server:test', 'jshint']);
+});
+
 // -------------------------------common tasks -------------------------------------------
 
 gulp.task('jshint', function() {
@@ -96,20 +110,7 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('watch', function() {
-  //client
-  gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ['client:scss']);
-  gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ['client:images']);
-  gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:javascript', 'client:test', 'jshint']);
-  gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'jshint']);
-  gulp.watch(parameters.client.clientAppPath + "/index.html", ['client:copy-index-html']);
-
-  //server
-  gulp.watch(parameters.server.srcPath + '/**/*.js', ['server:test', 'jshint', 'server:copy-js']);
-  gulp.watch(parameters.server.serverJsFile, ['server:test', 'jshint', 'server:copy-js']);
-  gulp.watch(parameters.server.testPath +'/**/*.js', ['server:test', 'jshint']);
-});
-
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
 gulp.task('test', ['client:test', 'server:test']);
+gulp.task('watch', ['client:watch', 'server:watch']);
