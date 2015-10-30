@@ -31,7 +31,6 @@
     "gulp-jshint": "^1.11.2",
     "gulp-mocha": "^2.1.3",
     "gulp-sass": "^2.0.4",
-    "isomorphic-fetch": "^2.2.0",
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.0.1",
     "karma": "^0.13.10",

@@ -1,36 +1,30 @@
 import fetch from "isomorphic-fetch";
+import customAjax from "./utils/AjaxRequest"
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 
-export function userLogin(userName , password) {
-  return dispatch => {
-    fetch('http://localhost:5000/login',
-    {
-      method:'post',
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-      body:JSON.stringify({"username":userName,"password":password})
-    })
-    .then(response => response.json())
-    .then(responseJson => {
-      if(responseJson["status"] === "success") {
-        dispatch(loginSuccess());
-      }else{
-        dispatch(loginFailed(responseJson["message"]));
-      }
-    }).catch(err => {
-
-    });
-  }
+export function userLogin(userName, password) {
+    return dispatch => {
+        customAjax.request(
+            {
+                method: 'POST',
+                url: '/login',
+                data: {"username": userName, "password": password}
+            })
+            .then(succesData => {
+                dispatch(loginSuccess());
+            })
+            .catch(errorData => {
+                dispatch(loginFailed(errorData.message));
+            });
+    }
 }
 
 export function loginSuccess() {
-  return { type: LOGIN_SUCCESS };
+    return {type: LOGIN_SUCCESS};
 }
 
 export function loginFailed(responseMessage) {
-  return { type: LOGIN_FAILED, responseMessage };
+    return {type: LOGIN_FAILED, responseMessage};
 }
