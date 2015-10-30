@@ -10,8 +10,9 @@ var fs = require('fs');
 var runSequence = require('run-sequence');
 var path = require('path');
 var babel = require('gulp-babel');
-var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
+var eslint = require('gulp-eslint');
+
 require('babel/register');
 
 gulp.task("client:scss", function () {
@@ -56,12 +57,26 @@ gulp.task('client:build', function(callback) {
 gulp.task('client:watch', function() {
     gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ['client:scss']);
     gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ['client:images']);
-    gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:javascript', 'client:test', 'jshint']);
-    gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'jshint']);
+    gulp.watch(parameters.client.srcPath + '/**/*.js', ['client:build-sources', 'client:test', 'client:src-es-lint']);
+    gulp.watch(parameters.client.testPath +'/**/*.js', ['client:test', 'client:test-es-lint']);
     gulp.watch(parameters.client.clientAppPath + "/index.html", ['client:copy-index-html']);
 });
 
+gulp.task('client:src-es-lint', function () {
+    return gulp.src([parameters.client.srcPath + '/**/*.jsx', parameters.client.srcPath + '/**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
 
+gulp.task('client:test-es-lint', function () {
+    return gulp.src([parameters.client.testPath + '/**/*.jsx', parameters.client.testPath + '**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task('client:es-lint', ['client:src-es-lint', 'client:test-es-lint']);
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', ['server:clean'], function() {
@@ -91,24 +106,30 @@ gulp.task('server:test', function () {
 gulp.task('server:build', ['server:copy-js']);
 
 gulp.task('server:watch', function() {
-    gulp.watch(parameters.server.srcPath + '/**/*.js', ['server:test', 'jshint', 'server:copy-js']);
-    gulp.watch(parameters.server.serverJsFile, ['server:test', 'jshint', 'server:copy-js']);
-    gulp.watch(parameters.server.testPath +'/**/*.js', ['server:test', 'jshint']);
+    gulp.watch(parameters.server.srcPath + '/**/*.js', ['server:test', 'server:src-es-lint', 'server:copy-js']);
+    gulp.watch(parameters.server.serverJsFile, ['server:test', 'server:src-es-lint', 'server:copy-js']);
+    gulp.watch(parameters.server.testPath +'/**/*.js', ['server:test', 'server:test-es-lint']);
 });
+
+gulp.task('server:src-es-lint', function () {
+    return gulp.src([parameters.server.srcPath  + '/**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task('server:test-es-lint', function () {
+    return gulp.src([parameters.server.testPath + '**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+gulp.task('server:es-lint', ['server:src-es-lint', 'server:test-es-lint']);
 
 // -------------------------------common tasks -------------------------------------------
-
-gulp.task('jshint', function() {
-  gulp.src(parameters.client.clientAppPath + "/**/*.js")
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
-
-  return gulp.src(parameters.server.serverAppPath + "/**/*.js")
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
-});
 
 gulp.task('build', ['client:build', 'server:build']);
 gulp.task('clean', ['client:clean', 'server:clean']);
 gulp.task('test', ['client:test', 'server:test']);
 gulp.task('watch', ['client:watch', 'server:watch']);
+gulp.task('es-lint', ['client:es-lint', 'server:es-lint']);
