@@ -26,8 +26,8 @@ gulp.task("client:images", function () {
           .pipe(gulp.dest(parameters.client.distFolder + "/images"));
 });
 
-gulp.task('client:javascript', function () {
-  return browserify(parameters.client.srcPath +'/index.js', {debug: true})
+gulp.task('client:build-sources', function () {
+  return browserify(parameters.client.srcPath +'/index.jsx', {debug: true})
         .transform(babelify)
         .bundle()
         .pipe(fs.createWriteStream(parameters.client.distFolder + '/' + parameters.client.appMainFile));
@@ -44,12 +44,12 @@ gulp.task('client:clean', function () {
 });
 
 gulp.task('client:test', function (done) {
-  return gulp.src(parameters.client.testPath + "**/*.js", {read: false})
+  return gulp.src([parameters.client.testPath + "**/*.jsx", parameters.client.testPath + "**/*.js"], {read: false})
     .pipe(mocha());
 });
 
 gulp.task('client:build', function(callback) {
-  runSequence('client:clean', 'client:copy-index-html', 'client:javascript', 'client:scss', 'client:images', callback);
+  runSequence('client:clean', 'client:copy-index-html', 'client:build-sources', 'client:scss', 'client:images', callback);
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 

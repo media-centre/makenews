@@ -1,6 +1,6 @@
 import { connect, Provider } from 'react-redux'
-import Login from './Login.js'
-import App from './App.js'
+import Login from './Login.jsx'
+import App from './App.jsx'
 import contentDiscoveryApp from './Reducers.js'
 import ReactDOM from 'react-dom';
 import React from 'react';

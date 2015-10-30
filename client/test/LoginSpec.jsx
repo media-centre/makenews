@@ -1,31 +1,12 @@
-import Login from '../src/js/Login.js';
+import Login from '../src/js/Login.jsx';
 
 import jsdom from 'jsdom';
 import sinon from 'sinon';
 import { assert } from 'chai';
 import React from 'react/addons';
-import './TestHelper.js';
+import {element, elementsHashById} from './TestHelper.js';
 
 let TestUtils = React.addons.TestUtils;
-
-export default function elementsHashById(component, tagName) {
-        let elements = TestUtils.scryRenderedDOMComponentsWithTag(
-          component,
-          tagName
-        );
-
-        let elementsJson = {};
-        for(var element of elements) {
-            elementsJson[element.getAttribute('id')] = element;
-        }
-        return elementsJson;
-}
-
-export default function element(component, tagName, id) {
-    return elementsHashById(component, tagName)[id];
-}
-
-
 
 describe('login component', function(){
 

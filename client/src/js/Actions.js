@@ -16,15 +16,15 @@ export function userLogin(userName , password) {
     })
     .then(response => response.json())
     .then(responseJson => {
-      if(responseJson["status"] === "success") {
+      if(responseJson.status === "success") {
         dispatch(loginSuccess());
       }else{
-        dispatch(loginFailed(responseJson["message"]));
+        dispatch(loginFailed(responseJson.message));
       }
     }).catch(err => {
 
     });
-  }
+  };
 }
 
 export function loginSuccess() {
