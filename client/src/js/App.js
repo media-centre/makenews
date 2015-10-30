@@ -5,11 +5,10 @@ import React, { Component, PropTypes } from 'react';
 
 export default class App extends Component {
   render() {
-    const { dispatch, state } = this.props;
-    console.log(this.props);
+    const { dispatch, login } = this.props;
      return (
         <div>
-          <Login test={"testing"} onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} />
+          <Login onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={login.errorMessage} />
         </div>
       );
   }
