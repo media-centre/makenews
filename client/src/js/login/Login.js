@@ -4,11 +4,13 @@ export default class Login extends Component {
   render() {
     return (
       <form id="login" onSubmit={(e) => this.handleClick(e)}>
+
+          <p className="error extra-small-text">{this.props.errorMessage}</p>
+
           <div className="clear-fix input-container">
 
               <div className="left m-block">
                   <input type="text" id="user_name" placeholder='username' ref='user_name' name="userName" className="m-input-block box small-text" required/>
-                  <p className="error extra-small-text">{this.props.errorMessage}</p>
               </div>
 
               <div className="left m-block password-container">
