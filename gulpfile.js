@@ -1,5 +1,6 @@
-var gulp   = require('gulp');
 var parameters = require('./config/parameters');
+
+var gulp   = require('gulp');
 var sass = require("gulp-sass");
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
@@ -8,7 +9,6 @@ var babelify = require('babelify');
 var fs = require('fs');
 var runSequence = require('run-sequence');
 var path = require('path');
-var Server = require('karma').Server;
 var babel = require('gulp-babel');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
@@ -44,10 +44,8 @@ gulp.task('client:clean', function () {
 });
 
 gulp.task('client:test', function (done) {
-  new Server({
-    configFile: __dirname + '/config/karma.conf.client.js',
-    singleRun: true
-  }, done).start();
+  return gulp.src(parameters.client.testPath + "**/*.js", {read: false})
+    .pipe(mocha());
 });
 
 gulp.task('client:build', function(callback) {

@@ -5,10 +5,9 @@ export default class Login extends Component {
     return (
       <form id="login" onSubmit={(e) => this.handleClick(e)}>
           <div className="clear-fix input-container">
-
               <div className="left m-block">
-                  <input type="text" id="user_name" placeholder='username' ref='user_name' name="userName" className="m-input-block box small-text" required/>
-                  <p className="error extra-small-text">{this.props.errorMessage}</p>
+                  <input type="text" id="userName" placeholder='username' ref='userName' name="userName" className="m-input-block box small-text" required/>
+                  <p id="errorMessage" className="error extra-small-text">{this.props.errorMessage}</p>
               </div>
 
               <div className="left m-block password-container">
@@ -17,9 +16,8 @@ export default class Login extends Component {
               </div>
 
               <div className="left m-block m-t-center">
-                  <button>Login</button>
+                  <button id="submit">Login</button>
               </div>
-
           </div>
 
       </form>
@@ -28,7 +26,7 @@ export default class Login extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    let  userName = this.refs.user_name.value.trim();
+    let  userName = this.refs.userName.value.trim();
     let  password = this.refs.password.value.trim();
     this.props.onLoginClick(userName, password);
   }
