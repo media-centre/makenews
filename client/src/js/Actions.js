@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 
-export const USER_LOGIN = 'USER_LOGIN';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 
 export function userLogin(userName , password) {
@@ -17,7 +17,6 @@ export function userLogin(userName , password) {
     .then(response => response.json())
     .then(responseJson => {
       if(responseJson["status"] === "success") {
-        console.log("in success");
         dispatch(loginSuccess());
       }else{
         dispatch(loginFailed(responseJson["message"]));
