@@ -1,5 +1,5 @@
 import { connect} from 'react-redux'
-import Login from './login/Login.js'
+import Login from './Login.jsx'
 import { userLogin } from './Actions';
 import React, { Component, PropTypes } from 'react';
 
