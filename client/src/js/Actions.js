@@ -1,5 +1,5 @@
 import fetch from "isomorphic-fetch";
-import customAjax from "./utils/AjaxRequest"
+import customAjax from "./utils/CustomAjax"
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
