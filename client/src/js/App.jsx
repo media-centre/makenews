@@ -8,7 +8,7 @@ export default class App extends Component {
     const { dispatch, login } = this.props;
      return (
         <div>
-          <Login onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={login.errorMessage} />
+          <Login refs="login" onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={login.errorMessage} />
         </div>
       );
   }
