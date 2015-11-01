@@ -1,7 +1,7 @@
 import { LOGIN_FAILED, LOGIN_SUCCESS } from './Actions';
 import { combineReducers } from 'redux';
 
-function login(state={"errorMessage":""}, action={}) {
+function login(state={'errorMessage':''}, action={}) {
   switch (action.type) {
     case LOGIN_FAILED:
       return {
@@ -9,7 +9,7 @@ function login(state={"errorMessage":""}, action={}) {
       };
     case LOGIN_SUCCESS:
       return {
-        errorMessage: "successful"
+        errorMessage: 'successful'
       };
     default:
       return state;

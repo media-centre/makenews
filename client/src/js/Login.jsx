@@ -1,11 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 export default class Login extends Component {
   render() {
     return (
       <form id="login" onSubmit={(e) => this.handleClick(e)}>
 
-          <p id="errorMessage" className="error extra-small-text">{this.props.errorMessage}</p>
+          <p id="errorMessage" ref="errorMessage" className="error extra-small-text">{this.props.errorMessage}</p>
 
           <div className="clear-fix input-container">
               <div className="left m-block">
@@ -18,7 +18,7 @@ export default class Login extends Component {
               </div>
 
               <div className="left m-block m-t-center">
-                  <button id="submit">Login</button>
+                  <button id="submit" ref="submit">Login</button>
               </div>
           </div>
 
