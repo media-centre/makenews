@@ -12,7 +12,6 @@ var path = require('path');
 var babel = require('gulp-babel');
 var mocha = require('gulp-mocha');
 var eslint = require('gulp-eslint');
-
 require('babel/register');
 
 gulp.task("client:scss", function () {
@@ -45,7 +44,7 @@ gulp.task('client:clean', function () {
 });
 
 gulp.task('client:test', function (done) {
-  return gulp.src([parameters.client.testPath + "**/*.jsx", parameters.client.testPath + "**/*.js"], {read: false})
+  return gulp.src([parameters.client.testPath + "**/**/*.jsx", parameters.client.testPath + "**/**/*.js"], {read: false})
     .pipe(mocha());
 });
 
