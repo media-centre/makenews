@@ -6,7 +6,7 @@ export default class AjaxClient {
   }
 
   post(headers, data) {
-      return this.request('POST', headers, data)
+      return this.request('POST', headers, data);
   }
 
   request(method, headers, data={}) {
@@ -36,7 +36,7 @@ export default class AjaxClient {
                 let jsonResponse = JSON.parse(event.target.response);
                 reject(jsonResponse);
               } else {
-                reject("error");
+                reject('error');
               }
             }
           };

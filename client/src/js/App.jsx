@@ -1,7 +1,7 @@
-import { connect} from 'react-redux'
-import Login from './Login.jsx'
+import { connect} from 'react-redux';
+import Login from './Login.jsx';
 import { userLogin } from './Actions';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 export class App extends Component {
   render() {

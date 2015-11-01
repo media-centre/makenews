@@ -1,7 +1,7 @@
 import request from 'request';
 import './chai';
 
-let dbAdminUrl = "http://vikram:password@localhost:5984";
+let dbAdminUrl = "http://test:test@localhost:5984";
 export default class Helper {
   static createUser(username, password) {
     return new Promise((resolve) => {

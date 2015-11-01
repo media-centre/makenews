@@ -1,6 +1,5 @@
 import Login from '../src/js/Login.jsx';
 
-import jsdom from 'jsdom';
 import sinon from 'sinon';
 import { assert } from 'chai';
 import ReactDOM from 'react-dom';
@@ -12,8 +11,9 @@ let TestUtils = React.addons.TestUtils;
 describe('login component', function(){
 
   before('render and locate element', function() {
+    this.onSubmitCallback = sinon.spy();
     this.loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={""} />
+        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={""} />
     );
   });
 
@@ -34,21 +34,20 @@ describe('login component', function(){
 
   it('error message should be invalid credentials', function() {
     let loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={"invalid credentials"} />
+        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={"invalid credentials"} />
     );
     let errorElementDOM = ReactDOM.findDOMNode(loginComponent.refs.errorMessage);
     assert.strictEqual('invalid credentials', errorElementDOM.innerHTML, 'unexpected error message received');
   });
 
   it('submit button click should call login action call back' , function() {
-    let onSubmitCallback = sinon.spy();
     let loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => onSubmitCallback(userName, password)} errorMessage={""} />
+        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={""} />
     );
 
     let buttonElementDOM = ReactDOM.findDOMNode(loginComponent.refs.submit);
     TestUtils.Simulate.submit(buttonElementDOM);
-    assert.isTrue(onSubmitCallback.called);
+    assert.isTrue(this.onSubmitCallback.called);
   });
 
 });

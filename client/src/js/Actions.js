@@ -10,15 +10,15 @@ export function userLogin(userName, password) {
                               'Accept': 'application/json',
                               'Content-type': 'application/json'
                             };
-          const data = {"username": userName, "password": password};
+          const data = {'username': userName, 'password': password};
           ajax.post(headers, data)
           .then(succesData => {
               dispatch(loginSuccess());
           })
           .catch(errorData => {
-              dispatch(loginFailed("invalid user name or password"));
+              dispatch(loginFailed('invalid user name or password'));
           });
-    }
+    };
 }
 
 export function loginSuccess() {

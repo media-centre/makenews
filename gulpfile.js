@@ -49,7 +49,7 @@ gulp.task('client:test', function (done) {
 });
 
 gulp.task('client:build', function(callback) {
-  runSequence('client:clean', 'client:copy-index-html', 'client:build-sources', 'client:scss', 'client:images', callback);
+  runSequence('client:copy-index-html', 'client:build-sources', 'client:scss', 'client:images', callback);
 });
 // gulp.task('client:build', ['client:scss', 'client:javascript', 'client:riot-tags', 'client:copy-index-html']);
 
@@ -78,7 +78,7 @@ gulp.task('client:test-es-lint', function () {
 gulp.task('client:es-lint', ['client:src-es-lint', 'client:test-es-lint']);
 
 // -------------------------------server tasks -------------------------------------------
-gulp.task('server:copy-js', ['server:clean'], function() {
+gulp.task('server:copy-js', function() {
     gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distFolder + "/src"));
