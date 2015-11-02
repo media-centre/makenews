@@ -10,12 +10,16 @@
   .app-logo {
     margin-bottom: 15px;
     color: $secondary-font-color;
-    @extend .extra-large-font;
+    @extend .max-text;
   }
 
   form {
     .input-container > div {
       margin-right: 10px;
+    }
+
+    p.error {
+      margin-top: -10px;
     }
 
     p {
