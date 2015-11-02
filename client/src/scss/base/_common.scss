@@ -31,10 +31,10 @@ html, body {
 }
 
 .bottom-box-shadow {
-  -webkit-box-shadow: 0px 0px 10px #403E3E;
-  -moz-box-shadow: 0px 0px 10px #403E3E;
-  -ms-box-shadow: 0px 0px 10px #403E3E;
-  box-shadow: 0px 0px 10px #403E3E;
+  -webkit-box-shadow: 0px 1px 4px #403E3E;
+  -moz-box-shadow: 0px 1px 4px #403E3E;
+  -ms-box-shadow: 0px 1px 4px #403E3E;
+  box-shadow: 0px 1px 4px #403E3E;
 }
 
 img {
@@ -112,7 +112,7 @@ button {
 
 
 .error {
-  color: $error-color;
+  color: $secondary-font-color;
 }
 
 .t-center {

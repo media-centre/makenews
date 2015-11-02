@@ -4,6 +4,7 @@
   background: $app-header-bg-color;
   color: $primary-font-color;
   padding: 30px;
+  position: relative;
   @extend .bottom-box-shadow;
 
   .app-logo {
@@ -27,5 +28,6 @@
 .login.app-section {
   img {
     width: 100%;
+    opacity: 0.7;
   }
 }
