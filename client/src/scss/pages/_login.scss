@@ -8,6 +8,7 @@
   @extend .bottom-box-shadow;
 
   .app-logo {
+    margin-bottom: 15px;
     color: $secondary-font-color;
     @extend .extra-large-font;
   }
