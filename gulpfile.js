@@ -76,6 +76,7 @@ gulp.task('client:test-es-lint', function () {
 });
 
 gulp.task('client:es-lint', ['client:src-es-lint', 'client:test-es-lint']);
+gulp.task('client:checkin-ready', ['client:es-lint', 'client:test']);
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task('server:copy-js', function() {
@@ -124,6 +125,7 @@ gulp.task('server:test-es-lint', function () {
         .pipe(eslint.failAfterError());
 });
 gulp.task('server:es-lint', ['server:src-es-lint', 'server:test-es-lint']);
+gulp.task('server:checkin-ready', ['server:es-lint', 'server:test']);
 
 // -------------------------------common tasks -------------------------------------------
 
@@ -132,3 +134,4 @@ gulp.task('clean', ['client:clean', 'server:clean']);
 gulp.task('test', ['client:test', 'server:test']);
 gulp.task('watch', ['client:watch', 'server:watch']);
 gulp.task('es-lint', ['client:es-lint', 'server:es-lint']);
+gulp.task('checkin-ready', ['client:checkin-ready', 'server:checkin-ready']);
