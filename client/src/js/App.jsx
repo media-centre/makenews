@@ -1,4 +1,3 @@
-import { connect} from 'react-redux';
 import React, { Component } from 'react';
 
 export class App extends Component {
@@ -10,8 +9,3 @@ export class App extends Component {
       );
   }
 }
-
-function select(store) {
-  return store;
-}
-export default connect(select)(App);

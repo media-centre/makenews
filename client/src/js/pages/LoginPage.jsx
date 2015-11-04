@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect} from 'react-redux';
 import { userLogin } from '../Actions';
 
-export default class LoginPage extends Component {
+export class LoginPage extends Component {
   render() {
     const { dispatch} = this.props;
 
@@ -16,7 +16,7 @@ export default class LoginPage extends Component {
                     <b className="left">news</b>
                 </div>
                 <div id="login-form-container" className="login-form-container right m-block">
-                  <Login id='login' ref='login' onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={this.props.errorMessage} />
+                  <Login ref='login' onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={this.props.errorMessage} />
                 </div>
             </div>
             <p className="description small-text">
