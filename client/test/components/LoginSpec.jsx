@@ -1,4 +1,4 @@
-import Login from '../src/js/Login.jsx';
+import Login from '../../src/js/components/Login.jsx';
 
 import sinon from 'sinon';
 import { assert } from 'chai';
