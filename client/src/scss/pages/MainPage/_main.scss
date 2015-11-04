@@ -1,0 +1,53 @@
+@import "../../utils/variable";
+
+.main-page header {
+  background: $app-header-bg-color;
+  color: $primary-font-color;
+  height: 82px;
+  position: relative;
+  @extend .bottom-box-shadow;
+
+    .fixed-header {
+      overflow: hidden;
+      padding: 12px;
+
+      .app-logo {
+        margin-top: 3px;
+        color: $secondary-font-color;
+        @extend .max-text;
+      }
+
+      .user-info {
+        width: 80px;
+        margin: 20px 0px 0px 0px;
+        text-align: right;
+      }
+
+      .flexible {
+        overflow: hidden;
+      }
+
+      ul li {
+        list-style-type: none;
+        display: inline-block;
+        padding: 0px 10px;
+        width: 70px;
+      }
+
+      .menu-list li {
+        img {
+          width: 35px;
+          height: 35px;
+          margin: auto;
+          margin-bottom: 5px;
+        }
+        * {
+          display: block;
+        }
+      }
+    }
+}
+
+.main-page section {
+  background: $primary-font-color;
+}
