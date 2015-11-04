@@ -31,5 +31,6 @@ export default class Login extends Component {
     let  userName = this.refs.userName.value.trim();
     let  password = this.refs.password.value.trim();
     this.props.onLoginClick(userName, password);
+
   }
 }
