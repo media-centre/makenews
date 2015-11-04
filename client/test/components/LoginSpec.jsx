@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import ReactDOM from 'react-dom';
 import React from 'react/addons';
-import './helper/TestHelper.js';
+import '../helper/TestHelper.js';
 
 let TestUtils = React.addons.TestUtils;
 
