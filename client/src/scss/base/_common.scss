@@ -12,6 +12,10 @@ ul {
   padding: 0px;
 }
 
+li {
+ list-style-type: none;
+}
+
 .left {
   float: left;
 }
@@ -52,6 +56,10 @@ a {
 
 .border {
   border: 1px solid $input-border-color;
+}
+
+.border-blue {
+  border: 1px solid $app-header-bg-color;
 }
 
 .border-highlight {
@@ -140,6 +148,14 @@ button {
   left: 0px;
   right: 0px;
   top: 0px;
+}
+
+.v-center {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 

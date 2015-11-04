@@ -60,11 +60,21 @@
     }
   }
 
-  .main-page header {
-    .fixed-header .user-info {
+  .main-page {
+    header  .fixed-header .user-info {
       position: absolute;
       right: 15px;
     }
+
+    section {
+      .configure-page {
+        .cat-list li {
+          margin: 10px;
+        }
+
+      }
+    }
+
   }
 
 }
