@@ -7,6 +7,10 @@ html, body {
   font-weight: 100;
   background: $app-bg-color;
 }
+ul {
+  margin: 0px;
+  padding: 0px;
+}
 
 .left {
   float: left;
@@ -39,6 +43,11 @@ html, body {
 
 img {
   vertical-align: top;
+}
+
+a {
+  text-decoration: none;
+  color: $primary-font-color;
 }
 
 .border {
@@ -124,6 +133,13 @@ button {
 }
 .t-right {
   text-align: right;
+}
+
+.fixed-header {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
 }
 
 

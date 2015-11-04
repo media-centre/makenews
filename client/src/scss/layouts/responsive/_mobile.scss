@@ -24,6 +24,10 @@
     padding: 8px 16px;
   }
 
+  .m-none {
+    display: none;
+  }
+
   .m-block {
     float: none;
     clear: both;
@@ -53,6 +57,13 @@
 
     .description {
       text-align: justify;
+    }
+  }
+
+  .main-page header {
+    .fixed-header .user-info {
+      position: absolute;
+      right: 15px;
     }
   }
 
