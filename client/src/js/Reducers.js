@@ -1,23 +1,24 @@
-import { LOGIN_FAILED, LOGIN_SUCCESS } from './Actions';
-import { combineReducers } from 'redux';
+"use strict";
+import { LOGIN_FAILED, LOGIN_SUCCESS } from "./Actions";
+import { combineReducers } from "redux";
 
-function login(state={'errorMessage':''}, action={}) {
-  switch (action.type) {
+function login(state = { "errorMessage": "" }, action = {}) {
+    switch(action.type) {
     case LOGIN_FAILED:
-      return {
-        errorMessage: action.responseMessage
-      };
+        return {
+            "errorMessage": action.responseMessage
+        };
     case LOGIN_SUCCESS:
-      return {
-        errorMessage: 'successful'
-      };
+        return {
+            "errorMessage": "successful"
+        };
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 const contentDiscoveryApp = combineReducers({
-  login
+    login
 });
 
 export default contentDiscoveryApp;

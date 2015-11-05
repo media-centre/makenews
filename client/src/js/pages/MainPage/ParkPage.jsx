@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
-import { connect} from 'react-redux';
-
+"use strict";
+import React, { Component } from "react";
 
 export default class ParkPage extends Component {
     render() {
         return (
-            <div>Park</div>
-
+            <div>
+                {"Park"}
+            </div>
         );
     }
 }
-function select(store) {
-    return store;
-}
-export default connect(select)(ParkPage);
+
+ParkPage.displayName = "ParkPage";

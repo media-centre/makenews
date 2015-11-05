@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
+"use strict";
+import React, { Component, PropTypes } from "react";
 
 export class App extends Component {
   render() {
-     return (
+      return (
         <div>
             {this.props.children}
         </div>
       );
   }
+
 }
+
+App.displayName = "App";
+App.propTypes = {
+    "children": PropTypes.node.isRequired
+};
+

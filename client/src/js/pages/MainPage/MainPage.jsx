@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { connect} from 'react-redux';
-import Router, {Route, Link} from 'react-router';
-
+"use strict";
+import React, { Component, PropTypes } from "react";
+import Link from "react-router";
 
 export default class MainPage extends Component {
     render() {
@@ -11,19 +10,31 @@ export default class MainPage extends Component {
                     <div className="fixed-header clear-fix multi-column">
 
                         <div className="app-logo left clear-fix large-text m-none">
-                            <span className="left">make</span>
-                            <b className="left">news</b>
+                            <span className="left">
+                                {"make"}
+                            </span>
+                            <b className="left">
+                                {"news"}
+                            </b>
                         </div>
 
                         <div className="user-info right">
-                            <a>Logout</a>
+                            <a>{"Logout"}</a>
                         </div>
 
                         <div className="flexible t-center">
                             <ul className="menu-list">
-                                <li><Link to="/configure"><img src="../../../newspaper.jpg" /><span>Configure</span></Link></li>
-                                <li><Link to="/surf"><img src="../../../newspaper.jpg" /><span>Surf</span></Link></li>
-                                <li><Link to="/park"><img src="../../../newspaper.jpg" /><span>Park</span></Link></li>
+                                <li><Link to="/configure"><img src="../../../newspaper.jpg" /><span>
+                                    {"Configure"}
+                                </span></Link></li>
+
+                                <li><Link to="/surf"><img src="../../../newspaper.jpg" /><span>
+                                    {"Surf"}
+                                </span></Link></li>
+
+                                <li><Link to="/park"><img src="../../../newspaper.jpg" /><span>
+                                    {"Park"}
+                                </span></Link></li>
                             </ul>
                         </div>
 
@@ -37,9 +48,8 @@ export default class MainPage extends Component {
         );
     }
 }
-function select(store) {
-    return store;
-}
-export default connect(select)(MainPage);
 
-
+MainPage.displayName = "MainPage";
+MainPage.propTypes = {
+    "children": PropTypes.node.isRequired
+};
