@@ -1,6 +1,6 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
-import Link from "react-router";
+import {Route, Link} from "react-router";
 
 export default class MainPage extends Component {
     render() {
@@ -24,17 +24,25 @@ export default class MainPage extends Component {
 
                         <div className="flexible t-center">
                             <ul className="menu-list">
-                                <li><Link to="/configure"><img src="../../../newspaper.jpg" /><span>
-                                    {"Configure"}
-                                </span></Link></li>
+                                <li>
+                                    <Link to="/configure">
+                                        <img src="../../../newspaper.jpg" />
+                                        <span>{"Configure"}</span>
+                                    </Link>
+                                </li>
 
-                                <li><Link to="/surf"><img src="../../../newspaper.jpg" /><span>
-                                    {"Surf"}
-                                </span></Link></li>
+                                <li>
+                                    <Link to="/surf"><img src="../../../newspaper.jpg" />
+                                        <span>{"Surf"}</span>
+                                    </Link>
+                                </li>
 
-                                <li><Link to="/park"><img src="../../../newspaper.jpg" /><span>
-                                    {"Park"}
-                                </span></Link></li>
+                                <li>
+                                    <Link to="/park">
+                                        <img src="../../../newspaper.jpg" />
+                                        <span>{"Park"}</span>
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
 
