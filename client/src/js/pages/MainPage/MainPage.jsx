@@ -1,7 +1,7 @@
 "use strict";
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 
-import MainHeader from "../../components/MainHeader/MainHeader.jsx"
+import MainHeader from "../../components/MainHeader/MainHeader.jsx";
 
 export default class MainPage extends Component {
     render() {

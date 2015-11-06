@@ -24,7 +24,7 @@ export default class MainHeader extends Component {
                   <div className="flexible t-center">
                       <ul className="menu-list">
                           <li>
-                              <Link to="/configure">
+                              <Link to="/configure/categories">
                                   <img src="../../../images/newspaper.jpg" />
                                   <span>{"Configure"}</span>
                               </Link>
