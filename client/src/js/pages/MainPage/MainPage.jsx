@@ -1,5 +1,6 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
+import Link from "react-router";
 
 import MainHeader from "../../components/MainHeader/MainHeader.jsx";
 

@@ -6,8 +6,9 @@ import { assert } from "chai";
 
 describe("actions", function() {
     it("return type LOGIN_SUCCESS action", function() {
-        const loginSuccessAction = { "type": "LOGIN_SUCCESS" };
-        assert.deepEqual(loginSuccessAction, loginSuccess());
+        const userDetails = "test_user";
+        const loginSuccessAction = { "type": "LOGIN_SUCCESS", userDetails };
+        assert.deepEqual(loginSuccessAction, loginSuccess(userDetails));
     });
 
     it("return type LOGIN_FAILED action", function() {
