@@ -83,6 +83,10 @@ gulp.task("server:copy-js", function() {
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
+    gulp.src(parameters.server.serverAppPath + "/config/**/*.js")
+        .pipe(babel())
+        .pipe(gulp.dest(parameters.server.distFolder + "/config"));
+
     gulp.src("./" + parameters.server.serverJsFile)
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distServerJsFolder));

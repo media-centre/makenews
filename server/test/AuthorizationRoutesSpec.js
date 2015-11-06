@@ -1,6 +1,6 @@
 import request from 'supertest';
 import sinon from 'sinon';
-import Session from '../src/session';
+import CouchSession from '../src/CouchSession.js';
 import server from '../../server';
 
 describe('AuthorizationRoutesSpec', () => {
@@ -28,7 +28,7 @@ describe('AuthorizationRoutesSpec', () => {
       let userPromise = new Promise((resolve) => {
         resolve("username");
       });
-      sandbox.stub(Session, "currentUser").withArgs(token).returns(userPromise);
+      sandbox.stub(CouchSession, "currentUser").withArgs(token).returns(userPromise);
 
       request(server)
         .get('/welcome')
@@ -40,7 +40,7 @@ describe('AuthorizationRoutesSpec', () => {
       let invalidUserPromise = new Promise((resolve, reject) => {
         reject("oops");
       });
-      sandbox.stub(Session, "currentUser").withArgs("invalid_token").returns(invalidUserPromise);
+      sandbox.stub(CouchSession, "currentUser").withArgs("invalid_token").returns(invalidUserPromise);
 
       request(server)
         .get('/welcome')
@@ -62,7 +62,7 @@ describe('AuthorizationRoutesSpec', () => {
       let cookiePromise = new Promise((resolve) => {
         resolve(cookie);
       });
-      sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(cookiePromise);
+      sandbox.stub(CouchSession, "login").withArgs(userCredentials.username, userCredentials.password).returns(cookiePromise);
       request(server)
         .post('/login')
         .send(userCredentials)
@@ -75,7 +75,7 @@ describe('AuthorizationRoutesSpec', () => {
       let rejectedPromise = new Promise((resolve, reject) => {
         reject("err");
       });
-      sandbox.stub(Session, "login").withArgs(userCredentials.username, userCredentials.password).returns(rejectedPromise);
+      sandbox.stub(CouchSession, "login").withArgs(userCredentials.username, userCredentials.password).returns(rejectedPromise);
       request(server)
         .post('/login')
         .send(userCredentials)

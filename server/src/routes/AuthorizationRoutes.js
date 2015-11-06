@@ -1,4 +1,4 @@
-import Session from '../session';
+import Session from '../CouchSession.js';
 
 export default function (app) {
   app.post('/login', (req, res) => {
