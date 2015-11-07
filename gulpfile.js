@@ -76,7 +76,19 @@ gulp.task("client:test-eslint", function() {
 
 gulp.task("client:eslint", ["client:src-eslint", "client:test-eslint"]);
 gulp.task("client:checkin-ready", ["client:eslint", "client:test"]);
+// -------------------------------common tasks -------------------------------------------
+gulp.task("common:copy-js", function() {
+    gulp.src(parameters.common.srcPath + "/**/*.js")
+        .pipe(babel())
+        .pipe(gulp.dest(parameters.common.distFolder + "/src"));
+});
 
+gulp.task("common:test", function() {
+    return gulp.src(parameters.common.testPath + "/**/**/*.js", { "read": false })
+        .pipe(mocha());
+});
+
+gulp.task("common:build", ["common:copy-js"]);
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
     gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
@@ -103,7 +115,7 @@ gulp.task("server:clean", function() {
 
 gulp.task("server:test", function() {
     return gulp.src(parameters.server.testPath + "**/*.js", { "read": false })
-    .pipe(mocha());
+    .pipe(mocha({timeout:3000}));
 });
 
 gulp.task("server:build", ["server:copy-js"]);
@@ -132,9 +144,9 @@ gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 
 // -------------------------------common tasks -------------------------------------------
 
-gulp.task("build", ["client:build", "server:build"]);
+gulp.task("build", ["common:build", "client:build", "server:build"]);
 gulp.task("clean", ["client:clean", "server:clean"]);
-gulp.task("test", ["client:test", "server:test"]);
+gulp.task("test", ["common:test", "client:test", "server:test"]);
 gulp.task("watch", ["client:watch", "server:watch"]);
 gulp.task("eslint", ["client:eslint", "server:eslint"]);
 gulp.task("checkin-ready", ["client:checkin-ready", "server:checkin-ready"]);

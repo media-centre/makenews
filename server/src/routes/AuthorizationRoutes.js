@@ -1,11 +1,11 @@
-import Session from '../CouchSession.js';
+import CouchSession from '../CouchSession.js';
 
 export default function (app) {
   app.post('/login', (req, res) => {
     if(req.body.username === "" || req.body.password === "") {
       res.status(401).json({"status":"error", "message": "cannot be blank"});
     }
-    Session.login(req.body.username, req.body.password)
+    CouchSession.login(req.body.username, req.body.password)
       .then((token) => {
         res.status(200).append('Set-Cookie', token).json({"status":"success", "message": ""});
       })
@@ -19,7 +19,7 @@ export default function (app) {
     if(allowedUrls.indexOf(req.originalUrl) !== -1) {
       next();
     } else if (req.cookies.AuthSession) {
-      Session.currentUser(req.cookies.AuthSession)
+      CouchSession.currentUser(req.cookies.AuthSession)
         .then(() => {
           next();
         }).catch(() => {

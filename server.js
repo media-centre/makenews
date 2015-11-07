@@ -17,10 +17,6 @@ const port = process.env.PORT || 5000;
 
 app.use(express.static(__dirname + '/client'));
 
-app.get('/welcome', (req, res) => {
-  res.send("welcome");
-});
-
 routeErrorHandler(app);
 let server = app.listen(port);
 export default server;

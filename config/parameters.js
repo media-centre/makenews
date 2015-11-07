@@ -1,6 +1,4 @@
-var clientConfig, serverConfig;
-
-clientConfig = {
+const clientConfig = {
   clientAppPath: './client',
   appMainFile: 'app.js',
   cssMainFile: 'app.css',
@@ -12,7 +10,7 @@ clientConfig = {
   distFolder: './dist/client'
 };
 
-serverConfig = {
+const serverConfig = {
   serverAppPath: './server',
   srcPath: './server/src',
   testPath: './server/test',
@@ -21,4 +19,10 @@ serverConfig = {
   serverJsFile: 'server.js'
 };
 
-module.exports = {client: clientConfig, server: serverConfig};
+const commonConfig = {
+  appPath: './common',
+  srcPath: './common/src',
+  testPath: './common/test',
+  distFolder: './dist/common'
+}
+module.exports = {"client": clientConfig, "server": serverConfig, "common": commonConfig};

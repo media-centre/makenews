@@ -1,5 +1,5 @@
 "use strict";
-import StringUtil from "./StringUtil.js";
+import StringUtil from "../../../../common/src/util/StringUtil.js";
 
 export default class AjaxClient {
   constructor(url) {

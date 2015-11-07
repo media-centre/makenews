@@ -1,5 +1,7 @@
 import DbParameters from "../config/DbParameters.js";
-import HttpErrors from "./HttpErrors.js";
+import NodeErrorHandler from "./NodeErrorHandler.js";
+import CouchResponseHandler from "./CouchResponseHandler.js";
+import StringUtil from "../../common/src/util/StringUtil.js"
 import request from "request";
 import querystring from "querystring";
 
@@ -12,32 +14,39 @@ export default class CouchSession {
           body: querystring.stringify({ name: username, password: password })
       },
         (error, response) => {
-          if(!error && response.statusCode === HttpErrors.OK) {
+          if(CouchSession.requestSuccessful(error, response)) {
               resolve(response.headers["set-cookie"][0]);
           }
-          else{
-              reject(error);
-          }
+          reject(error);
         });
     });
   }
 
-  static currentUser(token) {
+  static authenitcate(token) {
       return new Promise((resolve, reject) => {
         request.get({
-          url: dbUrl + "/_session",
+          url: DbParameters.dbUrl + "/_session",
           headers: {
             "Cookie": "AuthSession=" + token
         }
       }, (error, response, body) => {
-            let userJson = JSON.parse(body);
-            if(!error && userJson.userCtx && userJson.userCtx.name !== null) {
-                resolve(userJson.userCtx.name);
+            if(CouchSession.requestSuccessful(error, response)) {
+                let userJson = JSON.parse(body);
+
+                if(StringUtil.validNonEmptyString(userJson.userCtx.name)) {
+                    resolve(userJson.userCtx.name);
+                }
+                reject("");
             }
-            else{
-                reject("invalid user");
-            }
+            reject(error);
       });
     });
+  }
+
+  static requestSuccessful(error, response) {
+      if(NodeErrorHandler.noError(error) && CouchResponseHandler.requestCompleted(response.statusCode)) {
+          return true;
+      }
+      return false;
   }
 }

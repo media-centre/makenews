@@ -1,4 +1,4 @@
-import StringUtil from '../../src/js/utils/StringUtil.js';
+import StringUtil from '../../src/util/StringUtil.js';
 import { assert } from 'chai';
 
 describe('valid non empty string', function(){
