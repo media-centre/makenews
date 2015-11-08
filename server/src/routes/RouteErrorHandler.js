@@ -1,9 +1,12 @@
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+
 export default function (app) {
   app.use((err, req, res, next) => {
-    if (err.status !== 401) {
+    if (err.status !== HttpResponseHandler.codes.UNAUTHORIZED) {
       next();
     }
-    res.status(401);
+    res.status(HttpResponseHandler.codes.UNAUTHORIZED);
     res.send("Unauthorised");
   });
+
 }

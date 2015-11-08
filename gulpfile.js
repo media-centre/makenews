@@ -114,7 +114,7 @@ gulp.task("server:clean", function() {
 });
 
 gulp.task("server:test", function() {
-    return gulp.src(parameters.server.testPath + "**/*.js", { "read": false })
+    return gulp.src(parameters.server.testPath + "**/**/*.js", { "read": false })
     .pipe(mocha({timeout:3000}));
 });
 
