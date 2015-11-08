@@ -14,7 +14,6 @@ export default class StringUtil {
       return false;
   }
 
-  /*test cases pending*/
   static trim(value) {
       if(!value) {
           return "";

@@ -5,6 +5,6 @@ export default class BoolUtil {
       return !object;
     }
     static isNotEmpty(object) {
-        return !isEmpty(object);
+        return !BoolUtil.isEmpty(object);
     }
 }

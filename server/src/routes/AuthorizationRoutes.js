@@ -57,9 +57,7 @@ export class AuthorizationRoutes {
              proceedToUnAuthorizedError();
           });
     }else{
-        console.log("here 1....");
         proceedToUnAuthorizedError();
-        console.log("here 2....");
     }
     function proceedToUnAuthorizedError() {
       let error = new Error("unthorized");
