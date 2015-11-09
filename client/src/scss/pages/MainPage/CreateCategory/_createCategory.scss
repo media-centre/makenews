@@ -1,3 +1,49 @@
 @import "../../../utils/variable";
 
+.url-panel {
+  margin: 10px 0px;
 
+  ul li.feed-url {
+    position: relative;
+    font-size: $small-font-size;
+    color: $app-header-bg-color;
+    border: 1px solid transparent;
+    margin: 2px;
+
+    &:active {
+      border: 1px solid $app-header-bg-color;
+    }
+
+    input {
+      width: 70%;
+      border: none;
+      color: $app-header-bg-color;
+    }
+
+    .close {
+      position: absolute;
+      right: 8px;
+      top: 4px;
+      display: none;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+  }
+
+  ul li.feed-url:hover {
+    border: 1px solid $app-header-bg-color;
+
+    .close {
+      display: block;
+    }
+  }
+
+  .add-url-input {
+    width: 100%;
+    margin: 3px 0px;
+  }
+}

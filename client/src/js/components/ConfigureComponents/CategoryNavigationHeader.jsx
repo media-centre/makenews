@@ -7,32 +7,11 @@ class CategoryNavigationHeader extends Component {
 
     render() {
         return (
-            <div className="configure-page max-width">
-                <h4 className="t-center">
-                    {"All categories"}
-                </h4>
-                <div className="categories">
-                    <ul className="cat-list m-t-center">
-
-                        <li className="add-new">
-                            <Link to="/configure/category">
-                                <div className="v-center t-center">
-                                    <span>{"Add new category"}</span>
-                                </div>
-                            </Link>
-                        </li>
-
-
-                        <li className="category">
-                            <Link to="/configure/category">
-                                <div className="v-center t-center">
-                                    <span>{"Default Category"}</span>
-                                </div>
-                            </Link>
-                        </li>
-
-                    </ul>
-                </div>
+            <div className="navigation-header clear-fix">
+                <Link to="/configure/categories" className="navigation nav-control h-center left">
+                    <i className="fa fa-arrow-left"></i><span>{"All Categories"}</span>
+                </Link>
+                <h4 className="navigation-title t-center">{"Default Category"}</h4>
             </div>
         );
     }

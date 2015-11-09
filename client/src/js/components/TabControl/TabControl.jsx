@@ -1,66 +1,52 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 
-export default class TabPanel extends Component {
-    render() {
-        var active = this.props.active || false;
-        if (active) {
-            return this.props.children;
-        } else {
-            return null;
-        }
-    }
-}
-
 export default class TabControl extends Component {
 
-    getInitialState() {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             activeIndex: this.props.activeIndex || 0
-        }
+        };
     }
 
     render() {
 
         var self = this;
-        var cx = React.addons.classSet;
-        var tabHeader = this.props.children.map(function (tab, index) {
-            var className = cx({'active': self.state.activeIndex === index});
-            return (
-                <li onClick={self._handleClick.bind(null, index)}><a className={className} href="#">{tab.props.display}</a></li>
-            );
-        });
-
-        var tabContent = this.props.children.map(function (content, index) {
-            if(self.state.activeIndex === index) {
-                return (
-                    <div className="TabPane">{content.props.children}</div>
-                );
-            }
-        });
+        function classes(index) {
+            return this.state.activeIndex === index ? "tab active selected h-center" : "tab h-center";
+        }
 
         return (
             <div className="tab-control">
-                <ul className="tab-header">{tabHeader}</ul>
-                <section className="tab-content">{tabContent}</section>
+                <ul className="tab-header h-center t-center">
+                    {this.props.children.map((tab, index) =>
+                            <li key={index} className={classes.call(this, index)} onClick={this._handleClick.bind(this, index)}>
+                                <i className={tab.props.icon}></i>
+                                <span>{tab.props.display}</span>
+                            </li>
+                    )}
+                </ul>
+
+                <div className="tab-content">
+                    {this.props.children.map(function(content, index) {
+                        if(self.state.activeIndex === index) {
+                            return <div key={index} className="tab-content-inner">{content.props.children}</div>;
+                        }
+                    })}
+                </div>
+
             </div>
         );
     }
 
     _handleClick(index) {
-        this.setState({
-            activeIndex: index
-        });
+        this.setState({ activeIndex: index });
     }
 }
 
-
-TabPanel.displayName = "Tab Panel";
-TabPanel.propTypes = {
-
-};
-
 TabControl.displayName = "Tab Control";
 TabControl.propTypes = {
-
+    activeIndex: Number
 };
+
