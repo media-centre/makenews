@@ -1,57 +1,56 @@
-import chai from './helpers/chai';
-import NodeErrorHandler from '../src/NodeErrorHandler.js';
-import sinon  from "sinon";
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-describe("errored", function(){
-    beforeEach("errored", () => {
-        this.logSpy = sinon.stub(NodeErrorHandler, "log", function() {return true});
-    });
-    afterEach("errored", () => {
-        this.logSpy.restore();
-    });
-    it('should return true if error object is not empty', () => {
+"use strict";
+import { expect } from "chai";
+import NodeErrorHandler from "../src/NodeErrorHandler.js";
+import sinon from "sinon";
 
-        let errorObject = {
-            code: 'ECONNREFUSED',
-            errno: 'ECONNREFUSED',
-            syscall: 'connect',
-            address: '127.0.0.1',
-            port: 5984 };
-        assert.ok(NodeErrorHandler.errored(errorObject));
-        assert.ok(this.logSpy.called);
-    });
+describe("NodeErrorHandler", () => {
+    let logSpy = null, errorObject = null;
 
-    it('should return false if error object is empty', () => {
-        let errorObject = null;
-        assert.notOk(NodeErrorHandler.errored(errorObject));
-        assert.notOk(this.logSpy.called);
+    beforeEach("NodeErrorHandler", () => {
+        logSpy = sinon.stub(NodeErrorHandler, "log", () => {
+            return true;
+        });
+        errorObject = {
+            "code": "ECONNREFUSED",
+            "errno": "ECONNREFUSED",
+            "syscall": "connect",
+            "address": "127.0.0.1",
+            "port": 5984
+        };
+
     });
 
+    afterEach("NodeErrorHandler", () => {
+        logSpy.restore();
+    });
+
+    describe("errored", () => {
+        it("should return true if error object is not empty", () => {
+            expect(NodeErrorHandler.errored(errorObject)).to.be.ok;
+            expect(logSpy.called).to.be.ok;
+        });
+
+        it("should return false if error object is empty", () => {
+            let error = null;
+            expect(NodeErrorHandler.errored(error)).to.be.not.ok;
+            expect(logSpy.called).to.be.not.ok;
+        });
+
+    });
+
+    describe("noError", () => {
+        it("should return false if error object is not empty", () => {
+            expect(NodeErrorHandler.noError(errorObject)).to.be.not.ok;
+            expect(logSpy.called).to.be.ok;
+        });
+
+        it("should return true if error object is empty", () => {
+            let error=null;
+            expect(NodeErrorHandler.noError(error)).to.be.ok;
+            expect(logSpy.called).to.be.not.ok;
+        });
+    });
 });
 
-describe("no error", function(){
-    beforeEach("errored", () => {
-        this.logSpy = sinon.stub(NodeErrorHandler, "log", function() {return true});
-    });
-    afterEach("errored", () => {
-        this.logSpy.restore();
-    });
-
-    it('should return false if error object is not empty', () => {
-        let errorObject = {
-            code: 'ECONNREFUSED',
-            errno: 'ECONNREFUSED',
-            syscall: 'connect',
-            address: '127.0.0.1',
-            port: 5984 };
-        assert.notOk(NodeErrorHandler.noError(errorObject));
-        assert.ok(this.logSpy.called);
-    });
-
-    it('should return true if error object is empty', () => {
-        let errorObject = null;
-        assert.ok(NodeErrorHandler.noError(errorObject));
-        assert.notOk(this.logSpy.called);
-    });
-
-});

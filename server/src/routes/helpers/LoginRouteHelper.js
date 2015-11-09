@@ -13,7 +13,7 @@ export default class LoginRouteHelper {
 
         if(LoginRouteHelper.isValidUserInput(request.body.username, request.body.password)) {
             LoginRouteHelper.handleInvalidInput(response);
-        }else{
+        } else {
             CouchSession.login(request.body.username, request.body.password)
                 .then((token) => {
                     LoginRouteHelper.handleLoginSuccess(response, token);
@@ -26,18 +26,18 @@ export default class LoginRouteHelper {
 
     static handleLoginSuccess(response, token) {
         response.status(HttpResponseHandler.codes.OK)
-            .append('Set-Cookie', token)
-            .json({"message": "login successful"});
+            .append("Set-Cookie", token)
+            .json({ "message": "login successful" });
     }
 
     static handleLoginFailure(response) {
         response.status(HttpResponseHandler.codes.UNAUTHORIZED)
-            .json({"message": "unauthorized"});
+            .json({ "message": "unauthorized" });
     }
 
     static handleInvalidInput(response) {
         response.status(HttpResponseHandler.codes.UNAUTHORIZED)
-            .json({"message": "invalid user or password"});
+            .json({ "message": "invalid user or password" });
     }
 
     static isValidUserInput(userName, password) {

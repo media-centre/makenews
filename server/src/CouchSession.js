@@ -1,35 +1,35 @@
 import DbParameters from "../config/DbParameters.js";
 import NodeErrorHandler from "./NodeErrorHandler.js";
 import CouchResponseHandler from "./CouchResponseHandler.js";
-import StringUtil from "../../common/src/util/StringUtil.js"
+import StringUtil from "../../common/src/util/StringUtil.js";
 import request from "request";
 import querystring from "querystring";
 
 export default class CouchSession {
   static login(username, password) {
-    return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         request.post({
-          uri: DbParameters.dbUrl + "/_session",
-          headers: { "content-type": "application/x-www-form-urlencoded" },
-          body: querystring.stringify({ name: username, password: password })
-      },
+            uri: DbParameters.dbUrl + "/_session",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            body: querystring.stringify({ name: username, password: password })
+        },
         (error, response) => {
-          if(CouchSession.requestSuccessful(error, response)) {
+            if(CouchSession.requestSuccessful(error, response)) {
               resolve(response.headers["set-cookie"][0]);
           }
-          reject(error);
+            reject(error);
         });
     });
   }
 
   static authenitcate(token) {
       return new Promise((resolve, reject) => {
-        request.get({
-          url: DbParameters.dbUrl + "/_session",
-          headers: {
-            "Cookie": "AuthSession=" + token
-        }
-      }, (error, response, body) => {
+          request.get({
+            url: DbParameters.dbUrl + "/_session",
+            headers: {
+              "Cookie": "AuthSession=" + token
+          }
+        }, (error, response, body) => {
             if(CouchSession.requestSuccessful(error, response)) {
                 let userJson = JSON.parse(body);
 
@@ -39,8 +39,8 @@ export default class CouchSession {
                 reject("");
             }
             reject(error);
+        });
       });
-    });
   }
 
   static requestSuccessful(error, response) {

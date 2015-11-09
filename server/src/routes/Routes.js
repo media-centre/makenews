@@ -1,5 +1,5 @@
 import authorizationRoutes from "./AuthorizationRoutes.js";
 
-export default function (app) {
-  authorizationRoutes(app);
+export default function(app) {
+    authorizationRoutes(app);
 }

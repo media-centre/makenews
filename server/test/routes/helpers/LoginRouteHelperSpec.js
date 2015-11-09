@@ -1,8 +1,12 @@
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+
+"use strict";
+
 import LoginRouteHelper from "../../../src/routes/helpers/LoginRouteHelper.js";
 import CouchSession from "../../../src/CouchSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import sinon from 'sinon';
-import chai from '../../helpers/chai';
+import sinon from "sinon";
+import { expect } from "chai";
 
 
 describe("LoginRouteHelper", () => {
@@ -42,66 +46,65 @@ describe("LoginRouteHelper", () => {
     describe("handleInvalidInput", () => {
         it("should set the response status to unauthorized", () => {
             let response = {
-                "status": function(data){
+                "status": function(data) {
                     expect(data).to.equal(HttpResponseHandler.codes.UNAUTHORIZED);
                     return response;
                 },
-                "json": function (data) {
-                    expect(data).to.deep.equal({"message": "invalid user or password"});
+                "json": function(data) {
+                    expect(data).to.deep.equal({ "message": "invalid user or password" });
                 }
-            }
+            };
             LoginRouteHelper.handleInvalidInput(response);
         });
     });
 
-    describe("handleLoginSuccess", function(){
+    describe("handleLoginSuccess", function() {
         it("should set the token as cookie", () => {
-            const token="test_token";
+            const token = "test_token";
             let response = {
-                "status": function(data){
+                "status": function(data) {
                     expect(data).to.equal(HttpResponseHandler.codes.OK);
                     return response;
                 },
-                "append": function(cookieName, receivedToken){
+                "append": function(cookieName, receivedToken) {
                     expect("Set-Cookie").to.equal(cookieName);
                     expect(token).to.equal(receivedToken);
                     return response;
                 },
-                "json": function (data) {
-                    expect(data).to.deep.equal({"message": "login successful"});
+                "json": function(data) {
+                    expect(data).to.deep.equal({ "message": "login successful" });
                 }
-            }
+            };
             LoginRouteHelper.handleLoginSuccess(response, token);
         });
 
     });
 
-    describe("handleLoginFailure", function(){
+    describe("handleLoginFailure", function() {
         it("should set the response status as unauthorized", () => {
-            const token="test_token";
+            const token = "test_token";
             let response = {
-                "status": function(data){
+                "status": function(data) {
                     expect(data).to.equal(HttpResponseHandler.codes.UNAUTHORIZED);
                     return response;
                 },
-                "json": function (data) {
-                    expect(data).to.deep.equal({"message": "unauthorized"});
+                "json": function(data) {
+                    expect(data).to.deep.equal({ "message": "unauthorized" });
                 }
-            }
+            };
             LoginRouteHelper.handleLoginFailure(response, token);
         });
 
     });
 
     describe("loginCallback", () => {
-        let request, response, inValidUserStub, couchSessionStub, token;
+        let request = null, response = null, inValidUserStub = null, couchSessionStub = null;
 
         beforeEach("loginCallback", () => {
-            request = {"body": {"username": "test_user", "password": "test_password"}};
+            request = { "body": { "username": "test_user", "password": "test_password" } };
             response = {};
             inValidUserStub = sinon.stub(LoginRouteHelper, "isValidUserInput");
             couchSessionStub = sinon.stub(CouchSession, "login");
-            token = "test_token";
         });
 
         afterEach("loginCallback", () => {
@@ -109,7 +112,7 @@ describe("LoginRouteHelper", () => {
             couchSessionStub.restore();
         });
 
-        it('should throw error if request is empty', () => {
+        it("should throw error if request is empty", () => {
             try {
                 LoginRouteHelper.loginCallback(null, response);
             } catch (error) {
@@ -117,7 +120,7 @@ describe("LoginRouteHelper", () => {
             }
         });
 
-        it('should throw error if response is empty', () => {
+        it("should throw error if response is empty", () => {
             try {
                 LoginRouteHelper.loginCallback(request, null);
             } catch (error) {
@@ -125,7 +128,7 @@ describe("LoginRouteHelper", () => {
             }
         });
 
-        it('should handle the error if invalid user name or password received.', () => {
+        it("should handle the error if invalid user name or password received.", () => {
             let handleInputMock = sinon.mock(LoginRouteHelper).expects("handleInvalidInput");
 
             inValidUserStub.withArgs(request.body.username, request.body.password).returns(true);
@@ -135,17 +138,17 @@ describe("LoginRouteHelper", () => {
             LoginRouteHelper.handleInvalidInput.restore();
         });
 
-        it('should handle the success if login is success with the valid user name and password.', () => {
+        it("should handle the success if login is success with the valid user name and password.", () => {
 
-            //let handleLoginSuccessMock = sinon.mock(LoginRouteHelper).expects("handleLoginSuccess");
-            //inValidUserStub.withArgs(request.body.username, request.body.password).returns(false);
-            //handleLoginSuccessMock.withArgs(response, token);
-            //couchSessionStub.withArgs(request.body.username, request.body.password).returns(Promise.resolve(token));
-            //LoginRouteHelper.loginCallback(request, response);
-            //handleLoginSuccessMock.verify();
+            // let handleLoginSuccessMock = sinon.mock(LoginRouteHelper).expects("handleLoginSuccess");
+            // inValidUserStub.withArgs(request.body.username, request.body.password).returns(false);
+            // handleLoginSuccessMock.withArgs(response, token);
+            // couchSessionStub.withArgs(request.body.username, request.body.password).returns(Promise.resolve(token));
+            // LoginRouteHelper.loginCallback(request, response);
+            // handleLoginSuccessMock.verify();
         });
 
-        it('should handle the failure if login is failed.', () => {
+        it("should handle the failure if login is failed.", () => {
         });
 
     });

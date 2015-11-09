@@ -7,14 +7,14 @@ export default class AllUrlHelper {
     static allUrlsCallback(request, next) {
         if(AllUrlHelper.whiteList(request.originalUrl)) {
             next();
-        }else if (request.cookies.AuthSession) {
+        } else if(request.cookies.AuthSession) {
             CouchSession.authenitcate(request.cookies.AuthSession)
                 .then((userName) => {
                     next();
                 }).catch((error) => {
                     proceedToUnAuthorizedError();
                 });
-        }else{
+        } else {
             proceedToUnAuthorizedError();
         }
         function proceedToUnAuthorizedError() {
@@ -29,7 +29,7 @@ export default class AllUrlHelper {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = ['/', '/login', '/app.js', '/app.css', '/images/newspaper.jpg'];
+        let whitelistUrls = ["/", "/login", "/app.js", "/app.css", "/images/newspaper.jpg"];
         const negativeIndex = -1;
         if(whitelistUrls.indexOf(url) !== negativeIndex) {
             return true;

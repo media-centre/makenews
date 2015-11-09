@@ -1,5 +1,4 @@
 "use strict";
-import BoolUtil from "../../common/src/util/BoolUtil.js";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 
 export default class CoucheResponseHandler {
