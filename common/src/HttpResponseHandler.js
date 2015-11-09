@@ -7,9 +7,9 @@ export default class HttpResponseHandler {
     }
 
     information() {
-        const infoCodeStart=100;
+        const infoCodeStart = 100;
         const infoCodeEnd = 199;
-        if( this.statusCode >= infoCodeStart && this.statusCode <= infoCodeEnd ) {
+        if(this.statusCode >= infoCodeStart && this.statusCode <= infoCodeEnd) {
             return true;
         }
         return false;
@@ -17,7 +17,7 @@ export default class HttpResponseHandler {
     success() {
         const successStart = 200;
         const successEnd = 299;
-        if( this.statusCode >= successStart && this.statusCode <= successEnd ) {
+        if(this.statusCode >= successStart && this.statusCode <= successEnd) {
             return true;
         }
         return false;
@@ -26,7 +26,7 @@ export default class HttpResponseHandler {
     redirection() {
         const reDirectionStart = 300;
         const reDirectionEnd = 399;
-        if( this.statusCode >= reDirectionStart && this.statusCode <= reDirectionEnd ) {
+        if(this.statusCode >= reDirectionStart && this.statusCode <= reDirectionEnd) {
             return true;
         }
         return false;
@@ -35,7 +35,7 @@ export default class HttpResponseHandler {
     clientError() {
         const clientErrorStart = 400;
         const clientErrorEnd = 499;
-        if( this.statusCode >= clientErrorStart && this.statusCode <= clientErrorEnd ) {
+        if(this.statusCode >= clientErrorStart && this.statusCode <= clientErrorEnd) {
             return true;
         }
         return false;
@@ -45,7 +45,7 @@ export default class HttpResponseHandler {
         const serverErrorStart = 500;
         const serverErrorEnd = 599;
 
-        if( this.statusCode >= serverErrorStart && this.statusCode <= serverErrorEnd ) {
+        if(this.statusCode >= serverErrorStart && this.statusCode <= serverErrorEnd) {
             return true;
         }
         return false;

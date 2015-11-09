@@ -47,7 +47,7 @@ describe("NodeErrorHandler", () => {
         });
 
         it("should return true if error object is empty", () => {
-            let error=null;
+            let error = null;
             expect(NodeErrorHandler.noError(error)).to.be.ok;
             expect(logSpy.called).to.be.not.ok;
         });

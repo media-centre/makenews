@@ -6,7 +6,7 @@ import BoolUtil from "../../../../common/src/util/BoolUtil.js";
 export default class AllUrlHelper {
     static allUrlsCallback(request, next) {
         if(AllUrlHelper.whiteList(request.originalUrl)) {
-            next();
+            return next();
         } else if(request.cookies.AuthSession) {
             CouchSession.authenitcate(request.cookies.AuthSession)
                 .then((userName) => {

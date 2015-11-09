@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+
 "use strict";
 import "../helper/TestHelper.js";
 import { LoginPage } from "../../src/js/pages/LoginPage.jsx";

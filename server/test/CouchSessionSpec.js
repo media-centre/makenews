@@ -29,10 +29,10 @@ describe("CouchSessionSpec", () => {
         it("should fail if username/password are invalid", (done) => {
             let username = "test_user";
             let password = "test_password";
-            let scope = nock("http://localhost:5984")
+            nock("http://localhost:5984")
                 .post("/_session", {
-                    name: username,
-                    password: password
+                    "name": username,
+                    "password": password
                 })
                 .replyWithError({
                     "code": "ECONNREFUSED",
@@ -55,9 +55,7 @@ describe("CouchSessionSpec", () => {
         it("should send the valid user name if it is successful", (done) => {
             let token = "12345678";
             nock("http://localhost:5984", {
-                    "reqheaders": {
-                    "Cookie": "AuthSession=" + token
-                }
+                "reqheaders": { "Cookie": "AuthSession=" + token }
             })
             .get("/_session")
             .reply(HttpResponseHandler.codes.OK, {

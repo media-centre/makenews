@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+
 "use strict";
 import contentDiscoveryApp from "../src/js/Reducers.js";
 import { assert } from "chai";

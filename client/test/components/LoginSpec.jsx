@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+
 "use strict";
 import Login from "../../src/js/components/Login.jsx";
 

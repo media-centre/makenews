@@ -1,6 +1,6 @@
 "use strict";
-import React, { Component, PropTypes } from "react";
-import {Route, Link} from "react-router";
+import React, { Component } from "react";
+import { Route, Link } from "react-router";
 
 export default class MainHeader extends Component {
   render() {

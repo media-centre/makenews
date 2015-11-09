@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+
 "use strict";
 import { loginFailed, loginSuccess } from "../src/js/Actions.js";
 import { assert } from "chai";

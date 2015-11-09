@@ -88,7 +88,23 @@ gulp.task("common:test", function() {
         .pipe(mocha());
 });
 
+gulp.task("common:src-eslint", function() {
+    return gulp.src([parameters.common.srcPath + "/**/*.js"])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task("common:test-eslint", function() {
+    return gulp.src([parameters.common.testPath + "**/*.js"])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+
 gulp.task("common:build", ["common:copy-js"]);
+gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
     gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
@@ -115,7 +131,7 @@ gulp.task("server:clean", function() {
 
 gulp.task("server:test", function() {
     return gulp.src(parameters.server.testPath + "**/**/*.js", { "read": false })
-    .pipe(mocha({timeout:3000}));
+    .pipe(mocha({ "timeout": 3000 }));
 });
 
 gulp.task("server:build", ["server:copy-js"]);
@@ -148,5 +164,5 @@ gulp.task("build", ["common:build", "client:build", "server:build"]);
 gulp.task("clean", ["client:clean", "server:clean"]);
 gulp.task("test", ["common:test", "client:test", "server:test"]);
 gulp.task("watch", ["client:watch", "server:watch"]);
-gulp.task("eslint", ["client:eslint", "server:eslint"]);
+gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint"]);
 gulp.task("checkin-ready", ["client:checkin-ready", "server:checkin-ready"]);
