@@ -13,25 +13,32 @@
     margin: auto;
 
     li {
-      width: 150px;
-      height: 150px;
-      padding: 8px;
       margin: 0px 20px 20px 0px;
       background: $app-header-bg-color;
       color: $primary-font-color;
       display: inline-block;
       vertical-align: top;
       cursor: pointer;
+
+      a {
+        display: block;
+        padding: 8px;
+        width: 150px;
+        height: 150px;
+      }
     }
 
-    li.category:hover {
+    li.category:hover span {
       color: $secondary-font-color;
     }
 
     li.add-new {
       @extend .border-blue;
-      color: $app-header-bg-color;
       background: $primary-font-color;
+
+      a {
+        color: $app-header-bg-color;
+      }
     }
 
   }

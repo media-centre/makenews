@@ -1,6 +1,10 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
-import {Route, Link} from "react-router";
+import {Route, Link, IndexLink} from "react-router";
+import { render } from "react-dom";
+
+const ACTIVE_CLASS = "selected";
+
 
 export default class MainHeader extends Component {
   render() {
@@ -24,20 +28,21 @@ export default class MainHeader extends Component {
                   <div className="flexible t-center">
                       <ul className="menu-list">
                           <li>
-                              <Link to="/configure/categories">
+                              <Link to="/configure/categories" activeClassName={ACTIVE_CLASS}>
                                   <img src="../../../images/newspaper.jpg" />
                                   <span>{"Configure"}</span>
                               </Link>
                           </li>
 
                           <li>
-                              <Link to="/surf"><img src="../../../images/newspaper.jpg" />
+                              <Link to="/surf" activeClassName={ACTIVE_CLASS}>
+                                  <img src="../../../images/newspaper.jpg" />
                                   <span>{"Surf"}</span>
                               </Link>
                           </li>
 
                           <li>
-                              <Link to="/park">
+                              <Link to="/park" activeClassName={ACTIVE_CLASS}>
                                   <img src="../../../images/newspaper.jpg" />
                                   <span>{"Park"}</span>
                               </Link>

@@ -5,7 +5,7 @@ export class App extends Component {
   render() {
       return (
         <div>
-            {this.props.children}
+             {this.props.children}
         </div>
       );
   }
