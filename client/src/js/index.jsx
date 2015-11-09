@@ -2,6 +2,7 @@
 import { Provider } from "react-redux";
 
 import App from "./App.jsx";
+import history from "./history.js";
 import LoginPage from "./pages/LoginPage.jsx";
 import MainPage from "./pages/MainPage/MainPage.jsx";
 
@@ -46,7 +47,7 @@ function renderRoutes() {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>{renderRoutes()}</Router>
+    <Router history={history}>{renderRoutes()}</Router>
   </Provider>,
   document.getElementById("main")
 );
