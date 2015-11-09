@@ -15,8 +15,9 @@ export default function (app) {
   });
 
   app.use((req, res, next) => {
-    let allowedUrls = ['/', '/login', '/app.js', '/app.css', '/images/newspaper.jpg'];
-    if(allowedUrls.indexOf(req.originalUrl) !== -1) {
+    //let allowedUrls = ['/', '/login', '/app.js', '/app.css', '/images/newspaper.jpg', '/font/.*'];
+    let allowedUrls = [/^\/$/g, /^\/login\$/g, /^\/app.js/g, /^\/app.css/g, /^\/images\/.*/g, /^\/fonts\/.*/g];
+    if(allowedUrls.filter(function(item) { return req.originalUrl.match(item)})) {
       next();
     } else if (req.cookies.AuthSession) {
       Session.currentUser(req.cookies.AuthSession)

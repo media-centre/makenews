@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from "react";
 import {Route, Link} from "react-router";
 
 export default
-class AllCategories extends Component {
+class CategoryNavigationHeader extends Component {
 
     render() {
         return (
@@ -40,6 +40,6 @@ class AllCategories extends Component {
 }
 
 
-AllCategories.displayName = "All categories";
+CategoryNavigationHeader.displayName = "Category Navigation Header";
 
 

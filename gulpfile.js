@@ -14,15 +14,10 @@ var eslint = require("gulp-eslint");
 require("babel/register");
 
 gulp.task("client:scss", function() {
-    return gulp.src(parameters.client.scssSrcPath + "/**/*.scss")
+    return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
           .pipe(sass())
           .pipe(concat(parameters.client.cssMainFile))
           .pipe(gulp.dest(parameters.client.distFolder));
-});
-
-gulp.task("client:images", function() {
-    return gulp.src(parameters.client.imgSrcPath + "/**/*.*")
-          .pipe(gulp.dest(parameters.client.distFolder + "/images"));
 });
 
 gulp.task("client:build-sources", function() {
@@ -32,9 +27,16 @@ gulp.task("client:build-sources", function() {
         .pipe(fs.createWriteStream(parameters.client.distFolder + "/" + parameters.client.appMainFile));
 });
 
-gulp.task("client:copy-index-html", function() {
-    return gulp.src(parameters.client.clientAppPath + "/index.html")
+gulp.task("client:copy-resources", function() {
+    gulp.src(parameters.client.clientAppPath + "/index.html")
     .pipe(gulp.dest(parameters.client.distFolder));
+
+    gulp.src(parameters.client.imgSrcPath + "/**/*.*")
+        .pipe(gulp.dest(parameters.client.distFolder + "/images"));
+
+    return gulp.src(parameters.client.fontsPath + "/**/*.*")
+        .pipe(gulp.dest(parameters.client.distFolder + "/fonts"));
+
 });
 
 gulp.task("client:clean", function() {
@@ -48,16 +50,16 @@ gulp.task("client:test", function(done) {
 });
 
 gulp.task("client:build", function(callback) {
-    runSequence("client:copy-index-html", "client:build-sources", "client:scss", "client:images", callback);
+    runSequence("client:copy-resources", "client:build-sources", "client:scss", callback);
 });
-// gulp.task("client:build", ["client:scss", "client:javascript", "client:riot-tags", "client:copy-index-html"]);
+// gulp.task("client:build", ["client:scss", "client:javascript", "client:riot-tags", "client:copy-resources"]);
 
 gulp.task("client:watch", function() {
     gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ["client:scss"]);
-    gulp.watch(parameters.client.imgSrcPath + "/**/*.*", ["client:images"]);
+    gulp.watch([parameters.client.imgSrcPath + "/**/*.*", parameters.client.fontsPath + "/**/*.*"], ["client:copy-resources"]);
     gulp.watch(parameters.client.srcPath + "/**/*.js", ["client:build-sources", "client:test", "client:src-es-lint"]);
     gulp.watch(parameters.client.testPath + "/**/*.js", ["client:test", "client:test-es-lint"]);
-    gulp.watch(parameters.client.clientAppPath + "/index.html", ["client:copy-index-html"]);
+    gulp.watch(parameters.client.clientAppPath + "/index.html", ["client:copy-resources"]);
 });
 
 gulp.task("client:src-eslint", function() {

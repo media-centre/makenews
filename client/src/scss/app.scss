@@ -1,5 +1,6 @@
 //@import "fonts";
 @import "base/_fonts";
+@import "fonts/font-awesome/scss/font-awesome";
 
 //@import "variable";
 @import "base/_common";
@@ -9,6 +10,7 @@
 @import "pages/_login";
 @import "pages/MainPage/_main";
 @import "pages/MainPage/_configure";
+@import "pages/MainPage/CreateCategory/_createCategory";
 
 
 //responsive css

@@ -5,7 +5,10 @@ export default class Category extends Component {
 
   render() {
       return (
-          <div className="category-page">{'category'}</div>
+          <div className="category-page max-width">
+              <div>fsfsdfsdfsd</div>
+                <i className="fa fa-flag"></i>
+          </div>
       );
   }
 
