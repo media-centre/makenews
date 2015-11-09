@@ -8,7 +8,7 @@ export default class AllUrlHelper {
         if(AllUrlHelper.whiteList(request.originalUrl)) {
             return next();
         } else if(request.cookies.AuthSession) {
-            CouchSession.authenitcate(request.cookies.AuthSession)
+            CouchSession.authenticate(request.cookies.AuthSession)
                 .then((userName) => {
                     next();
                 }).catch((error) => {

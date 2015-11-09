@@ -50,7 +50,7 @@ describe("CouchSessionSpec", () => {
         });
     });
 
-    describe("authenitcate", () => {
+    describe("authenticate", () => {
 
         it("should send the valid user name if it is successful", (done) => {
             let token = "12345678";
@@ -63,7 +63,7 @@ describe("CouchSessionSpec", () => {
             }
             );
 
-            CouchSession.authenitcate(token).then((userName) => {
+            CouchSession.authenticate(token).then((userName) => {
                 expect("test_user").to.equal(userName);
                 done();
             });
@@ -81,7 +81,7 @@ describe("CouchSessionSpec", () => {
                 "userCtx": { "name": "", "roles": [] }
             });
 
-            CouchSession.authenitcate(token).catch((userName) => {
+            CouchSession.authenticate(token).catch((userName) => {
                 expect("").to.equal(userName);
                 done();
             });
@@ -103,7 +103,7 @@ describe("CouchSessionSpec", () => {
                 "port": 5984
             });
 
-            CouchSession.authenitcate(token).catch((error) => {
+            CouchSession.authenticate(token).catch((error) => {
                 expect(error.code).to.have.string("ECONNREFUSED");
                 expect(error.errno).to.have.string("ECONNREFUSED");
                 done();

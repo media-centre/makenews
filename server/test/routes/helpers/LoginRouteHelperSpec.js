@@ -10,19 +10,19 @@ import { expect } from "chai";
 
 
 describe("LoginRouteHelper", () => {
-    describe("isValidUserInput", () => {
+    describe("invalidUserInput", () => {
 
         it("should return true if username is empty", () => {
             const username = "";
             const password = "testPassword";
-            let inValidUser = LoginRouteHelper.isValidUserInput(username, password);
+            let inValidUser = LoginRouteHelper.invalidUserInput(username, password);
             expect(inValidUser).to.be.ok;
         });
 
         it("should return true if password is empty", () => {
             const username = "testUser";
             const password = "";
-            let inValidUser = LoginRouteHelper.isValidUserInput(username, password);
+            let inValidUser = LoginRouteHelper.invalidUserInput(username, password);
             expect(inValidUser).to.be.ok;
         });
 
@@ -30,7 +30,7 @@ describe("LoginRouteHelper", () => {
         it("should return true if username has whitespaces and with non empty password", () => {
             const username = "      ";
             const password = "testPassword";
-            let inValidUser = LoginRouteHelper.isValidUserInput(username, password);
+            let inValidUser = LoginRouteHelper.invalidUserInput(username, password);
             expect(inValidUser).to.be.ok;
         });
 
@@ -38,7 +38,7 @@ describe("LoginRouteHelper", () => {
         it("should return false if username and password are not empty", () => {
             const username = "testUser";
             const password = "testPassword";
-            let inValidUser = LoginRouteHelper.isValidUserInput(username, password);
+            let inValidUser = LoginRouteHelper.invalidUserInput(username, password);
             expect(inValidUser).to.be.not.ok;
         });
     });
@@ -103,7 +103,7 @@ describe("LoginRouteHelper", () => {
         beforeEach("loginCallback", () => {
             request = { "body": { "username": "test_user", "password": "test_password" } };
             response = {};
-            inValidUserStub = sinon.stub(LoginRouteHelper, "isValidUserInput");
+            inValidUserStub = sinon.stub(LoginRouteHelper, "invalidUserInput");
             couchSessionStub = sinon.stub(CouchSession, "login");
         });
 

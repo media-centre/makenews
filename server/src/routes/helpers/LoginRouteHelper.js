@@ -11,7 +11,7 @@ export default class LoginRouteHelper {
             throw new Error("request or response can not be empty");
         }
 
-        if(LoginRouteHelper.isValidUserInput(request.body.username, request.body.password)) {
+        if(LoginRouteHelper.invalidUserInput(request.body.username, request.body.password)) {
             LoginRouteHelper.handleInvalidInput(response);
         } else {
             CouchSession.login(request.body.username, request.body.password)
@@ -40,7 +40,7 @@ export default class LoginRouteHelper {
             .json({ "message": "invalid user or password" });
     }
 
-    static isValidUserInput(userName, password) {
+    static invalidUserInput(userName, password) {
         if(StringUtil.trim(userName) === "" || StringUtil.trim(password) === "") {
             return true;
         }

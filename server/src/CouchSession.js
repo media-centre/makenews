@@ -23,7 +23,7 @@ export default class CouchSession {
       });
   }
 
-  static authenitcate(token) {
+  static authenticate(token) {
       return new Promise((resolve, reject) => {
           request.get({
               "url": DbParameters.dbUrl + "/_session",
@@ -45,9 +45,6 @@ export default class CouchSession {
   }
 
   static requestSuccessful(error, response) {
-      if(NodeErrorHandler.noError(error) && CouchResponseHandler.requestCompleted(response.statusCode)) {
-          return true;
-      }
-      return false;
+      return NodeErrorHandler.noError(error) && CouchResponseHandler.requestCompleted(response.statusCode);
   }
 }

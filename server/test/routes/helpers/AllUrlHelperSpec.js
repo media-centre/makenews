@@ -38,7 +38,7 @@ describe("AllUrlHelper", () => {
 
         beforeEach("allUrlsCallback", () => {
             whiteListStub = sinon.stub(AllUrlHelper, "whiteList");
-            couchSessionStub = sinon.stub(CouchSession, "authenitcate");
+            couchSessionStub = sinon.stub(CouchSession, "authenticate");
             request = {
                 "cookies": {
                             "AuthSession": "test_auth_session"
