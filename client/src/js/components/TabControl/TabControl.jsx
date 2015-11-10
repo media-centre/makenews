@@ -22,8 +22,8 @@ export default class TabControl extends Component {
                 <ul className="tab-header h-center t-center">
                     {this.props.children.map((tab, index) =>
                             <li key={index} className={classes.call(this, index)} onClick={this._handleClick.bind(this, index)}>
-                                <i className={tab.props.icon}></i>
-                                <span>{tab.props.display}</span>
+                                <i className={"fa fa-" + tab.props.content.name.toLowerCase()}></i>
+                                <span>{tab.props.content.name + "(" + tab.props.content.urls.length + ")"}</span>
                             </li>
                     )}
                 </ul>
@@ -31,7 +31,7 @@ export default class TabControl extends Component {
                 <div className="tab-content">
                     {this.props.children.map(function(content, index) {
                         if(self.state.activeIndex === index) {
-                            return <div key={index} className="tab-content-inner">{content.props.children}</div>;
+                            return <div key={index} className="tab-content-inner">{self.props.children[index]}</div>;
                         }
                     })}
                 </div>

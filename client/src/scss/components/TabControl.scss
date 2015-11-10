@@ -9,7 +9,7 @@
     color: $primary-font-color;
 
       .tab {
-        margin: 0px 10px 0px 10px;
+        margin-right: 20px;
         cursor: pointer;
 
           i {
@@ -21,6 +21,9 @@
             font-size: $small-font-size;
             vertical-align: bottom;
           }
+      }
+      .tab:last-child {
+        margin-right: 0px;
       }
   }
 
