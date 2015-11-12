@@ -1,28 +1,41 @@
 "use strict";
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
+import { Route, Link } from "react-router";
 
-export default class AllCategories extends Component {
+export default
+class AllCategories extends Component {
 
-  render() {
-      return (
-          <div className="configure-page">
-              <h4 className="t-center">
+    render() {
+        return (
+            <div className="configure-page max-width">
+                <h4 className="t-center">
                     {"All categories"}
-              </h4>
-              <div className="categories">
-                  <ul className="cat-list m-t-center">
-                      <li className="add-new"><div className="v-center t-center">
-                            {"Add new category"}
-                      </div></li>
-                      <li className="category"><div className="v-center t-center">
-                            {"Default Category"}
-                      </div></li>
-                  </ul>
-              </div>
-          </div>
-      );
-  }
+                </h4>
+                <div className="categories">
+                    <ul className="cat-list m-t-center">
 
+                        <li className="add-new">
+                            <Link to="/configure/category">
+                                <div className="v-center t-center">
+                                    <span>{"Add new category"}</span>
+                                </div>
+                            </Link>
+                        </li>
+
+
+                        <li className="category">
+                            <Link to="/configure/category">
+                                <div className="v-center t-center">
+                                    <span>{"Default Category"}</span>
+                                </div>
+                            </Link>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        );
+    }
 }
 
 

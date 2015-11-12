@@ -1,0 +1,10 @@
+@import "../utils/variable";
+.nav-control {
+  margin-right: 10px;
+  color: $app-header-bg-color;
+  cursor: pointer;
+
+  span {
+    margin-left: 10px;
+  }
+}
