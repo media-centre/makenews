@@ -12,15 +12,39 @@ describe("AllUrlHelper", () => {
 
     describe("whiteList", () => {
 
-        it("should return true if the url is in whitelist", () => {
+        it("should return true if the url is login", () => {
             const url = "/login";
+            expect(AllUrlHelper.whiteList(url)).to.be.ok;
+        });
+
+        it("should return true if the url is in app.js", () => {
+            const url = "/app.js";
+            expect(AllUrlHelper.whiteList(url)).to.be.ok;
+        });
+
+        it("should return true if the url is in app.css", () => {
+            const url = "/app.css";
+            expect(AllUrlHelper.whiteList(url)).to.be.ok;
+        });
+
+        it("should return true if the url is in images nesting", () => {
+            const url = "/images/abc.jpg";
+            expect(AllUrlHelper.whiteList(url)).to.be.ok;
+        });
+
+        it("should return true if the url is in fonts nesting", () => {
+            const url = "/fonts/abc.woff";
             expect(AllUrlHelper.whiteList(url)).to.be.ok;
         });
 
         it("should return false if the url is not in whitelist", () => {
             const url = "/test";
             expect(AllUrlHelper.whiteList(url)).to.be.not.ok;
+        });
 
+        it("should return false if the url is login/123", () => {
+            const url = "/login/abcd";
+            expect(AllUrlHelper.whiteList(url)).to.be.not.ok;
         });
 
         it("should validate for the non empty url", () => {
