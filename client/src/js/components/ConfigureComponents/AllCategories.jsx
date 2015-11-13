@@ -5,6 +5,14 @@ import { Route, Link } from "react-router";
 export default
 class AllCategories extends Component {
 
+    constructor(props) {
+        super( props );
+
+        this.state = {
+            "categories": [{ name: "Default Category" }, { name: "Category B" }, { name: "Category C" }, { name: "Category D" }]
+        };
+    }
+
     render() {
         return (
             <div className="configure-page max-width">
@@ -22,15 +30,15 @@ class AllCategories extends Component {
                             </Link>
                         </li>
 
-
-                        <li className="category">
-                            <Link to="/configure/category">
-                                <div className="v-center t-center">
-                                    <span>{"Default Category"}</span>
-                                </div>
-                            </Link>
-                        </li>
-
+                        {this.state.categories.map((category, index) =>
+                            <li className="category">
+                                <Link key={index} to="/configure/category">
+                                    <div className="v-center t-center">
+                                        <span>{category.name}</span>
+                                    </div>
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
