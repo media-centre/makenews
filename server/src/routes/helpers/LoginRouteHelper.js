@@ -5,7 +5,7 @@ import StringUtil from "../../../../common/src/util/StringUtil.js";
 import BoolUtil from "../../../../common/src/util/BoolUtil.js";
 
 export default class LoginRouteHelper {
-    static loginCallback(request, response) {
+    static loginCallback(request, response, next) {
 
         if(BoolUtil.isEmpty(request) || BoolUtil.isEmpty(response)) {
             throw new Error("request or response can not be empty");
@@ -16,7 +16,7 @@ export default class LoginRouteHelper {
         } else {
             CouchSession.login(request.body.username, request.body.password)
                 .then((token) => {
-                    LoginRouteHelper.handleLoginSuccess(response, token);
+                    LoginRouteHelper.handleLoginSuccess(response, token, next);
                 })
                 .catch(() => {
                     LoginRouteHelper.handleLoginFailure(response);
@@ -24,10 +24,21 @@ export default class LoginRouteHelper {
         }
     }
 
-    static handleLoginSuccess(response, token) {
-        response.status(HttpResponseHandler.codes.OK)
-            .append("Set-Cookie", token)
-            .json({ "message": "login successful" });
+    static handleLoginSuccess(response, token, next) {
+        let loggedInUserName = "";
+        if(token && token.split("=")[1]) {
+            CouchSession.authenticate(token.split("=")[1])
+                .then((userName) => {
+                    loggedInUserName = userName;
+                    response.status(HttpResponseHandler.codes.OK)
+                        .append("Set-Cookie", token)
+                        .json({ "userName":loggedInUserName, "message": "login successful" });
+                    next();
+                }).catch((error) => {
+                    proceedToUnAuthorizedError();
+                    next();
+                });
+        }
     }
 
     static handleLoginFailure(response) {

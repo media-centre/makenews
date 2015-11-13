@@ -1,8 +1,12 @@
 "use strict";
-import { LOGIN_FAILED, LOGIN_SUCCESS, CREATE_DB, ADD_RSS_FEEDS, DELETE_RSS_FEEDS } from "./Actions";
+import ConfigDbInterface from "./config/ConfigDbInterface.js";
+import CategoryDbInterface from "./config/CategoryDbInterface.js";
+import DbParameters from "./db/config/DbParameters.js";
+import { LOGIN_FAILED, LOGIN_SUCCESS, CREATE_LOCAL_DB, ADD_RSS_FEEDS, DELETE_RSS_FEEDS } from "./Actions";
 import { combineReducers } from "redux";
-import LocalDb from "./pouch/LocalDb.js";
-import { List, Map } from "immutable";
+import { List } from "immutable";
+import DbSession from "./db/DbSession.js";
+import PouchDB from "pouchdb";
 
 
 function login(state = { "errorMessage": "" }, action = {}) {
@@ -12,44 +16,38 @@ function login(state = { "errorMessage": "" }, action = {}) {
             "errorMessage": action.responseMessage
         };
     case LOGIN_SUCCESS:
+        DbParameters.setLocalDb(action.userDetails);
+        DbSession.sync();
+        //DbParameters.setLocalDb(action.userName);
         return {
             "errorMessage": "successful",
-            "userName": action.userName
+            "userName": action.userDetails
         };
     default:
         return state;
     }
 }
 
-function database(state = { "localDb": null }, action = {}) {
-    switch(action.type) {
-        case CREATE_DB:
-            let db = new LocalDb(action.userDetails);
-            return {
-                "localDb" : db
-            };
-        default:
-            return state;
-    }
-}
-
-function configSources(sources = Map({ "webFeeds": Map() }), action = {}) {
+function configureRssFeedSource(source = List(), action = {}) {
     switch(action.type) {
         case ADD_RSS_FEEDS:
-            let rssFeeds = sources.get("webFeeds");
-            return sources.set(action.rssFeed, true);
+            CategoryDbInterface.instance().addCategory("sports");
+            ConfigDbInterface.instance("sports").addRssFeed(action.rssFeed);
+            CategoryDbInterface.instance().addCategory("politics");
+            ConfigDbInterface.instance("plitics").addRssFeed(action.rssFeed);
+            return source;
+            //return source.push(action.rssFeed, true);
         case DELETE_RSS_FEEDS:
-            return sources.remove(action.rssFeed);
+            return source.deletein(action.rssFeed);
         default:
-            return sources;
+            return source;
     }
 
 }
 
 const contentDiscoveryApp = combineReducers({
     login,
-    database,
-    configSources
+    configureRssFeedSource
 });
 
 export default contentDiscoveryApp;

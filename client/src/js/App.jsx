@@ -14,6 +14,6 @@ export class App extends Component {
 
 App.displayName = "App";
 App.propTypes = {
-    "children": PropTypes.array.isRequired
+    "children": PropTypes.node.isRequired
 };
 
