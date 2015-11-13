@@ -11,6 +11,7 @@ function login(state = { "errorMessage": "" }, action = {}) {
         };
     case LOGIN_SUCCESS:
         history.pushState(null, "/main");
+        localStorage.setItem("userInfo", "loggedIn");
         return {
             "errorMessage": "successful"
         };

@@ -27,7 +27,7 @@ function renderRoutes() {
     return (
     <Route component={App}>
       <Route path="/" component={LoginPage} />
-      <Route path="/main" component={MainPage}>
+      <Route path="/main" component={MainPage} onEnter={isLoggedIn}>
 
           <Route path="/configure" component={ConfigurePage}>
               <Route path="/configure/categories" component={AllCategories} />
@@ -39,6 +39,12 @@ function renderRoutes() {
       </Route>
     </Route>
   );
+}
+
+function isLoggedIn(nextState, replaceState) {
+    if(localStorage.getItem("userInfo") !== "loggedIn") {
+        replaceState({ nextPathname: nextState.location.pathname }, '/');
+    }
 }
 
 ReactDOM.render(
