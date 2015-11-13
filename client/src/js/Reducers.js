@@ -1,7 +1,6 @@
 "use strict";
 import { LOGIN_FAILED, LOGIN_SUCCESS } from "./Actions";
 import { combineReducers } from "redux";
-import history from "./history";
 
 function login(state = { "errorMessage": "" }, action = {}) {
     switch(action.type) {
@@ -10,8 +9,8 @@ function login(state = { "errorMessage": "" }, action = {}) {
             "errorMessage": action.responseMessage
         };
     case LOGIN_SUCCESS:
-        history.pushState(null, "/main");
         localStorage.setItem("userInfo", "loggedIn");
+        document.getElementById("temp-navigation").click();
         return {
             "errorMessage": "successful"
         };

@@ -1,7 +1,6 @@
 "use strict";
 import { Provider } from "react-redux";
 import App from "./App.jsx";
-import history from "./history.js";
 import LoginPage from "./pages/LoginPage.jsx";
 import MainPage from "./pages/MainPage/MainPage.jsx";
 import ConfigurePage from "./pages/MainPage/ConfigurePage.jsx";
@@ -26,7 +25,7 @@ let store = createStoreWithMiddleware(contentDiscoveryApp);
 function renderRoutes() {
     return (
     <Route component={App}>
-      <Route path="/" component={LoginPage} />
+      <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
       <Route path="/main" component={MainPage} onEnter={isLoggedIn}>
 
           <Route path="/configure" component={ConfigurePage}>
@@ -47,9 +46,15 @@ function isLoggedIn(nextState, replaceState) {
     }
 }
 
+function showLoginPage(nextState, replaceState) {
+    if(localStorage.getItem("userInfo") === "loggedIn") {
+        replaceState({ nextPathname: nextState.location.pathname }, '/main');
+    }
+}
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>{renderRoutes()}</Router>
+    <Router>{renderRoutes()}</Router>
   </Provider>,
   document.getElementById("main")
 );
