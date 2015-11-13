@@ -7,6 +7,9 @@ import { combineReducers } from "redux";
 import { List } from "immutable";
 import DbSession from "./db/DbSession.js";
 import PouchDB from "pouchdb";
+import AllCategory from "./config.new/AllCategory.js";
+import Category from "./config.new/Category.js";
+import RssFeedsConfiguration from "./config.new/RssFeedsConfiguration.js";
 
 
 function login(state = { "errorMessage": "" }, action = {}) {
@@ -31,12 +34,8 @@ function login(state = { "errorMessage": "" }, action = {}) {
 function configureRssFeedSource(source = List(), action = {}) {
     switch(action.type) {
         case ADD_RSS_FEEDS:
-            CategoryDbInterface.instance().addCategory("sports");
-            ConfigDbInterface.instance("sports").addRssFeed(action.rssFeed);
-            CategoryDbInterface.instance().addCategory("politics");
-            ConfigDbInterface.instance("plitics").addRssFeed(action.rssFeed);
+            RssFeedsConfiguration.addRssFeed("SundayTimes", "www.thoughtworks.com")
             return source;
-            //return source.push(action.rssFeed, true);
         case DELETE_RSS_FEEDS:
             return source.deletein(action.rssFeed);
         default:
