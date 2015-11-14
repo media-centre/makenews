@@ -18,7 +18,7 @@ export default class Category extends Component {
 
               <TabControl>
                   {this.props.sources.map((item, index) =>
-                      <TabContent key={index} content={item} categoryName={this.props.categoryName} dispatch={this.props.dispatch}/>
+                      <TabContent key={index} content={item} title={item.name} categoryName={this.props.categoryName} dispatch={this.props.dispatch}/>
                   )}
               </TabControl>
 
