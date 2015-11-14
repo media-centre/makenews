@@ -158,5 +158,18 @@ button {
   transform: translateY(-50%);
 }
 
+.selected {
+  color: $secondary-font-color;
+}
 
+.max-width {
+  max-width: $max-content-width;
+  margin: auto;
+}
 
+.circle {
+  -webkit-border-radius: 300px;
+  -moz-border-radius: 300px;
+  -ms-border-radius: 300px;
+  border-radius: 300px;
+}

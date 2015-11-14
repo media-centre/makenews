@@ -184,7 +184,7 @@
     "space-infix-ops": [2],                // require spaces around operators (fixable)
     "space-return-throw-case": [2],                // require a space after return, throw, and case (fixable)
     "space-unary-ops": [2],                // require or disallow spaces before/after unary operators (fixable)
-    "spaced-comment": [0],                // require or disallow a space immediately following the // or /* in a comment
+    "spaced-comment": [0],
     "wrap-regex": [2],       // require regex literals to be wrapped in parentheses
 
 

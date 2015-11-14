@@ -29,11 +29,8 @@ export default class AllUrlHelper {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = ["/", "/login", "/app.js", "/app.css", "/images/newspaper.jpg"];
-        const negativeIndex = -1;
-        if(whitelistUrls.indexOf(url) !== negativeIndex) {
-            return true;
-        }
-        return false;
+        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/app.js/g, /^\/app.css/g, /^\/images\/.*/g, /^\/fonts\/.*/g];
+        return whitelistUrls.filter(function(item) { return url.match(item) }).length > 0;
     }
 }
+

@@ -2,7 +2,7 @@
 
 .main-page header {
   color: $primary-font-color;
-  height: 82px;
+  height: 87px;
   position: relative;
 
     .fixed-header {
@@ -51,4 +51,8 @@
 .main-page section {
   background: $primary-font-color;
   height: 1000px;
+}
+
+.main-page section > div {
+  padding: 20px;
 }

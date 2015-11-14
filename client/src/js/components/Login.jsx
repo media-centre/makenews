@@ -1,13 +1,14 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
+import {Link} from 'react-router';
 
 export default class Login extends Component {
+
     handleClick(event) {
         event.preventDefault();
         let userName = this.refs.userName.value.trim();
         let password = this.refs.password.value.trim();
         this.props.onLoginClick(userName, password);
-
     }
 
   render() {
@@ -35,6 +36,8 @@ export default class Login extends Component {
                     {"Login"}
                   </button>
               </div>
+
+              <Link to="/main" id="temp-navigation" />
           </div>
 
       </form>

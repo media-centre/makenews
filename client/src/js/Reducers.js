@@ -21,7 +21,8 @@ function login(state = { "errorMessage": "" }, action = {}) {
     case LOGIN_SUCCESS:
         DbParameters.setLocalDb(action.userDetails);
         DbSession.sync();
-        //DbParameters.setLocalDb(action.userName);
+        localStorage.setItem("userInfo", "loggedIn");
+        document.getElementById("temp-navigation").click();
         return {
             "errorMessage": "successful",
             "userName": action.userDetails
