@@ -43,13 +43,12 @@ class AllCategories extends Component {
             </div>
         );
     }
-
 }
 
 
 AllCategories.displayName = "All categories";
 AllCategories.propTypes = {
-    "categories": PropTypes.node.isRequired,
+    "categories": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired
 };
 
