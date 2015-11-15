@@ -1,33 +1,35 @@
 "use strict";
 
 export default class DbParameters {
-    static get() {
-        return (
-            { "size": 50 }
-        );
-    }
-    static type() {
+    type() {
         return "PouchDB";
     }
 
-    static setLocalDb(dbUrl) {
+    setLocalDb(dbUrl) {
         if(!dbUrl) {
-            throw new Error("db name can not be empty = " + dbUrl);
+            throw new Error("db url can not be empty = " + dbUrl);
         }
         if(!this.dbUrl) {
             this.dbUrl = dbUrl;
         }
     }
 
-    static getLocalDb() {
+    getLocalDb() {
         if(!this.dbUrl) {
-            throw new Error("local db name not set yet.");
+            throw new Error("db url not set yet.");
         }
         return this.dbUrl;
     }
 
-    static getRemoteDb() {
+    getRemoteDb() {
         return "http://localhost:5984/" + this.dbUrl;
+    }
+
+    static instance() {
+        if(!this.dbParameters) {
+            this.dbParameters = new DbParameters();
+        }
+        return this.dbParameters;
     }
 
 }

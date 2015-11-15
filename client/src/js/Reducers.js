@@ -1,7 +1,7 @@
 "use strict";
 
-import { allCategories, categoryDetails } from "./reducers/ConfigReducer.js";
-import { login } from "./reducers/LoginReducers.js";
+import { allCategories, categoryDetails } from "./config/reducers/ConfigReducer.js";
+import { login } from "./login/LoginReducers.js";
 import { combineReducers } from "redux";
 
 const contentDiscoveryApp = combineReducers({

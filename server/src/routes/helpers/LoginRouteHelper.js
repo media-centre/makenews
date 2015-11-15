@@ -24,20 +24,20 @@ export default class LoginRouteHelper {
         }
     }
 
-    static handleLoginSuccess(response, token, next) {
-        let loggedInUserName = "";
-        if(token && token.split("=")[1]) {
-            CouchSession.authenticate(token.split("=")[1])
-                .then((userName) => {
-                    loggedInUserName = userName;
-                    response.status(HttpResponseHandler.codes.OK)
-                        .append("Set-Cookie", token)
-                        .json({ "userName":loggedInUserName, "message": "login successful" });
-                    next();
-                }).catch((error) => {
-                    proceedToUnAuthorizedError();
-                    next();
-                });
+    static handleLoginSuccess(response, setCookieTokenHeader, next) {
+
+        if(setCookieTokenHeader && setCookieTokenHeader.split("=")[1]) {
+            let setCookieTokenValue = setCookieTokenHeader.split("=")[1];
+            CouchSession.authenticate(setCookieTokenValue)
+            .then((userName) => {
+                response.status(HttpResponseHandler.codes.OK)
+                    .append("Set-Cookie", setCookieTokenHeader)
+                    .json({ "userName": userName, "message": "login successful" });
+                next();
+
+            });
+        } else {
+            LoginRouteHelper.handleLoginFailure(response);
         }
     }
 

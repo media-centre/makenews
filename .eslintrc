@@ -196,7 +196,7 @@
     "no-plusplus": 2, // disallow use of unary operators, ++ and -- (off by default)
 
     "react/display-name": 2,
-    "react/forbid-prop-types": 2,
+    "react/forbid-prop-types": 0,
     "react/jsx-boolean-value": 2,
     "react/jsx-closing-bracket-location": 2,
     "react/jsx-curly-spacing": 2,

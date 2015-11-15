@@ -1,3 +1,4 @@
+/* eslint no-unused-vars:0 */
 "use strict";
 import CouchSession from "../../CouchSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
@@ -30,7 +31,9 @@ export default class AllUrlHelper {
         }
 
         let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/app.js/g, /^\/app.css/g, /^\/images\/.*/g, /^\/fonts\/.*/g];
-        return whitelistUrls.filter(function(item) { return url.match(item) }).length > 0;
+        return whitelistUrls.filter((item) => {
+            return url.match(item);
+        }).length > 0;
     }
 }
 

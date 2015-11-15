@@ -58,12 +58,12 @@ describe("LoginRouteHelper", () => {
         });
     });
 
-    describe("handleLoginSuccess", function() {
+    describe("handleLoginSuccess", () => {
         it("should set the token as cookie", () => {
-            const token = "test_token";
+            const token = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
             let response = {
                 "status": function(data) {
-                    expect(data).to.equal(HttpResponseHandler.codes.OK);
+                    expect(HttpResponseHandler.codes.OK).to.equal(data);
                     return response;
                 },
                 "append": function(cookieName, receivedToken) {
@@ -80,7 +80,7 @@ describe("LoginRouteHelper", () => {
 
     });
 
-    describe("handleLoginFailure", function() {
+    describe("handleLoginFailure", () => {
         it("should set the response status as unauthorized", () => {
             const token = "test_token";
             let response = {
@@ -138,7 +138,7 @@ describe("LoginRouteHelper", () => {
             LoginRouteHelper.handleInvalidInput.restore();
         });
 
-        it("should handle the success if login is success with the valid user name and password.", () => {
+        xit("should handle the success if login is success with the valid user name and password.", () => {
 
             // let handleLoginSuccessMock = sinon.mock(LoginRouteHelper).expects("handleLoginSuccess");
             // inValidUserStub.withArgs(request.body.username, request.body.password).returns(false);
@@ -148,7 +148,7 @@ describe("LoginRouteHelper", () => {
             // handleLoginSuccessMock.verify();
         });
 
-        it("should handle the failure if login is failed.", () => {
+        xit("should handle the failure if login is failed.", () => {
         });
 
     });
