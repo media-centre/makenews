@@ -4,13 +4,11 @@ import CategoryNavigationHeader from "./CategoryNavigationHeader.jsx";
 import TabControl from "../TabControl/TabControl.jsx";
 import TabContent from "../TabControl/TabContent.jsx";
 import { connect } from "react-redux";
-import {populateCategoryDetailsAsync} from "../../Actions.js";
+import { populateCategoryDetailsAsync } from "../../actions/config/CategoryActions.js";
 
 
 export default class Category extends Component {
     render() {
-      console.log("Category component = ");
-      console.log(this.props);
       return (
           <div className="category-page max-width">
               <CategoryNavigationHeader />

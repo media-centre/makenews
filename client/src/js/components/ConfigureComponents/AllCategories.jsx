@@ -2,26 +2,12 @@
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
 import { connect } from "react-redux";
+import { displayAllCategoriesAsync } from "../../actions/config/AllCategoriesActions.js";
+
 
 export default
 class AllCategories extends Component {
-
-    //constructor(props) {
-        //super(props);
-        //this.state = {
-        //    "categories": [{ name: "Default Category" }, { name: "Category B" }, { name: "Category C" }, { name: "Category D" }]
-        //};
-    //}
-
     render() {
-        console.log("start.....");
-        console.log(this.props.categories);
-        this.props.categories.map(function(category, index){
-            console.log("key = " + category);
-            console.log("index = " + index);
-        });
-        console.log("end.....");
-
         return (
             <div className="configure-page max-width">
                 <h4 className="t-center">
@@ -39,8 +25,8 @@ class AllCategories extends Component {
                         </li>
 
                         {this.props.categories.map((category, index) =>
-                            <li className="category">
-                                <Link key={index} to={"/configure/category/" + category}>
+                            <li key={index} className="category">
+                                <Link to={"/configure/category/" + category}>
                                     <div className="v-center t-center">
                                         <span>{category}</span>
                                     </div>
@@ -52,6 +38,11 @@ class AllCategories extends Component {
             </div>
         );
     }
+
+    componentDidMount() {
+        this.props.dispatch(displayAllCategoriesAsync());
+    }
+
 }
 
 

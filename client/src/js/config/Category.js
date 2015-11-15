@@ -5,29 +5,35 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 
 export default class Category {
 
-    static documentType() {
-        return "ConfigCategory";
+    static fetchDocumentByCategoryId(categoryId) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().get(categoryId).then(document => {
+                resolve(document);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
     }
 
-    static newDocument() {
-        let document = {
-            "rssFeeds" : {},
-            "faceBookFeeds" : {},
-            "twitterFeeds" : {},
-            "type": Category.documentType()
-        };
-        return document;
+    static fetchDocumentByCategoryName(categoryName) {
+        return new Promise((resolve, reject) => {
+            Category.fetchDocumentByCategoryId(Category.getId(categoryName)).then(document => {
+                resolve(document);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 
-    static newCategoryDocument(categoryName) {
-        let document = Category.newDocument();
-        document._id = Category.getId(categoryName);
-        return document;
-    }
-
-    static addNewCategory(categoryName) {
+    static saveNewCategoryDocument(categoryName) {
         let document = newDocument(categoryName);
-        return Category.saveDocument(document);
+        return new Promise((resolve, reject) => {
+            Category.saveDocument(document).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 
     static saveDocument(document) {
@@ -59,23 +65,25 @@ export default class Category {
         return "Category-" + categoryName;
     }
 
-    static fetchDocumentByCategoryId(categoryId) {
-        return new Promise((resolve, reject) => {
-            DbSession.instance().get(categoryId).then(document => {
-                resolve(document);
-            }).catch((error) => {
-                reject(error);
-            });
-        });
+    static documentType() {
+        return "ConfigCategory";
     }
 
-    static fetchDocumentByCategoryName(categoryName) {
-        return new Promise((resolve, reject) => {
-            Category.fetchDocumentByCategoryId(Category.getId(categoryName)).then(document => {
-                resolve(document);
-            }).catch(error => {
-                reject(error);
-            });
-        });
+    static newDocument() {
+        let document = {
+            "rssFeeds" : {},
+            "faceBookFeeds" : {},
+            "twitterFeeds" : {},
+            "type": Category.documentType()
+        };
+        return document;
     }
+
+    static newCategoryDocument(categoryName) {
+        let document = Category.newDocument();
+        document._id = Category.getId(categoryName);
+        document.name = categoryName;
+        return document;
+    }
+
 }

@@ -1,6 +1,6 @@
 "use strict";
 import Login from "../components/Login.jsx";
-import { userLogin } from "../Actions";
+import { userLogin } from "../actions/login/LoginActions.js";
 
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";

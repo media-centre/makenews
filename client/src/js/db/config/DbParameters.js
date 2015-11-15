@@ -12,7 +12,7 @@ export default class DbParameters {
 
     static setLocalDb(dbUrl) {
         if(!dbUrl) {
-            throw new Error("db name can be empty = " + dbUrl);
+            throw new Error("db name can not be empty = " + dbUrl);
         }
         if(!this.dbUrl) {
             this.dbUrl = dbUrl;
@@ -27,7 +27,6 @@ export default class DbParameters {
     }
 
     static getRemoteDb() {
-        console.log("remote db = " + "http://localhost:5984/" + this.dbUrl);
         return "http://localhost:5984/" + this.dbUrl;
     }
 
