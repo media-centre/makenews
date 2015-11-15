@@ -64,14 +64,21 @@ export function dispalyAllCategories(categories) {
 }
 
 
-export function populateCategoryDetailsAsync(categoryType) {
+export function populateCategoryDetailsAsync(categoryName) {
     return dispatch => {
-        DbSession.instance().get(Category.getId(categoryType)).then(categoryDocument => {
+        Category.fetchDocumentByCategoryName(categoryName).then(categoryDocument => {
             console.log(categoryDocument);
             dispatch(populateCategoryDetails(categoryDocument));
         }).catch(function (error) {
             dispatch(populateCategoryDetails(null));
         });
+        //
+        //DbSession.instance().get(Category.getId(categoryName)).then(categoryDocument => {
+        //    console.log(categoryDocument);
+        //    dispatch(populateCategoryDetails(categoryDocument));
+        //}).catch(function (error) {
+        //    dispatch(populateCategoryDetails(null));
+        //});
     };
 }
 
@@ -79,16 +86,22 @@ export function populateCategoryDetails(categoryDocument) {
     return { "type": DISPLAY_CATEGORY, categoryDocument };
 }
 
-export function addRssUrlAsync(categoryName, url) {
+export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        DbSession.instance().get(categoryName).then(categoryDocument => {
-            console.log(categoryDocument);
-            categoryDocument.rssFeeds[url] = true;
-            DbSession.instance().put(categoryDocument, categoryDocument._rev, function(error, response){
-                if(!error) {
-                    dispatch(populateCategoryDetails(categoryDocument));
-                }
+        RssFeedsConfiguration.addRssFeed(categoryId, url).then(response => {
+            Category.fetchDocumentByCategoryId(categoryId).then(document => {
+                dispatch(populateCategoryDetails(document));
+            }).catch(error => {
+
             });
         });
+        //Category.fetchDocumentByCategoryId(categoryId).then(categoryDocument => {
+        //    console.log(categoryDocument);
+        //    categoryDocument.rssFeeds[url] = true;
+        //
+        //    Category.saveDocument(categoryDocument).then(response => {
+        //        dispatch(populateCategoryDetails(categoryDocument));
+        //    });
+        //});
     };
 }

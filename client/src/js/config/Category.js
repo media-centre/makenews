@@ -27,22 +27,55 @@ export default class Category {
 
     static addNewCategory(categoryName) {
         let document = newDocument(categoryName);
-        Category.saveDocument(document);
+        return Category.saveDocument(document);
     }
 
     static saveDocument(document) {
         if(!document || !document._id) {
             throw new Error("can not save invalid document");
         }
-
-        if(document._rev) {
-            DbSession.instance().put(document, document._rev);
-        } else {
-            DbSession.instance().put(document);
-        }
+        return new Promise((resolve, reject) => {
+            if (document._rev) {
+                DbSession.instance().put(document, document._rev, (error, response) => {
+                    if(!error) {
+                        resolve(response);
+                    }else{
+                        reject(error);
+                    }
+                });
+            } else {
+                DbSession.instance().put(document, (error, response) => {
+                    if(!error) {
+                        resolve(response);
+                    }else{
+                        reject(error);
+                    }
+                });
+            }
+        });
     }
 
     static getId(categoryName) {
         return "Category-" + categoryName;
+    }
+
+    static fetchDocumentByCategoryId(categoryId) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().get(categoryId).then(document => {
+                resolve(document);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
+
+    static fetchDocumentByCategoryName(categoryName) {
+        return new Promise((resolve, reject) => {
+            Category.fetchDocumentByCategoryId(Category.getId(categoryName)).then(document => {
+                resolve(document);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
