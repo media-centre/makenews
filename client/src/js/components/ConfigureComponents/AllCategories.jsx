@@ -1,19 +1,27 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
+import { connect } from "react-redux";
 
 export default
 class AllCategories extends Component {
 
-    constructor(props) {
-        super( props );
-
-        this.state = {
-            "categories": [{ name: "Default Category" }, { name: "Category B" }, { name: "Category C" }, { name: "Category D" }]
-        };
-    }
+    //constructor(props) {
+        //super(props);
+        //this.state = {
+        //    "categories": [{ name: "Default Category" }, { name: "Category B" }, { name: "Category C" }, { name: "Category D" }]
+        //};
+    //}
 
     render() {
+        console.log("start.....");
+        console.log(this.props.categories);
+        this.props.categories.map(function(category, index){
+            console.log("key = " + category);
+            console.log("index = " + index);
+        });
+        console.log("end.....");
+
         return (
             <div className="configure-page max-width">
                 <h4 className="t-center">
@@ -30,11 +38,11 @@ class AllCategories extends Component {
                             </Link>
                         </li>
 
-                        {this.state.categories.map((category, index) =>
+                        {this.props.categories.map((category, index) =>
                             <li className="category">
-                                <Link key={index} to="/configure/category">
+                                <Link key={index} to={"/configure/category/" + category}>
                                     <div className="v-center t-center">
-                                        <span>{category.name}</span>
+                                        <span>{category}</span>
                                     </div>
                                 </Link>
                             </li>
@@ -49,4 +57,8 @@ class AllCategories extends Component {
 
 AllCategories.displayName = "All categories";
 
+function select(store) {
+    return store.allCategories;
+}
+export default connect(select)(AllCategories);
 

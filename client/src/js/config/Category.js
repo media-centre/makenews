@@ -12,6 +12,8 @@ export default class Category {
     static newDocument() {
         let document = {
             "rssFeeds" : {},
+            "faceBookFeeds" : {},
+            "twitterFeeds" : {},
             "type": Category.documentType()
         };
         return document;

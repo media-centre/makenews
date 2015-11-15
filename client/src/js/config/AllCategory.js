@@ -2,6 +2,7 @@
 import DbSession from "../db/DbSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import Category from "./Category.js";
+import { connect } from "react-redux";
 
 export default class AllCategory {
 

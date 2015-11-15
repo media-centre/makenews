@@ -15,6 +15,7 @@ import { createStore, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import "babel/polyfill";
 import Router, { Route } from "react-router";
+import { dispalyAllCategoriesAsync, populateCategoryDetailsAsync } from "./Actions";
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware
@@ -29,8 +30,8 @@ function renderRoutes() {
       <Route path="/main" component={MainPage} onEnter={isLoggedIn}>
 
           <Route path="/configure" component={ConfigurePage}>
-              <Route path="/configure/categories" component={AllCategories} />
-              <Route path="/configure/category" component={CategoryPage} />
+              <Route path="/configure/categories" component={AllCategories} onEnter={()=>store.dispatch(dispalyAllCategoriesAsync())} />
+                  <Route path="/configure/category/:categoryType" component={CategoryPage}/>
           </Route>
 
           <Route path="/surf" component={SurfPage} />
