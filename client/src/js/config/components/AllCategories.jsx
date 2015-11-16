@@ -48,7 +48,7 @@ class AllCategories extends Component {
 
 AllCategories.displayName = "All categories";
 AllCategories.propTypes = {
-    "categories": PropTypes.array.isRequired,
+    "categories": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired
 };
 

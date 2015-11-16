@@ -1,7 +1,8 @@
+
 /* eslint no-unused-vars:0 */
 "use strict";
 import React, { Component } from "react";
-import { Route, Link } from "react-router";
+import { Route, Link, PropTypes } from "react-router";
 
 export default
 class CategoryNavigationHeader extends Component {
@@ -21,5 +22,9 @@ class CategoryNavigationHeader extends Component {
 
 
 CategoryNavigationHeader.displayName = "Category Navigation Header";
+
+CategoryNavigationHeader.propTypes = {
+    "title": PropTypes.string.isRequired
+};
 
 
