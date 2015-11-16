@@ -6,6 +6,7 @@ import { LOGIN_SUCCESS, LOGIN_FAILED } from "./LoginActions.js";
 export function login(state = { "errorMessage": "" }, action = {}) {
     switch(action.type) {
     case LOGIN_FAILED:
+        console.log("Test");
         return {
             "errorMessage": action.responseMessage
         };
