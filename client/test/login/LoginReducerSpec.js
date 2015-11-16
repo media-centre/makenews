@@ -25,25 +25,15 @@ describe("login reducer", function() {
     it("should set the user session details when the login is successful", function() {
         let tempNavigation = { "click": () => { } };
         let DocumentMock = sinon.mock(document);
-        let db = DbParameters.instance();
-        let DbParametersStub = sinon.stub(db, "setLocalDb");
-        let DbSessionMock = sinon.mock(DbSession);
-
 
         let testUser = "test_user";
         let action = { "type": "LOGIN_SUCCESS", "userDetails": testUser };
         DocumentMock.expects("getElementById").withArgs("temp-navigation").returns(tempNavigation);
-        DbParametersStub.withArgs(testUser);
-        DbSessionMock.expects("sync");
 
         let state = login(undefined, action);
-        DbSessionMock.verify();
         DocumentMock.verify();
         assert.strictEqual("", state.errorMessage);
         assert.strictEqual(testUser, state.userName);
-
-        DbParametersStub.restore();
-        DbSessionMock.restore();
         DocumentMock.restore();
     });
 });

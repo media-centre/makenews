@@ -1,5 +1,7 @@
 /* eslint react/display-name:0 */
 "use strict";
+import DbParameters from "./db/config/DbParameters.js";
+import DbSession from "./db/DbSession.js";
 import App from "./App.jsx";
 import LoginPage from "./login/pages/LoginPage.jsx";
 import MainPage from "./main/pages/MainPage.jsx";
@@ -11,6 +13,7 @@ import ParkPage from "./park/pages/ParkPage.jsx";
 import React from "react";
 import "babel/polyfill";
 import { Route } from "react-router";
+
 
 export function renderRoutes() {
     return (
@@ -31,13 +34,22 @@ export function renderRoutes() {
 }
 
 function isLoggedIn(nextState, replaceState) {
-    if(localStorage.getItem("userInfo") !== "loggedIn") {
+    if(localStorage.getItem("userInfo")) {
+        dbSync();
+    } else {
         replaceState({ "nextPathname": nextState.location.pathname }, "/");
     }
+
 }
 
 function showLoginPage(nextState, replaceState) {
-    if(localStorage.getItem("userInfo") === "loggedIn") {
+    if(localStorage.getItem("userInfo")) {
         replaceState({ "nextPathname": nextState.location.pathname }, "/main");
     }
+}
+
+
+function dbSync() {
+    DbParameters.instance().setLocalDb(localStorage.getItem("userInfo"));
+    DbSession.sync();
 }
