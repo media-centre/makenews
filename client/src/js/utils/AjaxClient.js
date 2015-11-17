@@ -1,9 +1,10 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
+import Config from "../../../src/js/utils/Config.js";
 
 export default class AjaxClient {
   constructor(url) {
-      this.url = window.location.origin + url;
+      this.url = Config.serverUrl + url;
   }
 
   post(headers, data) {

@@ -14,3 +14,4 @@ global.localStorage = {
         this.item[key] = value;
     }
 };
+global.XMLHttpRequest = window.XMLHttpRequest;
