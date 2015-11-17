@@ -29,7 +29,12 @@ export function categoryDetails(state = getCategoryState(), action = {}) {
     }
 }
 
-function getCategoryState(document = null, categoryName = "TimeLine") {
+function getCategoryState(document = null, categoryNameParameter = null) {
+    let categoryName = categoryNameParameter;
+    if(!categoryName){
+        categoryName = "TimeLine";
+    }
+
     let categoryDocument = document;
     if(!categoryDocument) {
         categoryDocument = CategoryDb.newCategoryDocumentByName(categoryName);
