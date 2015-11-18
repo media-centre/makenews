@@ -23,7 +23,7 @@ export default class CategoryNavigationHeader extends Component {
 CategoryNavigationHeader.displayName = "Category Navigation Header";
 
 CategoryNavigationHeader.propTypes = {
-    "title": PropTypes.string.isRequired
+    "title": PropTypes.string
 };
 
 CategoryNavigationHeader.DefaultProp = {

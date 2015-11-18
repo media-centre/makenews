@@ -1,16 +1,16 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
 "use strict";
 import { allCategories, categoryDetails } from "../../src/js/config/reducers/ConfigReducer.js";
+import { DISPLAY_ALL_CATEGORIES } from "../../src/js/config/actions/AllCategoriesActions.js";
+import { DISPLAY_CATEGORY } from "../../src/js/config/actions/CategoryActions.js";
 import { expect } from "chai";
 import { List } from "immutable";
 
 describe("Config Reducer", () => {
     describe("allCategories", () => {
-        it("default state if action type is not handled", () => {
-            let action = { "type": "undefined" };
-            let state = allCategories(undefined, action);
-            expect({ "categories": new List(["TimeLine"]) }).to.deep.equal(state);
+        it("default state should return default category", () => {
+            expect({ "categories": new List(["TimeLine"]) }).to.deep.equal(allCategories());
         });
 
         it("should not include the TimeLine twice in the state if it is already exists in parameters", () => {
@@ -23,7 +23,7 @@ describe("Config Reducer", () => {
         });
 
         it("should include the TimeLine category by default in the state", () => {
-            let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": ["Sports"] };
+            let action = { "type": DISPLAY_ALL_CATEGORIES, "categories": ["Sports"] };
             let expectedState = { "categories": ["Sports", "TimeLine"] };
             let actualState = allCategories(undefined, action);
             expect(actualState.categories.size).to.equal(expectedState.categories.length);
@@ -35,34 +35,42 @@ describe("Config Reducer", () => {
 
     describe("categoryDetails", () => {
         it("default state if action type is not handled", () => {
-            let state = allCategories(undefined);
-            expect({ "categories": new List(["TimeLine"]) }).to.deep.equal(state);
+            expect({ "categories": new List(["TimeLine"]) }).to.deep.equal(allCategories());
         });
 
         it("return default categoryConfig if document and categoryName are undefined", () => {
-            let action = { "type": "DISPLAY_CATEGORY" };
+            let action = { "type": DISPLAY_CATEGORY };
             let expected = { "categoryName": "TimeLine", "sources": [{ "name": "RSS", "details": [] },
                 { "name": "Facebook", "details": [] }, { "name": "Twitter", "details": [] }] };
             expect(categoryDetails(undefined, action)).to.deep.equal(expected);
         });
 
         it("return default categoryConfig if document and categoryName are null", () => {
-            let action = { "type": "DISPLAY_CATEGORY", "categoryDocument": null, "categoryName": "Sports" };
-            let expected = { "categoryName": "Sports", "sources": [{ "name": "RSS", "details": [] },
+            let action = { "type": DISPLAY_CATEGORY, "categoryDocument": null, "categoryName": null };
+            let expected = { "categoryName": "TimeLine", "sources": [{ "name": "RSS", "details": [] },
                 { "name": "Facebook", "details": [] }, { "name": "Twitter", "details": [] }] };
             expect(categoryDetails(undefined, action)).to.deep.equal(expected);
         });
 
-        xit("should return categories in-case of DISPLAY_CATEGORY", () => {
-         let action = { "type": "DISPLAY_CATEGORY", "categoryDocument": "myTest", "categoryName": "testName" };
-         let expectedState = {"categories": ["first", "second"]};
-         let mystub = sinon.stub(getCategoryState).withArgs("myTest", "testName").returns(expectedState);
-         //                    let expectation = sinon.expectation.create("getCategoryState").returns(expectedState);
-         //sinon.stub(getCategoryState).withArgs("myTest", "testName").returns(expectedState);
-         mystub.categoryDetails(undefined, action);
-         //                    assert.deepEqual(categoryDetails(undefined, action), expectedState);
-         expectation.verify();
-         });
+        it("return categoryConfig from categoryDocument", () => {
+            let categoryDocument = { "name": "Sports",
+                                "rssFeeds": { "rss1": "true", "rss2": "true" },
+                                "faceBookFeeds": { "fb1": "true", "fb2": "true" },
+                                 "twitterFeeds": { "tw1": "true", "tw2": "true" }
+                                 };
+            let action = { "type": DISPLAY_CATEGORY,
+                        "categoryDocument": categoryDocument,
+                        "categoryName": "Sports" };
+
+            let expectedState = { "categoryName": "Sports",
+                                "sources": [{ "name": "RSS",
+                                            "details": ["rss1", "rss2"] },
+                                            { "name": "Facebook",
+                                            "details": ["fb1", "fb2"] },
+                                            { "name": "Twitter",
+                                            "details": ["tw1", "tw2"] }] };
+            expect(categoryDetails(undefined, action)).to.deep.equal(expectedState);
+        });
     });
 
 });

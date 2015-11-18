@@ -12,6 +12,19 @@ export default class MainHeader extends Component {
         localStorage.setItem("userInfo", "");
     }
 
+    getLinkElements() {
+        let linkCollection = [
+                    { "path": "/configure/categories", "imageURL": "../../../images/newspaper.jpg", "title": "Configure" },
+                    { "path": "/surf", "imageURL": "../../../images/newspaper.jpg", "title": "Surf" },
+                    { "path": "/park", "imageURL": "../../../images/newspaper.jpg", "title": "Park" }];
+        return linkCollection.map((link) =>
+                                           <Link to={link.path} activeClassName={ACTIVE_CLASS}>
+                                               <img src={link.imageURL} />
+                                               <span>{link.title}</span>
+                                           </Link>
+                                       );
+    }
+
     render() {
         return (
             <header>
@@ -32,26 +45,7 @@ export default class MainHeader extends Component {
 
                     <div className="flexible t-center">
                         <ul className="menu-list">
-                            <li>
-                                <Link to="/configure/categories" activeClassName={ACTIVE_CLASS}>
-                                    <img src="../../../images/newspaper.jpg" />
-                                    <span>{"Configure"}</span>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link to="/surf" activeClassName={ACTIVE_CLASS}>
-                                    <img src="../../../images/newspaper.jpg" />
-                                    <span>{"Surf"}</span>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link to="/park" activeClassName={ACTIVE_CLASS}>
-                                    <img src="../../../images/newspaper.jpg" />
-                                    <span>{"Park"}</span>
-                                </Link>
-                            </li>
+                            {this.getLinkElements()}
                         </ul>
                     </div>
 
