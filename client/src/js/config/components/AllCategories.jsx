@@ -30,9 +30,9 @@ export class AllCategories extends Component {
 
                         {this.props.categories.map((category, index) =>
                             <li key={index} className="category">
-                                <Link to={"/configure/category/" + category}>
+                                <Link to={"/configure/category/" + category._id}>
                                     <div className="v-center t-center">
-                                        <span>{category}</span>
+                                        <span>{category.name}</span>
                                     </div>
                                 </Link>
                             </li>

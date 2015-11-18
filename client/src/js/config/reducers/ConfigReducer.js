@@ -39,7 +39,7 @@ function getCategoryState(document = null, categoryNameParameter = null) {
 
     let categoryDocument = document;
     if(!categoryDocument) {
-        categoryDocument = CategoryDb.newCategoryDocumentByName(categoryName);
+        categoryDocument = {};//CategoryDb.newCategoryDocumentByName(categoryName);
     }
     let rssSources = {};
     rssSources.name = "RSS";

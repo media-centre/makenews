@@ -64,8 +64,8 @@ gulp.task("client:build", function(callback) {
 gulp.task("client:watch", function() {
     gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ["client:scss"]);
     gulp.watch([parameters.client.imgSrcPath + "/**/*.*", parameters.client.fontsPath + "/**/*.*"], ["client:copy-resources"]);
-    gulp.watch(parameters.client.srcPath + "/**/*.js", ["client:build-sources", "client:test", "client:src-es-lint"]);
-    gulp.watch(parameters.client.testPath + "/**/*.js", ["client:test", "client:test-es-lint"]);
+    gulp.watch(parameters.client.srcPath + "/**/*.js", ["client:build-sources"]);
+    gulp.watch(parameters.client.testPath + "/**/*.js", ["client:test"]);
     gulp.watch(parameters.client.clientAppPath + "/index.html", ["client:copy-resources"]);
 });
 
