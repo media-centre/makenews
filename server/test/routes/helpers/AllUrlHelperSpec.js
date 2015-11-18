@@ -65,8 +65,8 @@ describe("AllUrlHelper", () => {
             couchSessionStub = sinon.stub(CouchSession, "authenticate");
             request = {
                 "cookies": {
-                            "AuthSession": "test_auth_session"
-                        },
+                    "AuthSession": "test_auth_session"
+                },
                 "originalUrl": "test_url"
             };
         });

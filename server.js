@@ -1,23 +1,28 @@
-import express from 'express';
-import routers from './server/src/routes/Routes';
+/* eslint no-console:0 */
+"use strict";
+import express from "express";
+import routers from "./server/src/routes/Routes";
 import routeErrorHandler from "./server/src/routes/RouteErrorHandler.js";
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import EnvironmentConfig from "./server/src/config/EnvironmentConfig.js";
+import path from "path";
 
 let app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 routers(app);
 
-const port = process.env.PORT || 5000;
+const DEFAULT_PORT = 5000;
+const port = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("serverPort") || DEFAULT_PORT;
 
-app.use(express.static(__dirname + '/client'));
+app.use(express.static(path.join(__dirname, "/client")));
 
 routeErrorHandler(app);
 let server = app.listen(port);
 export default server;
-console.log('listening on port ' + port);
+console.log("listening on port " + port);

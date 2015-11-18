@@ -138,7 +138,7 @@
     "consistent-this": [2],                // enforce consistent naming when capturing the current execution context
     "eol-last": [2],                // enforce newline at the end of file, with no multiple empty lines (fixable)
     "func-names": [0],                // require function expressions to have a name
-    "func-style": [2],                // enforce use of function declarations or expressions
+    "func-style": [0],                // enforce use of function declarations or expressions
     "id-length": [2],                // this option enforces minimum and maximum identifier lengths (variable names, property names etc.)
     "id-match": [2],                // require identifiers to match the provided regular expression
     "indent": [2],                // specify tab or space width for your code (fixable)

@@ -77,7 +77,7 @@ gulp.task("client:src-eslint", function() {
 });
 
 gulp.task("client:test-eslint", function() {
-    return gulp.src([parameters.client.testPath + "/**/*.jsx", parameters.client.testPath + "**/*.js"])
+    return gulp.src([parameters.client.testPath + "/**/*.jsx", parameters.client.testPath + "/**/*.js"])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
@@ -119,8 +119,7 @@ gulp.task("server:copy-js", function() {
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
-    gulp.src(parameters.server.serverAppPath + "/config/**/*.js")
-        .pipe(babel())
+    gulp.src(parameters.server.serverAppPath + "/config/**/*.json")
         .pipe(gulp.dest(parameters.server.distFolder + "/config"));
 
     gulp.src("./" + parameters.server.serverJsFile)
@@ -145,8 +144,8 @@ gulp.task("server:test", function() {
 gulp.task("server:build", ["server:copy-js"]);
 
 gulp.task("server:watch", function() {
-    gulp.watch(parameters.server.srcPath + "/**/*.js", ["server:test", "server:src-eslint", "server:copy-js"]);
-    gulp.watch(parameters.server.serverJsFile, ["server:test", "server:src-eslint", "server:copy-js"]);
+    gulp.watch(parameters.server.srcPath + "/**/*.js", ["server:src-eslint", "server:copy-js"]);
+    gulp.watch(parameters.server.serverJsFile, ["server:src-eslint", "server:copy-js"]);
     gulp.watch(parameters.server.testPath + "/**/*.js", ["server:test", "server:test-eslint"]);
 });
 
@@ -158,7 +157,7 @@ gulp.task("server:src-eslint", function() {
 });
 
 gulp.task("server:test-eslint", function() {
-    return gulp.src([parameters.server.testPath + "**/*.js"])
+    return gulp.src([parameters.server.testPath + "/**/*.js"])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());

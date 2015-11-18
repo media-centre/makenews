@@ -15,7 +15,7 @@ export default class StringUtil {
   }
 
   static trim(value) {
-      if(!value) {
+      if(!StringUtil.validNonEmptyString(value)) {
           return "";
       }
       return String(value).trim();

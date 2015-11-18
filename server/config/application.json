@@ -1,0 +1,20 @@
+{
+  "default": {
+    "serverIpAddress": "127.0.0.1",
+    "serverPort": 5000,
+    "couchDbUrl": "http://127.0.0.1:5984"
+  },
+  "development": {
+  },
+  "unit_testing": {
+    "serverIpAddress": "localhost",
+    "serverPort": 5000,
+    "couchDbUrl": "http://localhost:5984"
+  },
+  "qa": {
+
+  },
+  "production": {
+
+  }
+}
