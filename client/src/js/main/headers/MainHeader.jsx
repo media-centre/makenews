@@ -12,20 +12,20 @@ export default class MainHeader extends Component {
         localStorage.setItem("userInfo", "");
     }
 
-    getLinkElements() {
-        let linkCollection = [
-                    { "path": "/configure/categories", "imageURL": "../../../images/newspaper.jpg", "title": "Configure" },
-                    { "path": "/surf", "imageURL": "../../../images/newspaper.jpg", "title": "Surf" },
-                    { "path": "/park", "imageURL": "../../../images/newspaper.jpg", "title": "Park" }];
-        return linkCollection.map((link) =>
-                                           <Link to={link.path} activeClassName={ACTIVE_CLASS}>
-                                               <img src={link.imageURL} />
-                                               <span>{link.title}</span>
-                                           </Link>
-                                       );
-    }
-
     render() {
+      let linkCollection = [
+                    { "path": "/configure/categories", "imageURL": "../../../images/newspaper.jpg", "name": "Configure" },
+                    { "path": "/surf", "imageURL": "../../../images/newspaper.jpg", "name": "Surf" },
+                    { "path": "/park", "imageURL": "../../../images/newspaper.jpg", "name": "Park" }];
+      let linksDom = linkCollection.map((link) =>
+                        <li>
+                       <Link to={link.path} activeClassName={ACTIVE_CLASS}>
+                           <img src={link.imageURL} />
+                           <span>{link.name}</span>
+                       </Link>
+                       </li>
+                   );
+
         return (
             <header>
                 <div className="fixed-header clear-fix multi-column">
@@ -45,7 +45,7 @@ export default class MainHeader extends Component {
 
                     <div className="flexible t-center">
                         <ul className="menu-list">
-                            {this.getLinkElements()}
+                            {linksDom}
                         </ul>
                     </div>
 

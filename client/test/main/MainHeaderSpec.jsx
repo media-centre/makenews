@@ -15,7 +15,7 @@ describe("main header component", function() {
 
     it("should have div with fixed-header clear-fix multi-column", function() {
         var mainHeaderDomNode = ReactDOM.findDOMNode(this.mainHeader);
-        expect(mainHeader.className).to.equal("main-page");
+        expect(mainHeader.firstChild.className).to.equal("main-page");
     });
 
 });
