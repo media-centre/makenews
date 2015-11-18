@@ -8,7 +8,7 @@ const ACTIVE_CLASS = "selected";
 
 export default class MainHeader extends Component {
 
-    logout() {
+    _logout() {
         localStorage.setItem("userInfo", "");
     }
 
@@ -27,7 +27,7 @@ export default class MainHeader extends Component {
                     </div>
 
                     <div className="user-info right">
-                        <Link to="/" onClick={this.logout} className="link">{"Logout"}</Link>
+                        <Link to="/" onClick={this._logout} className="link">{"Logout"}</Link>
                     </div>
 
                     <div className="flexible t-center">

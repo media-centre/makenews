@@ -173,3 +173,7 @@ button {
   -ms-border-radius: 300px;
   border-radius: 300px;
 }
+
+.error-border {
+  border: 1px solid $error-border-color;
+}

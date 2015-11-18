@@ -3,6 +3,10 @@
 .url-panel {
   margin: 10px 0px;
 
+  input.add-url-input.error-border {
+    border: 1px solid $error-color !important;
+  }
+
   ul li.feed-url {
     position: relative;
     font-size: $small-font-size;
