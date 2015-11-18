@@ -6,8 +6,7 @@ import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
 
 
-export default
-class AllCategories extends Component {
+export class AllCategories extends Component {
     componentDidMount() {
         this.props.dispatch(displayAllCategoriesAsync());
     }
