@@ -22,10 +22,10 @@ export class LoginPage extends Component {
 
       blocks = staticBlocks.map((block, index) =>
           <div key={index} className="static-block">
-              <div className="image-block circle blue-bg">
+              <div className="image-block circle blue-bg bottom-box-shadow">
                   <img src={block.url}/>
               </div>
-              <div className="content-block">
+              <div className="content-block bottom-box-shadow">
                   <h4>{block.name}</h4>
                   <p className="t-left">{block.description}</p>
               </div>
@@ -53,13 +53,9 @@ export class LoginPage extends Component {
         </header>
 
         <section className="login app-section container">
-            <img src="images/newspaper.jpg" alt="banner image"/>
-
-            <div className="static-block-container">
-                <div className="container h-center t-center">{blocks}</div>
-            </div>
-
+            <div className="container h-center t-center">{blocks}</div>
         </section>
+
       </div>
 
     );

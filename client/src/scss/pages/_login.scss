@@ -1,10 +1,11 @@
 @import "../utils/_variable";
 
 .login.app-header {
+  position: relative;
   background: $app-header-bg-color;
   color: $primary-font-color;
   padding: 30px;
-  position: relative;
+  margin-bottom: 2px;
   @extend .bottom-box-shadow;
 
   .app-logo {
@@ -28,17 +29,8 @@
 }
 
 .login.app-section {
-  img {
-    width: 100%;
-    opacity: 0.7;
-  }
-
-  .static-block-container {
-    position: absolute;
-    left: 0px;
-    top: 4%;
-    right: 0px;
-    bottom: 0px;
+    background: url("images/newspaper.jpg");
+    padding: 3% 0px;
 
     .static-block {
       width: 240px;
@@ -64,5 +56,4 @@
         margin-top: -60px;
       }
     }
-  }
 }
