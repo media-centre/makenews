@@ -177,3 +177,7 @@ button {
 .error-border {
   border: 1px solid $error-border-color;
 }
+
+.highlight-on-hover:hover {
+  color: $secondary-font-color;
+}

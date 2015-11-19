@@ -40,7 +40,7 @@ export default class MainHeader extends Component {
                     </div>
 
                     <div className="user-info right">
-                        <Link to="/" onClick={this._logout} className="link">{"Logout"}</Link>
+                        <Link to="/" onClick={this._logout} className="link highlight-on-hover">{"Logout"}</Link>
                     </div>
 
                     <div className="flexible t-center">

@@ -28,7 +28,7 @@ describe("main header component", () => {
     it("should have Logout", () => {
         let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
         expect(listComponents[0].props.to).to.equal("/");
-        expect(listComponents[0].props.className).to.equal("link");
+        expect(listComponents[0].props.className).to.equal("link highlight-on-hover");
         expect(listComponents[0].props.children).to.equal("Logout");
     });
 
