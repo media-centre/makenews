@@ -13,9 +13,7 @@
       z-index: 1;
 
       .app-logo {
-        margin-top: 3px;
-        color: $secondary-font-color;
-        @extend .max-text;
+        margin-top: 8px;
       }
 
       .user-info {
@@ -35,12 +33,38 @@
       }
 
       .menu-list li {
-        img {
-          width: 35px;
-          height: 35px;
-          margin: auto;
-          margin-bottom: 5px;
+        a {
+          .header-link-image {
+            width: 35px;
+            height: 35px;
+            margin: auto;
+            margin-bottom: 5px;
+            background-size: 35px !important;
+          }
+          .header-link-image.configure {
+            background: url('images/main/configure-white.png') no-repeat center;
+          }
+          .header-link-image.surf {
+            background: url('images/main/surf-white.png') no-repeat center;
+          }
+          .header-link-image.park {
+            background: url('images/main/park-white.png') no-repeat center;
+          }
+
+          &.selected {
+            .header-link-image.configure {
+              background: url('images/main/configure.png') no-repeat center;
+            }
+            .header-link-image.surf {
+              background: url('images/main/surf.png') no-repeat center;
+            }
+            .header-link-image.park {
+              background: url('images/main/park.png') no-repeat center;
+            }
+          }
         }
+
+
         * {
           display: block;
         }

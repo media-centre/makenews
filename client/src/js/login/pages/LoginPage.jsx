@@ -9,18 +9,34 @@ export class LoginPage extends Component {
   render() {
       const { dispatch } = this.props;
 
+      let desc = "", staticBlocks = null, blocks = null;
+
+      desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel faucibus lectus, quis rutrum sem. Quisque lobortis viverra sagittis. Pellentesque vitae tristique dolor, \
+                                sed suscipit tellus. Nunc fringilla euismod felis eget lobortis.";
+
+      staticBlocks = [
+          { "url": "images/main/configure.png", "name": "Configure", "description": desc },
+          { "url": "images/main/surf.png", "name": "Surf", "description": desc },
+          { "url": "images/main/park.png", "name": "Park", "description": desc }
+      ];
+
+      blocks = staticBlocks.map((block, index) =>
+          <div key={index} className="static-block">
+              <div className="image-block circle blue-bg">
+                  <img src={block.url}/>
+              </div>
+              <div className="content-block">
+                  <h4>{block.name}</h4>
+                  <p className="t-left">{block.description}</p>
+              </div>
+          </div>
+      );
+
       return (
       <div>
         <header className="app-header login app-">
             <div className="clear-fix form-container">
-                <div className="app-logo left clear-fix extra-large-text">
-                    <span className="left">
-                        {"make"}
-                    </span>
-                    <b className="left">
-                        {"news"}
-                    </b>
-                </div>
+                <img src="images/main/makenews.png" className="app-logo left clear-fix"/>
                 <div id="login-form-container" className="login-form-container right m-block">
                   <Login ref="login" onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={this.props.errorMessage} />
                 </div>
@@ -36,8 +52,13 @@ export class LoginPage extends Component {
             </p>
         </header>
 
-        <section className="login app-section">
+        <section className="login app-section container">
             <img src="images/newspaper.jpg" alt="banner image"/>
+
+            <div className="static-block-container">
+                <div className="container h-center t-center">{blocks}</div>
+            </div>
+
         </section>
       </div>
 

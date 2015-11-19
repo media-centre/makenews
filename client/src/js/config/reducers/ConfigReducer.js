@@ -5,13 +5,15 @@ import { DISPLAY_CATEGORY } from "../actions/CategoryActions.js";
 import CategoryDb from "../db/CategoryDb.js";
 import { List } from "immutable";
 
-export function allCategories(state = { "categories": List(["TimeLine"]) }, action = {}) {
+export const DEFAULT_CATEGORY = "Default Category"
+
+export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_CATEGORIES:
         let newList = List(action.categories);
         const NEGATIVE_INDEX = -1;
-        if(newList.indexOf("TimeLine") === NEGATIVE_INDEX) {
-            newList = newList.push("TimeLine");
+        if(newList.indexOf(DEFAULT_CATEGORY) === NEGATIVE_INDEX) {
+            newList = newList.push(DEFAULT_CATEGORY);
         }
         return { "categories": newList };
     default:
@@ -31,8 +33,8 @@ export function categoryDetails(state = getCategoryState(), action = {}) {
 
 function getCategoryState(document = null, categoryNameParameter = null) {
     let categoryName = categoryNameParameter;
-    if(!categoryName){
-        categoryName = "TimeLine";
+    if(!categoryName) {
+        categoryName = DEFAULT_CATEGORY;
     }
 
     let categoryDocument = document;

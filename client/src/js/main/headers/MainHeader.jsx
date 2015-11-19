@@ -14,15 +14,16 @@ export default class MainHeader extends Component {
 
     render() {
       let linkCollection = [
-                    { "path": "/configure/categories", "imageURL": "../../../images/newspaper.jpg", "name": "Configure" },
-                    { "path": "/surf", "imageURL": "../../../images/newspaper.jpg", "name": "Surf" },
-                    { "path": "/park", "imageURL": "../../../images/newspaper.jpg", "name": "Park" }];
-      let linksDom = linkCollection.map((link) =>
-                        <li>
-                       <Link to={link.path} activeClassName={ACTIVE_CLASS}>
-                           <img src={link.imageURL} />
-                           <span>{link.name}</span>
-                       </Link>
+                    { "path": "/configure/categories", "name": "Configure" },
+                    { "path": "/surf", "name": "Surf" },
+                    { "path": "/park", "name": "Park" }];
+
+      let linksDom = linkCollection.map((link, index) =>
+                        <li key={index}>
+                           <Link to={link.path} activeClassName={ACTIVE_CLASS}>
+                               <div className={link.name.toLowerCase() + ' header-link-image'}></div>
+                               <span>{link.name}</span>
+                           </Link>
                        </li>
                    );
 
@@ -30,17 +31,12 @@ export default class MainHeader extends Component {
             <header>
                 <div className="fixed-header clear-fix multi-column">
 
-                    <div className="app-logo left clear-fix large-text m-none">
-                        <span className="left">
-                                {"make"}
-                        </span>
-                        <b className="left">
-                                {"news"}
-                        </b>
-                    </div>
+                    <img src="images/main/makenews.png" className="app-logo left clear-fix m-none"/>
 
                     <div className="user-info right">
-                        <Link to="/" onClick={this._logout} className="link highlight-on-hover">{"Logout"}</Link>
+                        <Link to="/" onClick={this._logout} className="link highlight-on-hover">
+                            <span>{"Logout"}</span>
+                        </Link>
                     </div>
 
                     <div className="flexible t-center">

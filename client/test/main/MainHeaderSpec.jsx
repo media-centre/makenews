@@ -29,7 +29,6 @@ describe("main header component", () => {
         let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
         expect(listComponents[0].props.to).to.equal("/");
         expect(listComponents[0].props.className).to.equal("link highlight-on-hover");
-        expect(listComponents[0].props.children).to.equal("Logout");
     });
 
     it("Logout OnClick event", () => {
@@ -39,15 +38,14 @@ describe("main header component", () => {
 
     it("should have header list items", () => {
             let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-            var testHeaderList = (listItem, path, imgURL, name) => {
+            var testHeaderList = (listItem, path, name) => {
                             expect(listItem.props.to).to.equal(path);
                             expect(listItem.props.activeClassName).to.equal("selected");
-                            expect(listItem.props.children[0].type).to.equal("img");
-                            expect(listItem.props.children[0].props.src).to.equal(imgURL);
+                            expect(listItem.props.children[0].type).to.equal("div");
                             expect(listItem.props.children[1].props.children).to.equal(name);
                         };
-            testHeaderList(listComponents[1], "/configure/categories", "../../../images/newspaper.jpg", "Configure");
-            testHeaderList(listComponents[2], "/surf", "../../../images/newspaper.jpg", "Surf");
-            testHeaderList(listComponents[3], "/park", "../../../images/newspaper.jpg", "Park");
+            testHeaderList(listComponents[1], "/configure/categories", "Configure");
+            testHeaderList(listComponents[2], "/surf", "Surf");
+            testHeaderList(listComponents[3], "/park", "Park");
     });
 });

@@ -142,6 +142,9 @@ button {
 .t-right {
   text-align: right;
 }
+.t-left {
+  text-align: left;
+}
 
 .fixed-header {
   position: fixed;
@@ -180,4 +183,12 @@ button {
 
 .highlight-on-hover:hover {
   color: $secondary-font-color;
+}
+
+.app-logo {
+  width: 200px;
+}
+
+.container {
+  position: relative;
 }

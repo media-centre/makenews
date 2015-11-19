@@ -73,7 +73,7 @@ export default class AllCategoryDb {
     static newDocument() {
         return {
             "_id": this.documentType(),
-            "categories": { "TimeLine": true },
+            "categories": { "Default Category": true },
             "type": AllCategoryDb.documentType()
         };
     }
