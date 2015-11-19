@@ -12,16 +12,16 @@ import TabControl from "../../src/js/config/components/TabControl/TabControl.jsx
 import TabContent from "../../src/js/config/components/TabControl/TabContent.jsx";
 import "../helper/TestHelper.js";
 
-let TestUtils = React.addons.TestUtils, content = {};
+let TestUtils = React.addons.TestUtils, content = {}, time = 100;
 
-describe("Tab Control", function() {
-    before(function() {
+describe("Tab Control", ()=> {
+    before(() => {
         content = {
-            details: ["one detail"],
-            name: "one"
-        }
+            "details": ["one detail"],
+            "name": "one"
+        };
     })
-    xit("should have at least one child", function() {
+    xit("should have at least one child", ()=> {
 
         function iThrowError() {
             throw new Error("Error thrown");
@@ -34,7 +34,7 @@ describe("Tab Control", function() {
         assert.throws(iThrowError, Error, "Error thrown");
     });
 
-    it("should have atleast one TabContent", function() {
+    it("should have atleast one TabContent", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
                 <TabContent title={content.name} content={content} categoryName={content.name}/>
@@ -43,7 +43,7 @@ describe("Tab Control", function() {
         assert.strictEqual(TabControlComponent.props.children.props.title, "one");
     });
 
-    it("can have multiple TabContents", function() {
+    it("can have multiple TabContents", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
                 <TabContent title={content.name} content={content} categoryName={content.name}/>
@@ -54,7 +54,7 @@ describe("Tab Control", function() {
         assert.strictEqual(TabControlComponent.props.children.length > 1, true);
     });
 
-    it("should tab header and content", function() {
+    it("should tab header and content", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
@@ -68,7 +68,7 @@ describe("Tab Control", function() {
         assert.isNotNull(tabContent);
     });
 
-    it("should be selected the first tab by default", function() {
+    it("should be selected the first tab by default", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
@@ -80,7 +80,7 @@ describe("Tab Control", function() {
         assert.strictEqual(userNameInputDOM.classList.contains("selected"), true);
     });
 
-    xit("should display corresponding contents on clicking tabs", function() {
+    it("should display corresponding contents on clicking tabs", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
                 <TabContent title={content.name} content={content} categoryName={content.name}/>
@@ -89,9 +89,11 @@ describe("Tab Control", function() {
         );
 
         let userNameInputDOM = ReactDOM.findDOMNode(TabControlComponent.refs.tab1);
-        TestUtils.Simulate.keyDown(userNameInputDOM);
+        TestUtils.Simulate.keyUp(userNameInputDOM);
 
-        let contentDom = ReactDOM.findDOMNode(TabControlComponent.refs.tabContent1);
-        assert.strictEqual(contentDom.getDOMNode().getAttribute("data-selected"), "1");
+        setTimeout(()=> {
+            let contentDom = ReactDOM.findDOMNode(TabControlComponent.refs.tabContent1);
+            assert.strictEqual(contentDom.getDOMNode().getAttribute("data-selected"), "1");
+        }, time);
     });
 });

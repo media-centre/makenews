@@ -13,9 +13,9 @@ import "../helper/TestHelper.js";
 
 let TestUtils = React.addons.TestUtils, categories = [], allCategories = null;
 
-describe("All categories", function() {
+describe("All categories", ()=> {
 
-    before("render and locate element", function() {
+    before("render and locate element", ()=> {
         if(allCategories) {
             allCategories = null;
             categories = [];
@@ -26,17 +26,17 @@ describe("All categories", function() {
         );
     });
 
-    it("should have create-new category option", function() {
+    it("should have create-new category option", ()=> {
         let createCategoryDOM = ReactDOM.findDOMNode(allCategories).querySelector('ul li.add-new');
         assert.isNotNull(createCategoryDOM);
     });
 
-    it("should have categories based on props input", function() {
+    it("should have categories based on props input", ()=> {
         let categoryDOMList = ReactDOM.findDOMNode(allCategories).querySelectorAll('ul li.category');
         assert.strictEqual(2, categoryDOMList.length);
     });
 
-    it("should have category name in the list", function() {
+    it("should have category name in the list", ()=> {
         let categoryText = ReactDOM.findDOMNode(allCategories).querySelectorAll('ul li.category span')[1].textContent;
         assert.strictEqual("Category A", categoryText);
     });
