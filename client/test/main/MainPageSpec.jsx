@@ -9,25 +9,26 @@ import ReactDOM from "react-dom";
 
 let TestUtils = React.addons.TestUtils;
 
-describe("main page component", function() {
-    before("Main page component", function() {
-        let childElement = <div>{"mainpage children"}</div>;
-        this.mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement}/>);
+describe("main page component", () => {
+    let mainPage = null;
+    before("Main page component", () => {
+        let childElement = <div>{"main-page children"}</div>;
+        mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement}/>);
     });
 
-    it("should have div with className main-page", function() {
-        var mainPageDomNode = ReactDOM.findDOMNode(this.mainPage);
+    it("should have div with className main-page", () => {
+        var mainPageDomNode = ReactDOM.findDOMNode(mainPage);
         expect(mainPageDomNode.className).to.equal("main-page");
     });
 
-    it("should have MainHeader component", function() {
-        expect(TestUtils.scryRenderedComponentsWithType(this.mainPage, MainHeader).length).to.equal(1);
+    it("should have MainHeader component", () => {
+        expect(TestUtils.scryRenderedComponentsWithType(mainPage, MainHeader).length).to.equal(1);
     });
 
-    it("should have section with children", function() {
-        let sectionTag = TestUtils.findRenderedDOMComponentWithTag(this.mainPage, "section");
+    it("should have section with children", () => {
+        let sectionTag = TestUtils.findRenderedDOMComponentWithTag(mainPage, "section");
         expect(sectionTag.tagName).to.equal("section".toUpperCase());
-        expect(sectionTag.firstChild.textContent).to.equal("mainpage children");
+        expect(sectionTag.firstChild.textContent).to.equal("main-page children");
     });
 
 });

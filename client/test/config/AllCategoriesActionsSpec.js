@@ -7,13 +7,13 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("AllCategoriesActions", () => {
-    it("return type DISPLAY_ALL_CATEGORIES action", function() {
+    it("return type DISPLAY_ALL_CATEGORIES action", () =>  {
         let categories = "{TimeLine, Sports}";
         let allCategoreisAction = { "type": DISPLAY_ALL_CATEGORIES, categories };
         expect(allCategoreisAction).to.deep.equal(dispalyAllCategories(categories));
     });
 
-    xit("dispatch DISPLAY_ALL_CATEGORIES_ASYNC action", function() {
+    xit("dispatch DISPLAY_ALL_CATEGORIES_ASYNC action", () =>  {
             let categories = "{TimeLine, Sports}";
             let allCategoreisAction =  {"type": "DISPLAY_ALL_CATEGORIES", categories };
             let allCategoriesDbStub = sinon.stub(AllCategoriesDb, "fetchAllCategories").returns(categories);
