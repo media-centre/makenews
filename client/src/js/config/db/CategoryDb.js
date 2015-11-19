@@ -3,7 +3,7 @@
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
 
-export default class AllCategoryDb {
+export default class CategoryDb {
 
     static fetchAllCategoryDocuments() {
         return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true });

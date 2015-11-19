@@ -2,7 +2,7 @@
 //
 //"use strict";
 //import DbSession from "../../db/DbSession.js";
-//import AllCategoryDb from "./AllCategoriesDb.js";
+//import CategoryDb from "./AllCategoriesDb.js";
 //
 //export default class CategoryDb {
 //
@@ -45,7 +45,7 @@
 //            throw new Error("can not save invalid document");
 //        }
 //        return new Promise((resolve, reject) => {
-//            AllCategoryDb.addCategory(document.name).then((response) => {
+//            CategoryDb.addCategory(document.name).then((response) => {
 //                if (document._rev) {
 //                    DbSession.instance().put(document, document._rev).then((saveResponse)=> {
 //                        resolve(saveResponse);
