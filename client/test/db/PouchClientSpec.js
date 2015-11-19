@@ -18,17 +18,37 @@ describe("PouchClient", () => {
                 "docType": "category",
                 "name": "Sports"
             }
-            , "sports");
+            , "sportsCategoryId1");
         DbSession.instance().put({
                 "docType": "category",
                 "name": "Politics"
             }
-            , "politics");
+            , "politicsCategoryId2");
+
+        DbSession.instance().put({
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.hindu.com/rss",
+                "categoryIds": [ "sportsCategoryId1"]
+            }
+            , "rssId1");
+
+        DbSession.instance().put({
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.yahoo.com/rss",
+                "categoryIds": ["politicsCategoryId2"]
+            }
+            , "rssId2");
+
         DbSession.instance().put( {
             "language": "javascript",
             "views": {
                 "allCategories": {
-                    "map": "function(doc) { if(doc.docType == 'category') {emit(doc.docType, doc)} }"
+                    "map": "function(doc) { if(doc.docType === 'category') {emit(doc.docType, doc)} }"
+                },
+                "rssConfigurations": {
+                    "map": "function(doc) { if(doc.docType === 'source' && doc.sourceType === 'rss') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
                 }
             }}, "_design/category");
     });
@@ -55,6 +75,14 @@ describe("PouchClient", () => {
 
         it("should handle error on pouch error", (done) => {
             PouchClient.fetchDocuments(null, { "include_docs": true }).catch(() => {
+                done();
+            });
+        });
+
+        it("should list all rssConfigurations for every categoryId", (done) => {
+            PouchClient.fetchDocuments("category/rssConfigurations", { "include_docs": true, "key": "politicsCategoryId2" }).then((docs) => {
+                expect(docs.map((doc) => {return doc.url})).to.include("www.yahoo.com/rss");
+                expect(docs.map((doc) => {return doc.url})).to.not.include("www.hindu.com/rss");
                 done();
             });
         });
