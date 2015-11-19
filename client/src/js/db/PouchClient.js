@@ -5,7 +5,6 @@ import DbSession from "./DbSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 
 export default class PouchClient {
-
     static fetchDocuments(queryPath, options) {
         return new Promise((resolve, reject) => {
             DbSession.instance().query(queryPath, options).then(result => {

@@ -27,7 +27,7 @@ describe("EnvironmentConfig", () => {
             fs.readFileSync.restore();
         });
 
-        it.only("should throw exception if the relative path is empty", () => {
+        it("should throw exception if the relative path is empty", () => {
             let envFunc = function() {
                 EnvironmentConfig.instance("   ");
             };
@@ -47,7 +47,9 @@ describe("EnvironmentConfig", () => {
         });
 
         it("should return the associated environment and load the environment of the mentioned file", () => {
-            fsMock.withArgs(path.join(__dirname, "../../src/config/test_file_path"), "utf8").returns(fileJson);
+            relativeFilePath = "test_file_anotehr_path";
+
+            fsMock.withArgs(path.join(__dirname, "../../src/config/test_file_anotehr_path"), "utf8").returns(fileJson);
             fsMock.returns(fileJson);
             let envConfig = EnvironmentConfig.instance(relativeFilePath);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
