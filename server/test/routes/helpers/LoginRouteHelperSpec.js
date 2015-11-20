@@ -141,43 +141,24 @@ describe("LoginRouteHelper", () => {
         it("should handle the success if login is success with the valid user name and password.", () => {
             let handleLoginSuccessMock = sinon.mock(LoginRouteHelper).expects("handleLoginSuccess");
             let token = "token";
-            let mockSuccessPromise = function() {
-                return {
-                    then: function(callback) {
-                        callback(token);
-                        return this;
-                    },
-                    catch: function(callback) {
-                    }
-                }
-            }();
             inValidUserStub.withArgs(request.body.username, request.body.password).returns(false);
-            couchSessionStub.withArgs(request.body.username, request.body.password).returns(mockSuccessPromise);
+            couchSessionStub.withArgs(request.body.username, request.body.password).returns(Promise.resolve(token));
             handleLoginSuccessMock.withArgs(response, token);
-            LoginRouteHelper.loginCallback(request, response);
-            handleLoginSuccessMock.verify();
-            LoginRouteHelper.handleLoginSuccess.restore();
+            return Promise.resolve(LoginRouteHelper.loginCallback(request, response)).then(() => {
+                handleLoginSuccessMock.verify();
+                LoginRouteHelper.handleLoginSuccess.restore();
+            });
         });
 
         it("should handle the failure if login is failed.", () => {
             let handleLoginFailureMock = sinon.mock(LoginRouteHelper).expects("handleLoginFailure");
-            let mockFailurePromise = function() {
-                return {
-                    then: function(callback) {
-                        return this;
-                    },
-                    catch: function(callback) {
-                        callback(response);
-                    }
-                }
-            }();
-
             inValidUserStub.withArgs(request.body.username, request.body.password).returns(false);
-            couchSessionStub.withArgs(request.body.username, request.body.password).returns(mockFailurePromise);
+            couchSessionStub.withArgs(request.body.username, request.body.password).returns(Promise.reject(response));
             handleLoginFailureMock.withArgs(response);
-            LoginRouteHelper.loginCallback(request, response);
-            handleLoginFailureMock.verify();
-            LoginRouteHelper.handleLoginFailure.restore();
+            return Promise.resolve(LoginRouteHelper.loginCallback(request, response)).catch(() => {
+                handleLoginFailureMock.verify();
+                LoginRouteHelper.handleLoginFailure.restore();
+            });
         });
     });
 });
