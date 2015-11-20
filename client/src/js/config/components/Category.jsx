@@ -14,7 +14,7 @@ export default class Category extends Component {
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader />
+              <CategoryNavigationHeader title={this.props.categoryName}/>
 
               <TabControl>
                   {this.props.sources.map((item, index) =>

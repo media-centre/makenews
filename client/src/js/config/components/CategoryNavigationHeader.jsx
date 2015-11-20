@@ -12,7 +12,7 @@ export default class CategoryNavigationHeader extends Component {
                 <Link to="/configure/categories" className="navigation nav-control h-center left">
                     <i className="fa fa-arrow-left"></i><span>{"All Categories"}</span>
                 </Link>
-                <h4 className="navigation-title t-center">{this.props.title}</h4>
+                <h3 className="navigation-title t-center">{this.props.title}</h3>
             </div>
         );
     }

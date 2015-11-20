@@ -1,5 +1,9 @@
 @import "../utils/_variable";
 
+.login-bg {
+  background: url("images/newspaper.jpg");
+}
+
 .login.app-header {
   position: relative;
   background: $app-header-bg-color;
@@ -23,13 +27,12 @@
 
     p {
       margin: 8px 0px;
-      min-height: 14px;
+      min-height: 17px;
     }
   }
 }
 
 .login.app-section {
-    background: url("images/newspaper.jpg");
     padding: 3% 0px;
 
     .static-block {

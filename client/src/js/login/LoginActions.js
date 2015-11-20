@@ -19,7 +19,7 @@ export function userLogin(userName, password) {
                 dispatch(loginSuccess(succesData.userName));
             })
             .catch(errorData => {
-                dispatch(loginFailed("invalid user name or password"));
+                dispatch(loginFailed("Invalid user name or password"));
             });
     };
 }

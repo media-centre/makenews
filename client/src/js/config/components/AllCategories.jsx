@@ -14,9 +14,9 @@ export class AllCategories extends Component {
     render() {
         return (
             <div className="configure-page max-width">
-                <h4 className="t-center">
-                    {"All categories"}
-                </h4>
+                <h3 className="t-center">
+                    {"Default Category"}
+                </h3>
                 <div className="categories">
                     <ul className="cat-list m-t-center">
 
