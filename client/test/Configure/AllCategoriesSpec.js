@@ -20,7 +20,7 @@ describe("All categories", ()=> {
             allCategories = null;
             categories = [];
         }
-        categories = ["Default", "Category A"];
+        categories = [{ "_id": "id1", "name": "Default" }, { "_id": "id2", "name": "Category A" }];
         allCategories = TestUtils.renderIntoDocument(
             <AllCategories categories={categories} dispatch={()=>{}}/>
         );

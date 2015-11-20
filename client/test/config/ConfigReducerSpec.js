@@ -13,63 +13,112 @@ describe("Config Reducer", () => {
             expect({ "categories": new List([DEFAULT_CATEGORY]) }).to.deep.equal(allCategories());
         });
 
-        it("should not include the TimeLine twice in the state if it is already exists in parameters", () => {
-            let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": [DEFAULT_CATEGORY, "Sports"] };
-            let expectedState = { "categories": [DEFAULT_CATEGORY, "Sports"] };
+        it("should not include the default category twice in the state if it is already exists in parameters", () => {
+            let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
+            let expectedState = { "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
             let actualState = allCategories(null, action);
             expect(actualState.categories.size).to.equal(expectedState.categories.length);
-            expect(actualState.categories.get(0)).to.equal(expectedState.categories[0]);
-            expect(actualState.categories.get(1)).to.equal(expectedState.categories[1]);
+            expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]);
+            expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]);
         });
 
-        it("should include the TimeLine category by default in the state", () => {
-            let action = { "type": DISPLAY_ALL_CATEGORIES, "categories": ["Sports"] };
-            let expectedState = { "categories": ["Sports", DEFAULT_CATEGORY] };
+        it("should include the default category category by default in the state", () => {
+            let action = { "type": DISPLAY_ALL_CATEGORIES, "categories": [{"_id": "id1", "name":"Sports"}] };
+            let expectedState = { "categories": [{"_id": "id1", "name":"Sports"}, {"_id": "", "name":DEFAULT_CATEGORY}] };
             let actualState = allCategories(undefined, action);
             expect(actualState.categories.size).to.equal(expectedState.categories.length);
-            expect(actualState.categories.get(0)).to.equal(expectedState.categories[0]);
-            expect(actualState.categories.get(1)).to.equal(expectedState.categories[1]);
+            expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]);
+            expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]);
 
         });
     });
 
     describe("categoryDetails", () => {
-        it("default state if action type is not handled", () => {
-            expect({ "categories": new List([DEFAULT_CATEGORY]) }).to.deep.equal(allCategories());
-        });
-
-        it("return default categoryConfig if document and categoryName are undefined", () => {
+        it("return default category config details ", () => {
             let action = { "type": DISPLAY_CATEGORY };
-            let expected = { "categoryName": DEFAULT_CATEGORY, "sources": [{ "name": "RSS", "details": [] },
-                { "name": "Facebook", "details": [] }, { "name": "Twitter", "details": [] }] };
-            expect(categoryDetails(undefined, action)).to.deep.equal(expected);
+            let expected = {
+                "sources": {
+                    "rss": { "name": "RSS", "details": [] },
+                    "facebook": { "name": "Facebook", "details": [] },
+                    "twitter": { "name": "Twitter", "details": [] }
+                } };
+            expect(expected).to.deep.equal(categoryDetails(undefined, action));
         });
 
-        it("return default categoryConfig if document and categoryName are null", () => {
-            let action = { "type": DISPLAY_CATEGORY, "categoryDocument": null, "categoryName": null };
-            let expected = { "categoryName": DEFAULT_CATEGORY, "sources": [{ "name": "RSS", "details": [] },
-                { "name": "Facebook", "details": [] }, { "name": "Twitter", "details": [] }] };
-            expect(categoryDetails(undefined, action)).to.deep.equal(expected);
+        it("return default categoryConfig if the source Urls configuration object is null", () => {
+            let action = { "type": DISPLAY_CATEGORY, "sourceUrlsObj": null };
+            let expected = {
+                "sources": {
+                    "rss": { "name": "RSS", "details": [] },
+                    "facebook": { "name": "Facebook", "details": [] },
+                    "twitter": { "name": "Twitter", "details": [] }
+                } };
+            expect(expected).to.deep.equal(categoryDetails(undefined, action));
         });
 
         it("return categoryConfig from categoryDocument", () => {
-            let categoryDocument = { "name": "Sports",
-                                "rssFeeds": { "rss1": "true", "rss2": "true" },
-                                "faceBookFeeds": { "fb1": "true", "fb2": "true" },
-                                 "twitterFeeds": { "tw1": "true", "tw2": "true" }
-                                 };
-            let action = { "type": DISPLAY_CATEGORY,
-                        "categoryDocument": categoryDocument,
-                        "categoryName": "Sports" };
+            let sourceUrlsObj = {
+                "rss": [
+                    {
+                        "_id": "rss_id1",
+                        "url": "rss_url1"
+                    },
+                    {
+                        "_id": "rss_id2",
+                        "url": "rss_url2"
+                    }
+                ],
+                "twitter": [
+                    {
+                        "_id": "twitter_id1",
+                        "url": "twitter_url1"
+                    }
+                ],
+                "facebook": [
+                    {
+                        "_id": "facebook_id1",
+                        "url": "facebook_url1"
+                    }
+                ]
+            };
+            let action = { "type": DISPLAY_CATEGORY, sourceUrlsObj };
 
-            let expectedState = { "categoryName": "Sports",
-                                "sources": [{ "name": "RSS",
-                                            "details": ["rss1", "rss2"] },
-                                            { "name": "Facebook",
-                                            "details": ["fb1", "fb2"] },
-                                            { "name": "Twitter",
-                                            "details": ["tw1", "tw2"] }] };
-            expect(categoryDetails(undefined, action)).to.deep.equal(expectedState);
+            let expectedState = {
+                                  "sources": {
+                                      "rss": {
+                                          "details": [
+                                              {
+                                                  "_id": "rss_id1",
+                                                  "url": "rss_url1"
+                                              },
+                                              {
+                                                  "_id": "rss_id2",
+                                                  "url": "rss_url2"
+                                              }
+                                          ],
+                                          "name": "RSS"
+                                      },
+                                      "twitter": {
+                                          "details": [
+                                              {
+                                                  "_id": "twitter_id1",
+                                                  "url": "twitter_url1"
+                                              }
+                                          ],
+                                          "name": "Twitter"
+                                      },
+                                      "facebook": {
+                                          "details": [
+                                              {
+                                                  "_id": "facebook_id1",
+                                                  "url": "facebook_url1"
+                                              }
+                                          ],
+                                          "name": "Facebook"
+                                      }
+                                  }
+                                };
+            expect(expectedState).to.deep.equal(categoryDetails(undefined, action));
         });
     });
 

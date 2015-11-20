@@ -72,7 +72,7 @@ describe("PouchClient", () => {
         describe("allCategories", () => {
             it("should list all documents for the given queryPath", (done) => {
                 PouchClient.fetchDocuments("category/allCategories", { "include_docs": true }).then((docs) => {
-                    var actualCategories = docs.map((doc) => {
+                    let actualCategories = docs.map((doc) => {
                         return doc.name;
                     });
                     expect(actualCategories).to.include("Sports");

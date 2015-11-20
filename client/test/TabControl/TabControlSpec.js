@@ -17,10 +17,10 @@ let TestUtils = React.addons.TestUtils, content = {}, time = 100;
 describe("Tab Control", ()=> {
     before(() => {
         content = {
-            "details": ["one detail"],
+            "details": [{"_id": "id1", "url": "one detail" }],
             "name": "one"
         };
-    })
+    });
     xit("should have at least one child", ()=> {
 
         function iThrowError() {
@@ -46,8 +46,8 @@ describe("Tab Control", ()=> {
     it("can have multiple TabContents", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
+                <TabContent title={content.name} content={content.details}/>
+                <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
 
@@ -58,8 +58,8 @@ describe("Tab Control", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
+                <TabContent title={content.name} content={content.details}/>
+                <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
         let tabHeader = ReactDOM.findDOMNode(TabControlComponent).querySelector('.tab');
@@ -72,8 +72,8 @@ describe("Tab Control", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
+                <TabContent title={content.name} content={content.details}/>
+                <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
         let userNameInputDOM = ReactDOM.findDOMNode(TabControlComponent).querySelector('.tab');
@@ -83,8 +83,8 @@ describe("Tab Control", ()=> {
     it("should display corresponding contents on clicking tabs", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
-                <TabContent title={content.name} content={content} categoryName={content.name}/>
+                <TabContent title={content.name} content={content.details}/>
+                <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
 
@@ -92,8 +92,8 @@ describe("Tab Control", ()=> {
         TestUtils.Simulate.keyUp(userNameInputDOM);
 
         setTimeout(()=> {
-            let contentDom = ReactDOM.findDOMNode(TabControlComponent.refs.tabContent1);
-            assert.strictEqual(contentDom.getDOMNode().getAttribute("data-selected"), "1");
+            let contentDom = ReactDOM.findDOMNode(TabControlComponent.refs.tab1);
+            assert.strictEqual("1", contentDom.getDOMNode().getAttribute("data-selected"));
         }, time);
     });
 });

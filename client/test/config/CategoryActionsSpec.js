@@ -8,10 +8,9 @@ import { expect } from "chai";
 describe("CategoryActions", () => {
     describe("populateCategoryDetails", () => {
         it("return type DISPLAY_CATEGORY action", function() {
-            let categoryName = "Sports";
-            let categoryDocument = {RSSFeeds: ["url1", "url2"], FaceBook:[], Twitter: []};
-            expect(populateCategoryDetails(categoryDocument, categoryName)).to.deep.equal(
-                                { "type": DISPLAY_CATEGORY, categoryDocument, categoryName });
+            let sourceUrlsObj = { "rss": {}, "facebook": {}, "twitter": {}};
+            expect(populateCategoryDetails(sourceUrlsObj)).to.deep.equal(
+                                { "type": DISPLAY_CATEGORY, sourceUrlsObj});
         });
     });
 

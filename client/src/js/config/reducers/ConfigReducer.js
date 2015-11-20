@@ -12,8 +12,9 @@ export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }
     case DISPLAY_ALL_CATEGORIES:
         let newList = List(action.categories);
         const NEGATIVE_INDEX = -1;
-        if(newList.indexOf(DEFAULT_CATEGORY) === NEGATIVE_INDEX) {
-            newList = newList.push({ "_id:": "", "name": DEFAULT_CATEGORY });
+        let catgoryNames = action.categories.map((category) => { return category.name;});
+        if(catgoryNames.indexOf(DEFAULT_CATEGORY) === NEGATIVE_INDEX) {
+            newList = newList.push({ "_id": "", "name": DEFAULT_CATEGORY });
         }
         return { "categories": newList };
     default:
@@ -24,14 +25,13 @@ export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }
 export function categoryDetails(state = getCategoryState(null), action = {}) {
     switch(action.type) {
     case DISPLAY_CATEGORY:
-        //return getCategoryState(action.sourceUrlsObj, action.categoryId);
         return getCategoryState(action.sourceUrlsObj);
     default:
         return state;
     }
 }
 
-function getCategoryState(sourceUrlsObj = null, categoryId = null) {
+function getCategoryState(sourceUrlsObj = null) {
     let categorySourceConfig = {
         "sources": {
             "rss": { "name": "RSS", "details": [] },
@@ -45,9 +45,11 @@ function getCategoryState(sourceUrlsObj = null, categoryId = null) {
 
     if(sourceUrlsObj.rss) {
         categorySourceConfig.sources.rss.details = sourceUrlsObj.rss;
-    } else if(sourceUrlsObj.facebook) {
+    }
+    if(sourceUrlsObj.facebook) {
         categorySourceConfig.sources.facebook.details = sourceUrlsObj.facebook;
-    } else if(sourceUrlsObj.twitter) {
+    }
+    if(sourceUrlsObj.twitter) {
         categorySourceConfig.sources.twitter.details = sourceUrlsObj.twitter;
     }
 
