@@ -40,6 +40,23 @@ export default class CategoriesApplicationQueries {
         });
     }
 
+    static getNewRssDocumnet(categoryId, url) {
+        if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
+            throw new Error("category id or url can not be empty");
+        }
+        return {
+            "docType": "source",
+            "sourceType": "rss",
+            "url": url,
+            "categoryIds": [categoryId]
+        };
+    }
+
+    static addRssUrlConfiguration(categoryId, url) {
+        let rssConfigDocument = CategoriesApplicationQueries.getNewRssDocumnet(categoryId, url);
+        return CategoryDb.createOrUpdateSource(rssConfigDocument);
+    }
+
     static addCategoryDocument(document, categoryName) {
         //if(!document || !categoryName) {
         //    throw new Error("document and category name can not be empty");

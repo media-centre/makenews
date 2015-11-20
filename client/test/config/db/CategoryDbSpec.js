@@ -50,7 +50,7 @@ describe("CategoryDb", () => {
         });
     });
 
-    describe.only("createOrUpdateSource", () => {
+    describe("createOrUpdateSource", () => {
         let fetchDocumentsStub = null;
         beforeEach("createOrUpdateSource", () => {
             fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");

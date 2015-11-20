@@ -23,7 +23,6 @@ export default class TabContent extends Component {
     }
 
     _onKeyDownTextBox(event, props) {
-        console.log("in on key down text box");
         const ENTERKEY = 13;
         if(event.keyCode === ENTERKEY) {
             let url = this.refs.addUrlTextBox.value.trim();

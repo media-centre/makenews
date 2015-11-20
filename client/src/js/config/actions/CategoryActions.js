@@ -21,12 +21,10 @@ export function populateCategoryDetails(sourceUrlsObj, categoryId) {
     return { "type": DISPLAY_CATEGORY, sourceUrlsObj, categoryId };
 }
 
-export function addRssUrlAsync(categoryName, url) {
+export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        RssFeedsConfigurationDb.addRssFeed(categoryName, url).then(response => {
-            CategoryDb.fetchDocumentByCategoryName(categoryName).then(document => {
-                dispatch(populateCategoryDetails(document));
-            });
+        CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url).then(response => {
+            dispatch(populateCategoryDetailsAsync(categoryId));
         });
     };
 
