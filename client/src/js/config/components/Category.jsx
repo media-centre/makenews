@@ -8,17 +8,17 @@ import { connect } from "react-redux";
 
 export default class Category extends Component {
     componentDidMount() {
-        this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryName));
+        this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
     }
 
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader title={this.props.categoryName}/>
+              <CategoryNavigationHeader title={this.props.params.categoryName} />
 
               <TabControl>
-                  {this.props.sources.map((item, index) =>
-                      <TabContent key={index} content={item} title={item.name} categoryName={this.props.categoryName} dispatch={this.props.dispatch}/>
+                  {Object.keys(this.props.sources).map((key, index) =>
+                      <TabContent key={index} content={this.props.sources[key].details} title={this.props.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch}/>
                   )}
               </TabControl>
 

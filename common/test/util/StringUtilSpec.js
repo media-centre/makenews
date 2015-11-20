@@ -38,5 +38,14 @@ describe('StringUtil', () => {
     expect("").to.equals(StringUtil.trim("     \t   "));
   });
 
+  it('should return true if the string is empty', () => {
+    expect(StringUtil.isEmptyString("")).to.be.true;
+
+  });
+
+  it('should return false if the string is not empty', () => {
+    expect(StringUtil.isEmptyString("test")).to.be.false;
+
+  });
 
 });

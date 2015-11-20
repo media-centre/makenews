@@ -2,22 +2,23 @@
 
 "use strict";
 import CategoryDb from "../db/CategoryDb.js";
+import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
 import RssFeedsConfigurationDb from "../db/RssFeedsConfigurationDb.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 
-export function populateCategoryDetailsAsync(categoryName) {
+export function populateCategoryDetailsAsync(categoryId) {
     return dispatch => {
-        CategoryDb.fetchDocumentByCategoryName(categoryName).then(categoryDocument => {
-            dispatch(populateCategoryDetails(categoryDocument, categoryName));
+        CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
+            dispatch(populateCategoryDetails(sourceUrlsObj, categoryId));
         }).catch((error) => {
-            dispatch(populateCategoryDetails(null, categoryName));
+            dispatch(populateCategoryDetails(null, categoryId));
         });
     };
 }
 
-export function populateCategoryDetails(categoryDocument, categoryName) {
-    return { "type": DISPLAY_CATEGORY, categoryDocument, categoryName };
+export function populateCategoryDetails(sourceUrlsObj, categoryId) {
+    return { "type": DISPLAY_CATEGORY, sourceUrlsObj, categoryId };
 }
 
 export function addRssUrlAsync(categoryName, url) {

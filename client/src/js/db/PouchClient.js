@@ -21,4 +21,29 @@ export default class PouchClient {
             });
         });
     }
+
+    static createDocument(jsonDocument) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().post(jsonDocument).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    static updateDocument(existingDocument) {
+
+    }
+
+    static getDocument(id) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().get(id).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+
+    }
 }

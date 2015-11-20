@@ -5,7 +5,7 @@ import { DISPLAY_CATEGORY } from "../actions/CategoryActions.js";
 import CategoryDb from "../db/CategoryDb.js";
 import { List } from "immutable";
 
-export const DEFAULT_CATEGORY = "Default Category"
+export const DEFAULT_CATEGORY = "Default Category";
 
 export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }, action = {}) {
     switch(action.type) {
@@ -13,7 +13,7 @@ export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }
         let newList = List(action.categories);
         const NEGATIVE_INDEX = -1;
         if(newList.indexOf(DEFAULT_CATEGORY) === NEGATIVE_INDEX) {
-            newList = newList.push(DEFAULT_CATEGORY);
+            newList = newList.push({ "_id:": "", "name": DEFAULT_CATEGORY });
         }
         return { "categories": newList };
     default:
@@ -21,56 +21,35 @@ export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }
     }
 }
 
-export function categoryDetails(state = getCategoryState(), action = {}) {
+export function categoryDetails(state = getCategoryState(null), action = {}) {
     switch(action.type) {
     case DISPLAY_CATEGORY:
-        return getCategoryState(action.categoryDocument, action.categoryName);
-
+        //return getCategoryState(action.sourceUrlsObj, action.categoryId);
+        return getCategoryState(action.sourceUrlsObj);
     default:
         return state;
     }
 }
 
-function getCategoryState(document = null, categoryNameParameter = null) {
-    let categoryName = categoryNameParameter;
-    if(!categoryName) {
-        categoryName = DEFAULT_CATEGORY;
+function getCategoryState(sourceUrlsObj = null, categoryId = null) {
+    let categorySourceConfig = {
+        "sources": {
+            "rss": { "name": "RSS", "details": [] },
+            "facebook": { "name": "Facebook", "details": [] },
+            "twitter": { "name": "Twitter", "details": [] }
+        }
+    };
+    if(sourceUrlsObj === null) {
+        return categorySourceConfig;
     }
 
-    let categoryDocument = document;
-    if(!categoryDocument) {
-        categoryDocument = {};//CategoryDb.newCategoryDocumentByName(categoryName);
-    }
-    let rssSources = {};
-    rssSources.name = "RSS";
-    if(categoryDocument.rssFeeds) {
-        rssSources.details = Object.keys(categoryDocument.rssFeeds);
-    } else {
-        rssSources.details = [];
+    if(sourceUrlsObj.rss) {
+        categorySourceConfig.sources.rss.details = sourceUrlsObj.rss;
+    } else if(sourceUrlsObj.facebook) {
+        categorySourceConfig.sources.facebook.details = sourceUrlsObj.facebook;
+    } else if(sourceUrlsObj.twitter) {
+        categorySourceConfig.sources.twitter.details = sourceUrlsObj.twitter;
     }
 
-    let faceBookSources = {};
-    faceBookSources.name = "Facebook";
-    if(categoryDocument.faceBookFeeds) {
-        faceBookSources.details = Object.keys(categoryDocument.faceBookFeeds);
-    } else {
-        faceBookSources.details = [];
-    }
-
-    let twitterSources = {};
-    twitterSources.name = "Twitter";
-    if(categoryDocument.twitterFeeds) {
-        twitterSources.details = Object.keys(categoryDocument.twitterFeeds);
-    } else {
-        twitterSources.details = [];
-    }
-
-    let categoryConfig = { "sources": [] };
-    categoryConfig.sources.push(rssSources);
-    categoryConfig.sources.push(faceBookSources);
-    categoryConfig.sources.push(twitterSources);
-
-    categoryConfig.categoryName = categoryDocument.name;
-
-    return categoryConfig;
+    return categorySourceConfig;
 }

@@ -35,11 +35,19 @@ describe("PouchClient", () => {
 
         DbSession.instance().put({
                 "docType": "source",
-                "sourceType": "rss",
-                "url": "www.yahoo.com/rss",
+                "sourceType": "facebook",
+                "url": "www.facebooksports.com",
+                "categoryIds": [ "sportsCategoryId1"]
+            }
+            , "fbId1");
+
+        DbSession.instance().put({
+                "docType": "source",
+                "sourceType": "facebook",
+                "url": "www.facebookpolitics.com",
                 "categoryIds": ["politicsCategoryId2"]
             }
-            , "rssId2");
+            , "fbId2");
 
         DbSession.instance().put( {
             "language": "javascript",
@@ -47,8 +55,11 @@ describe("PouchClient", () => {
                 "allCategories": {
                     "map": "function(doc) { if(doc.docType === 'category') {emit(doc.docType, doc)} }"
                 },
-                "rssConfigurations": {
-                    "map": "function(doc) { if(doc.docType === 'source' && doc.sourceType === 'rss') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
+                "sourceConfigurations": {
+                    "map": "function(doc) { if(doc.docType === 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
+                },
+                "allSourcesByUrl": {
+                    "map": "function(doc) { if(doc.docType === 'source') {emit(doc.url, doc)} }"
                 }
             }}, "_design/category");
     });
@@ -58,11 +69,16 @@ describe("PouchClient", () => {
     });
 
     describe("fetchDocuments", () => {
-        it("should list all documents for the given queryPath", (done) => {
-            PouchClient.fetchDocuments("category/allCategories", { "include_docs": true }).then((docs) => {
-                expect(docs.map((doc) => {return doc.name})).to.include("Sports");
-                expect(docs.map((doc) => {return doc.name})).to.include("Politics");
-                done();
+        describe("allCategories", () => {
+            it("should list all documents for the given queryPath", (done) => {
+                PouchClient.fetchDocuments("category/allCategories", { "include_docs": true }).then((docs) => {
+                    var actualCategories = docs.map((doc) => {
+                        return doc.name;
+                    });
+                    expect(actualCategories).to.include("Sports");
+                    expect(actualCategories).to.include("Politics");
+                    done();
+                });
             });
         });
 
@@ -79,11 +95,77 @@ describe("PouchClient", () => {
             });
         });
 
-        it("should list all rssConfigurations for every categoryId", (done) => {
-            PouchClient.fetchDocuments("category/rssConfigurations", { "include_docs": true, "key": "politicsCategoryId2" }).then((docs) => {
-                expect(docs.map((doc) => {return doc.url})).to.include("www.yahoo.com/rss");
-                expect(docs.map((doc) => {return doc.url})).to.not.include("www.hindu.com/rss");
-                done();
+        describe("sourceConfigurations", () => {
+            it("should list all source configurations for every categoryId", () => {
+                return PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": "sportsCategoryId1" }).then((docs) => {
+                    let actualUrls = docs.map((doc) => {
+                        return doc.url;
+                    });
+                    expect(actualUrls).to.include("www.hindu.com/rss");
+                    expect(actualUrls).to.include("www.facebooksports.com");
+                    expect(actualUrls).to.not.include("www.facebookpolitics.com");
+                });
+            });
+        });
+
+        describe("allSourcesByUrl", () => {
+            it("should index all sourceConfigurations by url", () => {
+                return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": "www.hindu.com/rss" }).then((docs) => {
+                    let resultDoc = docs[0];
+                    expect(resultDoc.url).to.include("www.hindu.com/rss");
+                });
+            });
+        });
+    });
+
+    describe("createDocument", () => {
+        it("should create the document with the given json object", () => {
+            let jsonDocument = {
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.google.com/rss",
+                "categoryId": [
+                    "8bc3db40aa04d6c65fd10d833f00163e"
+                ]
+            };
+
+            return PouchClient.createDocument(jsonDocument).then((response) => {
+                expect(response.ok).to.be.true;
+                expect(response.id).not.to.be.undefined;
+                expect(response.rev).not.to.be.undefined;
+            });
+        });
+
+        it("should reject with the error in case of error while creating the document", () => {
+            let jsonDocument = {
+                "_id": "id",
+                "_rev": "1234",
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.google.com/rss",
+                "categoryId": [
+                    "8bc3db40aa04d6c65fd10d833f00163e"
+                ]
+            };
+
+            return PouchClient.createDocument(jsonDocument).catch((errorResponse) => {
+                expect(errorResponse.error).to.be.true;
+            });
+        });
+    });
+
+    describe("getDocument", () => {
+        it("should get document for the given id", () => {
+            PouchClient.getDocument("sportsCategoryId1").then(document => {
+               expect(document._id).to.eq("sportsCategoryId1");
+               expect(document._rev).not.to.be.undefined;
+            });
+        });
+
+        it("should reject with the error if document not found", () => {
+            return PouchClient.getDocument("invalidId").catch((errorResponse) => {
+                expect(errorResponse.error).to.be.true;
+                expect(errorResponse.status).to.eq(404);
             });
         });
     });

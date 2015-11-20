@@ -27,7 +27,7 @@ export default class TabControl extends Component {
         tabHeader = tabContentDom.map((tab, index) =>
                 <li key={index} ref={'tab' + index} className={classes.call(this, index)} onClick={this._handleClick.bind(this, index)}>
                     <i className={"fa fa-" + tab.props.title.toLowerCase()}></i>
-                    <span>{tab.props.title + "(" + tab.props.content.details.length + ")"}</span>
+                    <span>{tab.props.title + "(" + tab.props.content.length + ")"}</span>
                 </li>
         );
 

@@ -23,7 +23,7 @@ export function renderRoutes() {
 
                 <Route path="/configure" component={ConfigurePage}>
                     <Route path="/configure/categories" component={AllCategories} />
-                    <Route path="/configure/category/:categoryName" component={CategoryPage}/>
+                    <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
 
                 <Route path="/surf" component={SurfPage} />

@@ -7,6 +7,10 @@ export default class StringUtil {
       return false;
   }
 
+  static isEmptyString(value) {
+      return !StringUtil.validNonEmptyString(value);
+  }
+
   static validString(value) {
       if(value && typeof value === "string") {
           return true;
