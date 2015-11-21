@@ -25,7 +25,7 @@ export default class TabControl extends Component {
         }
 
         tabHeader = tabContentDom.map((tab, index) =>
-                <li key={index} ref={'tab' + index} className={classes.call(this, index)} onClick={this._handleClick.bind(this, index)}>
+                <li key={index} ref={"tab" + index} className={classes.call(this, index)} onClick={this._handleClick.bind(this, index)}>
                     <i className={"fa fa-" + tab.props.title.toLowerCase()}></i>
                     <span>{tab.props.title + "(" + tab.props.content.length + ")"}</span>
                 </li>
@@ -33,7 +33,7 @@ export default class TabControl extends Component {
 
         tabContent = tabContentDom.map(function(content, index) {
             if(self.state.activeIndex === index) {
-                return <div key={index} ref={'tabContent' + index} data-selected={self.state.activeIndex} className="tab-content-inner">{self.props.children[index]}</div>;
+                return <div key={index} ref={"tabContent" + index} data-selected={self.state.activeIndex} className="tab-content-inner">{self.props.children[index]}</div>;
             }
         });
 

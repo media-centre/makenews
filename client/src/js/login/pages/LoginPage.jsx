@@ -1,3 +1,4 @@
+/*eslint max-len:[0,500] */
 "use strict";
 import Login from "../components/Login.jsx";
 import { userLogin } from "../LoginActions.js";
@@ -20,13 +21,12 @@ export class LoginPage extends Component {
 
         let desc = "", staticBlocks = null, blocks = null;
 
-        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel faucibus lectus, quis rutrum sem. Quisque lobortis viverra sagittis. Pellentesque vitae tristique dolor, \
-                                sed suscipit tellus. Nunc fringilla euismod felis eget lobortis.";
+        desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel faucibus lectus, quis rutrum sem. Quisque lobortis viverra sagittis. Pellentesque vitae tristique dolor, sed suscipit tellus. Nunc fringilla euismod felis eget lobortis.";
 
         staticBlocks = [
-            {"url": "images/main/configure.png", "name": "Configure", "description": desc},
-            {"url": "images/main/surf.png", "name": "Surf", "description": desc},
-            {"url": "images/main/park.png", "name": "Park", "description": desc}
+            { "url": "images/main/configure.png", "name": "Configure", "description": desc },
+            { "url": "images/main/surf.png", "name": "Surf", "description": desc },
+            { "url": "images/main/park.png", "name": "Park", "description": desc }
         ];
 
         blocks = staticBlocks.map((block, index) =>

@@ -1,9 +1,7 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
 "use strict";
 import "../helper/TestHelper.js";
-import DbParameters from "../../src/js/db/config/DbParameters.js";
-import DbSession from "../../src/js/db/DbSession.js";
 import { login } from "../../src/js/login/LoginReducers.js";
 import { assert } from "chai";
 import sinon from "sinon";

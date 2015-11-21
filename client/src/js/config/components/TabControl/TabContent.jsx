@@ -1,16 +1,16 @@
-/* eslint no-underscore-dangle:0 */
+/* eslint no-underscore-dangle:0, max-len:[0,500] no-unused-vars:0*/
 "use strict";
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../../actions/CategoryActions.js";
 
-let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i
+let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
 export default class TabContent extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {showTextbox: false, error: false};
+        this.state = { "showTextbox": false, "error": false };
     }
 
     _onUrlChange() {}
@@ -18,7 +18,7 @@ export default class TabContent extends Component {
     _addNewUrlButton() {
         let self = this, renderingTime = 100;
 
-        self.setState({showTextbox: true});
+        self.setState({ "showTextbox": true });
         setTimeout(function() { self.refs.addUrlTextBox.focus(); }, renderingTime);
     }
 
@@ -27,17 +27,18 @@ export default class TabContent extends Component {
         if(event.keyCode === ENTERKEY) {
             let url = this.refs.addUrlTextBox.value.trim();
             if(this._isInvalidUrl(url)) {
-                this.setState({error: true});
+                this.setState({ "error": true });
             } else {
                 props.dispatch(addRssUrlAsync(props.categoryId, url));
                 this.refs.addUrlTextBox.value = "";
-                this.setState({showTextbox: false});
+                this.setState({ "showTextbox": false });
             }
         }
     }
 
     _isInvalidUrl(url) {
-        return (this.props.content.indexOf(url) !== -1 || url.match(urlRegex) === null);
+        const NEGATIVE_INDEX = -1;
+        return (this.props.content.indexOf(url) !== NEGATIVE_INDEX || url.match(urlRegex) === null);
     }
 
     render() {

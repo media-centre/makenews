@@ -1,12 +1,11 @@
-/* eslint no-unused-vars:0 */
-export const DEFAULT_CATEGORY = "Default Category";
-
+/* eslint no-unused-vars:0 no-unused-expressions:0*/
 "use strict";
 import AjaxClient from "../utils/AjaxClient";
 import { createCategory } from "../config/actions/CategoryActions.js";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
+export const DEFAULT_CATEGORY = "Default Category";
 
 export function userLogin(userName, password) {
     return dispatch => {

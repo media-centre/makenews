@@ -44,6 +44,5 @@ function getCategoryState(sourceUrlsObj = null) {
     if(sourceUrlsObj.twitter) {
         categorySourceConfig.sources.twitter.details = sourceUrlsObj.twitter;
     }
-
     return categorySourceConfig;
 }

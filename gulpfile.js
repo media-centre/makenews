@@ -169,7 +169,10 @@ gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 
 gulp.task("build", ["common:build", "client:build", "server:build"]);
 gulp.task("clean", ["client:clean", "server:clean"]);
-gulp.task("test", ["common:test", "client:test", "server:test"]);
+gulp.task("test", function(callback) {
+    runSequence("common:test", "client:test", "server:test", callback);
+});
+
 gulp.task("watch", ["client:watch", "server:watch"]);
 gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint"]);
 gulp.task("checkin-ready", ["client:checkin-ready", "server:checkin-ready"]);

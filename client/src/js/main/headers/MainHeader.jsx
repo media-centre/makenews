@@ -13,15 +13,15 @@ export default class MainHeader extends Component {
     }
 
     render() {
-      let linkCollection = [
+        let linkCollection = [
                     { "path": "/configure/categories", "name": "Configure" },
                     { "path": "/surf", "name": "Surf" },
                     { "path": "/park", "name": "Park" }];
 
-      let linksDom = linkCollection.map((link, index) =>
+        let linksDom = linkCollection.map((link, index) =>
                         <li key={index}>
                            <Link to={link.path} activeClassName={ACTIVE_CLASS}>
-                               <div className={link.name.toLowerCase() + ' header-link-image'}></div>
+                               <div className={link.name.toLowerCase() + " header-link-image"}></div>
                                <span>{link.name}</span>
                            </Link>
                        </li>

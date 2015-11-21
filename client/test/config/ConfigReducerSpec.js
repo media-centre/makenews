@@ -1,11 +1,12 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
 "use strict";
-import { allCategories, categoryDetails, DEFAULT_CATEGORY } from "../../src/js/config/reducers/ConfigReducer.js";
-import { DISPLAY_ALL_CATEGORIES } from "../../src/js/config/actions/AllCategoriesActions.js";
+import { allCategories, categoryDetails } from "../../src/js/config/reducers/ConfigReducer.js";
 import { DISPLAY_CATEGORY } from "../../src/js/config/actions/CategoryActions.js";
 import { expect } from "chai";
 import { List } from "immutable";
+
+const DEFAULT_CATEGORY = "Default Category";
 
 describe("Config Reducer", () => {
     describe("allCategories", () => {
@@ -14,8 +15,8 @@ describe("Config Reducer", () => {
         });
 
         it("should return the action categories as new state", () => {
-            let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
-            let expectedState = { "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
+            let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": [{ "_id": "", "name": DEFAULT_CATEGORY }, { "_id": "id1", "name": "Sports" }] };
+            let expectedState = { "categories": [{ "_id": "", "name": DEFAULT_CATEGORY }, { "_id": "id1", "name": "Sports" }] };
             let actualState = allCategories(null, action);
             expect(actualState.categories.size).to.equal(expectedState.categories.length);
             expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]);
@@ -23,8 +24,8 @@ describe("Config Reducer", () => {
         });
 
         it("should return the same state in case of default case", () => {
-            let action = { "type": "OTHER_CATEGORY"};
-            let state = { "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
+            let action = { "type": "OTHER_CATEGORY" };
+            let state = { "categories": [{ "_id": "", "name": DEFAULT_CATEGORY }, { "_id": "id1", "name": "Sports" }] };
             let actualState = allCategories(state, action);
             expect(state).to.deep.equal(actualState);
         });
@@ -81,40 +82,40 @@ describe("Config Reducer", () => {
             let action = { "type": DISPLAY_CATEGORY, sourceUrlsObj };
 
             let expectedState = {
-                                  "sources": {
-                                      "rss": {
-                                          "details": [
-                                              {
-                                                  "_id": "rss_id1",
-                                                  "url": "rss_url1"
-                                              },
-                                              {
-                                                  "_id": "rss_id2",
-                                                  "url": "rss_url2"
-                                              }
-                                          ],
-                                          "name": "RSS"
-                                      },
-                                      "twitter": {
-                                          "details": [
-                                              {
-                                                  "_id": "twitter_id1",
-                                                  "url": "twitter_url1"
-                                              }
-                                          ],
-                                          "name": "Twitter"
-                                      },
-                                      "facebook": {
-                                          "details": [
-                                              {
-                                                  "_id": "facebook_id1",
-                                                  "url": "facebook_url1"
-                                              }
-                                          ],
-                                          "name": "Facebook"
-                                      }
-                                  }
-                                };
+                "sources": {
+                    "rss": {
+                        "details": [
+                            {
+                                "_id": "rss_id1",
+                                "url": "rss_url1"
+                            },
+                            {
+                                "_id": "rss_id2",
+                                "url": "rss_url2"
+                            }
+                        ],
+                        "name": "RSS"
+                    },
+                    "twitter": {
+                        "details": [
+                            {
+                                "_id": "twitter_id1",
+                                "url": "twitter_url1"
+                            }
+                        ],
+                        "name": "Twitter"
+                    },
+                    "facebook": {
+                        "details": [
+                            {
+                                "_id": "facebook_id1",
+                                "url": "facebook_url1"
+                            }
+                        ],
+                        "name": "Facebook"
+                    }
+                }
+            };
             expect(expectedState).to.deep.equal(categoryDetails(undefined, action));
         });
     });

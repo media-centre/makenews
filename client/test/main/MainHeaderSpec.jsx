@@ -1,3 +1,4 @@
+/*eslint no-magic-numbers:0 */
 "use strict";
 import "../helper/TestHelper.js";
 import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
@@ -16,9 +17,9 @@ describe("main header component", () => {
     });
 
     it("should have header element", () => {
-            var mainHeaderDomNode = ReactDOM.findDOMNode(mainHeader);
-            expect(mainHeaderDomNode.tagName).to.equal("header".toUpperCase());
-        });
+        var mainHeaderDomNode = ReactDOM.findDOMNode(mainHeader);
+        expect(mainHeaderDomNode.tagName).to.equal("header".toUpperCase());
+    });
 
     it("should have div with fixed-header clear-fix multi-column", () => {
         expect(TestUtils.findRenderedDOMComponentWithClass(mainHeader, "fixed-header clear-fix multi-column").className)
@@ -32,20 +33,20 @@ describe("main header component", () => {
     });
 
     it("Logout OnClick event", () => {
-            let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-            TestUtils.Simulate.click(listComponents[0]);
-        });
+        let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
+        TestUtils.Simulate.click(listComponents[0]);
+    });
 
     it("should have header list items", () => {
-            let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-            var testHeaderList = (listItem, path, name) => {
-                            expect(listItem.props.to).to.equal(path);
-                            expect(listItem.props.activeClassName).to.equal("selected");
-                            expect(listItem.props.children[0].type).to.equal("div");
-                            expect(listItem.props.children[1].props.children).to.equal(name);
-                        };
-            testHeaderList(listComponents[1], "/configure/categories", "Configure");
-            testHeaderList(listComponents[2], "/surf", "Surf");
-            testHeaderList(listComponents[3], "/park", "Park");
+        let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
+        var testHeaderList = (listItem, path, name) => {
+            expect(listItem.props.to).to.equal(path);
+            expect(listItem.props.activeClassName).to.equal("selected");
+            expect(listItem.props.children[0].type).to.equal("div");
+            expect(listItem.props.children[1].props.children).to.equal(name);
+        };
+        testHeaderList(listComponents[1], "/configure/categories", "Configure");
+        testHeaderList(listComponents[2], "/surf", "Surf");
+        testHeaderList(listComponents[3], "/park", "Park");
     });
 });

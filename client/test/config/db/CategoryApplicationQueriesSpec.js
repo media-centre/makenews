@@ -5,7 +5,7 @@ import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import CategoryApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
 import CategoryDocuments from "../../../src/js/config/actions/CategoryDocuments.js";
 import sinon from "sinon";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 describe("CategoryApplicationQueries", () => {
     describe("fetchAllCategories", () => {
@@ -99,7 +99,7 @@ describe("CategoryApplicationQueries", () => {
         it("should add or udpate the rss url configuration", () => {
             let categoryId = "test_id";
             let url = "url";
-            sinon.stub(CategoryDocuments, "getNewRssDocumnet").withArgs(categoryId, url).returns({})
+            sinon.stub(CategoryDocuments, "getNewRssDocumnet").withArgs(categoryId, url).returns({});
             let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
             createOrUpdateMock.withArgs({});
             CategoryApplicationQueries.addRssUrlConfiguration(categoryId, url);

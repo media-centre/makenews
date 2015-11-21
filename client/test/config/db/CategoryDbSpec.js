@@ -1,11 +1,10 @@
-/* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0*/
-
+/* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0, no-undefined:0*/
 
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import sinon from "sinon";
-import {expect} from "chai";
+import { expect } from "chai";
 
 describe("CategoryDb", () => {
     describe("fetchAllCategoryDocuments", () => {
@@ -135,7 +134,7 @@ describe("CategoryDb", () => {
 
             let existingDocument = jsonDocument;
 
-
+            let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
             fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
             fetchDocumentsStub.returns(Promise.resolve([existingDocument]));
             let pouchClientMock = sinon.mock(PouchClient).expects("updateDocument").never();

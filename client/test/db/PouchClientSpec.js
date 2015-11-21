@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint global-require:0 no-unused-expressions:0, max-nested-callbacks: [2, 7], no-magic-numbers:0*/
 
 "use strict";
 import DbSession from "../../src/js/db/DbSession.js";
@@ -9,47 +9,47 @@ import PouchClient from "../../src/js/db/PouchClient.js";
 
 describe("PouchClient", () => {
     before("PouchClient", () => {
-        let pouch = new PouchDB('myDB', {db: require('memdown')});
+        let pouch = new PouchDB("myDB", { "db": require("memdown") });
         sinon.stub(DbSession, "instance", () => {
             return pouch;
         });
 
         DbSession.instance().put({
-                "docType": "category",
-                "name": "Sports"
-            }
+            "docType": "category",
+            "name": "Sports"
+        }
             , "sportsCategoryId1");
         DbSession.instance().put({
-                "docType": "category",
-                "name": "Politics"
-            }
+            "docType": "category",
+            "name": "Politics"
+        }
             , "politicsCategoryId2");
 
         DbSession.instance().put({
-                "docType": "source",
-                "sourceType": "rss",
-                "url": "www.hindu.com/rss",
-                "categoryIds": [ "sportsCategoryId1"]
-            }
+            "docType": "source",
+            "sourceType": "rss",
+            "url": "www.hindu.com/rss",
+            "categoryIds": ["sportsCategoryId1"]
+        }
             , "rssId1");
 
         DbSession.instance().put({
-                "docType": "source",
-                "sourceType": "facebook",
-                "url": "www.facebooksports.com",
-                "categoryIds": [ "sportsCategoryId1"]
-            }
+            "docType": "source",
+            "sourceType": "facebook",
+            "url": "www.facebooksports.com",
+            "categoryIds": ["sportsCategoryId1"]
+        }
             , "fbId1");
 
         DbSession.instance().put({
-                "docType": "source",
-                "sourceType": "facebook",
-                "url": "www.facebookpolitics.com",
-                "categoryIds": ["politicsCategoryId2"]
-            }
+            "docType": "source",
+            "sourceType": "facebook",
+            "url": "www.facebookpolitics.com",
+            "categoryIds": ["politicsCategoryId2"]
+        }
             , "fbId2");
 
-        DbSession.instance().put( {
+        DbSession.instance().put({
             "language": "javascript",
             "views": {
                 "allCategories": {
@@ -61,11 +61,11 @@ describe("PouchClient", () => {
                 "allSourcesByUrl": {
                     "map": "function(doc) { if(doc.docType === 'source') {emit(doc.url, doc)} }"
                 }
-            }}, "_design/category");
+            } }, "_design/category");
     });
 
     after("PouchClient", () => {
-       DbSession.instance.restore();
+        DbSession.instance.restore();
     });
 
     describe("fetchDocuments", () => {
@@ -161,9 +161,9 @@ describe("PouchClient", () => {
     describe("getDocument", () => {
         it("should get document for the given id", (done) => {
             PouchClient.getDocument("sportsCategoryId1").then(document => {
-               expect(document._id).to.eq("sportsCategoryId1");
-               expect(document._rev).not.to.be.undefined;
-               done();
+                expect(document._id).to.eq("sportsCategoryId1");
+                expect(document._rev).not.to.be.undefined;
+                done();
             });
         });
 

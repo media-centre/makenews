@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS} from "../../src/js/login/LoginActions.js";
+import { loginFailed, loginSuccess, userLogin } from "../../src/js/login/LoginActions.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -12,7 +12,6 @@ describe("actions", () => {
         const loginSuccessAction = { "type": "LOGIN_SUCCESS", userDetails };
         expect(loginSuccessAction).to.deep.equal(loginSuccess(userDetails));
     });
-    let ajaxStub =
     it("return type LOGIN_FAILED action", function() {
         const loginFailedAction = { "type": "LOGIN_FAILED", "responseMessage": "invalid login" };
         expect(loginFailedAction).to.deep.equal(loginFailed("invalid login"));

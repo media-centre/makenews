@@ -1,23 +1,19 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
-
+/* eslint no-magic-numbers:0 no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
 import "../helper/TestHelper.js";
-import { assert } from "chai";
-import sinon from "sinon";
-import ReactDOM from "react-dom";
-import React from "react/addons";
-import jsdom from "jsdom";
 import TabControl from "../../src/js/config/components/TabControl/TabControl.jsx";
 import TabContent from "../../src/js/config/components/TabControl/TabContent.jsx";
+import { assert } from "chai";
+import ReactDOM from "react-dom";
+import React from "react/addons";
 import "../helper/TestHelper.js";
 
-let TestUtils = React.addons.TestUtils, content = {}, time = 100;
+let TestUtils = React.addons.TestUtils, content = {};
 
 describe("Tab Control", ()=> {
     before(() => {
         content = {
-            "details": [{"_id": "id1", "url": "one detail" }],
+            "details": [{ "_id": "id1", "url": "one detail" }],
             "name": "one"
         };
     });
@@ -27,8 +23,7 @@ describe("Tab Control", ()=> {
             throw new Error("Error thrown");
         }
 
-
-        let TabControlComponent = TestUtils.renderIntoDocument(
+        TestUtils.renderIntoDocument(
             <TabControl />
         );
         assert.throws(iThrowError, Error, "Error thrown");
@@ -62,8 +57,8 @@ describe("Tab Control", ()=> {
                 <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
-        let tabHeader = ReactDOM.findDOMNode(TabControlComponent).querySelector('.tab');
-        let tabContent = ReactDOM.findDOMNode(TabControlComponent).querySelector('.tab-content-inner');
+        let tabHeader = ReactDOM.findDOMNode(TabControlComponent).querySelector(".tab");
+        let tabContent = ReactDOM.findDOMNode(TabControlComponent).querySelector(".tab-content-inner");
         assert.isNotNull(tabHeader);
         assert.isNotNull(tabContent);
     });
@@ -76,7 +71,7 @@ describe("Tab Control", ()=> {
                 <TabContent title={content.name} content={content.details}/>
             </TabControl>
         );
-        let userNameInputDOM = ReactDOM.findDOMNode(TabControlComponent).querySelector('.tab');
+        let userNameInputDOM = ReactDOM.findDOMNode(TabControlComponent).querySelector(".tab");
         assert.strictEqual(userNameInputDOM.classList.contains("selected"), true);
     });
 
