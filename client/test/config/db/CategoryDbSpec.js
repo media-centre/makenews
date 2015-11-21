@@ -1,4 +1,5 @@
-/* eslint max-nested-callbacks: [2, 5] */
+/* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0*/
+
 
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
@@ -146,4 +147,86 @@ describe("CategoryDb", () => {
 
         });
     });
+
+    describe("isCategoryExists", () => {
+        let resultDocs = null;
+        before("isCategoryExists", () => {
+            resultDocs = [
+                {
+                    "_id": "8bc3db40aa04d6c65fd10d833f001be8",
+                    "_rev": "1-0078fe2a374458f856d8678a50f78d3e",
+                    "docType": "category",
+                    "name": "Politics"
+                },
+                {
+                    "_id": "8bc3db40aa04d6c65fd10d833f00163e",
+                    "_rev": "2-7f1d26cb8acdcb3dbfc135b74af7ad28",
+                    "docType": "category",
+                    "name": "Sports"
+                }
+            ];
+        });
+        it("should resolve true if the category already exists", (done) => {
+            let categoryName = "Sports";
+            sinon.stub(CategoryDb, "fetchAllCategoryDocuments").returns(Promise.resolve(resultDocs));
+            CategoryDb.isCategoryExists(categoryName).then((result)=> {
+                expect(result.status).to.be.true;
+                CategoryDb.fetchAllCategoryDocuments.restore();
+                done();
+            });
+        });
+        it("should resolve with false if the category not already exists", (done) => {
+            let categoryName = "test_category";
+            sinon.stub(CategoryDb, "fetchAllCategoryDocuments").returns(Promise.resolve(resultDocs));
+            CategoryDb.isCategoryExists(categoryName).then((result)=> {
+                expect(result.status).to.be.false;
+                CategoryDb.fetchAllCategoryDocuments.restore();
+                done();
+            });
+        });
+
+    });
+
+    describe("createCategoryIfNotExists", () => {
+        let categoryDocument = null;
+        before("createCategoryIfNotExists", () => {
+            categoryDocument = {
+                "docType": "category",
+                "name": "Politics"
+            };
+        });
+
+        it("should create the cateogry document if category name does not exists", (done) => {
+            sinon.stub(CategoryDb, "isCategoryExists").withArgs("Politics").returns(Promise.resolve({ "status": false }));
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(categoryDocument).returns(Promise.resolve("resolved"));
+            CategoryDb.createCategoryIfNotExists(categoryDocument).then((response)=> {
+                pouchClientMock.verify();
+                CategoryDb.isCategoryExists.restore();
+                PouchClient.createDocument.restore();
+                done();
+            });
+        });
+
+        it("should not create the cateogry document if category is already exists", (done) => {
+            sinon.stub(CategoryDb, "isCategoryExists").withArgs("Politics").returns(Promise.resolve({ "status": true }));
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").never();
+            CategoryDb.createCategoryIfNotExists(categoryDocument).then((response)=> {
+                expect("category name already exists").to.equal(response.status);
+                pouchClientMock.verify();
+                CategoryDb.isCategoryExists.restore();
+                PouchClient.createDocument.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if the document is invalid", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").never();
+            CategoryDb.createCategoryIfNotExists(undefined).catch((response)=> {
+                expect("document should not be empty").to.equal(response.status);
+                pouchClientMock.verify();
+                done();
+            });
+        });
+    });
+
 });

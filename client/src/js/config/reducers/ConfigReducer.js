@@ -2,21 +2,13 @@
 "use strict";
 import { DISPLAY_ALL_CATEGORIES } from "../actions/AllCategoriesActions.js";
 import { DISPLAY_CATEGORY } from "../actions/CategoryActions.js";
-import CategoryDb from "../db/CategoryDb.js";
 import { List } from "immutable";
 
-export const DEFAULT_CATEGORY = "Default Category";
 
-export function allCategories(state = { "categories": List([DEFAULT_CATEGORY]) }, action = {}) {
+export function allCategories(state = { "categories": List([]) }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_CATEGORIES:
-        let newList = List(action.categories);
-        const NEGATIVE_INDEX = -1;
-        let catgoryNames = action.categories.map((category) => { return category.name;});
-        if(catgoryNames.indexOf(DEFAULT_CATEGORY) === NEGATIVE_INDEX) {
-            newList = newList.push({ "_id": "", "name": DEFAULT_CATEGORY });
-        }
-        return { "categories": newList };
+        return { "categories": List(action.categories) };
     default:
         return state;
     }

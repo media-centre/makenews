@@ -9,11 +9,11 @@ import { List } from "immutable";
 
 describe("Config Reducer", () => {
     describe("allCategories", () => {
-        it("default state should return default category", () => {
-            expect({ "categories": new List([DEFAULT_CATEGORY]) }).to.deep.equal(allCategories());
+        it("default state should return empty list", () => {
+            expect({ "categories": new List([]) }).to.deep.equal(allCategories());
         });
 
-        it("should not include the default category twice in the state if it is already exists in parameters", () => {
+        it("should return the action categories as new state", () => {
             let action = { "type": "DISPLAY_ALL_CATEGORIES", "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
             let expectedState = { "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
             let actualState = allCategories(null, action);
@@ -22,14 +22,11 @@ describe("Config Reducer", () => {
             expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]);
         });
 
-        it("should include the default category category by default in the state", () => {
-            let action = { "type": DISPLAY_ALL_CATEGORIES, "categories": [{"_id": "id1", "name":"Sports"}] };
-            let expectedState = { "categories": [{"_id": "id1", "name":"Sports"}, {"_id": "", "name":DEFAULT_CATEGORY}] };
-            let actualState = allCategories(undefined, action);
-            expect(actualState.categories.size).to.equal(expectedState.categories.length);
-            expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]);
-            expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]);
-
+        it("should return the same state in case of default case", () => {
+            let action = { "type": "OTHER_CATEGORY"};
+            let state = { "categories": [{"_id": "", "name":DEFAULT_CATEGORY}, {"_id": "id1", "name":"Sports"}] };
+            let actualState = allCategories(state, action);
+            expect(state).to.deep.equal(actualState);
         });
     });
 

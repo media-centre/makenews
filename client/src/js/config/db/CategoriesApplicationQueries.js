@@ -2,6 +2,7 @@
 
 "use strict";
 import CategoryDb from "./CategoryDb.js";
+import CategoryDocuments from "../actions/CategoryDocuments.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 
 
@@ -40,20 +41,8 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static getNewRssDocumnet(categoryId, url) {
-        if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
-            throw new Error("category id or url can not be empty");
-        }
-        return {
-            "docType": "source",
-            "sourceType": "rss",
-            "url": url,
-            "categoryIds": [categoryId]
-        };
-    }
-
     static addRssUrlConfiguration(categoryId, url) {
-        let rssConfigDocument = CategoriesApplicationQueries.getNewRssDocumnet(categoryId, url);
+        let rssConfigDocument = CategoryDocuments.getNewRssDocumnet(categoryId, url);
         return CategoryDb.createOrUpdateSource(rssConfigDocument);
     }
 }

@@ -32,8 +32,7 @@ Category.displayName = "Category";
 Category.propTypes = {
     "categories": PropTypes.node,
     "dispatch": PropTypes.func.isRequired,
-    "sources": PropTypes.array.isRequired,
-    "categoryName": PropTypes.string.isRequired,
+    "sources": PropTypes.object.isRequired,
     "params": PropTypes.object,
     "params.categoryType": PropTypes.string
 };

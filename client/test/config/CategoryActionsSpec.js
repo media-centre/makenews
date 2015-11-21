@@ -13,6 +13,6 @@ describe("CategoryActions", () => {
                                 { "type": DISPLAY_CATEGORY, sourceUrlsObj});
         });
     });
-
 });
+
 

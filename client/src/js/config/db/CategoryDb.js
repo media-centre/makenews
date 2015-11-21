@@ -52,4 +52,48 @@ export default class CategoryDb {
             });
         });
     }
+
+    static isCategoryExists(categoryName) {
+        return new Promise((resolve, reject) => {
+            CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
+                categoryDocs.forEach(document => {
+                    if(document.name === categoryName) {
+                        resolve({
+                            "error": "",
+                            "status": true
+                        });
+                    }
+                });
+                resolve({
+                    "error": "",
+                    "status": false
+                });
+            }).catch((error) => {
+                reject({
+                    "error": error,
+                    "status": false
+                });
+            });
+        });
+    }
+
+    static createCategoryIfNotExists(categoryDocument) {
+        return new Promise((resolve, reject) => {
+            if(!categoryDocument) {
+                reject({ "status": "document should not be empty" });
+            }
+            CategoryDb.isCategoryExists(categoryDocument.name).then(result => {
+                if(result.status === false) {
+                    PouchClient.createDocument(categoryDocument).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }
+                resolve({ "status": "category name already exists" });
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }

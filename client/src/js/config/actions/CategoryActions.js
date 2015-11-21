@@ -2,6 +2,9 @@
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
+import CategoryDb from "../db/CategoryDb.js";
+import CategoryDocument from "./CategoryDocuments.js";
+import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 
@@ -25,7 +28,12 @@ export function addRssUrlAsync(categoryId, url) {
             dispatch(populateCategoryDetailsAsync(categoryId));
         });
     };
-
 }
 
-
+export function createCategory(categoryName) {
+    return dispatch => {
+        let newCategoryDocument = CategoryDocument.getNewCategoryDocument(categoryName);
+        CategoryDb.createCategoryIfNotExists(newCategoryDocument);
+        dispatch(displayAllCategoriesAsync());
+    };
+}

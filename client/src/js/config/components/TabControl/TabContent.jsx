@@ -37,8 +37,7 @@ export default class TabContent extends Component {
     }
 
     _isInvalidUrl(url) {
-        return false;
-        //return (this.props.content.indexOf(url) !== -1 || url.match(urlRegex) === null);
+        return (this.props.content.indexOf(url) !== -1 || url.match(urlRegex) === null);
     }
 
     render() {
@@ -68,7 +67,7 @@ export default class TabContent extends Component {
 
 TabContent.displayName = "Tab Control";
 TabContent.propTypes = {
-    "content": PropTypes.object.isRequired,
+    "content": PropTypes.array.isRequired,
     "content.details": PropTypes.array
 };
 

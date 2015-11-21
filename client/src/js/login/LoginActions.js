@@ -1,7 +1,9 @@
 /* eslint no-unused-vars:0 */
+export const DEFAULT_CATEGORY = "Default Category";
 
 "use strict";
 import AjaxClient from "../utils/AjaxClient";
+import { createCategory } from "../config/actions/CategoryActions.js";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
@@ -17,6 +19,7 @@ export function userLogin(userName, password) {
         ajax.post(headers, data)
             .then(succesData => {
                 dispatch(loginSuccess(succesData.userName));
+                dispatch(createCategory("Default Category"));
             })
             .catch(errorData => {
                 dispatch(loginFailed("Invalid user name or password"));
