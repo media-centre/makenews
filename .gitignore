@@ -3,3 +3,5 @@ node_modules/
 .gulp-scss-cache/
 .idea/
 .test_user/
+localDb/
+remoteDb/

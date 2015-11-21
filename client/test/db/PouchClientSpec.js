@@ -96,30 +96,32 @@ describe("PouchClient", () => {
         });
 
         describe("sourceConfigurations", () => {
-            it("should list all source configurations for every categoryId", () => {
-                return PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": "sportsCategoryId1" }).then((docs) => {
+            it("should list all source configurations for every categoryId", (done) => {
+                PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": "sportsCategoryId1" }).then((docs) => {
                     let actualUrls = docs.map((doc) => {
                         return doc.url;
                     });
                     expect(actualUrls).to.include("www.hindu.com/rss");
                     expect(actualUrls).to.include("www.facebooksports.com");
                     expect(actualUrls).to.not.include("www.facebookpolitics.com");
+                    done();
                 });
             });
         });
 
         describe("allSourcesByUrl", () => {
-            it("should index all sourceConfigurations by url", () => {
-                return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": "www.hindu.com/rss" }).then((docs) => {
+            it("should index all sourceConfigurations by url", (done) => {
+                PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": "www.hindu.com/rss" }).then((docs) => {
                     let resultDoc = docs[0];
                     expect(resultDoc.url).to.include("www.hindu.com/rss");
+                    done();
                 });
             });
         });
     });
 
     describe("createDocument", () => {
-        it("should create the document with the given json object", () => {
+        it("should create the document with the given json object", (done) => {
             let jsonDocument = {
                 "docType": "source",
                 "sourceType": "rss",
@@ -129,14 +131,15 @@ describe("PouchClient", () => {
                 ]
             };
 
-            return PouchClient.createDocument(jsonDocument).then((response) => {
+            PouchClient.createDocument(jsonDocument).then((response) => {
                 expect(response.ok).to.be.true;
                 expect(response.id).not.to.be.undefined;
                 expect(response.rev).not.to.be.undefined;
+                done();
             });
         });
 
-        it("should reject with the error in case of error while creating the document", () => {
+        it("should reject with the error in case of error while creating the document", (done) => {
             let jsonDocument = {
                 "_id": "id",
                 "_rev": "1234",
@@ -148,24 +151,27 @@ describe("PouchClient", () => {
                 ]
             };
 
-            return PouchClient.createDocument(jsonDocument).catch((errorResponse) => {
+            PouchClient.createDocument(jsonDocument).catch((errorResponse) => {
                 expect(errorResponse.error).to.be.true;
+                done();
             });
         });
     });
 
     describe("getDocument", () => {
-        it("should get document for the given id", () => {
+        it("should get document for the given id", (done) => {
             PouchClient.getDocument("sportsCategoryId1").then(document => {
                expect(document._id).to.eq("sportsCategoryId1");
                expect(document._rev).not.to.be.undefined;
+               done();
             });
         });
 
-        it("should reject with the error if document not found", () => {
-            return PouchClient.getDocument("invalidId").catch((errorResponse) => {
+        it("should reject with the error if document not found", (done) => {
+            PouchClient.getDocument("invalidId").catch((errorResponse) => {
                 expect(errorResponse.error).to.be.true;
                 expect(errorResponse.status).to.eq(404);
+                done();
             });
         });
     });

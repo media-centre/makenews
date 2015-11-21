@@ -1,18 +1,89 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import { DbSession } from "../../src/js/db/DbSession.js";
+import DbSession from "../../src/js/db/DbSession.js";
+import DbParameters from "../../src/js/db/config/DbParameters.js";
 import { assert } from "chai";
-import PouchDB  from "pouchdb";
-
+import sinon from "sinon";
+import PouchDB from "pouchdb";
 
 describe("DbSession", () => {
-    describe("instance", () => {
-        xit("should create the new pouch db instance for the first time", () => {
-            var pouch = new PouchDB('myDB', {db: require('memdown')});
-        });
+    let parametersFake = null;
+    before("DbSession", () => {
+        parametersFake = {
+            "type": () => {
+                return "PouchDB";
+            },
+            "getLocalDb": () => {
+                return "localDb";
+            },
+            "getRemoteDb": () => {
+                return "remoteDb";
+            }
+        };
 
-        xit("should return the same pouch db instance from second time onwards", () => {
+    });
+
+    describe("instance", () => {
+        it("should create the new pouch db instance for the first time", () => {
+            let dbParametesMock = sinon.mock(DbParameters);
+            dbParametesMock.expects("instance").once().returns(parametersFake);
+
+            assert.isDefined(DbSession.instance());
+            assert.isDefined(DbSession.instance());
+            assert.isDefined(DbSession.instance());
+
+            dbParametesMock.verify();
+            dbParametesMock.restore();
+        });
+    });
+
+    describe("sync", () => {
+        it("should start the pouchd db sync with remote db. Second call should stop the existing sync", () => {
+            let dbParametesMock = sinon.mock(DbParameters);
+            let cancelReturn = {
+                "cancel": function() {
+                }
+            };
+            let cancelSpy = sinon.spy(cancelReturn, "cancel");
+            sinon.mock(PouchDB).expects("sync").withArgs("localDb", "remoteDb", {
+                "live": true,
+                "retry": true
+            }).twice().returns({
+                "on": function() {
+                    return {
+                        "on": function() {
+                            return {
+                                "on": function() {
+                                    return {
+                                        "on": function() {
+                                            return {
+                                                "on": function() {
+                                                    return {
+                                                        "on": function() {
+                                                            return cancelReturn;
+                                                        }
+                                                    };
+                                                }
+                                            };
+                                        }
+                                    };
+                                }
+                            };
+                        }
+                    };
+                }
+            });
+            dbParametesMock.expects("instance").atLeast(2).returns(parametersFake);
+
+            DbSession.sync();
+            DbSession.sync();
+            assert.isTrue(cancelSpy.calledOnce);
+
+            dbParametesMock.verify();
+            dbParametesMock.restore();
+            cancelSpy.restore();
+
         });
     });
 });

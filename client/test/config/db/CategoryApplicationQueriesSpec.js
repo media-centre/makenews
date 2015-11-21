@@ -30,21 +30,18 @@ describe("CategoryApplicationQueries", () => {
             });
         });
 
-        it("should reject with error if fetching category document fails", () => {
+        it("should reject with error if fetching category document fails", (done) => {
             let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
             fetchAllCategoryDocumentsStub.returns(Promise.reject("error"));
-            return CategoryApplicationQueries.fetchAllCategories().catch(error => {
+            CategoryApplicationQueries.fetchAllCategories().catch(error => {
                 expect("error").to.eq(error);
                 CategoryDb.fetchAllCategoryDocuments.restore();
+                done();
             });
         });
     });
 
     describe("fetchSourceConfigurationsByCategoryId", () => {
-        let categoryId = null;
-
-        beforeEach("fetchAllCategories", () => {
-        });
 
         it("should throw error if the category id is empty", (done) => {
             let categoryId = "";
@@ -54,7 +51,7 @@ describe("CategoryApplicationQueries", () => {
             });
         });
 
-        it("should return list of urls along with the id for a category id", () => {
+        it("should return list of urls along with the id for a category id", (done) => {
             let categoryId = "test_category";
             let result = [
                 { "_id": "rss_url_id1",
@@ -81,17 +78,18 @@ describe("CategoryApplicationQueries", () => {
             return CategoryApplicationQueries.fetchSourceUrlsObj(categoryId).then(rssDetails => {
                 expect(expectedRssDetails).to.deep.equal(rssDetails);
                 CategoryDb.fetchSourceConfigurationsByCategoryId.restore();
-
+                done();
             });
         });
 
-        it("should reject in case of any other errors", () => {
-            let categoryd = "test_category";
+        it("should reject in case of any other errors", (done) => {
+            let categoryId = "test_category";
             let fetchRssConfigurationsStub = sinon.stub(CategoryDb, "fetchSourceConfigurationsByCategoryId");
             fetchRssConfigurationsStub.withArgs(categoryId).returns(Promise.reject("test_error"));
-            return CategoryApplicationQueries.fetchSourceUrlsObj(categoryId).catch(error => {
+            CategoryApplicationQueries.fetchSourceUrlsObj(categoryId).catch(error => {
                 expect("test_error").to.equal(error);
                 CategoryDb.fetchSourceConfigurationsByCategoryId.restore();
+                done();
             });
         });
     });

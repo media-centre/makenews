@@ -21,18 +21,36 @@ describe("actions", () => {
 });
 
 describe("userLogin", () => {
+    let headers = null, data = null, userName = null, password = null, ajaxClientInstanceStub = null, route = null, ajaxPostStub = null, ajax = null, dispatch = null;
+    beforeEach("userLogin", () => {
+        userName = "test_user";
+        password = "test_password";
+        headers = {
+            "Accept": "application/json",
+            "Content-type": "application/json"
+        };
+        data = { "username": userName, "password": password };
+        ajax = new AjaxClient(route);
+        ajaxClientInstanceStub = sinon.stub(AjaxClient, "instance");
+        route = "/login";
+        ajaxPostStub = sinon.stub(ajax, "post");
+        dispatch = sinon.spy();
+    });
+    afterEach("userLogin", () => {
+        AjaxClient.instance.restore();
+        ajax.post.restore();
+    });
     xit("should dispatch login successful action if the login is successful", () => {
-        let ajaxClient = new AjaxClient("/login");
-        let succesData = {"userName": "test"}
-        let loginMock = sinon.mock(ajaxClient);
-        loginMock.expects("post").returns(succesData);
-        let expected = { "type": LOGIN_SUCCESS, succesData };
-        expect(userLogin("test", "password")()).to.deep.equal(expected);
-        loginMock.verify();
+        let loginSuccessMock = sinon.mock(loginSuccess);
+        ajaxClientInstanceStub.withArgs(route).returns(ajaxPostStub);
+        ajaxPostStub.withArgs(headers, data).returns(Promise.resolve({ "userName": userName }));
+        //loginSuccessMock.withArgs(userName).returns({ "type": "LOGIN_SUCCESS", userName });
+        dispatch.withArgs({ "type": "LOGIN_SUCCESS", userName });
+        userLogin(userName, password)(dispatch);
+        loginSuccessMock.verify();
+        loginSuccess.restore();
     });
 
     xit("should dispatch login failure action if the login is not successful", () => {
     });
-
 });
-

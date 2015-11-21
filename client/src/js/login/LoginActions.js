@@ -8,7 +8,7 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 
 export function userLogin(userName, password) {
     return dispatch => {
-        let ajax = new AjaxClient("/login");
+        let ajax = AjaxClient.instance("/login");
         const headers = {
             "Accept": "application/json",
             "Content-type": "application/json"

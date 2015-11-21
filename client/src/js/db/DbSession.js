@@ -18,6 +18,7 @@ export default class DbSession {
 
     static sync() {
         DbSession.instance();
+
         if(this.currentSyn) {
             this.currentSyn.cancel();
         }

@@ -3,6 +3,9 @@ import StringUtil from "../../../../common/src/util/StringUtil.js";
 import Config from "../../../src/js/utils/Config.js";
 
 export default class AjaxClient {
+  static instance(url) {
+      return new AjaxClient(url);
+  }
   constructor(url) {
       this.url = Config.serverUrl + url;
   }
