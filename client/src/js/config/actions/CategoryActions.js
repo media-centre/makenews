@@ -31,13 +31,23 @@ export function addRssUrlAsync(categoryId, url) {
     };
 }
 
-export function createCategory(categoryName = DEFAULT_CATEGORY) {
+export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {
     return dispatch => {
         let newCategoryDocument = CategoryDocument.getNewCategoryDocument(categoryName);
         CategoryDb.createCategoryIfNotExists(newCategoryDocument).then(success => {
             dispatch(displayAllCategoriesAsync());
         }).catch(error => {
             dispatch(displayAllCategoriesAsync());
+        });
+    };
+}
+
+export function createCategory(categoryName = DEFAULT_CATEGORY, callback = ()=> {}) {
+    return dispatch => {
+        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName)).then(success => {
+            callback(success);
+        }).catch(error => {
+            callback(error);
         });
     };
 }

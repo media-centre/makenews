@@ -96,4 +96,8 @@ export default class CategoryDb {
             });
         });
     }
+
+    static createCategory(categoryDocument) {
+        return PouchClient.createDocument(categoryDocument);
+    }
 }

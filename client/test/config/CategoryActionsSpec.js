@@ -4,6 +4,7 @@
 import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory } from "../../src/js/config/actions/CategoryActions.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
+import mockStore from "../helper/ActionHelper.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -18,38 +19,29 @@ describe("CategoryActions", () => {
 });
 
 describe("createCategory", () => {
-    let dispatch = null;
-    beforeEach("createCategory", () => {
-        dispatch = sinon.spy();
-    });
-    afterEach("createCategory", () => {
-    });
-    xit("should dispatch displayAllCategoriesAsync after adding default category", () => {
+    it("should dispatch displayAllCategoriesAsync after adding default category", (done) => {
         var categoryName = "default";
 
-        //CategoryDb.createCategoryIfNotExists
         let categoryDbStub = sinon.stub(CategoryDb, "createCategoryIfNotExists").withArgs({
             "docType": "category",
             "name": categoryName
         });
         categoryDbStub.returns(Promise.resolve("document added"));
-        createCategory(categoryName)(dispatch);
-        dispatch.withArgs(displayAllCategoriesAsync());
+        const store = mockStore({}, [], done);
+        store.dispatch(createCategory(categoryName, (success) => { done(); }));
+        CategoryDb.createCategoryIfNotExists.restore();
     });
 
-    xit("should not dispatch displayAllCategoriesAsync if adding default category fails", () => {
+    it("should not dispatch displayAllCategoriesAsync if adding default category fails", (done) => {
         var categoryName = "default";
 
-        //CategoryDb.createCategoryIfNotExists
         let categoryDbStub = sinon.stub(CategoryDb, "createCategoryIfNotExists").withArgs({
             "docType": "category",
             "name": categoryName
         });
-        categoryDbStub.returns(Promise.resolve("document added"));
-        createCategory(categoryName)(dispatch);
-        dispatch.withArgs(displayAllCategoriesAsync());
+        categoryDbStub.returns(Promise.reject("document added"));
+        const store = mockStore({}, [], done);
+        store.dispatch(createCategory(categoryName, (error) => { done(); }));
+        CategoryDb.createCategoryIfNotExists.restore();
     });
-
-    xit("should dispatch login failure action if the login is not successful", () => {
-    });
-})
+});

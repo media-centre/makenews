@@ -8,6 +8,7 @@ import MainPage from "./main/pages/MainPage.jsx";
 import ConfigurePage from "./config/pages/ConfigurePage.jsx";
 import AllCategories from "./config/components/AllCategories.jsx";
 import CategoryPage from "./config/components/Category.jsx";
+import NewCategory from "./config/components/NewCategory.jsx";
 import SurfPage from "./surf/pages/SurfPage.jsx";
 import ParkPage from "./park/pages/ParkPage.jsx";
 import React from "react";
@@ -23,6 +24,7 @@ export function renderRoutes() {
 
                 <Route path="/configure" component={ConfigurePage}>
                     <Route path="/configure/categories" component={AllCategories} />
+                    <Route path="/configure/category/new" component={NewCategory} />
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
 

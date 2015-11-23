@@ -4,24 +4,24 @@ import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
 import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
-import { createCategory } from "../actions/CategoryActions.js";
+import { createDefaultCategory } from "../actions/CategoryActions.js";
 
 export class AllCategories extends Component {
     componentWillMount() {
-        this.props.dispatch(createCategory());
+        this.props.dispatch(createDefaultCategory());
     }
 
     render() {
         return (
             <div className="configure-page max-width">
                 <h3 className="t-center">
-                    {"Default Category"}
+                    {"All Categories"}
                 </h3>
                 <div className="categories">
                     <ul className="cat-list m-t-center">
 
                         <li className="add-new">
-                            <Link to="/configure/category">
+                            <Link to="/configure/category/new">
                                 <div className="v-center t-center">
                                     <span>{"Add new category"}</span>
                                 </div>

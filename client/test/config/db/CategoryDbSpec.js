@@ -223,9 +223,37 @@ describe("CategoryDb", () => {
             CategoryDb.createCategoryIfNotExists(undefined).catch((response)=> {
                 expect("document should not be empty").to.equal(response.status);
                 pouchClientMock.verify();
+                PouchClient.createDocument.restore();
                 done();
             });
         });
     });
 
+    describe("createCategory", () => {
+        it("should create category document and return resolved promise", (done) => {
+            let jsonDocument = {
+                "docType": "category",
+                "name": "Sports"
+            };
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(jsonDocument).returns(Promise.resolve("resolve"));
+            CategoryDb.createCategory(jsonDocument).then(() => {
+                pouchClientMock.verify();
+                PouchClient.createDocument.restore();
+                done();
+            });
+        });
+
+        it("should reject if creation fails", (done) => {
+            let jsonDocument = {
+                "docType": "category",
+                "name": "Sports"
+            };
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(jsonDocument).returns(Promise.reject("error"));
+            CategoryDb.createCategory(jsonDocument).catch(() => {
+                pouchClientMock.verify();
+                PouchClient.createDocument.restore();
+                done();
+            });
+        });
+    });
 });

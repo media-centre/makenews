@@ -7,12 +7,15 @@ import { Route, Link } from "react-router";
 export default class CategoryNavigationHeader extends Component {
 
     render() {
+
+        let input = this.props.editableHeader ? <input type="text" placeholder="Enter your title" ref="inputTitle" onBlur={this.props.validateTitle} /> : this.props.title;
+
         return (
             <div className="navigation-header clear-fix">
                 <Link to="/configure/categories" className="navigation nav-control h-center left">
                     <i className="fa fa-arrow-left"></i><span>{"All Categories"}</span>
                 </Link>
-                <h3 className="navigation-title t-center">{this.props.title}</h3>
+                <h3 className="navigation-title t-center">{input}</h3>
             </div>
         );
     }
@@ -23,11 +26,13 @@ export default class CategoryNavigationHeader extends Component {
 CategoryNavigationHeader.displayName = "Category Navigation Header";
 
 CategoryNavigationHeader.propTypes = {
-    "title": PropTypes.string
+    "title": PropTypes.string,
+    "editableHeader": PropTypes.bool
 };
 
-CategoryNavigationHeader.DefaultProp = {
-    "title": ""
+CategoryNavigationHeader.DefaultProps = {
+    "title": "",
+    "editableHeader": false
 };
 
 
