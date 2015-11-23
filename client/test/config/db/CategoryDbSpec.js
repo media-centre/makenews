@@ -235,10 +235,13 @@ describe("CategoryDb", () => {
                 "docType": "category",
                 "name": "Sports"
             };
+            let fetchCategoryByNameStub = sinon.stub(CategoryDb, "fetchCategoryByName");
+            fetchCategoryByNameStub.returns(Promise.resolve([]));
             let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(jsonDocument).returns(Promise.resolve("resolve"));
             CategoryDb.createCategory(jsonDocument).then(() => {
                 pouchClientMock.verify();
                 PouchClient.createDocument.restore();
+                CategoryDb.fetchCategoryByName.restore();
                 done();
             });
         });
@@ -248,10 +251,50 @@ describe("CategoryDb", () => {
                 "docType": "category",
                 "name": "Sports"
             };
-            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(jsonDocument).returns(Promise.reject("error"));
+
+            let existingJsonDocument = {
+                "id": "1234",
+                "docType": "category",
+                "name": "Sports"
+            };
+
+            let fetchCategoryByNameStub = sinon.stub(CategoryDb, "fetchCategoryByName");
+            fetchCategoryByNameStub.returns(Promise.resolve([existingJsonDocument]));
+            let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").never();
             CategoryDb.createCategory(jsonDocument).catch(() => {
                 pouchClientMock.verify();
                 PouchClient.createDocument.restore();
+                CategoryDb.fetchCategoryByName.restore();
+                done();
+            });
+        });
+
+        it("should reject if fetchDocument fails", (done) => {
+            let jsonDocument = {
+                "docType": "category",
+                "name": "Sports"
+            };
+            let fetchCategoryByNameStub = sinon.stub(CategoryDb, "fetchCategoryByName");
+            fetchCategoryByNameStub.returns(Promise.reject([]));
+            CategoryDb.createCategory(jsonDocument).catch(() => {
+                done();
+            });
+            CategoryDb.fetchCategoryByName.restore();
+        });
+    });
+
+    describe("fetchCategoryByName", () => {
+        it("should fetch the category by name", () => {
+            let name = "categoryname";
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allCategoriesByName", { "include_docs": true, "key": name });
+            CategoryDb.fetchCategoryByName(name);
+            pouchClientMock.verify();
+            PouchClient.fetchDocuments.restore();
+        });
+
+        it("should reject if the category name is empty", (done) => {
+            CategoryDb.fetchCategoryByName("").catch(error => {
+                expect("name should not be empty").to.equal(error);
                 done();
             });
         });

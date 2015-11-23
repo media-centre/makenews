@@ -55,6 +55,9 @@ describe("PouchClient", () => {
                 "allCategories": {
                     "map": "function(doc) { if(doc.docType === 'category') {emit(doc.docType, doc)} }"
                 },
+                "allCategoriesByName": {
+                    "map": "function(doc) { if(doc.docType === 'category') {emit(doc.name, doc)} }"
+                },
                 "sourceConfigurations": {
                     "map": "function(doc) { if(doc.docType === 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
                 },
@@ -114,6 +117,16 @@ describe("PouchClient", () => {
                 PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": "www.hindu.com/rss" }).then((docs) => {
                     let resultDoc = docs[0];
                     expect(resultDoc.url).to.include("www.hindu.com/rss");
+                    done();
+                });
+            });
+        });
+
+        describe("allCategoriesByName", () => {
+            it("should index all categories by name", (done) => {
+                PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": "Sports" }).then((docs) => {
+                    let resultDoc = docs[0];
+                    expect(resultDoc.name).to.include("Sports");
                     done();
                 });
             });

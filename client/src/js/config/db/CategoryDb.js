@@ -77,6 +77,15 @@ export default class CategoryDb {
         });
     }
 
+    static fetchCategoryByName(name) {
+        if(StringUtil.isEmptyString(name)) {
+            return new Promise((resolve, reject) => {
+                reject("name should not be empty");
+            });
+        }
+        return PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": name });
+    }
+
     static createCategoryIfNotExists(categoryDocument) {
         return new Promise((resolve, reject) => {
             if(!categoryDocument) {
@@ -98,6 +107,18 @@ export default class CategoryDb {
     }
 
     static createCategory(categoryDocument) {
-        return PouchClient.createDocument(categoryDocument);
+        return new Promise((resolve, reject) => {
+            CategoryDb.fetchCategoryByName(categoryDocument.name).then(result => {
+                if(result.length === 0) {
+                    PouchClient.createDocument(categoryDocument).then(response => {
+                        resolve("Category created");
+                    }).catch(error => {
+                        reject(error);
+                    });
+                } else {
+                    reject("Category with name already exists");
+                }
+            }).catch(err => { reject(err) });
+        });
     }
 }
