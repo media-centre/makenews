@@ -5,7 +5,6 @@ import { createCategory } from "../config/actions/CategoryActions.js";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
-export const DEFAULT_CATEGORY = "Default Category";
 
 export function userLogin(userName, password) {
     return dispatch => {

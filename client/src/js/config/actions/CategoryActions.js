@@ -7,6 +7,7 @@ import CategoryDocument from "./CategoryDocuments.js";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
+export const DEFAULT_CATEGORY = "Default Category";
 
 export function populateCategoryDetailsAsync(categoryId) {
     return dispatch => {
@@ -30,10 +31,13 @@ export function addRssUrlAsync(categoryId, url) {
     };
 }
 
-export function createCategory(categoryName) {
+export function createCategory(categoryName = DEFAULT_CATEGORY) {
     return dispatch => {
         let newCategoryDocument = CategoryDocument.getNewCategoryDocument(categoryName);
-        CategoryDb.createCategoryIfNotExists(newCategoryDocument);
-        dispatch(displayAllCategoriesAsync());
+        CategoryDb.createCategoryIfNotExists(newCategoryDocument).then(success => {
+            dispatch(displayAllCategoriesAsync());
+        }).catch(error => {
+            dispatch(displayAllCategoriesAsync());
+        });
     };
 }

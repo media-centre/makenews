@@ -4,11 +4,11 @@ import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
 import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
-
+import { createCategory } from "../actions/CategoryActions.js";
 
 export class AllCategories extends Component {
-    componentDidMount() {
-        this.props.dispatch(displayAllCategoriesAsync());
+    componentWillMount() {
+        this.props.dispatch(createCategory());
     }
 
     render() {
