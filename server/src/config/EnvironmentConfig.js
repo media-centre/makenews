@@ -16,7 +16,7 @@ export default class EnvironmentConfig {
         }
         let environment = process.env.NODE_ENV || "development";
         let environmentConfigJson = JSON.parse(fs.readFileSync(path.join(__dirname, relativefilePath), "utf8"));
-        this.config = {};
+        this.config = this.config || {};
         this.config[relativefilePath] = new EnvironmentReader(environmentConfigJson, environment);
         return this.config[relativefilePath];
     }

@@ -20,11 +20,11 @@ describe("EnvironmentConfig", () => {
         });
 
         beforeEach("instance", () => {
-            fsMock = sinon.mock(fs).expects("readFileSync");
+            fsMock = sinon.mock(fs);
 
         });
         afterEach("instance", () => {
-            fs.readFileSync.restore();
+            fsMock.restore();
         });
 
         it("should throw exception if the relative path is empty", () => {
@@ -36,8 +36,7 @@ describe("EnvironmentConfig", () => {
         });
 
         it("should return the associated environment of the configuration file if it is already loaded ", () => {
-            fsMock.withArgs(path.join(__dirname, "../../src/config/test_file_path"), "utf8").once().returns(fileJson);
-            fsMock.returns(fileJson);
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/test_file_path"), "utf8").once().returns(fileJson);
             EnvironmentConfig.instance(relativeFilePath);
             let envConfig = EnvironmentConfig.instance(relativeFilePath);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
@@ -49,13 +48,34 @@ describe("EnvironmentConfig", () => {
         it("should return the associated environment and load the environment of the mentioned file", () => {
             relativeFilePath = "test_file_anotehr_path";
 
-            fsMock.withArgs(path.join(__dirname, "../../src/config/test_file_anotehr_path"), "utf8").returns(fileJson);
-            fsMock.returns(fileJson);
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/test_file_anotehr_path"), "utf8").returns(fileJson);
             let envConfig = EnvironmentConfig.instance(relativeFilePath);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
             expect("unit_testing").to.be.equal(envConfig.getEnvironment());
             fsMock.verify();
         });
 
+        it("should load multiple configurations", () => {
+            let file_path1 = "file_path1", file_path2 = "file_path2";
+            let fileJson1 = JSON.stringify({
+                "unit_testing": {
+                    "test_key1": "test_value1"
+                }
+            });
+            let fileJson2 = JSON.stringify({
+                "unit_testing": {
+                    "test_key2": "test_value2"
+                }
+            });
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/"+file_path1), "utf8").once().returns(fileJson1);
+            EnvironmentConfig.instance(file_path1);
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/"+file_path2), "utf8").once().returns(fileJson2);
+            EnvironmentConfig.instance(file_path2);
+            fsMock.verify();
+
+            let envConfig = EnvironmentConfig.instance(file_path1);
+            expect("test_value1").to.be.equal(envConfig.get("test_key1"));
+            expect("unit_testing").to.be.equal(envConfig.getEnvironment());
+        });
     });
 });
