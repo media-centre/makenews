@@ -48,7 +48,7 @@ export default class Logger {
         return new Logger();
     }
 
-    static createCategoryLoggers(logConfigJson) {
+    static _createCategoryLoggers(logConfigJson) {
         let environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION);
         let loggingConfig = logConfigJson[environment.environment];
         if(loggingConfig) {
@@ -68,7 +68,7 @@ export default class Logger {
         }
     }
 
-    static getJson(relativefilePath) {
+    static _getJson(relativefilePath) {
         return JSON.parse(fs.readFileSync(path.join(__dirname, relativefilePath), "utf8"));
     }
 
@@ -82,8 +82,8 @@ export default class Logger {
     }
 
     static _readLogConfig(relativefilePath) {
-        let logConfigJSON = Logger.getJson(relativefilePath);
-        Logger.createCategoryLoggers(logConfigJSON);
+        let logConfigJSON = Logger._getJson(relativefilePath);
+        Logger._createCategoryLoggers(logConfigJSON);
     }
 
     static _createLogger(options) {

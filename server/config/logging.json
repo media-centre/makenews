@@ -11,7 +11,7 @@
       "http": {
         "file": {
           "filename": "http.log",
-          "level": "debug"
+          "level": "info"
         }
       },
       "database": {
@@ -34,7 +34,7 @@
       "default": {
         "file": {
           "filename": "server.log",
-          "level": "info"
+          "level": "warn"
         }
       },
       "http": {
@@ -46,13 +46,13 @@
       "database": {
         "file": {
           "filename": "database.log",
-          "level": "info"
+          "level": "debug"
         }
       },
       "authorization": {
         "file": {
           "filename": "database.log",
-          "level": "info"
+          "level": "debug"
         }
       }
     }
@@ -63,25 +63,25 @@
       "default": {
         "file": {
           "filename": "server.log",
-          "level": "error"
+          "level": "warn"
         }
       },
       "http": {
         "file": {
           "filename": "http.log",
-          "level": "error"
+          "level": "warn"
         }
       },
       "database": {
         "file": {
           "filename": "database.log",
-          "level": "error"
+          "level": "warn"
         }
       },
       "authorization": {
         "file": {
           "filename": "database.log",
-          "level": "error"
+          "level": "warn"
         }
       }
     }
