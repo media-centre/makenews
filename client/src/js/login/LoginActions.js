@@ -1,4 +1,3 @@
-/* eslint no-unused-vars:0 no-unused-expressions:0*/
 "use strict";
 import AjaxClient from "../utils/AjaxClient";
 import { createCategory } from "../config/actions/CategoryActions.js";

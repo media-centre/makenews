@@ -111,7 +111,7 @@ export default class CategoryDb {
             CategoryDb.fetchCategoryByName(categoryDocument.name).then(result => {
                 if(result.length === 0) {
                     PouchClient.createDocument(categoryDocument).then(response => {
-                        resolve("Category created");
+                        resolve(response);
                     }).catch(error => {
                         reject(error);
                     });

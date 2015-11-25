@@ -11,7 +11,7 @@ export default class CategoriesApplicationQueries {
     static fetchAllCategories() {
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
-                let categories = categoryDocs.map((category) => {
+                let categories = categoryDocs.sort((a, b)=> { return a.createdTime - b.createdTime; }).map((category) => {
                     return { "_id": category._id, "name": category.name };
                 });
                 resolve(categories);

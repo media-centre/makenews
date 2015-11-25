@@ -1,6 +1,7 @@
 "use strict";
 
 import { LOGIN_SUCCESS, LOGIN_FAILED } from "./LoginActions.js";
+import externalNavigation from "../utils/ExternalNavigation.js";
 
 export function login(state = { "errorMessage": "" }, action = {}) {
     switch(action.type) {
@@ -10,7 +11,7 @@ export function login(state = { "errorMessage": "" }, action = {}) {
         };
     case LOGIN_SUCCESS:
         localStorage.setItem("userInfo", action.userDetails);
-        document.getElementById("temp-navigation").click();
+        externalNavigation("#/main");
         return {
             "errorMessage": "",
             "userName": action.userDetails

@@ -1,9 +1,21 @@
 @import "../utils/variable";
 
 .navigation-header {
-    h3 {
+    .navigation-title {
       color: $medium-gray-color;
       margin: 0px 135px 0px 0px;
+      font-size: $large-font-size;
+      outline: none;
+    }
+
+    .delete-category {
+      border: none;
+      color: $dark-gray-color;
+      padding: 6px 0px;
+    }
+
+    .error-msg {
+      font-size: $extra-small-font-size
     }
 }
 

@@ -26,7 +26,6 @@ describe("login reducer", function() {
 
         let testUser = "test_user";
         let action = { "type": "LOGIN_SUCCESS", "userDetails": testUser };
-        DocumentMock.expects("getElementById").withArgs("temp-navigation").returns(tempNavigation);
 
         let state = login(undefined, action);
         DocumentMock.verify();

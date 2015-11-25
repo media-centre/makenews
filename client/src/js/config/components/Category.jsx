@@ -3,18 +3,37 @@ import React, { Component, PropTypes } from "react";
 import CategoryNavigationHeader from "./CategoryNavigationHeader.jsx";
 import TabControl from "./TabControl/TabControl.jsx";
 import TabContent from "./TabControl/TabContent.jsx";
-import { populateCategoryDetailsAsync } from "../actions/CategoryActions.js";
+import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } from "../actions/CategoryActions.js";
 import { connect } from "react-redux";
 
 export default class Category extends Component {
-    componentDidMount() {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            "isDefaultCategory": this.props.params.categoryName === DEFAULT_CATEGORY,
+            "titleErrorMessage": ""
+        };
+    }
+
+    componentWillMount() {
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
+    }
+
+    updateCategoryName(categoryName) {
+        if(categoryName) {
+            this.props.dispatch(updateCategoryName(this.props.categoryId, categoryName, (response)=>  {
+                this.setState({ titleErrorMessage: response.result ? "" : "Category name already exists" });
+            }));
+        } else {
+            this.setState({ titleErrorMessage: "Category name can not be empty" });
+        }
     }
 
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader title={this.props.params.categoryName} />
+              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this.updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage}/>
 
               <TabControl>
                   {Object.keys(this.props.sources).map((key, index) =>

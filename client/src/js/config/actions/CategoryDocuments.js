@@ -9,8 +9,13 @@ export default class CategoryDocument {
 
         return {
             "docType": "category",
-            "name": categoryName
+            "name": categoryName,
+            "createdTime": CategoryDocument._getCreatedTime()
         };
+    }
+
+    static _getCreatedTime() {
+        return new Date().getTime();
     }
 
     static getNewRssDocumnet(categoryId, url) {

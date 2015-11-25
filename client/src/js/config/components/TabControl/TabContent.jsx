@@ -47,7 +47,7 @@ export default class TabContent extends Component {
 
         return (
             <div>
-                <div className="nav-control h-center" onClick={(event) => this._addNewUrlButton()}>
+                <div className="nav-control h-center" id="addNewUrlButton" onClick={(event) => this._addNewUrlButton()}>
                     <i className="fa fa-plus"></i><span>{"Add Url"}</span>
                 </div>
                 <div className="url-panel">

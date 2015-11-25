@@ -42,12 +42,58 @@ export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {
     };
 }
 
-export function createCategory(categoryName = DEFAULT_CATEGORY, callback = ()=> {}) {
+export function createCategory(categoryName = "", callback = ()=> {}) {
     return dispatch => {
-        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName)).then(success => {
-            callback(success);
+        if(categoryName) {
+            dispatchCreateCategory(categoryName);
+        } else {
+            generateCategoryName().then((name) => {
+                dispatchCreateCategory(name)
+            });
+        }
+    };
+
+    function dispatchCreateCategory(categoryName) {
+        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName)).then(response => {
+            response.name = categoryName;
+            callback(response);
         }).catch(error => {
             callback(error);
         });
+    }
+}
+
+export function updateCategoryName(categoryId, categoryName = "", callback = ()=> {}) {
+    return dispatch => {
+
+        var found = false;
+        CategoryDb.fetchAllCategoryDocuments().then(categories => {
+            categories.some((category)=> {
+                if(category._id !== categoryId && categoryName.toLowerCase() === category.name.toLowerCase()) {
+                    found = true;
+                }
+            });
+
+            callback({ "result": !found });
+        }).catch(error => {
+            callback({ "result": !found });
+        });
     };
+}
+
+function generateCategoryName() {
+    return new Promise((resolve, reject) => {
+        let generatedName = "";
+        CategoryDb.fetchAllCategoryDocuments().then(categories => {
+            let existingNames = categories.map(category => category.name);
+            let existingNamesSize = existingNames.length + 1;
+            Array(existingNamesSize).fill().map((_, i) => i).some((i)=> {
+                generatedName = "Untitled Category " + (i+1);
+                if(existingNames.indexOf(generatedName) === -1) {
+                    resolve(generatedName);
+                    return true;
+                }
+            });
+        });
+    });
 }

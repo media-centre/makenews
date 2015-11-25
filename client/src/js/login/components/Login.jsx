@@ -36,8 +36,6 @@ export default class Login extends Component {
                     {"Login"}
                   </button>
               </div>
-
-              <Link to="/main" id="temp-navigation" />
           </div>
 
       </form>

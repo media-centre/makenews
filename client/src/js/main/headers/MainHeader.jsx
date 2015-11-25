@@ -19,7 +19,7 @@ export default class MainHeader extends Component {
                     { "path": "/park", "name": "Park" }];
 
         let linksDom = linkCollection.map((link, index) =>
-                        <li key={index}>
+                        <li key={index} id={link.name.toLowerCase() + "Link"}>
                            <Link to={link.path} activeClassName={ACTIVE_CLASS}>
                                <div className={link.name.toLowerCase() + " header-link-image"}></div>
                                <span>{link.name}</span>
@@ -33,7 +33,7 @@ export default class MainHeader extends Component {
 
                     <img src="images/main/makenews.png" className="app-logo left clear-fix m-none"/>
 
-                    <div className="user-info right">
+                    <div className="user-info right" id="logout">
                         <Link to="/" onClick={this._logout} className="link highlight-on-hover">
                             <span>{"Logout"}</span>
                         </Link>
