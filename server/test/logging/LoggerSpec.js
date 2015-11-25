@@ -19,11 +19,23 @@ describe("Logger", () => {
     }
 
     describe("instance", () => {
-        it("defaultLogger is called", () => {
-            let JsonStub = sinon.stub(Logger, "getJson").returns(() => {});
-            assertFileLogger(Logger.instance(), "defaultLog.log", logLevel.LOG_INFO);
-            JsonStub.restore();
+        let JsonStub = null;
+        let loggerStub = null;
+
+        before("stub getJson", () => {
+            JsonStub = sinon.stub(Logger, "_getJson");
+            loggerStub = sinon.stub(Logger, "_isCategoriesInitialized");
         });
+        after("restore getJson stub", ()=> {
+                JsonStub.restore();
+                loggerStub.restore();
+        });
+        it("defaultLogger is called", () => {
+            JsonStub.returns({});
+            assertFileLogger(Logger.instance(), "defaultLog.log", logLevel.LOG_INFO);
+
+        });
+
         it("default logger should be returned when instance is called without default logging config ", () => {
             let myJson = {
                 "unit_testing": {
@@ -38,9 +50,8 @@ describe("Logger", () => {
                     }
                 }
             };
-            let JsonStub = sinon.stub(Logger, "getJson").returns(myJson);
+            JsonStub.returns(myJson);
             assertFileLogger(Logger.instance(), "defaultLog.log", logLevel.LOG_INFO);
-            JsonStub.restore();
         });
         it("default category logger should be returned when instance is called", () => {
             let myJson = {
@@ -62,11 +73,10 @@ describe("Logger", () => {
                     }
                 }
             };
-            let JsonStub = sinon.stub(Logger, "getJson").returns(myJson);
-            let loggerStub = sinon.stub(Logger, "_isCategoriesInitialized").returns(false);
+            JsonStub.returns(myJson);
+            loggerStub.returns(false);
             assertFileLogger(Logger.instance(), "def.log", logLevel.LOG_WARN);
-            JsonStub.restore();
-            loggerStub.restore();
+
         });
         it("category logger should be returned when instance is called with category name", () => {
             let myJson = {
@@ -88,12 +98,10 @@ describe("Logger", () => {
                     }
                 }
             };
-            let JsonStub = sinon.stub(Logger, "getJson").returns(myJson);
-            let loggerStub = sinon.stub(Logger, "_isCategoriesInitialized").returns(false);
+            JsonStub.returns(myJson);
+            loggerStub.returns(false);
             let logger = Logger.instance("test3");
             assertFileLogger(logger, "test3.log", logLevel.LOG_INFO);
-            JsonStub.restore();
-            loggerStub.restore();
         });
     });
 

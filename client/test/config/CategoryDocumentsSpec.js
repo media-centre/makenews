@@ -3,12 +3,15 @@
 "use strict";
 import CategoryDocument from "../../src/js/config/actions/CategoryDocuments.js";
 import { assert } from "chai";
+import sinon from "sinon";
 
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
         it("should return the category document", () => {
             let time = new Date().getTime();
+            let stub = sinon.stub(CategoryDocument, "_getCreatedTime").returns(time);
             assert.deepEqual({ "name": "Sports", "docType": "category", "createdTime": time }, CategoryDocument.getNewCategoryDocument("Sports"));
+            assert(stub.called);
         });
 
         it("should throw an error if the category name is empty", () => {
