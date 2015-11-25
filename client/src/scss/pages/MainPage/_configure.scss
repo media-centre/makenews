@@ -8,18 +8,22 @@
   }
 
   ul.cat-list {
-    max-width: 1000px;
+    max-width: 932px;
     margin: auto;
 
     li {
-      margin: 0px 20px 20px 0px;
+      margin: 10px;
       background: $app-header-bg-color;
       color: $primary-font-color;
       display: inline-block;
       vertical-align: top;
       cursor: pointer;
 
-      a {
+      .text-container {
+        overflow: hidden;
+      }
+
+      .navigation-link {
         display: block;
         padding: 8px;
         width: 150px;
@@ -35,7 +39,7 @@
       @extend .border-blue;
       background: $primary-font-color;
 
-      a {
+      .navigation-link {
         color: $app-header-bg-color;
       }
     }

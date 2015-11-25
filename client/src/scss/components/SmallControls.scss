@@ -8,3 +8,11 @@
     margin-left: 10px;
   }
 }
+
+.editable-element {
+  .editable-input {
+    border: none;
+    display: block;
+    width: 100%;
+  }
+}

@@ -9,7 +9,8 @@ export default class CategoryDocument {
 
         return {
             "docType": "category",
-            "name": categoryName
+            "name": categoryName,
+            "createdTime": new Date().getTime()
         };
     }
 

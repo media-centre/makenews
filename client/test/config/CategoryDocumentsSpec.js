@@ -7,7 +7,8 @@ import { assert } from "chai";
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
         it("should return the category document", () => {
-            assert.deepEqual({ "name": "Sports", "docType": "category" }, CategoryDocument.getNewCategoryDocument("Sports"));
+            let time = new Date().getTime();
+            assert.deepEqual({ "name": "Sports", "docType": "category", "createdTime": time }, CategoryDocument.getNewCategoryDocument("Sports"));
         });
 
         it("should throw an error if the category name is empty", () => {
