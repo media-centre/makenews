@@ -8,10 +8,9 @@ import sinon from "sinon";
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
         it("should return the category document", () => {
-            let time = new Date().getTime();
-            let stub = sinon.stub(CategoryDocument, "_getCreatedTime").returns(time);
-            assert.deepEqual({ "name": "Sports", "docType": "category", "createdTime": time }, CategoryDocument.getNewCategoryDocument("Sports"));
-            assert(stub.called);
+            let doc = CategoryDocument.getNewCategoryDocument("Sports");
+            let time = doc.createdTime;
+            assert.deepEqual({ "name": "Sports", "docType": "category", "createdTime": time }, doc);
         });
 
         it("should throw an error if the category name is empty", () => {

@@ -6,13 +6,18 @@
 @import "base/_common";
 @import "layouts/_layout";
 
+//@import pages
 @import "pages/_login";
 @import "pages/MainPage/_main";
 @import "pages/MainPage/_configure";
+@import "pages/surf/surf";
 
+//@import components
 @import "pages/MainPage/CreateCategory/_createCategory";
 @import "components/TabControl";
 @import "components/SmallControls";
+
+
 
 //responsive css
 @import "layouts/responsive/_mobile";

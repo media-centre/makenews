@@ -1,5 +1,9 @@
 @media (max-width: 600px) {
 
+  .max-width {
+    max-width: 100%;
+  }
+
   .extra-small-text {
     font-size: $small-font-size;
   }
@@ -66,6 +70,10 @@
       right: 15px;
     }
 
+    section > div {
+      padding: 15px;
+    }
+
     section {
       .configure-page {
         .cat-list li {
@@ -84,4 +92,36 @@
     margin-right: 3%;
   }
 
+/* surf page */
+  .surf-page {
+
+    .all-feeds {
+      .feed-header {
+
+        .header-item, ul li {
+          margin-right: 10px;
+        }
+      }
+
+      .image-gallery ul.gallery-list li.image-container {
+          width: 50%;
+      }
+
+      .image-content {
+        .container {
+          .img-container {
+            width: 50%;
+            margin: auto;
+            padding: 0px;
+          }
+          p {
+            width: auto;
+            margin-top: 20px;
+          }
+        }
+      }
+
+    }
+
+  }
 }
