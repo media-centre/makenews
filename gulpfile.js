@@ -62,11 +62,16 @@ gulp.task("client:build", function(callback) {
 // gulp.task("client:build", ["client:scss", "client:javascript", "client:riot-tags", "client:copy-index-html"]);
 
 gulp.task("client:watch", function() {
-    gulp.watch(parameters.client.scssSrcPath + "/**/*.scss", ["client:scss"]);
-    gulp.watch([parameters.client.imgSrcPath + "/**/*.*", parameters.client.fontsPath + "/**/*.*"], ["client:copy-resources"]);
-    gulp.watch(parameters.client.srcPath + "/**/*.js", ["client:build-sources"]);
-    gulp.watch(parameters.client.testPath + "/**/*.js", ["client:test"]);
-    gulp.watch(parameters.client.clientAppPath + "/index.html", ["client:copy-resources"]);
+    this.cssFilesPath = parameters.client.scssSrcPath + "/**/*.scss";
+    this.copyFilesPath = [parameters.client.imgSrcPath + "/**/*.*", parameters.client.fontsPath + "/**/*.*"];
+    this.jsFilesPath = parameters.client.srcPath + "/**/*.{js,jsx}";
+    this.testJsFilesPath = parameters.client.testPath + "/**/*.js";
+    this.appPath = parameters.client.clientAppPath + "/index.html";
+    gulp.watch(this.cssFilesPath, ["client:scss"]);
+    gulp.watch(this.copyFilesPath, ["client:copy-resources"]);
+    gulp.watch(this.jsFilesPath, ["client:build-sources", "client:src-eslint"]);
+    gulp.watch(this.testJsFilesPath, ["client:test", "client:test-eslint"]);
+    gulp.watch(this.appPath, ["client:copy-resources"]);
 });
 
 gulp.task("client:src-eslint", function() {
@@ -144,9 +149,12 @@ gulp.task("server:test", function() {
 gulp.task("server:build", ["server:copy-js"]);
 
 gulp.task("server:watch", function() {
-    gulp.watch(parameters.server.srcPath + "/**/*.js", ["server:src-eslint", "server:copy-js"]);
-    gulp.watch(parameters.server.serverJsFile, ["server:src-eslint", "server:copy-js"]);
-    gulp.watch(parameters.server.testPath + "/**/*.js", ["server:test", "server:test-eslint"]);
+    this.srcPath = parameters.server.srcPath + "/**/*.js";
+    this.serverJSFilePath = parameters.server.serverJsFile;
+    this.testPath = parameters.server.testPath + "/**/*.js";
+    gulp.watch(this.srcPath, ["server:src-eslint", "server:copy-js"]);
+    gulp.watch(this.serverJSFilePath, ["server:src-eslint", "server:copy-js"]);
+    gulp.watch(this.testPath, ["server:test", "server:test-eslint"]);
 });
 
 gulp.task("server:src-eslint", function() {

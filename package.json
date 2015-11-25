@@ -18,7 +18,8 @@
     "redux": "^3.0.4",
     "redux-router": "^1.0.0-beta3",
     "redux-thunk": "^1.0.0",
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.3",

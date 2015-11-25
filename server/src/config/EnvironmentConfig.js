@@ -24,5 +24,6 @@ export default class EnvironmentConfig {
 }
 
 EnvironmentConfig.files = {
-    "APPLICATION": "../../config/application.json"
+    "APPLICATION": "../../config/application.json",
+    "LOGGING": "../../config/application.json"
 };

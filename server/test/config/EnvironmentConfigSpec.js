@@ -56,7 +56,7 @@ describe("EnvironmentConfig", () => {
         });
 
         it("should load multiple configurations", () => {
-            let file_path1 = "file_path1", file_path2 = "file_path2";
+            let filePath1 = "file_path1", filePath2 = "file_path2";
             let fileJson1 = JSON.stringify({
                 "unit_testing": {
                     "test_key1": "test_value1"
@@ -67,13 +67,13 @@ describe("EnvironmentConfig", () => {
                     "test_key2": "test_value2"
                 }
             });
-            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/"+file_path1), "utf8").once().returns(fileJson1);
-            EnvironmentConfig.instance(file_path1);
-            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/"+file_path2), "utf8").once().returns(fileJson2);
-            EnvironmentConfig.instance(file_path2);
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/" + filePath1), "utf8").once().returns(fileJson1);
+            EnvironmentConfig.instance(filePath1);
+            fsMock.expects("readFileSync").withArgs(path.join(__dirname, "../../src/config/" + filePath2), "utf8").once().returns(fileJson2);
+            EnvironmentConfig.instance(filePath2);
             fsMock.verify();
 
-            let envConfig = EnvironmentConfig.instance(file_path1);
+            let envConfig = EnvironmentConfig.instance(filePath1);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
             expect("unit_testing").to.be.equal(envConfig.getEnvironment());
         });
