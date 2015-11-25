@@ -96,18 +96,18 @@ export default class Logger {
     static _createTransports(options) {
         let transports = [];
         switch (options.logType) {
-            case logType.CONSOLE:
-                transports.push(Logger._createConsoleTransport(options));
-                break;
-            case logType.FILE:
-                transports.push(Logger._createFileTransport(options));
-                break;
-            case logType.CONSOLE_FILE:
-                transports.push(Logger._createFileTransport(options));
-                transports.push(Logger._createConsoleTransport(options));
-                break;
-            default:
-                transports.push(Logger._createFileTransport(options));
+        case logType.CONSOLE:
+            transports.push(Logger._createConsoleTransport(options));
+            break;
+        case logType.FILE:
+            transports.push(Logger._createFileTransport(options));
+            break;
+        case logType.CONSOLE_FILE:
+            transports.push(Logger._createFileTransport(options));
+            transports.push(Logger._createConsoleTransport(options));
+            break;
+        default:
+            transports.push(Logger._createFileTransport(options));
         }
         return transports;
     }

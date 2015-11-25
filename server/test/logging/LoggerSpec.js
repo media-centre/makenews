@@ -27,8 +27,8 @@ describe("Logger", () => {
             loggerStub = sinon.stub(Logger, "_isCategoriesInitialized");
         });
         after("restore getJson stub", ()=> {
-                JsonStub.restore();
-                loggerStub.restore();
+            JsonStub.restore();
+            loggerStub.restore();
         });
         it("defaultLogger is called", () => {
             JsonStub.returns({});
