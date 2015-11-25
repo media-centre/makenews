@@ -28,7 +28,7 @@ export class AllCategories extends Component {
         </li>);
         this.props.categories.map((category, index) =>
             categoriesArray.push(
-                <li key={index} className="category">
+                <li key={index + 1} className="category">
                     <Link to={"/configure/category/" + category._id + "/" + category.name} className="navigation-link">
                         <div className="v-center t-center text-container">
                             <span>{category.name}</span>
