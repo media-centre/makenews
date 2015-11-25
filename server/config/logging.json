@@ -1,0 +1,95 @@
+{
+  "default": {
+    "dirname": "server/logs",
+    "logging": {
+      "default": {
+        "file": {
+          "filename": "server.log",
+          "level": "info"
+        }
+      },
+      "http": {
+        "file": {
+          "filename": "http.log",
+          "level": "debug"
+        }
+      },
+      "database": {
+        "file": {
+          "filename": "database.log",
+          "level": "info"
+        }
+      },
+      "authorization": {
+        "file": {
+          "filename": "database.log",
+          "level": "info"
+        }
+      }
+    }
+  },
+  "development": {
+    "dirname": "server/logs",
+    "logging": {
+      "default": {
+        "file": {
+          "filename": "server.log",
+          "level": "info"
+        }
+      },
+      "http": {
+        "file": {
+          "filename": "http.log",
+          "level": "debug"
+        }
+      },
+      "database": {
+        "file": {
+          "filename": "database.log",
+          "level": "info"
+        }
+      },
+      "authorization": {
+        "file": {
+          "filename": "database.log",
+          "level": "info"
+        }
+      }
+    }
+  },
+  "unit_testing": {
+    "dirname": "server/logs",
+    "logging": {
+      "default": {
+        "file": {
+          "filename": "server.log",
+          "level": "error"
+        }
+      },
+      "http": {
+        "file": {
+          "filename": "http.log",
+          "level": "error"
+        }
+      },
+      "database": {
+        "file": {
+          "filename": "database.log",
+          "level": "error"
+        }
+      },
+      "authorization": {
+        "file": {
+          "filename": "database.log",
+          "level": "error"
+        }
+      }
+    }
+  },
+  "qa": {
+
+  },
+  "production": {
+
+  }
+}
