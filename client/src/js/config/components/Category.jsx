@@ -20,10 +20,11 @@ export default class Category extends Component {
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
     }
 
-    updateCategoryName(categoryName) {
+    _updateCategoryName(categoryName) {
         if(categoryName) {
-            this.props.dispatch(updateCategoryName(this.props.categoryId, categoryName, (response)=>  {
-                this.setState({ titleErrorMessage: response.result ? "" : "Category name already exists" });
+            this.props.dispatch(updateCategoryName(this.props.params.categoryId, categoryName, (response)=>  {
+                this.setState({ titleErrorMessage: response.result ? "Category name already exists" : "" });
+                console.log("this.props.params.categoryName", this.props.params.categoryName)
             }));
         } else {
             this.setState({ titleErrorMessage: "Category name can not be empty" });
@@ -33,7 +34,7 @@ export default class Category extends Component {
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this.updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage}/>
+              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage}/>
 
               <TabControl>
                   {Object.keys(this.props.sources).map((key, index) =>

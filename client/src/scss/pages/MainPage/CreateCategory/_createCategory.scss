@@ -51,4 +51,10 @@
     margin: 3px 0px;
     padding-left: 16px;
   }
+
+  .error-message {
+    font-size: $extra-small-font-size;
+    color: $error-border-color;
+    margin-left: 18px;
+  }
 }

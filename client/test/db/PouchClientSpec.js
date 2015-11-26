@@ -16,6 +16,13 @@ describe("PouchClient", () => {
 
         DbSession.instance().put({
             "docType": "category",
+            "name": "Long Title",
+            "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5",
+            "_rev": "14-a050422e3a9367aa519109443f86810c"
+        })
+
+        DbSession.instance().put({
+            "docType": "category",
             "name": "Sports"
         }
             , "sportsCategoryId1");
@@ -184,6 +191,17 @@ describe("PouchClient", () => {
             PouchClient.getDocument("invalidId").catch((errorResponse) => {
                 expect(errorResponse.error).to.be.true;
                 expect(errorResponse.status).to.eq(404);
+                done();
+            });
+        });
+    });
+
+    describe("updateDocument", () => {
+
+        xit("should update the document", (done) => {
+            let documentInput = { "docType": "category", "name": "Renamed", "createdTime": 1448540914840, "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5", "_rev": "14-a050422e3a9367aa519109443f86810c" };
+            PouchClient.updateDocument(documentInput).then(document => {
+                expect(document._id).to.eq(documentInput._id);
                 done();
             });
         });

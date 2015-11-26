@@ -66,15 +66,27 @@ export function createCategory(categoryName = "", callback = ()=> {}) {
 export function updateCategoryName(categoryId, categoryName = "", callback = ()=> {}) {
     return dispatch => {
 
-        var found = false;
+        let isAlreadyExists = false, categoryDoc = null;
         CategoryDb.fetchAllCategoryDocuments().then(categories => {
             categories.some((category)=> {
                 if(category._id !== categoryId && categoryName.toLowerCase() === category.name.toLowerCase()) {
-                    found = true;
+                    isAlreadyExists = true;
+                    callback({ "result": isAlreadyExists });
+                    return true;
+                }
+
+                if(category._id === categoryId) {
+                    categoryDoc = category;
                 }
             });
 
-            callback({ "result": !found });
+            if(!isAlreadyExists && categoryDoc !== null) {
+                categoryDoc.name = categoryName;
+                CategoryDb.updateCategory(categoryDoc).then(response => {
+                    callback({ "result": isAlreadyExists });
+                });
+            }
+
         }).catch(error => {
             callback({ "result": !found });
         });

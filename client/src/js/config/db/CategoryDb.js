@@ -118,7 +118,19 @@ export default class CategoryDb {
                 } else {
                     reject("Category with name already exists");
                 }
-            }).catch(err => { reject(err) });
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+    static updateCategory(categoryDocument) {
+        return new Promise((resolve, reject) => {
+            PouchClient.updateDocument(categoryDocument).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
         });
     }
 }

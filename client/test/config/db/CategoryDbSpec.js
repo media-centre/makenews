@@ -299,4 +299,32 @@ describe("CategoryDb", () => {
             });
         });
     });
+
+    describe("updateCategory", ()=> {
+
+        it("should update the category passed", (done)=> {
+            let document = { "docType": "category", "name": "test", "createdTime": 1448554080663, "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "_rev": "3-c8b00a32dc84b286d914816b51f7f52e" };
+            let response = { "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "rev": "modified" };
+
+            let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(document).returns(Promise.resolve(response));
+            CategoryDb.updateCategory(document).then(()=> {
+                updateMock.verify();
+                PouchClient.updateDocument.restore();
+                done();
+            });
+        });
+
+        it("should not update the category without id", (done)=> {
+            let document = {};
+            let response = "Invalid category id";
+
+            let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(document).returns(Promise.reject(response));
+            CategoryDb.updateCategory(document).catch(()=> {
+                updateMock.verify();
+                PouchClient.updateDocument.restore();
+                done();
+            });
+        });
+
+    });
 });

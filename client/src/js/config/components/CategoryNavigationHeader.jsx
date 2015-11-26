@@ -16,7 +16,7 @@ export default class CategoryNavigationHeader extends Component {
 
     render() {
 
-        let titleElement = this.props.isDefault ?  <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div> : <div className="navigation-title t-center m-block" id="categoryTitle" ref="categoryTitleElement" contentEditable onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>{this.props.categoryName}</div>
+        let titleElement = this.props.isDefault ?  <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div> : <div className="navigation-title t-center m-block custom-category-name"><div className="t-center" id="categoryTitle" ref="categoryTitleElement" contentEditable onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>{this.props.categoryName}</div><div className="error-msg t-center">{this.props.errorMessage}</div></div>
         let deleteElement = this.props.isDefault ?  null : <button className="delete-category right" id="deleteCategory">{"Delete Category"}</button>
 
         return (
@@ -27,8 +27,6 @@ export default class CategoryNavigationHeader extends Component {
                 </Link>
                 {deleteElement}
                 {titleElement}
-                <div className="error-msg error t-center">{this.props.errorMessage}</div>
-
             </div>
         );
     }

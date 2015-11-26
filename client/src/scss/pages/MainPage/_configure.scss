@@ -21,6 +21,7 @@
 
       .text-container {
         overflow: hidden;
+        max-height: 134px;
       }
 
       .navigation-link {
@@ -31,8 +32,11 @@
       }
     }
 
-    li.category:hover span {
+    li:hover span {
       color: $secondary-font-color;
+    }
+    li.add-new:hover {
+      background: $app-header-bg-color;
     }
 
     li.add-new {

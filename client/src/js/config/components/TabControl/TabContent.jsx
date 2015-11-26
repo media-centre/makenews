@@ -1,4 +1,3 @@
-/* eslint no-underscore-dangle:0, max-len:[0,500] no-unused-vars:0*/
 "use strict";
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../../actions/CategoryActions.js";
@@ -10,7 +9,7 @@ export default class TabContent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { "showTextbox": false, "error": false };
+        this.state = { "showTextbox": false, "errorMessage": "" };
     }
 
     _onUrlChange() {}
@@ -25,25 +24,39 @@ export default class TabContent extends Component {
     _onKeyDownTextBox(event, props) {
         const ENTERKEY = 13;
         if(event.keyCode === ENTERKEY) {
-            let url = this.refs.addUrlTextBox.value.trim();
-            if(this._isInvalidUrl(url)) {
-                this.setState({ "error": true });
-            } else {
-                props.dispatch(addRssUrlAsync(props.categoryId, url));
-                this.refs.addUrlTextBox.value = "";
-                this.setState({ "showTextbox": false });
-            }
+            this._validateAndUpdateUrl(props);
+        }
+    }
+
+    _validateAndUpdateUrl(props) {
+        let url = this.refs.addUrlTextBox.value.trim();
+        let errorMessage = this._isInvalidUrl(url);
+        this.setState({ "errorMessage": errorMessage });
+
+        if(errorMessage.length === 0) {
+            props.dispatch(addRssUrlAsync(props.categoryId, url));
+            this.refs.addUrlTextBox.value = "";
+            this.setState({ "showTextbox": false });
         }
     }
 
     _isInvalidUrl(url) {
-        const NEGATIVE_INDEX = -1;
-        return (this.props.content.indexOf(url) !== NEGATIVE_INDEX || url.match(urlRegex) === null);
+        if(!url.match(urlRegex)) {
+            return url ? "Invalid URL format" : "URL should not be empty";
+        }
+
+        let result = "";
+        this.props.content.some((obj)=> {
+            if(obj.url.toLowerCase().trim() === url.toLowerCase().trim()) {
+                result =  "URL is already added";
+            }
+        });
+        return result;
     }
 
     render() {
 
-        let inputBox = this.state.showTextbox ? <input type="text" ref="addUrlTextBox" className={this.state.error ? "add-url-input box error-border" : "add-url-input box"} placeholder="Enter url here" onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/> : null;
+        let inputBox = this.state.showTextbox ? <div><input type="text" ref="addUrlTextBox" className={this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box"} placeholder="Enter url here" onBlur={()=> this._validateAndUpdateUrl(this.props)} onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/><div className="error-message">{ this.state.errorMessage }</div></div> : null;
 
         return (
             <div>

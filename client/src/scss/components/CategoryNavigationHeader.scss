@@ -8,6 +8,10 @@
       outline: none;
     }
 
+    .custom-category-name {
+      color: $app-header-bg-color;
+    }
+
     .delete-category {
       border: none;
       color: $dark-gray-color;
@@ -15,7 +19,10 @@
     }
 
     .error-msg {
-      font-size: $extra-small-font-size
+      font-size: $extra-small-font-size;
+      margin-left: 125px;
+      height: 17px;
+      color: $error-border-color;
     }
 }
 

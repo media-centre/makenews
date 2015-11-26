@@ -10,9 +10,9 @@ export default class ImageGallery extends Component {
         let description = this.props.category.content ? <p className="surf-description">{this.props.category.content}</p> : null;
         return (
             <div className="image-gallery">
-                {header}
                 <ul className="gallery-list h-center">{images}</ul>
                 {description}
+                {header}
             </div>
 
         );

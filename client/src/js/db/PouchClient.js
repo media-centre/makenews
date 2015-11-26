@@ -32,8 +32,14 @@ export default class PouchClient {
         });
     }
 
-    static updateDocument(existingDocument) {
-
+    static updateDocument(jsonDocument) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().put(jsonDocument).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 
     static getDocument(id) {
