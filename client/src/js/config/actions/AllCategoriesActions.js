@@ -6,11 +6,12 @@ export const DISPLAY_ALL_CATEGORIES = "DISPLAY_ALL_CATEGORIES";
 export function displayAllCategoriesAsync() {
     return dispatch => {
         CategoriesApplicationQueries.fetchAllCategories().then((categories) => {
-            dispatch(dispalyAllCategories(categories));
+            dispatch(displayAllCategories(categories));
         });
+
     };
 }
 
-export function dispalyAllCategories(categories) {
+export function displayAllCategories(categories) {
     return { "type": DISPLAY_ALL_CATEGORIES, categories };
 }

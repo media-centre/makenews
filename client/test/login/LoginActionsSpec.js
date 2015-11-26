@@ -1,10 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import { loginFailed, loginSuccess, userLogin } from "../../src/js/login/LoginActions.js";
+import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } from "../../src/js/login/LoginActions.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import { expect } from "chai";
 import sinon from "sinon";
+import mockStore from "../helper/ActionHelper.js";
 
 describe("actions", () => {
     it("return type LOGIN_SUCCESS action", function() {
@@ -20,7 +21,7 @@ describe("actions", () => {
 });
 
 describe("userLogin", () => {
-    let headers = null, data = null, userName = null, password = null, ajaxClientInstanceStub = null, route = null, ajaxPostStub = null, ajax = null, dispatch = null;
+    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
@@ -29,27 +30,31 @@ describe("userLogin", () => {
             "Content-type": "application/json"
         };
         data = { "username": userName, "password": password };
-        ajax = new AjaxClient(route);
-        ajaxClientInstanceStub = sinon.stub(AjaxClient, "instance");
-        route = "/login";
-        ajaxPostStub = sinon.stub(ajax, "post");
-        dispatch = sinon.spy();
-    });
-    afterEach("userLogin", () => {
-        AjaxClient.instance.restore();
-        ajax.post.restore();
-    });
-    xit("should dispatch login successful action if the login is successful", () => {
-        let loginSuccessMock = sinon.mock(loginSuccess);
-        ajaxClientInstanceStub.withArgs(route).returns(ajaxPostStub);
-        ajaxPostStub.withArgs(headers, data).returns(Promise.resolve({ "userName": userName }));
-        //loginSuccessMock.withArgs(userName).returns({ "type": "LOGIN_SUCCESS", userName });
-        dispatch.withArgs({ "type": "LOGIN_SUCCESS", userName });
-        userLogin(userName, password)(dispatch);
-        loginSuccessMock.verify();
-        loginSuccess.restore();
+        ajaxPostMock = sinon.mock(AjaxClient.prototype).expects("post");
     });
 
-    xit("should dispatch login failure action if the login is not successful", () => {
+    afterEach("userLogin", () => {
+        ajaxPostMock.verify();
+        AjaxClient.prototype.post.restore();
+    });
+
+    it("should dispatch login successful action if the login is successful", (done) => {
+        ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName }));
+        const expectedActions = [
+            { "type": LOGIN_SUCCESS, "userDetails": userName }
+        ];
+        const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+
+        store.dispatch(userLogin(userName, password));
+    });
+
+    it("should dispatch login failure action if the login is not successful", (done) => {
+        ajaxPostMock.withArgs(headers, data).returns(Promise.reject("error"));
+        const expectedActions = [
+            { "type": LOGIN_FAILED, "responseMessage": "Invalid user name or password" }
+        ];
+        const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+
+        store.dispatch(userLogin(userName, password));
     });
 });
