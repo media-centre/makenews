@@ -16,7 +16,6 @@ export function userLogin(userName, password) {
         ajax.post(headers, data)
             .then(succesData => {
                 dispatch(loginSuccess(succesData.userName));
-                dispatch(createCategory("Default Category"));
             })
             .catch(errorData => {
                 dispatch(loginFailed("Invalid user name or password"));
