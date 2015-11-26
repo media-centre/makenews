@@ -11,6 +11,7 @@ var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
 var eslint = require("gulp-eslint");
+var exec = require("child_process").exec;
 require("babel/register");
 
 gulp.task("client:scss", function() {
@@ -173,7 +174,7 @@ gulp.task("server:test-eslint", function() {
 gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint"]);
 gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 
-// -------------------------------common tasks -------------------------------------------
+// -------------------------------single task to cover client, common and server  -------------------------------------------
 
 gulp.task("build", ["common:build", "client:build", "server:build"]);
 gulp.task("clean", ["client:clean", "server:clean"]);
@@ -184,3 +185,35 @@ gulp.task("test", function(callback) {
 gulp.task("watch", ["client:watch", "server:watch"]);
 gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint"]);
 gulp.task("checkin-ready", ["client:checkin-ready", "server:checkin-ready"]);
+
+gulp.task("start", (cb) => {
+    exec("./node_modules/forever/bin/forever start dist/server.js", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task("stop", (cb) => {
+    exec("./node_modules/forever/bin/forever stop dist/server.js", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task("restart", (cb) => {
+    exec("./node_modules/forever/bin/forever restart dist/server.js", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task("list", (cb) => {
+    exec("./node_modules/forever/bin/forever list", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
