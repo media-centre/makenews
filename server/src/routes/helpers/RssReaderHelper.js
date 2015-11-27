@@ -14,13 +14,14 @@ export default class RssReaderHelper {
     }
     feedsForUrl() {
         let url = this.request.query.url;
-
+        return Promise.resolve(url);
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(url)) {
-                this.response.statusCode = HttpResponseHandler.codes.OK;
+                this.response.status = HttpResponseHandler.codes.OK;
                 this.response.json = {};
                 resolve(this.response);
             }
+            console.log(url, "$$$$$$");
             restRequest.get({
                 "uri": url,
                 "headers": { "content-type": "application/x-www-form-urlencoded" }
@@ -30,14 +31,13 @@ export default class RssReaderHelper {
                     reject(error);
                 }
                 if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                    this.response.statusCode = HttpResponseHandler.codes.OK;
+                    this.response.status = HttpResponseHandler.codes.OK;
                     parseString(body, (err, result) => {
-                        winston.info(body);
                         this.response.json = result;
                     });
                     resolve(this.response);
                 } else {
-                    this.response.statusCode = HttpResponseHandler.codes.NOT_FOUND;
+                    this.response.status = HttpResponseHandler.codes.NOT_FOUND;
                     resolve(this.response);
                 }
             });
