@@ -1,5 +1,6 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import Config from "../../../src/js/utils/Config.js";
 
 export default class AjaxClient {
@@ -12,6 +13,10 @@ export default class AjaxClient {
 
   post(headers, data) {
       return this.request("POST", headers, data);
+  }
+
+  getUrl() {
+      return this.request("GET");
   }
 
   request(method, headers, data = {}) {
@@ -41,6 +46,8 @@ export default class AjaxClient {
                   } else if(xhttp.status === response.UNAUTHORIZED) {
                       let jsonResponse = JSON.parse(event.target.response);
                       reject(jsonResponse);
+                  } else if(xhttp.status === response.BAD_GATEWAY) {
+                      reject("connection refused");
                   }
                   reject("error");
               }
@@ -49,9 +56,10 @@ export default class AjaxClient {
   }
   responseCodes() {
       return {
+          "BAD_GATEWAY": HttpResponseHandler.codes.BAD_GATEWAY,
           "REQUEST_FINISHED": 4,
-          "OK": 200,
-          "UNAUTHORIZED": 401
+          "OK": HttpResponseHandler.codes.OK,
+          "UNAUTHORIZED": HttpResponseHandler.codes.UNAUTHORIZED
       };
   }
 }
