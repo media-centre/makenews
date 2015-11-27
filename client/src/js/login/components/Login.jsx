@@ -1,54 +1,57 @@
 "use strict";
-import React, { Component, PropTypes } from "react";
-import { Link } from "react-router";
+import React, { PropTypes } from "react";
+import { History } from "react-router";
 
-export default class Login extends Component {
+let Login = React.createClass({
+    displayName() {
+        return "Login Component";
+    },
+    propTypes() {
+        return {
+            "errorMessage": PropTypes.string.isRequired,
+            "onLoginClick": PropTypes.func.isRequired
+        };
+    },
+
+    mixins: [History],
 
     handleClick(event) {
         event.preventDefault();
         let userName = this.refs.userName.value.trim();
         let password = this.refs.password.value.trim();
-        this.props.onLoginClick(userName, password);
-    }
+        this.props.onLoginClick(this.history, userName, password);
+    },
 
-  render() {
-      return (
-      <form id="login" onSubmit={(event) => this.handleClick(event)}>
+    render() {
+        return (
+            <form id="login" onSubmit={(event) => this.handleClick(event)}>
 
-          <p id="errorMessage" ref="errorMessage" className="error extra-small-text">
+                <p id="errorMessage" ref="errorMessage" className="error extra-small-text">
             {this.props.errorMessage}
-          </p>
+                </p>
 
-          <div className="clear-fix input-container">
-              <div className="left m-block">
-                  <input type="text" id="userName" placeholder="username" ref="userName" name="userName" className="m-input-block box small-text" required/>
-              </div>
+                <div className="clear-fix input-container">
+                    <div className="left m-block">
+                        <input type="text" id="userName" placeholder="username" ref="userName" name="userName" className="m-input-block box small-text" required/>
+                    </div>
 
-              <div className="left m-block password-container">
-                  <input type="password" id="password" placeholder="password" ref="password" name="password" className="m-input-block box small-text" required/>
-                  <p className="help-login extra-small-text t-right">
+                    <div className="left m-block password-container">
+                        <input type="password" id="password" placeholder="password" ref="password" name="password" className="m-input-block box small-text" required/>
+                        <p className="help-login extra-small-text t-right">
                     {"Need help to login"}
-                  </p>
-              </div>
+                        </p>
+                    </div>
 
-              <div className="left m-block m-t-center">
-                  <button id="submit" ref="submit">
+                    <div className="left m-block m-t-center">
+                        <button id="submit" ref="submit">
                     {"Login"}
-                  </button>
-              </div>
-          </div>
+                        </button>
+                    </div>
+                </div>
 
-      </form>
-    );
-  }
+            </form>
+        );
+    }
+});
 
-}
-
-
-Login.displayName = "Login Component";
-Login.propTypes = {
-    "errorMessage": PropTypes.string.isRequired,
-    "onLoginClick": PropTypes.func.isRequired
-};
-
-
+module.exports = Login;

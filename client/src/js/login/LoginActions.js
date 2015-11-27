@@ -5,7 +5,7 @@ import { createCategory } from "../config/actions/CategoryActions.js";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
 
-export function userLogin(userName, password) {
+export function userLogin(history, userName, password) {
     return dispatch => {
         let ajax = AjaxClient.instance("/login");
         const headers = {
@@ -15,7 +15,7 @@ export function userLogin(userName, password) {
         const data = { "username": userName, "password": password };
         ajax.post(headers, data)
             .then(succesData => {
-                dispatch(loginSuccess(succesData.userName));
+                dispatch(loginSuccess(history, succesData.userName));
             })
             .catch(errorData => {
                 dispatch(loginFailed("Invalid user name or password"));
@@ -23,8 +23,8 @@ export function userLogin(userName, password) {
     };
 }
 
-export function loginSuccess(userDetails) {
-    return { "type": LOGIN_SUCCESS, userDetails };
+export function loginSuccess(history, userName) {
+    return { "type": LOGIN_SUCCESS, history, userName };
 }
 
 export function loginFailed(responseMessage) {

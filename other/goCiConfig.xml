@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="75">
+  <server artifactsdir="artifacts" commandRepositoryLocation="default" serverId="ebe86205-7318-4fec-afb3-d346b355db74">
+    <security>
+      <passwordFile path="/var/lib/go-server/passwd-file" />
+    </security>
+  </server>
+  <pipelines group="MediaCenter">
+    <pipeline name="build" isLocked="false" template="build_template">
+      <materials>
+        <svn url="https://github.com/media-centre/ContentDiscovery.git" username="vikramkb" encryptedPassword="rF+KSA+PJYLw+EM7aAxRFg==" />
+      </materials>
+    </pipeline>
+    <pipeline name="DevelopmentDeployment">
+      <materials>
+        <pipeline pipelineName="build" stageName="CreateTar" materialName="build" />
+      </materials>
+      <stage name="StartServer">
+        <jobs>
+          <job name="UntarAndStartServer">
+            <tasks>
+              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="tar" workingdir="trunk">
+                <arg>-xvzf</arg>
+                <arg>dist.tar.gz</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>killall node | pwd</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="trunk" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="QaDeployment">
+      <materials>
+        <pipeline pipelineName="build" stageName="CreateTar" materialName="build" />
+      </materials>
+      <stage name="StartServer">
+        <approval type="manual" />
+        <jobs>
+          <job name="UntarAndStartServer">
+            <environmentvariables>
+              <variable name="NODE_ENV">
+                <value>qa</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="tar" workingdir="trunk">
+                <arg>-xvzf</arg>
+                <arg>dist.tar.gz</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>killall node | pwd</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
+  <templates>
+    <pipeline name="build_template">
+      <stage name="NodeModules">
+        <jobs>
+          <job name="npm-install">
+            <tasks>
+              <exec command="npm" workingdir="trunk">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="gulp" workingdir="trunk">
+                <arg>clean</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="gulp" workingdir="trunk">
+                <arg>build</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="UnitTest">
+        <jobs>
+          <job name="unit-test">
+            <tasks>
+              <exec command="gulp" workingdir="trunk">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="StaticCodeAnalyser">
+        <jobs>
+          <job name="eslint">
+            <tasks>
+              <exec command="gulp" workingdir="trunk">
+                <arg>eslint</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="CreateTar">
+        <jobs>
+          <job name="generate-tar-file">
+            <tasks>
+              <exec command="tar" workingdir="trunk">
+                <arg>cvzf</arg>
+                <arg>../dist.tar.gz</arg>
+                <arg>.</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="dist.tar.gz" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </templates>
+  <environments>
+    <environment name="DevDeployment">
+      <environmentvariables>
+        <variable name="NODE_ENV">
+          <value>development</value>
+        </variable>
+      </environmentvariables>
+      <agents>
+        <physical uuid="c76db453-bf00-4544-98e8-abf4d18ecb9e" />
+      </agents>
+      <pipelines>
+        <pipeline name="DevelopmentDeployment" />
+      </pipelines>
+    </environment>
+    <environment name="QaDeployment">
+      <agents>
+        <physical uuid="b40fdef2-f3ec-47dd-9fa1-fd5f16dc0a3e" />
+      </agents>
+      <pipelines>
+        <pipeline name="QaDeployment" />
+      </pipelines>
+    </environment>
+  </environments>
+  <agents>
+    <agent hostname="continuousintegrationserver" ipaddress="10.19.0.5" uuid="2eb05fac-008c-4e6e-b794-916c26121dd3" />
+    <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="c76db453-bf00-4544-98e8-abf4d18ecb9e" />
+    <agent hostname="Testing-Env" ipaddress="10.19.0.7" uuid="b40fdef2-f3ec-47dd-9fa1-fd5f16dc0a3e" />
+  </agents>
+</cruise>

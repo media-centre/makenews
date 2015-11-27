@@ -71,8 +71,8 @@ gulp.task("client:watch", function() {
     this.appPath = parameters.client.clientAppPath + "/index.html";
     gulp.watch(this.cssFilesPath, ["client:scss"]);
     gulp.watch(this.copyFilesPath, ["client:copy-resources"]);
-    gulp.watch(this.jsFilesPath, ["client:build-sources", "client:src-eslint"]);
-    gulp.watch(this.testJsFilesPath, ["client:test", "client:test-eslint"]);
+    gulp.watch(this.jsFilesPath, ["client:build-sources"]);
+    gulp.watch(this.testJsFilesPath, ["client:test"]);
     gulp.watch(this.appPath, ["client:copy-resources"]);
 });
 

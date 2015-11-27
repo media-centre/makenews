@@ -16,6 +16,7 @@ import { Route } from "react-router";
 
 
 export function renderRoutes() {
+
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>

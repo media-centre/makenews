@@ -1,25 +1,37 @@
 "use strict";
-import React, { Component, PropTypes } from "react";
-import { Route, Link } from "react-router";
+import React, { PropTypes } from "react";
+import { History, Link } from "react-router";
 import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
-import { createDefaultCategory, createCategory } from "../actions/CategoryActions.js";
-import externalNavigation from "../../utils/ExternalNavigation.js";
+import { createCategory } from "../actions/CategoryActions.js";
 
-export class AllCategories extends Component {
+let AllCategories = React.createClass({
+    displayName() {
+        return "All Categories";
+    },
+    propTypes() {
+        return {
+            "categories": PropTypes.object.isRequired,
+            "dispatch": PropTypes.func.isRequired
+        };
+    },
+
+    mixins: [History],
+
     componentWillMount() {
-        this.props.dispatch(createDefaultCategory());
-    }
+        this.props.dispatch(displayAllCategoriesAsync());
+    },
 
     _createNewCategory() {
-        this.props.dispatch(createCategory("", (response)=>  {
-            externalNavigation("#/configure/category/" + response.id + "/" + response.name);
+        let history = this.history;
+        this.props.dispatch(createCategory("", (response)=>{
+            history.push("/configure/category/" + response.id + "/" + response.name);
         }));
-    }
+    },
 
     renderCategoryLists() {
         let categoriesArray = [];
-        categoriesArray.push(<li className="add-new" id="addNewCategoryButton" key ="0" onClick={this._createNewCategory.bind(this)}>
+        categoriesArray.push(<li className="add-new" id="addNewCategoryButton" key ="0" onClick={this._createNewCategory}>
             <div className="navigation-link">
                 <div className="v-center t-center text-container">
                     <span>{"Add new category"}</span>
@@ -38,7 +50,7 @@ export class AllCategories extends Component {
             )
         );
         return categoriesArray;
-    }
+    },
 
     render() {
         return (
@@ -54,14 +66,9 @@ export class AllCategories extends Component {
             </div>
         );
     }
-}
+});
 
-
-AllCategories.displayName = "All categories";
-AllCategories.propTypes = {
-    "categories": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func.isRequired
-};
+module.exports = AllCategories;
 
 function select(store) {
     return store.allCategories;

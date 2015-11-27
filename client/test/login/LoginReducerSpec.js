@@ -21,16 +21,17 @@ describe("login reducer", function() {
     });
 
     it("should set the user session details when the login is successful", function() {
-        let tempNavigation = { "click": () => { } };
         let DocumentMock = sinon.mock(document);
 
         let testUser = "test_user";
-        let action = { "type": "LOGIN_SUCCESS", "userDetails": testUser };
+        let action = { "type": "LOGIN_SUCCESS", "history": { "push": () => {} }, "userName": testUser };
+        sinon.mock(action.history).expects("push").withArgs("/main");
 
         let state = login(undefined, action);
         DocumentMock.verify();
         assert.strictEqual("", state.errorMessage);
         assert.strictEqual(testUser, state.userName);
         DocumentMock.restore();
+        action.history.push.restore();
     });
 });

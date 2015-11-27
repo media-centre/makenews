@@ -9,9 +9,10 @@ import mockStore from "../helper/ActionHelper.js";
 
 describe("actions", () => {
     it("return type LOGIN_SUCCESS action", function() {
-        const userDetails = "test_user";
-        const loginSuccessAction = { "type": "LOGIN_SUCCESS", userDetails };
-        expect(loginSuccessAction).to.deep.equal(loginSuccess(userDetails));
+        const userName = "test_user";
+        const history = {};
+        const loginSuccessAction = { "type": "LOGIN_SUCCESS", history, userName };
+        expect(loginSuccessAction).to.deep.equal(loginSuccess(history, userName));
     });
     it("return type LOGIN_FAILED action", function() {
         const loginFailedAction = { "type": "LOGIN_FAILED", "responseMessage": "invalid login" };
@@ -21,10 +22,11 @@ describe("actions", () => {
 });
 
 describe("userLogin", () => {
-    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null;
+    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null, history = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
+        history = {};
         headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
@@ -41,11 +43,11 @@ describe("userLogin", () => {
     it("should dispatch login successful action if the login is successful", (done) => {
         ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName }));
         const expectedActions = [
-            { "type": LOGIN_SUCCESS, "userDetails": userName }
+            { "type": LOGIN_SUCCESS, "history": history, "userName": userName }
         ];
         const store = mockStore({ "errorMessage": "" }, expectedActions, done);
 
-        store.dispatch(userLogin(userName, password));
+        store.dispatch(userLogin(history, userName, password));
     });
 
     it("should dispatch login failure action if the login is not successful", (done) => {
@@ -55,6 +57,6 @@ describe("userLogin", () => {
         ];
         const store = mockStore({ "errorMessage": "" }, expectedActions, done);
 
-        store.dispatch(userLogin(userName, password));
+        store.dispatch(userLogin(history, userName, password));
     });
 });

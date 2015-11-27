@@ -47,7 +47,7 @@ export class LoginPage extends Component {
                     <div className="clear-fix form-container">
                         <img src="images/main/makenews.png" className="app-logo left clear-fix"/>
                         <div id="login-form-container" className="login-form-container right m-block">
-                            <Login ref="login" onLoginClick={(userName, password) => dispatch(userLogin(userName, password))} errorMessage={this.props.errorMessage} />
+                            <Login ref="login" onLoginClick={(history, userName, password) => dispatch(userLogin(history, userName, password))} errorMessage={this.props.errorMessage} />
                         </div>
                     </div>
                     <p className="description small-text">
