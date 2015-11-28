@@ -22,12 +22,11 @@ export default class Category extends Component {
 
     _updateCategoryName(categoryName) {
         if(categoryName) {
-            this.props.dispatch(updateCategoryName(this.props.params.categoryId, categoryName, (response)=>  {
-                this.setState({ titleErrorMessage: response.result ? "Category name already exists" : "" });
-                console.log("this.props.params.categoryName", this.props.params.categoryName)
+            this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
+                this.setState({ "titleErrorMessage": response.status ? "" : "Category name already exists" });
             }));
         } else {
-            this.setState({ titleErrorMessage: "Category name can not be empty" });
+            this.setState({ "titleErrorMessage": "Category name can not be empty" });
         }
     }
 

@@ -53,26 +53,22 @@ export default class CategoryDb {
         });
     }
 
-    static isCategoryExists(categoryName) {
+    static isCategoryExists(categoryName, categoryId) {
         return new Promise((resolve, reject) => {
-            CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
-                categoryDocs.forEach(document => {
-                    if(document.name === categoryName) {
-                        resolve({
-                            "error": "",
-                            "status": true
-                        });
+            CategoryDb.fetchAllCategoryDocuments().then(categories => {
+                let isAlreadyExists = false;
+                categories.some((category)=> {
+                    if(((categoryId && category._id !== categoryId) || !categoryId) && categoryName.toLowerCase() === category.name.toLowerCase()) {
+                        isAlreadyExists = true;
+                        resolve({ "status": isAlreadyExists, "error": "" });
+                        return;
                     }
                 });
-                resolve({
-                    "error": "",
-                    "status": false
-                });
-            }).catch((error) => {
-                reject({
-                    "error": error,
-                    "status": false
-                });
+                if(!isAlreadyExists) {
+                    resolve({ "status": isAlreadyExists });
+                }
+            }).catch(error => {
+                reject({ "error": error, "status": false });
             });
         });
     }
@@ -129,7 +125,23 @@ export default class CategoryDb {
             PouchClient.updateDocument(categoryDocument).then(response => {
                 resolve(response);
             }).catch(error => {
-                reject(error);
+                reject({ "status": false, "error": error });
+            });
+        });
+    }
+
+    static getCategoryById(categoryId) {
+        return new Promise((resolve, reject) => {
+            CategoryDb.fetchAllCategoryDocuments().then(categories => {
+                categories.some((category)=> {
+                    if(category._id === categoryId) {
+                        resolve({ "status": true, "category": category });
+                        return true;
+                    }
+                });
+                resolve({ "status": false });
+            }).catch(error => {
+                reject({ "status": false, "error": error });
             });
         });
     }

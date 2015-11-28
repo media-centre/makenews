@@ -63,34 +63,44 @@ export function createCategory(categoryName = "", callback = ()=> {}) {
     }
 }
 
-export function updateCategoryName(categoryId, categoryName = "", callback = ()=> {}) {
+export function updateCategoryName(categoryName = "", categoryId = "", callback = ()=> {}) {
     return dispatch => {
 
-        let isAlreadyExists = false, categoryDoc = null;
-        CategoryDb.fetchAllCategoryDocuments().then(categories => {
-            categories.some((category)=> {
-                if(category._id !== categoryId && categoryName.toLowerCase() === category.name.toLowerCase()) {
-                    isAlreadyExists = true;
-                    callback({ "result": isAlreadyExists });
-                    return true;
-                }
-
-                if(category._id === categoryId) {
-                    categoryDoc = category;
-                }
-            });
-
-            if(!isAlreadyExists && categoryDoc !== null) {
-                categoryDoc.name = categoryName;
-                CategoryDb.updateCategory(categoryDoc).then(response => {
-                    callback({ "result": isAlreadyExists });
-                });
+        CategoryDb.isCategoryExists(categoryName, categoryId).then((response)=> {
+            if(response.status) {
+                return callback({ "status": false });
             }
-
-        }).catch(error => {
-            callback({ "result": !found });
+            updateCategoryNameHelper(categoryName, categoryId).then((updateResponse)=> {
+                callback(updateResponse);
+            }).catch((error)=> {
+                callback(error);
+            });
+        }).catch((error)=> {
+            callback(error);
         });
     };
+}
+
+function updateCategoryNameHelper(categoryName, categoryId) {
+    return new Promise((resolve, reject) => {
+        CategoryDb.getCategoryById(categoryId).then((response)=> {
+            if (response.status) {
+
+                let categoryDoc = response.category;
+                categoryDoc.name = categoryName;
+
+                CategoryDb.updateCategory(categoryDoc).then(()=> {
+                    resolve({ "status": true });
+                }).catch((error)=> {
+                    reject(error);
+                });
+            } else {
+                resolve(response);
+            }
+        }).catch((error)=> {
+            reject(error);
+        });
+    });
 }
 
 function generateCategoryName() {
