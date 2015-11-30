@@ -3,7 +3,7 @@
 .navigation-header {
     .navigation-title {
       color: $medium-gray-color;
-      margin: 0px 135px 0px 0px;
+      margin: 0px 135px 0px 135px;
       font-size: $large-font-size;
       outline: none;
     }
@@ -20,7 +20,6 @@
 
     .error-msg {
       font-size: $extra-small-font-size;
-      margin-left: 125px;
       height: 17px;
       color: $error-border-color;
     }
