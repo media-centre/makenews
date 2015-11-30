@@ -55,7 +55,7 @@ let AllCategories = React.createClass({
     render() {
         return (
             <div className="configure-page max-width">
-                <h3 className="t-center">
+                <h3 className="t-center t-bold">
                     {"All Categories"}
                 </h3>
                 <div className="categories">
