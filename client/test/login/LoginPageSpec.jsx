@@ -5,11 +5,9 @@ import "../helper/TestHelper.js";
 import { LoginPage } from "../../src/js/login/pages/LoginPage.jsx";
 
 import { assert } from "chai";
-import React from "react/addons";
+import TestUtils from "react-addons-test-utils";
+import React from "react";
 import ReactDOM from "react-dom";
-
-
-let TestUtils = React.addons.TestUtils;
 
 describe("login page component", function() {
     before("login page component", function() {

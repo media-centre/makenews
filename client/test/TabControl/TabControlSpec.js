@@ -5,10 +5,11 @@ import TabControl from "../../src/js/config/components/TabControl/TabControl.jsx
 import TabContent from "../../src/js/config/components/TabControl/TabContent.jsx";
 import { assert } from "chai";
 import ReactDOM from "react-dom";
-import React from "react/addons";
+import TestUtils from "react-addons-test-utils";
+import React from "react";
 import "../helper/TestHelper.js";
 
-let TestUtils = React.addons.TestUtils, content = {};
+let content = {};
 
 describe("Tab Control", ()=> {
     before(() => {

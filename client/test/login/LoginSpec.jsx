@@ -6,10 +6,9 @@ import Login from "../../src/js/login/components/Login.jsx";
 import sinon from "sinon";
 import { assert } from "chai";
 import ReactDOM from "react-dom";
-import React from "react/addons";
+import TestUtils from "react-addons-test-utils";
+import React from "react";
 import "../helper/TestHelper.js";
-
-let TestUtils = React.addons.TestUtils;
 
 describe("login component", function() {
 

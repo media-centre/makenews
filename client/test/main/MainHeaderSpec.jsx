@@ -5,10 +5,9 @@ import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
 import { Link } from "react-router";
 
 import { expect } from "chai";
-import React from "react/addons";
+import TestUtils from "react-addons-test-utils";
+import React from "react";
 import ReactDOM from "react-dom";
-
-let TestUtils = React.addons.TestUtils;
 
 describe("main header component", () => {
     let mainHeader = null;

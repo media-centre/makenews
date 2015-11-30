@@ -1,8 +1,9 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory } from "../../src/js/config/actions/CategoryActions.js";
+import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory, addRssUrlAsync } from "../../src/js/config/actions/CategoryActions.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
 import mockStore from "../helper/ActionHelper.js";
 import { expect } from "chai";
@@ -15,6 +16,42 @@ describe("CategoryActions", () => {
             expect(populateCategoryDetails(sourceUrlsObj)).to.deep.equal(
                                 { "type": DISPLAY_CATEGORY, sourceUrlsObj });
         });
+    });
+});
+
+describe("addRssUrlAsync", () => {
+    let sandbox = null;
+    beforeEach("Before", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    it("should create rss and dispatch populateCategoryDetailsAsync", (done) => {
+        let categoryId = "categoryId";
+        let url = "www.hindu.com";
+        let allSources = [{ "url": url, "docType": "sources" }];
+
+        let categoriesApplicationQueriesStub = sandbox.mock(CategoriesApplicationQueries).expects("fetchSourceUrlsObj");
+        categoriesApplicationQueriesStub.withArgs(categoryId).returns(Promise.resolve(allSources));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration").once();
+        categoriesApplicationQueriesMock.withArgs(categoryId, url).returns(Promise.resolve("response"));
+
+        let categorySourceConfig = {
+            "sources": {
+                "rss": { "name": "RSS", "details": [] },
+                "facebook": { "name": "Facebook", "details": [] },
+                "twitter": { "name": "Twitter", "details": [] }
+            }
+        };
+
+        let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
+        const store = mockStore(categorySourceConfig, expectedActions, done);
+        store.dispatch(addRssUrlAsync(categoryId, url));
+        categoriesApplicationQueriesMock.verify();
+
+    });
+
+    afterEach("After", () => {
+        sandbox.restore();
     });
 });
 
@@ -69,7 +106,7 @@ describe("createCategory", () => {
         createCategoryMock.returns(Promise.resolve("document added"));
 
         let allCategoriesStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
-        allCategoriesStub.returns(Promise.resolve([{id: "1", "name": "Default Category"}, {"id": "2", "name": "Sports"}]));
+        allCategoriesStub.returns(Promise.resolve([{ id: "1", "name": "Default Category" }, { "id": "2", "name": "Sports" }]));
         const store = mockStore({}, [], done);
         store.dispatch(createCategory(categoryName, (success) => { done(); }));
         createCategoryMock.verify();
@@ -84,7 +121,7 @@ describe("createCategory", () => {
         createCategoryMock.returns(Promise.resolve("document added"));
 
         let allCategoriesStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
-        allCategoriesStub.returns(Promise.resolve([{id: "1", "name": "Untitled Category 1"}, {"id": "2", "name": "Untitled Category 3"}]));
+        allCategoriesStub.returns(Promise.resolve([{ id: "1", "name": "Untitled Category 1" }, { "id": "2", "name": "Untitled Category 3" }]));
         const store = mockStore({}, [], done);
         store.dispatch(createCategory(categoryName, (success) => { done(); }));
         createCategoryMock.verify();
