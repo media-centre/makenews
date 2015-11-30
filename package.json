@@ -19,7 +19,8 @@
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "request": "^2.65.0",
-    "winston": "^2.1.1"
+    "winston": "^2.1.1",
+    "xml2js": "^0.4.15"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.3",

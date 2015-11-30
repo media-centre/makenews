@@ -1,8 +1,8 @@
 "use strict";
 import authorizationRoutes from "./AuthorizationRoutes.js";
-import RssReaderRoutes from "./RssReaderRoutes";
+import rssReaderRoutes from "./RssReaderRoutes";
 
 export default function(app) {
     authorizationRoutes(app);
-    RssReaderRoutes(app);
+    rssReaderRoutes(app);
 }
