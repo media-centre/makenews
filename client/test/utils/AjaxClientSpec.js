@@ -39,15 +39,15 @@ describe("AjaxClient", function() {
         });
     });
 
-    describe("getUrl", () => {
-        it("should do a getUrl request to the url", function(done) {
+    describe("get", () => {
+        it("should do a get request to the url", function(done) {
             nock("http://localhost:5000")
                 .get("/home")
                 .query({"page": 1})
                 .reply(HttpResponseHandler.codes.OK, {"data": "success"});
 
             let ajax = new AjaxClient("/home?page=1");
-            ajax.getUrl().then(succesData => {
+            ajax.get().then(succesData => {
                     expect(succesData.data).to.eq("success");
                     done();
                 });
@@ -60,7 +60,7 @@ describe("AjaxClient", function() {
                 .reply(HttpResponseHandler.codes.BAD_GATEWAY);
 
             let ajax = new AjaxClient(url);
-            ajax.getUrl().catch(errorData => {
+            ajax.get().catch(errorData => {
                     expect(errorData).to.eq("connection refused");
                     done();
                 });

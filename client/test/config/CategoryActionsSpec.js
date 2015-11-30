@@ -5,6 +5,7 @@ import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaul
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
+import AjaxClient from "../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -25,14 +26,18 @@ describe("addRssUrlAsync", () => {
         sandbox = sinon.sandbox.create();
     });
 
-    it("should create rss and dispatch populateCategoryDetailsAsync", (done) => {
+    xit("should create rss and dispatch populateCategoryDetailsAsync", (done) => {
         let categoryId = "categoryId";
         let url = "www.hindu.com";
         let allSources = [{ "url": url, "docType": "sources" }];
-
-        let categoriesApplicationQueriesStub = sandbox.mock(CategoriesApplicationQueries).expects("fetchSourceUrlsObj");
+        let ajaxMock = new AjaxClient(url);
+        let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
+        ajaxInstanceMock.withArgs(url).returns(ajaxMock);
+        let ajaxGetMock = sandbox.mock(ajaxMock).expects("get");
+        ajaxGetMock.returns(Promise.resolve({"data": "feeds"}));
+        let categoriesApplicationQueriesStub = sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj");
         categoriesApplicationQueriesStub.withArgs(categoryId).returns(Promise.resolve(allSources));
-        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration").once();
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, url).returns(Promise.resolve("response"));
 
         let categorySourceConfig = {
@@ -46,8 +51,37 @@ describe("addRssUrlAsync", () => {
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         store.dispatch(addRssUrlAsync(categoryId, url));
+        console.log("in test after dispatch");
         categoriesApplicationQueriesMock.verify();
+        ajaxInstanceMock.verify();
+        ajaxGetMock.verify();
+        //done();
+    });
 
+    it("should not create rss if the url fetch returns invalid response", (done) => {
+        let categoryId = "categoryId";
+        let url = "www.hindu.com";
+        let ajaxMock = AjaxClient.prototype;
+        let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
+        ajaxInstanceMock.withArgs(url).returns(ajaxMock);
+        let ajaxGetMock = sandbox.mock(ajaxMock).expects("get");
+        ajaxGetMock.returns(Promise.reject("error"));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration").never();
+
+        let categorySourceConfig = {
+            "sources": {
+                "rss": { "name": "RSS", "details": [] },
+                "facebook": { "name": "Facebook", "details": [] },
+                "twitter": { "name": "Twitter", "details": [] }
+            }
+        };
+
+        const store = mockStore(categorySourceConfig, [], done);
+        store.dispatch(addRssUrlAsync(categoryId, url));
+        categoriesApplicationQueriesMock.verify();
+        ajaxInstanceMock.verify();
+        ajaxGetMock.verify();
+        done();
     });
 
     afterEach("After", () => {

@@ -4,6 +4,7 @@
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
 import CategoryDb from "../db/CategoryDb.js";
 import CategoryDocument from "./CategoryDocuments.js";
+import AjaxClient from "../../utils/AjaxClient";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
@@ -25,8 +26,10 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url).then(response => {
-            dispatch(populateCategoryDetailsAsync(categoryId));
+        AjaxClient.instance(url).get().then((ajaxResponse) => {
+            CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url).then(response => {
+                dispatch(populateCategoryDetailsAsync(categoryId));
+            });
         });
     };
 }

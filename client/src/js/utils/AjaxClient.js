@@ -15,7 +15,7 @@ export default class AjaxClient {
       return this.request("POST", headers, data);
   }
 
-  getUrl() {
+  get() {
       return this.request("GET");
   }
 
