@@ -1,4 +1,5 @@
 "use strict";
+import EnvironmentConfig from "../../EnvironmentConfig.js";
 
 export default class DbParameters {
     type() {
@@ -22,7 +23,8 @@ export default class DbParameters {
     }
 
     getRemoteDb() {
-        return "http://localhost:5984/" + this.dbUrl;
+        let remoteDb = EnvironmentConfig.instance().get("remoteDbUrl");
+        return remoteDb + "/" + this.dbUrl;
     }
 
     static instance() {

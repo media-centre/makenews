@@ -1,13 +1,13 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
-import Config from "../../../src/js/utils/Config.js";
+import EnvironmentConfig from "../EnvironmentConfig.js";
 
 export default class AjaxClient {
   static instance(url) {
       return new AjaxClient(url);
   }
   constructor(url) {
-      this.url = Config.serverUrl + url;
+      this.url = EnvironmentConfig.instance().get("serverUrl") + url;
   }
 
   post(headers, data) {
