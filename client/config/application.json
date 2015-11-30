@@ -1,0 +1,17 @@
+{
+  "default": {
+    "serverUrl": "http://localhost:5000",
+    "remoteDbUrl": "http://localhost:5984"
+  },
+  "ci_dev": {
+    "serverUrl": "http://46.101.252.58:5000",
+    "remoteDbUrl": "http://46.101.252.58:5984"
+  },
+  "ci_qa": {
+    "serverUrl": "http://46.101.195.133:5000",
+    "remoteDbUrl": "http://46.101.195.133:5984"
+  },
+  "production": {
+
+  }
+}

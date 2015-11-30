@@ -1,15 +1,23 @@
 {
   "default": {
-    "serverIpAddress": "127.0.0.1",
-    "serverPort": 5000,
-    "couchDbUrl": "http://127.0.0.1:5984"
-  },
-  "development": {
-  },
-  "unit_testing": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984"
+  },
+  "development": {
+    "serverIpAddress": "localhost",
+    "serverPort": 5000,
+    "couchDbUrl": "http://localhost:5984"
+  },
+  "ci_dev": {
+    "serverIpAddress": "46.101.252.58",
+    "serverPort": 5000,
+    "couchDbUrl": "http://46.101.252.58:5984"
+  },
+  "ci_qa": {
+    "serverIpAddress": "46.101.195.133",
+    "serverPort": 5000,
+    "couchDbUrl": "http://46.101.195.133:5984"
   },
   "qa": {
 

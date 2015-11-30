@@ -1,0 +1,2 @@
+"use strict";
+export const ENVIRONMENT = "__MEDIA_CENTER_CONTENT_CREATION_ENVIRONMENT__";

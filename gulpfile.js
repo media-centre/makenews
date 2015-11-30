@@ -5,14 +5,16 @@ var gulp = require("gulp");
 var sass = require("gulp-sass");
 var concat = require("gulp-concat");
 var clean = require("gulp-clean");
-var browserify = require("browserify");
+var browserify = require('gulp-browserify')
 var babelify = require("babelify");
-var fs = require("fs");
 var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
 var eslint = require("gulp-eslint");
 var exec = require("child_process").exec;
+var replace = require("gulp-replace");
+var argv = require("yargs").argv;
+var rename = require("gulp-rename");
 require("babel/register");
 
 gulp.task("client:scss", function() {
@@ -29,10 +31,16 @@ gulp.task("client:images", function() {
 });
 
 gulp.task("client:build-sources", function() {
-    return browserify(parameters.client.srcPath + "/index.jsx", { "debug": true })
-        .transform(babelify)
-        .bundle()
-        .pipe(fs.createWriteStream(parameters.client.distFolder + "/" + parameters.client.appMainFile));
+    let clientEnvironment = argv.client_environment || "development";
+
+    gulp.src(parameters.client.srcPath + "/index.jsx")
+        .pipe(browserify({
+            "debug" : true,
+            "transform": ["babelify"]
+        }))
+        .pipe(replace("__MEDIA_CENTER_CONTENT_CREATION_ENVIRONMENT__", clientEnvironment))
+        .pipe(rename("app.js"))
+        .pipe(gulp.dest(parameters.client.distFolder));
 });
 
 
@@ -45,7 +53,6 @@ gulp.task("client:copy-resources", function() {
 
     return gulp.src(parameters.client.fontsPath + "/**/*.*")
         .pipe(gulp.dest(parameters.client.distFolder + "/fonts"));
-
 });
 
 gulp.task("client:clean", function() {
