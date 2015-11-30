@@ -25,7 +25,7 @@ describe("login reducer", function() {
 
         let testUser = "test_user";
         let action = { "type": "LOGIN_SUCCESS", "history": { "push": () => {} }, "userName": testUser };
-        sinon.mock(action.history).expects("push").withArgs("/main");
+        sinon.mock(action.history).expects("push").withArgs("/surf");
 
         let state = login(undefined, action);
         DocumentMock.verify();
