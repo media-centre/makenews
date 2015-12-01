@@ -26,11 +26,11 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        AjaxClient.instance(url).get().then((ajaxResponse) => {
+        //AjaxClient.instance(url).get().then((ajaxResponse) => {
             CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url).then(response => {
                 dispatch(populateCategoryDetailsAsync(categoryId));
             });
-        });
+        //});
     };
 }
 
