@@ -5,9 +5,6 @@
     "couchDbUrl": "http://localhost:5984"
   },
   "development": {
-    "serverIpAddress": "localhost",
-    "serverPort": 5000,
-    "couchDbUrl": "http://localhost:5984"
   },
   "ci_dev": {
     "serverIpAddress": "46.101.252.58",

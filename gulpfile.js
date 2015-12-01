@@ -16,6 +16,69 @@ var replace = require("gulp-replace");
 var argv = require("yargs").argv;
 var rename = require("gulp-rename");
 require("babel/register");
+var del = require('del');
+var cordova = require('cordova-lib').cordova.raw;
+
+
+gulp.task("mobile:remove-directory", function(cb) {
+	del(["."+parameters.mobile.mobilePath], function() {
+		cb();
+	});
+});
+
+gulp.task("mobile:init",["mobile:remove-directory"],function(cb) {
+    process.chdir(__dirname + '/dist/');
+	exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            process.chdir('../');
+            cb(err);
+        });
+});
+
+gulp.task("mobile:create",["mobile:init"],function(cb) {
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+	exec("cordova platform add android ", (err, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            cb(err);
+        });
+});
+
+
+gulp.task("mobile:clean-files", function(cb) {
+	del([ parameters.mobile.cordovaPath + '/*' ], function() {
+		cb();
+	});
+});
+
+gulp.task("mobile:copy-files", [ "mobile:clean-files" ], function(cb) {
+	return gulp.src([ parameters.mobile.appPath + '/**/*' ])
+		.pipe(gulp.dest(parameters.mobile.cordovaPath));
+});
+
+
+
+gulp.task("mobile:build",["mobile:copy-files"], function(cb) {
+	process.chdir(__dirname + parameters.mobile.mobilePath);
+	cordova
+		.build()
+		.then(function() {
+			process.chdir('../');
+			cb();
+		});
+});
+
+gulp.task("mobile:emulate", function(cb) {
+	process.chdir(__dirname + parameters.mobile.mobilePath);
+	cordova
+		.run({ platforms: [ 'android' ] })
+		.then(function() {
+			process.chdir('../');
+			cb();
+		});
+});
+
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
@@ -68,6 +131,7 @@ gulp.task("client:test", function(done) {
 gulp.task("client:build", function(callback) {
     runSequence("client:copy-resources", "client:build-sources", "client:scss", callback);
 });
+
 // gulp.task("client:build", ["client:scss", "client:javascript", "client:riot-tags", "client:copy-index-html"]);
 
 gulp.task("client:watch", function() {

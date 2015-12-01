@@ -3,6 +3,8 @@
     "serverUrl": "http://localhost:5000",
     "remoteDbUrl": "http://localhost:5984"
   },
+  "development": {
+  },
   "ci_dev": {
     "serverUrl": "http://46.101.252.58:5000",
     "remoteDbUrl": "http://46.101.252.58:5984"

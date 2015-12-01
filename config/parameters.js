@@ -26,4 +26,11 @@ const commonConfig = {
   testPath: './common/test',
   distFolder: './dist/common'
 }
-module.exports = {"client": clientConfig, "server": serverConfig, "common": commonConfig};
+
+const mobileConfig = {
+ appPath : './dist/client',
+  cordovaPath: './dist/mobile/www',
+  mobilePath: '/dist/mobile'
+}
+
+module.exports = {"client": clientConfig, "server": serverConfig, "common": commonConfig,"mobile":mobileConfig};
