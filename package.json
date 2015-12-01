@@ -5,6 +5,7 @@
   "dependencies": {
     "babel": "^5.8.29",
     "body-parser": "^1.14.1",
+    "browser-sync": "^2.10.0",
     "cookie-parser": "^1.4.0",
     "express": "^4.13.3",
     "feedparser": "^1.1.4",
@@ -13,6 +14,7 @@
     "helmet": "^0.15.0",
     "history": "^1.13.0",
     "immutable": "^3.7.5",
+    "lodash": "^3.10.1",
     "morgan": "^1.6.1",
     "pouchdb": "^5.1.0",
     "react": "^0.14.1",
