@@ -3,12 +3,9 @@
 import "../helper/TestHelper.js";
 import { assert } from "chai";
 import ReactDOM from "react-dom";
-import TestUtils from "react-addons-test-utils";
-import React from "react";
-import { AllCategories } from "../../src/js/config/components/AllCategories.jsx";
 import "../helper/TestHelper.js";
 
-let categories = [], allCategories = null;
+let allCategories = null;
 
 describe("All categories", ()=> {
 

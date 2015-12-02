@@ -1,3 +1,4 @@
+/*eslint react/prefer-es6-class:0*/
 "use strict";
 import React, { PropTypes } from "react";
 import { History } from "react-router";
@@ -13,7 +14,7 @@ let Login = React.createClass({
         };
     },
 
-    mixins: [History],
+    mixins: [History], //eslint-disable-line quote-props
 
     handleClick(event) {
         event.preventDefault();

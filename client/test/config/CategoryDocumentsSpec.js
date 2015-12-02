@@ -3,7 +3,6 @@
 "use strict";
 import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
 import { assert } from "chai";
-import sinon from "sinon";
 
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {

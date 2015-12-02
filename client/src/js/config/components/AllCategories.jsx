@@ -1,3 +1,4 @@
+/*eslint react/prefer-es6-class:0*/
 "use strict";
 import React, { PropTypes } from "react";
 import { History, Link } from "react-router";
@@ -16,7 +17,7 @@ let AllCategories = React.createClass({
         };
     },
 
-    mixins: [History],
+    mixins: [History], //eslint-disable-line quote-props
 
     componentWillMount() {
         this.props.dispatch(displayAllCategoriesAsync());

@@ -135,7 +135,7 @@
     "comma-spacing": [2],                // enforce spacing before and after comma (fixable)
     "comma-style": [2],                // enforce one true comma style
     "computed-property-spacing": [2],                // require or disallow padding inside computed properties (fixable)
-    "consistent-this": [2],                // enforce consistent naming when capturing the current execution context
+    "consistent-this": [1],                // enforce consistent naming when capturing the current execution context
     "eol-last": [2],                // enforce newline at the end of file, with no multiple empty lines (fixable)
     "func-names": [0],                // require function expressions to have a name
     "func-style": [0],                // enforce use of function declarations or expressions
@@ -215,7 +215,7 @@
     "react/no-did-update-set-state": 2,
     "react/no-direct-mutation-state": 2,
     "react/no-multi-comp": 2,
-    "react/no-set-state": 2,
+    "react/no-set-state": 1,
     "react/no-unknown-property": 2,
     "react/prefer-es6-class": 2,
     "react/prop-types": 2,

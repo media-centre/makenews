@@ -11,7 +11,9 @@ export default class CategoriesApplicationQueries {
     static fetchAllCategories() {
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
-                let categories = categoryDocs.sort((a, b)=> { return a.createdTime - b.createdTime; }).map((category) => {
+                let categories = categoryDocs.sort((first, second)=> {
+                    return first.createdTime - second.createdTime;
+                }).map((category) => {
                     return { "_id": category._id, "name": category.name };
                 });
                 resolve(categories);
@@ -32,7 +34,7 @@ export default class CategoriesApplicationQueries {
                     if (!sourceUrls[rssConfiguration.sourceType]) {
                         sourceUrls[rssConfiguration.sourceType] = [];
                     }
-                    sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url, "status": rssConfiguration.status  });
+                    sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url, "status": rssConfiguration.status });
                 });
                 resolve(sourceUrls);
             }).catch(error => {

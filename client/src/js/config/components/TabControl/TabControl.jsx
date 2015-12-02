@@ -7,12 +7,12 @@ export default class TabControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeIndex: this.props.activeIndex || 0
+            "activeIndex": this.props.activeIndex || 0
         };
     }
 
     _handleClick(index) {
-        this.setState({ activeIndex: index });
+        this.setState({ "activeIndex": index });
     }
 
     render() {
@@ -25,7 +25,7 @@ export default class TabControl extends Component {
         }
 
         tabHeader = tabContentDom.map((tab, index) =>
-                <li key={index} ref={"tab" + index} className={classes.call(this, index)} id={tab.props.title.toLowerCase() + 'Tab'} onClick={this._handleClick.bind(this, index)}>
+                <li key={index} ref={"tab" + index} className={classes.call(this, index)} id={tab.props.title.toLowerCase() + "Tab"} onClick={this._handleClick.bind(this, index)}>
                     <i className={"fa fa-" + tab.props.title.toLowerCase()}></i>
                     <span>{tab.props.title + "(" + tab.props.content.length + ")"}</span>
                 </li>

@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0 */
+/* eslint no-unused-vars:0*/
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
@@ -57,14 +57,14 @@ export function createCategory(categoryName = "", callback = ()=> {}) {
             dispatchCreateCategory(categoryName);
         } else {
             generateCategoryName().then((name) => {
-                dispatchCreateCategory(name)
+                dispatchCreateCategory(name);
             });
         }
     };
 
-    function dispatchCreateCategory(categoryName) {
-        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName)).then(response => {
-            response.name = categoryName;
+    function dispatchCreateCategory(categoryName1) {
+        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName1)).then(response => {
+            response.name = categoryName1;
             callback(response);
         }).catch(error => {
             callback(error);
@@ -118,9 +118,10 @@ function generateCategoryName() {
         CategoryDb.fetchAllCategoryDocuments().then(categories => {
             let existingNames = categories.map(category => category.name);
             let existingNamesSize = existingNames.length + 1;
-            Array(existingNamesSize).fill().map((_, i) => i).some((i)=> {
-                generatedName = "Untitled Category " + (i+1);
-                if(existingNames.indexOf(generatedName) === -1) {
+            Array(existingNamesSize).fill().map((value, index) => index).some((index)=> {
+                generatedName = "Untitled Category " + (index + 1);
+                let NEGATIVE_INDEX = -1;
+                if(existingNames.indexOf(generatedName) === NEGATIVE_INDEX) {
                     resolve(generatedName);
                     return true;
                 }

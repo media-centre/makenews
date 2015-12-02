@@ -1,3 +1,4 @@
+/*eslint max-len:0 no-unused-vars:0*/
 "use strict";
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../../actions/CategoryActions.js";
@@ -15,10 +16,14 @@ export default class TabContent extends Component {
     _onUrlChange() {}
 
     _addNewUrlButton() {
-        let self = this, renderingTime = 100;
+        let renderingTime = 100;
 
-        self.setState({ "showTextbox": true });
-        setTimeout(function() { self.refs.addUrlTextBox.focus(); }, renderingTime);
+        this.setState({
+            "showTextbox": true
+        });
+        setTimeout(function() {
+            this.refs.addUrlTextBox.focus();
+        }, renderingTime);
     }
 
     _onKeyDownTextBox(event, props) {
@@ -32,7 +37,6 @@ export default class TabContent extends Component {
         let url = this.refs.addUrlTextBox.value.trim();
         let errorMessage = this._isInvalidUrl(url);
         this.setState({ "errorMessage": errorMessage });
-        console.log(this.props.content);
         if(errorMessage.length === 0) {
             props.dispatch(addRssUrlAsync(props.categoryId, url));
             this.refs.addUrlTextBox.value = "";
@@ -48,7 +52,7 @@ export default class TabContent extends Component {
         let result = "";
         this.props.content.some((obj)=> {
             if(obj.url.toLowerCase().trim() === url.toLowerCase().trim()) {
-                result =  "URL is already added";
+                result = "URL is already added";
             }
         });
         return result;
@@ -56,7 +60,16 @@ export default class TabContent extends Component {
 
     render() {
 
-        let inputBox = this.state.showTextbox ? <div><input type="text" ref="addUrlTextBox" className={this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box"} placeholder="Enter url here" onBlur={()=> this._validateAndUpdateUrl(this.props)} onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/><div className="error-message">{ this.state.errorMessage }</div></div> : null;
+        let inputBox = null;
+        if(this.state.showTextbox) {
+            let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
+            inputBox = (
+                <div>
+                    <input type="text" ref="addUrlTextBox" className={addUrlClasses} placeholder="Enter url here" onBlur={()=> this._validateAndUpdateUrl(this.props)} onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/>
+                    <div className="error-message">{this.state.errorMessage}</div>
+                </div>
+            );
+        }
 
         return (
             <div>
@@ -67,7 +80,7 @@ export default class TabContent extends Component {
                     <ul classaName="url-list">
                                 {this.props.content.map((urlObj, index) =>
                                         <li key={index} className="feed-url">
-                                            <input type="text" className={ urlObj.status } value={urlObj.url} onChange={this._onUrlChange} />
+                                            <input type="text" className={urlObj.status} value={urlObj.url} onChange={this._onUrlChange} />
                                             <i className="border-blue circle fa fa-close close circle"></i>
                                         </li>
                                 )}

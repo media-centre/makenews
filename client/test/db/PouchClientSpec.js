@@ -145,8 +145,9 @@ describe("PouchClient", () => {
         describe("allSourcesWithCategories", () => {
             it("should index all sources for all categories by category id", (done) => {
                 PouchClient.fetchDocuments("category/allSourcesWithCategories", { "include_docs": true }).then((docs) => {
-                    let resultDocTypes = docs.map(doc => { return doc.docType });
-                    console.log(resultDocTypes);
+                    let resultDocTypes = docs.map(doc => {
+                        return doc.docType;
+                    });
                     expect(resultDocTypes).to.include("category");
                     expect(resultDocTypes).to.include("source");
                     done();

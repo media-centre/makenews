@@ -1,3 +1,4 @@
+/*eslint no-nested-ternary:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
 import Paragraph from "./Paragraph.jsx";
@@ -9,9 +10,10 @@ export default class AllFeeds extends Component {
     render() {
 
         let categories = this.props.feeds.map((category, index)=>
-                category.type === "description" ? <Paragraph key={index} category={category} /> :
-                    category.type === "gallery" ? <ImageGallery key={index} category={category} /> :
-                        category.type === "imagecontent" ? <ImageContent key={index} category={category} /> : null
+                category.type === "description" ? <Paragraph key={index} category={category} />
+                    : category.type === "gallery" ? <ImageGallery key={index} category={category} />
+                        : category.type === "imagecontent" ? <ImageContent key={index} category={category} /> : null
+
         );
 
         return (

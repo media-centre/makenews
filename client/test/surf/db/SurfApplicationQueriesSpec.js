@@ -43,13 +43,13 @@ describe("SurfApplicationQueries", () => {
                 }
             ];
             let expectedSources = [{
-                    "_id": "sourceId1",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.hindu.com/rss",
-                    "categoryIds": ["sportsCategoryId1"],
-                    "categoryNames": ["Sports"]
-                },
+                "_id": "sourceId1",
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.hindu.com/rss",
+                "categoryIds": ["sportsCategoryId1"],
+                "categoryNames": ["Sports"]
+            },
                 {
                     "_id": "sourceId2",
                     "docType": "source",

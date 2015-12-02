@@ -1,4 +1,4 @@
-/* eslint consistent-this:0 */
+/* eslint consistent-this:0 no-unused-vars:0*/
 "use strict";
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";

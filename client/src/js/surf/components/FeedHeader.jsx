@@ -1,7 +1,6 @@
 "use strict";
 
 import React, { Component, PropTypes } from "react";
-import Paragraph from "./Paragraph.jsx";
 
 export default class FeedHeader extends Component {
     render() {

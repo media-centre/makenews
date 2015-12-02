@@ -9,15 +9,15 @@ import sinon from "sinon";
 import { List } from "immutable";
 
 describe("AllCategoriesActions", () => {
-    it("return type DISPLAY_ALL_CATEGORIES action", () =>  {
+    it("return type DISPLAY_ALL_CATEGORIES action", () => {
         let categories = "{TimeLine, Sports}";
         let allCategoreisAction = { "type": DISPLAY_ALL_CATEGORIES, categories };
         expect(allCategoreisAction).to.deep.equal(displayAllCategories(categories));
     });
 
-    it("dispatch DISPLAY_ALL_CATEGORIES_ASYNC action", (done) =>  {
+    it("dispatch DISPLAY_ALL_CATEGORIES_ASYNC action", (done) => {
         let categories = "{TimeLine, Sports}";
-        let store = mockStore({ "categories": List([]) }, [{"type": "DISPLAY_ALL_CATEGORIES", categories }], done);
+        let store = mockStore({ "categories": new List([]) }, [{ "type": "DISPLAY_ALL_CATEGORIES", categories }], done);
         let allCategoriesDbMock = sinon.mock(CategoriesApplicationQueries).expects("fetchAllCategories");
         allCategoriesDbMock.returns(Promise.resolve(categories));
         store.dispatch(displayAllCategoriesAsync());

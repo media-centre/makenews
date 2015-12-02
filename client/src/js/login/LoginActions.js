@@ -1,6 +1,5 @@
 "use strict";
 import AjaxClient from "../utils/AjaxClient";
-import { createCategory } from "../config/actions/CategoryActions.js";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
@@ -17,7 +16,7 @@ export function userLogin(history, userName, password) {
             .then(succesData => {
                 dispatch(loginSuccess(history, succesData.userName));
             })
-            .catch(errorData => {
+            .catch(errorData => { //eslint-disable-line no-unused-vars
                 dispatch(loginFailed("Invalid user name or password"));
             });
     };
