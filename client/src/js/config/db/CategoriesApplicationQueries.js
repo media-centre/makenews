@@ -2,7 +2,7 @@
 
 "use strict";
 import CategoryDb from "./CategoryDb.js";
-import CategoryDocuments from "../actions/CategoryDocuments.js";
+import { CategoryDocument } from "../actions/CategoryDocuments.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 
 
@@ -41,8 +41,8 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static addRssUrlConfiguration(categoryId, url) {
-        let rssConfigDocument = CategoryDocuments.getNewRssDocumnet(categoryId, url);
+    static addRssUrlConfiguration(categoryId, url, status) {
+        let rssConfigDocument = CategoryDocument.getNewRssDocumnet(categoryId, url, status);
         return CategoryDb.createOrUpdateSource(rssConfigDocument);
     }
 }

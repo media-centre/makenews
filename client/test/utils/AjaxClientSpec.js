@@ -43,14 +43,59 @@ describe("AjaxClient", function() {
         it("should do a get request to the url", function(done) {
             nock("http://localhost:5000")
                 .get("/home")
-                .query({"page": 1})
                 .reply(HttpResponseHandler.codes.OK, {"data": "success"});
 
-            let ajax = new AjaxClient("/home?page=1");
+            let ajax = new AjaxClient("/home");
             ajax.get().then(succesData => {
                     expect(succesData.data).to.eq("success");
                     done();
                 });
+        });
+
+        it("should do a get request with query parameter to the url", function() {
+            nock("http://localhost:5000")
+                .get("/rss-feeds")
+                .query({ "url": "http://rssfedd.com" })
+                .reply(HttpResponseHandler.codes.OK, {"data": "success"});
+
+            let ajax = new AjaxClient("/rss-feeds");
+            return ajax.get({ "url": "http://rssfedd.com" }).then(succesData => {
+                    expect(succesData.data).to.eq("success");
+                });
+        });
+
+        it("should do a get request with multiple query parameters to the url", function() {
+            nock("http://localhost:5000")
+                .get("/rss-feeds")
+                .query({ "url": "http://rssfedd.com", "page": 1 })
+                .reply(HttpResponseHandler.codes.OK, {"data": "success"});
+
+            let ajax = new AjaxClient("/rss-feeds");
+            return ajax.get({ "url": "http://rssfedd.com", "page": 1 }).then(succesData => {
+                    expect(succesData.data).to.eq("success");
+                });
+        });
+
+        it("should handle for empty objects", () => {
+            nock("http://localhost:5000")
+                .get("/rss-feeds")
+                .reply(HttpResponseHandler.codes.OK, {"data": "success"});
+
+            let ajax = new AjaxClient("/rss-feeds");
+            return ajax.get({}).then(succesData => {
+                expect(succesData.data).to.eq("success");
+            });
+        });
+
+        it("should handle for 404", () => {
+            nock("http://localhost:5000")
+                .get("/rss-feeds")
+                .reply(HttpResponseHandler.codes.NOT_FOUND);
+
+            let ajax = new AjaxClient("/rss-feeds");
+            return ajax.get({}).catch(errorData => {
+                expect(errorData).to.eq("error");
+            });
         });
 
         it("should reject on connection refused", function(done) {

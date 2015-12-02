@@ -22,8 +22,8 @@ export default class RssReaderHelper {
             },
                 (error, response, body) => {
                     if(error) {
-                        this.response.json({ "message": error });
                         this.response.status(HttpResponseHandler.codes.NOT_FOUND);
+                        this.response.json({ "message": error });
                     } else if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                         this.response.status(HttpResponseHandler.codes.OK);
                         parseString(body, (err, result) => {

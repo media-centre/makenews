@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import CategoryDocument from "../../src/js/config/actions/CategoryDocuments.js";
+import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -25,12 +25,28 @@ describe("CategoryDocument", () => {
         it("should return the new rss document", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
+            let status = STATUS_VALID;
             let expectedDocument =
                 {
                     "docType": "source",
                     "sourceType": "rss",
                     "url": url,
-                    "categoryIds": [categoryId]
+                    "categoryIds": [categoryId],
+                    "status": status
+                };
+            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status));
+        });
+
+        it("should set invalid status by default", () => {
+            let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
+            let url = "test url";
+            let expectedDocument =
+                {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": url,
+                    "categoryIds": [categoryId],
+                    "status": STATUS_INVALID
                 };
             assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url));
         });

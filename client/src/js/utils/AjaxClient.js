@@ -15,7 +15,15 @@ export default class AjaxClient {
       return this.request("POST", headers, data);
   }
 
-  get() {
+  get(queryParams = {}) {
+      let keys = Object.keys(queryParams);
+      if(keys.length !== 0) {
+          this.url = this.url + "?";
+          let keyValues = keys.map(queryKey => {
+              return queryKey + "=" + encodeURIComponent(queryParams[queryKey]);
+          });
+          this.url = this.url + keyValues.join("&");
+      }
       return this.request("GET");
   }
 

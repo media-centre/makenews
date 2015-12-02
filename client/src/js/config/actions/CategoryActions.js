@@ -3,7 +3,7 @@
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
 import CategoryDb from "../db/CategoryDb.js";
-import CategoryDocument from "./CategoryDocuments.js";
+import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "./CategoryDocuments.js";
 import AjaxClient from "../../utils/AjaxClient";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 
@@ -26,12 +26,18 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        //AjaxClient.instance(url).get().then((ajaxResponse) => {
-            CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url).then(response => {
-                dispatch(populateCategoryDetailsAsync(categoryId));
-            });
-        //});
+        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((ajaxResponse) => {
+            addRssUrlDocument(dispatch, categoryId, url, STATUS_VALID );
+        }).catch(() => {
+            addRssUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
+        });
     };
+}
+
+function addRssUrlDocument(dispatch, categoryId, url, status) {
+    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status).then(response => {
+        dispatch(populateCategoryDetailsAsync(categoryId));
+    });
 }
 
 export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {

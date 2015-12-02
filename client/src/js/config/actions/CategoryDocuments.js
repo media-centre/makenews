@@ -1,7 +1,8 @@
 "use strict";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 
-export default class CategoryDocument {
+export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
+export class CategoryDocument {
     static getNewCategoryDocument(categoryName) {
         if(StringUtil.isEmptyString(categoryName)) {
             throw new Error("category name can not be empty");
@@ -18,7 +19,7 @@ export default class CategoryDocument {
         return new Date().getTime();
     }
 
-    static getNewRssDocumnet(categoryId, url) {
+    static getNewRssDocumnet(categoryId, url, status) {
         if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
             throw new Error("category id or url can not be empty");
         }
@@ -26,9 +27,8 @@ export default class CategoryDocument {
             "docType": "source",
             "sourceType": "rss",
             "url": url,
-            "categoryIds": [categoryId]
+            "categoryIds": [categoryId],
+            "status": status || STATUS_INVALID
         };
     }
-
-
 }
