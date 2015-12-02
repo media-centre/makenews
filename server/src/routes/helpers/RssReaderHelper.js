@@ -25,12 +25,13 @@ export default class RssReaderHelper {
                         this.response.status(HttpResponseHandler.codes.NOT_FOUND);
                         this.response.json({ "message": error });
                     } else if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        this.response.status(HttpResponseHandler.codes.OK);
                         parseString(body, (err, result) => {
-                            let data = result;
-                            if(err) {
+                            let data = result, status = HttpResponseHandler.codes.OK;
+                            if(err || !(data.rss && data.rss.channel)) {
                                 data = {};
+                                status = HttpResponseHandler.codes.NOT_FOUND;
                             }
+                            this.response.status(status);
                             this.response.json(data);
                         });
                     } else {

@@ -16,9 +16,9 @@ describe("RssReaderIntegrationSpec", () => {
         });
 
         it("responds with /rss-feeds if user is logged in", (done) => {
-            let data = "<rss><item>" +
+            let data = "<rss version=\"2.0\"><channel><item>" +
                 "<title>sample1</title></item><item>" +
-                "<title>sample2</title></item></rss>";
+                "<title>sample2</title></item></channel></rss>";
 
             nock("http://www.thehindu.com/sport/cricket")
                 .get("/")
@@ -30,7 +30,7 @@ describe("RssReaderIntegrationSpec", () => {
                     .query("url=http://www.thehindu.com/sport/cricket/")
                     .set("Cookie", token)
                     .expect(HttpResponseHandler.codes.OK)
-                    .expect({ "rss": { "item": [{ "title": ["sample1"] }, { "title": ["sample2"] }] } }, done);
+                    .expect({ "rss": { "$": { "version": "2.0" }, "channel": [{ "item": [{ "title": ["sample1"] }, { "title": ["sample2"] }] }] } }, done);
             });
         });
 

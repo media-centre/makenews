@@ -20,9 +20,39 @@ describe("RssReaderHelper", () => {
         return response;
     }
 
+    it("should return invalid if the url doesn't return feeds", (done) => {
+        let data = "<html>" +
+            "<head>" +
+            "<title>sample</title>" +
+            "</head>" +
+            "<body>" +
+            "<h1>test</h1>" +
+            "</body>" +
+            "</html>";
+        nock("http://www.test.com/sport/cricket")
+
+            .get("/?service=rss", {
+            })
+            .reply(HttpResponseHandler.codes.OK, data);
+        let request = {
+            "query": {
+                "url": "http://www.test.com/sport/cricket/?service=rss"
+            }
+        };
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": {} });
+        let rssReaderHelper = new RssReaderHelper(request, response);
+        rssReaderHelper.feedsForUrl();
+    });
+
     it("should return feeds for the given url of a user", (done) => {
-        let data = "<rss><item>" +
-            "<title>sample</title></item></rss>";
+        let data = "<rss version=\"2.0\"><channel>" +
+            "<item>" +
+            "<title>sample</title>" +
+            "</item>" +
+            "<item>" +
+            "<title>test</title>" +
+            "</item>" +
+            "</channel></rss>";
         nock("http://www.thehindu.com/sport/cricket")
 
             .get("/?service=rss", {
@@ -33,7 +63,16 @@ describe("RssReaderHelper", () => {
                 "url": "http://www.thehindu.com/sport/cricket/?service=rss"
             }
         };
-        let feedsJson = { "rss": { "item": [{ "title": ["sample"] }] } };
+        let feedsJson = {
+            "rss": {
+                "$": {
+                    "version": "2.0"
+                },
+                "channel": [{
+                    "item": [{ "title": ["sample"] }, { "title": ["test"] }]
+                }]
+            }
+        };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
