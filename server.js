@@ -8,8 +8,10 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import EnvironmentConfig from "./server/src/config/EnvironmentConfig.js";
 import path from "path";
+import helmet from "helmet";
 
 let app = express();
+app.use(helmet.hidePoweredBy());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
