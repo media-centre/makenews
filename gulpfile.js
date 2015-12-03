@@ -200,6 +200,14 @@ gulp.task("server:test-eslint", function() {
 });
 gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint"]);
 gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
+gulp.task("server:test-coverage", (cb) => {
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
 
 // -------------------------------single task to cover client, common and server  -------------------------------------------
 
@@ -215,7 +223,7 @@ gulp.task("stop", (cb) => {
     exec("./node_modules/forever/bin/forever stop dist/server.js", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
-        cb(err);
+        cb();
     });
 });
 
@@ -240,13 +248,6 @@ gulp.task("clean", ["client:clean", "server:clean"]);
 gulp.task("test", function(callback) {
     runSequence("common:test", "client:test", "server:test", callback);
 });
-gulp.task("server:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
 
 gulp.task("watch", ["client:watch", "server:watch"]);
 gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint"]);
@@ -263,4 +264,6 @@ gulp.task("test-coverage", (cb) => {
     });
 });
 
-
+gulp.task("clean-start", function(callback) {
+    runSequence("clean", "build", "stop", "start", callback);
+});
