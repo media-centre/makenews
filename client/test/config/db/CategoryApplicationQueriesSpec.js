@@ -3,7 +3,7 @@
 "use strict";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import CategoryApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
-import { CategoryDocument } from "../../../src/js/config/actions/CategoryDocuments.js";
+import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "../../../src/js/config/actions/CategoryDocuments.js";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -58,7 +58,7 @@ describe("CategoryApplicationQueries", () => {
                 { "_id": "rss_url_id1",
                     "docType": "source",
                     "sourceType": "rss",
-
+                    "status": STATUS_VALID,
                     "url": "www.yahoo.com/rss",
                     "categoryIds": ["dummy_category1", "test_category"]
                 },
@@ -66,13 +66,14 @@ describe("CategoryApplicationQueries", () => {
                     "_id": "rss_url_id2",
                     "docType": "source",
                     "sourceType": "facebook",
+                    "status": STATUS_VALID,
                     "url": "www.google.com/rss",
                     "categoryIds": ["test_category"]
                 }
             ];
             let expectedRssDetails = {
-                "rss": [{ "_id": "rss_url_id1", "url": "www.yahoo.com/rss" }],
-                "facebook": [{ "_id": "rss_url_id2", "url": "www.google.com/rss" }]
+                "rss": [{ "_id": "rss_url_id1", "url": "www.yahoo.com/rss", "status": STATUS_VALID }],
+                "facebook": [{ "_id": "rss_url_id2", "url": "www.google.com/rss", "status": STATUS_VALID }]
             };
             let fetchRssConfigurationsStub = sinon.stub(CategoryDb, "fetchSourceConfigurationsByCategoryId");
             fetchRssConfigurationsStub.withArgs(categoryId).returns(Promise.resolve(result));
@@ -99,7 +100,7 @@ describe("CategoryApplicationQueries", () => {
         it("should add or udpate the rss url configuration", () => {
             let categoryId = "test_id";
             let url = "url";
-            let status = "valid";
+            let status = STATUS_VALID;
             sinon.stub(CategoryDocument, "getNewRssDocumnet").withArgs(categoryId, url, status).returns({});
             let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
             createOrUpdateMock.withArgs({});
