@@ -47,8 +47,8 @@ describe("RssParser", () => {
             .reply(HttpResponseHandler.codes.OK, data);
 
         let expectedFeeds = {
-            "items": [{ title: "test",
-                description: "news cricket" }]
+            "items": [{ "title": "test",
+                "description": "news cricket" }]
         };
 
         restRequest(url).on("response", function(res) {
@@ -58,7 +58,7 @@ describe("RssParser", () => {
                 if(items) {
                     let expectedItems = expectedFeeds.items;
                     expect(items.length).to.eq(expectedItems.length);
-                    for(let index = 0; index < items.length; index++) {
+                    for(let index = 0; index < items.length; index += 1) {
                         expect(items[index].title).to.eq(expectedItems[index].title);
                         expect(items[index].description).to.eq(expectedItems[index].description);
                     }

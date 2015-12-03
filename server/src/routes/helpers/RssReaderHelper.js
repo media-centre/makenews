@@ -1,4 +1,4 @@
-/* eslint consistent-this:0 */
+/* eslint consistent-this:0 no-unused-vars:0 */
 "use strict";
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
@@ -25,7 +25,9 @@ export default class RssReaderHelper {
                 this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": "Request failed for " + url });
             });
             requestToUrl.on("response", function(res) {
-                if (res.statusCode !== HttpResponseHandler.codes.OK) return this.emit("error", new Error("Bad status code"));
+                if(res.statusCode !== HttpResponseHandler.codes.OK) {
+                    return this.emit("error", new Error("Bad status code"));
+                }
                 rssParser = new RssParser(this);
                 rssParser.parse()
                     .then(feeds => {
