@@ -26,16 +26,16 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url) {
     return dispatch => {
-        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((ajaxResponse) => {
-            addRssUrlDocument(dispatch, categoryId, url, STATUS_VALID );
+        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
+            addRssUrlDocument(dispatch, categoryId, url, STATUS_VALID, responseFeed.items);
         }).catch(() => {
             addRssUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
         });
     };
 }
 
-function addRssUrlDocument(dispatch, categoryId, url, status) {
-    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status).then(response => {
+function addRssUrlDocument(dispatch, categoryId, url, status, responseFeed) {
+    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status, responseFeed).then(response => {
         dispatch(populateCategoryDetailsAsync(categoryId));
     });
 }

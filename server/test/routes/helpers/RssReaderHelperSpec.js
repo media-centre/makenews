@@ -30,7 +30,7 @@ describe("RssReaderHelper", () => {
                 if(items) {
                     let expectedItems = expectedValues.json.items;
                     expect(items.length).to.eq(expectedItems.length);
-                    for(let index = 0; index < items.length; index++) {
+                    for(let index = 0; index < items.length; index += 1) {
                         expect(items[index].title).to.eq(expectedItems[index].title);
                         expect(items[index].description).to.eq(expectedItems[index].description);
                     }
@@ -82,8 +82,8 @@ describe("RssReaderHelper", () => {
             }
         };
         let feedsJson = {
-            "items": [{ title: "test",
-                description: "news cricket" }]
+            "items": [{ "title": "test",
+                "description": "news cricket" }]
         };
         let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssReaderHelper = new RssReaderHelper(request, response);

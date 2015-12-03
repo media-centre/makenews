@@ -101,10 +101,11 @@ describe("CategoryApplicationQueries", () => {
             let categoryId = "test_id";
             let url = "url";
             let status = STATUS_VALID;
-            sinon.stub(CategoryDocument, "getNewRssDocumnet").withArgs(categoryId, url, status).returns({});
+            let feedItems = [{ "title": "sports", "description": "desc" }];
+            sinon.stub(CategoryDocument, "getNewRssDocumnet").withArgs(categoryId, url, status, feedItems).returns({});
             let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
             createOrUpdateMock.withArgs({});
-            CategoryApplicationQueries.addRssUrlConfiguration(categoryId, url, status);
+            CategoryApplicationQueries.addRssUrlConfiguration(categoryId, url, status, feedItems);
             createOrUpdateMock.verify();
             CategoryDocument.getNewRssDocumnet.restore();
             CategoryDb.createOrUpdateSource.restore();

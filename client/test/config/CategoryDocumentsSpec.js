@@ -26,18 +26,20 @@ describe("CategoryDocument", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
             let status = STATUS_VALID;
+            let feedItems = [{ "title": "sports", "description": "desc" }];
             let expectedDocument =
                 {
                     "docType": "source",
                     "sourceType": "rss",
                     "url": url,
                     "categoryIds": [categoryId],
-                    "status": status
+                    "status": status,
+                    "feedItems": feedItems
                 };
-            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status));
+            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status, feedItems));
         });
 
-        it("should set invalid status by default", () => {
+        it("should not set feedItems if status is invalid", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
             let expectedDocument =
@@ -48,7 +50,7 @@ describe("CategoryDocument", () => {
                     "categoryIds": [categoryId],
                     "status": STATUS_INVALID
                 };
-            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url));
+            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, STATUS_INVALID));
         });
 
         it("should throw an error if the url or category id is empty", () => {

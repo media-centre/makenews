@@ -19,16 +19,20 @@ export class CategoryDocument {
         return new Date().getTime();
     }
 
-    static getNewRssDocumnet(categoryId, url, status) {
+    static getNewRssDocumnet(categoryId, url, status, feedItems) {
         if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
             throw new Error("category id or url can not be empty");
         }
-        return {
+        let rssDoc = {
             "docType": "source",
             "sourceType": "rss",
             "url": url,
             "categoryIds": [categoryId],
-            "status": status || STATUS_INVALID
+            "status": status
         };
+        if(status === STATUS_VALID) {
+            rssDoc.feedItems = feedItems;
+        }
+        return rssDoc;
     }
 }
