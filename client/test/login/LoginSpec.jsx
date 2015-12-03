@@ -10,46 +10,70 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../helper/TestHelper.js";
 
-describe("login component", function() {
+describe("login component", () => {
+    let onSubmitCallback = null, loginComponent = null, loginStrings = null;
 
-    before("render and locate element", function() {
-        this.onSubmitCallback = sinon.spy();
-        this.loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={""} />
-    );
+    before("render and locate element", () => {
+        loginStrings = {
+            "loginButton": "TestLogin",
+            "userNamePlaceHoder": "enUser",
+            "passwordPlaceHoder": "enPassword"
+        };
+        onSubmitCallback = sinon.spy();
+        loginComponent = TestUtils.renderIntoDocument(
+            <Login onLoginClick={(userName, password) => onSubmitCallback(userName, password)} loginStrings={loginStrings} errorMessage={""} />
+        );
     });
 
-    it("user name element type should be text", function() {
-        let userNameInputDOM = ReactDOM.findDOMNode(this.loginComponent.refs.userName);
+    it("should display the login button string from locale string", () => {
+        let buttonElementDOM = ReactDOM.findDOMNode(loginComponent.refs.submit);
+        assert.strictEqual("TestLogin", buttonElementDOM.innerHTML);
+    });
+
+    it("user name element type should be text", () => {
+        let userNameInputDOM = ReactDOM.findDOMNode(loginComponent.refs.userName);
         assert.strictEqual("text", userNameInputDOM.getAttribute("type"), "user name element type is not a text");
     });
 
-    it("password element type should be password", function() {
-        let passwordInputDOM = ReactDOM.findDOMNode(this.loginComponent.refs.password);
+    it("password element type should be password", () => {
+        let passwordInputDOM = ReactDOM.findDOMNode(loginComponent.refs.password);
         assert.strictEqual("password", passwordInputDOM.getAttribute("type"), "password element type is not a password");
     });
 
-    it("error message should be empty", function() {
-        let errorElementDOM = ReactDOM.findDOMNode(this.loginComponent.refs.errorMessage);
+    it("error message should be empty", () => {
+        let errorElementDOM = ReactDOM.findDOMNode(loginComponent.refs.errorMessage);
         assert.strictEqual("", errorElementDOM.innerHTML, "error message is not empty");
     });
 
-    it("error message should be invalid credentials", function() {
-        let loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={"invalid credentials"} />
+    it("error message should be invalid credentials", () => {
+        let anotherLoginComponent = TestUtils.renderIntoDocument(
+        <Login onLoginClick={(userName, password) => onSubmitCallback(userName, password)} loginStrings={loginStrings} errorMessage={"invalid credentials"} />
     );
-        let errorElementDOM = ReactDOM.findDOMNode(loginComponent.refs.errorMessage);
+        let errorElementDOM = ReactDOM.findDOMNode(anotherLoginComponent.refs.errorMessage);
         assert.strictEqual("invalid credentials", errorElementDOM.innerHTML, "unexpected error message received");
     });
 
-    it("submit button click should call login action call back", function() {
-        let loginComponent = TestUtils.renderIntoDocument(
-        <Login onLoginClick={(userName, password) => this.onSubmitCallback(userName, password)} errorMessage={""} />
+    it("submit button click should call login action call back", () => {
+        let anotherLoginComponent = TestUtils.renderIntoDocument(
+        <Login onLoginClick={(userName, password) => onSubmitCallback(userName, password)} loginStrings={loginStrings} errorMessage={""} />
     );
 
-        let buttonElementDOM = ReactDOM.findDOMNode(loginComponent.refs.submit);
+        let buttonElementDOM = ReactDOM.findDOMNode(anotherLoginComponent.refs.submit);
         TestUtils.Simulate.submit(buttonElementDOM);
-        assert.isTrue(this.onSubmitCallback.called);
+        assert.isTrue(onSubmitCallback.called);
     });
 
+    it("should display the login button string from locale string", () => {
+        let buttonElementDOM = ReactDOM.findDOMNode(loginComponent.refs.submit);
+        assert.strictEqual("TestLogin", buttonElementDOM.innerHTML);
+    });
+
+    it("should display the login username string from locale string", () => {
+        let userNameInputDOM = ReactDOM.findDOMNode(loginComponent.refs.userName);
+        assert.strictEqual("enUser", userNameInputDOM.getAttribute("placeholder"));
+    });
+    it("should display the login password string from locale string", () => {
+        let passwordInputDOM = ReactDOM.findDOMNode(loginComponent.refs.password);
+        assert.strictEqual("enPassword", passwordInputDOM.getAttribute("placeholder"));
+    });
 });

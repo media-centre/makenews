@@ -33,19 +33,19 @@ let Login = React.createClass({
 
                 <div className="clear-fix input-container">
                     <div className="left m-block">
-                        <input type="text" id="userName" placeholder="username" ref="userName" name="userName" className="m-input-block box small-text" required/>
+                        <input type="text" id="userName" placeholder={this.props.loginStrings.userNamePlaceHoder} ref="userName" name="userName" className="m-input-block box small-text" required/>
                     </div>
 
                     <div className="left m-block password-container">
-                        <input type="password" id="password" placeholder="password" ref="password" name="password" className="m-input-block box small-text" required/>
+                        <input type="password" id="password" placeholder={this.props.loginStrings.passwordPlaceHoder} ref="password" name="password" className="m-input-block box small-text" required/>
                         <p className="help-login extra-small-text t-right">
-                    {"Need help to login"}
+                            {this.props.loginStrings.loginHelpLabel}
                         </p>
                     </div>
 
                     <div className="left m-block m-t-center">
                         <button id="submit" ref="submit">
-                    {"Login"}
+                    {this.props.loginStrings.loginButton}
                         </button>
                     </div>
                 </div>

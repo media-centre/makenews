@@ -4,7 +4,7 @@ import "../helper/TestHelper.js";
 import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
 import { Link } from "react-router";
 
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -25,27 +25,29 @@ describe("main header component", () => {
                                                             .to.equal("fixed-header clear-fix multi-column");
     });
 
-    it("should have Logout", () => {
-        let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-        expect(listComponents[0].props.to).to.equal("/");
-        expect(listComponents[0].props.className).to.equal("link highlight-on-hover");
+    it("should have logo on left", () => {
+        let logoElement = mainHeader.refs.logo;
+        assert.isDefined(logoElement);
     });
 
-    it("Logout OnClick event", () => {
-        let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-        TestUtils.Simulate.click(listComponents[0]);
+    it("should have logout component", () => {
+        let logOutElement = mainHeader.refs.logout;
+        assert.isDefined(logOutElement);
     });
 
-    it("should have header list items", () => {
-        let listComponents = TestUtils.scryRenderedComponentsWithType(mainHeader, Link);
-        var testHeaderList = (listItem, path, name) => {
-            expect(listItem.props.to).to.equal(path);
-            expect(listItem.props.activeClassName).to.equal("selected");
-            expect(listItem.props.children[0].type).to.equal("div");
-            expect(listItem.props.children[1].props.children).to.equal(name);
-        };
-        testHeaderList(listComponents[1], "/configure/categories", "Configure");
-        testHeaderList(listComponents[2], "/surf", "Surf");
-        testHeaderList(listComponents[3], "/park", "Park");
+    it("should have configure menu component", () => {
+        let menuElement = mainHeader.refs.configureMenu;
+        assert.isDefined(menuElement);
     });
+
+    it("should have surf menu component", () => {
+        let menuElement = mainHeader.refs.surfMenu;
+        assert.isDefined(menuElement);
+    });
+
+    it("should have park menu component", () => {
+        let menuElement = mainHeader.refs.parkMenu;
+        assert.isDefined(menuElement);
+    });
+
 });

@@ -1,6 +1,8 @@
+/*eslint no-unused-vars:0 */
 "use strict";
 
 import { LOGIN_SUCCESS, LOGIN_FAILED } from "./LoginActions.js";
+import Locale from "../utils/Locale.js";
 
 export function login(state = { "errorMessage": "" }, action = {}) {
 
@@ -21,4 +23,9 @@ export function login(state = { "errorMessage": "" }, action = {}) {
         return state;
 
     }
+}
+
+export function loginPageLocale(state = {}, action = {}) {
+    let appLocaleEn = Locale.applicationStrings();
+    return appLocaleEn.messages.loginPage;
 }
