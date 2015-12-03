@@ -21,7 +21,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
+app.use(helmet.nosniff());
+app.use(helmet.xssFilter());
+app.use(helmet.frameguard("deny"));
 routers(app);
 
 const DEFAULT_PORT = 5000;
