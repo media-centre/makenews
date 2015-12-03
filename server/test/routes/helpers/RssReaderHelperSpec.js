@@ -20,43 +20,61 @@ describe("RssReaderHelper", () => {
         return response;
     }
 
-    it("should return invalid if the url doesn't return feeds", (done) => {
-        let data = "<html>" +
-            "<head>" +
-            "<title>sample</title>" +
-            "</head>" +
-            "<body>" +
-            "<h1>test</h1>" +
-            "</body>" +
-            "</html>";
-        nock("http://www.test.com/sport/cricket")
-
-            .get("/?service=rss", {
-            })
-            .reply(HttpResponseHandler.codes.OK, data);
-        let request = {
-            "query": {
-                "url": "http://www.test.com/sport/cricket/?service=rss"
+    function mockSuccessResponse(done, expectedValues) {
+        let response = {
+            "status": (status) => {
+                expect(status).to.equal(expectedValues.status);
+            },
+            "json": (jsonData) => {
+                let items = jsonData.items;
+                if(items) {
+                    let expectedItems = expectedValues.json.items;
+                    expect(items.length).to.eq(expectedItems.length);
+                    for(let index = 0; index < items.length; index++) {
+                        expect(items[index].title).to.eq(expectedItems[index].title);
+                        expect(items[index].description).to.eq(expectedItems[index].description);
+                    }
+                }
+                done();
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": {} });
+        return response;
+    }
+
+    it("should return invalid if the url doesn't return feeds", (done) => {
+        let data = `<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <TITLE>302 Moved</TITLE></HEAD><BODY>
+        <H1>302 Moved</H1>
+        The document has moved
+        <A HREF="http://www.google.co.in/?gfe_rd=cr&amp;ei=h91eVqj4N-my8wexop6oAg">here</A>.
+        </BODY></HTML>`;
+        nock("http://www.google.com")
+            .get("/users")
+            .reply(HttpResponseHandler.codes.OK, data);
+
+        let url = "http://www.google.com/users";
+        let request = {
+            "query": {
+                "url": url
+            }
+        };
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": url + " is not a proper feed" } });
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
     });
 
     it("should return feeds for the given url of a user", (done) => {
-        let data = "<rss version=\"2.0\"><channel>" +
-            "<item>" +
-            "<title>sample</title>" +
-            "</item>" +
-            "<item>" +
-            "<title>test</title>" +
-            "</item>" +
-            "</channel></rss>";
+        let data = `<rss version="2.0"><channel>
+        <title>hindu</title>
+        <link>http://hindu.com</link>
+        <description>from hindu</description>
+            <item>
+                <title>test</title>
+                <description>news cricket</description>
+            </item>
+        </channel></rss>`;
         nock("http://www.thehindu.com/sport/cricket")
-
-            .get("/?service=rss", {
-            })
+            .get("/?service=rss")
             .reply(HttpResponseHandler.codes.OK, data);
         let request = {
             "query": {
@@ -64,16 +82,10 @@ describe("RssReaderHelper", () => {
             }
         };
         let feedsJson = {
-            "rss": {
-                "$": {
-                    "version": "2.0"
-                },
-                "channel": [{
-                    "item": [{ "title": ["sample"] }, { "title": ["test"] }]
-                }]
-            }
+            "items": [{ title: "test",
+                description: "news cricket" }]
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
+        let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
     });
@@ -84,12 +96,13 @@ describe("RssReaderHelper", () => {
             })
             .reply(HttpResponseHandler.codes.NOT_IMPLEMENTED, "");
 
+        let url = "http://www.test1.com/cricket/";
         let request = {
             "query": {
-                "url": "http://www.test1.com/cricket/"
+                "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": {} });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "Request failed for " + url } });
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
     });
@@ -100,13 +113,14 @@ describe("RssReaderHelper", () => {
             })
             .replyWithError("something awful happened");
 
+        let url = "http://www.test1.com/cricket/";
         let request = {
             "query": {
-                "url": "http://www.test1.com/cricket/"
+                "url": url
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json":
-            { "message": new Error("something awful happened") } });
+        { "message": "Request failed for " + url } });
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
     });
@@ -131,5 +145,4 @@ describe("RssReaderHelper", () => {
         let rssReaderHelper = new RssReaderHelper(request, response);
         rssReaderHelper.feedsForUrl();
     });
-
 });

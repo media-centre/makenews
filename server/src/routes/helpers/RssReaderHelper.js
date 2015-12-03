@@ -1,44 +1,46 @@
+/* eslint consistent-this:0 */
 "use strict";
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import restRequest from "request";
-import { parseString } from "xml2js";
+import RssParser from "../../parsers/RssParser";
+//import Logger from "../../logging/Logger";
 
+//let logger = Logger.instance();
 export default class RssReaderHelper {
     constructor(request, response) {
         this.request = request;
         this.response = response;
     }
+
     feedsForUrl() {
-        let url = this.request.query.url;
+        let url = this.request.query.url, _this = this;
         if(StringUtil.isEmptyString(url)) {
-            this.response.status(HttpResponseHandler.codes.OK);
-            this.response.json({});
+            this.setResponse(HttpResponseHandler.codes.OK, {});
         } else {
-            restRequest.get({
-                "uri": url,
-                "headers": { "content-type": "application/x-www-form-urlencoded" }
-            },
-                (error, response, body) => {
-                    if(error) {
-                        this.response.status(HttpResponseHandler.codes.NOT_FOUND);
-                        this.response.json({ "message": error });
-                    } else if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        parseString(body, (err, result) => {
-                            let data = result, status = HttpResponseHandler.codes.OK;
-                            if(err || !(data.rss && data.rss.channel)) {
-                                data = {};
-                                status = HttpResponseHandler.codes.NOT_FOUND;
-                            }
-                            this.response.status(status);
-                            this.response.json(data);
-                        });
-                    } else {
-                        this.response.status(HttpResponseHandler.codes.NOT_FOUND);
-                        this.response.json({});
-                    }
-                });
+            let requestToUrl = restRequest(url), rssParser = null;
+            requestToUrl.on("error", (error) => {
+                //logger.warn("Request failed for %s", url, error);
+                this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": "Request failed for " + url });
+            });
+            requestToUrl.on("response", function(res) {
+                if (res.statusCode !== HttpResponseHandler.codes.OK) return this.emit("error", new Error("Bad status code"));
+                rssParser = new RssParser(this);
+                rssParser.parse()
+                    .then(feeds => {
+                        _this.setResponse(HttpResponseHandler.codes.OK, feeds);
+                    })
+                    .catch(error => {
+                        //logger.warn("%s is not a proper feed", url, error);
+                        _this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": url + " is not a proper feed" });
+                    });
+            });
         }
+    }
+
+    setResponse(status, responseJson) {
+        this.response.status(status);
+        this.response.json(responseJson);
     }
 }
