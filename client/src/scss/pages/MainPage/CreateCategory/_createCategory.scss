@@ -21,7 +21,12 @@
     input {
       width: 70%;
       border: none;
+    }
+    .valid {
       color: $app-header-bg-color;
+    }
+    .invalid {
+      color: $error-border-color;
     }
 
     .close {

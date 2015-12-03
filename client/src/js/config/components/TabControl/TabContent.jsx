@@ -32,7 +32,7 @@ export default class TabContent extends Component {
         let url = this.refs.addUrlTextBox.value.trim();
         let errorMessage = this._isInvalidUrl(url);
         this.setState({ "errorMessage": errorMessage });
-
+        console.log(this.props.content);
         if(errorMessage.length === 0) {
             props.dispatch(addRssUrlAsync(props.categoryId, url));
             this.refs.addUrlTextBox.value = "";
@@ -67,7 +67,7 @@ export default class TabContent extends Component {
                     <ul classaName="url-list">
                                 {this.props.content.map((urlObj, index) =>
                                         <li key={index} className="feed-url">
-                                            <input type="text" value={urlObj.url} onChange={this._onUrlChange} />
+                                            <input type="text" className={ urlObj.status } value={urlObj.url} onChange={this._onUrlChange} />
                                             <i className="border-blue circle fa fa-close close circle"></i>
                                         </li>
                                 )}

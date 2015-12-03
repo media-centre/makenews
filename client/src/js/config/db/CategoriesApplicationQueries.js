@@ -32,7 +32,7 @@ export default class CategoriesApplicationQueries {
                     if (!sourceUrls[rssConfiguration.sourceType]) {
                         sourceUrls[rssConfiguration.sourceType] = [];
                     }
-                    sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url });
+                    sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url, "status": rssConfiguration.status  });
                 });
                 resolve(sourceUrls);
             }).catch(error => {
