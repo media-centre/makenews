@@ -3,7 +3,6 @@
 
 import FeedParser from "feedparser";
 //import Logger from "../logging/Logger";
-
 export default class RssParser {
     constructor(response) {
         this.response = response;
