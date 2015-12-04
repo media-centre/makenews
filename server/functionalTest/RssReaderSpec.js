@@ -8,8 +8,12 @@ import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import nock from "nock";
 import { expect } from "chai";
 
-describe("RssReaderIntegrationSpec", () => {
+
+describe("RssReaderSpec", () => {
     describe("RssReaderRoutes", () => {
+        afterEach("RssReaderRoutes", () => {
+            server.close();
+        });
         it("responds to /rss-feeds with 401 if user is not logged in", (done) => {
             request(server)
                 .get("/rss-feeds")

@@ -15,6 +15,7 @@ const serverConfig = {
   serverAppPath: './server',
   srcPath: './server/src',
   testPath: './server/test',
+  functionalTestPath: './server/functionalTest',
   distFolder: './dist/server',
   distServerJsFolder: './dist',
   serverJsFile: 'server.js'

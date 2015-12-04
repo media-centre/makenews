@@ -108,7 +108,7 @@
     "no-shadow": [2],                // disallow declaration of variables already declared in the outer scope
     "no-undef-init": [2],                // disallow use of undefined when initializing variables
     "no-undef": [2],                // disallow use of undeclared variables unless mentioned in a /*global */ block (recommended)
-    "no-undefined": [1],                // disallow use of undefined variable
+    "no-undefined": [2],                // disallow use of undefined variable
     "no-unused-vars": [2],                // disallow declaration of variables that are not used in the code (recommended)
     "no-use-before-define": [2, "nofunc"],                // disallow use of variables before they are defined
 
