@@ -19,7 +19,7 @@ describe("PouchClient", () => {
             "name": "Long Title",
             "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5",
             "_rev": "14-a050422e3a9367aa519109443f86810c"
-        })
+        });
 
         DbSession.instance().put({
             "docType": "category",
@@ -70,6 +70,9 @@ describe("PouchClient", () => {
                 },
                 "allSourcesByUrl": {
                     "map": "function(doc) { if(doc.docType === 'source') {emit(doc.url, doc)} }"
+                },
+                "allSourcesWithCategories": {
+                    "map": "function(doc) { if (doc.docType == 'category') { emit([doc._id, 0], doc); } else if (doc.docType == 'source') { emit([doc.category_id, 1], doc);}}"
                 }
             } }, "_design/category");
     });
@@ -134,6 +137,18 @@ describe("PouchClient", () => {
                 PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": "Sports" }).then((docs) => {
                     let resultDoc = docs[0];
                     expect(resultDoc.name).to.include("Sports");
+                    done();
+                });
+            });
+        });
+
+        describe("allSourcesWithCategories", () => {
+            it("should index all sources for all categories by category id", (done) => {
+                PouchClient.fetchDocuments("category/allSourcesWithCategories", { "include_docs": true }).then((docs) => {
+                    let resultDocTypes = docs.map(doc => { return doc.docType });
+                    console.log(resultDocTypes);
+                    expect(resultDocTypes).to.include("category");
+                    expect(resultDocTypes).to.include("source");
                     done();
                 });
             });
