@@ -29,6 +29,11 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
+                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_dev";/g' ./dist/client/app.js</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
                 <arg>killall node | pwd</arg>
                 <runif status="passed" />
               </exec>
@@ -69,6 +74,11 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
+                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_qa";/g' ./dist/client/app.js</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
                 <arg>killall node | pwd</arg>
                 <runif status="passed" />
               </exec>
@@ -91,6 +101,11 @@
             <tasks>
               <exec command="npm" workingdir="trunk">
                 <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>npm rebuild node-sass</arg>
                 <runif status="passed" />
               </exec>
               <exec command="gulp" workingdir="trunk">
