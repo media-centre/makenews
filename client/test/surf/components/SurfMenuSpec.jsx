@@ -2,7 +2,6 @@
 "use strict";
 import SurfMenu from "../../../src/js/surf/components/SurfMenu.jsx";
 import { assert } from "chai";
-import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { Link } from "react-router";

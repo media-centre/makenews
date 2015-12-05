@@ -1,8 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
 import Logout from "../../../src/js/login/components/Logout.jsx";
-import { expect, assert } from "chai";
-import ReactDOM from "react-dom";
+import { expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { Link } from "react-router";

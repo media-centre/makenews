@@ -18,3 +18,4 @@ export default class Locale {
 Locale.languages = {
     "ENGLISH": "en"
 }
+;

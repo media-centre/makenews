@@ -21,7 +21,9 @@ export default class SurfPage extends Component {
 SurfPage.displayName = "SurfPage";
 
 SurfPage.propTypes = {
-    "categories": PropTypes.array
+    "dispatch": PropTypes.func.isRequired,
+    "categories": PropTypes.array,
+    "feeds": PropTypes.array
 };
 
 SurfPage.defaultProps = {

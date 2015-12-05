@@ -49,25 +49,25 @@ describe("Surf Reducer", () => {
             let expectedfeeds = {
                 "feeds": [{
                     "content": "feed1 description",
-                    "type":"description",
+                    "type": "description",
                     "feedType": "rss",
                     "name": "sportsCategory",
                     "tags": []
                 }, {
                     "content": "feed2 description",
-                    "type":"description",
+                    "type": "description",
                     "feedType": "rss",
                     "name": "sportsCategory",
                     "tags": []
                 }, {
                     "content": "tn desc",
-                    "type":"description",
+                    "type": "description",
                     "feedType": "rss",
                     "name": "politicsCategory",
                     "tags": []
                 }, {
                     "content": "AP desc",
-                    "type":"description",
+                    "type": "description",
                     "feedType": "rss",
                     "name": "politicsCategory",
                     "tags": []

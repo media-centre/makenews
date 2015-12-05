@@ -8,7 +8,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("AllFeedsAction", () => {
-    it("return type DISPLAY_ALL_FEEDS action", () =>  {
+    it("return type DISPLAY_ALL_FEEDS action", () => {
         let sources = [
             {
                 "url": "www.hindu.com",
@@ -27,7 +27,7 @@ describe("AllFeedsAction", () => {
         expect(displayAllFeeds(sources)).to.deep.equal(displayAllFeedsAction);
     });
 
-    it("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) =>  {
+    it("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
         let sources = [
             {
                 "url": "www.hindu.com",
@@ -47,7 +47,7 @@ describe("AllFeedsAction", () => {
         });
     });
 
-    it("dispatch displayAllFeedsAsync action with empty feeds on fetch failure", (done) =>  {
+    it("dispatch displayAllFeedsAsync action with empty feeds on fetch failure", (done) => {
         let fetchAllSourcesWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllSourcesWithCategoryName");
         fetchAllSourcesWithCategoryNameMock.returns(Promise.reject("error"));
 

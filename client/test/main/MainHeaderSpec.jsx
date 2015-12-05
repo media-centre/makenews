@@ -2,8 +2,6 @@
 "use strict";
 import "../helper/TestHelper.js";
 import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
-import { Link } from "react-router";
-
 import { assert, expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
