@@ -8,11 +8,15 @@ import { Link } from "react-router";
 import "../../helper/TestHelper.js";
 
 describe("ParkMenu", () => {
-    let parkMenuComponent = null;
+    let parkMenuComponent = null, parkTab = null;
 
     before("ParkMenu", () => {
+        parkTab = {
+            "Name": "Park Test"
+        };
+
         parkMenuComponent = TestUtils.renderIntoDocument(
-            <ParkMenu/>
+            <ParkMenu parkTab={parkTab}/>
         );
     });
 
@@ -20,5 +24,10 @@ describe("ParkMenu", () => {
         let linkElement = TestUtils.scryRenderedComponentsWithType(parkMenuComponent, Link);
         assert.strictEqual("/park", linkElement[0].props.to);
     });
+
+    it("should display the park tab name from the locale file", () => {
+        assert.strictEqual("Park Test", parkMenuComponent.refs.parkTabName.innerHTML);
+    });
+
 });
 

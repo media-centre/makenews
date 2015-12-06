@@ -1,7 +1,10 @@
-/* eslint no-underscore-dangle:0 new-cap:0*/
+/* eslint no-underscore-dangle:0 new-cap:0, no-unused-vars:0*/
+
 "use strict";
 import { DISPLAY_ALL_CATEGORIES } from "../actions/AllCategoriesActions.js";
 import { DISPLAY_CATEGORY } from "../actions/CategoryActions.js";
+import Locale from "../../utils/Locale.js";
+
 import { List } from "immutable";
 
 
@@ -45,4 +48,10 @@ function getCategoryState(sourceUrlsObj = null) {
         categorySourceConfig.sources.twitter.details = sourceUrlsObj.twitter;
     }
     return categorySourceConfig;
+}
+
+
+export function configurePageLocale(state = {}, action = {}) {
+    let appLocaleEn = Locale.applicationStrings();
+    return appLocaleEn.messages.configurePage;
 }

@@ -1,12 +1,13 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import MainHeader from "../headers/MainHeader.jsx";
+import { connect } from "react-redux";
 
-export default class MainPage extends Component {
+export class MainPage extends Component {
     render() {
         return (
             <div className="main-page">
-                <MainHeader />
+                <MainHeader ref="header" headerStrings={this.props.headerStrings}/>
                 <section>{this.props.children}</section>
             </div>
         );
@@ -16,5 +17,11 @@ export default class MainPage extends Component {
 
 MainPage.displayName = "MainPage";
 MainPage.propTypes = {
-    "children": PropTypes.node
+    "children": PropTypes.node,
+    "headerStrings": PropTypes.object.isRequired
 };
+
+function select(store) {
+    return { "headerStrings": store.mainHeaderLocale };
+}
+export default connect(select)(MainPage);

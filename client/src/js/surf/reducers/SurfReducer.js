@@ -1,4 +1,4 @@
-/*eslint new-cap:0*/
+/*eslint new-cap:0, no-unused-vars:0*/
 "use strict";
 import { DISPLAY_ALL_FEEDS } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";

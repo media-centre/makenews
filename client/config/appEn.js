@@ -37,6 +37,32 @@ export default {
                     sed suscipit tellus. Nunc fringilla euismod felis eget lobortis."
                 }
             }
+        },
+        "configurePage": {
+            "allCategories": {
+                "allCategoriesHeading": "All Categories",
+                "addNewCategoryLabel": "Add new category"
+            },
+            "categoryDetailsPage": {
+                "allCategoriesLinkLabel": "All Categories",
+                "deleteCategoryLinkLabel": "Delete Category",
+                "addUrlLinkLabel": "Add Url"
+            },
+            "configureTabName": "Configure"
+        },
+        "headerStrings": {
+            "surfTab": {
+                "Name": "Surf"
+            },
+            "parkTab": {
+                "Name": "Park"
+            },
+            "configTab": {
+                "Name": "Configure"
+            },
+            "logoutButton": {
+                "Name": "Logout"
+            }
         }
     }
 };

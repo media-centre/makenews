@@ -8,11 +8,15 @@ import { Link } from "react-router";
 import "../../helper/TestHelper.js";
 
 describe("ConfigureMenu", () => {
-    let configureMenuComponent = null;
+    let configureMenuComponent = null, configTab = null;
 
     before("ConfigureMenu", () => {
+        configTab = {
+            "Name": "Configure Test"
+        };
+
         configureMenuComponent = TestUtils.renderIntoDocument(
-            <ConfigureMenu/>
+            <ConfigureMenu configTab={configTab}/>
         );
     });
 
@@ -20,5 +24,10 @@ describe("ConfigureMenu", () => {
         let linkElement = TestUtils.scryRenderedComponentsWithType(configureMenuComponent, Link);
         assert.strictEqual("/configure/categories", linkElement[0].props.to);
     });
+
+    it("should display the configure tab name from the locale file", () => {
+        assert.strictEqual("Configure Test", configureMenuComponent.refs.configureTabName.innerHTML);
+    });
+
 });
 

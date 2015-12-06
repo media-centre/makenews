@@ -8,11 +8,14 @@ import { Link } from "react-router";
 import "../../helper/TestHelper.js";
 
 describe("SurfMenu", () => {
-    let surfMenuComponent = null;
+    let surfMenuComponent = null, surfTab = null;
 
     before("SurfMenu", () => {
+        surfTab = {
+            "Name": "Surf Test"
+        };
         surfMenuComponent = TestUtils.renderIntoDocument(
-            <SurfMenu/>
+            <SurfMenu surfTab ={surfTab}/>
         );
     });
 
@@ -20,5 +23,11 @@ describe("SurfMenu", () => {
         let linkElement = TestUtils.scryRenderedComponentsWithType(surfMenuComponent, Link);
         assert.strictEqual("/surf", linkElement[0].props.to);
     });
+
+    it("should display the surf tab name from the locale file", () => {
+        assert.strictEqual("Surf Test", surfMenuComponent.refs.surfTabName.innerHTML);
+    });
+
 });
+
 

@@ -36,14 +36,14 @@ class CategoryNavigationHeader extends Component {
             </div>
             <div className="error-msg t-center">{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory">{"Delete Category"}</button>;
+        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoriyDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 
         return (
 
             <div className="navigation-header clear-fix">
                 <Link to="/configure/categories" className="navigation nav-control h-center left" id="allCategoriesButton">
                     <i className="fa fa-arrow-left"></i>
-                    <span>{"All Categories"}</span>
+                    <span ref="allCategoriesLinkLabel">{this.props.categoriyDetailsPageStrings.allCategoriesLinkLabel}</span>
                 </Link>
                 {deleteElement}
                 {titleElement}
@@ -60,7 +60,8 @@ CategoryNavigationHeader.propTypes = {
     "categoryName": PropTypes.string,
     "editableHeader": PropTypes.bool,
     "isDefault": PropTypes.bool,
-    "errorMessage": PropTypes.string
+    "errorMessage": PropTypes.string,
+    "categoriyDetailsPageStrings": PropTypes.object.isRequired
 };
 
 CategoryNavigationHeader.DefaultProps = {

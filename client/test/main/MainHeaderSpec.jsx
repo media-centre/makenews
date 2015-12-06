@@ -8,9 +8,24 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 describe("main header component", () => {
-    let mainHeader = null;
+    let mainHeader = null, headerStrings = null;
     before("Main page component", () => {
-        mainHeader = TestUtils.renderIntoDocument(<MainHeader />);
+        headerStrings = {
+            "surfTab": {
+                "Name": "Surf"
+            },
+            "parkTab": {
+                "Name": "Park"
+            },
+            "configTab": {
+                "Name": "Configure"
+            },
+            "logoutButton": {
+                "Name": "Logout"
+            }
+        };
+
+        mainHeader = TestUtils.renderIntoDocument(<MainHeader headerStrings={headerStrings}/>);
     });
 
     it("should have header element", () => {
@@ -46,6 +61,26 @@ describe("main header component", () => {
     it("should have park menu component", () => {
         let menuElement = mainHeader.refs.parkMenu;
         assert.isDefined(menuElement);
+    });
+
+    it("should have surf menu name for the Surf Menu component", () => {
+        let menuElement = mainHeader.refs.surfMenu;
+        assert.strictEqual("Surf", menuElement.props.surfTab.Name);
+    });
+
+    it("should have park name for the Park Menu component", () => {
+        let menuElement = mainHeader.refs.parkMenu;
+        assert.strictEqual("Park", menuElement.props.parkTab.Name);
+    });
+
+    it("should have configure name for the Config Menu component", () => {
+        let menuElement = mainHeader.refs.configureMenu;
+        assert.strictEqual("Configure", menuElement.props.configTab.Name);
+    });
+
+    it("should have logout name for the logout component", () => {
+        let menuElement = mainHeader.refs.logout;
+        assert.strictEqual("Logout", menuElement.props.logoutButton.Name);
     });
 
 });

@@ -1,3 +1,4 @@
+/*eslint max-len:0*/
 "use strict";
 import React, { Component, PropTypes } from "react";
 import CategoryNavigationHeader from "./CategoryNavigationHeader.jsx";
@@ -44,11 +45,11 @@ export default class Category extends Component {
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage}/>
+              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
 
-              <TabControl>
-                  {Object.keys(this.props.sources).map((key, index) =>
-                      <TabContent key={index} content={this.props.sources[key].details} title={this.props.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch}/>
+              <TabControl categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}>
+                  {Object.keys(this.props.categoryDetails.sources).map((key, index) =>
+                      <TabContent key={index} content={this.props.categoryDetails.sources[key].details} title={this.props.categoryDetails.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
                   )}
               </TabControl>
 
@@ -60,15 +61,15 @@ export default class Category extends Component {
 
 Category.displayName = "Category";
 Category.propTypes = {
-    "categories": PropTypes.node,
+    "categoryDetails": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "sources": PropTypes.object.isRequired,
     "params": PropTypes.object,
-    "params.categoryType": PropTypes.string
+    "params.categoryType": PropTypes.string,
+    "categoryDetailsPageStrings": PropTypes.object.isRequired
 };
 
 function select(store) {
-    return store.categoryDetails;
+    return { "categoryDetails": store.categoryDetails, "categoryDetailsPageStrings": store.configurePageLocale.categoryDetailsPage };
 }
 export default connect(select)(Category);
 

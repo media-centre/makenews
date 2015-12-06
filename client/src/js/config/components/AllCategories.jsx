@@ -36,16 +36,16 @@ let AllCategories = React.createClass({
         categoriesArray.push(<li className="add-new" id="addNewCategoryButton" key ="0" onClick={this._createNewCategory}>
             <div className="navigation-link">
                 <div className="v-center t-center text-container">
-                    <span>{"Add new category"}</span>
+                    <span ref="addNewCategoryLink">{this.props.allCategoriesPageStrings.addNewCategoryLabel}</span>
                 </div>
             </div>
         </li>);
-        this.props.categories.map((category, index) =>
+        this.props.allCategories.categories.map((category, index) =>
             categoriesArray.push(
                 <li key={index + 1} className="category">
-                    <Link to={"/configure/category/" + category._id + "/" + category.name} className="navigation-link">
+                    <Link ref={"categoryLink_" + category._id} to={"/configure/category/" + category._id + "/" + category.name} className="navigation-link">
                         <div className="v-center t-center text-container">
-                            <span>{category.name}</span>
+                            <span ref={"category_" + category._id}>{category.name}</span>
                         </div>
                     </Link>
                 </li>
@@ -57,8 +57,8 @@ let AllCategories = React.createClass({
     render() {
         return (
             <div className="configure-page max-width">
-                <h3 className="t-center t-bold">
-                    {"All Categories"}
+                <h3 ref="allCategoriesHeading" className="t-center t-bold">
+                    {this.props.allCategoriesPageStrings.allCategoriesHeading}
                 </h3>
                 <div className="categories">
                     <ul className="cat-list t-center">
@@ -70,10 +70,10 @@ let AllCategories = React.createClass({
     }
 });
 
-module.exports = AllCategories;
+export { AllCategories };
 
 function select(store) {
-    return store.allCategories;
+    return { "allCategories": store.allCategories, "allCategoriesPageStrings": store.configurePageLocale.allCategories };
 }
 export default connect(select)(AllCategories);
 

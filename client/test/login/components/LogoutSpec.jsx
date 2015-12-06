@@ -5,14 +5,19 @@ import { expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { Link } from "react-router";
+import { assert } from "chai";
 import "../../helper/TestHelper.js";
 
 describe("Logout", () => {
-    let logoutComponent = null;
+    let logoutComponent = null, logoutButton = null;
 
     before("Logout", () => {
+        logoutButton = {
+            "Name": "Logout Test"
+        };
+
         logoutComponent = TestUtils.renderIntoDocument(
-            <Logout/>
+            <Logout logoutButton={logoutButton}/>
         );
     });
 
@@ -27,6 +32,8 @@ describe("Logout", () => {
         TestUtils.Simulate.click(listComponents[0]);
     });
 
-
+    it("should display the button name from the locale file", () => {
+        assert.strictEqual("Logout Test", logoutComponent.refs.logoutLabel.innerHTML);
+    });
 });
 

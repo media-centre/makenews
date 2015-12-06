@@ -1,5 +1,5 @@
 "use strict";
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";
 
 export default class SurfMenu extends Component {
@@ -7,10 +7,14 @@ export default class SurfMenu extends Component {
         return (
             <Link to="/surf" activeClassName="selected">
                 <div className= "surf header-link-image"></div>
-                <span>{"Surf"}</span>
+                <span ref="surfTabName">{this.props.surfTab.Name}</span>
             </Link>
         );
     }
 }
 
 SurfMenu.displayName = "SurfMenu";
+SurfMenu.propTypes = {
+    "surfTab": PropTypes.object.isRequired
+};
+

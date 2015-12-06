@@ -1,10 +1,12 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
 "use strict";
-import { allCategories, categoryDetails } from "../../src/js/config/reducers/ConfigReducer.js";
+import { allCategories, categoryDetails, configurePageLocale } from "../../src/js/config/reducers/ConfigReducer.js";
+import Locale from "../../src/js/utils/Locale.js";
 import { DISPLAY_CATEGORY } from "../../src/js/config/actions/CategoryActions.js";
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import { List } from "immutable";
+import sinon from "sinon";
 
 const DEFAULT_CATEGORY = "Default Category";
 
@@ -117,6 +119,34 @@ describe("Config Reducer", () => {
                 }
             };
             expect(expectedState).to.deep.equal(categoryDetails(undefined, action));
+        });
+    });
+
+    describe("configLocale", () => {
+        it("should have configure page strings in English by default", () => {
+            let applicationStrings = {
+                "locales": ["en"],
+
+                "messages": {
+                    "configurePage": {
+                        "allCategories": {
+                            "allCategoriesHeading": "All Categories",
+                            "addNewCategoryLabel": "Add new category"
+                        },
+                        "categoryDetailsPage": {
+                            "allCategoriesLinkLabel": "All Categories",
+                            "deleteCategoryLinkLabel": "Delete Category",
+                            "addUrlLinkLabel": "Add Url"
+                        }
+                    }
+                }
+            };
+            let applicationStringsMock = sinon.mock(Locale).expects("applicationStrings");
+            applicationStringsMock.returns(applicationStrings);
+            let configurePageLocales = configurePageLocale();
+            assert.strictEqual("All Categories", configurePageLocales.categoryDetailsPage.allCategoriesLinkLabel);
+            applicationStringsMock.verify();
+            Locale.applicationStrings.restore();
         });
     });
 

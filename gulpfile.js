@@ -273,7 +273,7 @@ gulp.task("server:functionalTest-eslint", function() {
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
-gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint","server:functionalTest-eslint"]);
+gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint", "server:functionalTest-eslint"]);
 gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 gulp.task("server:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
