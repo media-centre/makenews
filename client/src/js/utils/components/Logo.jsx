@@ -4,7 +4,7 @@ import React, { Component } from "react";
 export default class Logo extends Component {
     render() {
         return (
-            <div>
+            <div className="m-none">
                 <img src="images/main/makenews.png" className="app-logo left clear-fix" ref="logo"/>
             </div>
         );

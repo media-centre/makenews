@@ -18,15 +18,26 @@ export default class Category extends Component {
 
     componentWillMount() {
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
+        window.scrollTo(0, 0);
+    }
+
+    _isValidName(categoryName) {
+        return categoryName.match(/^[ A-Za-z0-9_-]*$/) !== null;
     }
 
     _updateCategoryName(categoryName) {
-        if(categoryName) {
+        if(!categoryName) {
+            this.setState({ "titleErrorMessage": "Category name can not be empty" });
+            return;
+        }
+
+
+        if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
                 this.setState({ "titleErrorMessage": response.status ? "" : "Category name already exists" });
             }));
         } else {
-            this.setState({ "titleErrorMessage": "Category name can not be empty" });
+            this.setState({ "titleErrorMessage": "Invalid category name. Use only - or _" });
         }
     }
 

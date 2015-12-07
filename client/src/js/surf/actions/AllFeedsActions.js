@@ -13,7 +13,7 @@ export function displayAllFeedsAsync() {
         SurfApplicationQueries.fetchAllSourcesWithCategoryName().then((sources) => {
             dispatch(displayAllFeeds(sources));
         }).catch(error => { //eslint-disable-line no-unused-vars
-            dispatch(displayAllFeeds([]));
+            dispatch(displayAllFeeds({}));
         });
     };
 }

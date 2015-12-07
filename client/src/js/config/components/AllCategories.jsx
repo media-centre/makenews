@@ -20,6 +20,7 @@ let AllCategories = React.createClass({
     mixins: [History], //eslint-disable-line quote-props
 
     componentWillMount() {
+        window.scrollTo(0, 0);
         this.props.dispatch(displayAllCategoriesAsync());
     },
 

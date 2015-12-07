@@ -23,11 +23,15 @@ export default class CategoryNavigationHeader extends Component {
 
     }
 
+    _highlightEditableTitle() {
+        return this.props.errorMessage.trim().length > 0 ? "t-center t-bold error-border" : "t-center t-bold";
+    }
+
     render() {
 
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
-                <div className="t-center t-bold" id="categoryTitle" ref="categoryTitleElement" contentEditable onKeyDown={(event)=> this._handleEnterKey(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
+                <div className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" contentEditable onKeyDown={(event)=> this._handleEnterKey(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
                     {this.props.categoryName}
                 </div>
             <div className="error-msg t-center">{this.props.errorMessage}</div></div>;
