@@ -51,7 +51,7 @@ describe("AllFeedsAction", () => {
         let fetchAllSourcesWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllSourcesWithCategoryName");
         fetchAllSourcesWithCategoryNameMock.returns(Promise.reject("error"));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "sources": [] }], done);
+        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "sources": {} }], done);
         return Promise.resolve(store.dispatch(displayAllFeedsAsync())).then(() => {
             fetchAllSourcesWithCategoryNameMock.verify();
             SurfApplicationQueries.fetchAllSourcesWithCategoryName.restore();
