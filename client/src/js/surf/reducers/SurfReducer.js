@@ -14,6 +14,14 @@ export function allFeeds(state = { "feeds": List([]) }, action = {}) {
     }
 }
 
+function getDateAndTime(dateString) {
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    let date = new Date(dateString);
+    return months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear() + "  " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+}
+
 function createFeed(feed, source) {
     let feedObj = {
         "type": "description",
@@ -21,7 +29,7 @@ function createFeed(feed, source) {
         "feedType": "rss",
         "name": source.categoryNames[0],
         "content": feed.description,
-        "tags": []
+        "tags": [getDateAndTime(feed.pubDate)]
     };
     if(feed.enclosures && feed.enclosures.length > 0) {
 

@@ -34,6 +34,18 @@
 
   .all-feeds a {
     color: $anchor-font-color;
+
+    img {
+      width: 200px;
+    }
+  }
+  .all-feeds > div {
+    br {
+      display: none;
+    }
+    p.surf-description {
+      overflow: auto;
+    }
   }
   .all-feeds > div > a {
     display: block;
