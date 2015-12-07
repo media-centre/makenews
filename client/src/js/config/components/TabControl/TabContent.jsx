@@ -22,7 +22,9 @@ export default class TabContent extends Component {
             "showTextbox": true
         });
         setTimeout(function() {
-            this.refs.addUrlTextBox.focus();
+            if(this.refs) {
+                this.refs.addUrlTextBox.focus();
+            }
         }, renderingTime);
     }
 

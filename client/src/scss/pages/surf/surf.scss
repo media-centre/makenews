@@ -32,6 +32,19 @@
     }
   }
 
+  .all-feeds a {
+    color: $anchor-font-color;
+  }
+  .all-feeds > div > a {
+    display: block;
+    text-align: right;
+  }
+  .all-feeds > div > div.title {
+    font-weight: bold;
+    font-size: $large-font-size;
+    padding: 10px 0px;
+  }
+
   .image-gallery {
     ul.gallery-list {
       margin-left: -10px;
@@ -39,7 +52,7 @@
       padding: 10px 0px;
 
       li.image-container {
-        width: 25%;
+        width: 200px;
         padding: 10px;
         vertical-align: top;
 
@@ -58,7 +71,7 @@
       padding: 20px 0px;
 
       .img-container {
-        width: 25%;
+        width: 200px;
         padding-right: 15px;
 
         img {

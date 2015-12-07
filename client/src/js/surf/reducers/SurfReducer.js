@@ -3,6 +3,8 @@
 import { DISPLAY_ALL_FEEDS } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";
 
+const NEGATIVE_INDEX = -1;
+
 export function allFeeds(state = { "feeds": List([]) }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
@@ -12,18 +14,43 @@ export function allFeeds(state = { "feeds": List([]) }, action = {}) {
     }
 }
 
+function createFeed(feed, source) {
+    let feedObj = {
+        "type": "description",
+        "title": feed.title,
+        "feedType": "rss",
+        "name": source.categoryNames[0],
+        "content": feed.description,
+        "tags": []
+    };
+    if(feed.enclosures && feed.enclosures.length > 0) {
+
+        if(feed.enclosures.length === 1) {
+            feedObj.type = "imagecontent";
+            if(feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
+                feedObj.url = feed.enclosures[0].url;
+            }
+        } else {
+            feedObj.type = "gallery";
+            feedObj.images = [];
+            feed.enclosures.forEach(item => {
+                if(item.type === "image/jpeg") {
+                    feedObj.images.push(item);
+                }
+            });
+        }
+    }
+    return feedObj;
+}
+
 function presentableItemsFromSources(sources = []) {
     let feeds = [];
     sources.forEach(source => {
-        source.feedItems.forEach(feedItem => {
-            feeds.push({
-                "feedType": "rss",
-                "name": source.categoryNames[0],
-                "content": feedItem.description,
-                "type": "description",
-                "tags": []
+        if(source.feedItems) {
+            source.feedItems.forEach(feedItem => {
+                feeds.push(createFeed(feedItem, source));
             });
-        });
+        }
     });
     return { "feeds": feeds };
 }

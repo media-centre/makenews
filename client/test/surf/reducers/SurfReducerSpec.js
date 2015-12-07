@@ -40,7 +40,7 @@ describe("Surf Reducer", () => {
                         "title": "Tamilnadu",
                         "description": "tn desc"
                     }, {
-                        "title": "Andra",
+                        "title": "Andhra",
                         "description": "AP desc"
                     }]
                 }
@@ -52,24 +52,28 @@ describe("Surf Reducer", () => {
                     "type": "description",
                     "feedType": "rss",
                     "name": "sportsCategory",
+                    "title": "cricket",
                     "tags": []
                 }, {
                     "content": "feed2 description",
                     "type": "description",
                     "feedType": "rss",
                     "name": "sportsCategory",
+                    "title": "football",
                     "tags": []
                 }, {
                     "content": "tn desc",
                     "type": "description",
                     "feedType": "rss",
                     "name": "politicsCategory",
+                    "title": "Tamilnadu",
                     "tags": []
                 }, {
                     "content": "AP desc",
                     "type": "description",
                     "feedType": "rss",
                     "name": "politicsCategory",
+                    "title": "Andhra",
                     "tags": []
                 }]
             };
