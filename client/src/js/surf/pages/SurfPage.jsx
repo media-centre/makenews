@@ -12,8 +12,10 @@ export default class SurfPage extends Component {
     }
 
     render() {
+        let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{"No feeds found"}</div> : null;
         return (
             <div className="surf-page">
+                {hintMsg}
                 <AllFeeds feeds={this.props.feeds}/>
             </div>
         );

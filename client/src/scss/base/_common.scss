@@ -199,3 +199,8 @@ button {
 .container {
   position: relative;
 }
+
+.spinner-msg {
+  color: $spinner-font-color;
+  font-size: $small-font-size;
+}

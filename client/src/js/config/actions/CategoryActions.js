@@ -24,12 +24,14 @@ export function populateCategoryDetails(sourceUrlsObj) {
     return { "type": DISPLAY_CATEGORY, sourceUrlsObj };
 }
 
-export function addRssUrlAsync(categoryId, url) {
+export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
         AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
             addRssUrlDocument(dispatch, categoryId, url, STATUS_VALID, responseFeed.items);
+            callback(STATUS_VALID);
         }).catch(() => {
             addRssUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
+            callback(STATUS_INVALID);
         });
     };
 }

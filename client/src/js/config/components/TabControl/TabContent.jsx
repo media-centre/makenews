@@ -10,22 +10,15 @@ export default class TabContent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { "showTextbox": false, "errorMessage": "" };
+        this.state = { "showTextbox": false, "errorMessage": "", "urlError": "", "showUrlError": false };
     }
 
     _onUrlChange() {}
 
     _addNewUrlButton() {
-        let renderingTime = 100;
-
         this.setState({
             "showTextbox": true
         });
-        setTimeout(function() {
-            if(this.refs) {
-                this.refs.addUrlTextBox.focus();
-            }
-        }, renderingTime);
     }
 
     _onKeyDownTextBox(event, props) {
@@ -40,7 +33,11 @@ export default class TabContent extends Component {
         let errorMessage = this._isInvalidUrl(url);
         this.setState({ "errorMessage": errorMessage });
         if(errorMessage.length === 0) {
-            props.dispatch(addRssUrlAsync(props.categoryId, url));
+            this.setState({ "urlError": "Checking feeds please wait...", "showUrlError": true });
+            props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
+                let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Fetched feeds";
+                this.setState({ "urlError": errorMsg, "showUrlError": false });
+            }));
             this.refs.addUrlTextBox.value = "";
             this.setState({ "showTextbox": false });
         }
@@ -67,11 +64,13 @@ export default class TabContent extends Component {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
-                    <input type="text" ref="addUrlTextBox" className={addUrlClasses} placeholder="Enter url here" onBlur={()=> this._validateAndUpdateUrl(this.props)} onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/>
+                    <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder="Enter url here" onBlur={()=> this._validateAndUpdateUrl(this.props)} onKeyDown={(event) => this._onKeyDownTextBox(event, this.props)}/>
                     <div className="error-message">{this.state.errorMessage}</div>
                 </div>
             );
         }
+
+        let errorMsg = this.state.showUrlError ? <div className="spinner spinner-msg">{this.state.urlError}</div> : null;
 
         return (
             <div>
@@ -80,14 +79,15 @@ export default class TabContent extends Component {
                 </div>
                 <div className="url-panel">
                     <ul classaName="url-list">
-                                {this.props.content.map((urlObj, index) =>
-                                        <li key={index} className="feed-url">
-                                            <input type="text" className={urlObj.status} value={urlObj.url} onChange={this._onUrlChange} />
-                                            <i className="border-blue circle fa fa-close close circle"></i>
-                                        </li>
-                                )}
+                        {this.props.content.map((urlObj, index) =>
+                                <li key={index} className="feed-url">
+                                    <input type="text" className={urlObj.status} value={urlObj.url} onChange={this._onUrlChange} />
+                                    <i className="border-blue circle fa fa-close close circle"></i>
+                                </li>
+                        )}
                     </ul>
                 {inputBox}
+                {errorMsg}
                 </div>
             </div>
         );
