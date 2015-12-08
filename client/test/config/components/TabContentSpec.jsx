@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers:0 no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
 import "../../helper/TestHelper.js";
-import TabContent from "../../../src/js/config/components/TabControl/TabContent.jsx";
+import RSSComponent from "../../../src/js/config/components/RSSComponent.jsx";
 import { assert } from "chai";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
@@ -20,7 +20,7 @@ describe("Tab Content", ()=> {
             "addUrlLinkLabel": "Add Url Test"
         };
         tabContentComponent = TestUtils.renderIntoDocument(
-            <TabContent title={content.name} content={content.details} categoryName={content.name} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
+            <RSSComponent title={content.name} content={content.details} categoryName={content.name} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
         );
     });
 

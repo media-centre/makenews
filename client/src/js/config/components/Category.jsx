@@ -2,10 +2,14 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import CategoryNavigationHeader from "./CategoryNavigationHeader.jsx";
-import TabControl from "./TabControl/TabControl.jsx";
-import TabContent from "./TabControl/TabContent.jsx";
 import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } from "../actions/CategoryActions.js";
 import { connect } from "react-redux";
+import TabComponent from "../../utils/components/TabComponent/TabComponent.jsx";
+import RSSComponent from "./RSSComponent.jsx";
+
+const RSS = "rss";
+const FACEBOOK = "facebook";
+const TWITTER = "twitter";
 
 export default class Category extends Component {
     constructor(props) {
@@ -43,16 +47,22 @@ export default class Category extends Component {
     }
 
     render() {
+
+        let tabContent = Object.keys(this.props.categoryDetails.sources).map((key, index) => {
+            let item = this.props.categoryDetails.sources[key];
+            if(key === RSS) {
+                return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+            } else if(key === FACEBOOK) {
+                return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+            } else if(key === TWITTER) {
+                return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+            }
+        });
+
         return (
           <div className="category-page max-width">
               <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
-
-              <TabControl categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}>
-                  {Object.keys(this.props.categoryDetails.sources).map((key, index) =>
-                      <TabContent key={index} content={this.props.categoryDetails.sources[key].details} title={this.props.categoryDetails.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
-                  )}
-              </TabControl>
-
+              <TabComponent>{tabContent}</TabComponent>
           </div>
       );
     }
