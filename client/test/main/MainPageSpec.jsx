@@ -45,7 +45,7 @@ describe("main page component", () => {
     });
 
     it("should have headerStrings property for MainHeader component", () => {
-        assert.strictEqual("Surf", mainPage.refs.header.props.headerStrings.surfTab.Name);
+        assert.strictEqual("Surf",  mainPage.refs.header.props.headerStrings.surfTab.Name);
     });
 
 });

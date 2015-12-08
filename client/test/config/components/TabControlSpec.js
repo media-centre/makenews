@@ -10,13 +10,13 @@ import React from "react";
 
 
 describe("Tab Control", ()=> {
-    let content = {}, categoriyDetailsPageStrings = null;
+    let content = {}, categoryDetailsPageStrings = null;
     before(() => {
         content = {
             "details": [{ "_id": "id1", "url": "one detail" }],
             "name": "one"
         };
-        categoriyDetailsPageStrings = {
+        categoryDetailsPageStrings = {
             "allCategoriesLinkLabel": "All Categories Test",
             "deleteCategoryLinkLabel": "Delete Category Test",
             "addUrlLinkLabel": "Add Url Test"
@@ -38,7 +38,7 @@ describe("Tab Control", ()=> {
     it("should have atleast one TabContent", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content} categoryName={content.name} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+                <TabContent title={content.name} content={content} categoryName={content.name} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
             </TabControl>
         );
         assert.strictEqual(TabControlComponent.props.children.props.title, "one");
@@ -47,8 +47,8 @@ describe("Tab Control", ()=> {
     it("can have multiple TabContents", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
             </TabControl>
         );
 
@@ -59,8 +59,8 @@ describe("Tab Control", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
             </TabControl>
         );
         let tabHeader = ReactDOM.findDOMNode(TabControlComponent).querySelector(".tab");
@@ -73,8 +73,8 @@ describe("Tab Control", ()=> {
 
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
             </TabControl>
         );
         let userNameInputDOM = ReactDOM.findDOMNode(TabControlComponent).querySelector(".tab");
@@ -84,8 +84,8 @@ describe("Tab Control", ()=> {
     xit("should display corresponding contents on clicking tabs", ()=> {
         let TabControlComponent = TestUtils.renderIntoDocument(
             <TabControl>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
-                <TabContent title={content.name} content={content.details} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
+                <TabContent title={content.name} content={content.details} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
             </TabControl>
         );
 

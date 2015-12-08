@@ -45,11 +45,11 @@ export default class Category extends Component {
     render() {
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
+              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
 
-              <TabControl categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}>
+              <TabControl categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}>
                   {Object.keys(this.props.categoryDetails.sources).map((key, index) =>
-                      <TabContent key={index} content={this.props.categoryDetails.sources[key].details} title={this.props.categoryDetails.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoriyDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
+                      <TabContent key={index} content={this.props.categoryDetails.sources[key].details} title={this.props.categoryDetails.sources[key].name} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
                   )}
               </TabControl>
 

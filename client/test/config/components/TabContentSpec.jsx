@@ -8,23 +8,23 @@ import TestUtils from "react-addons-test-utils";
 
 
 describe("Tab Content", ()=> {
-    let content = {}, tabContentComponent = null, categoriyDetailsPageStrings = null;
+    let content = {}, tabContentComponent = null, categoryDetailsPageStrings = null;
     before("Tab Content", () => {
         content = {
             "details": [{ "_id": "id1", "url": "one detail" }],
             "name": "one"
         };
-        categoriyDetailsPageStrings = {
+        categoryDetailsPageStrings = {
             "allCategoriesLinkLabel": "All Categories Test",
             "deleteCategoryLinkLabel": "Delete Category Test",
             "addUrlLinkLabel": "Add Url Test"
         };
         tabContentComponent = TestUtils.renderIntoDocument(
-            <TabContent title={content.name} content={content.details} categoryName={content.name} categoriyDetailsPageStrings = {categoriyDetailsPageStrings}/>
+            <TabContent title={content.name} content={content.details} categoryName={content.name} categoryDetailsPageStrings = {categoryDetailsPageStrings}/>
         );
     });
 
     it("Should display Add Url text from the language file", () => {
-        assert.strictEqual(categoriyDetailsPageStrings.addUrlLinkLabel, tabContentComponent.refs.addUrlLinkTex.innerHTML);
+        assert.strictEqual(categoryDetailsPageStrings.addUrlLinkLabel, tabContentComponent.refs.addUrlLinkTex.innerHTML);
     });
 });

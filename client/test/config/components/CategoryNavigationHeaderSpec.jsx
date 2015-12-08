@@ -8,24 +8,24 @@ import TestUtils from "react-addons-test-utils";
 
 
 describe("CategoryNavigationHeader", ()=> {
-    let categoryNavigationHeaderComponent = null, categoriyDetailsPageStrings = null;
+    let categoryNavigationHeaderComponent = null, categoryDetailsPageStrings = null;
     before("CategoryNavigationHeader", () => {
-        categoriyDetailsPageStrings = {
+        categoryDetailsPageStrings = {
             "allCategoriesLinkLabel": "All Categories Test",
             "deleteCategoryLinkLabel": "Delete Category Test",
             "addUrlLinkLabel": "Add Url Test"
         };
         categoryNavigationHeaderComponent = TestUtils.renderIntoDocument(
-            <CategoryNavigationHeader categoryName="Test Category Name" categoriyDetailsPageStrings={categoriyDetailsPageStrings}/>
+            <CategoryNavigationHeader categoryName="Test Category Name" categoryDetailsPageStrings={categoryDetailsPageStrings}/>
         );
     });
 
     it("Should display all categories text from the language file", () => {
-        assert.strictEqual(categoriyDetailsPageStrings.allCategoriesLinkLabel, categoryNavigationHeaderComponent.refs.allCategoriesLinkLabel.innerHTML);
+        assert.strictEqual(categoryDetailsPageStrings.allCategoriesLinkLabel, categoryNavigationHeaderComponent.refs.allCategoriesLinkLabel.innerHTML);
     });
 
     it("Should display delete category text from the language file", () => {
-        assert.strictEqual(categoriyDetailsPageStrings.deleteCategoryLinkLabel, categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel.innerHTML);
+        assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel.innerHTML);
     });
 
 });

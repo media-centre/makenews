@@ -36,14 +36,14 @@ class CategoryNavigationHeader extends Component {
             </div>
             <div className="error-msg t-center">{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoriyDetailsPageStrings.deleteCategoryLinkLabel}</button>;
+        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 
         return (
 
             <div className="navigation-header clear-fix">
                 <Link to="/configure/categories" className="navigation nav-control h-center left" id="allCategoriesButton">
                     <i className="fa fa-arrow-left"></i>
-                    <span ref="allCategoriesLinkLabel">{this.props.categoriyDetailsPageStrings.allCategoriesLinkLabel}</span>
+                    <span ref="allCategoriesLinkLabel">{this.props.categoryDetailsPageStrings.allCategoriesLinkLabel}</span>
                 </Link>
                 {deleteElement}
                 {titleElement}
@@ -61,10 +61,10 @@ CategoryNavigationHeader.propTypes = {
     "editableHeader": PropTypes.bool,
     "isDefault": PropTypes.bool,
     "errorMessage": PropTypes.string,
-    "categoriyDetailsPageStrings": PropTypes.object.isRequired
+    "categoryDetailsPageStrings": PropTypes.object.isRequired
 };
 
-CategoryNavigationHeader.DefaultProps = {
+CategoryNavigationHeader.defaultProps = {
     "categoryName": "",
     "editableHeader": false,
     "isDefault": false,
