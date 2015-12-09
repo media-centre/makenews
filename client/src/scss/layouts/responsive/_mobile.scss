@@ -65,10 +65,15 @@
   }
 
   .main-page {
-    header  .fixed-header .user-info {
-      position: absolute;
-      right: 15px;
-    }
+    header {
+      .fixed-header .user-info {
+        position: absolute;
+        right: 15px;
+      }
+      .app-logo-container {
+        display: none;
+      }
+  }
 
     section > div {
       padding: 15px;
