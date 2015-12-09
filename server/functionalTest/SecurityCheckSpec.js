@@ -133,7 +133,7 @@ describe("SecurityCheckSpec", () => {
                 .post("/")
                 .end((err, res) => {
                     expect(res.headers).to.have.property("x-xss-protection");
-                    assert.equal(res.headers["x-xss-protection"], " 1; mode=block");
+                    assert.equal(res.headers["x-xss-protection"], "1; mode=block");
                     done();
                 });
         });
@@ -142,7 +142,7 @@ describe("SecurityCheckSpec", () => {
                 .post("/rss-feeds")
                 .end((err, res) => {
                     expect(res.headers).to.have.property("x-xss-protection");
-                    assert.equal(res.headers["x-xss-protection"], " 1; mode=block");
+                    assert.equal(res.headers["x-xss-protection"], "1; mode=block");
                     done();
                 });
         });
@@ -151,7 +151,7 @@ describe("SecurityCheckSpec", () => {
                 .post("/login")
                 .end((err, res) => {
                     expect(res.headers).to.have.property("x-xss-protection");
-                    assert.equal(res.headers["x-xss-protection"], " 1; mode=block");
+                    assert.equal(res.headers["x-xss-protection"], "1; mode=block");
                     done();
                 });
         });
@@ -162,7 +162,7 @@ describe("SecurityCheckSpec", () => {
                 .send(user)
                 .end((err, res) => {
                     expect(res.headers).to.have.property("x-xss-protection");
-                    assert.equal(res.headers["x-xss-protection"], " 1; mode=block");
+                    assert.equal(res.headers["x-xss-protection"], "1; mode=block");
                     done();
                 });
         });

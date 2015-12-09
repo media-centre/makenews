@@ -11,9 +11,6 @@ import { expect } from "chai";
 
 describe("RssReaderSpec", () => {
     describe("RssReaderRoutes", () => {
-        afterEach("RssReaderRoutes", () => {
-            server.close();
-        });
         it("responds to /rss-feeds with 401 if user is not logged in", (done) => {
             request(server)
                 .get("/rss-feeds")
