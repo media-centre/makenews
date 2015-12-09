@@ -43,8 +43,12 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static addRssUrlConfiguration(categoryId, url, status, feedItems) {
-        let rssConfigDocument = CategoryDocument.getNewRssDocumnet(categoryId, url, status, feedItems);
+    static addRssUrlConfiguration(categoryId, url, status) {
+        let rssConfigDocument = CategoryDocument.getNewRssDocumnet(categoryId, url, status);
         return CategoryDb.createOrUpdateSource(rssConfigDocument);
+    }
+
+    static addRssFeeds(sourceId, feeds) {
+        return CategoryDb.createFeeds(CategoryDocument.getNewFeedDocuments(sourceId, feeds));
     }
 }

@@ -50,6 +50,13 @@ export default class PouchClient {
                 reject(error);
             });
         });
+    }
 
+    static createBulkDocuments(jsonDocument) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().bulkDocs(jsonDocument).then(response => {
+                resolve(response);
+            });
+        });
     }
 }

@@ -2,7 +2,7 @@
 
 "use strict";
 import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
-import { assert } from "chai";
+import { assert, expect} from "chai";
 
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
@@ -25,31 +25,15 @@ describe("CategoryDocument", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
             let status = STATUS_VALID;
-            let feedItems = [{ "title": "sports", "description": "desc" }];
             let expectedDocument =
                 {
                     "docType": "source",
                     "sourceType": "rss",
                     "url": url,
                     "categoryIds": [categoryId],
-                    "status": status,
-                    "feedItems": feedItems
+                    "status": status
                 };
-            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status, feedItems));
-        });
-
-        it("should not set feedItems if status is invalid", () => {
-            let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
-            let url = "test url";
-            let expectedDocument =
-                {
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": url,
-                    "categoryIds": [categoryId],
-                    "status": STATUS_INVALID
-                };
-            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, STATUS_INVALID));
+            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status));
         });
 
         it("should throw an error if the url or category id is empty", () => {
@@ -57,6 +41,62 @@ describe("CategoryDocument", () => {
                 CategoryDocument.getNewRssDocumnet("", "");
             };
             assert.throw(newRssDocumentCallback, "category id or url can not be empty");
+        });
+    });
+
+    describe("getNewFeedDocuments", ()=> {
+        it("should return feeds with given source id", ()=> {
+            let sourceId = "sourceId";
+            let feeds = [
+                {
+                    "title": "sports - cricket",
+                    "description": "desc",
+                    "guid": "sportsGuid1"
+                },
+                {
+                    "title": "sports - football",
+                    "description": "desc",
+                    "guid": "sportsGuid2"
+                }];
+
+            let expectedFeeds = [
+                {
+                    "docType": "feed",
+                    "sourceId": sourceId,
+                    "title": "sports - cricket",
+                    "description": "desc",
+                    "guid": "sportsGuid1"
+                },
+                {
+                    "docType": "feed",
+                    "sourceId": sourceId,
+                    "title": "sports - football",
+                    "description": "desc",
+                    "guid": "sportsGuid2"
+                }];
+            let newFeeds = CategoryDocument.getNewFeedDocuments(sourceId, feeds);
+            expect(newFeeds).to.deep.equal(expectedFeeds);
+        });
+
+        it("should throw an error if the sourceId is empty", () => {
+            let newFeedDocumentCallback = function() {
+                CategoryDocument.getNewFeedDocuments("", [{"id": 1}]);
+            };
+            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+        });
+
+        it("should throw an error if the feeds is empty", () => {
+            let newFeedDocumentCallback = function() {
+                CategoryDocument.getNewFeedDocuments("test", []);
+            };
+            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+        });
+
+        it("should throw an error if the feeds is undefined", () => {
+            let newFeedDocumentCallback = function() {
+                CategoryDocument.getNewFeedDocuments("test");
+            };
+            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
         });
     });
 });

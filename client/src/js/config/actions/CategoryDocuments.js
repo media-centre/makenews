@@ -19,7 +19,7 @@ export class CategoryDocument {
         return new Date().getTime();
     }
 
-    static getNewRssDocumnet(categoryId, url, status, feedItems) {
+    static getNewRssDocumnet(categoryId, url, status) {
         if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
             throw new Error("category id or url can not be empty");
         }
@@ -30,9 +30,19 @@ export class CategoryDocument {
             "categoryIds": [categoryId],
             "status": status
         };
-        if(status === STATUS_VALID) {
-            rssDoc.feedItems = feedItems;
-        }
         return rssDoc;
+    }
+
+    static getNewFeedDocuments(sourceId, feeds) {
+        if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
+            throw new Error("source id or feeds can not be empty");
+        }
+
+        let resultFeeds = feeds;
+        resultFeeds.forEach((feed)=> {
+            feed.docType = "feed";
+            feed.sourceId = sourceId;
+        });
+        return resultFeeds;
     }
 }

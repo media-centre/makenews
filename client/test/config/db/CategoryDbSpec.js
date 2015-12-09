@@ -301,7 +301,6 @@ describe("CategoryDb", () => {
     });
 
     describe("updateCategory", ()=> {
-
         it("should update the category passed", (done)=> {
             let document = { "docType": "category", "name": "test", "createdTime": 1448554080663, "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "_rev": "3-c8b00a32dc84b286d914816b51f7f52e" };
             let response = { "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "rev": "modified" };
@@ -325,6 +324,27 @@ describe("CategoryDb", () => {
                 done();
             });
         });
+    });
 
+    describe("createFeeds", () => {
+        it("should create all the feeds in the json", () => {
+            let jsonDocument = [
+                {
+                    "_id": "guid1",
+                    "docType": "feed",
+                    "title": "www.google.com/rss"
+                },
+                {
+                    "_id": "guid2",
+                    "docType": "feed",
+                    "title": "www.hindu.com/rss"
+                }];
+
+            let createMock = sinon.mock(PouchClient).expects("createBulkDocuments").withArgs(jsonDocument).returns(Promise.resolve([{ "id": "1", "ok": true }, { "id": "2", "ok": true }]));
+            return CategoryDb.createFeeds(jsonDocument).then(() => {
+                createMock.verify();
+                PouchClient.createBulkDocuments.restore();
+            });
+        });
     });
 });

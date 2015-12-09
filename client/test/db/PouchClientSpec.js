@@ -222,4 +222,53 @@ describe("PouchClient", () => {
             });
         });
     });
+
+    describe("createBulkDocuments", () => {
+        it("should create all the documents with the given json object", () => {
+            let jsonDocument = [
+                {
+                    "_id": "guid1",
+                    "docType": "feed",
+                    "title": "www.google.com/rss"
+                },
+                {
+                    "_id": "guid2",
+                    "docType": "feed",
+                    "title": "www.hindu.com/rss"
+                }];
+
+            return PouchClient.createBulkDocuments(jsonDocument).then((response) => {
+                let expectedIds = ["guid1", "guid2"];
+                expect(response.length).to.eq(2);
+                expect(response.map(resp => {
+                    return resp.id;
+                })).to.deep.eq(expectedIds);
+                expect(response[0].rev).not.to.be.undefined;
+                expect(response[1].rev).not.to.be.undefined;
+            });
+        });
+
+        xit("should reject with the error in case of error while creating the documents", (done) => {
+            DbSession.instance().put({
+                    "docType": "feed",
+                    "title": "www.google.com/rss"
+                }
+                , "guid1");
+
+            let jsonDocument = [
+                {
+                    "_id": "guid1",
+                    "docType": "feed",
+                    "title": "www.google.com/rss"
+                },
+                {
+                    "_id": "guid2",
+                    "docType": "feed",
+                    "title": "www.hindu.com/rss"
+                }];
+
+            PouchClient.createBulkDocuments(jsonDocument).then( response => {
+            });
+        });
+    });
 });

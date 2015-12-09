@@ -37,7 +37,8 @@ export function addRssUrlAsync(categoryId, url, callback) {
 }
 
 function addRssUrlDocument(dispatch, categoryId, url, status, responseFeed) {
-    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status, responseFeed).then(response => {
+    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status).then(response => {
+        CategoriesApplicationQueries.addRssFeeds(response.id, responseFeed);
         dispatch(populateCategoryDetailsAsync(categoryId));
     });
 }

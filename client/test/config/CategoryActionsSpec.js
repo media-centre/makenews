@@ -51,11 +51,12 @@ describe("addRssUrlAsync", () => {
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration");
-        categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_VALID, responseJson.items).returns(Promise.resolve("response"));
+        categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_VALID).returns(Promise.resolve("response"));
+        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url))).then(() => {
+        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
             categoriesApplicationQueriesMock.verify();
         });
     });
@@ -77,6 +78,7 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve({ "data": "feeds" }));
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_VALID).returns(Promise.resolve("response"));
 
@@ -94,6 +96,7 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
 
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_INVALID).returns(Promise.resolve("response"));
@@ -102,6 +105,28 @@ describe("addRssUrlAsync", () => {
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url))).then(() => {
             categoriesApplicationQueriesMock.verify();
+        });
+    });
+
+    it("should create rss source and then create the feeds", (done) => {
+        let categoryId = "categoryId";
+        let url = "www.hindu.com";
+        let allSources = [{ "url": url, "docType": "sources" }];
+        let responseJson = { "items": [{ "title": "hindu football" }, { "title": "cricket" }] };
+        let sourceId = "sourceId";
+        ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
+
+        sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssUrlConfiguration");
+        categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_VALID).returns(Promise.resolve({ "id": sourceId, "ok": true }));
+        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssFeeds");
+        categoriesApplicationQueriesCreateFeedsMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
+
+        let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
+        const store = mockStore(categorySourceConfig, expectedActions, done);
+        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
+            categoriesApplicationQueriesMock.verify();
+            categoriesApplicationQueriesCreateFeedsMock.verify();
         });
     });
 

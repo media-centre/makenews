@@ -145,4 +145,8 @@ export default class CategoryDb {
             });
         });
     }
+
+    static createFeeds(feedDocuments) {
+        return PouchClient.createBulkDocuments(feedDocuments);
+    }
 }
