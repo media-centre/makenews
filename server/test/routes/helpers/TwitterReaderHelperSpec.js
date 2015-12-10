@@ -4,12 +4,13 @@ import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterReaderHelper, { baseURL, searchApi } from "../../../src/routes/helpers/TwitterReaderHelper";
 
-
-
 describe("TwitterReaderHelper", () => {
     function mockTwitterRequest() {
-        return nock(baseURL)
-            .get(searchApi);
+        return nock(baseURL, {
+            "reqheaders": {
+                "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
+            }
+        }).get(searchApi);
     }
 
     function mockResponse(done, expectedValues) {
@@ -48,7 +49,7 @@ describe("TwitterReaderHelper", () => {
     });
 
     it("should return data if the url is valid", (done) => {
-        let expectedData = { "items": [{ "id": 1, "text": "Tweet 2" }, { "id": 2, "text": "Tweet 3" }] };
+        let expectedData = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, { "id": 2, "id_str": "124", "text": "Tweet 2" }] };
         let request = {
             "query": {
                 "url": "@the_hindu"
