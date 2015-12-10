@@ -22,11 +22,10 @@ export default class TwitterReaderHelper {
                 (error, response) => {
                     if(error) {
                         this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": "Request failed for twitter handler " + url });
-                    }
-                    else if(response.statusCode !== HttpResponseHandler.codes.OK) {
-                        this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": url + " is not a valid twitter handler" });
-                    } else {
+                    } else if(response.statusCode === HttpResponseHandler.codes.OK) {
                         this.setResponse(HttpResponseHandler.codes.OK, response.body);
+                    } else {
+                        this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": url + " is not a valid twitter handler" });
                     }
                 }
             );
