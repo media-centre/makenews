@@ -6,6 +6,7 @@ import { Link } from "react-router";
 export default class Logout extends Component {
     _logout() {
         localStorage.setItem("userInfo", "");
+        location.reload();
     }
 
     render() {
