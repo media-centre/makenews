@@ -17,7 +17,11 @@ export default class TwitterReaderHelper {
         if(StringUtil.isEmptyString(url)) {
             this.setResponse(HttpResponseHandler.codes.OK, {});
         } else {
-            let options = { "uri": baseURL + searchApi, "qs": { "q": url }, "json": true };
+            let options = { "uri": baseURL + searchApi, "qs": { "q": url }, "json": true, "headers": {
+                "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
+            }
+            };
+
             restRequest.get(options,
                 (error, response) => {
                     if(error) {
