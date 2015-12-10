@@ -7,82 +7,84 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 describe("SurfApplicationQueries", () => {
-    describe("fetchAllSourcesWithCategoryName", () => {
-        it("should fetch all sources and return with category name", () => {
-            let resultDocs = [
-                {
-                    "_id": "sourceId1",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.hindu.com/rss",
-                    "categoryIds": ["sportsCategoryId1"]
+    describe("allFeedsWithCategoryNames", () => {
+        it("should fetch all feeds and return with category name", () => {
+            let resultDocs = [{
+                "key": "fbId1",
+                "id": "fbId1",
+                "value": {
+                    "_id": "sportsCategoryId1"
                 },
-                {
-                    "_id": "sourceId2",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.guardian.com/rss",
-                    "categoryIds": ["sportsCategoryId1", "politicsCategoryId1"]
-                },
-                {
-                    "_id": "sourceId3",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.hindu.com/politics/rss",
-                    "categoryIds": ["politicsCategoryId1"]
-                },
-                {
+                "doc": {
+                    "docType": "category",
+                    "name": "Sports",
                     "_id": "sportsCategoryId1",
-                    "docType": "category",
-                    "name": "Sports"
-                },
-                {
-                    "_id": "politicsCategoryId1",
-                    "docType": "category",
-                    "name": "Politics"
+                    "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
                 }
-            ];
-            let expectedSources = [{
-                "_id": "sourceId1",
-                "docType": "source",
-                "sourceType": "rss",
-                "url": "www.hindu.com/rss",
-                "categoryIds": ["sportsCategoryId1"],
-                "categoryNames": ["Sports"]
-            },
-                {
-                    "_id": "sourceId2",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.guardian.com/rss",
-                    "categoryIds": ["sportsCategoryId1", "politicsCategoryId1"],
-                    "categoryNames": ["Sports", "Politics"]
-                },
-                {
-                    "_id": "sourceId3",
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.hindu.com/politics/rss",
-                    "categoryIds": ["politicsCategoryId1"],
-                    "categoryNames": ["Politics"]
+            }, {
+                "key": "rssId1",
+                "id": "feedId1",
+                "value": null,
+                "doc": {
+                    "docType": "feed",
+                    "title": "tn",
+                    "description": "www.facebookpolitics.com",
+                    "sourceId": "rssId1",
+                    "_id": "feedId1",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
                 }
-            ];
+            }, {
+                "key": "rssId1",
+                "id": "rssId1",
+                "value": {
+                    "_id": "sportsCategoryId1"
+                },
+                "doc": {
+                    "docType": "category",
+                    "name": "Sports",
+                    "_id": "sportsCategoryId1",
+                    "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
+                }
+            }, {
+                "key": "rssId2",
+                "id": "rssId2",
+                "value": {
+                    "_id": "politicsCategoryId2"
+                },
+                "doc": {
+                    "docType": "category",
+                    "name": "Politics",
+                    "_id": "politicsCategoryId2",
+                    "_rev": "1-175853337b49fcd1db6474777f871d4a"
+                }
+            }];
 
-            let fetchAllSourcesWithCategoriesMock = sinon.mock(SurfDb).expects("fetchAllSourcesWithCategories");
+
+            let expectedSources = [{
+                "docType": "feed",
+                "title": "tn",
+                "description": "www.facebookpolitics.com",
+                "sourceId": "rssId1",
+                "_id": "feedId1",
+                "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                "categoryNames": ["Sports"]
+            }];
+
+            let fetchAllSourcesWithCategoriesMock = sinon.mock(SurfDb).expects("fetchAllFeedsAndCategoriesWithSource");
             fetchAllSourcesWithCategoriesMock.returns(Promise.resolve(resultDocs));
-            return SurfApplicationQueries.fetchAllSourcesWithCategoryName().then(sources => {
+            return SurfApplicationQueries.fetchAllFeedsWithCategoryName().then(sources => {
                 expect(expectedSources).to.deep.equal(sources);
                 fetchAllSourcesWithCategoriesMock.verify();
-                SurfDb.fetchAllSourcesWithCategories.restore();
+                SurfDb.fetchAllFeedsAndCategoriesWithSource.restore();
             });
         });
 
         it("should reject with error if fetching documents fails", () => {
-            let fetchAllSourcesWithCategoriesStub = sinon.stub(SurfDb, "fetchAllSourcesWithCategories");
+            let fetchAllSourcesWithCategoriesStub = sinon.stub(SurfDb, "fetchAllFeedsAndCategoriesWithSource");
             fetchAllSourcesWithCategoriesStub.returns(Promise.reject("error"));
-            return SurfApplicationQueries.fetchAllSourcesWithCategoryName().catch(error => {
+            return SurfApplicationQueries.fetchAllFeedsWithCategoryName().catch(error => {
                 expect(error).to.eq("error");
-                SurfDb.fetchAllSourcesWithCategories.restore();
+                SurfDb.fetchAllFeedsAndCategoriesWithSource.restore();
             });
         });
     });

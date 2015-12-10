@@ -12,74 +12,50 @@ describe("Surf Reducer", () => {
             expect({ "feeds": new List([]) }).to.deep.equal(allFeeds());
         });
 
-        xit("return feeds from sources", () => {
-            let sources = [
+        it("return feeds in required format", () => {
+            let feeds = [
                 {
-                    "_id": "sourceId1",
-                    "docType": "source",
-                    "type": "rss",
-                    "url": "www.hindu.com/rss",
-                    "categoryIds": ["sportsCategoryId"],
-                    "categoryNames": ["sportsCategory"],
-                    "feedItems": [{
-                        "title": "cricket",
-                        "description": "feed1 description",
-                        "tags": []
-                    }, {
-                        "title": "football",
-                        "description": "feed2 description",
-                        "tags": []
-                    }]
+                    "docType": "feed",
+                    "title": "tn",
+                    "description": "www.facebookpolitics1.com",
+                    "sourceId": "rssId1",
+                    "_id": "feedId1",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                    "categoryNames": ["Sports"],
+                    "pubDate": "Thu Dec 10 2015 14:27:37 GMT+0530 (IST)"
                 },
                 {
-                    "_id": "sourceId2",
-                    "docType": "source",
-                    "type": "rss",
-                    "url": "www.guardian.com/rss",
-                    "categoryIds": ["politicsCategoryId"],
-                    "categoryNames": ["politicsCategory"],
-                    "feedItems": [{
-                        "title": "Tamilnadu",
-                        "description": "tn desc",
-                        "tags": []
-                    }, {
-                        "title": "Andhra",
-                        "description": "AP desc",
-                        "tags": []
-                    }]
+                    "docType": "feed",
+                    "title": "tn",
+                    "description": "www.facebookpolitics2.com",
+                    "sourceId": "rssId1",
+                    "_id": "feedId2",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                    "categoryNames": ["Sports", "Politics"]
                 }
             ];
-            let action = { "type": DISPLAY_ALL_FEEDS, "sources": sources };
+            let action = { "type": DISPLAY_ALL_FEEDS, "feeds": feeds };
             let expectedfeeds = {
-                "feeds": [{
-                    "content": "feed1 description",
-                    "type": "description",
-                    "feedType": "rss",
-                    "name": "sportsCategory",
-                    "title": "cricket",
-                    "tags": []
-                }, {
-                    "content": "feed2 description",
-                    "type": "description",
-                    "feedType": "rss",
-                    "name": "sportsCategory",
-                    "title": "football",
-                    "tags": []
-                }, {
-                    "content": "tn desc",
-                    "type": "description",
-                    "feedType": "rss",
-                    "name": "politicsCategory",
-                    "title": "Tamilnadu",
-                    "tags": []
-                }, {
-                    "content": "AP desc",
-                    "type": "description",
-                    "feedType": "rss",
-                    "name": "politicsCategory",
-                    "title": "Andhra",
-                    "tags": []
-                }]
+                "feeds": [
+                    {
+                        "content": "www.facebookpolitics1.com",
+                        "feedType": "rss",
+                        "name": "Sports",
+                        "tags": [
+                            "Dec 10 2015    14:27:37"
+                        ],
+                        "title": "tn",
+                        "type": "description"
+                    },
+                    {
+                        "content": "www.facebookpolitics2.com",
+                        "feedType": "rss",
+                        "name": "Sports, Politics",
+                        "tags": [""],
+                        "title": "tn",
+                        "type": "description"
+                    }
+                ]
             };
             expect(expectedfeeds).to.deep.equal(allFeeds(undefined, action));
         });

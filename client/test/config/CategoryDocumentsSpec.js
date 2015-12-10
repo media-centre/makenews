@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
-import { assert, expect} from "chai";
+import { CategoryDocument, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
+import { assert, expect } from "chai";
 
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
@@ -80,7 +80,7 @@ describe("CategoryDocument", () => {
 
         it("should throw an error if the sourceId is empty", () => {
             let newFeedDocumentCallback = function() {
-                CategoryDocument.getNewFeedDocuments("", [{"id": 1}]);
+                CategoryDocument.getNewFeedDocuments("", [{ "id": 1 }]);
             };
             assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
         });

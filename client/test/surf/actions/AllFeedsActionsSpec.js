@@ -9,7 +9,7 @@ import sinon from "sinon";
 
 describe("AllFeedsAction", () => {
     it("return type DISPLAY_ALL_FEEDS action", () => {
-        let sources = [
+        let feeds = [
             {
                 "url": "www.hindu.com",
                 "categoryNames": ["hindu"],
@@ -23,12 +23,12 @@ describe("AllFeedsAction", () => {
             }];
 
 
-        let displayAllFeedsAction = { "type": DISPLAY_ALL_FEEDS, "sources": sources };
-        expect(displayAllFeeds(sources)).to.deep.equal(displayAllFeedsAction);
+        let displayAllFeedsAction = { "type": DISPLAY_ALL_FEEDS, "feeds": feeds };
+        expect(displayAllFeeds(feeds)).to.deep.equal(displayAllFeedsAction);
     });
 
     it("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
-        let sources = [
+        let feeds = [
             {
                 "url": "www.hindu.com",
                 "categoryNames": ["hindu"],
@@ -37,24 +37,24 @@ describe("AllFeedsAction", () => {
                 ]
             }
         ];
-        let fetchAllSourcesWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllSourcesWithCategoryName");
-        fetchAllSourcesWithCategoryNameMock.returns(Promise.resolve(sources));
+        let fetchAllFeedsWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllFeedsWithCategoryName");
+        fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(feeds));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "sources": sources }], done);
+        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
         return Promise.resolve(store.dispatch(displayAllFeedsAsync())).then(() => {
-            fetchAllSourcesWithCategoryNameMock.verify();
-            SurfApplicationQueries.fetchAllSourcesWithCategoryName.restore();
+            fetchAllFeedsWithCategoryNameMock.verify();
+            SurfApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
     });
 
     it("dispatch displayAllFeedsAsync action with empty feeds on fetch failure", (done) => {
-        let fetchAllSourcesWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllSourcesWithCategoryName");
-        fetchAllSourcesWithCategoryNameMock.returns(Promise.reject("error"));
+        let fetchAllFeedsWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllFeedsWithCategoryName");
+        fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "sources": {} }], done);
+        let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "feeds": [] }], done);
         return Promise.resolve(store.dispatch(displayAllFeedsAsync())).then(() => {
-            fetchAllSourcesWithCategoryNameMock.verify();
-            SurfApplicationQueries.fetchAllSourcesWithCategoryName.restore();
+            fetchAllFeedsWithCategoryNameMock.verify();
+            SurfApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
     });
 });

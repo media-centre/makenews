@@ -10,7 +10,7 @@ export default class FeedHeader extends Component {
         return (
             <div className="feed-header border-bottom box h-center">
                 <span className="icon-container header-item"><i className={"feed-icon fa fa-" + this.props.feedType.toLowerCase()}></i></span>
-                <span className="category-name header-item">{this.props.categoryName}</span>
+                <span className="category-name header-item">{this.props.categoryNames}</span>
                 <ul className="h-center header-item">
                     {tags}
                 </ul>
@@ -23,6 +23,6 @@ FeedHeader.displayName = "FeedHeader";
 
 FeedHeader.propTypes = {
     "feedType": PropTypes.string,
-    "categoryName": PropTypes.string,
+    "categoryNames": PropTypes.string,
     "tags": PropTypes.array
 };

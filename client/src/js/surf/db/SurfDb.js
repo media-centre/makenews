@@ -4,7 +4,7 @@
 import PouchClient from "../../db/PouchClient.js";
 
 export default class SurfDb {
-    static fetchAllSourcesWithCategories() {
-        return PouchClient.fetchDocuments("category/allSourcesWithCategories", { "include_docs": true });
+    static fetchAllFeedsAndCategoriesWithSource() {
+        return PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true });
     }
 }

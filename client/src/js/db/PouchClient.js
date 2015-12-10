@@ -22,6 +22,20 @@ export default class PouchClient {
         });
     }
 
+    static fetchLinkedDocuments(queryPath, options) {
+        return new Promise((resolve, reject) => {
+            DbSession.instance().query(queryPath, options).then(result => {
+                resolve(result.rows);
+            }).catch((error) => {
+                if(error.status === HttpResponseHandler.codes.NOT_FOUND) {
+                    resolve([]);
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
     static createDocument(jsonDocument) {
         return new Promise((resolve, reject) => {
             DbSession.instance().post(jsonDocument).then(response => {

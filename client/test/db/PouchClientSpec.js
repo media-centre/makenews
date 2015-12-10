@@ -36,7 +36,7 @@ describe("PouchClient", () => {
             "docType": "source",
             "sourceType": "rss",
             "url": "www.hindu.com/rss",
-            "categoryIds": ["sportsCategoryId1"]
+            "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
         }
             , "rssId1");
 
@@ -50,11 +50,19 @@ describe("PouchClient", () => {
 
         DbSession.instance().put({
             "docType": "source",
-            "sourceType": "facebook",
+            "sourceType": "rss",
             "url": "www.facebookpolitics.com",
             "categoryIds": ["politicsCategoryId2"]
         }
-            , "fbId2");
+            , "rssId2");
+
+        DbSession.instance().put({
+            "docType": "feed",
+            "title": "tn",
+            "description": "www.facebookpolitics.com",
+            "sourceId": "rssId1"
+        }
+            , "feedId1");
 
         DbSession.instance().put({
             "language": "javascript",
@@ -71,8 +79,8 @@ describe("PouchClient", () => {
                 "allSourcesByUrl": {
                     "map": "function(doc) { if(doc.docType === 'source') {emit(doc.url, doc)} }"
                 },
-                "allSourcesWithCategories": {
-                    "map": "function(doc) { if (doc.docType == 'category') { emit([doc._id, 0], doc); } else if (doc.docType == 'source') { emit([doc.category_id, 1], doc);}}"
+                "allFeedsAndCategoriesWithSource": {
+                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed') { emit(doc.sourceId, null);}}"
                 }
             } }, "_design/category");
     });
@@ -142,14 +150,20 @@ describe("PouchClient", () => {
             });
         });
 
-        describe("allSourcesWithCategories", () => {
-            it("should index all sources for all categories by category id", (done) => {
-                PouchClient.fetchDocuments("category/allSourcesWithCategories", { "include_docs": true }).then((docs) => {
-                    let resultDocTypes = docs.map(doc => {
-                        return doc.docType;
+        describe("allFeedsAndCategoriesWithSource", () => {
+            it("should index all feeds for all categories by category id", (done) => {
+                PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).then((doc) => {
+                    expect(doc.map((item)=> {
+                        return item.key;
+                    })).to.deep.eq(["fbId1", "rssId1", "rssId1", "rssId1", "rssId2"]);
+
+                    let rssSourceRelatedDocTypes = doc.map(relatedDoc => {
+                        return relatedDoc.doc.docType;
                     });
-                    expect(resultDocTypes).to.include("category");
-                    expect(resultDocTypes).to.include("source");
+
+                    expect(doc[0].doc.docType).not.to.eq("feed");
+                    expect(rssSourceRelatedDocTypes).to.include("category");
+                    expect(rssSourceRelatedDocTypes).to.include("feed");
                     done();
                 });
             });
@@ -250,10 +264,9 @@ describe("PouchClient", () => {
 
         xit("should reject with the error in case of error while creating the documents", (done) => {
             DbSession.instance().put({
-                    "docType": "feed",
-                    "title": "www.google.com/rss"
-                }
-                , "guid1");
+                "docType": "feed",
+                "title": "www.google.com/rss"
+            }, "guid1");
 
             let jsonDocument = [
                 {
@@ -267,7 +280,8 @@ describe("PouchClient", () => {
                     "title": "www.hindu.com/rss"
                 }];
 
-            PouchClient.createBulkDocuments(jsonDocument).then( response => {
+            PouchClient.createBulkDocuments(jsonDocument).then(() => {
+                done();
             });
         });
     });

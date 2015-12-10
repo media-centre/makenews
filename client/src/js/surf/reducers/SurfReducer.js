@@ -8,7 +8,7 @@ const NEGATIVE_INDEX = -1;
 export function allFeeds(state = { "feeds": List([]) }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
-        return presentableItemsFromSources(action.sources);
+        return presentableItemsFromSources(action.feeds);
     default:
         return state;
     }
@@ -22,17 +22,16 @@ function getDateAndTime(dateString) {
 
 }
 
-function createFeed(feed, source) {
+function createFeed(feed) {
     let feedObj = {
         "type": "description",
         "title": feed.title,
         "feedType": "rss",
-        "name": source.categoryNames[0],
+        "name": feed.categoryNames.join(", "),
         "content": feed.description,
-        "tags": [getDateAndTime(feed.pubDate)]
+        "tags": feed.pubDate ? [getDateAndTime(feed.pubDate)] : [""]
     };
     if(feed.enclosures && feed.enclosures.length > 0) {
-
         if(feed.enclosures.length === 1) {
             feedObj.type = "imagecontent";
             if(feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
@@ -51,14 +50,10 @@ function createFeed(feed, source) {
     return feedObj;
 }
 
-function presentableItemsFromSources(sources = []) {
-    let feeds = [];
-    sources.forEach(source => {
-        if(source.feedItems) {
-            source.feedItems.forEach(feedItem => {
-                feeds.push(createFeed(feedItem, source));
-            });
-        }
+function presentableItemsFromSources(feeds = []) {
+    let feedResult = [];
+    feeds.forEach(feed => {
+        feedResult.push(createFeed(feed));
     });
-    return { "feeds": feeds };
+    return { "feeds": feedResult };
 }

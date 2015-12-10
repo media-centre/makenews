@@ -4,22 +4,27 @@
 import SurfDb from "./SurfDb.js";
 
 export default class SurfApplicationQueries {
-    static fetchAllSourcesWithCategoryName() {
+    static fetchAllFeedsWithCategoryName() {
         return new Promise((resolve, reject) => {
-            SurfDb.fetchAllSourcesWithCategories().then((sourcesCategoriesDocs) => {
-                let sourcesDocs = sourcesCategoriesDocs.filter(sourcesCategoriesDoc => {
-                    return sourcesCategoriesDoc.docType === "source";
+            SurfDb.fetchAllFeedsAndCategoriesWithSource().then((feedsAndCategoriesDocs) => {
+                let feeds = [], mapOfSource = {};
+                feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
+                    if(feedsAndCategoriesDoc.doc.docType === "category") {
+                        if (mapOfSource[feedsAndCategoriesDoc.key]) {
+                            mapOfSource[feedsAndCategoriesDoc.key].push(feedsAndCategoriesDoc.doc.name);
+                        } else {
+                            mapOfSource[feedsAndCategoriesDoc.key] = [feedsAndCategoriesDoc.doc.name];
+                        }
+                    }
                 });
-                sourcesDocs.forEach(sourceDoc => {
-                    let categoriesOfSource = sourcesCategoriesDocs.filter(sourcesCategoriesDoc => {
-                        return sourceDoc.categoryIds.includes(sourcesCategoriesDoc._id);
-                    });
-                    sourceDoc.categoryNames = categoriesOfSource.map(category => {
-                        return category.name;
-                    });
-                    return sourceDoc;
+
+                feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
+                    if (feedsAndCategoriesDoc.doc.docType === "feed") {
+                        feedsAndCategoriesDoc.doc.categoryNames = mapOfSource[feedsAndCategoriesDoc.key];
+                        feeds.push(feedsAndCategoriesDoc.doc);
+                    }
                 });
-                resolve(sourcesDocs);
+                resolve(feeds);
             }).catch((error) => {
                 reject(error);
             });

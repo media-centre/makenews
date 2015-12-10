@@ -7,12 +7,12 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 describe("SurfDb", () => {
-    describe("fetchAllSourcesWithCategories", () => {
-        it("should fetch all sources with category documents", (done) => {
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allSourcesWithCategories", { "include_docs": true }).returns(Promise.resolve(""));
-            SurfDb.fetchAllSourcesWithCategories().then(() => {
+    describe("fetchAllFeedsAndCategoriesWithSource", () => {
+        it("should fetch all feeds and category documents", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).returns(Promise.resolve(""));
+            SurfDb.fetchAllFeedsAndCategoriesWithSource().then(() => {
                 pouchClientMock.verify();
-                PouchClient.fetchDocuments.restore();
+                PouchClient.fetchLinkedDocuments.restore();
                 done();
             });
         });
