@@ -5,8 +5,8 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterReaderHelper, { baseURL, searchApi } from "../../../src/routes/helpers/TwitterReaderHelper";
 
 
-describe.only("TwitterReaderHelper", () => {
 
+describe("TwitterReaderHelper", () => {
     function mockTwitterRequest() {
         return nock(baseURL)
             .get(searchApi);
@@ -48,7 +48,7 @@ describe.only("TwitterReaderHelper", () => {
     });
 
     it("should return data if the url is valid", (done) => {
-        let expectedData = { "items": [{ "id":1,"text":"Tweet 2" },{ "id":2,"text":"Tweet 3" }] };
+        let expectedData = { "items": [{ "id": 1, "text": "Tweet 2" }, { "id": 2, "text": "Tweet 3" }] };
         let request = {
             "query": {
                 "url": "@the_hindu"
