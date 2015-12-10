@@ -7,7 +7,7 @@ import { stringToHtml } from "../../utils/StringToHtml";
 export default class Paragraph extends Component {
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.name} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         return (
             <div>
                 <div className="title">{this.props.category.title}</div>

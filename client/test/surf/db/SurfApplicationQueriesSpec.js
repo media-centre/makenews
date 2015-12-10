@@ -46,8 +46,8 @@ describe("SurfApplicationQueries", () => {
                     "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
                 }
             }, {
-                "key": "rssId2",
-                "id": "rssId2",
+                "key": "rssId1",
+                "id": "rssId1",
                 "value": {
                     "_id": "politicsCategoryId2"
                 },
@@ -67,7 +67,7 @@ describe("SurfApplicationQueries", () => {
                 "sourceId": "rssId1",
                 "_id": "feedId1",
                 "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": ["Sports"]
+                "categoryNames": "Sports, Politics"
             }];
 
             let fetchAllSourcesWithCategoriesMock = sinon.mock(SurfDb).expects("fetchAllFeedsAndCategoriesWithSource");

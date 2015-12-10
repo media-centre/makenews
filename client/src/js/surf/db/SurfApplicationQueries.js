@@ -20,7 +20,7 @@ export default class SurfApplicationQueries {
 
                 feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
                     if (feedsAndCategoriesDoc.doc.docType === "feed") {
-                        feedsAndCategoriesDoc.doc.categoryNames = mapOfSource[feedsAndCategoriesDoc.key];
+                        feedsAndCategoriesDoc.doc.categoryNames = mapOfSource[feedsAndCategoriesDoc.key].join(", ");
                         feeds.push(feedsAndCategoriesDoc.doc);
                     }
                 });

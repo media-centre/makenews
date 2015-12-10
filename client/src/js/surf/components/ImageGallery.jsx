@@ -7,7 +7,7 @@ import { stringToHtml } from "../../utils/StringToHtml";
 
 export default class ImageGallery extends Component {
     render() {
-        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.name} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let images = this.props.category.images.map((image, index)=> <li className="image-container box" key={index}><img src={image.url}/></li>);
         let description = this.props.category.content ? <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p> : null;
         return (
