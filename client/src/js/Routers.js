@@ -45,7 +45,7 @@ function isLoggedIn(nextState, replaceState) {
 
 function showLoginPage(nextState, replaceState) {
     if(localStorage.getItem("userInfo")) {
-        replaceState({ "nextPathname": nextState.location.pathname }, "/main");
+        replaceState({ "nextPathname": nextState.location.pathname }, "/surf");
     }
 }
 
