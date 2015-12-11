@@ -2,7 +2,10 @@
   "default": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,
-    "couchDbUrl": "http://localhost:5984"
+    "couchDbUrl": "http://localhost:5984",
+    "facebook": {
+      "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964"
+    }
   },
   "development": {
   },
