@@ -1,6 +1,7 @@
 /* eslint consistent-this:0 no-unused-vars:0*/
 "use strict";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import EnvironmentConfig from "";
 import restRequest from "request";

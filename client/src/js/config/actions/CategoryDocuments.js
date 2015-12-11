@@ -34,6 +34,20 @@ export class CategoryDocument {
         return rssDoc;
     }
 
+    static getNewTwitterDocumnet(categoryId, title, url, status) {
+        if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
+            throw new Error("category id or url can not be empty");
+        }
+        let rssDoc = {
+            "docType": "source",
+            "sourceType": title,
+            "url": url,
+            "categoryIds": [categoryId],
+            "status": status
+        };
+        return rssDoc;
+    }
+
     static getNewFeedDocuments(sourceId, feeds) {
         if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
             throw new Error("source id or feeds can not be empty");
@@ -42,6 +56,18 @@ export class CategoryDocument {
         let resultFeeds = [];
         feeds.forEach((feed)=> {
             resultFeeds.push(CategoryDocument.createFeed(feed, sourceId));
+        });
+        return resultFeeds;
+    }
+
+    static getNewTwitterDocuments(sourceId, feeds) {
+        if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
+            throw new Error("source id or feeds can not be empty");
+        }
+
+        let resultFeeds = [];
+        feeds.forEach((feed)=> {
+            resultFeeds.push(CategoryDocument.createTwitterFeed(feed, sourceId));
         });
         return resultFeeds;
     }
@@ -78,6 +104,32 @@ export class CategoryDocument {
                     if(item.type === "image/jpeg") {
                         feedObj.images.push(item);
                     }
+                });
+            }
+        }
+        return feedObj;
+    }
+
+    static createTwitterFeed(feed, sourceId) {
+        let feedObj = {
+            "_id": feed.id_str,
+            "docType": "feed",
+            "sourceId": sourceId,
+            "type": "description",
+            "feedType": "twitter",
+            "content": feed.text,
+            "tags": [feed.created_at].concat(feed.entities.hashtags)
+        };
+        let media = feed.entities.media;
+        if(media && media.length > 0) {
+            if(media.length === 1) {
+                feedObj.type = "imagecontent";
+                feedObj.url = media[0].media_url_https;
+            } else {
+                feedObj.type = "gallery";
+                feedObj.images = [];
+                media.forEach(item => {
+                    feedObj.images.push({ "url": item.media_url_https });
                 });
             }
         }

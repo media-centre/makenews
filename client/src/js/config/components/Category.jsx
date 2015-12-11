@@ -6,6 +6,7 @@ import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } fr
 import { connect } from "react-redux";
 import TabComponent from "../../utils/components/TabComponent/TabComponent.jsx";
 import RSSComponent from "./RSSComponent.jsx";
+import TwitterComponent from "./TwitterComponent.jsx";
 
 const RSS = "rss";
 const FACEBOOK = "facebook";
@@ -55,7 +56,7 @@ export default class Category extends Component {
             } else if(key === FACEBOOK) {
                 return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             } else if(key === TWITTER) {
-                return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <TwitterComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             }
         });
 

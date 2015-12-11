@@ -82,6 +82,22 @@ describe("TwitterReaderHelper", () => {
         twitterReader.feedsForUrl();
     });
 
+    it("should return 404 error if url is not valid twitter url", (done) => {
+        let url = "myTest";
+        mockTwitterRequest()
+            .query({ "q": url })
+            .reply(HttpResponseHandler.codes.OK, "<html><body>Hi</body></html>");
+
+        let request = {
+            "query": {
+                "url": url
+            }
+        };
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": url + " is not a valid twitter handler" } });
+        let twitterReader = new TwitterReaderHelper(request, response);
+        twitterReader.feedsForUrl();
+    });
+
     it("should return error if request to url returns error", (done) => {
         let url = "myTest1";
         mockTwitterRequest()

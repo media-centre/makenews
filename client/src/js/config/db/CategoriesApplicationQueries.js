@@ -49,6 +49,17 @@ export default class CategoriesApplicationQueries {
     }
 
     static addRssFeeds(sourceId, feeds) {
-        return CategoryDb.createFeeds(CategoryDocument.getNewFeedDocuments(sourceId, feeds));
+        const feedDocuments = CategoryDocument.getNewFeedDocuments(sourceId, feeds);
+        return CategoryDb.createFeeds(feedDocuments);
+    }
+
+    static addTwitterFeeds(sourceId, feeds) {
+        const feedDocuments = CategoryDocument.getNewTwitterDocuments(sourceId, feeds);
+        return CategoryDb.createFeeds(feedDocuments);
+    }
+
+    static addTwitterUrlConfiguration(categoryId, url, status) {
+        let twitterConfigDocument = CategoryDocument.getNewTwitterDocumnet(categoryId, "twitter", url, status);
+        return CategoryDb.createOrUpdateSource(twitterConfigDocument);
     }
 }
