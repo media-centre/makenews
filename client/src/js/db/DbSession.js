@@ -16,6 +16,11 @@ export default class DbSession {
         return this.db;
     }
 
+    static clearInstance() {
+        this.db = null;
+        DbParameters.instance().clearInstance();
+    }
+
     static sync() {
         DbSession.instance();
 

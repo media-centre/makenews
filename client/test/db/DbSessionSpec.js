@@ -8,7 +8,7 @@ import sinon from "sinon";
 import PouchDB from "pouchdb";
 
 describe("DbSession", () => {
-    let parametersFake = null;
+    let parametersFake = null, dbParametesMock = null;
     before("DbSession", () => {
         parametersFake = {
             "type": () => {
@@ -19,28 +19,42 @@ describe("DbSession", () => {
             },
             "getRemoteDb": () => {
                 return "remoteDb";
-            }
+            },
+            "clearInstance": () => {}
         };
+    });
 
+    beforeEach("DbSession", () => {
+        dbParametesMock = sinon.mock(DbParameters);
+    });
+
+    afterEach("DbSession", () => {
+        DbSession.clearInstance();
+        dbParametesMock.verify();
+        dbParametesMock.restore();
+    });
+
+    describe("clearInstance", () => {
+        it("should clear current instance and db parameter instance", () => {
+            dbParametesMock.expects("instance").atLeast(2).returns(parametersFake);
+            DbSession.instance();
+            DbSession.clearInstance();
+            DbSession.instance();
+        });
     });
 
     describe("instance", () => {
         it("should create the new pouch db instance for the first time", () => {
-            let dbParametesMock = sinon.mock(DbParameters);
-            dbParametesMock.expects("instance").once().returns(parametersFake);
+            dbParametesMock.expects("instance").atLeast(1).returns(parametersFake);
 
             assert.isDefined(DbSession.instance());
             assert.isDefined(DbSession.instance());
             assert.isDefined(DbSession.instance());
-
-            dbParametesMock.verify();
-            dbParametesMock.restore();
         });
     });
 
     describe("sync", () => {
         it("should start the pouchd db sync with remote db. Second call should stop the existing sync", () => {
-            let dbParametesMock = sinon.mock(DbParameters);
             let cancelReturn = {
                 "cancel": function() {
                 }
@@ -80,10 +94,7 @@ describe("DbSession", () => {
             DbSession.sync();
             assert.isTrue(cancelSpy.calledOnce);
 
-            dbParametesMock.verify();
-            dbParametesMock.restore();
             cancelSpy.restore();
-
         });
     });
 });

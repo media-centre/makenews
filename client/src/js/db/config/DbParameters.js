@@ -7,16 +7,16 @@ export default class DbParameters {
     }
 
     setLocalDb(dbUrl) {
-        if(!dbUrl) {
+        if (!dbUrl) {
             throw new Error("db url can not be empty = " + dbUrl);
         }
-        if(!this.dbUrl) {
+        if (!this.dbUrl) {
             this.dbUrl = dbUrl;
         }
     }
 
     getLocalDb() {
-        if(!this.dbUrl) {
+        if (!this.dbUrl) {
             throw new Error("db url not set yet.");
         }
         return this.dbUrl;
@@ -25,6 +25,10 @@ export default class DbParameters {
     getRemoteDb() {
         let remoteDb = EnvironmentConfig.instance().get("remoteDbUrl");
         return remoteDb + "/" + this.dbUrl;
+    }
+
+    clearInstance() {
+        this.dbUrl = null;
     }
 
     static instance() {
