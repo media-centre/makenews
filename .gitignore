@@ -6,3 +6,4 @@ node_modules/
 localDb/
 remoteDb/
 coverage/
+.DS_Store/
