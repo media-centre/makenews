@@ -1,6 +1,7 @@
 /* eslint consistent-this:0 no-unused-vars:0*/
 "use strict";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import restRequest from "request";
 
@@ -24,9 +25,9 @@ export default class TwitterReaderHelper {
 
             restRequest.get(options,
                 (error, response) => {
-                    if(error) {
+                    if(NodeErrorHandler.errored(error)) {
                         this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": "Request failed for twitter handler " + url });
-                    } else if(response.statusCode === HttpResponseHandler.codes.OK) {
+                    } else if(response.statusCode === HttpResponseHandler.codes.OK && response.body.statuses) {
                         this.setResponse(HttpResponseHandler.codes.OK, response.body);
                     } else {
                         this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": url + " is not a valid twitter handler" });

@@ -43,6 +43,27 @@ function addRssUrlDocument(dispatch, categoryId, url, status, responseFeed) {
     });
 }
 
+export function addTwitterUrlAsync(categoryId, url, callback) {
+    return dispatch => {
+        AjaxClient.instance("/twitter-feeds").get({ "url": url }).then((responseFeed) => {
+            addTwitterUrlDocument(dispatch, categoryId, url, STATUS_VALID, responseFeed.statuses);
+            callback(STATUS_VALID);
+        }).catch(() => {
+            addTwitterUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
+            callback(STATUS_INVALID);
+        });
+    };
+}
+
+function addTwitterUrlDocument(dispatch, categoryId, url, status, responseFeed) {
+    CategoriesApplicationQueries.addTwitterUrlConfiguration(categoryId, url, status).then(response => {
+        if(responseFeed && responseFeed.length !== 0) {
+            CategoriesApplicationQueries.addTwitterFeeds(response.id, responseFeed);
+        }
+        dispatch(populateCategoryDetailsAsync(categoryId));
+    });
+}
+
 export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {
     return dispatch => {
         let newCategoryDocument = CategoryDocument.getNewCategoryDocument(categoryName);
