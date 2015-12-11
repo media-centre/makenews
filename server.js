@@ -26,19 +26,6 @@ const DEFAULT_PORT = 5000;
 const port = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("serverPort") || DEFAULT_PORT;
 
 app.use(express.static(path.join(__dirname, "/client")));
-let appsecretProof = crypto.createHmac("SHA256", "abf3d1db7a48cb08f936d6caae17b964");
-appsecretProof.setEncoding("hex");
-let token = "CAAGG4KNMtVEBAGJ0DlZCH1b1t1lZCZCMGRxkPZAnL3YasbArkZBg3iT3VLHe9OZCV1J1qITJA9LojaCTDqaK3dpZCjs9JebnLAZBFrxKZBEUhkLZBCNZCbpA7T7Rt6A0slX6EniG1jr7ZAKVPU9inZCYLkyaiEE4LAQ9gxIz6eOZA7FgLibbR1m2zTBHhbNSkaCuNNXKQIz26h1LFfV6ZCzth9P7woj";
-appsecretProof.write(token);
-appsecretProof.end();
-let hash = appsecretProof.read();
-console.log(hash);
-let facebookClient = new FacebookClient(token, hash);
-facebookClient.pageFeeds("thehindu").then((feeds) => {
-    console.log(feeds);
-}).catch(error => {
-    console.log(error);
-});
 routeErrorHandler(app);
 let server = app.listen(port);
 export default server;
