@@ -35,5 +35,12 @@ describe("Logout", () => {
     it("should display the button name from the locale file", () => {
         assert.strictEqual("Logout Test", logoutComponent.refs.logoutLabel.innerHTML);
     });
+
+    xit("should clear the authsession cookie and localstorage on logout", () => {
+        localStorage.setItem("userInfo", "test");
+        let listComponents = TestUtils.scryRenderedComponentsWithType(logoutComponent, "span");
+        TestUtils.Simulate.click(listComponents[0]);
+        expect(localStorage.getItem("userInfo")).to.eq("");
+    });
 });
 
