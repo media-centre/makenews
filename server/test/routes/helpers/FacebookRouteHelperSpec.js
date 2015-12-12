@@ -7,7 +7,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 
-describe.only("FacebookRouteHelper", () => {
+describe("FacebookRouteHelper", () => {
     let request = null, facebookRequestHandler = null, accessToken = null, pageName = null;
     before("FacebookRouteHelper", () => {
         accessToken = "test_access_token";
