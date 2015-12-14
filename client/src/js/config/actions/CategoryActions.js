@@ -61,10 +61,14 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-function addUrlDocument(dispatch, categoryId, title, url, status, responseFeed) {
-    CategoriesApplicationQueries.addUrlConfiguration(categoryId, title, url, status).then(response => {
-        CategoriesApplicationQueries.addRssFeeds(response.id, responseFeed);
-        dispatch(populateCategoryDetailsAsync(categoryId));
+function addUrlDocument(dispatch, categoryId, title, url, status) {
+    return new Promise((resolve, reject) => {
+        CategoriesApplicationQueries.addUrlConfiguration(categoryId, title, url, status).then(response => {
+            dispatch(populateCategoryDetailsAsync(categoryId));
+            resolve(response.id);
+        }).catch(error => {
+            reject("error while creating document");
+        });
     });
 }
 

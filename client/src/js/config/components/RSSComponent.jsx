@@ -3,8 +3,6 @@
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
-import { fbRegex } from "./FacebookComponent.jsx";
-import { twRegex } from "./TwitterComponent.jsx";
 
 export default class RSSComponent extends Component {
 
@@ -14,10 +12,6 @@ export default class RSSComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        let fb = url.match(fbRegex), tw = url.match(twRegex);
-        if(fb || tw) {
-            return callback(fb ? "Please add this URL in facebook tab" : "Please add this URL in twitter tab");
-        }
         props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
             let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
             return callback(errorMsg);

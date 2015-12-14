@@ -2,7 +2,7 @@
 
 "use strict";
 import { CategoryDocument, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
-import { assert } from "chai";
+import { expect, assert } from "chai";
 
 describe("CategoryDocument", () => {
     describe("getNewCategoryDocument", () => {
