@@ -6,7 +6,7 @@ import { List } from "immutable";
 export function allFeeds(state = { "feeds": [] }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
-        return { "feeds": action.feeds };
+        return Object.assign({}, state, { "feeds": action.feeds });
     default:
         return state;
     }
