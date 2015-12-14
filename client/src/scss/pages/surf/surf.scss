@@ -4,23 +4,27 @@
   color: $dark-gray-color;
 
   .feed-header {
-    padding-bottom: 5px;
+      padding-bottom: 5px;
+      border-color: $dark-border-color;
 
-    .header-item, ul li {
-      margin-right: 15px;
-    }
+      .header-item, ul li {
+        margin-right: 15px;
+      }
 
-    .header-item li.tag {
-      font-size: $small-font-size;
-    }
+      .header-item li.tag {
+        font-size: $extra-small-font-size;
+      }
 
-    .category-name {
-      color: $app-header-bg-color;
+      .category-name {
+        color: $app-header-bg-color;
+        font-size: $extra-small-font-size;
+        margin-top: 4px;
+      }
     }
 
     .header-item {
       i {
-        font-size: $large-font-size;
+        font-size: $small-font-size;
       }
 
       li:before {
@@ -34,10 +38,13 @@
 
       }
     }
-  }
 
   /* feed styles */
   .all-feeds {
+
+    p {
+      font-size: $small-font-size;
+    }
 
     .custom-spinner {
       @extend .h-v-center;
@@ -55,8 +62,9 @@
     }
     div.title {
       font-weight: bold;
-      font-size: $large-font-size;
-      padding: 10px 0px;
+      font-size: $medium-font-size;
+      padding-top: 15px;
+      color: #545454;
     }
   }
 
@@ -71,18 +79,18 @@
       li.image-container {
         width: 200px;
         padding: 10px;
-        vertical-align: middle;
+        vertical-align: top;
         position: relative;
       }
     }
     p.surf-description {
-      margin: 0px 0px 20px 0px;
+      margin: 0px 0px 5px 0px;
     }
   }
 
   .image-content {
     .container {
-      padding: 20px 0px;
+      padding: 10px 0px;
 
       .img-container {
         width: 200px;
@@ -90,7 +98,7 @@
         position: relative;
       }
       p {
-        margin: 0px;
+        margin: 5px;
       }
     }
   }
