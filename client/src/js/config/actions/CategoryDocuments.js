@@ -2,6 +2,8 @@
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import DateTimeUtil from "../../utils/DateTimeUtil.js";
 
+export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
+
 export class CategoryDocument {
     static getNewCategoryDocument(categoryName) {
         if(StringUtil.isEmptyString(categoryName)) {

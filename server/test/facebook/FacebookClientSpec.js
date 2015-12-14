@@ -16,7 +16,7 @@ describe("FacebookClient", () => {
             accessToken = "test_token";
             appSecretProof = "test_secret_proof";
             pageName = "thehindu";
-            remainingUrl = "/v2.5/" + pageName + "/posts?fields=link,message,picture,name,caption,place,tags,privacy&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
+            remainingUrl = "/v2.5/" + pageName + "/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
         });
 
         it("should return feeds for a public page", (done) => {

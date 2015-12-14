@@ -1,5 +1,6 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
+import DateTimeUtil from "../utils/DateTimeUtil.js";
 
 export default class FacebookResponseParser {
 
@@ -27,7 +28,7 @@ export default class FacebookResponseParser {
             "title": post.name || "",
             "feedType": "facebook",
             "content": post.message || "",
-            "tags": [""]
+            "tags": post.created_time ? [DateTimeUtil.getDateAndTime(post.created_time)] : [""]
         };
 
         if(StringUtil.validString(post.picture)) {

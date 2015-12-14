@@ -3,7 +3,6 @@
 "use strict";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
 import FacebookClient from "../../src/js/facebook/FacebookClient.js";
-import FacebookResponseParser from "../../src/js/facebook/FacebookResponseParser.js";
 
 import sinon from "sinon";
 import { assert } from "chai";
@@ -56,17 +55,13 @@ describe("FacebookRequestHandler", () => {
             facebookClientMock.withArgs(accessToken).returns(faceFacebookClient);
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchPosts");
             facebookFetchPostsMock.withArgs(nodeUrl).returns(Promise.resolve(facebookOriginalFeeds));
-            let facebookResponseParsePostsMock = sinon.mock(FacebookResponseParser).expects("parsePosts");
-            facebookResponseParsePostsMock.withArgs(sourceId, facebookOriginalFeeds.posts).returns([{}, {}, {}]);
 
             FacebookRequestHandler.getPosts(sourceId, accessToken, nodeUrl).then(posts => {
                 assert.strictEqual(3, posts.length);
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
-                facebookResponseParsePostsMock.verify();
                 FacebookClient.instance.restore();
                 faceFacebookClient.fetchPosts.restore();
-                FacebookResponseParser.parsePosts.restore();
                 done();
             });
         });

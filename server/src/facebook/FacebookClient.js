@@ -18,7 +18,7 @@ export default class FacebookClient {
         this.appSecretProof = appSecretProof;
     }
 
-    pagePosts(pageName, fields = "link,message,picture,name,caption,place,tags,privacy") {
+    pagePosts(pageName, fields = "link,message,picture,name,caption,place,tags,privacy,created_time") {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(pageName)) {
                 reject({

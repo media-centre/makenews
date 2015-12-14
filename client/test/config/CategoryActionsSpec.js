@@ -22,7 +22,7 @@ describe("CategoryActions", () => {
     });
 });
 
-describe("addRssUrlAsync", () => {
+describe.only("addRssUrlAsync", () => {
     let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null;
 
     beforeEach("Before", () => {

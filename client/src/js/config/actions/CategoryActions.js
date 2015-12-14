@@ -8,6 +8,7 @@ import AjaxClient from "../../utils/AjaxClient";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 import RssDb from "../../rss/RssDb.js";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
+import FacebookResponseParser from "../../facebook/FacebookResponseParser.js";
 import EnvironmentConfig from "../../EnvironmentConfig.js";
 import FacebookDb from "../../facebook/FacebookDb.js";
 
@@ -50,12 +51,14 @@ export function addRssUrlAsync(categoryId, url, callback) {
 
 export function addFacebookUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID).then(documentId => {
-            FacebookRequestHandler.getPosts(documentId, EnvironmentConfig.instance().get("facebookAccessToken"), url).then((postDocuments)=> {
-                FacebookDb.addFacebookFeeds(postDocuments);
+        FacebookRequestHandler.getPosts(EnvironmentConfig.instance().get("facebookAccessToken"), url).then((originalPosts)=> {
+            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID).then(documentId => {
+                let feedDocuments = FacebookResponseParser.parsePosts(documentId, originalPosts);
+                FacebookDb.addFacebookFeeds(feedDocuments);
             });
             callback(STATUS_VALID);
         }).catch(error => {
+            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };

@@ -2,7 +2,7 @@
   "default": {
     "serverUrl": "http://localhost:5000",
     "remoteDbUrl": "http://localhost:5984",
-    "facebookAccessToken": "CAAGG4KNMtVEBAC9xQOpopEZCtN5k2QnBAsCZAK2y6ESFL3ZCtWEJZANEzOYRgCGlhwdjw2rx4sk7IhOmUhGCqnowwozNv4QVzkxp1bn7OuOZBVD4TqlEvh1PsQgWkx01vdmkNwKZA9wY9XkkzsbwgV01XH7kNeEFdwJdtvGD8XczC9Th88SKnjHbicYd3ISkvnV7hjRMVzXgZDZD"
+    "facebookAccessToken": "CAAGG4KNMtVEBAHv7704aZBZAZCbz1zMNIqzHt4KX4DbkhDzf44zhFzTZCUZAdIZB4xcukNIrDvtqgSFQBQLNaBi5a1etAadZC5E0i0fncsHBFChiwUogZBWS2E2eSmPxZA4V08jZARbZBkT5faWBRCb8efeziIkuX73TZC3ZAZBar2lnwzO4e5rjbwppY4RVZAqlCMbkaEZD"
   },
   "development": {
   },

@@ -1,15 +1,13 @@
 "use strict";
 import FacebookClient from "./FacebookClient.js";
-import FacebookResponseParser from "./FacebookResponseParser.js";
 
 export default class FacebookRequestHandler {
 
-    static getPosts(sourceId, accessToken, nodeUrl) {
+    static getPosts(accessToken, nodeUrl) {
         return new Promise((resolve, reject) => {
             let facebookClient = FacebookClient.instance(accessToken);
             facebookClient.fetchPosts(nodeUrl).then(originalFeeds => {
-                let feedDocuments = FacebookResponseParser.parsePosts(sourceId, originalFeeds.posts);
-                resolve(feedDocuments);
+                resolve(originalFeeds.posts);
             }).catch(error => { // eslint-disable-line
                 reject([]);
             });
