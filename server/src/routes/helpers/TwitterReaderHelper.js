@@ -3,7 +3,7 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import EnvironmentConfig from "";
+import EnvironmentConfig from "../../config/EnvironmentConfig";
 import restRequest from "request";
 
 export const baseURL = "https://api.twitter.com/1.1", searchApi = "/search/tweets.json";
