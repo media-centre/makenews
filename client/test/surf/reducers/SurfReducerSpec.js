@@ -4,12 +4,11 @@
 import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer.js";
 import { DISPLAY_ALL_FEEDS } from "../../../src/js/surf/actions/AllFeedsActions.js";
 import { expect } from "chai";
-import { List } from "immutable";
 
 describe("Surf Reducer", () => {
     describe("allFeeds", () => {
         it("default state should return empty list", () => {
-            expect({ "feeds": new List([]) }).to.deep.equal(allFeeds());
+            expect({ "feeds": [] }).to.deep.equal(allFeeds());
         });
 
         it("should return given feeds", () => {
