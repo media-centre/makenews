@@ -4,11 +4,22 @@
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import { stringToHtml } from "../../utils/StringToHtml";
+import Spinner from "../../utils/components/Spinner.jsx";
 
 export default class ImageGallery extends Component {
+    _onLoadImage(index) {
+        let item = this.refs["gallery-item-" + index];
+        item.querySelector("img").classList.remove("hide");
+        item.querySelector(".custom-spinner").remove();
+    }
     render() {
         let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
-        let images = this.props.category.images.map((image, index)=> <li className="image-container box" key={index}><img src={image.url}/></li>);
+        let images = this.props.category.images.map((image, index)=>
+            <li className="image-container box" ref={"gallery-item-" + index} key={index}>
+                <img src={image.url} onLoad={() => this._onLoadImage(index)} className="hide"/>
+                <Spinner/>
+            </li>
+        );
         let description = this.props.category.content ? <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p> : null;
         return (
             <div className="image-gallery">

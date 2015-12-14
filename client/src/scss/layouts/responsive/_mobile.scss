@@ -110,6 +110,10 @@
 
       .image-gallery ul.gallery-list li.image-container {
           width: 50%;
+
+        img {
+          width: 100%;
+        }
       }
 
       .image-content {

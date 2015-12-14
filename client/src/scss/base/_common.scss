@@ -167,6 +167,14 @@ button {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+.h-v-center {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0px;
+  margin: auto;
+}
 
 .selected {
   color: $secondary-font-color;
@@ -204,3 +212,7 @@ button {
   color: $spinner-font-color;
   font-size: $small-font-size;
 }
+.hide {
+  opacity: 0;
+}
+

@@ -235,21 +235,14 @@ describe("CategoryDocument", () => {
             let newFeedDocumentCallback = function() {
                 CategoryDocument.getNewFeedDocuments("", [{ "id": 1 }]);
             };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+            assert.throw(newFeedDocumentCallback, "source id can not be empty");
         });
 
         it("should throw an error if the feeds is empty", () => {
             let newFeedDocumentCallback = function() {
-                CategoryDocument.getNewFeedDocuments("test", []);
+                CategoryDocument.getNewFeedDocuments("");
             };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
-        });
-
-        it("should throw an error if the feeds is undefined", () => {
-            let newFeedDocumentCallback = function() {
-                CategoryDocument.getNewFeedDocuments("test");
-            };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+            assert.throw(newFeedDocumentCallback, "source id can not be empty");
         });
     });
 

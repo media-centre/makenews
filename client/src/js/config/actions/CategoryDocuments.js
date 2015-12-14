@@ -96,13 +96,17 @@ export class CategoryDocument {
                 feedObj.type = "imagecontent";
                 if(feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
                     feedObj.url = feed.enclosures[0].url;
+                } else if(feed.enclosures[0].type.indexOf("video") !== NEGATIVE_INDEX) {
+                    feedObj.url = feed.image.url;
                 }
             } else {
                 feedObj.type = "gallery";
                 feedObj.images = [];
-                feed.enclosures.forEach(item => {
-                    if(item.type === "image/jpeg") {
-                        feedObj.images.push(item);
+                feed.enclosures.forEach((item, index) => {
+                    if(item.type.indexOf("image") !== NEGATIVE_INDEX) {
+                        feedObj.images.push(feed.enclosures[index]);
+                    } else if(item.type.indexOf("video") !== NEGATIVE_INDEX) {
+                        feedObj.images.push({ "type": "video", "url": feed.image.url });
                     }
                 });
             }
