@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from "react";
 import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-let twRegex = /http:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]+/;
+let twRegex = /@(#!\/)?[a-zA-Z0-9_]+/;
 export default class TwitterComponent extends Component {
 
     constructor(props) {
@@ -25,7 +25,7 @@ export default class TwitterComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
+            <AddURLComponent content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation />
         );
     }
 }

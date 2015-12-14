@@ -38,7 +38,7 @@ export default class AddURLComponent extends Component {
     }
 
     _isValidUrl(url) {
-        if(!url.match(urlRegex)) {
+        if(!this.props.noValidation && !url.match(urlRegex)) {
             return url ? this.props.categoryDetailsPageStrings.errorMessages.invalidUrlFormat : this.props.categoryDetailsPageStrings.errorMessages.emptyUrl;
         }
 
@@ -100,5 +100,9 @@ AddURLComponent.propTypes = {
     "addUrlLinkLabel": PropTypes.string.isRequired,
     "errorMessage": PropTypes.string.isRequired,
     "sourceDomainValidation": PropTypes.func.isRequired,
-    "categoryDetailsPageStrings": PropTypes.object.isRequired
+    "categoryDetailsPageStrings": PropTypes.object.isRequired,
+    "noValidation": PropTypes.bool
+};
+AddURLComponent.defaultProps = {
+    "noValidation": false
 };

@@ -118,7 +118,7 @@ export class CategoryDocument {
             "type": "description",
             "feedType": "twitter",
             "content": feed.text,
-            "tags": [feed.created_at].concat(feed.entities.hashtags)
+            "tags": CategoryDocument.hashTags(feed)
         };
         let media = feed.entities.media;
         if(media && media.length > 0) {
@@ -134,5 +134,14 @@ export class CategoryDocument {
             }
         }
         return feedObj;
+    }
+
+    static hashTags(feed) {
+        let tagsArray = [];
+        tagsArray.push(feed.created_at);
+        feed.entities.hashtags.forEach(tag => {
+            tagsArray.push(tag.text);
+        });
+        return tagsArray;
     }
 }
