@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from "react";
 import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-let twRegex = /@(#!\/)?[a-zA-Z0-9_]+/;
+export const twRegex = /@(#!\/)?[a-zA-Z0-9_]+/;
 export default class TwitterComponent extends Component {
 
     constructor(props) {

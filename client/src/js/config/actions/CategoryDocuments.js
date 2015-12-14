@@ -48,9 +48,9 @@ export class CategoryDocument {
         return rssDoc;
     }
 
-    static getNewFeedDocuments(sourceId, feeds) {
-        if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
-            throw new Error("source id or feeds can not be empty");
+    static getNewFeedDocuments(sourceId, feeds = []) {
+        if(StringUtil.isEmptyString(sourceId)) {
+            throw new Error("source id can not be empty");
         }
 
         let resultFeeds = [];
@@ -60,9 +60,9 @@ export class CategoryDocument {
         return resultFeeds;
     }
 
-    static getNewTwitterDocuments(sourceId, feeds) {
-        if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
-            throw new Error("source id or feeds can not be empty");
+    static getNewTwitterDocuments(sourceId, feeds = []) {
+        if(StringUtil.isEmptyString(sourceId)) {
+            throw new Error("source id can not be empty");
         }
 
         let resultFeeds = [];
