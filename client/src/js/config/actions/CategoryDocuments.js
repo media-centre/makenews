@@ -1,8 +1,7 @@
 "use strict";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
+import DateTimeUtil from "../../utils/DateTimeUtil.js";
 
-export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
-const NEGATIVE_INDEX = -1;
 export class CategoryDocument {
     static getNewCategoryDocument(categoryName) {
         if(StringUtil.isEmptyString(categoryName)) {
@@ -12,12 +11,8 @@ export class CategoryDocument {
         return {
             "docType": "category",
             "name": categoryName,
-            "createdTime": CategoryDocument._getCreatedTime()
+            "createdTime": DateTimeUtil.getCreatedTime()
         };
-    }
-
-    static _getCreatedTime() {
-        return new Date().getTime();
     }
 
     static getNewDocument(categoryId, title, url, status) {
@@ -48,18 +43,6 @@ export class CategoryDocument {
         return rssDoc;
     }
 
-    static getNewFeedDocuments(sourceId, feeds = []) {
-        if(StringUtil.isEmptyString(sourceId)) {
-            throw new Error("source id can not be empty");
-        }
-
-        let resultFeeds = [];
-        feeds.forEach((feed)=> {
-            resultFeeds.push(CategoryDocument.createFeed(feed, sourceId));
-        });
-        return resultFeeds;
-    }
-
     static getNewTwitterDocuments(sourceId, feeds = []) {
         if(StringUtil.isEmptyString(sourceId)) {
             throw new Error("source id can not be empty");
@@ -70,48 +53,6 @@ export class CategoryDocument {
             resultFeeds.push(CategoryDocument.createTwitterFeed(feed, sourceId));
         });
         return resultFeeds;
-    }
-
-    static getDateAndTime(dateString) {
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        let date = new Date(dateString);
-        return months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear() + "    " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-    }
-
-    static createFeed(feed, sourceId) {
-        let feedObj = {
-            "_id": feed.guid,
-            "docType": "feed",
-            "sourceId": sourceId,
-            "type": "description",
-            "title": feed.title,
-            "feedType": "rss",
-            "content": feed.description,
-            "tags": feed.pubDate ? [CategoryDocument.getDateAndTime(feed.pubDate)] : [""]
-        };
-        if(feed.enclosures && feed.enclosures.length > 0) {
-            if(feed.enclosures.length === 1) {
-                feedObj.type = "imagecontent";
-                if(feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
-                    feedObj.url = feed.enclosures[0].url;
-                } else if(feed.enclosures[0].type.indexOf("video") !== NEGATIVE_INDEX) {
-                    feedObj.url = feed.image.url;
-                }
-            } else {
-                feedObj.type = "gallery";
-                feedObj.images = [];
-                feed.enclosures.forEach((item, index) => {
-                    if(item.type.indexOf("image") !== NEGATIVE_INDEX) {
-                        feedObj.images.push(feed.enclosures[index]);
-                    } else if(item.type.indexOf("video") !== NEGATIVE_INDEX) {
-                        feedObj.images.push({ "type": "video", "url": feed.image.url });
-                    }
-                });
-            }
-        }
-        return feedObj;
     }
 
     static createTwitterFeed(feed, sourceId) {

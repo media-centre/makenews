@@ -325,26 +325,4 @@ describe("CategoryDb", () => {
             });
         });
     });
-
-    describe("createFeeds", () => {
-        it("should create all the feeds in the json", () => {
-            let jsonDocument = [
-                {
-                    "_id": "guid1",
-                    "docType": "feed",
-                    "title": "www.google.com/rss"
-                },
-                {
-                    "_id": "guid2",
-                    "docType": "feed",
-                    "title": "www.hindu.com/rss"
-                }];
-
-            let createMock = sinon.mock(PouchClient).expects("createBulkDocuments").withArgs(jsonDocument).returns(Promise.resolve([{ "id": "1", "ok": true }, { "id": "2", "ok": true }]));
-            return CategoryDb.createFeeds(jsonDocument).then(() => {
-                createMock.verify();
-                PouchClient.createBulkDocuments.restore();
-            });
-        });
-    });
 });

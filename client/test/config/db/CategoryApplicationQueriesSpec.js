@@ -110,43 +110,5 @@ describe("CategoryApplicationQueries", () => {
             CategoryDb.createOrUpdateSource.restore();
         });
     });
-
-    describe("addRssFeeds", () => {
-        it("should add rss feeds for given source", () => {
-            let sourceId = "sourceId";
-            let feeds = [
-                {
-                    "title": "sports - cricket",
-                    "description": "desc",
-                    "guid": "sportsGuid1"
-                },
-                {
-                    "title": "sports - football",
-                    "description": "desc",
-                    "guid": "sportsGuid2"
-                }];
-
-            let expectedFeeds = [
-                {
-                    "sourceId": sourceId,
-                    "title": "sports - cricket",
-                    "description": "desc",
-                    "guid": "sportsGuid1"
-                },
-                {
-                    "sourceId": sourceId,
-                    "title": "sports - football",
-                    "description": "desc",
-                    "guid": "sportsGuid2"
-                }];
-            sinon.stub(CategoryDocument, "getNewFeedDocuments").withArgs(sourceId, feeds).returns(expectedFeeds);
-            let createFeedsMock = sinon.mock(CategoryDb).expects("createFeeds");
-            createFeedsMock.withArgs(expectedFeeds);
-            CategoryApplicationQueries.addRssFeeds(sourceId, feeds);
-            createFeedsMock.verify();
-            CategoryDocument.getNewFeedDocuments.restore();
-            CategoryDb.createFeeds.restore();
-        });
-    });
 });
 

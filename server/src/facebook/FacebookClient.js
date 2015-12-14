@@ -31,8 +31,8 @@ export default class FacebookClient {
             }, (error, response, body) => {
                 if(NodeErrorHandler.noError(error)) {
                     if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        let feedResponce = JSON.parse(body);
-                        resolve(feedResponce.data);
+                        let feedResponse = JSON.parse(body);
+                        resolve(feedResponse.data);
                     } else {
                         let errorInfo = JSON.parse(body);
                         reject(errorInfo.error);

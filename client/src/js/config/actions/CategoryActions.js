@@ -6,6 +6,10 @@ import CategoryDb from "../db/CategoryDb.js";
 import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "./CategoryDocuments.js";
 import AjaxClient from "../../utils/AjaxClient";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
+import RssDb from "../../rss/RssDb.js";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
+import EnvironmentConfig from "../../EnvironmentConfig.js";
+import FacebookDb from "../../facebook/FacebookDb.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 export const DEFAULT_CATEGORY = "Default Category";
@@ -31,8 +35,12 @@ export function populateCategoryDetails(sourceUrlsObj) {
 export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
         AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
-            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, responseFeed.items);
-            callback(STATUS_VALID);
+            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID).then(documentId => {
+                RssDb.addRssFeeds(documentId, responseFeed.items);
+                callback(STATUS_VALID);
+            }).catch(error => {
+                callback(STATUS_INVALID);
+            });
         }).catch(() => {
             addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
@@ -42,8 +50,14 @@ export function addRssUrlAsync(categoryId, url, callback) {
 
 export function addFacebookUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, []);
-        callback(STATUS_VALID);
+        addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID).then(documentId => {
+            FacebookRequestHandler.getPosts(documentId, EnvironmentConfig.instance().get("facebookAccessToken"), url).then((postDocuments)=> {
+                FacebookDb.addFacebookFeeds(postDocuments);
+            });
+            callback(STATUS_VALID);
+        }).catch(error => {
+            callback(STATUS_INVALID);
+        });
     };
 }
 

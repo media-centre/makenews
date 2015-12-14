@@ -4,9 +4,6 @@ import React, { Component, PropTypes } from "react";
 import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-
-export const fbRegex = /^(http\:\/\/|https\:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/;
-
 export default class FacebookComponent extends Component {
 
     constructor(props) {
@@ -15,14 +12,10 @@ export default class FacebookComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        if(url.match(fbRegex)) {
-            props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
-                let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
-                return callback(errorMsg);
-            }));
-        } else {
-            return callback("Invalid facebook url");
-        }
+        props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
+            let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
+            return callback(errorMsg);
+        }));
     }
 
     render() {

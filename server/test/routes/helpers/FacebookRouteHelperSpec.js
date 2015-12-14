@@ -14,7 +14,7 @@ describe("FacebookRouteHelper", () => {
         pageName = "test_page";
         request = {
             "query": {
-                "pageName": pageName,
+                "nodeName": pageName,
                 "accessToken": accessToken
             }
         };
@@ -30,7 +30,7 @@ describe("FacebookRouteHelper", () => {
             let facebookRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
-            let feeds = [
+            let posts = [
                 {
                     "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
                     "created_time": "2015-12-11T08:02:59+0000",
@@ -42,12 +42,12 @@ describe("FacebookRouteHelper", () => {
                     return response;
                 },
                 "json": (json) => {
-                    assert.deepEqual({ "feeds": feeds }, json);
+                    assert.deepEqual({ "posts": posts }, json);
                     done();
                 }
             };
 
-            facebookRequestHandlerStub.withArgs(pageName).returns(Promise.resolve(feeds));
+            facebookRequestHandlerStub.withArgs(pageName).returns(Promise.resolve(posts));
 
             let facebookRouteHelper = new FacebookRouteHelper(request, response);
             facebookRouteHelper.pageRouter();

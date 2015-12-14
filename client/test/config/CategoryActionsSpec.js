@@ -8,6 +8,7 @@ import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCatego
 import { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper.js";
+import RssDb from "../../src/js/rss/RssDb.js";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -53,7 +54,7 @@ describe("addRssUrlAsync", () => {
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_VALID).returns(Promise.resolve("response"));
-        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
+        sandbox.stub(RssDb, "addRssFeeds");
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
@@ -80,7 +81,7 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve({ "data": "feeds" }));
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
+        sandbox.stub(RssDb, "addRssFeeds");
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_VALID).returns(Promise.resolve("response"));
 
@@ -99,7 +100,6 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        sandbox.stub(CategoriesApplicationQueries, "addRssFeeds");
 
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_INVALID).returns(Promise.resolve("response"));
@@ -123,7 +123,7 @@ describe("addRssUrlAsync", () => {
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_VALID).returns(Promise.resolve({ "id": sourceId, "ok": true }));
-        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(CategoriesApplicationQueries).expects("addRssFeeds");
+        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
         categoriesApplicationQueriesCreateFeedsMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
