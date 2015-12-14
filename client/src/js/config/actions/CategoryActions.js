@@ -47,18 +47,6 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-export function addTwitterUrlAsync(categoryId, url, callback) {
-    return dispatch => {
-        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
-            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID, responseFeed.items);
-            callback(STATUS_VALID);
-        }).catch(() => {
-            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_INVALID);
-            callback(STATUS_INVALID);
-        });
-    };
-}
-
 function addUrlDocument(dispatch, categoryId, title, url, status, responseFeed) {
     CategoriesApplicationQueries.addUrlConfiguration(categoryId, title, url, status).then(response => {
         CategoriesApplicationQueries.addRssFeeds(response.id, responseFeed);
