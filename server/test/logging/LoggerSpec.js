@@ -6,7 +6,7 @@ import { assert } from "chai";
 import Logger, { logLevel, logType } from "../../src/logging/Logger";
 import sinon from "sinon";
 
-describe("Logger", () => {
+xdescribe("Logger", () => {
 
     function assertFileLogger(logger, fileName, level) {
         assert.strictEqual(logger.getLogger().transports.file.filename, fileName);

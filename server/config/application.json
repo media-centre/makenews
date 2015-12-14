@@ -5,7 +5,7 @@
     "couchDbUrl": "http://localhost:5984",
     "facebook": {
       "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964"
-    }
+    },
     "twitterBearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
   },
   "development": {
