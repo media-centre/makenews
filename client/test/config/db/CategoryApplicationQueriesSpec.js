@@ -101,12 +101,12 @@ describe("CategoryApplicationQueries", () => {
             let categoryId = "test_id";
             let url = "url";
             let status = STATUS_VALID;
-            sinon.stub(CategoryDocument, "getNewRssDocumnet").withArgs(categoryId, url, status).returns({});
+            sinon.stub(CategoryDocument, "getNewDocument").withArgs(categoryId, url, status).returns({});
             let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
             createOrUpdateMock.withArgs({});
-            CategoryApplicationQueries.addRssUrlConfiguration(categoryId, url, status);
+            CategoryApplicationQueries.addUrlConfiguration(categoryId, url, status);
             createOrUpdateMock.verify();
-            CategoryDocument.getNewRssDocumnet.restore();
+            CategoryDocument.getNewDocument.restore();
             CategoryDb.createOrUpdateSource.restore();
         });
     });

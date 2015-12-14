@@ -1,10 +1,13 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
-import { addRssUrlAsync } from "../actions/CategoryActions.js";
+import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-export default class RSSComponent extends Component {
+
+let fbRegex = /^(http\:\/\/|https\:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/;
+
+export default class FacebookComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -12,10 +15,14 @@ export default class RSSComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
-            let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
-            callback(errorMsg);
-        }));
+        if(url.match(fbRegex)) {
+            props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
+                let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
+                return callback(errorMsg);
+            }));
+        } else {
+            return callback("Invalid facebook url");
+        }
     }
 
     render() {
@@ -25,8 +32,8 @@ export default class RSSComponent extends Component {
     }
 }
 
-RSSComponent.displayName = "RSSComponent";
-RSSComponent.propTypes = {
+FacebookComponent.displayName = "FacebookComponent";
+FacebookComponent.propTypes = {
     "content": PropTypes.array.isRequired,
     "content.details": PropTypes.array,
     "categoryDetailsPageStrings": PropTypes.object.isRequired

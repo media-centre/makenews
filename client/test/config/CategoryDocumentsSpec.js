@@ -20,7 +20,7 @@ describe("CategoryDocument", () => {
         });
     });
 
-    describe("getNewRssDocumnet", () => {
+    describe("getNewDocument", () => {
         it("should return the new rss document", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
@@ -33,12 +33,12 @@ describe("CategoryDocument", () => {
                     "categoryIds": [categoryId],
                     "status": status
                 };
-            assert.deepEqual(expectedDocument, CategoryDocument.getNewRssDocumnet(categoryId, url, status));
+            assert.deepEqual(expectedDocument, CategoryDocument.getNewDocument(categoryId, "rss", url, status));
         });
 
         it("should throw an error if the url or category id is empty", () => {
             let newRssDocumentCallback = function() {
-                CategoryDocument.getNewRssDocumnet("", "");
+                CategoryDocument.getNewDocument("", "");
             };
             assert.throw(newRssDocumentCallback, "category id or url can not be empty");
         });

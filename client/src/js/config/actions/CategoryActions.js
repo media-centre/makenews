@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0*/
+/* eslint no-unused-vars:0, max-params:1 */
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
@@ -9,6 +9,10 @@ import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 export const DEFAULT_CATEGORY = "Default Category";
+
+export const RSS_TYPE = "rss";
+export const FACEBOOK_TYPE = "facebook";
+export const TWITTER_TYPE = "twitter";
 
 export function populateCategoryDetailsAsync(categoryId) {
     return dispatch => {
@@ -27,17 +31,36 @@ export function populateCategoryDetails(sourceUrlsObj) {
 export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
         AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
-            addRssUrlDocument(dispatch, categoryId, url, STATUS_VALID, responseFeed.items);
+            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, responseFeed.items);
             callback(STATUS_VALID);
         }).catch(() => {
-            addRssUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
+            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };
 }
 
-function addRssUrlDocument(dispatch, categoryId, url, status, responseFeed) {
-    CategoriesApplicationQueries.addRssUrlConfiguration(categoryId, url, status).then(response => {
+export function addFacebookUrlAsync(categoryId, url, callback) {
+    return dispatch => {
+        addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, []);
+        callback(STATUS_VALID);
+    };
+}
+
+export function addTwitterUrlAsync(categoryId, url, callback) {
+    return dispatch => {
+        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
+            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID, responseFeed.items);
+            callback(STATUS_VALID);
+        }).catch(() => {
+            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_INVALID);
+            callback(STATUS_INVALID);
+        });
+    };
+}
+
+function addUrlDocument(dispatch, categoryId, title, url, status, responseFeed) {
+    CategoriesApplicationQueries.addUrlConfiguration(categoryId, title, url, status).then(response => {
         CategoriesApplicationQueries.addRssFeeds(response.id, responseFeed);
         dispatch(populateCategoryDetailsAsync(categoryId));
     });
