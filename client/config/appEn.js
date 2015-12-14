@@ -46,7 +46,14 @@ export default {
             "categoryDetailsPage": {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
-                "addUrlLinkLabel": "Add Url"
+                "addUrlLinkLabel": "Add Url",
+                "errorMessages": {
+                    "urlSuccess": "Url is successfully added",
+                    "invalidUrlFormat": "Invalid URL format",
+                    "emptyUrl": "URL should not be empty",
+                    "validatingUrl": "validating Url...",
+                    "alreadyAdded": "URL is already added"
+                }
             },
             "configureTabName": "Configure"
         },

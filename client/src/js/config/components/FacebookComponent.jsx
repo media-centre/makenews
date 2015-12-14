@@ -1,12 +1,13 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
-import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
+import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-let twRegex = /http:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]+/;
 
-export default class TwitterComponent extends Component {
+let fbRegex = /^(http\:\/\/|https\:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/;
+
+export default class FacebookComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -14,13 +15,13 @@ export default class TwitterComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        if(url.match(twRegex)) {
-            props.dispatch(addTwitterUrlAsync(props.categoryId, url, (response)=> {
+        if(url.match(fbRegex)) {
+            props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
                 let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
                 return callback(errorMsg);
             }));
         } else {
-            return callback("Invalid twitter url");
+            return callback("Invalid facebook url");
         }
     }
 
@@ -31,8 +32,8 @@ export default class TwitterComponent extends Component {
     }
 }
 
-TwitterComponent.displayName = "TwitterComponent";
-TwitterComponent.propTypes = {
+FacebookComponent.displayName = "FacebookComponent";
+FacebookComponent.propTypes = {
     "content": PropTypes.array.isRequired,
     "content.details": PropTypes.array,
     "categoryDetailsPageStrings": PropTypes.object.isRequired

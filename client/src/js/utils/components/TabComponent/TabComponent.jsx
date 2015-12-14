@@ -1,3 +1,5 @@
+/* eslint react/no-set-state:0 */
+
 "use strict";
 import React, { Component, PropTypes } from "react";
 
@@ -51,6 +53,5 @@ TabComponent.displayName = "TabComponent";
 
 TabComponent.propTypes = {
     "children": PropTypes.node.isRequired,
-    "tab-header": PropTypes.string.isRequired,
     "activeIndex": PropTypes.number
 };

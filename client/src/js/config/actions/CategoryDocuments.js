@@ -20,13 +20,13 @@ export class CategoryDocument {
         return new Date().getTime();
     }
 
-    static getNewRssDocumnet(categoryId, url, status) {
+    static getNewDocument(categoryId, title, url, status) {
         if(StringUtil.isEmptyString(categoryId) || StringUtil.isEmptyString(url)) {
             throw new Error("category id or url can not be empty");
         }
         let rssDoc = {
             "docType": "source",
-            "sourceType": "rss",
+            "sourceType": title,
             "url": url,
             "categoryIds": [categoryId],
             "status": status
