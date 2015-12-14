@@ -8,7 +8,6 @@ export default class Logout extends Component {
     _logout() {
         localStorage.setItem("userInfo", "");
         DbSession.clearInstance();
-        location.reload();
     }
 
     render() {
