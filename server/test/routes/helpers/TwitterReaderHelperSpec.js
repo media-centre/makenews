@@ -86,7 +86,7 @@ describe("TwitterReaderHelper", () => {
         let url = "myTest";
         mockTwitterRequest()
             .query({ "q": url })
-            .reply(HttpResponseHandler.codes.OK, "<html><body>Hi</body></html>");
+            .reply(HttpResponseHandler.codes.OK, { "statuses": [], "search_metadata": { "completed_in": 0.01 } });
 
         let request = {
             "query": {

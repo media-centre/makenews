@@ -3,6 +3,7 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
+import EnvironmentConfig from "../../config/EnvironmentConfig";
 import restRequest from "request";
 
 export const baseURL = "https://api.twitter.com/1.1", searchApi = "/search/tweets.json";
@@ -19,7 +20,7 @@ export default class TwitterReaderHelper {
             this.setResponse(HttpResponseHandler.codes.OK, {});
         } else {
             let options = { "uri": baseURL + searchApi, "qs": { "q": url }, "json": true, "headers": {
-                "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
+                "Authorization": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("twitterBearerToken")
             }
             };
 
@@ -27,7 +28,7 @@ export default class TwitterReaderHelper {
                 (error, response) => {
                     if(NodeErrorHandler.errored(error)) {
                         this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": "Request failed for twitter handler " + url });
-                    } else if(response.statusCode === HttpResponseHandler.codes.OK && response.body.statuses) {
+                    } else if(this.isSuccefullResponse(response)) {
                         this.setResponse(HttpResponseHandler.codes.OK, response.body);
                     } else {
                         this.setResponse(HttpResponseHandler.codes.NOT_FOUND, { "message": url + " is not a valid twitter handler" });
@@ -35,6 +36,10 @@ export default class TwitterReaderHelper {
                 }
             );
         }
+    }
+
+    isSuccefullResponse(response) {
+        return response.statusCode === HttpResponseHandler.codes.OK && response.body.statuses.length > 0;
     }
 
     setResponse(status, responseJson) {

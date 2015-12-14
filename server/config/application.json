@@ -2,7 +2,8 @@
   "default": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,
-    "couchDbUrl": "http://localhost:5984"
+    "couchDbUrl": "http://localhost:5984",
+    "twitterBearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
   },
   "development": {
   },
