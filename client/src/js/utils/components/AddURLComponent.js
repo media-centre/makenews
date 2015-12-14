@@ -104,5 +104,6 @@ AddURLComponent.propTypes = {
     "noValidation": PropTypes.bool
 };
 AddURLComponent.defaultProps = {
-    "noValidation": false
+    "noValidation": false,
+    "categoryDetailsPageStrings": PropTypes.object.isRequired
 };
