@@ -2,7 +2,7 @@
 import { assert } from "chai";
 import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import TwitterReaderHelper, { baseURL, searchApi } from "../../../src/routes/helpers/TwitterReaderHelper";
+import TwitterReaderHelper, { baseURL, searchApi, searchParams } from "../../../src/routes/helpers/TwitterReaderHelper";
 
 describe("TwitterReaderHelper", () => {
     function mockTwitterRequest() {
@@ -56,7 +56,7 @@ describe("TwitterReaderHelper", () => {
             }
         };
         mockTwitterRequest()
-            .query({ "q": "@the_hindu" })
+            .query({ "q": "@the_hindu" + searchParams })
             .reply(HttpResponseHandler.codes.OK, expectedData, expectedData);
 
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
@@ -69,7 +69,7 @@ describe("TwitterReaderHelper", () => {
     it("should return 404 error if url is invalid", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url })
+            .query({ "q": url + searchParams })
             .reply(HttpResponseHandler.codes.NOT_IMPLEMENTED, "");
 
         let request = {
@@ -85,7 +85,7 @@ describe("TwitterReaderHelper", () => {
     it("should return 404 error if url is not valid twitter url", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url })
+            .query({ "q": url + searchParams })
             .reply(HttpResponseHandler.codes.OK, { "statuses": [], "search_metadata": { "completed_in": 0.01 } });
 
         let request = {
@@ -101,7 +101,7 @@ describe("TwitterReaderHelper", () => {
     it("should return error if request to url returns error", (done) => {
         let url = "myTest1";
         mockTwitterRequest()
-            .query({ "q": url })
+            .query({ "q": url + searchParams })
             .replyWithError("request failed");
 
         let request = {

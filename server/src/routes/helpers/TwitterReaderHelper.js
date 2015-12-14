@@ -6,7 +6,7 @@ import StringUtil from "../../../../common/src/util/StringUtil";
 import EnvironmentConfig from "../../config/EnvironmentConfig";
 import restRequest from "request";
 
-export const baseURL = "https://api.twitter.com/1.1", searchApi = "/search/tweets.json";
+export const baseURL = "https://api.twitter.com/1.1", searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
 export default class TwitterReaderHelper {
 
     constructor(request, response) {
@@ -19,11 +19,10 @@ export default class TwitterReaderHelper {
         if(StringUtil.isEmptyString(url)) {
             this.setResponse(HttpResponseHandler.codes.OK, {});
         } else {
-            let options = { "uri": baseURL + searchApi, "qs": { "q": url }, "json": true, "headers": {
+            let options = { "uri": baseURL + searchApi, "qs": { "q": url + searchParams }, "json": true, "headers": {
                 "Authorization": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("twitterBearerToken")
             }
             };
-
             restRequest.get(options,
                 (error, response) => {
                     if(NodeErrorHandler.errored(error)) {
