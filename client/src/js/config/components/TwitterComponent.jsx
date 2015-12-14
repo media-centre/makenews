@@ -5,7 +5,6 @@ import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
 let twRegex = /http:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]+/;
-
 export default class TwitterComponent extends Component {
 
     constructor(props) {
