@@ -4,6 +4,8 @@
 import CategoryDb from "./CategoryDb.js";
 import { CategoryDocument } from "../actions/CategoryDocuments.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
+import TwitterDb from "../../twitter/TwitterDb.js";
+import TwitterDocument from "../../twitter/TwitterDocument.js";
 
 
 export default class CategoriesApplicationQueries {
@@ -54,12 +56,12 @@ export default class CategoriesApplicationQueries {
     }
 
     static addTwitterFeeds(sourceId, feeds) {
-        const feedDocuments = CategoryDocument.getNewTwitterDocuments(sourceId, feeds);
-        return CategoryDb.createFeeds(feedDocuments);
+        const feedDocuments = TwitterDocument.getAllFeedsDocument(sourceId, feeds);
+        return TwitterDb.addTwitterFeeds(feedDocuments);
     }
 
     static addTwitterUrlConfiguration(categoryId, url, status) {
-        let twitterConfigDocument = CategoryDocument.getNewTwitterDocumnet(categoryId, "twitter", url, status);
+        let twitterConfigDocument = TwitterDocument.getSourceUrlDocument(categoryId, "twitter", url, status);
         return CategoryDb.createOrUpdateSource(twitterConfigDocument);
     }
 }
