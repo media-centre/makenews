@@ -18,7 +18,7 @@ export default class FacebookClient {
         this.appSecretProof = appSecretProof;
     }
 
-    pageFeeds(pageName) {
+    pagePosts(pageName, fields = "link,message,picture,name,caption,place,tags,privacy") {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(pageName)) {
                 reject({
@@ -27,7 +27,7 @@ export default class FacebookClient {
                 });
             }
             request.get({
-                "url": "https://graph.facebook.com/v2.5/" + pageName + "/feed?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+                "url": "https://graph.facebook.com/v2.5/" + pageName + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
             }, (error, response, body) => {
                 if(NodeErrorHandler.noError(error)) {
                     if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {

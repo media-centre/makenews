@@ -29,7 +29,7 @@ describe("FacebookRequestHandler", () => {
     describe("pageFeeds", () => {
         it("should throw error if the access token is empty", (done) => {
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            facebookRequestHandler.pageFeeds(null).catch(error => {
+            facebookRequestHandler.pagePosts(null).catch(error => {
                 assert.strictEqual("page name can not be null", error);
                 done();
             });
@@ -66,14 +66,14 @@ describe("FacebookRequestHandler", () => {
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             let facebookClientInstanceMock = sinon.mock(FacebookClient).expects("instance");
             facebookClientInstanceMock.withArgs(accessToken, appSecretProof).returns(facebookClient);
-            sinon.stub(facebookClient, "pageFeeds").withArgs(pageName).returns(Promise.resolve(actualFeeds));
+            sinon.stub(facebookClient, "pagePosts").withArgs(pageName).returns(Promise.resolve(actualFeeds));
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            facebookRequestHandler.pageFeeds(pageName).then(feeds => {
+            facebookRequestHandler.pagePosts(pageName).then(feeds => {
                 assert.deepEqual(actualFeeds, feeds);
                 facebookClientInstanceMock.verify();
                 FacebookClient.instance.restore();
-                facebookClient.pageFeeds.restore();
+                facebookClient.pagePosts.restore();
                 done();
             });
         });
@@ -82,7 +82,7 @@ describe("FacebookRequestHandler", () => {
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             let facebookClientInstanceMock = sinon.mock(FacebookClient).expects("instance");
             facebookClientInstanceMock.withArgs(accessToken, appSecretProof).returns(facebookClient);
-            sinon.stub(facebookClient, "pageFeeds").withArgs(pageName).returns(Promise.reject({
+            sinon.stub(facebookClient, "pagePosts").withArgs(pageName).returns(Promise.reject({
                 "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
                 "type": "OAuthException",
                 "code": 190,
@@ -92,11 +92,11 @@ describe("FacebookRequestHandler", () => {
 
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            facebookRequestHandler.pageFeeds(pageName).catch(error => {
+            facebookRequestHandler.pagePosts(pageName).catch(error => {
                 assert.strictEqual("error fetching feeds for a " + pageName + " page.", error);
                 facebookClientInstanceMock.verify();
                 FacebookClient.instance.restore();
-                facebookClient.pageFeeds.restore();
+                facebookClient.pagePosts.restore();
                 done();
             });
         });

@@ -11,11 +11,12 @@ import sinon from "sinon";
 describe("FacebookClient", () => {
 
     describe("pageFeeds", () => {
-        let accessToken = null, appSecretProof = null, pageName = null;
+        let accessToken = null, appSecretProof = null, pageName = null, remainingUrl = null;
         before("pageFeeds", () => {
             accessToken = "test_token";
             appSecretProof = "test_secret_proof";
             pageName = "thehindu";
+            remainingUrl = "/v2.5/" + pageName + "/posts?fields=link,message,picture,name,caption,place,tags,privacy&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
         });
 
         it("should return feeds for a public page", (done) => {
@@ -23,14 +24,14 @@ describe("FacebookClient", () => {
             nodErrorHandlerMock.returns(true);
 
             nock("https://graph.facebook.com")
-            .get("/v2.5/" + pageName + "/feed?access_token=" + accessToken + "&appsecret_proof=" + appSecretProof)
-            .reply(HttpResponseHandler.codes.OK, {
-                "data":
+                .get(remainingUrl)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data":
                         [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                        { "message": "test news 2", "id": "163974433696568_957850670975603" }]
-            });
+                            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                });
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pageFeeds(pageName).then((feeds) => {
+            facebookClient.pagePosts(pageName).then((feeds) => {
                 assert.strictEqual("test news 1", feeds[0].message);
                 assert.strictEqual("test news 2", feeds[1].message);
                 nodErrorHandlerMock.verify();
@@ -44,7 +45,7 @@ describe("FacebookClient", () => {
             nodErrorHandlerMock.returns(true);
 
             nock("https://graph.facebook.com")
-                .get("/v2.5/" + pageName + "/feed?access_token=" + accessToken + "&appsecret_proof=" + appSecretProof)
+                .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, {
                     "error": {
                         "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
@@ -56,7 +57,7 @@ describe("FacebookClient", () => {
                 }
             );
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pageFeeds(pageName).catch((error) => {
+            facebookClient.pagePosts(pageName).catch((error) => {
                 assert.strictEqual("OAuthException", error.type);
                 assert.strictEqual("Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.", error.message);
                 nodErrorHandlerMock.verify();
@@ -70,7 +71,7 @@ describe("FacebookClient", () => {
             nodErrorHandlerMock.returns(false);
 
             nock("https://graph.facebook.com")
-                .get("/v2.5/" + pageName + "/feed?access_token=" + accessToken + "&appsecret_proof=" + appSecretProof)
+                .get(remainingUrl)
                 .replyWithError({
                     "code": "ETIMEDOUT",
                     "errno": "ETIMEDOUT",
@@ -80,7 +81,7 @@ describe("FacebookClient", () => {
                 }
             );
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pageFeeds(pageName).catch((error) => {
+            facebookClient.pagePosts(pageName).catch((error) => {
                 assert.strictEqual("ETIMEDOUT", error.code);
                 assert.strictEqual("ETIMEDOUT", error.errno);
                 nodErrorHandlerMock.verify();
@@ -110,7 +111,7 @@ describe("FacebookClient", () => {
         it("should reject with error when page name is null", (done) => {
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pageFeeds(null).catch((error) => {
+            facebookClient.pagePosts(null).catch((error) => {
                 assert.strictEqual("page name cannot be empty", error.message);
                 done();
             });

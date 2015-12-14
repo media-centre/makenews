@@ -16,12 +16,12 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pageFeeds(pageName) {
+    pagePosts(pageName) {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(pageName)) {
                 reject("page name can not be null");
             }
-            this.facebookClient().pageFeeds(pageName).then(feeds => {
+            this.facebookClient().pagePosts(pageName).then(feeds => {
                 resolve(feeds);
             }).catch(error => { //eslint-disable-line no-unused-vars
                 reject("error fetching feeds for a " + pageName + " page.");

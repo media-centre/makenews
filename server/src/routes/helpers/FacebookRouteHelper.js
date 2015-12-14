@@ -15,7 +15,7 @@ export default class FacebookRouteHelper {
         let pageName = this.request.query.pageName;
         let accessTokenName = this.request.query.accessToken;
         let facebookRequestHandler = FacebookRequestHandler.instance(accessTokenName);
-        facebookRequestHandler.pageFeeds(pageName).then(feeds => {
+        facebookRequestHandler.pagePosts(pageName).then(feeds => {
             this.response.status(HttpResponseHandler.codes.OK);
             this.response.json({ "feeds": feeds });
         }).catch(error => {

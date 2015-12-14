@@ -29,7 +29,7 @@ describe("FacebookRouteHelper", () => {
 
             let facebookRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pageFeeds");
+            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
             let feeds = [
                 {
                     "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
@@ -58,7 +58,7 @@ describe("FacebookRouteHelper", () => {
 
             let facebookRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pageFeeds");
+            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
             let error = {
                 "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
                 "type": "OAuthException",
