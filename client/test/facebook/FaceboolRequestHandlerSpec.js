@@ -10,11 +10,10 @@ import "../helper/TestHelper.js";
 
 describe("FacebookRequestHandler", () => {
     describe("getPosts", () => {
-        let nodeUrl = null, accessToken = null, facebookOriginalFeeds = null, sourceId = null;
+        let nodeUrl = null, accessToken = null, facebookOriginalFeeds = null;
         before("getPosts", () => {
             nodeUrl = "test-node-name";
             accessToken = "test-access-token";
-            sourceId = "test-sourceId";
             facebookOriginalFeeds = {
                 "posts": [
                     {
@@ -56,8 +55,8 @@ describe("FacebookRequestHandler", () => {
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchPosts");
             facebookFetchPostsMock.withArgs(nodeUrl).returns(Promise.resolve(facebookOriginalFeeds));
 
-            FacebookRequestHandler.getPosts(sourceId, accessToken, nodeUrl).then(posts => {
-                assert.strictEqual(3, posts.length);
+            FacebookRequestHandler.getPosts(accessToken, nodeUrl).then(posts => {
+                assert.strictEqual(2, posts.length);
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
                 FacebookClient.instance.restore();
@@ -73,7 +72,7 @@ describe("FacebookRequestHandler", () => {
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchPosts");
             facebookFetchPostsMock.withArgs(nodeUrl).returns(Promise.reject("error"));
 
-            FacebookRequestHandler.getPosts(sourceId, accessToken, nodeUrl).catch(posts => {
+            FacebookRequestHandler.getPosts(accessToken, nodeUrl).catch(posts => {
                 assert.strictEqual(0, posts.length);
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
