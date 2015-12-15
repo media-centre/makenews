@@ -9,8 +9,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 describe("main page component", () => {
-    let mainPage = null, headerStrings = null;
+    let mainPage = null, headerStrings = null, highlightedTab = null;
     before("Main page component", () => {
+        highlightedTab = {
+            "tabName": "Surf"
+        };
         headerStrings = {
             "surfTab": {
                 "Name": "Surf"
@@ -26,7 +29,7 @@ describe("main page component", () => {
             }
         };
         let childElement = <div>{"main-page children"}</div>;
-        mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement} headerStrings={headerStrings}/>);
+        mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement} headerStrings={headerStrings} highlightedTab={highlightedTab}/>);
     });
 
     it("should have div with className main-page", () => {

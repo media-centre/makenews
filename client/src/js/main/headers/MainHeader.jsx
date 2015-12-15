@@ -1,15 +1,11 @@
 /* eslint no-unused-vars:0*/
 "use strict";
-import ConfigureMenu from "../../config/components/ConfigureMenu.jsx";
-import SurfMenu from "../../surf/components/SurfMenu.jsx";
-import ParkMenu from "../../park/components/ParkMenu.jsx";
 import Logo from "../../utils/components/Logo.jsx";
+import CustomTabComponent from "../../utils/components/TabComponent/CustomTabComponent.jsx";
+import TabGroup from "../../utils/components/TabComponent/TabGroup.jsx";
 import Logout from "../../login/components/Logout.jsx";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
-
-const ACTIVE_CLASS = "selected";
-
 
 export default class MainHeader extends Component {
 
@@ -24,17 +20,11 @@ export default class MainHeader extends Component {
                     </div>
 
                     <div className="flexible t-center">
-                        <ul className="menu-list">
-                            <li key={0} id="configureLink">
-                                <ConfigureMenu ref="configureMenu" configTab={this.props.headerStrings.configTab}/>
-                            </li>
-                            <li key={1} id="surfLink">
-                                <SurfMenu ref="surfMenu" surfTab={this.props.headerStrings.surfTab}/>
-                            </li>
-                            <li key={2} id="parkLink">
-                                <ParkMenu ref="parkMenu" parkTab={this.props.headerStrings.parkTab}/>
-                            </li>
-                        </ul>
+                        <TabGroup highlightedTab={this.props.highlightedTab} >
+                            <CustomTabComponent name={this.props.headerStrings.configTab.Name} url="/configure/categories" />
+                            <CustomTabComponent name={this.props.headerStrings.surfTab.Name} url="/surf" />
+                            <CustomTabComponent name={this.props.headerStrings.parkTab.Name} url="/park" />
+                        </TabGroup>
                     </div>
                 </div>
             </header>
@@ -44,7 +34,6 @@ export default class MainHeader extends Component {
 
 MainHeader.displayName = "Main Header";
 MainHeader.propTypes = {
-    "headerStrings": PropTypes.object.isRequired
+    "headerStrings": PropTypes.object.isRequired,
+    "highlightedTab": PropTypes.object.isRequired
 };
-
-

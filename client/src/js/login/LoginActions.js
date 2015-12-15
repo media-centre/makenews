@@ -15,6 +15,7 @@ export function userLogin(history, userName, password) {
         ajax.post(headers, data)
             .then(succesData => {
                 dispatch(loginSuccess(history, succesData.userName));
+                history.push("/surf");
             })
             .catch(errorData => { //eslint-disable-line no-unused-vars
                 dispatch(loginFailed("Invalid user name or password"));

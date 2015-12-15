@@ -9,6 +9,7 @@ import TabComponent from "../../utils/components/TabComponent/TabComponent.jsx";
 import RSSComponent from "./RSSComponent.jsx";
 import FacebookComponent from "./FacebookComponent.jsx";
 import TwitterComponent from "./TwitterComponent.jsx";
+import { highLightTabAction } from "../../tabs/TabActions.js"
 
 const RSS = "rss";
 const FACEBOOK = "facebook";
@@ -25,6 +26,7 @@ export default class Category extends Component {
     }
 
     componentWillMount() {
+        this.props.dispatch(highLightTabAction("Configure"));
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
         window.scrollTo(0, 0);
     }

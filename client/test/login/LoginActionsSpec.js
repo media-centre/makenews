@@ -26,7 +26,7 @@ describe("userLogin", () => {
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
-        history = {};
+        history= { "push": () => {} };
         headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
@@ -45,9 +45,10 @@ describe("userLogin", () => {
         const expectedActions = [
             { "type": LOGIN_SUCCESS, "history": history, "userName": userName }
         ];
+        sinon.mock(history).expects("push").withArgs("/surf");
         const store = mockStore({ "errorMessage": "" }, expectedActions, done);
-
         store.dispatch(userLogin(history, userName, password));
+        history.push.restore();
     });
 
     it("should dispatch login failure action if the login is not successful", (done) => {

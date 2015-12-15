@@ -4,6 +4,7 @@ import React, { PropTypes } from "react";
 import { History, Link } from "react-router";
 import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
+import { highLightTabAction } from "../../tabs/TabActions.js"
 import { createCategory } from "../actions/CategoryActions.js";
 
 let AllCategories = React.createClass({
@@ -21,6 +22,7 @@ let AllCategories = React.createClass({
 
     componentWillMount() {
         window.scrollTo(0, 0);
+        this.props.dispatch(highLightTabAction("Configure"));
         this.props.dispatch(displayAllCategoriesAsync());
     },
 

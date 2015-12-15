@@ -26,15 +26,13 @@ describe("login reducer", function() {
             let DocumentMock = sinon.mock(document);
 
             let testUser = "test_user";
-            let action = { "type": "LOGIN_SUCCESS", "history": { "push": () => {} }, "userName": testUser };
-            sinon.mock(action.history).expects("push").withArgs("/surf");
+            let action = { "type": "LOGIN_SUCCESS", "history": { }, "userName": testUser };
 
             let state = login(undefined, action);
             DocumentMock.verify();
             assert.strictEqual("", state.errorMessage);
             assert.strictEqual(testUser, state.userName);
             DocumentMock.restore();
-            action.history.push.restore();
         });
     });
     describe("loginLocale", () => {

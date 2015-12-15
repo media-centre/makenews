@@ -7,7 +7,7 @@ export class MainPage extends Component {
     render() {
         return (
             <div className="main-page">
-                <MainHeader ref="header" headerStrings={this.props.headerStrings}/>
+                <MainHeader ref="header" headerStrings={this.props.headerStrings} highlightedTab={this.props.highlightedTab}/>
                 <section>{this.props.children}</section>
             </div>
         );
@@ -22,6 +22,7 @@ MainPage.propTypes = {
 };
 
 function select(store) {
-    return { "headerStrings": store.mainHeaderLocale };
+    return { "highlightedTab": store.highlightedTab, "headerStrings": store.mainHeaderLocale };
 }
+
 export default connect(select)(MainPage);

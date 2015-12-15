@@ -3,6 +3,7 @@
 import { allCategories, categoryDetails, configurePageLocale } from "./config/reducers/ConfigReducer.js";
 import { allFeeds } from "./surf/reducers/SurfReducer.js";
 import { login, loginPageLocale } from "./login/LoginReducers.js";
+import { highlightedTab } from "./tabs/TabReducers.js";
 import { combineReducers } from "redux";
 import { mainHeaderLocale } from "./main/reducers/MainReducer.js";
 
@@ -13,7 +14,8 @@ const contentDiscoveryApp = combineReducers({
     allCategories,
     categoryDetails,
     configurePageLocale,
-    mainHeaderLocale
+    mainHeaderLocale,
+    highlightedTab
 });
 
 export default contentDiscoveryApp;

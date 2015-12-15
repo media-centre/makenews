@@ -13,8 +13,6 @@ export function login(state = { "errorMessage": "" }, action = {}) {
         };
     case LOGIN_SUCCESS:
         localStorage.setItem("userInfo", action.userName);
-        action.history.push("/surf");
-
         return {
             "errorMessage": "",
             "userName": action.userName
