@@ -110,4 +110,10 @@ describe("CouchSessionSpec", () => {
             });
         });
     });
+
+    describe("logout", () => {
+        it("should clear the session when user logs out", () => {
+
+        });
+    });
 });
