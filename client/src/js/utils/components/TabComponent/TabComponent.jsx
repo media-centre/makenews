@@ -23,7 +23,7 @@ export default class TabComponent extends Component {
 
     _activeClassName(tabName) {
         const NOT_FOUND_INDEX = -1;
-        return this.props.tabToHighlight.tabNames.indexOf(tabName) === NOT_FOUND_INDEX ? "tab h-center" : "tab h-center active selected";
+        return (this.props.tabToHighlight.tabNames.indexOf(tabName) === NOT_FOUND_INDEX) ? "tab h-center" : "tab h-center active selected";
     }
 
     render() {
@@ -32,14 +32,12 @@ export default class TabComponent extends Component {
             let tabDisplayName = header.props["tab-header"];
             let tabName = header.props.name;
             if(header.props.icon) {
-                li = (<li key={index} className={this._activeClassName.bind(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
+                li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
                 <i className={"fa fa-" + header.props.icon.toLowerCase()}></i>
                     <span>{tabDisplayName}</span>
                 </li>);
             } else {
-                li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
-                        {tabDisplayName}
-                    </li>);
+                li = <li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>{tabDisplayName}</li>;
             }
             return li;
         });
