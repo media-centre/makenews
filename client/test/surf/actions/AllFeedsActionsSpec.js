@@ -2,7 +2,7 @@
 
 "use strict";
 import { displayAllFeeds, DISPLAY_ALL_FEEDS, displayAllFeedsAsync } from "../../../src/js/surf/actions/AllFeedsActions.js";
-import SurfApplicationQueries from "../../../src/js/surf/db/SurfApplicationQueries.js";
+import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import mockStore from "../../helper/ActionHelper.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -37,24 +37,24 @@ describe("AllFeedsAction", () => {
                 ]
             }
         ];
-        let fetchAllFeedsWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllFeedsWithCategoryName");
+        let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(feeds));
 
         let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
         return Promise.resolve(store.dispatch(displayAllFeedsAsync())).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
-            SurfApplicationQueries.fetchAllFeedsWithCategoryName.restore();
+            FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
     });
 
     it("dispatch displayAllFeedsAsync action with empty feeds on fetch failure", (done) => {
-        let fetchAllFeedsWithCategoryNameMock = sinon.mock(SurfApplicationQueries).expects("fetchAllFeedsWithCategoryName");
+        let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
         let store = mockStore({ "feeds": [] }, [{ "type": DISPLAY_ALL_FEEDS, "feeds": [] }], done);
         return Promise.resolve(store.dispatch(displayAllFeedsAsync())).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
-            SurfApplicationQueries.fetchAllFeedsWithCategoryName.restore();
+            FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
     });
 });

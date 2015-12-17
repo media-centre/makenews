@@ -2,12 +2,13 @@
 
 "use strict";
 import DbSession from "../../src/js/db/DbSession.js";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import PouchDB from "pouchdb";
 import sinon from "sinon";
 import PouchClient from "../../src/js/db/PouchClient.js";
 
 describe("PouchClient", () => {
+    let parkFeed = null, surfFeed = null;
     before("PouchClient", () => {
         let pouch = new PouchDB("myDB", { "db": require("memdown") });
         sinon.stub(DbSession, "instance", () => {
@@ -56,13 +57,23 @@ describe("PouchClient", () => {
         }
             , "rssId2");
 
-        DbSession.instance().put({
+        surfFeed = {
             "docType": "feed",
             "title": "tn",
             "description": "www.facebookpolitics.com",
             "sourceId": "rssId1"
-        }
+        };
+        DbSession.instance().put(surfFeed
             , "feedId1");
+
+        parkFeed = {
+            "docType": "feed",
+            "title": "tn3",
+            "description": "www.fbpolitics.com",
+            "sourceId": "fbId1",
+            "status": "park"
+        };
+        DbSession.instance().put(parkFeed, "feedId2");
 
         DbSession.instance().put({
             "language": "javascript",
@@ -80,7 +91,10 @@ describe("PouchClient", () => {
                     "map": "function(doc) { if(doc.docType === 'source') {emit(doc.url, doc)} }"
                 },
                 "allFeedsAndCategoriesWithSource": {
-                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed') { emit(doc.sourceId, null);}}"
+                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType === 'feed' && (!doc.status || doc.status === 'surf')) { emit(doc.sourceId, null);}}"
+                },
+                "parkedFeeds": {
+                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType === 'feed' && doc.status === 'park') { emit(doc.sourceId, null);}}"
                 }
             } }, "_design/category");
     });
@@ -150,8 +164,28 @@ describe("PouchClient", () => {
             });
         });
 
+        function assertFeedView(actual, docId, sourceId, expectedFeed) {
+            let feedFound = false;
+            actual.forEach((doc) => {
+                if(doc.id === docId) {
+                    expect(doc.key).to.eq(sourceId);
+                    assertFeed(doc.doc, expectedFeed);
+                    feedFound = true;
+                }
+            });
+            assert.ok(feedFound);
+        }
+
+        function assertFeed(actual, expected) {
+            assert.strictEqual(actual.docType, expected.docType);
+            assert.strictEqual(actual.title, expected.title);
+            assert.strictEqual(actual.description, expected.description);
+            assert.strictEqual(actual.sourceId, expected.sourceId);
+            assert.strictEqual(actual.status, expected.status);
+        }
+
         describe("allFeedsAndCategoriesWithSource", () => {
-            it("should index all feeds for all categories by category id", (done) => {
+            it("should index feeds for all categories by category id", (done) => {
                 PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).then((doc) => {
                     expect(doc.map((item)=> {
                         return item.key;
@@ -160,10 +194,41 @@ describe("PouchClient", () => {
                     let rssSourceRelatedDocTypes = doc.map(relatedDoc => {
                         return relatedDoc.doc.docType;
                     });
-
                     expect(doc[0].doc.docType).not.to.eq("feed");
                     expect(rssSourceRelatedDocTypes).to.include("category");
                     expect(rssSourceRelatedDocTypes).to.include("feed");
+                    done();
+                });
+            });
+
+            it("should get surf feeds", (done) => {
+                PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).then((doc) => {
+                    assertFeedView(doc, "feedId1", "rssId1", surfFeed);
+                });
+                done();
+            });
+        });
+
+        describe("parkedFeeds", () => {
+            it("should index feeds for all categories by category id", (done) => {
+                PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true }).then((doc) => {
+                    expect(doc.map((item)=> {
+                        return item.key;
+                    })).to.deep.eq(["fbId1", "fbId1", "rssId1", "rssId1", "rssId2"]);
+
+                    let rssSourceRelatedDocTypes = doc.map(relatedDoc => {
+                        return relatedDoc.doc.docType;
+                    });
+                    expect(doc[0].doc.docType).not.to.eq("feed");
+                    expect(rssSourceRelatedDocTypes).to.include("category");
+                    expect(rssSourceRelatedDocTypes).to.include("feed");
+                    done();
+                });
+            });
+
+            it("should get park feeds", (done) => {
+                PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true }).then((doc) => {
+                    assertFeedView(doc, "feedId2", "fbId1", parkFeed);
                     done();
                 });
             });

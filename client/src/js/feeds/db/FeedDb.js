@@ -3,8 +3,12 @@
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
 
-export default class SurfDb {
-    static fetchAllFeedsAndCategoriesWithSource() {
+export default class FeedDb {
+    static fetchSurfFeedsAndCategoriesWithSource() {
         return PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true });
+    }
+
+    static fetchParkFeeds() {
+        return PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true });
     }
 }
