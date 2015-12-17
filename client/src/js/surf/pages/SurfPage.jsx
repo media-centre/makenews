@@ -9,7 +9,7 @@ import { highLightTabAction } from "../../tabs/TabActions.js";
 export default class SurfPage extends Component {
     componentWillMount() {
         window.scrollTo(0, 0);
-        this.props.dispatch(highLightTabAction("Surf"));
+        this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(displayAllFeedsAsync());
     }
 

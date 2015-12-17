@@ -12,7 +12,7 @@ describe("MainHeaderTab", () => {
 
     before("MainHeaderTab", () => {
         highlightedTab = {
-            "tabName": "Park"
+            "tabNames": ["Park"]
         };
     });
 

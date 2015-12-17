@@ -2,6 +2,7 @@
 
 "use strict";
 import React, { Component, PropTypes } from "react";
+import { highLightTabAction } from "../../../tabs/TabActions.js";
 
 export default class TabComponent extends Component {
     constructor(props) {
@@ -12,24 +13,33 @@ export default class TabComponent extends Component {
         };
     }
 
-    _selectTab(index) {
+    _selectTab(index, tabName) {
+        this.props.dispatch(highLightTabAction(["Configure", tabName]));
         if(this.state.activeIndex === index) {
             return;
         }
         this.setState({ "activeIndex": index });
     }
 
-    render() {
+    _activeClassName(tabName) {
+        const NOT_FOUND_INDEX = -1;
+        return this.props.tabToHighlight.tabNames.indexOf(tabName) === NOT_FOUND_INDEX ? "tab h-center" : "tab h-center active selected";
+    }
 
+    render() {
         let headers = this.props.children.map((header, index)=> {
             let li = null;
+            let tabDisplayName = header.props["tab-header"];
+            let tabName = header.props.name;
             if(header.props.icon) {
-                li = (<li key={index} className={index === this.state.activeIndex ? "tab h-center active selected" : "tab h-center"} ref={"tab" + index} onClick={this._selectTab.bind(this, index)}>
-                    <i className={"fa fa-" + header.props.icon.toLowerCase()}></i>
-                    <span>{header.props["tab-header"]}</span>
+                li = (<li key={index} className={this._activeClassName.bind(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
+                <i className={"fa fa-" + header.props.icon.toLowerCase()}></i>
+                    <span>{tabDisplayName}</span>
                 </li>);
             } else {
-                li = <li key={index} className={index === this.state.activeIndex ? "tab h-center active selected" : "tab h-center"} ref={"tab" + index} onClick={this._selectTab.bind(this, index)}>{header.props["tab-header"]}</li>;
+                li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
+                        {tabDisplayName}
+                    </li>);
             }
             return li;
         });
@@ -53,5 +63,7 @@ TabComponent.displayName = "TabComponent";
 
 TabComponent.propTypes = {
     "children": PropTypes.node.isRequired,
-    "activeIndex": PropTypes.number
+    "activeIndex": PropTypes.number,
+    "dispatch": PropTypes.func.isRequired,
+    "tabToHighlight": PropTypes.object.isRequired
 };

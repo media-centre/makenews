@@ -12,7 +12,7 @@ describe("main page component", () => {
     let mainPage = null, headerStrings = null, highlightedTab = null;
     before("Main page component", () => {
         highlightedTab = {
-            "tabName": "Surf"
+            "tabNames": ["Surf"]
         };
         headerStrings = {
             "surfTab": {

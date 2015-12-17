@@ -22,7 +22,7 @@ let AllCategories = React.createClass({
 
     componentWillMount() {
         window.scrollTo(0, 0);
-        this.props.dispatch(highLightTabAction("Configure"));
+        this.props.dispatch(highLightTabAction(["Configure", "RSS"]));
         this.props.dispatch(displayAllCategoriesAsync());
     },
 

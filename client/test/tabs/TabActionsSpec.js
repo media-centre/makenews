@@ -6,12 +6,13 @@ import mockStore from "../helper/ActionHelper.js";
 
 describe("Tab Action", () => {
     it("should call highlighted tab action successfully", (done) => {
-        const tabName = "tab";
+        const tabName1 = "Configure";
+        const tabName2 = "RSS";
         const expectedActions = [
-            { "type": CHANGE_HIGHLIGHTED_TAB, "tabName": tabName }
+            { "type": CHANGE_HIGHLIGHTED_TAB, "tabNames": [tabName1, tabName2] }
         ];
-        const store = mockStore({ "tabName": "Surf" }, expectedActions, done);
-        store.dispatch(highLightTabAction(tabName));
+        const store = mockStore({ "tabNames": ["Surf"] }, expectedActions, done);
+        store.dispatch(highLightTabAction([tabName1, tabName2]));
     });
 });
 

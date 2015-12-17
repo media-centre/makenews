@@ -26,7 +26,7 @@ export default class Category extends Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(highLightTabAction("Configure"));
+        this.props.dispatch(highLightTabAction(["Configure", "RSS"]));
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
         window.scrollTo(0, 0);
     }
@@ -56,18 +56,18 @@ export default class Category extends Component {
         let tabContent = Object.keys(this.props.categoryDetails.sources).map((key, index) => {
             let item = this.props.categoryDetails.sources[key];
             if(key === RSS) {
-                return <RSSComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <RSSComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             } else if(key === FACEBOOK) {
-                return <FacebookComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <FacebookComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             } else if(key === TWITTER) {
-                return <TwitterComponent key={index} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <TwitterComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             }
         });
 
         return (
           <div className="category-page max-width">
               <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
-              <TabComponent>{tabContent}</TabComponent>
+              <TabComponent tabToHighlight={this.props.highlightedTab} dispatch={this.props.dispatch}>{tabContent}</TabComponent>
           </div>
       );
     }
@@ -79,12 +79,13 @@ Category.propTypes = {
     "categoryDetails": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "params": PropTypes.object,
+    "highlightedTab": PropTypes.object,
     "params.categoryType": PropTypes.string,
     "categoryDetailsPageStrings": PropTypes.object.isRequired
 };
 
 function select(store) {
-    return { "categoryDetails": store.categoryDetails, "categoryDetailsPageStrings": store.configurePageLocale.categoryDetailsPage };
+    return { "categoryDetails": store.categoryDetails, "categoryDetailsPageStrings": store.configurePageLocale.categoryDetailsPage, "highlightedTab": store.highlightedTab };
 }
 export default connect(select)(Category);
 

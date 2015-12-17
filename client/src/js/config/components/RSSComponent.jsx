@@ -5,7 +5,6 @@ import { addRssUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
 export default class RSSComponent extends Component {
-
     constructor(props) {
         super(props);
         this.state = { "errorMessage": "" };
