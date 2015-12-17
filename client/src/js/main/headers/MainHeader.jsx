@@ -1,13 +1,12 @@
 /* eslint no-unused-vars:0*/
 "use strict";
 import Logo from "../../utils/components/Logo.jsx";
-import CustomTabComponent from "../../utils/components/TabComponent/CustomTabComponent.jsx";
+import MainHeaderTab from "../../utils/components/TabComponent/MainHeaderTab.jsx";
 import Logout from "../../login/components/Logout.jsx";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
 
 export default class MainHeader extends Component {
-
     render() {
         return (
             <header>
@@ -20,9 +19,9 @@ export default class MainHeader extends Component {
 
                     <div className="flexible t-center">
                         <ul className="menu-list">
-                            <CustomTabComponent name={this.props.headerStrings.configTab.Name} url="/configure/categories" tabToHighlight={this.props.highlightedTab} />
-                            <CustomTabComponent name={this.props.headerStrings.surfTab.Name} url="/surf" tabToHighlight={this.props.highlightedTab} />
-                            <CustomTabComponent name={this.props.headerStrings.parkTab.Name} url="/park" tabToHighlight={this.props.highlightedTab} />
+                            <MainHeaderTab name={this.props.headerStrings.configTab.Name} url="/configure/categories" tabToHighlight={this.props.highlightedTab} className="configure" />
+                            <MainHeaderTab name={this.props.headerStrings.surfTab.Name} url="/surf" tabToHighlight={this.props.highlightedTab} className="surf" />
+                            <MainHeaderTab name={this.props.headerStrings.parkTab.Name} url="/park" tabToHighlight={this.props.highlightedTab} className="park" />
                         </ul>
                     </div>
                 </div>

@@ -4,23 +4,24 @@
 import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";
 
-export default class CustomTabComponent extends Component {
+export default class MainHeaderTab extends Component {
     render() {
         return (
             <li>
                 <Link to={this.props.url} className={(this.props.tabToHighlight.tabName === this.props.name) ? "selected" : ""} >
-                    <div className= "configure header-link-image"></div>
-                    <span ref="configureTabName">{this.props.name}</span>
+                    <div className={this.props.className + " header-link-image"}></div>
+                    <span>{this.props.name}</span>
                 </Link>
             </li>
         );
     }
 }
 
-CustomTabComponent.displayName = "CustomTabComponent";
+MainHeaderTab.displayName = "MainHeaderTab";
 
-CustomTabComponent.propTypes = {
+MainHeaderTab.propTypes = {
     "name": PropTypes.string.isRequired,
     "url": PropTypes.string.isRequired,
-    "tabToHighlight": PropTypes.object.isRequired
+    "tabToHighlight": PropTypes.object.isRequired,
+    "className": PropTypes.string.isRequired
 };
