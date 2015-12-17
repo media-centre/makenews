@@ -2,7 +2,6 @@
 "use strict";
 import Logo from "../../utils/components/Logo.jsx";
 import CustomTabComponent from "../../utils/components/TabComponent/CustomTabComponent.jsx";
-import TabGroup from "../../utils/components/TabComponent/TabGroup.jsx";
 import Logout from "../../login/components/Logout.jsx";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
@@ -20,11 +19,11 @@ export default class MainHeader extends Component {
                     </div>
 
                     <div className="flexible t-center">
-                        <TabGroup highlightedTab={this.props.highlightedTab} >
-                            <CustomTabComponent name={this.props.headerStrings.configTab.Name} url="/configure/categories" />
-                            <CustomTabComponent name={this.props.headerStrings.surfTab.Name} url="/surf" />
-                            <CustomTabComponent name={this.props.headerStrings.parkTab.Name} url="/park" />
-                        </TabGroup>
+                        <ul className="menu-list">
+                            <CustomTabComponent name={this.props.headerStrings.configTab.Name} url="/configure/categories" tabToHighlight={this.props.highlightedTab} />
+                            <CustomTabComponent name={this.props.headerStrings.surfTab.Name} url="/surf" tabToHighlight={this.props.highlightedTab} />
+                            <CustomTabComponent name={this.props.headerStrings.parkTab.Name} url="/park" tabToHighlight={this.props.highlightedTab} />
+                        </ul>
                     </div>
                 </div>
             </header>
