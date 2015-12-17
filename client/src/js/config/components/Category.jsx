@@ -22,7 +22,8 @@ export default class Category extends Component {
 
         this.state = {
             "isDefaultCategory": this.props.params.categoryName === DEFAULT_CATEGORY,
-            "titleErrorMessage": ""
+            "titleErrorMessage": "",
+            "isValidName": true
         };
     }
 
@@ -39,18 +40,31 @@ export default class Category extends Component {
 
     _updateCategoryName(categoryName) {
         if(!categoryName) {
-            this.setState({ "titleErrorMessage": "Category name can not be empty" });
+            this.setState({ "titleErrorMessage": "Category name can not be empty", "isValidName": false });
             return;
         }
 
 
         if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
-                this.setState({ "titleErrorMessage": response.status ? "" : "Category name already exists" });
+                if(response.status) {
+                    this.setState({ "titleErrorMessage": "Category name is updated", "isValidName": true });
+                } else {
+                    this.setState({ "titleErrorMessage": "Category name already exists", "isValidName": false });
+                }
             }));
         } else {
-            this.setState({ "titleErrorMessage": "Invalid category name. Use only - or _" });
+            this.setState({ "titleErrorMessage": "Invalid category name. Use only - or _", "isValidName": false });
         }
+    }
+
+    _getValidURLCount(content) {
+        let items = content.filter((item) => {
+            if(item.status === "valid") {
+                return item;
+            }
+        });
+        return items.length;
     }
 
     render() {
@@ -58,18 +72,18 @@ export default class Category extends Component {
         let tabContent = Object.keys(this.props.categoryDetails.sources).map((key, index) => {
             let item = this.props.categoryDetails.sources[key];
             if(key === RSS) {
-                return <RSSComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <RSSComponent key={index} tab-header={item.name + "(" + this._getValidURLCount(item.details) + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             } else if(key === FACEBOOK) {
-                return <FacebookComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <FacebookComponent key={index} tab-header={item.name + "(" + this._getValidURLCount(item.details) + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             } else if(key === TWITTER) {
-                return <TwitterComponent key={index} name={item.name} tab-header={item.name + "(" + item.details.length + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
+                return <TwitterComponent key={index} tab-header={item.name + "(" + this._getValidURLCount(item.details) + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
             }
         });
 
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
-              <TabComponent tabToHighlight={this.props.highlightedTab} dispatch={this.props.dispatch}>{tabContent}</TabComponent>
+              <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
+              <TabComponent>{tabContent}</TabComponent>
           </div>
       );
     }
@@ -90,5 +104,3 @@ function select(store) {
     return { "categoryDetails": store.categoryDetails, "categoryDetailsPageStrings": store.configurePageLocale.categoryDetailsPage, "highlightedTab": store.highlightedTab };
 }
 export default connect(select)(Category);
-
-

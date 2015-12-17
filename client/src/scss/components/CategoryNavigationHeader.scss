@@ -18,11 +18,14 @@
       padding: 6px 0px;
     }
 
-    .error-msg {
+    .title-status {
       font-size: $extra-small-font-size;
       height: 17px;
+    }
+    .error-msg {
       color: $error-border-color;
     }
+
 }
 
 

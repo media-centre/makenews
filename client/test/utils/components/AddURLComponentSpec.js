@@ -25,7 +25,7 @@ describe("AddURLComponent", () => {
 
     before("TabComponent", () => {
         AddURLComponentElement = TestUtils.renderIntoDocument(
-            <AddURLComponent addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage="" sourceDomainValidation={(url, callback) => callback("Url is successfully added")} categoryDetailsPageStrings={categoryDetailsPageStrings}/> //eslint-disable-line max-len
+            <AddURLComponent addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })} categoryDetailsPageStrings={categoryDetailsPageStrings}/> //eslint-disable-line max-len
         );
     });
 

@@ -24,7 +24,7 @@ class CategoryNavigationHeader extends Component {
     }
 
     _highlightEditableTitle() {
-        return this.props.errorMessage.trim().length > 0 ? "t-center t-bold error-border" : "t-center t-bold";
+        return this.props.isValidName ? "t-center trans-border t-bold category-title" : "t-center t-bold error-border category-title";
     }
 
     render() {
@@ -34,7 +34,7 @@ class CategoryNavigationHeader extends Component {
             <div className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" contentEditable onKeyDown={(event)=> this._handleEnterKey(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
                     {this.props.categoryName}
             </div>
-            <div className="error-msg t-center">{this.props.errorMessage}</div>
+            <div className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
         let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 
@@ -61,14 +61,16 @@ CategoryNavigationHeader.propTypes = {
     "editableHeader": PropTypes.bool,
     "isDefault": PropTypes.bool,
     "errorMessage": PropTypes.string,
-    "categoryDetailsPageStrings": PropTypes.object.isRequired
+    "categoryDetailsPageStrings": PropTypes.object.isRequired,
+    "isValidName": PropTypes.bool
 };
 
 CategoryNavigationHeader.defaultProps = {
     "categoryName": "",
     "editableHeader": false,
     "isDefault": false,
-    "errorMessage": ""
+    "errorMessage": "",
+    "isValidName": true
 };
 
 

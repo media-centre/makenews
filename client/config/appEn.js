@@ -52,7 +52,12 @@ export default {
                     "invalidUrlFormat": "Invalid URL format",
                     "emptyUrl": "URL should not be empty",
                     "validatingUrl": "validating Url...",
-                    "alreadyAdded": "URL is already added"
+                    "alreadyAdded": "URL is already added",
+                    "noSuchUrl": "No such link found",
+                    "invalidRssUrl": "Invalid feed url",
+                    "invalidTwitterUrl": "Invalid twitter url",
+                    "invalidFacebookUrl": "Invalid facebook url",
+                    "noFbAccess": "No such link or no access to the profile"
                 }
             },
             "configureTabName": "Configure"

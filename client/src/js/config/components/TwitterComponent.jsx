@@ -15,11 +15,12 @@ export default class TwitterComponent extends Component {
     _validateUrl(url, callback, props) {
         if(url.match(twRegex)) {
             props.dispatch(addTwitterUrlAsync(props.categoryId, url, (response)=> {
-                let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
-                return callback(errorMsg);
+                let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+                return callback({ "error": errorMsg, "urlAdded": true });
             }));
         } else {
-            return callback("Invalid twitter url");
+            return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidTwitterUrl });
+
         }
     }
 

@@ -53,8 +53,11 @@ a {
   color: $primary-font-color;
 }
 
-.border {
+.border, .trans-border {
   border: 1px solid $input-border-color;
+}
+.trans-border {
+  border-color: transparent;
 }
 
 .border-bottom {

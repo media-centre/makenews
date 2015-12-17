@@ -13,8 +13,8 @@ export default class FacebookComponent extends Component {
 
     _validateUrl(url, callback, props) {
         props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
-            let errorMsg = response === "invalid" ? "Fetching feeds failed" : "Url is successfully added";
-            return callback(errorMsg);
+            let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+            return callback({ "error": errorMsg, "urlAdded": true });
         }));
     }
 

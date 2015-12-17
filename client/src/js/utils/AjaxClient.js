@@ -52,7 +52,12 @@ export default class AjaxClient {
                       let jsonResponse = JSON.parse(event.target.response);
                       resolve(jsonResponse);
                   } else if(xhttp.status === response.UNAUTHORIZED) {
-                      let jsonResponse = JSON.parse(event.target.response);
+                      let jsonResponse = event.target.response;
+                      try {
+                          jsonResponse = JSON.parse(event.target.response);
+                      } catch(error) {
+                          reject(jsonResponse);
+                      }
                       reject(jsonResponse);
                   } else if(xhttp.status === response.BAD_GATEWAY) {
                       reject("connection refused");
