@@ -330,9 +330,9 @@ gulp.task("checkin-ready", ["common:checkin-ready", "client:checkin-ready", "ser
 
 gulp.task("test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " +
-    parameters.server.testPath + "/**/**/**/*.js " +
-    parameters.common.testPath + "/**/**/**/*.js " +
-    parameters.client.testPath + "/**/**/**/*.jsx " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+    parameters.server.testPath + "/**/**/**/**/**/*.js " +
+    parameters.common.testPath + "/**/**/**/**/**/*.js " +
+    parameters.client.testPath + "/**/**/**/**/**/*.js " + parameters.client.testPath + "/**/**/**/**/**/*.jsx ", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
