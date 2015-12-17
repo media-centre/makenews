@@ -1,0 +1,22 @@
+{"level":"info","message":"all dbs = test,test1,test2","timestamp":"2015-12-28T05:36:49.490Z"}
+{"level":"info","message":"test migration started","timestamp":"2015-12-28T05:36:49.492Z"}
+{"level":"info","message":"test1 migration started","timestamp":"2015-12-28T05:36:49.509Z"}
+{"level":"info","message":"test2 migration started","timestamp":"2015-12-28T05:36:49.511Z"}
+{"level":"info","message":"test1 migration completed","timestamp":"2015-12-28T05:36:49.578Z"}
+{"level":"info","message":"test migration completed","timestamp":"2015-12-28T05:36:49.579Z"}
+{"level":"info","message":"test2 migration completed","timestamp":"2015-12-28T05:36:49.581Z"}
+{"level":"info","message":"[success-count, failed-count] = [3,0]","timestamp":"2015-12-28T05:36:49.581Z"}
+{"level":"info","message":"all dbs = test,test1,test2","timestamp":"2015-12-28T05:38:32.824Z"}
+{"level":"info","message":"test migration started","timestamp":"2015-12-28T05:38:32.825Z"}
+{"level":"info","message":"test1 migration started","timestamp":"2015-12-28T05:38:32.843Z"}
+{"level":"info","message":"test2 migration started","timestamp":"2015-12-28T05:38:32.845Z"}
+{"level":"info","message":"test migration completed","timestamp":"2015-12-28T05:38:32.859Z"}
+{"level":"info","message":"test1 migration completed","timestamp":"2015-12-28T05:38:32.862Z"}
+{"level":"info","message":"test2 migration completed","timestamp":"2015-12-28T05:38:32.864Z"}
+{"level":"info","message":"[success-count, failed-count] = [3,0]","timestamp":"2015-12-28T05:38:32.865Z"}
+{"level":"info","message":"all dbs = test,test1","timestamp":"2015-12-28T05:51:52.201Z"}
+{"level":"info","message":"test migration started","timestamp":"2015-12-28T05:51:52.202Z"}
+{"level":"info","message":"test1 migration started","timestamp":"2015-12-28T05:51:52.221Z"}
+{"level":"info","message":"test migration completed","timestamp":"2015-12-28T05:51:52.294Z"}
+{"level":"info","message":"test1 migration completed","timestamp":"2015-12-28T05:51:52.298Z"}
+{"level":"info","message":"[success-count, failed-count] = [2,0]","timestamp":"2015-12-28T05:51:52.298Z"}
