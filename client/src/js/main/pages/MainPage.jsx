@@ -18,7 +18,8 @@ export class MainPage extends Component {
 MainPage.displayName = "MainPage";
 MainPage.propTypes = {
     "children": PropTypes.node,
-    "headerStrings": PropTypes.object.isRequired
+    "headerStrings": PropTypes.object.isRequired,
+    "highlightedTab": PropTypes.object.isRequired
 };
 
 function select(store) {

@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import { displayAllFeedsAsync } from "../actions/AllFeedsActions.js";
 import { connect } from "react-redux";
-import { highLightTabAction } from "../../tabs/TabActions.js"
+import { highLightTabAction } from "../../tabs/TabActions.js";
 
 export default class SurfPage extends Component {
     componentWillMount() {

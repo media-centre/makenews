@@ -8,9 +8,9 @@ describe("Tab Action", () => {
     it("should call highlighted tab action successfully", (done) => {
         const tabName = "tab";
         const expectedActions = [
-            {"type": CHANGE_HIGHLIGHTED_TAB, "tabName": tabName}
+            { "type": CHANGE_HIGHLIGHTED_TAB, "tabName": tabName }
         ];
-        const store = mockStore({"tabName": "Surf"}, expectedActions, done);
+        const store = mockStore({ "tabName": "Surf" }, expectedActions, done);
         store.dispatch(highLightTabAction(tabName));
     });
 });

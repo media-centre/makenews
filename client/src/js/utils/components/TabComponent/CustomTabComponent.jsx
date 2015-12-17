@@ -3,7 +3,6 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";
-import { highLightTabAction } from "../../../tabs/TabActions.js"
 
 export default class CustomTabComponent extends Component {
     render() {

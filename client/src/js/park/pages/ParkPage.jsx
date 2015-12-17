@@ -1,6 +1,6 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
-import { highLightTabAction } from "../../tabs/TabActions.js"
+import { highLightTabAction } from "../../tabs/TabActions.js";
 import { connect } from "react-redux";
 
 export default class ParkPage extends Component {

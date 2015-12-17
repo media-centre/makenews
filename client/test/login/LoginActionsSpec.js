@@ -26,7 +26,7 @@ describe("userLogin", () => {
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
-        history= { "push": () => {} };
+        history = { "push": () => {} };
         headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
