@@ -191,7 +191,6 @@ describe("FeedApplicationQueries", () => {
             let expectedFeedDoc = {
                 "_id": "feedid",
                 "_rev": "1-5ec67a3c5068912d169a4d30f4526eea",
-                "categoryNames": "hindu",
                 "content": "The company has set aside Rs. 1,100 cr for interest free salary advances",
                 "docType": "feed",
                 "feedType": "rss",
