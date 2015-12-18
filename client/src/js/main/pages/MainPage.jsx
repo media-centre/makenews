@@ -23,7 +23,7 @@ MainPage.propTypes = {
 };
 
 function select(store) {
-    return { "highlightedTab": store.highlightedTab, "headerStrings": store.mainHeaderLocale };
+    return { "highlightedTab": store.highlightedTab, "headerStrings": store.mainHeaderLocale, "parkCounter": store.parkCounter };
 }
 
 export default connect(select)(MainPage);

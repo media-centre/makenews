@@ -10,7 +10,7 @@ export default class AllFeeds extends Component {
     render() {
 
         let categories = this.props.feeds.map((category, index)=>
-                category.type === "description" ? <Paragraph key={index} category={category} />
+                category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch}/>
                     : category.type === "gallery" ? <ImageGallery key={index} category={category} />
                         : category.type === "imagecontent" ? <ImageContent key={index} category={category} /> : null
 
@@ -27,6 +27,7 @@ export default class AllFeeds extends Component {
 AllFeeds.displayName = "AllFeeds";
 
 AllFeeds.propTypes = {
+    "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array
 };
 

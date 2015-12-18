@@ -24,6 +24,12 @@ export default class FeedApplicationQueries {
         });
     }
 
+    static updateFeed(rawFeedDoc) {
+        let requiredFeedDoc = Object.assign({}, rawFeedDoc, {"status": "park"});
+        delete requiredFeedDoc.categoryNames;
+        return  FeedDb.updateFeed(requiredFeedDoc);
+    }
+
     static _addCategoryName(feedsAndCategoriesDocs, resolve) {
         let feeds = [];
         let categoryNameMap = FeedApplicationQueries._prepareCategoryNameMap(feedsAndCategoriesDocs);
@@ -50,3 +56,4 @@ export default class FeedApplicationQueries {
         return categoryNameMap;
     }
 }
+

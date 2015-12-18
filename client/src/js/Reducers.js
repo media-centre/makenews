@@ -7,6 +7,7 @@ import { login, loginPageLocale } from "./login/LoginReducers.js";
 import { highlightedTab } from "./tabs/TabReducers.js";
 import { combineReducers } from "redux";
 import { mainHeaderLocale } from "./main/reducers/MainReducer.js";
+import { parkCounter } from "./feeds/reducers/FeedReducer.js";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -17,7 +18,8 @@ const contentDiscoveryApp = combineReducers({
     categoryDetails,
     configurePageLocale,
     mainHeaderLocale,
-    highlightedTab
+    highlightedTab,
+    parkCounter
 });
 
 export default contentDiscoveryApp;

@@ -11,4 +11,8 @@ export default class FeedDb {
     static fetchParkFeeds() {
         return PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true });
     }
+
+    static updateFeed(feedDoc) {
+        return PouchClient.updateDocument(feedDoc);
+    }
 }

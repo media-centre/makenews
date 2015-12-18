@@ -18,7 +18,7 @@ export default class SurfPage extends Component {
         return (
             <div className="surf-page feeds-container">
                 {hintMsg}
-                <AllFeeds feeds={this.props.feeds}/>
+                <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch}/>
             </div>
         );
     }

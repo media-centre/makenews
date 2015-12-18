@@ -19,7 +19,7 @@ describe("TwitterReaderSpec", () => {
         });
     });
     describe("TwitterReaderRoutes", () => {
-        it("responds to /twitter-feeds with 401 if user is not logged in", (done) => {
+        it.only("responds to /twitter-feeds with 401 if user is not logged in", () => {
             request(serverURL)
                 .get("/twitter-feeds")
                 .expect(HttpResponseHandler.codes.UNAUTHORIZED);

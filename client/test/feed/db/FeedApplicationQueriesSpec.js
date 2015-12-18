@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0*/
 
 "use strict";
-import FeedsDb from "../../../src/js/feeds/db/FeedDb.js";
+import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import sinon from "sinon";
 import { expect } from "chai";
@@ -70,21 +70,21 @@ describe("FeedApplicationQueries", () => {
                 "categoryNames": "Sports, Politics"
             }];
 
-            let fetchAllSourcesWithCategoriesMock = sinon.mock(FeedsDb).expects("fetchSurfFeedsAndCategoriesWithSource");
+            let fetchAllSourcesWithCategoriesMock = sinon.mock(FeedDb).expects("fetchSurfFeedsAndCategoriesWithSource");
             fetchAllSourcesWithCategoriesMock.returns(Promise.resolve(resultDocs));
             return FeedApplicationQueries.fetchAllFeedsWithCategoryName().then(sources => {
                 expect(expectedSources).to.deep.equal(sources);
                 fetchAllSourcesWithCategoriesMock.verify();
-                FeedsDb.fetchSurfFeedsAndCategoriesWithSource.restore();
+                FeedDb.fetchSurfFeedsAndCategoriesWithSource.restore();
             });
         });
 
         it("should reject with error if fetching documents fails", () => {
-            let fetchAllSourcesWithCategoriesStub = sinon.stub(FeedsDb, "fetchSurfFeedsAndCategoriesWithSource");
+            let fetchAllSourcesWithCategoriesStub = sinon.stub(FeedDb, "fetchSurfFeedsAndCategoriesWithSource");
             fetchAllSourcesWithCategoriesStub.returns(Promise.reject("error"));
             return FeedApplicationQueries.fetchAllFeedsWithCategoryName().catch(error => {
                 expect(error).to.eq("error");
-                FeedsDb.fetchSurfFeedsAndCategoriesWithSource.restore();
+                FeedDb.fetchSurfFeedsAndCategoriesWithSource.restore();
             });
         });
     });
@@ -154,21 +154,57 @@ describe("FeedApplicationQueries", () => {
                 "categoryNames": "Sports, Politics"
             }];
 
-            let fetchParkFeedssMock = sinon.mock(FeedsDb).expects("fetchParkFeeds");
+            let fetchParkFeedssMock = sinon.mock(FeedDb).expects("fetchParkFeeds");
             fetchParkFeedssMock.returns(Promise.resolve(resultDocs));
             return FeedApplicationQueries.fetchAllParkedFeeds().then(sources => {
                 expect(expectedSources).to.deep.equal(sources);
                 fetchParkFeedssMock.verify();
-                FeedsDb.fetchParkFeeds.restore();
+                FeedDb.fetchParkFeeds.restore();
             });
         });
 
         it("should reject with error if fetching documents fails", () => {
-            let fetchParkedFeedsStub = sinon.stub(FeedsDb, "fetchParkFeeds");
+            let fetchParkedFeedsStub = sinon.stub(FeedDb, "fetchParkFeeds");
             fetchParkedFeedsStub.returns(Promise.reject("error"));
             return FeedApplicationQueries.fetchAllParkedFeeds().catch(error => {
                 expect(error).to.eq("error");
-                FeedsDb.fetchParkFeeds.restore();
+                FeedDb.fetchParkFeeds.restore();
+            });
+        });
+    });
+
+    describe("updateFeed", () => {
+        it("should update feed after filtering required fields", () => {
+            let rawFeedDoc = {
+                _id: "feedid",
+                _rev: "1-5ec67a3c5068912d169a4d30f4526eea",
+                categoryNames: "hindu",
+                content: "The company has set aside Rs. 1,100 cr for interest free salary advances",
+                docType: "feed",
+                feedType: "rss",
+                sourceId: "52359499-59E9-2D9E-AC38-922DBBB25A63",
+                tags: [],
+                title: "Tata Consultancy offers cash incentives for flood-hit Chennai staff",
+                type: "description"
+            };
+
+            let expectedFeedDoc = {
+                _id: "feedid",
+                _rev: "1-5ec67a3c5068912d169a4d30f4526eea",
+                content: "The company has set aside Rs. 1,100 cr for interest free salary advances",
+                docType: "feed",
+                feedType: "rss",
+                sourceId: "52359499-59E9-2D9E-AC38-922DBBB25A63",
+                tags: [],
+                title: "Tata Consultancy offers cash incentives for flood-hit Chennai staff",
+                type: "description",
+                status: "park"
+            };
+            let feedDbMock = sinon.mock(FeedDb).expects("updateFeed");
+            feedDbMock.withArgs(expectedFeedDoc).returns(Promise.resolve({"status": "ok"}))
+            return FeedApplicationQueries.updateFeed(rawFeedDoc).then(response => {
+                feedDbMock.verify();
+                FeedDb.updateFeed.restore();
             });
         });
     });
