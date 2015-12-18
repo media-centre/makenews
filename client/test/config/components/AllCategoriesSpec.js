@@ -6,6 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import "../../helper/TestHelper.js";
+import mockStore from "../../helper/ActionHelper.js";
 
 describe("All categories", ()=> {
 
@@ -63,5 +64,32 @@ describe("All categories", ()=> {
     it("should display the all categories label from the language file", () => {
         assert.strictEqual(allCategoriesPageStrings.allCategoriesHeading, allCategories.refs.allCategoriesHeading.innerHTML);
     });
+});
 
+describe("All categories componentWillMount", () => {
+    it("should highLightTabAction on component mount", (done) => {
+
+        let allCategoriesPageStrings = {
+            "allCategoriesHeading": "All Categories Test",
+            "addNewCategoryLabel": "Add new category Test"
+        };
+        let categories = {
+            "categories": [
+                { "_id": "id1",
+                    "name": "Default"
+                },
+                { "_id": "id2",
+                    "name": "Category A"
+                }
+            ]
+        };
+        let tabNames = ["Configure", "RSS"];
+
+        const expectedActions = [{ "type": "CHANGE_HIGHLIGHTED_TAB", "tabNames": tabNames }];
+        const store = mockStore({}, expectedActions, done);
+        let dispatch = store.dispatch;
+        TestUtils.renderIntoDocument(
+            <AllCategories allCategories={categories} allCategoriesPageStrings = {allCategoriesPageStrings} dispatch={dispatch}/>
+        );
+    });
 });

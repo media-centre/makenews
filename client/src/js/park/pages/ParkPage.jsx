@@ -8,8 +8,8 @@ import { connect } from "react-redux";
 export class ParkPage extends Component {
     componentWillMount() {
         window.scrollTo(0, 0);
-        this.props.dispatch(displayParkedFeedsAsync());
         this.props.dispatch(highLightTabAction(["Park"]));
+        this.props.dispatch(displayParkedFeedsAsync());
     }
 
     render() {
