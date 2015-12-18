@@ -22,7 +22,10 @@ describe("FacbookPosts", () => {
         it("responds to /facebook-feeds with 401 if user is not logged in", (done) => {
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/facebook-posts")
-                .expect(HttpResponseHandler.codes.UNAUTHORIZED, done);
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.UNAUTHORIZED, res.statusCode);
+                    done();
+                });
         });
 
         it("should return feeds for public page", (done) => {
