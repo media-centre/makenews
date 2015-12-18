@@ -14,8 +14,10 @@ describe("FeedReducer", function() {
 
         it("should increment counter for the valid action", function() {
             let action = { "type": "INCREMENT_PARK_COUNTER" };
-            let state = parkCounter(3, action);
-            assert.deepEqual(4, state);
+            var currentCounterValue = 3;
+            let state = parkCounter(currentCounterValue, action);
+            var expectedCounterValue = 4;
+            assert.deepEqual(expectedCounterValue, state);
         });
     });
 });

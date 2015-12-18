@@ -24,8 +24,9 @@ describe("MainHeaderTab", () => {
         let linkProps = linkElement[0].props;
         assert.strictEqual("/park", linkProps.to);
         assert.strictEqual("selected", linkProps.className);
-        assert.strictEqual("Park", linkProps.children[1].props.children);
-        assert.strictEqual("park header-link-image", linkProps.children[0].props.className);
+        assert.strictEqual("Park", linkProps.children[2].props.children);
+        assert.strictEqual("park header-link-image", linkProps.children[1].props.className);
+        assert.strictEqual("counter", linkProps.children[0].props.className);
     });
 
     it("should not add selected class name from park", () => {

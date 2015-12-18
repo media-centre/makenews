@@ -26,7 +26,7 @@ export class ParkPage extends Component {
 ParkPage.displayName = "ParkPage";
 
 ParkPage.propTypes = {
-    "dispatch": PropTypes.func.isRequired,
+    "dispatch": PropTypes.func,
     "parkedItems": PropTypes.array
 };
 

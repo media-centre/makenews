@@ -7,7 +7,7 @@ export class MainPage extends Component {
     render() {
         return (
             <div className="main-page">
-                <MainHeader ref="header" headerStrings={this.props.headerStrings} highlightedTab={this.props.highlightedTab}/>
+                <MainHeader ref="header" headerStrings={this.props.headerStrings} highlightedTab={this.props.highlightedTab} parkCounter={this.props.parkCounter}/>
                 <section>{this.props.children}</section>
             </div>
         );
@@ -19,7 +19,8 @@ MainPage.displayName = "MainPage";
 MainPage.propTypes = {
     "children": PropTypes.node,
     "headerStrings": PropTypes.object.isRequired,
-    "highlightedTab": PropTypes.object.isRequired
+    "highlightedTab": PropTypes.object.isRequired,
+    "parkCounter": PropTypes.number.isRequired
 };
 
 function select(store) {

@@ -27,8 +27,8 @@ describe("main header component", () => {
                 "Name": "Logout"
             }
         };
-
-        mainHeader = TestUtils.renderIntoDocument(<MainHeader headerStrings={headerStrings} highlightedTab={highlightedTab} />);
+        let parkCounter = 0;
+        mainHeader = TestUtils.renderIntoDocument(<MainHeader headerStrings={headerStrings} highlightedTab={highlightedTab} parkCounter={parkCounter}/>);
     });
 
     it("should have header element", () => {

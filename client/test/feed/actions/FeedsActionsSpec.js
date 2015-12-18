@@ -4,7 +4,6 @@
 import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import mockStore from "../../helper/ActionHelper.js";
-import { expect } from "chai";
 import sinon from "sinon";
 
 describe("parkFeed", ()=> {
@@ -17,7 +16,7 @@ describe("parkFeed", ()=> {
             "sourceId": "rssId1"
         };
 
-        let store = mockStore({"parkFeedCount": 2}, [{ "type": FeedActions.INCREMENT_PARK_COUNTER }], done);
+        let store = mockStore({ "parkFeedCount": 2 }, [{ "type": FeedActions.INCREMENT_PARK_COUNTER }], done);
         let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
         feedApplicationQueriesMock.withArgs(feedDocument).returns(Promise.resolve({ "ok": true }));
         return Promise.resolve(store.dispatch(FeedActions.parkFeed(feedDocument))).then(() => {

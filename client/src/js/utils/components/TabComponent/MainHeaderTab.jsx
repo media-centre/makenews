@@ -7,14 +7,20 @@ import { Link } from "react-router";
 export default class MainHeaderTab extends Component {
     render() {
         const NOT_FOUND_INDEX = -1;
+        let counter = null;
+
+        if(this.props.className === "park") {
+            counter = <i className="counter">{this.props.parkCounter}</i>;
+        }
         return (
             <li>
-                <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
-                    <div className={this.props.className + " header-link-image"} id={this.props.id}></div>
-                    <span>{this.props.name}</span>
-                </Link>
+            <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
+                {counter}
+                <div className={this.props.className + " header-link-image"}></div>
+                <span>{this.props.name}</span>
+            </Link>
             </li>
-        );
+    );
     }
 }
 
@@ -25,5 +31,6 @@ MainHeaderTab.propTypes = {
     "url": PropTypes.string.isRequired,
     "tabToHighlight": PropTypes.object.isRequired,
     "className": PropTypes.string.isRequired,
-    "id": PropTypes.string.isRequired
+    "id": PropTypes.string.isRequired,
+    "parkCounter": PropTypes.number
 };

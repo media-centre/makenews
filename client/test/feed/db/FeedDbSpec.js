@@ -19,23 +19,22 @@ describe("FeedDb", () => {
     });
 
     describe("updateFeed", () => {
-       it("should update the feed document ", (done) => {
-           let feedDocument = {
-               "_id": "feedId",
-               "docType": "feed",
-               "title": "tn",
-               "description": "www.facebookpolitics.com",
-               "sourceId": "rssId1",
-               "status": "park"
-           };
-
-           let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(feedDocument).returns(Promise.resolve("success"));
-           FeedDb.updateFeed(feedDocument).then(()=> {
-               updateMock.verify();
-               PouchClient.updateDocument.restore();
-               done();
-           });
-       });
+        it("should update the feed document ", (done) => {
+            let feedDocument = {
+                "_id": "feedId",
+                "docType": "feed",
+                "title": "tn",
+                "description": "www.facebookpolitics.com",
+                "sourceId": "rssId1",
+                "status": "park"
+            };
+            let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(feedDocument).returns(Promise.resolve("success"));
+            FeedDb.updateFeed(feedDocument).then(()=> {
+                updateMock.verify();
+                PouchClient.updateDocument.restore();
+                done();
+            });
+        });
     });
 });
 

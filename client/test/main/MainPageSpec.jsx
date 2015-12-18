@@ -29,7 +29,8 @@ describe("main page component", () => {
             }
         };
         let childElement = <div>{"main-page children"}</div>;
-        mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement} headerStrings={headerStrings} highlightedTab={highlightedTab}/>);
+        let parkCounter = 0;
+        mainPage = TestUtils.renderIntoDocument(<MainPage children={childElement} headerStrings={headerStrings} highlightedTab={highlightedTab} parkCounter={parkCounter}/>);
     });
 
     it("should have div with className main-page", () => {

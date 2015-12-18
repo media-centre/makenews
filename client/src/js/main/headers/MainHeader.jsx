@@ -33,5 +33,6 @@ export default class MainHeader extends Component {
 MainHeader.displayName = "Main Header";
 MainHeader.propTypes = {
     "headerStrings": PropTypes.object.isRequired,
-    "highlightedTab": PropTypes.object.isRequired
+    "highlightedTab": PropTypes.object.isRequired,
+    "parkCounter": PropTypes.number.isRequired
 };

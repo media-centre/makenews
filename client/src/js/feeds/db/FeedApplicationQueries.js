@@ -25,9 +25,9 @@ export default class FeedApplicationQueries {
     }
 
     static updateFeed(rawFeedDoc) {
-        let requiredFeedDoc = Object.assign({}, rawFeedDoc, {"status": "park"});
+        let requiredFeedDoc = Object.assign({}, rawFeedDoc, { "status": "park" });
         delete requiredFeedDoc.categoryNames;
-        return  FeedDb.updateFeed(requiredFeedDoc);
+        return FeedDb.updateFeed(requiredFeedDoc);
     }
 
     static _addCategoryName(feedsAndCategoriesDocs, resolve) {

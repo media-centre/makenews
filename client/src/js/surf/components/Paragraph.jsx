@@ -21,10 +21,10 @@ export default class Paragraph extends Component {
 
     render() {
         let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
-        let feedStyle = this.state.showFeed ? {"display": "block"} : {"display": "none"};
+        let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
         let parkMenu = null;
         if(!this.props.category.status || this.props.category.status === "surf") {
-            parkMenu = <span onClick={this._parkFeed.bind(this, this.props.category)}> Park </span>;
+            parkMenu = <div className="park-images right" onClick={this._parkFeed.bind(this, this.props.category)}> <i className="fa fa-share"></i> </div>;
         }
         return (
             <div style={feedStyle}>
@@ -41,6 +41,6 @@ export default class Paragraph extends Component {
 Paragraph.displayName = "Paragraph";
 
 Paragraph.propTypes = {
-    "dispatch": PropTypes.func.isRequired,
+    "dispatch": PropTypes.func,
     "category": PropTypes.object
 };
