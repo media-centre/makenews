@@ -1,75 +1,70 @@
-/* eslint max-nested-callbacks: [2, 5] */
+/* eslint max-nested-callbacks: [2, 5] handle-callback-err:0*/
 "use strict";
 
 import request from "supertest";
-import server from "../../server";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import config from "../config/application.json";
+import argv from "yargs";
+import { assert, expect } from "chai";
 import CouchSession from "../src/CouchSession";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import nock from "nock";
-import { expect } from "chai";
 
-
+let env = argv.client_environment || "qa";
 describe("RssReaderSpec", () => {
-    describe("RssReaderRoutes", () => {
-        it("responds to /rss-feeds with 401 if user is not logged in", (done) => {
-            request(server)
-                .get("/rss-feeds")
-                .expect(HttpResponseHandler.codes.UNAUTHORIZED, done);
+    describe("RssReaderSpec", () => {
+        let accessToken = null;
+        before("RssReaderSpec", (done)=> {
+            CouchSession.login("test", "test").then((token) => {
+                accessToken = token;
+                done();
+            });
         });
 
-        it("responds with /rss-feeds if user is logged in", (done) => {
-            let data = "<rss version=\"2.0\"><channel><item>" +
-                "<title>sample1</title><description>news cricket</description></item><item>" +
-                "<title>sample2</title><description>news politics</description></item>" +
-                "</channel></rss>";
+        it("should return status OK if the url is empty", (done) => {
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/rss-feeds")
+                .query("url=")
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
+                    done();
+                });
+        });
 
-            nock("http://www.thehindu.com/sport/cricket")
-                .get("/")
-                .reply(HttpResponseHandler.codes.OK, data);
-
+        it("should return data if the url is valid", (done) => {
             let expectedValues = {
                 "items": [{ "title": "sample1", "description": "news cricket" },
                     { "title": "sample2", "description": "news politics" }
                 ]
             };
 
-            CouchSession.login("test", "test").then((token) => {
-                request(server)
-                    .get("/rss-feeds")
-                    .query("url=http://www.thehindu.com/sport/cricket/")
-                    .set("Cookie", token)
-                    .expect(HttpResponseHandler.codes.OK)
-                    .expect(function(result) {
-                        let items = result.body.items;
-                        let expectedItems = expectedValues.items;
-                        expect(items.length).to.eq(expectedItems.length);
-                        for(let index = 0; index < items.length; index += 1) {
-                            expect(items[index].title).to.eq(expectedItems[index].title);
-                            expect(items[index].description).to.eq(expectedItems[index].description);
-                        }
-                    })
-                    .end(function(error) {
-                        if(error) {
-                            return done(error);
-                        }
-                        done();
-                    });
-            });
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/rss-feeds")
+                .query("url=http://localhost:3000/thehindu/rss-feeds/")
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
+                    let items = res.body.items;
+                    let expectedItems = expectedValues.items;
+                    expect(items.length).to.eq(expectedItems.length);
+                    for(let index = 0; index < items.length; index += 1) {
+                        expect(items[index].title).to.eq(expectedItems[index].title);
+                        expect(items[index].description).to.eq(expectedItems[index].description);
+                    }
+                    done();
+                });
         });
 
         it("responds with 404 for /rss-feeds if rss fetch returns error", (done) => {
-            nock("http://www.thehindu.com/sport/cricket")
-                .get("/")
-                .replyWithError("error");
-
-            CouchSession.login("test", "test").then((token) => {
-                request(server)
-                    .get("/rss-feeds")
-                    .query("url=http://www.thehindu.com/sport/cricket/")
-                    .set("Cookie", token)
-                    .expect(HttpResponseHandler.codes.NOT_FOUND)
-                    .expect({ "message": "Request failed for http://www.thehindu.com/sport/cricket/" }, done);
-            });
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/rss-feeds")
+                .query("url=http://localhost:3000/thehindu/error-feeds/")
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
+                    assert.strictEqual(res.body.message, "Request failed for http://localhost:3000/thehindu/error-feeds/");
+                    done();
+                });
         });
     });
 });
+

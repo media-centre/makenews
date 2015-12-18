@@ -6,7 +6,7 @@ import StringUtil from "../../../../common/src/util/StringUtil";
 import EnvironmentConfig from "../../config/EnvironmentConfig";
 import restRequest from "request";
 
-export const baseURL = "https://api.twitter.com/1.1", searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
+export const baseURL = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("twitterURL"), searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
 export default class TwitterReaderHelper {
 
     constructor(request, response) {
@@ -15,6 +15,7 @@ export default class TwitterReaderHelper {
     }
 
     feedsForUrl() {
+
         let url = this.request.query.url;
         if(StringUtil.isEmptyString(url)) {
             this.setResponse(HttpResponseHandler.codes.OK, {});

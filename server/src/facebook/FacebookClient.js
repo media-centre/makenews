@@ -3,7 +3,7 @@ import StringUtil from "../../../common/src/util/StringUtil.js";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
-
+import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
 
 export default class FacebookClient {
 
@@ -27,7 +27,7 @@ export default class FacebookClient {
                 });
             }
             request.get({
-                "url": "https://graph.facebook.com/v2.5/" + pageName + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+                "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + pageName + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
             }, (error, response, body) => {
                 if(NodeErrorHandler.noError(error)) {
                     if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {

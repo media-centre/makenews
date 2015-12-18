@@ -3,6 +3,8 @@
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
+    "facebookURL": "https://graph.facebook.com/v2.5/",
+    "twitterURL": "https://api.twitter.com/1.1",
     "facebook": {
       "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964"
     },
@@ -12,15 +14,26 @@
   },
   "ci_dev": {
     "serverIpAddress": "46.101.252.58",
+    "facebookURL": "https://graph.facebook.com/v2.5/",
     "serverPort": 5000,
-    "couchDbUrl": "http://46.101.252.58:5984"
+    "couchDbUrl": "http://46.101.252.58:5984",
+    "twitterURL": "https://api.twitter.com/1.1"
+
   },
   "ci_qa": {
     "serverIpAddress": "46.101.195.133",
+    "facebookURL": "https://graph.facebook.com/v2.5/",
     "serverPort": 5000,
-    "couchDbUrl": "http://46.101.195.133:5984"
+    "couchDbUrl": "http://46.101.195.133:5984",
+    "twitterURL": "https://api.twitter.com/1.1"
+
   },
   "qa": {
+    "serverIpAddress": "localhost",
+    "serverPort": 5000,
+    "couchDbUrl": "http://localhost:5984",
+    "facebookURL": "http://localhost:3000/",
+    "twitterURL": "http://localhost:3000"
 
   },
   "production": {
