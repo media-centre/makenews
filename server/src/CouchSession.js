@@ -1,5 +1,6 @@
 "use strict";
-import EnvironmentConfig from "./config/EnvironmentConfig.js";
+
+import ApplicationConfig from "./config/ApplicationConfig.js";
 import NodeErrorHandler from "./NodeErrorHandler.js";
 import CouchResponseHandler from "./CouchResponseHandler.js";
 import StringUtil from "../../common/src/util/StringUtil.js";
@@ -11,7 +12,7 @@ export default class CouchSession {
   static login(username, password) {
       return new Promise((resolve, reject) => {
           request.post({
-              "uri": CouchSession.dbUrl() + "/_session",
+              "uri": ApplicationConfig.dbUrl() + "/_session",
               "headers": { "content-type": "application/x-www-form-urlencoded" },
               "body": querystring.stringify({ "name": username, "password": password })
           },
@@ -27,7 +28,7 @@ export default class CouchSession {
   static authenticate(token) {
       return new Promise((resolve, reject) => {
           request.get({
-              "url": CouchSession.dbUrl() + "/_session",
+              "url": ApplicationConfig.dbUrl() + "/_session",
               "headers": {
                   "Cookie": "AuthSession=" + token
               }
@@ -47,9 +48,5 @@ export default class CouchSession {
 
   static requestSuccessful(error, response) {
       return NodeErrorHandler.noError(error) && CouchResponseHandler.requestCompleted(response.statusCode);
-  }
-
-  static dbUrl() {
-      return EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("couchDbUrl");
   }
 }
