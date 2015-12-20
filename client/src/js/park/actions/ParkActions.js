@@ -4,7 +4,7 @@ import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
 
 export const DISPLAY_PARKED_FEEDS = "DISPLAY_PARKED_FEEDS";
 
-function displayParkedFeeds(parkedItems) {
+export function displayParkedFeeds(parkedItems) {
     return { "type": DISPLAY_PARKED_FEEDS, parkedItems };
 }
 

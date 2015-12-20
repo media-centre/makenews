@@ -14,7 +14,7 @@ export default class ImageContent extends Component {
     }
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         return (
             <div className="image-content">
                 <div className="title">{this.props.category.title}</div>

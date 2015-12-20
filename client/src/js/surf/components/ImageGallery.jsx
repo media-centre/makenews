@@ -13,7 +13,7 @@ export default class ImageGallery extends Component {
         item.querySelector(".custom-spinner").remove();
     }
     render() {
-        let header = this.props.category.feedType ? <FeedHeader categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let images = this.props.category.images.map((image, index)=>
             <li className="image-container box" ref={"gallery-item-" + index} key={index}>
                 <img src={image.url} onLoad={() => this._onLoadImage(index)} className="hide"/>

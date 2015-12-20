@@ -1,6 +1,6 @@
 @import "../../utils/variable";
 
-.surf-page {
+.feeds-container {
   color: $dark-gray-color;
 
   .feed-header {
@@ -20,6 +20,11 @@
         font-size: $extra-small-font-size;
         margin-top: 4px;
       }
+
+      .feed-action {
+        width: 30px;
+      }
+
     }
 
     .header-item {

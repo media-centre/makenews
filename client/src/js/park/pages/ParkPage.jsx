@@ -15,7 +15,7 @@ export class ParkPage extends Component {
     render() {
         let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{"No feeds found"}</div> : null;
         return (
-            <div ref="parkItem" className="park-page">
+            <div ref="parkItem" className="park-page feeds-container">
                 {defaultText}
                 <AllFeeds feeds={this.props.parkedItems}/>
             </div>

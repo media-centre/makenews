@@ -10,7 +10,7 @@ export function displayAllFeeds(feeds) {
 
 export function displayAllFeedsAsync() {
     return dispatch => {
-        FeedApplicationQueries.fetchAllFeedsWithCategoryName("surf").then((feeds) => {
+        FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => {
             dispatch(displayAllFeeds(feeds));
         }).catch(error => { //eslint-disable-line no-unused-vars
             dispatch(displayAllFeeds([]));
