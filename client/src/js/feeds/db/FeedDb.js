@@ -15,4 +15,14 @@ export default class FeedDb {
     static updateFeed(feedDoc) {
         return PouchClient.updateDocument(feedDoc);
     }
+
+    static parkedFeedsCount() {
+        return new Promise((resolve, reject) => {
+            PouchClient.fetchDocuments("category/parkedFeedsCount", { "reduce": true }).then(countArray => {
+                resolve(countArray[0]);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }

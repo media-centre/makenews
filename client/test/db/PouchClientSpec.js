@@ -95,6 +95,10 @@ describe("PouchClient", () => {
                 },
                 "parkedFeeds": {
                     "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType === 'feed' && doc.status === 'park') { emit(doc.sourceId, null);}}"
+                },
+                "parkedFeedsCount": {
+                    "map": "function(doc) { if(doc.docType === 'feed' && doc.status === 'park') { emit(doc._id, null);}}",
+                    "reduce": "_count"
                 }
             } }, "_design/category");
     });
@@ -229,6 +233,15 @@ describe("PouchClient", () => {
             it("should get park feeds", (done) => {
                 PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true }).then((doc) => {
                     assertFeedView(doc, "feedId2", "fbId1", parkFeed);
+                    done();
+                });
+            });
+        });
+
+        describe("parkedFeedsCount", () => {
+            it("should return count of parkedFeeds", (done) => {
+                PouchClient.fetchDocuments("category/parkedFeedsCount", { "reduce": true }).then((doc) => {
+                    expect(doc).to.deep.eq([1]);
                     done();
                 });
             });

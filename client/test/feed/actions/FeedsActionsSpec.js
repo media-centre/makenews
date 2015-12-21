@@ -3,6 +3,7 @@
 "use strict";
 import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
+import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
 import mockStore from "../../helper/ActionHelper.js";
 import sinon from "sinon";
 
@@ -43,6 +44,19 @@ describe("parkFeed", ()=> {
         return Promise.resolve(store.dispatch(FeedActions.parkFeed())).then(() => {
             feedApplicationQueriesMock.verify();
             FeedApplicationQueries.updateFeed.restore();
+        });
+    });
+});
+
+describe("initialiseParkedFeedsCount", () => {
+    it("should get the count of parked feeds and dispatch the count", (done) => {
+        var count = 20;
+        let store = mockStore({"parkFeedCount": 0}, [{ "type": FeedActions.INITIALISE_PARK_COUNTER, "count": count }], done);
+        let feedDbMock = sinon.mock(FeedDb).expects("parkedFeedsCount");
+        feedDbMock.returns(Promise.resolve(count));
+        return Promise.resolve(store.dispatch(FeedActions.initialiseParkedFeedsCount())).then(() => {
+            feedDbMock.verify();
+            FeedDb.parkedFeedsCount.restore();
         });
     });
 });

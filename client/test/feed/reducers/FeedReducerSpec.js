@@ -2,6 +2,7 @@
 
 "use strict";
 import { parkCounter } from "../../../src/js/feeds/reducers/FeedReducer.js";
+import { INCREMENT_PARK_COUNTER, INITIALISE_PARK_COUNTER } from "../../../src/js/feeds/actions/FeedsActions.js";
 import { assert } from "chai";
 
 describe("FeedReducer", function() {
@@ -13,11 +14,15 @@ describe("FeedReducer", function() {
         });
 
         it("should increment counter for the valid action", function() {
-            let action = { "type": "INCREMENT_PARK_COUNTER" };
-            var currentCounterValue = 3;
-            let state = parkCounter(currentCounterValue, action);
-            var expectedCounterValue = 4;
-            assert.deepEqual(expectedCounterValue, state);
+            let action = { "type": INCREMENT_PARK_COUNTER };
+            let state = parkCounter(3, action);
+            assert.deepEqual(4, state);
+        });
+
+        it("should initialise counter with parked feeds count", function() {
+            let action = { "type": INITIALISE_PARK_COUNTER, count: 100 };
+            let state = parkCounter(0, action);
+            assert.deepEqual(100, state);
         });
     });
 });

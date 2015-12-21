@@ -36,5 +36,26 @@ describe("FeedDb", () => {
             });
         });
     });
+
+    describe("parkedFeedsCount", () => {
+        it("should return the count of parked feeds", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/parkedFeedsCount", { "reduce": true }).returns(Promise.resolve([100]));
+            FeedDb.parkedFeedsCount().then((count) => {
+                expect(count).to.eq(100);
+                pouchClientMock.verify();
+                PouchClient.fetchDocuments.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if fetching documents fails", () => {
+            let pouchClientMock = sinon.stub(PouchClient, "fetchDocuments");
+            pouchClientMock.returns(Promise.reject("error"));
+            return FeedDb.parkedFeedsCount().catch(error => {
+                expect(error).to.eq("error");
+                PouchClient.fetchDocuments.restore();
+            });
+        });
+    });
 });
 
