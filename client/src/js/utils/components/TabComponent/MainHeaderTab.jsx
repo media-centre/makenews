@@ -31,6 +31,5 @@ MainHeaderTab.propTypes = {
     "url": PropTypes.string.isRequired,
     "tabToHighlight": PropTypes.object.isRequired,
     "className": PropTypes.string.isRequired,
-    "id": PropTypes.string.isRequired,
-    "parkCounter": PropTypes.number.isRequired
+    "parkCounter": PropTypes.number
 };
