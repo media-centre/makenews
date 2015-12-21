@@ -4,11 +4,11 @@ import { INCREMENT_PARK_COUNTER, INITIALISE_PARK_COUNTER } from "../actions/Feed
 
 export function parkCounter(state = 0, action = {}) {
     switch (action.type) {
-        case INCREMENT_PARK_COUNTER:
-            return state + 1;
-        case INITIALISE_PARK_COUNTER:
-            return action.count;
-        default:
-            return state;
+    case INCREMENT_PARK_COUNTER:
+        return state + 1;
+    case INITIALISE_PARK_COUNTER:
+        return action.count;
+    default:
+        return state;
     }
 }

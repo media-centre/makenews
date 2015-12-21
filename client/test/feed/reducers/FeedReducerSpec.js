@@ -14,15 +14,16 @@ describe("FeedReducer", function() {
         });
 
         it("should increment counter for the valid action", function() {
-            let action = { "type": INCREMENT_PARK_COUNTER };
-            let state = parkCounter(3, action);
-            assert.deepEqual(4, state);
+            let action = { "type": INCREMENT_PARK_COUNTER }, initialCount = 3, expectedCount = 4;
+            let state = parkCounter(initialCount, action);
+            assert.deepEqual(expectedCount, state);
         });
 
         it("should initialise counter with parked feeds count", function() {
-            let action = { "type": INITIALISE_PARK_COUNTER, count: 100 };
+            let initialCount = 100;
+            let action = { "type": INITIALISE_PARK_COUNTER, "count": initialCount };
             let state = parkCounter(0, action);
-            assert.deepEqual(100, state);
+            assert.deepEqual(initialCount, state);
         });
     });
 });

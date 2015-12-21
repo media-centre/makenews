@@ -25,7 +25,8 @@ MainPage.propTypes = {
     "children": PropTypes.node,
     "headerStrings": PropTypes.object.isRequired,
     "highlightedTab": PropTypes.object.isRequired,
-    "parkCounter": PropTypes.number.isRequired
+    "parkCounter": PropTypes.number.isRequired,
+    "dispatch": PropTypes.func.isRequired
 };
 
 function select(store) {

@@ -39,9 +39,10 @@ describe("FeedDb", () => {
 
     describe("parkedFeedsCount", () => {
         it("should return the count of parked feeds", (done) => {
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/parkedFeedsCount", { "reduce": true }).returns(Promise.resolve([100]));
+            let parkFeedsCount = 100;
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/parkedFeedsCount", { "reduce": true }).returns(Promise.resolve([parkFeedsCount]));
             FeedDb.parkedFeedsCount().then((count) => {
-                expect(count).to.eq(100);
+                expect(parkFeedsCount).to.eq(count);
                 pouchClientMock.verify();
                 PouchClient.fetchDocuments.restore();
                 done();
