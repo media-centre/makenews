@@ -10,7 +10,7 @@ export default class MainHeaderTab extends Component {
         return (
             <li>
                 <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
-                    <div className={this.props.className + " header-link-image"}></div>
+                    <div className={this.props.className + " header-link-image"} id={this.props.id}></div>
                     <span>{this.props.name}</span>
                 </Link>
             </li>
@@ -24,5 +24,6 @@ MainHeaderTab.propTypes = {
     "name": PropTypes.string.isRequired,
     "url": PropTypes.string.isRequired,
     "tabToHighlight": PropTypes.object.isRequired,
-    "className": PropTypes.string.isRequired
+    "className": PropTypes.string.isRequired,
+    "id": PropTypes.string.isRequired
 };
