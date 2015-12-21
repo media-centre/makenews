@@ -25,6 +25,15 @@
         width: 30px;
       }
 
+      .surf-actions i {
+        cursor: pointer;
+        color: $app-header-bg-color;
+        &:hover {
+          color: $light-blue-font;
+        }
+
+      }
+
     }
 
     .header-item {

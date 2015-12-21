@@ -33,7 +33,19 @@
       }
 
       .menu-list li {
+        position: relative;
         a {
+          i {
+            position: absolute;
+            right: 10px;
+            top: 0px;
+            background: $counter-bg-color;
+            line-height: 25px;
+            width: 25px;
+            height: 25px;
+            font-size: $extra-small-font-size;
+
+          }
           .header-link-image {
             width: 35px;
             height: 35px;

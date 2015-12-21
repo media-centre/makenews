@@ -10,13 +10,13 @@ export default class MainHeaderTab extends Component {
         let counter = null;
 
         if(this.props.className === "park") {
-            counter = <i className="counter">{this.props.parkCounter}</i>;
+            counter = <i className="counter circle">{this.props.parkCounter}</i>;
         }
         return (
             <li>
                 <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
                     {counter}
-                    <div className={this.props.className + " header-link-image"}></div>
+                    <div className={this.props.className + " header-link-image"} id={this.props.id}> </div>
                     <span>{this.props.name}</span>
                 </Link>
             </li>
@@ -31,5 +31,6 @@ MainHeaderTab.propTypes = {
     "url": PropTypes.string.isRequired,
     "tabToHighlight": PropTypes.object.isRequired,
     "className": PropTypes.string.isRequired,
-    "parkCounter": PropTypes.number
+    "parkCounter": PropTypes.number,
+    "id": PropTypes.string.isRequired
 };
