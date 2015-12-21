@@ -27,14 +27,9 @@ export default class ImageContent extends Component {
         this.props.dispatch(parkFeed(feedDoc));
     }
     render() {
-        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-        let parkMenu = null;
-        if(!this.props.category.status || this.props.category.status === "surf") {
-            parkMenu = (<div className="park-images right" onClick={this._parkFeed.bind(this, this.props.category)}>
-                <i className="fa fa-share"></i>
-            </div>);
-        }
+
         return (
             <div className="image-content" style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>
@@ -45,7 +40,6 @@ export default class ImageContent extends Component {
                     </div>
                     <p className="box" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p>
                 </div>
-                {parkMenu}
                 {header}
             </div>
         );
@@ -55,5 +49,6 @@ ImageContent.displayName = "ImageContent";
 
 ImageContent.propTypes = {
     "category": PropTypes.object,
-    "dispatch": PropTypes.func
+    "dispatch": PropTypes.func,
+    "parkFeed":PropTypes.func
 };

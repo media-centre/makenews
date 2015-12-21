@@ -28,7 +28,7 @@ export default class ImageGallery extends Component {
     }
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let images = this.props.category.images.map((image, index)=>
             <li className="image-container box" ref={"gallery-item-" + index} key={index}>
                 <img src={image.url} onLoad={() => this._onLoadImage(index)} className="hide"/>
@@ -37,17 +37,12 @@ export default class ImageGallery extends Component {
         );
 
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-        let parkMenu = null;
-        if(!this.props.category.status || this.props.category.status === "surf") {
-            parkMenu = <div className="park-images right" onClick={this._parkFeed.bind(this, this.props.category)}> <i className="fa fa-share"></i> </div>;
-        }
 
         let description = this.props.category.content ? <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p> : null;
         return (
             <div className="image-gallery" style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>
                 <ul className="gallery-list h-center">{images}</ul>
-                {parkMenu}
                 {description}
                 {header}
             </div>
@@ -59,5 +54,8 @@ ImageGallery.displayName = "ImageGallery";
 
 ImageGallery.propTypes = {
     "category": PropTypes.object,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "parkFeed":PropTypes.func
+
+
 };

@@ -20,17 +20,13 @@ export default class Paragraph extends Component {
     }
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-        let parkMenu = null;
-        if(!this.props.category.status || this.props.category.status === "surf") {
-            parkMenu = <div className="park-images right" onClick={this._parkFeed.bind(this, this.props.category)}> <i className="fa fa-share"></i> </div>;
-        }
+
         return (
             <div style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>
                 <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p>
-                {parkMenu}
                 {header}
             </div>
         );
@@ -42,5 +38,5 @@ Paragraph.displayName = "Paragraph";
 
 Paragraph.propTypes = {
     "dispatch": PropTypes.func,
-    "category": PropTypes.object
+    "parkFeed":PropTypes.func
 };

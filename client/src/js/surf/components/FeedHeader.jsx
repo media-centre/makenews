@@ -5,9 +5,14 @@ import FeedActionComponent from "./../../park/components/FeedActionComponent.jsx
 
 export default class FeedHeader extends Component {
     render() {
-
         let tags = this.props.tags.map((tag, index)=> <li className="tag" key={index}>{tag}</li>);
-        let feedAction = this.props.status === "park" ? <FeedActionComponent /> : null;
+        let feedAction = null;
+
+        if(this.props.status === "park")
+            feedAction = <FeedActionComponent />;
+        else if(!this.props.status || this.props.status === "surf"){
+            feedAction = <div className="park-images right" onClick={this.props.parkFeed}> <i className="fa fa-share"></i> </div>;
+        }
 
         return (
             <div className="feed-header border-bottom box h-center clear-fix">
@@ -28,5 +33,6 @@ FeedHeader.propTypes = {
     "status": PropTypes.string,
     "feedType": PropTypes.string,
     "categoryNames": PropTypes.string,
-    "tags": PropTypes.array
+    "tags": PropTypes.array,
+    "parkFeed": PropTypes.func.isRequired
 };
