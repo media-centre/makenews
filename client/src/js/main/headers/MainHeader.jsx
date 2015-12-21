@@ -19,9 +19,9 @@ export default class MainHeader extends Component {
 
                     <div className="flexible t-center">
                         <ul className="menu-list">
-                            <MainHeaderTab name={this.props.headerStrings.configTab.Name} url="/configure/categories" tabToHighlight={this.props.highlightedTab} className="configure" id="configureLink" />
-                            <MainHeaderTab name={this.props.headerStrings.surfTab.Name} url="/surf" tabToHighlight={this.props.highlightedTab} className="surf" id="surfLink" />
-                            <MainHeaderTab name={this.props.headerStrings.parkTab.Name} url="/park" tabToHighlight={this.props.highlightedTab} className="park" id="parkLink" />
+                            <MainHeaderTab name={this.props.headerStrings.configTab.Name} url="/configure/categories" tabToHighlight={this.props.highlightedTab} parkCounter={this.props.parkCounter} className="configure" id="configureLink" />
+                            <MainHeaderTab name={this.props.headerStrings.surfTab.Name} url="/surf" tabToHighlight={this.props.highlightedTab} parkCounter={this.props.parkCounter} className="surf" id="surfLink" />
+                            <MainHeaderTab name={this.props.headerStrings.parkTab.Name} url="/park" tabToHighlight={this.props.highlightedTab} parkCounter={this.props.parkCounter} className="park" id="parkLink" />
                         </ul>
                     </div>
                 </div>

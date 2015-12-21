@@ -1,4 +1,4 @@
-/* eslint react/no-danger:0 */
+/* eslint react/no-danger:0 max-len:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";
@@ -50,5 +50,5 @@ ImageContent.displayName = "ImageContent";
 ImageContent.propTypes = {
     "category": PropTypes.object,
     "dispatch": PropTypes.func,
-    "parkFeed":PropTypes.func
+    "parkFeed": PropTypes.func
 };

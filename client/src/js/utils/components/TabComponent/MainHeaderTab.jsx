@@ -14,13 +14,13 @@ export default class MainHeaderTab extends Component {
         }
         return (
             <li>
-            <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
-                {counter}
-                <div className={this.props.className + " header-link-image"}></div>
-                <span>{this.props.name}</span>
-            </Link>
+                <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
+                    {counter}
+                    <div className={this.props.className + " header-link-image"}></div>
+                    <span>{this.props.name}</span>
+                </Link>
             </li>
-    );
+        );
     }
 }
 
@@ -32,5 +32,5 @@ MainHeaderTab.propTypes = {
     "tabToHighlight": PropTypes.object.isRequired,
     "className": PropTypes.string.isRequired,
     "id": PropTypes.string.isRequired,
-    "parkCounter": PropTypes.number
+    "parkCounter": PropTypes.number.isRequired
 };

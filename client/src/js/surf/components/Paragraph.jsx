@@ -1,4 +1,4 @@
-/* eslint react/no-danger:0 */
+/* eslint react/no-danger:0 max-len:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
@@ -38,5 +38,6 @@ Paragraph.displayName = "Paragraph";
 
 Paragraph.propTypes = {
     "dispatch": PropTypes.func,
-    "parkFeed":PropTypes.func
+    "parkFeed": PropTypes.func,
+    "category": PropTypes.object
 };

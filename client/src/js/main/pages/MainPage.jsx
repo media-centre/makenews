@@ -1,14 +1,9 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import MainHeader from "../headers/MainHeader.jsx";
-import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 import { connect } from "react-redux";
 
 export class MainPage extends Component {
-    componentWillMount() {
-        this.props.dispatch(initialiseParkedFeedsCount());
-    }
-
     render() {
         return (
             <div className="main-page">

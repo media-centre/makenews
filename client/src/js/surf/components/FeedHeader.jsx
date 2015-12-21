@@ -8,9 +8,9 @@ export default class FeedHeader extends Component {
         let tags = this.props.tags.map((tag, index)=> <li className="tag" key={index}>{tag}</li>);
         let feedAction = null;
 
-        if(this.props.status === "park")
+        if(this.props.status === "park") {
             feedAction = <FeedActionComponent />;
-        else if(!this.props.status || this.props.status === "surf"){
+        } else if(!this.props.status || this.props.status === "surf") {
             feedAction = <div className="park-images right" onClick={this.props.parkFeed}> <i className="fa fa-share"></i> </div>;
         }
 

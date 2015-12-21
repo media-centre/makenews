@@ -1,4 +1,4 @@
-/* eslint react/no-danger:0 */
+/* eslint react/no-danger:0 max-len:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";
@@ -55,7 +55,7 @@ ImageGallery.displayName = "ImageGallery";
 ImageGallery.propTypes = {
     "category": PropTypes.object,
     "dispatch": PropTypes.func.isRequired,
-    "parkFeed":PropTypes.func
+    "parkFeed": PropTypes.func
 
 
 };
