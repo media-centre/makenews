@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { createCategory } from "../actions/CategoryActions.js";
+import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 
 let AllCategories = React.createClass({
     displayName() {
@@ -23,7 +24,9 @@ let AllCategories = React.createClass({
     componentWillMount() {
         window.scrollTo(0, 0);
         this.props.dispatch(highLightTabAction(["Configure", "RSS"]));
+        this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayAllCategoriesAsync());
+
     },
 
     _createNewCategory() {
