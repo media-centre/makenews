@@ -1,4 +1,4 @@
-/* eslint no-sync:0 */
+/* eslint no-sync:0 max-depth:0 */
 "use strict";
 import EnvironmentConfig from "../config/EnvironmentConfig";
 import winston from "winston";
@@ -9,7 +9,7 @@ export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR":
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-let LOG_DIR = "server/logs", LOG_FILE = "defaultLog.log";
+let LOG_DIR = path.join(__dirname, "../../../logs"), LOG_FILE = "defaultLog.log";
 
 export default class Logger {
 
@@ -18,8 +18,9 @@ export default class Logger {
     }
 
     static initialize() {
-        if (!fs.existsSync(LOG_DIR)) {
-            fs.mkdirSync(LOG_DIR);
+        Logger.createDir(LOG_DIR);
+        if(!Logger._isCategoriesInitialized()) {
+            Logger._readLogConfig(EnvironmentConfig.files.LOGGING);
         }
         if(!defaultLogger) {
             defaultLogger = new winston.Logger({
@@ -31,8 +32,11 @@ export default class Logger {
                 ]
             });
         }
-        if(!Logger._isCategoriesInitialized()) {
-            Logger._readLogConfig(EnvironmentConfig.files.LOGGING);
+    }
+
+    static createDir() {
+        if (!fs.existsSync(LOG_DIR)) {
+            fs.mkdirSync(LOG_DIR);
         }
     }
 
@@ -48,28 +52,41 @@ export default class Logger {
         return new Logger();
     }
 
-    static _createCategoryLoggers(logConfigJson) {
-        let environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION);
-        let loggingConfig = logConfigJson[environment.environment];
-        if(loggingConfig) {
-            let dirName = loggingConfig.dirname;
-            let categoriesConfig = loggingConfig.logging;
-            for (let loggerName of Object.keys(categoriesConfig)) {
-                let categoryConfig = categoriesConfig[loggerName];
-                if (categoryConfig.file) {
-                    categoryConfig.file.dirname = categoryConfig.file.dirname || dirName;
+    static _getDefaultCategoryLogger() {
+        return defaultCategoryLogger;
+    }
+
+    static _createCategoryLoggers(logConfigJson = {}) {
+        if(logConfigJson !== {}) {
+            let environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION);
+            let loggingConfig = logConfigJson[environment.environment];
+            if(loggingConfig) {
+                let logDir = LOG_DIR;
+                if(loggingConfig.dir) {
+                    logDir = path.join(__dirname, loggingConfig.dir);
+                    Logger.createDir(logDir);
                 }
-                winston.loggers.add(loggerName, categoryConfig);
-                if (loggerName === logCategories.DEFAULT) {
-                    defaultCategoryLogger = winston.loggers.get(loggerName);
+                for (let loggerName of Object.keys(loggingConfig)) {
+                    let categoryConfig = loggingConfig[loggerName];
+                    if (categoryConfig.file) {
+                        categoryConfig.file.dirname = logDir;
+                    }
+                    winston.loggers.add(loggerName, categoryConfig);
+                    if(loggerName === logCategories.DEFAULT) {
+                        defaultCategoryLogger = winston.loggers.get(loggerName);
+                    }
                 }
+                categoriesInitialized = true;
             }
-            categoriesInitialized = true;
         }
     }
 
     static _getJson(relativefilePath) {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, relativefilePath), "utf8"));
+        try {
+            return JSON.parse(fs.readFileSync(relativefilePath, "utf8"));
+        } catch (err) {
+            return {};
+        }
     }
 
     static fileInstance(fileName, level) {
@@ -114,12 +131,15 @@ export default class Logger {
 
     static _createFileTransport(options) {
         return new (winston.transports.File)({
-            "dirname": options.dirName ? options.dirName : LOG_DIR,
+            "dirname": LOG_DIR,
             "filename": options.filename ? options.filename : LOG_FILE,
             "level": options.level ? options.level : logLevel.LOG_INFO,
             "maxsize": 20000,
             "maxFiles": 10,
             "tailable": true,
+            "timestamp": function() {
+                return Date.now();
+            },
             "rotationFormat": this.getFormattedDate
         });
     }
@@ -141,7 +161,7 @@ export default class Logger {
     }
 
     getLogger() {
-        return this.logger || defaultCategoryLogger || defaultLogger;
+        return this.logger || Logger._getDefaultCategoryLogger() || defaultLogger;
     }
 
     debug(message, ...insertions) {

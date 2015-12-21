@@ -6,32 +6,25 @@ import { assert } from "chai";
 import Logger, { logLevel, logType } from "../../src/logging/Logger";
 import sinon from "sinon";
 
-xdescribe("Logger", () => {
-
-    function assertFileLogger(logger, fileName, level) {
-        assert.strictEqual(logger.getLogger().transports.file.filename, fileName);
-        assert.strictEqual(logger.getLogger().transports.file.level, level);
-        assert.strictEqual(logger.getLogger().transports.file.dirname, "server/logs");
-    }
-
-    function assertConsoleLogger(logger, level) {
-        assert.strictEqual(logger.getLogger().transports.console.level, level);
-    }
+describe("Logger", () => {
 
     describe("instance", () => {
-        let JsonStub = null;
-        let loggerStub = null;
+        let sandBox = null, JsonStub = null, loggerStub = null, defaultCategoryLogger = null;
 
-        before("stub getJson", () => {
-            JsonStub = sinon.stub(Logger, "_getJson");
-            loggerStub = sinon.stub(Logger, "_isCategoriesInitialized");
+        beforeEach("stub getJson", () => {
+            sandBox = sinon.sandbox.create();
+            loggerStub = sandBox.stub(Logger, "_isCategoriesInitialized");
         });
-        after("restore getJson stub", ()=> {
-            JsonStub.restore();
-            loggerStub.restore();
+        afterEach("restore getJson stub", ()=> {
+            sandBox.restore();
         });
+
         it("defaultLogger is called", () => {
+            JsonStub = sandBox.stub(Logger, "_getJson");
             JsonStub.returns({});
+            loggerStub.returns(true);
+            defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
+            defaultCategoryLogger.returns(null);
             assertFileLogger(Logger.instance(), "defaultLog.log", logLevel.LOG_INFO);
 
         });
@@ -39,65 +32,47 @@ xdescribe("Logger", () => {
         it("default logger should be returned when instance is called without default logging config ", () => {
             let myJson = {
                 "unit_testing": {
-                    "dirname": "server/logs",
-                    "logging": {
-                        "test1": {
-                            "file": {
-                                "filename": "test1.log",
-                                "level": logLevel.LOG_INFO
-                            }
+                    "dir": "../../../dist/logs",
+                    "test1": {
+                        "file": {
+                            "filename": "test1.log",
+                            "level": logLevel.LOG_INFO
                         }
                     }
                 }
             };
+            JsonStub = sandBox.stub(Logger, "_getJson");
             JsonStub.returns(myJson);
-            assertFileLogger(Logger.instance(), "defaultLog.log", logLevel.LOG_INFO);
+            defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
+            defaultCategoryLogger.returns(null);
+            const logger = Logger.instance();
+            assertFileLogger(logger, "defaultLog.log", logLevel.LOG_INFO);
         });
-        it("default category logger should be returned when instance is called", () => {
-            let myJson = {
-                "unit_testing": {
-                    "dirname": "server/logs",
-                    "logging": {
-                        "default": {
-                            "file": {
-                                "filename": "def.log",
-                                "level": logLevel.LOG_WARN
-                            }
-                        },
-                        "test2": {
-                            "file": {
-                                "filename": "test2.log",
-                                "level": logLevel.LOG_INFO
-                            }
-                        }
-                    }
-                }
-            };
-            JsonStub.returns(myJson);
-            loggerStub.returns(false);
-            assertFileLogger(Logger.instance(), "def.log", logLevel.LOG_WARN);
 
+        it("default category logger should be returned if looging.json is read", () => {
+            loggerStub.returns(false);
+            assertFileLogger(Logger.instance(), "unitTest.log", logLevel.LOG_ERROR);
         });
+
         it("category logger should be returned when instance is called with category name", () => {
             let myJson = {
                 "unit_testing": {
-                    "dirname": "server/logs",
-                    "logging": {
-                        "default": {
-                            "file": {
-                                "filename": "def.log",
-                                "level": logLevel.LOG_WARN
-                            }
-                        },
-                        "test3": {
-                            "file": {
-                                "filename": "test3.log",
-                                "level": logLevel.LOG_INFO
-                            }
+                    "dir": "../../../dist/logs",
+                    "default": {
+                        "file": {
+                            "filename": "def.log",
+                            "level": logLevel.LOG_WARN
+                        }
+                    },
+                    "test3": {
+                        "file": {
+                            "filename": "test3.log",
+                            "level": logLevel.LOG_INFO
                         }
                     }
                 }
             };
+            JsonStub = sandBox.stub(Logger, "_getJson");
             JsonStub.returns(myJson);
             loggerStub.returns(false);
             let logger = Logger.instance("test3");
@@ -136,4 +111,13 @@ xdescribe("Logger", () => {
             assertConsoleLogger(logger, "error");
         });
     });
+
+    function assertFileLogger(logger, fileName, level) {
+        assert.strictEqual(logger.getLogger().transports.file.filename, fileName);
+        assert.strictEqual(logger.getLogger().transports.file.level, level);
+    }
+
+    function assertConsoleLogger(logger, level) {
+        assert.strictEqual(logger.getLogger().transports.console.level, level);
+    }
 });
