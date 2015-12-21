@@ -20,9 +20,8 @@ export default class Paragraph extends Component {
     }
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader status={this.props.category.status} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-
         return (
             <div style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>
@@ -39,5 +38,6 @@ Paragraph.displayName = "Paragraph";
 Paragraph.propTypes = {
     "dispatch": PropTypes.func,
     "parkFeed": PropTypes.func,
-    "category": PropTypes.object
+    "category": PropTypes.object,
+    "actionComponent": PropTypes.func
 };

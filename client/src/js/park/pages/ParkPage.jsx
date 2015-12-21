@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import AllFeeds from "../../surf/components/AllFeeds.jsx";
 import { displayParkedFeedsAsync } from "../actions/ParkActions";
 import { highLightTabAction } from "../../tabs/TabActions.js";
+import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
 import { connect } from "react-redux";
 
 export class ParkPage extends Component {
@@ -17,7 +18,7 @@ export class ParkPage extends Component {
         return (
             <div ref="parkItem" className="park-page feeds-container">
                 {defaultText}
-                <AllFeeds feeds={this.props.parkedItems}/>
+                <AllFeeds feeds={this.props.parkedItems} actionComponent={ParkFeedActionComponent}/>
             </div>
         );
     }

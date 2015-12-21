@@ -4,15 +4,15 @@ import { assert } from "chai";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import FeedActionComponent from "../../../src/js/park/components/FeedActionComponent.jsx";
+import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent.jsx";
 
 
-describe("FeedActionComponent", () => {
+describe("ParkFeedActionComponent", () => {
     let feedActionComponent = null;
 
-    before("FeedActionComponent", () => {
+    before("ParkFeedActionComponent", () => {
         feedActionComponent = TestUtils.renderIntoDocument(
-          <FeedActionComponent />
+          <ParkFeedActionComponent />
        );
     });
 

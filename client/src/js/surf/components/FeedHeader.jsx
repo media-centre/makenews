@@ -1,19 +1,11 @@
 "use strict";
 
 import React, { Component, PropTypes } from "react";
-import FeedActionComponent from "./../../park/components/FeedActionComponent.jsx";
 
 export default class FeedHeader extends Component {
     render() {
         let tags = this.props.tags.map((tag, index)=> <li className="tag" key={index}>{tag}</li>);
-        let feedAction = null;
-
-        if(this.props.status === "park") {
-            feedAction = <FeedActionComponent />;
-        } else if(!this.props.status || this.props.status === "surf") {
-            feedAction = <div className="park-images right" onClick={this.props.parkFeed}> <i className="fa fa-share"></i> </div>;
-        }
-
+        let actionElement = this.props.actionComponent ? React.createElement(this.props.actionComponent, this.props) : null;
         return (
             <div className="feed-header border-bottom box h-center clear-fix">
                 <span className="icon-container header-item"><i className={"feed-icon fa fa-" + this.props.feedType.toLowerCase()}></i></span>
@@ -21,7 +13,7 @@ export default class FeedHeader extends Component {
                 <ul className="h-center header-item">
                     {tags}
                 </ul>
-                {feedAction}
+                {actionElement}
             </div>
         );
     }
@@ -30,9 +22,8 @@ export default class FeedHeader extends Component {
 FeedHeader.displayName = "FeedHeader";
 
 FeedHeader.propTypes = {
-    "status": PropTypes.string,
+    "actionComponent": PropTypes.func,
     "feedType": PropTypes.string,
     "categoryNames": PropTypes.string,
-    "tags": PropTypes.array,
-    "parkFeed": PropTypes.func.isRequired
+    "tags": PropTypes.array
 };

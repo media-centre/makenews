@@ -6,6 +6,7 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../../helper/TestHelper.js";
 import { ParkPage } from "../../../src/js/park/pages/ParkPage.jsx";
+import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent.jsx";
 import AllFeeds from "../../../src/js/surf/components/AllFeeds.jsx";
 
 describe("park Page", () => {
@@ -31,11 +32,12 @@ describe("park Page", () => {
     it("AllFeeds if feeds are there", () => {
         let feeds = ["test"];
         let parkComponent = TestUtils.renderIntoDocument(
-            <ParkPage parkedItems={feeds} dispatch={()=>{}}/>
+            <ParkPage parkedItems={feeds} actionComponent={ParkFeedActionComponent} dispatch={()=>{}}/>
         );
         const allFeeds = TestUtils.findRenderedComponentWithType(parkComponent, AllFeeds);
         assert(allFeeds);
         assert.deepEqual(allFeeds.props.feeds, feeds);
+        assert.deepEqual(allFeeds.props.actionComponent, ParkFeedActionComponent);
     });
 });
 

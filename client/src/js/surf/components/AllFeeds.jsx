@@ -10,9 +10,9 @@ export default class AllFeeds extends Component {
     render() {
 
         let categories = this.props.feeds.map((category, index)=>
-                category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch}/>
-                    : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch}/>
-                        : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch}/> : null
+            category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/>
+                : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/>
+                    : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/> : null
 
         );
 
@@ -28,9 +28,11 @@ AllFeeds.displayName = "AllFeeds";
 
 AllFeeds.propTypes = {
     "dispatch": PropTypes.func,
-    "feeds": PropTypes.array
+    "feeds": PropTypes.array,
+    "actionComponent": PropTypes.func
 };
 
 AllFeeds.defaultProps = {
-    "feeds": []
+    "feeds": [],
+    "actionComponent": null
 };

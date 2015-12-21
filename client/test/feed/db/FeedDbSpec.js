@@ -9,10 +9,22 @@ import { expect } from "chai";
 describe("FeedDb", () => {
     describe("fetchAllFeedsAndCategoriesWithSource", () => {
         it("should fetch all feeds and category documents", (done) => {
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).returns(Promise.resolve(""));
+            let pouchClientMock = sinon.mock(PouchClient);
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).returns(Promise.resolve(""));
             FeedDb.fetchSurfFeedsAndCategoriesWithSource().then(() => {
                 pouchClientMock.verify();
-                PouchClient.fetchLinkedDocuments.restore();
+                pouchClientMock.restore();
+                done();
+            });
+        });
+    });
+    describe("fetchParkFeeds", () => {
+        it("should fetch all parked feeds and category documents", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient);
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/parkedFeeds", { "include_docs": true }).returns(Promise.resolve(""));
+            FeedDb.fetchParkFeeds().then(() => {
+                pouchClientMock.verify();
+                pouchClientMock.restore();
                 done();
             });
         });

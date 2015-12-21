@@ -1,7 +1,7 @@
 "use strict";
 import React, { Component } from "react";
 
-export default class FeedActionComponent extends Component {
+export default class ParkFeedActionComponent extends Component {
     render() {
         return (
             <div className="feed-action right">
@@ -10,4 +10,4 @@ export default class FeedActionComponent extends Component {
         );
     }
 }
-FeedActionComponent.displayName = "FeedActionComponent";
+ParkFeedActionComponent.displayName = "ParkFeedActionComponent";

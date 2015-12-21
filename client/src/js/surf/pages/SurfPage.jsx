@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
+import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
 import { displayAllFeedsAsync } from "../actions/AllFeedsActions.js";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
@@ -20,7 +21,7 @@ export default class SurfPage extends Component {
         return (
             <div className="surf-page feeds-container">
                 {hintMsg}
-                <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch}/>
+                <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent}/>
             </div>
         );
     }
