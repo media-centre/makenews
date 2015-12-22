@@ -25,5 +25,11 @@ describe("FeedReducer", function() {
             let state = parkCounter(0, action);
             assert.deepEqual(initialCount, state);
         });
+
+        it("should initialise counter with 0 if the action count is undefined", function() {
+            let action = { "type": INITIALISE_PARK_COUNTER, "count": undefined };
+            let state = parkCounter(0, action);
+            assert.deepEqual(0, state);
+        });
     });
 });

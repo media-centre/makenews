@@ -7,7 +7,7 @@ export function parkCounter(state = 0, action = {}) {
     case INCREMENT_PARK_COUNTER:
         return state + 1;
     case INITIALISE_PARK_COUNTER:
-        return action.count;
+        return action.count || 0;
     default:
         return state;
     }
