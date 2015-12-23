@@ -62,6 +62,10 @@ export default {
             },
             "configureTabName": "Configure"
         },
+        "surfPage": {
+            "noFeeds": "No feeds available",
+            "fetchingFeeds": "Fetching feeds..."
+        },
         "headerStrings": {
             "surfTab": {
                 "Name": "Surf"

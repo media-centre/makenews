@@ -8,16 +8,23 @@ import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 
+
 export default class SurfPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds };
+    }
     componentWillMount() {
         window.scrollTo(0, 0);
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
-        this.props.dispatch(displayAllFeedsAsync());
+        this.props.dispatch(displayAllFeedsAsync((feeds)=> {
+            this.setState({ "fetchHintMessage": feeds.length > 0 ? "" : this.props.messages.noFeeds });
+        }));
     }
 
     render() {
-        let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{"Fetching feeds please wait..."}</div> : null;
+        let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
         return (
             <div className="surf-page feeds-container">
                 {hintMsg}
@@ -31,7 +38,8 @@ SurfPage.displayName = "SurfPage";
 
 SurfPage.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "feeds": PropTypes.array
+    "feeds": PropTypes.array,
+    "messages": PropTypes.object
 };
 
 SurfPage.defaultProps = {

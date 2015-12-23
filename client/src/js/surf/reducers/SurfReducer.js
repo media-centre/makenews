@@ -2,11 +2,14 @@
 "use strict";
 import { DISPLAY_ALL_FEEDS } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";
+import Locale from "../../utils/Locale.js";
 
-export function allFeeds(state = { "feeds": [] }, action = {}) {
+let surfMessages = Locale.applicationStrings().messages.surfPage;
+
+export function allFeeds(state = { "feeds": [], "messages": surfMessages }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
-        return Object.assign({}, state, { "feeds": action.feeds });
+        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages });
     default:
         return state;
     }

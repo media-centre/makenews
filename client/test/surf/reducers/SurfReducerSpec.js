@@ -5,10 +5,11 @@ import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer.js";
 import { DISPLAY_ALL_FEEDS } from "../../../src/js/surf/actions/AllFeedsActions.js";
 import { expect } from "chai";
 
+let messages = { "fetchingFeeds": "Fetching feeds...", "noFeeds": "No feeds available" };
 describe("Surf Reducer", () => {
     describe("allFeeds", () => {
         it("default state should return empty list", () => {
-            expect({ "feeds": [] }).to.deep.equal(allFeeds());
+            expect({ "feeds": [], "messages": messages }).to.deep.equal(allFeeds());
         });
 
         it("should return given feeds", () => {
@@ -34,7 +35,7 @@ describe("Surf Reducer", () => {
             ];
             let action = { "type": DISPLAY_ALL_FEEDS, "feeds": feeds };
 
-            expect({ "feeds": feeds }).to.deep.equal(allFeeds(undefined, action));
+            expect({ "feeds": feeds, "messages": messages }).to.deep.equal(allFeeds(undefined, action));
         });
     });
 });
