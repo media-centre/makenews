@@ -9,6 +9,9 @@ import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 import RssDb from "../../rss/RssDb.js";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
 import FacebookResponseParser from "../../facebook/FacebookResponseParser.js";
+import TwitterRequestHandler from "../../twitter/TwitterRequestHandler.js";
+import TwitterResponseParser from "../../twitter/TwitterResponseParser";
+import TwitterDb from "../../twitter/TwitterDb";
 import EnvironmentConfig from "../../EnvironmentConfig.js";
 import FacebookDb from "../../facebook/FacebookDb.js";
 
@@ -77,23 +80,17 @@ function addUrlDocument(dispatch, categoryId, title, url, status) {
 
 export function addTwitterUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        AjaxClient.instance("/twitter-feeds").get({ "url": url }).then((responseFeed) => {
-            addTwitterUrlDocument(dispatch, categoryId, url, STATUS_VALID, responseFeed.statuses);
+        TwitterRequestHandler.fetchTweets(url).then((responseTweet) => {
+            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID).then(documentId => {
+                let tweets = TwitterResponseParser.parseTweets(documentId, responseTweet);
+                TwitterDb.addTweets(tweets);
+            });
             callback(STATUS_VALID);
         }).catch(() => {
-            addTwitterUrlDocument(dispatch, categoryId, url, STATUS_INVALID);
+            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };
-}
-
-function addTwitterUrlDocument(dispatch, categoryId, url, status, responseFeed) {
-    CategoriesApplicationQueries.addTwitterUrlConfiguration(categoryId, url, status).then(response => {
-        if(responseFeed && responseFeed.length !== 0) {
-            CategoriesApplicationQueries.addTwitterFeeds(response.id, responseFeed);
-        }
-        dispatch(populateCategoryDetailsAsync(categoryId));
-    });
 }
 
 export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {

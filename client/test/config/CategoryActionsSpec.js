@@ -1,12 +1,13 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] no-unused-vars:0*/
 
 "use strict";
-import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync } from "../../src/js/config/actions/CategoryActions.js";
+import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
 import { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
+import TwitterDb from "../../src/js/twitter/TwitterDb";
 import mockStore from "../helper/ActionHelper.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import { expect, assert } from "chai";
@@ -171,17 +172,16 @@ describe("addTwitterUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(twitterFeed));
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
 
-        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addTwitterUrlConfiguration");
-        categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_VALID).returns(Promise.resolve({ "id": "url", "ok": true }));
-
-        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(CategoriesApplicationQueries).expects("addTwitterFeeds");
-        categoriesApplicationQueriesCreateFeedsMock.withArgs("url", twitterFeed.statuses).returns(Promise.resolve("response"));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
+        categoriesApplicationQueriesMock.withArgs(categoryId, TWITTER_TYPE, url, STATUS_VALID).returns(Promise.resolve({ "id": "url", "ok": true }));
+        let twitterDbMock = sandbox.mock(TwitterDb).expects("addTweets");
+        twitterDbMock.withArgs(twitterFeed.statuses).returns(Promise.resolve("response"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, () => { }))).then(() => {
             categoriesApplicationQueriesMock.verify();
-            categoriesApplicationQueriesCreateFeedsMock.verify();
+            twitterDbMock.verify();
         });
     });
 
@@ -192,8 +192,8 @@ describe("addTwitterUrlAsync", () => {
 
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
 
-        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addTwitterUrlConfiguration");
-        categoriesApplicationQueriesMock.withArgs(categoryId, url, STATUS_INVALID).returns(Promise.resolve({ "id": "url", "ok": true }));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
+        categoriesApplicationQueriesMock.withArgs(categoryId, TWITTER_TYPE, url, STATUS_INVALID).returns(Promise.resolve({ "id": "url", "ok": true }));
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
 

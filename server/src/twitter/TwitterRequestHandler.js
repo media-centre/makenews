@@ -8,10 +8,6 @@ export default class TwitterRequestHandler {
         return new TwitterRequestHandler();
     }
 
-    constructor() {
-
-    }
-
     fetchTweetsRequest(url) {
         return new Promise((resolve, reject) => {
             this.twitterClient().fetchTweets(url).then(feeds => {

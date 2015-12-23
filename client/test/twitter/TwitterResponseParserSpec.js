@@ -1,31 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import TwitterDocument from "../../src/js/twitter/TwitterDocument.js";
-import { expect, assert } from "chai";
-
-describe("getNewDocument", () => {
-    it("should return the new rss document", () => {
-        let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
-        let url = "test url";
-        let status = "valid";
-        let expectedDocument = {
-            "docType": "source",
-            "sourceType": "rss",
-            "url": url,
-            "categoryIds": [categoryId],
-            "status": status
-        };
-        assert.deepEqual(expectedDocument, TwitterDocument.getSourceUrlDocument(categoryId, "rss", url, status));
-    });
-
-    it("should throw an error if the url or category id is empty", () => {
-        let newRssDocumentCallback = function() {
-            TwitterDocument.getSourceUrlDocument("", "");
-        };
-        assert.throw(newRssDocumentCallback, "category id or url can not be empty");
-    });
-});
+import TwitterResponseParser from "../../src/js/twitter/TwitterResponseParser.js";
+import { expect } from "chai";
 
 describe("createTwitterFeed", ()=> {
     it("should return tweets with the desired format of description type", ()=> {
@@ -52,7 +29,7 @@ describe("createTwitterFeed", ()=> {
             "content": "Hindu twitter text - 123457",
             "tags": ["Fri Dec 11 11:41:56", "tag1", "tag2"]
         };
-        let newTweets = TwitterDocument.parseFeed(actualTweet, sourceId);
+        let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
         expect(newTweets).to.deep.equal(expectedTweet);
     });
 
@@ -82,7 +59,7 @@ describe("createTwitterFeed", ()=> {
             "tags": ["Fri Dec 11 11:41:56", "tag1", "tag2"],
             "url": "https://www.test.com"
         };
-        let newTweets = TwitterDocument.parseFeed(actualTweet, sourceId);
+        let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
         expect(newTweets).to.deep.equal(expectedTweet);
     });
 
@@ -120,7 +97,7 @@ describe("createTwitterFeed", ()=> {
                 }
             ]
         };
-        let newTweets = TwitterDocument.parseFeed(actualTweet, sourceId);
+        let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
         expect(newTweets).to.deep.equal(expectedTweet);
     });
 });
