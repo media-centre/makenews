@@ -92,15 +92,14 @@ describe("AddURLComponent", () => {
         expect(addUrlDom.querySelector("input")).to.be.null;
     });
 
-    it("should validate the url when user enters key down", () => {
+    xit("should show the url input with red outline if there is an invalid url", ()=> {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
         let input = AddURLComponentElement.refs.addUrlTextBox;
-        input.value = "httwep://www.test1.com";
-        let customEvent = {};
-        customEvent.keyCode = 13;
-        TestUtils.Simulate.keyDown(input, customEvent);
-        expect("Invalid URL format").to.eq(AddURLComponentElement.state.errorMessage);
+        input.value = "http://www.test1.com";
+        TestUtils.Simulate.blur(input);
+
+        expect("Url is successfully added").to.eq(AddURLComponentElement.state.errorMessage);
     });
 
     xit("should call the validateUrl function if the give url is valid", () => {

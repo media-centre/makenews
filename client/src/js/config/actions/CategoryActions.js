@@ -46,7 +46,6 @@ export function addRssUrlAsync(categoryId, url, callback) {
                 callback(STATUS_INVALID);
             });
         }).catch(() => {
-            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };
@@ -61,7 +60,6 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
             });
             callback(STATUS_VALID);
         }).catch(error => {
-            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };
@@ -87,7 +85,6 @@ export function addTwitterUrlAsync(categoryId, url, callback) {
             });
             callback(STATUS_VALID);
         }).catch(() => {
-            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_INVALID);
             callback(STATUS_INVALID);
         });
     };

@@ -41,8 +41,10 @@ export default class CategoryDb {
                         reject(error);
                     });
                 } else {
-                    let existingDocument = docs[0];
-                    existingDocument.categoryIds.push(sourceConfigurationDocument.categoryIds[0]);
+                    let existingDocument = docs[0], NEGATIVE_INDEX = -1;
+                    if(existingDocument.categoryIds.indexOf(sourceConfigurationDocument.categoryIds[0]) === NEGATIVE_INDEX) {
+                        existingDocument.categoryIds.push(sourceConfigurationDocument.categoryIds[0]);
+                    }
                     PouchClient.updateDocument(existingDocument).then(response => {
                         resolve(response);
                     }).catch(error => {

@@ -13,7 +13,7 @@ export default class RSSComponent extends Component {
     _validateUrl(url, callback, props) {
         props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
             let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
-            return callback({ "error": errorMsg, "urlAdded": true });
+            return callback({ "error": errorMsg, "urlAdded": response === "valid" });
         }));
     }
 

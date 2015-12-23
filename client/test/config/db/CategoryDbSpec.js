@@ -122,25 +122,41 @@ describe("CategoryDb", () => {
             });
         });
 
-        xit("should not update or create if the category id of a url is already exists in the document fetched from db", (done) => {
-            let jsonDocument = {
+        it("should not update or create if the category id of a url is already exists in the document fetched from db", (done) => {
+
+            let newUrlDocument = {
+                "categoryIds": ["F2B643BE-FC17-AE81-85AF-D6136EB5E1C8"],
+                "docType": "source",
+                "sourceType": "facebook",
+                "status": "invalid",
+                "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+            }
+
+            let existingDocuments = [{
+                "_id": "73C6D95C-C62B-B263-9885-C48CBA039B14",
+                "_rev": "11-4b90658a579a7fbd19658f87e9280683",
+                "categoryIds": ["F2B643BE-FC17-AE81-85AF-D6136EB5E1C8"],
                 "docType": "source",
                 "sourceType": "rss",
-                "url": "www.google.com/rss",
-                "categoryIds": [
-                    "id2"
-                ]
-            };
+                "status": "valid",
+                "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+            }];
 
-            let existingDocument = jsonDocument;
 
-            let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
-            fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
-            fetchDocumentsStub.returns(Promise.resolve([existingDocument]));
-            let pouchClientMock = sinon.mock(PouchClient).expects("updateDocument").never();
-            CategoryDb.createOrUpdateSource(jsonDocument).then(() => {
-                pouchClientMock.verify();
+            let pouchClientStub = sinon.mock(PouchClient).expects("updateDocument");
+            pouchClientStub.withArgs(existingDocuments[0]).returns(Promise.resolve({}));
+
+            let categoryDbStub = sinon.mock(CategoryDb).expects("fetchSourceConfigurationByUrl");
+            categoryDbStub.withArgs(newUrlDocument.url).returns(Promise.resolve(existingDocuments));
+
+            CategoryDb.createOrUpdateSource(newUrlDocument).then((response)=> {
+
+                categoryDbStub.verify();
+                CategoryDb.fetchSourceConfigurationByUrl.restore();
+
+                pouchClientStub.verify();
                 PouchClient.updateDocument.restore();
+
                 done();
             });
 

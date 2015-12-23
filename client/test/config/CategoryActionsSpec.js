@@ -102,14 +102,12 @@ describe("addRssUrlAsync", () => {
 
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
 
-        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
-        categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_INVALID).returns(Promise.resolve("response"));
-
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url))).then(() => {
-            categoriesApplicationQueriesMock.verify();
-        });
+        const store = mockStore(categorySourceConfig, expectedActions);
+        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, (response)=> {
+            assert.strictEqual("invalid", response);
+            done();
+        })));
     });
 
     it("should create rss source and then create the feeds", (done) => {
@@ -186,22 +184,21 @@ describe("addTwitterUrlAsync", () => {
     });
 
     it("should create twitter document with invalid status if url is invalid", (done) => {
+
         let categoryId = "categoryId";
         let url = "@the_hindu";
         let allSources = [{ "url": url, "docType": "sources" }];
 
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
 
-        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
-        categoriesApplicationQueriesMock.withArgs(categoryId, TWITTER_TYPE, url, STATUS_INVALID).returns(Promise.resolve({ "id": "url", "ok": true }));
-
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, () => { }))).then(() => {
-            categoriesApplicationQueriesMock.verify();
-        });
+        const store = mockStore(categorySourceConfig, expectedActions);
+        return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, (response) => {
+            assert.strictEqual("invalid", response);
+            done();
+        })));
     });
 
     afterEach("After Each", () => {

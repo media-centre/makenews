@@ -31,6 +31,7 @@ export default class AddURLComponent extends Component {
         if(errorMessage.length === 0) {
             this.setState({ "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl, "successResponse": false });
             this.props.sourceDomainValidation(url, (response)=> {
+                console.log(response);
                 let show = response.error !== this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
                 this.setState({ "showUrlInput": !response.urlAdded, "errorMessage": response.error, "successResponse": !show });
             });
