@@ -130,7 +130,7 @@ describe("CategoryDb", () => {
                 "sourceType": "facebook",
                 "status": "invalid",
                 "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
-            }
+            };
 
             let existingDocuments = [{
                 "_id": "73C6D95C-C62B-B263-9885-C48CBA039B14",
