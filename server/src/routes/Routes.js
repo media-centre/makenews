@@ -2,7 +2,7 @@
 import authorizationRoutes from "./AuthorizationRoutes.js";
 import rssReaderRoutes from "./RssReaderRoutes";
 import facebookReaderRoutes from "./FacebookRoutes.js";
-import twitterReaderRoutes from "./TwitterReaderRoutes";
+import twitterReaderRoutes from "./TwitterRoutes";
 
 export default function(app) {
     authorizationRoutes(app);

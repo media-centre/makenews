@@ -2,9 +2,10 @@
 import { assert } from "chai";
 import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import TwitterReaderHelper, { baseURL, searchApi, searchParams } from "../../../src/routes/helpers/TwitterReaderHelper";
+import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
+import { baseURL, searchApi, searchParams } from "../../../src/twitter/TwitterClient";
 
-describe("TwitterReaderHelper", () => {
+describe("TwitterRouteHelper", () => {
     function mockTwitterRequest() {
         return nock(baseURL, {
             "reqheaders": {
@@ -34,8 +35,8 @@ describe("TwitterReaderHelper", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
 
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
     });
 
     it("should return empty response if url is not present", (done) => {
@@ -44,8 +45,8 @@ describe("TwitterReaderHelper", () => {
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
     });
 
     it("should return data if the url is valid", (done) => {
@@ -61,8 +62,8 @@ describe("TwitterReaderHelper", () => {
 
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
 
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
 
     });
 
@@ -78,8 +79,8 @@ describe("TwitterReaderHelper", () => {
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": url + " is not a valid twitter handler" } });
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
     });
 
     it("should return 404 error if url is not valid twitter url", (done) => {
@@ -94,8 +95,8 @@ describe("TwitterReaderHelper", () => {
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": url + " is not a valid twitter handler" } });
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
     });
 
     it("should return error if request to url returns error", (done) => {
@@ -111,7 +112,7 @@ describe("TwitterReaderHelper", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json":
         { "message": "Request failed for twitter handler " + url } });
-        let twitterReader = new TwitterReaderHelper(request, response);
-        twitterReader.feedsForUrl();
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterRouter();
     });
 });
