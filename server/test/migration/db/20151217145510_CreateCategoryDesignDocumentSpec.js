@@ -15,7 +15,6 @@ let designDocument = null, response = null, accessToken = "YWRtaW46NTY3MzlGNDM6q
 
 describe("CreateCategoryDesignDocument", ()=> {
 
-
     describe("up", () => {
 
         before("up", () => {
@@ -46,12 +45,13 @@ describe("CreateCategoryDesignDocument", ()=> {
             getDocumentStub.returns(designDocument);
 
             designDocumentInstance.up().then((actualResponse)=> {
-                assert.strictEqual(HttpResponseHandler.codes.OK, actualResponse.statusCode);
-                assert.deepEqual(response, actualResponse.body);
+                assert.deepEqual(response, actualResponse);
                 appEnvMock.verify();
                 ApplicationConfig.dbUrl.restore();
                 designDocumentInstance.getDocument.restore();
                 done();
+            }).catch(error => {
+                console.log(error);
             });
         });
 

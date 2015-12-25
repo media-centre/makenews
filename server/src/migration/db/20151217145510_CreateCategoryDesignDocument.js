@@ -1,6 +1,7 @@
 "use strict";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../../config/ApplicationConfig.js";
+import NodeErrorHandler from "../../NodeErrorHandler.js";
 
 import request from "request";
 import fs from "fs";
@@ -13,11 +14,12 @@ export default class CreateCategoryDesignDocument {
     }
 
     getDocument() {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, "./documents/categoryDesignDocument.json"), "utf-8"));  //eslint-disable-line no-sync
+        return JSON.parse(fs.readFileSync(path.join(__dirname, "../documents/categoryDesignDocument.json"), "utf-8"));  //eslint-disable-line no-sync
     }
 
     up() {
         return new Promise((resolve, reject) => {
+            console.log("CreateCategoryDesignDocument::up - started");
             let categoryDocument = this.getDocument();
             request.put({
                 "uri": ApplicationConfig.dbUrl() + "/" + this.dbName + "/_design/category",
@@ -26,10 +28,17 @@ export default class CreateCategoryDesignDocument {
                 "json": true
             },
             (error, response) => {
-                if(!error && response.statusCode === HttpResponseHandler.codes.OK) {
-                    resolve(response);
+                if(NodeErrorHandler.noError(error)) {
+                    if(new HttpResponseHandler(response.statusCode).success()) {
+                        console.log("CreateCategoryDesignDocument::up - success ", response.body);
+                        resolve(response.body);
+                    } else {
+                        console.log("CreateCategoryDesignDocument::up - error ", response.body);
+                        reject("unexpected response from the db");
+                    }
                 } else {
-                    reject(response);
+                    console.log("CreateCategoryDesignDocument::up - error ", error);
+                    reject(error);
                 }
             });
         });

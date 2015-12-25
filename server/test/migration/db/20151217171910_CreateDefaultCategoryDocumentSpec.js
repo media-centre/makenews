@@ -43,8 +43,7 @@ describe("CreateDefaultCategoryDocument", ()=> {
             getDocumentStub.returns(defaultDocument);
 
             defaultDocumentInstance.up().then((actualResponse)=> {
-                assert.strictEqual(HttpResponseHandler.codes.OK, actualResponse.statusCode);
-                assert.deepEqual(response, actualResponse.body);
+                assert.deepEqual(response, actualResponse);
                 appEnvMock.verify();
                 ApplicationConfig.dbUrl.restore();
                 defaultDocumentInstance.getDocument.restore();

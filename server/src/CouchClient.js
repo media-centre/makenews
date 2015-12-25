@@ -30,7 +30,7 @@ export default class CouchClient {
             },
                 (error, response) => {
                     if(NodeErrorHandler.noError(error)) {
-                        if(response.statusCode === HttpResponseHandler.codes.OK) {
+                        if(new HttpResponseHandler(response.statusCode).success()) {
                             resolve(response.body);
                         } else {
                             reject("unexpected response from the db");
@@ -39,6 +39,30 @@ export default class CouchClient {
                         reject(error);
                     }
                 });
+        });
+    }
+
+    static getAllDbs() {
+        return new Promise((resolve, reject) => {
+            request.get({
+                "uri": ApplicationConfig.dbUrl() + "/_all_dbs"
+            },
+            (error, response) => {
+                if(NodeErrorHandler.noError(error)) {
+                    if(response.statusCode === HttpResponseHandler.codes.OK) {
+                        let userDbs = JSON.parse(response.body).filter(dbName => {
+                            if(dbName !== "_replicator" && dbName !== "_users") {
+                                return dbName;
+                            }
+                        });
+                        resolve(userDbs);
+                    } else {
+                        reject("unexpected response from the db");
+                    }
+                } else {
+                    reject(error);
+                }
+            });
         });
     }
 }

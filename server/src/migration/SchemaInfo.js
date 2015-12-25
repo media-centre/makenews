@@ -23,12 +23,14 @@ export default class SchemaInfo {
             let couchClient = CouchClient.instance(this.dbName, this.accessToken);
             this.getSchemaInfoDocument().then(schemaInfoDocument => {
                 couchClient.saveDocument("schema_info", this._getDocument(schemaVersion, schemaInfoDocument)).then(response => { //eslint-disable-line no-unused-vars
+                    console.log("SchemaInfo::save - success = ", response);
                     resolve(true);
-                    return;
                 }).catch(error => { //eslint-disable-line no-unused-vars
+                    console.log("SchemaInfo::save - error = ", error);
                     reject(false);
                 });
             }).catch(error => { //eslint-disable-line no-unused-vars
+                console.log("SchemaInfo::save - error = ", error);
                 reject(false);
             });
         });

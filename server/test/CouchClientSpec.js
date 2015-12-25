@@ -90,5 +90,18 @@ describe("CouchClient", () => {
         });
 
     });
+
+    describe("getAllDbs", () => {
+        it("should get all db names in a couch db", (done) => {
+            nock("http://localhost:5984")
+            .get("/_all_dbs")
+            .reply(HttpResponseHandler.codes.OK, ["_replicator", "_users", "test1", "test2", "test3"]);
+
+            CouchClient.getAllDbs().then(dbs => {
+                assert.deepEqual(["test1", "test2", "test3"], dbs);
+                done();
+            });
+        });
+    });
 });
 
