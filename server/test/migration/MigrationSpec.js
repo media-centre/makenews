@@ -201,4 +201,8 @@ describe("Migration", () => {
             });
         });
     });
+
+    it.only("run", () => {
+        Migration.allDbs("vikram", "password");
+    });
 });

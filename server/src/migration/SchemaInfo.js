@@ -3,9 +3,10 @@
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../config/ApplicationConfig.js";
 import CouchClient from "../CouchClient.js";
+import NodeErrorHandler from "../NodeErrorHandler.js";
+import Migration from "./Migration.js";
 
 import request from "request";
-
 
 export default class SchemaInfo {
     static instance(dbName, accessToken) {
@@ -23,14 +24,14 @@ export default class SchemaInfo {
             let couchClient = CouchClient.instance(this.dbName, this.accessToken);
             this.getSchemaInfoDocument().then(schemaInfoDocument => {
                 couchClient.saveDocument("schema_info", this._getDocument(schemaVersion, schemaInfoDocument)).then(response => { //eslint-disable-line no-unused-vars
-                    console.log("SchemaInfo::save - success = ", response);
+                    Migration.logger(this.dbName).info("SchemaInfo::save - success. %j", this.dbName, response);
                     resolve(true);
                 }).catch(error => { //eslint-disable-line no-unused-vars
-                    console.log("SchemaInfo::save - error = ", error);
+                    Migration.logger(this.dbName).error("SchemaInfo::save - error. %j", this.dbName, error);
                     reject(false);
                 });
             }).catch(error => { //eslint-disable-line no-unused-vars
-                console.log("SchemaInfo::save - error = ", error);
+                Migration.logger(this.dbName).error("SchemaInfo::save - error. %j", error);
                 reject(false);
             });
         });
@@ -44,16 +45,19 @@ export default class SchemaInfo {
                 "headers": { "Cookie": "AuthSession=" + this.accessToken, "Accept": "application/json" }
             },
             (error, response) => {
-                if(error) {
-                    reject(error);
-                } else {
-                    if(response.statusCode === HttpResponseHandler.codes.OK) { //eslint-disable-line no-lonely-if
+                if(NodeErrorHandler.noError(error)) {
+                    if(new HttpResponseHandler(response.statusCode).success()) {
                         resolve(JSON.parse(response.body));
                     } else if(response.statusCode === HttpResponseHandler.codes.NOT_FOUND) {
+                        Migration.logger(this.dbName).debug("SchemaInfo::getSchemaInfoDocument - no schema info record found.");
                         resolve(null);
                     } else {
-                        reject("unexpected response from the couchdb");
+                        Migration.logger(this.dbName).error("SchemaInfo::getSchemaInfoDocument - error = %j", response.body);
+                        reject(response.body);
                     }
+                } else {
+                    Migration.logger(this.dbName).error("SchemaInfo::getSchemaInfoDocument - error = %j", error);
+                    reject("unexpected response from the couchdb");
                 }
             });
         });

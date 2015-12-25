@@ -10,6 +10,14 @@ import Logger from "../logging/Logger.js";
 
 export default class Migration {
 
+    static logger(dbName) {
+        if(!this.logs) {
+            this.logs = {};
+        }
+        this.logs[dbName] = this.logs[dbName] || Logger.instance("migration-" + dbName);
+        return this.logs[dbName];
+    }
+
     static instance(dbName, accessToken) {
         return new Migration(dbName, accessToken);
     }
@@ -17,11 +25,13 @@ export default class Migration {
     constructor(dbName, accessToken) {
         this.dbName = dbName;
         this.accessToken = accessToken;
-        console.log("dbName = ", this.dbName);
+        Migration.logger(this.dbName).info("dbName = %s", this.dbName);
     }
 
     static allDbs(adminUserName, password) {
         return new Promise((resolve, reject) => {
+            let allDbMigrationLogger = Logger.instance("migration-alldbs");
+
             CouchSession.login(adminUserName, password).then(cookieHeader => {
                 let accessToken = null;
                 if(cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
@@ -29,12 +39,16 @@ export default class Migration {
                 }
 
                 CouchClient.getAllDbs().then(dbNames => {
+                    allDbMigrationLogger.info("all dbs = %s", dbNames);
                     let finishedCount = 0, failedCount = 0;
-                    dbNames.forEach(dbName => {
+                    dbNames.forEach(dbName => { //eslint-disable-line
+                        allDbMigrationLogger.info("%s migration started", dbName);
                         let migrationInstance = Migration.instance(dbName, accessToken);
-                        migrationInstance.start().then(status => {
-                            finishedCount = finishedCount + 1;
+                        migrationInstance.start().then(status => { //eslint-disable-line
+                            allDbMigrationLogger.info("%s migration completed", dbName);
+                            finishedCount += 1;
                             if(finishedCount + failedCount === dbNames.length) {
+                                allDbMigrationLogger.info("[success-count, failed-count] = [%s]", finishedCount, failedCount);
                                 resolve([finishedCount, failedCount]);
                             }
                         });
@@ -51,14 +65,14 @@ export default class Migration {
                 if(schemaInfoDoc) {
                     schemaVersion = schemaInfoDoc.lastMigratedDocumentTimeStamp;
                 }
-                console.log("schema version in db is ", schemaVersion);
+                Migration.logger(this.dbName).info("schema version in db is %s ", schemaVersion);
                 let migratableFileDetails = MigrationFile.instance().getMigratableFileClassNames(schemaVersion);
-                console.log("migratable file names = ", migratableFileDetails);
+                Migration.logger(this.dbName).info("migratable file names = %j", migratableFileDetails);
                 this._migrateFileSynchronously(migratableFileDetails).then(success => {
-                    console.log("migration succssful");
+                    Migration.logger(this.dbName).info("migration successful.");
                     resolve(true);
                 }).catch(failure => {
-                    console.log("migration failed");
+                    Migration.logger(this.dbName).error("migration failed");
                     reject(false);
                 });
             }).catch(error =>{
@@ -100,19 +114,19 @@ export default class Migration {
         return new Promise((resolve, reject) => {
             try {
                 this.getObject(fileDetails[1]).up().then(response => {
-                    console.log(fileDetails[1], " up is successful");
+                    Migration.logger(this.dbName).info("%s::up is successful", fileDetails[1]);
                     SchemaInfo.instance(this.dbName, this.accessToken).save(fileDetails[0]).then(success => {
-                        console.log("saving schema info token " + fileDetails[0] + " is successful.");
+                        Migration.logger(this.dbName).info("saving schema info token %s is successful.", fileDetails[0]);
                         resolve(success);
                     }).catch(error => {
-                        console.log("saving schema info token " + fileDetails[0] + " is failed.");
+                        Migration.logger(this.dbName).error("saving schema info token %s is failed.", fileDetails[0]);
                         reject(error);
                     });
                 }).catch(error => {
-                    console.log(fileDetails[1], " error = ", error);
+                    Migration.logger(this.dbName).error("%s error = %s", fileDetails[1], error);
                 });
             } catch(error) {
-                console.log("getObject for " + fileDetails[1] + " failed.");
+                Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);
                 reject(error);
             }
         });

@@ -2,6 +2,7 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../../config/ApplicationConfig.js";
 import NodeErrorHandler from "../../NodeErrorHandler.js";
+import Migration from "../Migration.js";
 
 import request from "request";
 import fs from "fs";
@@ -19,7 +20,7 @@ export default class CreateDefaultCategoryDocument {
 
     up() {
         return new Promise((resolve, reject) => {
-            console.log("CreateDefaultCategoryDocument::up - started");
+            Migration.logger(this.dbName).info("CreateDefaultCategoryDocument::up - started");
             let categoryDocument = this.getDocument();
             request.post({
                 "uri": ApplicationConfig.dbUrl() + "/" + this.dbName,
@@ -30,14 +31,14 @@ export default class CreateDefaultCategoryDocument {
             (error, response) => {
                 if(NodeErrorHandler.noError(error)) {
                     if(new HttpResponseHandler(response.statusCode).success()) {
-                        console.log("CreateDefaultCategoryDocument::up - response ", response.body);
+                        Migration.logger(this.dbName).debug("CreateDefaultCategoryDocument::up - response %j", response.body);
                         resolve(response.body);
                     } else {
-                        console.log("CreateDefaultCategoryDocument::up - error ", response.body);
+                        Migration.logger(this.dbName).error("CreateDefaultCategoryDocument::up - error %j", response.body);
                         reject("unexpected response from the db");
                     }
                 } else {
-                    console.log("CreateDefaultCategoryDocument::up - error ", error);
+                    Migration.logger(this.dbName).error("CreateDefaultCategoryDocument::up - error %j", error);
                     reject(error);
                 }
             });

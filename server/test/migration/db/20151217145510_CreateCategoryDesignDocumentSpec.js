@@ -50,8 +50,6 @@ describe("CreateCategoryDesignDocument", ()=> {
                 ApplicationConfig.dbUrl.restore();
                 designDocumentInstance.getDocument.restore();
                 done();
-            }).catch(error => {
-                console.log(error);
             });
         });
 

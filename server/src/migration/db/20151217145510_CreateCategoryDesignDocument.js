@@ -2,7 +2,7 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../../config/ApplicationConfig.js";
 import NodeErrorHandler from "../../NodeErrorHandler.js";
-
+import Migration from "../Migration.js";
 import request from "request";
 import fs from "fs";
 import path from "path";
@@ -19,7 +19,7 @@ export default class CreateCategoryDesignDocument {
 
     up() {
         return new Promise((resolve, reject) => {
-            console.log("CreateCategoryDesignDocument::up - started");
+            Migration.logger(this.dbName).info("CreateCategoryDesignDocument::up - started");
             let categoryDocument = this.getDocument();
             request.put({
                 "uri": ApplicationConfig.dbUrl() + "/" + this.dbName + "/_design/category",
@@ -30,14 +30,14 @@ export default class CreateCategoryDesignDocument {
             (error, response) => {
                 if(NodeErrorHandler.noError(error)) {
                     if(new HttpResponseHandler(response.statusCode).success()) {
-                        console.log("CreateCategoryDesignDocument::up - success ", response.body);
+                        Migration.logger(this.dbName).debug("CreateCategoryDesignDocument::up - success %j", response.body);
                         resolve(response.body);
                     } else {
-                        console.log("CreateCategoryDesignDocument::up - error ", response.body);
+                        Migration.logger(this.dbName).error("CreateCategoryDesignDocument::up - error %j", response.body);
                         reject("unexpected response from the db");
                     }
                 } else {
-                    console.log("CreateCategoryDesignDocument::up - error ", error);
+                    Migration.logger(this.dbName).error("CreateCategoryDesignDocument::up - error %j", error);
                     reject(error);
                 }
             });

@@ -9,7 +9,7 @@ export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR":
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-let LOG_DIR = path.join(__dirname, "../../../logs"), LOG_FILE = "defaultLog.log";
+let LOG_DIR = path.join(__dirname, "../../logs"), LOG_FILE = "defaultLog.log";
 
 export default class Logger {
 
@@ -47,7 +47,12 @@ export default class Logger {
     static instance(categoryName) {
         Logger.initialize();
         if(categoryName) {
-            return new Logger(winston.loggers.get(categoryName));
+            return new Logger(new winston.Logger({
+                "level": logLevel.LOG_INFO,
+                "transports": [
+                    new (winston.transports.File)({ "dirname": LOG_DIR, "filename": categoryName + ".log" })
+                ]
+            }));
         }
         return new Logger();
     }

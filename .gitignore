@@ -7,3 +7,5 @@ localDb/
 remoteDb/
 coverage/
 .DS_Store/
+logs/
+url2/
