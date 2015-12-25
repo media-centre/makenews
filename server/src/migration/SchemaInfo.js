@@ -8,6 +8,10 @@ import request from "request";
 
 
 export default class SchemaInfo {
+    static instance(dbName, accessToken) {
+        return new SchemaInfo(dbName, accessToken);
+    }
+
     constructor(dbName, accessToken) {
         this.dbName = dbName;
         this.accessToken = accessToken;

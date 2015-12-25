@@ -15,6 +15,7 @@
     "history": "^1.13.0",
     "immutable": "^3.7.5",
     "lodash": "^3.10.1",
+    "moment": "^2.10.6",
     "morgan": "^1.6.1",
     "pouchdb": "^5.1.0",
     "react": "^0.14.1",
