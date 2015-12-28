@@ -4,13 +4,14 @@
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
 import CategoryDb from "../db/CategoryDb.js";
 import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "./CategoryDocuments.js";
-import AjaxClient from "../../utils/AjaxClient";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 import RssDb from "../../rss/RssDb.js";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
 import FacebookResponseParser from "../../facebook/FacebookResponseParser.js";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler.js";
 import TwitterResponseParser from "../../twitter/TwitterResponseParser";
+import RssRequestHandler from "../../rss/RssRequestHandler.js";
+import RssResponseParser from "../../rss/RssResponseParser";
 import TwitterDb from "../../twitter/TwitterDb";
 import EnvironmentConfig from "../../EnvironmentConfig.js";
 import FacebookDb from "../../facebook/FacebookDb.js";
@@ -38,9 +39,10 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        AjaxClient.instance("/rss-feeds").get({ "url": url }).then((responseFeed) => {
+        RssRequestHandler.fetchRssFeeds(url).then((responseFeed) => {
             addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID).then(documentId => {
-                RssDb.addRssFeeds(documentId, responseFeed.items);
+                let feeds = RssResponseParser.parseFeeds(documentId, responseFeed.items);
+                RssDb.addRssFeeds(feeds);
                 callback(STATUS_VALID);
             }).catch(error => {
                 callback(STATUS_INVALID);

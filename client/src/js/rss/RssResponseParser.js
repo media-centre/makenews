@@ -3,20 +3,20 @@ import StringUtil from "../../../../common/src/util/StringUtil.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 
 const NEGATIVE_INDEX = -1;
-export default class RssDocument {
-    static getNewFeedDocuments(sourceId, feeds) {
+export default class RssResponseParser {
+    static parseFeeds(sourceId, feeds) {
         if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
             throw new Error("source id or feeds can not be empty");
         }
 
         let resultFeeds = [];
         feeds.forEach((feed)=> {
-            resultFeeds.push(RssDocument.createFeed(feed, sourceId));
+            resultFeeds.push(RssResponseParser.parseFeed(sourceId, feed));
         });
         return resultFeeds;
     }
 
-    static createFeed(feed, sourceId) {
+    static parseFeed(sourceId, feed) {
         let feedObj = {
             "_id": feed.guid,
             "docType": "feed",

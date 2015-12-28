@@ -3,9 +3,7 @@
 "use strict";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import RssDb from "../../src/js/rss/RssDb.js";
-import RssDocument from "../../src/js/rss/RssDocument.js";
 import sinon from "sinon";
-import { expect } from "chai";
 
 describe("RssDb", () => {
     describe("createFeeds", () => {
@@ -23,48 +21,10 @@ describe("RssDb", () => {
                 }];
 
             let createMock = sinon.mock(PouchClient).expects("createBulkDocuments").withArgs(jsonDocument).returns(Promise.resolve([{ "id": "1", "ok": true }, { "id": "2", "ok": true }]));
-            return RssDb.createFeeds(jsonDocument).then(() => {
+            return RssDb.addRssFeeds(jsonDocument).then(() => {
                 createMock.verify();
                 PouchClient.createBulkDocuments.restore();
             });
-        });
-    });
-
-    describe("addRssFeeds", () => {
-        it("should add rss feeds for given source", () => {
-            let sourceId = "sourceId";
-            let feeds = [
-                {
-                    "title": "sports - cricket",
-                    "description": "desc",
-                    "guid": "sportsGuid1"
-                },
-                {
-                    "title": "sports - football",
-                    "description": "desc",
-                    "guid": "sportsGuid2"
-                }];
-
-            let expectedFeeds = [
-                {
-                    "sourceId": sourceId,
-                    "title": "sports - cricket",
-                    "description": "desc",
-                    "guid": "sportsGuid1"
-                },
-                {
-                    "sourceId": sourceId,
-                    "title": "sports - football",
-                    "description": "desc",
-                    "guid": "sportsGuid2"
-                }];
-            sinon.stub(RssDocument, "getNewFeedDocuments").withArgs(sourceId, feeds).returns(expectedFeeds);
-            let createFeedsMock = sinon.mock(RssDb).expects("createFeeds");
-            createFeedsMock.withArgs(expectedFeeds);
-            RssDb.addRssFeeds(sourceId, feeds);
-            createFeedsMock.verify();
-            RssDocument.getNewFeedDocuments.restore();
-            RssDb.createFeeds.restore();
         });
     });
 });

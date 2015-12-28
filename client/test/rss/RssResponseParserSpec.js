@@ -1,10 +1,10 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
-import RssDocument from "../../src/js/rss/RssDocument.js";
+import RssResponseParser from "../../src/js/rss/RssResponseParser.js";
 import { assert, expect } from "chai";
 
-describe("RssDocument", () => {
-    describe("getNewFeedDocuments", ()=> {
+describe("RssResponseParser", () => {
+    describe("parseFeeds", ()=> {
         it("should return feeds with the desired format of description type", ()=> {
             let sourceId = "sourceId";
             let feeds = [
@@ -79,7 +79,7 @@ describe("RssDocument", () => {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 }
             ];
-            let newFeeds = RssDocument.getNewFeedDocuments(sourceId, feeds);
+            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
             expect(newFeeds).to.deep.equal(expectedFeeds);
         });
 
@@ -126,7 +126,7 @@ describe("RssDocument", () => {
                     "url": "http://www.abcd.com"
                 }
             ];
-            let newFeeds = RssDocument.getNewFeedDocuments(sourceId, feeds);
+            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
             expect(newFeeds).to.deep.equal(expectedFeeds);
         });
 
@@ -187,27 +187,27 @@ describe("RssDocument", () => {
                     ]
                 }
             ];
-            let newFeeds = RssDocument.getNewFeedDocuments(sourceId, feeds);
+            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
             expect(newFeeds).to.deep.equal(expectedFeeds);
         });
 
         it("should throw an error if the sourceId is empty", () => {
             let newFeedDocumentCallback = function() {
-                RssDocument.getNewFeedDocuments("", [{ "id": 1 }]);
+                RssResponseParser.parseFeeds("", [{ "id": 1 }]);
             };
             assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
         });
 
         it("should throw an error if the feeds is empty", () => {
             let newFeedDocumentCallback = function() {
-                RssDocument.getNewFeedDocuments("test", []);
+                RssResponseParser.parseFeeds("test", []);
             };
             assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
         });
 
         it("should throw an error if the feeds is undefined", () => {
             let newFeedDocumentCallback = function() {
-                RssDocument.getNewFeedDocuments("test");
+                RssResponseParser.parseFeeds("test");
             };
             assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
         });

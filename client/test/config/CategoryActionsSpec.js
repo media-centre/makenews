@@ -8,6 +8,7 @@ import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCatego
 import { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/actions/CategoryDocuments.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import TwitterDb from "../../src/js/twitter/TwitterDb";
+import RssResponseParser from "../../src/js/rss/RssResponseParser";
 import mockStore from "../helper/ActionHelper.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import { expect, assert } from "chai";
@@ -56,11 +57,13 @@ describe("addRssUrlAsync", () => {
         let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
         categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_VALID).returns(Promise.resolve("response"));
         sandbox.stub(RssDb, "addRssFeeds");
+        let responseParserMock = sandbox.mock(RssResponseParser).expects("parseFeeds");
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
             categoriesApplicationQueriesMock.verify();
+            responseParserMock.verify();
         });
     });
 
