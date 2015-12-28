@@ -27,23 +27,33 @@ export default class FacebookClient {
                     "message": "page name cannot be empty",
                     "type": "InvalidArgument"
                 });
+            } else {
+                this.getFacebookId(pageName).then(facebookId => {
+                    request.get({
+                        "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + facebookId + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+                    }, (error, response, body) => {
+                        if (NodeErrorHandler.noError(error)) {
+                            if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                                let feedResponse = JSON.parse(body);
+                                resolve(feedResponse.data);
+                            } else {
+                                let errorInfo = JSON.parse(body);
+                                reject(errorInfo.error);
+                            }
+                        } else {
+                            reject(error);
+                        }
+                    });
+                });
             }
+        });
+    }
+    getFacebookId(facebookUrl) {
+        return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
-                "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + pageName + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
-            }, (error, response, body) => {
-                if(NodeErrorHandler.noError(error)) {
-                    if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        let feedResponse = JSON.parse(body);
-                        resolve(feedResponse.data);
-                    } else {
-                        let errorInfo = JSON.parse(body);
-                        logger.warn("%s is not a valid facebook page", pageName, errorInfo.error);
-                        reject(errorInfo.error);
-                    }
-                } else {
-                    logger.warn("Request failed for facebook page %s", pageName, error);
-                    reject(error);
-                }
+                "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + facebookUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+            }, (error, response, body) => { //eslint-disable-line no-unused-vars
+                resolve(JSON.parse(response.body).id);
             });
         });
     }

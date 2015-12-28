@@ -27,7 +27,7 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("pageFeeds", () => {
-        it("should throw error if the access token is empty", (done) => {
+        it("should throw error if the page name is null", (done) => {
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             facebookRequestHandler.pagePosts(null).catch(error => {
                 assert.strictEqual("page name can not be null", error);
@@ -74,6 +74,7 @@ describe("FacebookRequestHandler", () => {
                 facebookClientInstanceMock.verify();
                 FacebookClient.instance.restore();
                 facebookClient.pagePosts.restore();
+                facebookRequestHandler.appSecretProof.restore();
                 done();
             });
         });

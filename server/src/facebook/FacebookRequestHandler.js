@@ -20,12 +20,13 @@ export default class FacebookRequestHandler {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(pageName)) {
                 reject("page name can not be null");
+            } else {
+                this.facebookClient().pagePosts(pageName).then(feeds => {
+                    resolve(feeds);
+                }).catch(error => { //eslint-disable-line no-unused-vars
+                    reject("error fetching feeds for a " + pageName + " page.");
+                });
             }
-            this.facebookClient().pagePosts(pageName).then(feeds => {
-                resolve(feeds);
-            }).catch(error => { //eslint-disable-line no-unused-vars
-                reject("error fetching feeds for a " + pageName + " page.");
-            });
         });
     }
 

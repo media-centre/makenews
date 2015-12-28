@@ -6,7 +6,23 @@ const PORT = 3000;
 
 var app = express();
 
-app.get("/thehindu/posts", (request, response, next) => {
+app.get("/thehindu", (request, response, next) => {
+    response.status(200);
+    response.json({
+        "id": "163974433696568_957858557641481"
+    });
+    next();
+});
+
+app.get("/doNotRespond", (request, response, next) => {
+    response.status(200);
+    response.json({
+        "id": "1235467890"
+    });
+    next();
+});
+
+app.get("/163974433696568_957858557641481/posts", (request, response, next) => {
     response.status(200);
     response.json({
         "data": [{"message": "test news 1", "id": "163974433696568_957858557641481"},
@@ -15,7 +31,7 @@ app.get("/thehindu/posts", (request, response, next) => {
     next();
 });
 
-app.get("/doNotRespond/posts", (request, response, next) => {
+app.get("/1235467890/posts", (request, response, next) => {
     response.status(404);
     response.json({
         "data": [{
