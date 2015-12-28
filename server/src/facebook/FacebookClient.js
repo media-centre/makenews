@@ -5,6 +5,7 @@ import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
 import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
 
+let logger = Logger.instance(); //eslint-disable-line no-unused-vars
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof) {

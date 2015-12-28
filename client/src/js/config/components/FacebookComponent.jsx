@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from "react";
 import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
+export const fbRegex = /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
 export default class FacebookComponent extends Component {
 
     constructor(props) {
@@ -12,12 +13,15 @@ export default class FacebookComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
-            let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
-            return callback({ "error": errorMsg, "urlAdded": response === "valid" });
-        }));
+        if(url.match(fbRegex)) {
+            props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
+                let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+                return callback({ "error": errorMsg, "urlAdded": response === "valid" });
+            }));
+        } else {
+            return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidFacebookUrl });
+        }
     }
-
     render() {
         return (
             <AddURLComponent content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
