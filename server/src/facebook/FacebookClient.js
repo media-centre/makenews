@@ -4,9 +4,7 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
 import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
-import Logger from "../logging/Logger.js";
 
-let logger = Logger.instance();
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof) {

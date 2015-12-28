@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks: [2, 7] */
+/* eslint max-nested-callbacks: [2, 7], no-unused-vars:0 */
 "use strict";
 
 import SchemaInfo from "../../src/migration/SchemaInfo.js";
