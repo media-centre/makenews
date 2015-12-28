@@ -1,6 +1,6 @@
 "use strict";
 import authorizationRoutes from "./AuthorizationRoutes.js";
-import rssReaderRoutes from "./RssReaderRoutes";
+import rssReaderRoutes from "./RssRoutes";
 import facebookReaderRoutes from "./FacebookRoutes.js";
 import twitterReaderRoutes from "./TwitterRoutes";
 

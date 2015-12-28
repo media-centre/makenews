@@ -129,14 +129,14 @@ describe("FacebookRequestHandler", () => {
         });
         it("should get the app secret key from the configuration file", () => {
 
-            let environmentConfigMock = sinon.mock(EnvironmentConfig).expects("instance");
-            environmentConfigMock.withArgs(EnvironmentConfig.files.APPLICATION).returns(applicationConfigFile);
+            let environmentConfigMock = sinon.mock(EnvironmentConfig);
+            environmentConfigMock.expects("instance").withArgs(EnvironmentConfig.files.APPLICATION).returns(applicationConfigFile);
 
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             let secretKey = facebookRequestHandler.appSecretKey();
             assert.strictEqual("test_secret_key", secretKey);
             environmentConfigMock.verify();
-            EnvironmentConfig.instance.restore();
+            environmentConfigMock.restore();
         });
 
     });

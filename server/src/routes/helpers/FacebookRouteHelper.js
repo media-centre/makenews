@@ -4,6 +4,7 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
+import ResponseUtil from "../../util/ResponseUtil";
 
 export default class FacebookRouteHelper {
     constructor(request, response) {
@@ -16,11 +17,9 @@ export default class FacebookRouteHelper {
         let accessTokenName = this.request.query.accessToken;
         let facebookRequestHandler = FacebookRequestHandler.instance(accessTokenName);
         facebookRequestHandler.pagePosts(pageName).then(feeds => {
-            this.response.status(HttpResponseHandler.codes.OK);
-            this.response.json({ "posts": feeds });
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": feeds });
         }).catch(error => {
-            this.response.status(HttpResponseHandler.codes.NOT_FOUND);
-            this.response.json(error);
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.NOT_FOUND, error);
         });
     }
 }

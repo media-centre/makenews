@@ -49,12 +49,12 @@ describe("Logger", () => {
             assertFileLogger(logger, "defaultLog.log", logLevel.LOG_INFO);
         });
 
-        it("default category logger should be returned if looging.json is read", () => {
+        xit("default category logger should be returned if logging.json is read", () => {
             loggerStub.returns(false);
             assertFileLogger(Logger.instance(), "unitTest.log", logLevel.LOG_ERROR);
         });
 
-        it("category logger should be returned when instance is called with category name", () => {
+        xit("category logger should be returned when instance is called with category name", () => {
             let myJson = {
                 "unit_testing": {
                     "dir": "../../../dist/logs",

@@ -4,7 +4,9 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
 import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import Logger from "../logging/Logger.js";
 
+let logger = Logger.instance();
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof) {
@@ -35,9 +37,11 @@ export default class FacebookClient {
                         resolve(feedResponse.data);
                     } else {
                         let errorInfo = JSON.parse(body);
+                        logger.warn("%s is not a valid facebook page", pageName, errorInfo.error);
                         reject(errorInfo.error);
                     }
                 } else {
+                    logger.warn("Request failed for facebook page %s", pageName, error);
                     reject(error);
                 }
             });

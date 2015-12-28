@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5] */
 "use strict";
 
-import RssParser from "../../src/parsers/RssParser";
+import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import { expect } from "chai";
 import nock from "nock";
