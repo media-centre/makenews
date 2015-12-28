@@ -39,7 +39,6 @@ export default class SchemaInfo {
 
     getSchemaInfoDocument() {
         return new Promise((resolve, reject) => {
-
             request.get({
                 "uri": ApplicationConfig.dbUrl() + "/" + this.dbName + "/schema_info",
                 "headers": { "Cookie": "AuthSession=" + this.accessToken, "Accept": "application/json" }

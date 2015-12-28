@@ -14,7 +14,7 @@ export default class Migration {
         if(!this.logs) {
             this.logs = {};
         }
-        this.logs[dbName] = this.logs[dbName] || Logger.instance("migration-" + dbName);
+        this.logs[dbName] = this.logs[dbName] || Logger.fileInstance("migration-" + dbName);
         return this.logs[dbName];
     }
 
@@ -29,9 +29,9 @@ export default class Migration {
     }
 
     static allDbs(adminUserName, password) {
-        return new Promise((resolve, reject) => {
-            let allDbMigrationLogger = Logger.instance("migration-alldbs");
 
+        return new Promise((resolve, reject) => {
+            let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
                 let accessToken = null;
                 if(cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
@@ -47,14 +47,21 @@ export default class Migration {
                         migrationInstance.start().then(status => { //eslint-disable-line
                             allDbMigrationLogger.info("%s migration completed", dbName);
                             finishedCount += 1;
-                            if(finishedCount + failedCount === dbNames.length) {
-                                allDbMigrationLogger.info("[success-count, failed-count] = [%s]", finishedCount, failedCount);
-                                resolve([finishedCount, failedCount]);
-                            }
+                            resolveStatus(finishedCount, failedCount, dbNames.length);
+                        }).catch(error => { //eslint-disable-line
+                            allDbMigrationLogger.info("%s migration failed", dbName);
+                            failedCount += 1;
+                            resolveStatus(finishedCount, failedCount, dbNames.length);
                         });
                     });
                 });
             });
+            function resolveStatus(finishedCount, failedCount, totalCount) {
+                if (finishedCount + failedCount === totalCount) {
+                    allDbMigrationLogger.info("[success-count, failed-count] = [%s]", finishedCount, failedCount);
+                    resolve([finishedCount, failedCount]);
+                }
+            }
         });
     }
 
@@ -123,7 +130,8 @@ export default class Migration {
                         reject(error);
                     });
                 }).catch(error => {
-                    Migration.logger(this.dbName).error("%s error = %s", fileDetails[1], error);
+                    Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]);
+                    reject(error);
                 });
             } catch(error) {
                 Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);

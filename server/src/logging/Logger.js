@@ -47,12 +47,7 @@ export default class Logger {
     static instance(categoryName) {
         Logger.initialize();
         if(categoryName) {
-            return new Logger(new winston.Logger({
-                "level": logLevel.LOG_INFO,
-                "transports": [
-                    new (winston.transports.File)({ "dirname": LOG_DIR, "filename": categoryName + ".log" })
-                ]
-            }));
+            return new Logger(winston.loggers.get(categoryName));
         }
         return new Logger();
     }
@@ -94,7 +89,8 @@ export default class Logger {
         }
     }
 
-    static fileInstance(fileName, level) {
+    static fileInstance(fileName, level = logLevel.LOG_INFO) {
+        Logger.createDir(LOG_DIR);
         let fileOptions = { "filename": fileName, "level": level };
         return Logger.customInstance(fileOptions);
     }

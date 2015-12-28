@@ -212,12 +212,15 @@ gulp.task("common:test-coverage", (cb) => {
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
-    gulp.src(parameters.server.serverAppPath + "/src/**/*.js")
+    gulp.src([parameters.server.serverAppPath + "/src/**/*.js"])
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
     gulp.src(parameters.server.serverAppPath + "/config/**/*.json")
         .pipe(gulp.dest(parameters.server.distFolder + "/config"));
+
+    gulp.src(parameters.server.serverAppPath + "/src/**/*.json")
+        .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
     gulp.src("./" + parameters.server.serverJsFile)
     .pipe(babel())

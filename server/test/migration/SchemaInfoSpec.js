@@ -4,6 +4,9 @@
 import SchemaInfo from "../../src/migration/SchemaInfo.js";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import CouchClient from "../../src/CouchClient.js";
+import Migration from "../../src/migration/Migration.js";
+import NodeErrorHandler from "../../src/NodeErrorHandler.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 
 import { assert } from "chai";
 import sinon from "sinon";
@@ -11,6 +14,25 @@ import nock from "nock";
 
 describe("SchemaInfo", () => {
     let dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", document = null;
+    let migrationLoggerStub = null;
+    before("SchemaInfo", () => {
+        let dbUrlStub = sinon.stub(ApplicationConfig, "dbUrl");
+        dbUrlStub.returns("http://localhost:5984");
+        migrationLoggerStub = sinon.stub(Migration, "logger");
+        migrationLoggerStub.withArgs(dbName).returns({
+            "error": (message, ...insertions) =>{
+            },
+            "info": (message, ...insertions)=> {
+            },
+            "debug": (message, ...insertions)=> {
+            }
+        });
+    });
+
+    after("SchemaInfo", () => {
+        ApplicationConfig.dbUrl.restore();
+        Migration.logger.restore();
+    });
 
     describe("getSchemaInfo", () => {
         before("getSchemaInfo", () => {
@@ -56,11 +78,16 @@ describe("SchemaInfo", () => {
                 "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Accept": "application/json" }
             })
                 .get("/" + dbName + "/" + documentId)
-                .reply(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR);
+                .reply(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "internal server error");
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
 
             let schemaInfoInstance = new SchemaInfo(dbName, accessToken);
             schemaInfoInstance.getSchemaInfoDocument().catch((error) => {
-                assert.strictEqual("unexpected response from the couchdb", error);
+                assert.strictEqual("internal server error", error);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
                 done();
             });
 
@@ -82,7 +109,7 @@ describe("SchemaInfo", () => {
 
             let schemaInfoInstance = new SchemaInfo(dbName, accessToken);
             schemaInfoInstance.getSchemaInfoDocument().catch((error) => {
-                assert.deepEqual(errorObj, error);
+                assert.strictEqual("unexpected response from the couchdb", error);
                 done();
             });
 

@@ -7,17 +7,36 @@ import Migration from "../../src/migration/Migration.js";
 import MigrationFile from "../../src/migration/MigrationFile.js";
 import SchemaInfo from "../../src/migration/SchemaInfo.js";
 import CouchSession from "../../src/CouchSession.js";
+import Logger from "../../src/logging/Logger.js";
 import CouchClient from "../../src/CouchClient.js";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("Migration", () => {
-    let dbName = null, accessToken = null, accessCookieHeader = null;
-    before("getObject", () => {
+    let dbName = null, accessToken = null, accessCookieHeader = null, migrationLoggerStub = null;
+    before("Migration", () => {
         dbName = "test";
         accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt";
         accessCookieHeader = "AuthSession=dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt; Version=1; Path=/; HttpOnly";
+        migrationLoggerStub = sinon.stub(Migration, "logger");
+        let loggerObject = {
+            "error": (message, ...insertions) => {
+            },
+            "info": (message, ...insertions)=> {
+            },
+            "debug": (message, ...insertions)=> {
+            }
+        };
+        migrationLoggerStub.returns(loggerObject);
+        let loggerInstanceStub = sinon.stub(Logger, "fileInstance");
+        loggerInstanceStub.returns(loggerObject);
     });
+
+    after("Migration", () => {
+        Migration.logger.restore();
+        Logger.fileInstance.restore();
+    });
+
 
     describe("getObject", () => {
         it("should give the function object to create the instance of create category design document", ()=> {
@@ -200,9 +219,5 @@ describe("Migration", () => {
                 done();
             });
         });
-    });
-
-    it.only("run", () => {
-        Migration.allDbs("vikram", "password");
     });
 });

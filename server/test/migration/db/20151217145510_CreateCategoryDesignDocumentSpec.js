@@ -5,16 +5,30 @@
 import CreateCategoryDesignDocument from "../../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import Migration from "../../../src/migration/Migration.js";
 
 import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
-
-let designDocument = null, response = null, accessToken = "YWRtaW46NTY3MzlGNDM6qVNIU4P7LcqONOyTkyVcTXVaAZ8", dbName = "test1";
-
 describe("CreateCategoryDesignDocument", ()=> {
+    let designDocument = null, response = null, accessToken = "YWRtaW46NTY3MzlGNDM6qVNIU4P7LcqONOyTkyVcTXVaAZ8", dbName = "test1";
+    let migrationLoggerStub = null;
+    before("CreateCategoryDesignDocument", () => {
+        migrationLoggerStub = sinon.stub(Migration, "logger");
+        migrationLoggerStub.withArgs(dbName).returns({
+            "error": (message, ...insertions) =>{
+            },
+            "info": (message, ...insertions)=> {
+            },
+            "debug": (message, ...insertions)=> {
+            }
+        });
+    });
 
+    after("CreateCategoryDesignDocument", () => {
+        Migration.logger.restore();
+    });
     describe("up", () => {
 
         before("up", () => {

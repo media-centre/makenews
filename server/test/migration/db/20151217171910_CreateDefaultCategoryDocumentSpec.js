@@ -5,16 +5,31 @@
 import CreateDefaultCategoryDocument from "../../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import Migration from "../../../src/migration/Migration.js";
 
 import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
 
-let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
-
 describe("CreateDefaultCategoryDocument", ()=> {
+    let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
+    let migrationLoggerStub = null;
+    before("CreateDefaultCategoryDocument", () => {
+        migrationLoggerStub = sinon.stub(Migration, "logger");
+        migrationLoggerStub.withArgs(dbName).returns({
+            "error": (message, ...insertions) =>{
+            },
+            "info": (message, ...insertions)=> {
+            },
+            "debug": (message, ...insertions)=> {
+            }
+        });
+    });
 
+    after("CreateDefaultCategoryDocument", () => {
+        Migration.logger.restore();
+    });
 
     describe("up", () => {
 
