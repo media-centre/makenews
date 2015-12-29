@@ -73,4 +73,18 @@ export default class PouchClient {
             });
         });
     }
+
+    static deleteDocument(jsonDocument) {
+        return new Promise((resolve, reject) => {
+            if(jsonDocument) {
+                DbSession.instance().remove(jsonDocument).then(response => {
+                    resolve(response);
+                }).catch(error => {
+                    reject(error);
+                });
+            } else {
+                reject("document can not be empty");
+            }
+        });
+    }
 }

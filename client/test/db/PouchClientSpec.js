@@ -1,8 +1,7 @@
-/* eslint global-require:0 no-unused-expressions:0, max-nested-callbacks: [2, 7], no-magic-numbers:0*/
+/* eslint global-require:0 no-unused-expressions:0, max-nested-callbacks: [2, 7], no-magic-numbers:0, no-unused-vars:0*/
 
 "use strict";
-import DbSession from "../../src/js/db/DbSession.js";
-import { expect, assert } from "chai";
+import DbSession from "../../src/js/db/DbSession.js";import { expect, assert } from "chai";
 import PouchDB from "pouchdb";
 import sinon from "sinon";
 import PouchClient from "../../src/js/db/PouchClient.js";
@@ -99,8 +98,12 @@ describe("PouchClient", () => {
                 "parkedFeedsCount": {
                     "map": "function(doc) { if(doc.docType === 'feed' && doc.status === 'park') { emit(doc._id, null);}}",
                     "reduce": "_count"
+                },
+                "surfFeeds": {
+                    "map": "function(doc) { if(doc.docType == 'feed' && doc.status != 'park') { emit(doc.sourceId, doc);}}"
                 }
-            } }, "_design/category");
+            }
+        }, "_design/category");
     });
 
     after("PouchClient", () => {
@@ -136,7 +139,10 @@ describe("PouchClient", () => {
 
         describe("sourceConfigurations", () => {
             it("should list all source configurations for every categoryId", (done) => {
-                PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": "sportsCategoryId1" }).then((docs) => {
+                PouchClient.fetchDocuments("category/sourceConfigurations", {
+                    "include_docs": true,
+                    "key": "sportsCategoryId1"
+                }).then((docs) => {
                     let actualUrls = docs.map((doc) => {
                         return doc.url;
                     });
@@ -150,7 +156,10 @@ describe("PouchClient", () => {
 
         describe("allSourcesByUrl", () => {
             it("should index all sourceConfigurations by url", (done) => {
-                PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": "www.hindu.com/rss" }).then((docs) => {
+                PouchClient.fetchDocuments("category/allSourcesByUrl", {
+                    "include_docs": true,
+                    "key": "www.hindu.com/rss"
+                }).then((docs) => {
                     let resultDoc = docs[0];
                     expect(resultDoc.url).to.include("www.hindu.com/rss");
                     done();
@@ -160,7 +169,10 @@ describe("PouchClient", () => {
 
         describe("allCategoriesByName", () => {
             it("should index all categories by name", (done) => {
-                PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": "Sports" }).then((docs) => {
+                PouchClient.fetchDocuments("category/allCategoriesByName", {
+                    "include_docs": true,
+                    "key": "Sports"
+                }).then((docs) => {
                     let resultDoc = docs[0];
                     expect(resultDoc.name).to.include("Sports");
                     done();
@@ -171,7 +183,7 @@ describe("PouchClient", () => {
         function assertFeedView(actual, docId, sourceId, expectedFeed) {
             let feedFound = false;
             actual.forEach((doc) => {
-                if(doc.id === docId) {
+                if (doc.id === docId) {
                     expect(doc.key).to.eq(sourceId);
                     assertFeed(doc.doc, expectedFeed);
                     feedFound = true;
@@ -307,7 +319,13 @@ describe("PouchClient", () => {
     describe("updateDocument", () => {
 
         xit("should update the document", (done) => {
-            let documentInput = { "docType": "category", "name": "Renamed", "createdTime": 1448540914840, "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5", "_rev": "14-a050422e3a9367aa519109443f86810c" };
+            let documentInput = {
+                "docType": "category",
+                "name": "Renamed",
+                "createdTime": 1448540914840,
+                "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5",
+                "_rev": "14-a050422e3a9367aa519109443f86810c"
+            };
             PouchClient.updateDocument(documentInput).then(document => {
                 expect(document._id).to.eq(documentInput._id);
                 done();
@@ -359,6 +377,95 @@ describe("PouchClient", () => {
                 }];
 
             PouchClient.createBulkDocuments(jsonDocument).then(() => {
+                done();
+            });
+        });
+    });
+
+    describe("deleteDocument", () => {
+        it("should delete the given document", (done) => {
+            DbSession.instance().put({
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.facebookpolitics.com",
+                "categoryIds": ["politicsCategoryId2"]
+            }
+                , "deleteId1").then(putResponse => {
+                    DbSession.instance().get("deleteId1").then(document => {
+                        PouchClient.deleteDocument(document).then((response) => {
+                            assert.isTrue(response.ok);
+                            assert.strictEqual("deleteId1", response.id);
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it("should reject with an error while deleting the document", (done) => {
+            let invalidDocument = { "_id": "invalidId", "title": "INVALID" };
+            PouchClient.deleteDocument(invalidDocument).catch((error) => {
+                expect(error.error).to.be.true;
+                expect(error.status).to.eq(404);
+                done();
+            });
+        });
+
+        it("should reject with an error if the document is null", (done) => {
+            PouchClient.deleteDocument(null).catch((error) => {
+                assert.strictEqual("document can not be empty", error);
+                done();
+            });
+        });
+    });
+
+    describe("surfFeeds", () => {
+        before("surfFeeds", () => {
+            DbSession.instance().put({
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Chennai Connect at The Hindu",
+                "feedType": "facebook",
+                "content": "Chennai patient receives heart from brain-dead man in CMC",
+                "tags": [
+                    "Dec 29 2015    7:47:59"
+                ],
+                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
+            }, "163974433696568_968907333203270");
+
+            DbSession.instance().put({
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Timeline Photos",
+                "feedType": "facebook",
+                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                "tags": [
+                    "Dec 29 2015    8:9:17"
+                ],
+                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
+            }, "163974433696568_968914649869205");
+
+            DbSession.instance().put({
+                "docType": "feed",
+                "sourceId": "1BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "The Hindu Lit for Life",
+                "feedType": "facebook",
+                "content": "Register for The Hindu Lit for Life 2016 soon!",
+                "tags": [
+                    "Dec 29 2015    14:32:13"
+                ],
+                "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
+            }, "163974433696568_969041863189817");
+        });
+        it("should fetch all surf feeds ", (done) => {
+            PouchClient.fetchDocuments("category/surfFeeds", {
+                "include_docs": true,
+                "key": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48"
+            }).then((docs) => {
+                assert.include(["Chennai patient receives heart from brain-dead man in CMC", "Martina Hingis and I complement each other, says Sania Mirza in a candid chat."], docs[0].content);
+                assert.include(["Chennai patient receives heart from brain-dead man in CMC", "Martina Hingis and I complement each other, says Sania Mirza in a candid chat."], docs[1].content);
                 done();
             });
         });
