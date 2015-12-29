@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from "react";
 import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
 
-export const twRegexHandler = (/[@][a-zA-Z0-9_]{1,15}$/) ;
+export const twRegexHandler = (/[@][a-zA-Z0-9_]{1,15}$/);
 export const twRegexHashtag = /[#][a-zA-Z][a-zA-Z0-9_]{1,140}$/;
 export default class TwitterComponent extends Component {
 
@@ -14,7 +14,7 @@ export default class TwitterComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
-        if( url.match(twRegexHandler)|| url.match(twRegexHashtag)) {
+        if(url.match(twRegexHandler) || url.match(twRegexHashtag)) {
             props.dispatch(addTwitterUrlAsync(props.categoryId, url, (response)=> {
                 let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
                 return callback({ "error": errorMsg, "urlAdded": response === "valid" });
