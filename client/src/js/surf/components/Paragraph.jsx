@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
+import { getUrl } from "../../utils/FeedUtils";
 
 export default class Paragraph extends Component {
     constructor(props) {
@@ -23,8 +24,10 @@ export default class Paragraph extends Component {
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
         return (
             <div style={feedStyle}>
+            <a target="_blank" href={getUrl(this.props.category)}>
                 <div className="title">{this.props.category.title}</div>
                 <p className="surf-description">{this.props.category.content}</p>
+            </a>
                 {header}
             </div>
         );

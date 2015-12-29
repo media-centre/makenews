@@ -35,7 +35,6 @@
       }
 
     }
-
     .header-item {
       i {
         font-size: $small-font-size;
@@ -55,10 +54,14 @@
 
   /* feed styles */
   .all-feeds {
-
-    p {
-      font-size: $small-font-size;
+    a {
+      font-size: $medium-font-size;
+      color: #545454;
+      p {
+        font-size: $small-font-size;
+      }
     }
+
 
     .custom-spinner {
       @extend .h-v-center;
