@@ -25,7 +25,7 @@ export default class Paragraph extends Component {
         return (
             <div style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>
-                <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p>
+                <p className="surf-description">{this.props.category.content}</p>
                 {header}
             </div>
         );

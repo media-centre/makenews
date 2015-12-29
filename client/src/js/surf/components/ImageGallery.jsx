@@ -38,7 +38,7 @@ export default class ImageGallery extends Component {
 
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
 
-        let description = this.props.category.content ? <p className="surf-description" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p> : null;
+        let description = this.props.category.content ? <p className="surf-description">{this.props.category.content}</p> : null;
         return (
             <div className="image-gallery" style={feedStyle}>
                 <div className="title">{this.props.category.title}</div>

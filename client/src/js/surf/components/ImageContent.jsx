@@ -37,7 +37,7 @@ export default class ImageContent extends Component {
                         <img src={this.props.category.url} onLoad={() => this._onLoadImage()} className="hide"/>
                         <Spinner/>
                     </div>
-                    <p className="box" dangerouslySetInnerHTML={stringToHtml(this.props.category.content)}></p>
+                    <p className="box">{this.props.category.content}</p>
                 </div>
                 {header}
             </div>
