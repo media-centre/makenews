@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
-import { stringToHtml } from "../../utils/StringToHtml";
 
 export default class Paragraph extends Component {
     constructor(props) {

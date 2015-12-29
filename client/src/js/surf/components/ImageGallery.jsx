@@ -3,7 +3,6 @@
 
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
-import { stringToHtml } from "../../utils/StringToHtml";
 import Spinner from "../../utils/components/Spinner.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
 
