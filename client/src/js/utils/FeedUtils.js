@@ -20,7 +20,7 @@ export function getUrl(category) {
     } else if (category.feedType === FACEBOOK) {
         hrefUrl = "https://www.facebook.com/" + category._id;
     } else if (category.feedType === RSS) {
-        hrefUrl = category._id;
+        hrefUrl = category.link;
     }
     return hrefUrl;
 }

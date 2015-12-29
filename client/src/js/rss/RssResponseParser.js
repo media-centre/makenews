@@ -23,6 +23,7 @@ export default class RssResponseParser {
             "sourceId": sourceId,
             "type": "description",
             "title": feed.title,
+            "link": feed.link,
             "feedType": "rss",
             "content": feed.description,
             "tags": feed.pubDate ? [DateTimeUtil.getDateAndTime(feed.pubDate)] : [""]

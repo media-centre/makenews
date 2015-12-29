@@ -6,9 +6,10 @@ describe("getUrl", function() {
     it("should get rss url for the rss feed", () =>{
         let expectedUrl = "http://www.thehindu.com/news/national/tamil-nadu/chennai-patient-receives-heart-from-braindead-man-in-cmc/article8039635.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication";
         let category = {
-            "_id": "http://www.thehindu.com/news/national/tamil-nadu/chennai-patient-receives-heart-from-braindead-man-in-cmc/article8039635.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication",
+            "_id": "78435DSKJHIUERWDCIURWU",
             "feedType": "rss",
-            "sourceId": "967E965A-1990-2FB6-A085-1018C28B5DB0"
+            "sourceId": "967E965A-1990-2FB6-A085-1018C28B5DB0",
+            "link": "http://www.thehindu.com/news/national/tamil-nadu/chennai-patient-receives-heart-from-braindead-man-in-cmc/article8039635.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication"
         };
         let url = getUrl(category);
         assert.strictEqual(url, expectedUrl);
