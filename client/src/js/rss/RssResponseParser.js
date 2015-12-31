@@ -26,7 +26,8 @@ export default class RssResponseParser {
             "link": feed.link,
             "feedType": "rss",
             "content": feed.description,
-            "tags": feed.pubDate ? [DateTimeUtil.getDateAndTime(feed.pubDate)] : [""]
+            "postedDate": feed.pubDate ? DateTimeUtil.getUTCDateAndTime(feed.pubDate) : null,
+            "tags": [""]
         };
         if(feed.enclosures && feed.enclosures.length > 0) {
             if(feed.enclosures.length === 1) {

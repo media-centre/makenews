@@ -1,4 +1,5 @@
 "use strict";
+import DateTimeUtil from "../utils/DateTimeUtil.js";
 
 export default class TwitterResponseParser {
 
@@ -23,6 +24,7 @@ export default class TwitterResponseParser {
             "type": "description",
             "feedType": "twitter",
             "content": tweet.text,
+            "postedDate": tweet.created_at ? DateTimeUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": TwitterResponseParser.hashTags(tweet)
         };
         let media = tweet.entities.media;
@@ -43,7 +45,6 @@ export default class TwitterResponseParser {
 
     static hashTags(tweet) {
         let tagsArray = [];
-        tagsArray.push(tweet.created_at);
         tweet.entities.hashtags.forEach(tag => {
             tagsArray.push(tag.text);
         });

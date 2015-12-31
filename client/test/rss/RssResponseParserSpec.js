@@ -65,7 +65,8 @@ describe("RssResponseParser", () => {
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
-                    "tags": ["Nov 5 2015    16:51:20"],
+                    "postedDate": "Nov 5, 2015 11:21 AM",
+                    "tags": [""],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 },
 
@@ -77,12 +78,13 @@ describe("RssResponseParser", () => {
                     "link": "http://www.hindu.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "postedDate": null,
                     "tags": [""],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 }
             ];
             let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
-            expect(newFeeds).to.deep.equal(expectedFeeds);
+            assert.deepEqual(newFeeds, expectedFeeds);
         });
 
         it("should return feeds with the desired format of type imagecontent", ()=> {
@@ -124,6 +126,7 @@ describe("RssResponseParser", () => {
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "postedDate": null,
                     "tags": [""],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "url": "http://www.abcd.com"
@@ -177,6 +180,7 @@ describe("RssResponseParser", () => {
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "postedDate": null,
                     "tags": [""],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "images": [

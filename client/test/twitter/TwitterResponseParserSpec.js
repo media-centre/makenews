@@ -27,7 +27,8 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "tags": ["Fri Dec 11 11:41:56", "tag1", "tag2"]
+            "postedDate": "Dec 11, 2001 6:11 AM",
+            "tags": ["tag1", "tag2"]
         };
         let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
         expect(newTweets).to.deep.equal(expectedTweet);
@@ -56,7 +57,8 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "tags": ["Fri Dec 11 11:41:56", "tag1", "tag2"],
+            "postedDate": "Dec 11, 2001 6:11 AM",
+            "tags": ["tag1", "tag2"],
             "url": "https://www.test.com"
         };
         let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
@@ -87,7 +89,8 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "tags": ["Fri Dec 11 11:41:56", "tag1", "tag2"],
+            "postedDate": "Dec 11, 2001 6:11 AM",
+            "tags": ["tag1", "tag2"],
             "images": [
                 {
                     "url": "https://www.test1.com"

@@ -28,7 +28,7 @@ export default class ImageGallery extends Component {
     }
 
     render() {
-        let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
         let images = this.props.category.images.map((image, index)=>
             <li className="image-container box" ref={"gallery-item-" + index} key={index}>
                 <img src={image.url} onLoad={() => this._onLoadImage(index)} className="hide"/>

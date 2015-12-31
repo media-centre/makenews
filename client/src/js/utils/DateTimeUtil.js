@@ -1,16 +1,16 @@
 "use strict";
+import moment from "moment";
 
 export default class DateTimeUtil {
 
     static getCreatedTime() {
-        return new Date().getTime();
+        return moment().utc().valueOf();
     }
-
-    static getDateAndTime(dateString) {
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        let date = new Date(dateString);
-        return months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear() + "    " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    static getLocalTimeFromUTC(dateString) {
+        return moment.utc(dateString).local().format("lll");
+    }
+    static getUTCDateAndTime(dateString) {
+        return moment(dateString).utc().format("lll");
 
     }
 }

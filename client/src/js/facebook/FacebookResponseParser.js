@@ -28,7 +28,8 @@ export default class FacebookResponseParser {
             "title": post.name || "",
             "feedType": "facebook",
             "content": post.message || "",
-            "tags": post.created_time ? [DateTimeUtil.getDateAndTime(post.created_time)] : [""]
+            "postedDate": post.created_time ? DateTimeUtil.getUTCDateAndTime(post.created_time) : null,
+            "tags": [""]
         };
 
         if(StringUtil.validString(post.picture)) {
