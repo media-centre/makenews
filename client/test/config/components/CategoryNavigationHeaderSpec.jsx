@@ -2,11 +2,12 @@
 "use strict";
 import "../../helper/TestHelper.js";
 import CategoryNavigationHeader from "../../../src/js/config/components/CategoryNavigationHeader.jsx";
+import CategoryDb from "../../../src/js/config/db/CategoryDb";
+
 import { assert } from "chai";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import sinon from "sinon";
-
 
 describe("CategoryNavigationHeader", ()=> {
     let categoryNavigationHeaderComponent = null, categoryDetailsPageStrings = null;
@@ -17,7 +18,7 @@ describe("CategoryNavigationHeader", ()=> {
             "addUrlLinkLabel": "Add Url Test"
         };
         categoryNavigationHeaderComponent = TestUtils.renderIntoDocument(
-            <CategoryNavigationHeader categoryName="Test Category Name" categoryDetailsPageStrings={categoryDetailsPageStrings}/>
+            <CategoryNavigationHeader categoryName="Test Category Name" categoryId="Test Category id" categoryDetailsPageStrings={categoryDetailsPageStrings}/>
         );
     });
 
@@ -30,15 +31,22 @@ describe("CategoryNavigationHeader", ()=> {
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
     });
 
-    it("Should delete category if delete category is called and confirmed", () => {
+    it("Should delete category if delete category is called and confirmed", (done) => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let confirmMock = sinon.mock(window);
         let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
+        let deleteCategoryMock = sinon.mock(CategoryDb);
+        deleteCategoryMock.expects("deleteCategory").returns(Promise.resolve(true));
         confirmMock.expects("confirm").withArgs(confirmMessage).returns(true);
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
-        confirmMock.verify();
-        confirmMock.restore();
+        setTimeout(() => {
+            deleteCategoryMock.verify();
+            confirmMock.verify();
+            confirmMock.restore();
+            deleteCategoryMock.restore();
+            done();
+        }, 0);
     });
 
     it("Should stay in same page if delete category is called and not confirmed", () => {
@@ -47,12 +55,12 @@ describe("CategoryNavigationHeader", ()=> {
         let confirmMock = sinon.mock(window);
         let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
         confirmMock.expects("confirm").withArgs(confirmMessage).returns(false);
-        let cancelTransistionStub = sinon.stub(CategoryNavigationHeader, "cancelTransistion");
+        let deleteCategoryStub = sinon.stub(CategoryDb, "deleteCategory");
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         confirmMock.verify();
-        assert.ok(cancelTransistionStub.called);
+        assert.notOk(deleteCategoryStub.called);
         confirmMock.restore();
-        cancelTransistionStub.restore();
+        CategoryDb.deleteCategory.restore();
     });
 
 });

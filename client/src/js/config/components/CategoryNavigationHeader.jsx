@@ -1,7 +1,8 @@
 /* eslint no-unused-vars:0, max-len:0 */
 "use strict";
+import CategoryDb from "../db/CategoryDb";
 import React, { Component, PropTypes } from "react";
-import { Route, Link } from "react-router";
+import { Route, Link, History } from "react-router";
 import { connect } from "react-redux";
 
 export default class CategoryNavigationHeader extends Component {
@@ -26,21 +27,16 @@ export default class CategoryNavigationHeader extends Component {
         return this.props.isValidName ? "t-center trans-border t-bold category-title" : "t-center t-bold error-border category-title";
     }
 
-    handleDelete(event, categoryName) {
+    handleDelete(categoryName, categoryId) {
         let confirm = window.confirm(categoryName + " Category will be permanently deleted. You will not get feeds from this category.");//eslint-disable-line no-alert
         if(confirm) {
-            console.log("deleted"); //eslint-disable-line no-console
-        } else {
-            CategoryNavigationHeader.cancelTransistion(event);
+            CategoryDb.deleteCategory(categoryId).then((result) => {
+                this.context.history.push("/configure/categories");
+            });
         }
     }
 
-    static cancelTransistion(event) {
-        event.preventDefault();
-    }
-
     render() {
-
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
             <div className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" contentEditable onKeyDown={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._validateCategoryTitle(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
@@ -48,10 +44,7 @@ export default class CategoryNavigationHeader extends Component {
             </div>
             <div className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <Link to="/configure/categories" onClick = {(event) => this.handleDelete(event, this.props.categoryName)} id="deleteCategoryLink">
-            <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
-        </Link>;
-
+        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.handleDelete(this.props.categoryName, this.props.categoryId)}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
         return (
 
             <div className="navigation-header clear-fix">
@@ -72,6 +65,7 @@ CategoryNavigationHeader.displayName = "Category Navigation Header";
 
 CategoryNavigationHeader.propTypes = {
     "categoryName": PropTypes.string,
+    "categoryId": PropTypes.string,
     "editableHeader": PropTypes.bool,
     "isDefault": PropTypes.bool,
     "errorMessage": PropTypes.string,
@@ -87,4 +81,7 @@ CategoryNavigationHeader.defaultProps = {
     "isValidName": true
 };
 
+CategoryNavigationHeader.contextTypes = {
+    "history": History.prototype
+};
 

@@ -343,22 +343,35 @@ describe("CategoryDb", () => {
         });
     });
 
-    describe.only("deleteCategory", ()=> {
+    describe("deleteCategory", ()=> {
+        let sandbox = sinon.sandbox.create();
+        afterEach("afterEach", () => {
+            sandbox.restore();
+        });
         it("should fetch all urls and call delete of all urls", (done)=> {
             let categoryId = 123;
             let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }],
                 "facebook": [{ "_id": "103", "url": "http://facebook.com/test1" }],
                 "rss": [{ "_id": "104", "url": "http://test.com/rss" }]
             };
-            let fetchUrlsMock = sinon.mock(CategoriesApplicationQueries);
+            let categoryDoc = {
+                "_id": "06E26F38-1145-B850-AFE0-072537EDBC98",
+                "_rev": "24-4f80c047d21a5cd55bdae898eaa7f912",
+                "docType": "category",
+                "name": "Ull",
+                "createdTime": 1451373861028
+            };
+            let pouchClientMock = sandbox.mock(PouchClient);
+            pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
+            pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
+            let fetchUrlsMock = sandbox.mock(CategoriesApplicationQueries);
             fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
-            let deleteSourceUrlMock = sinon.mock(CategoryDb);
+            let deleteSourceUrlMock = sandbox.mock(CategoryDb);
             deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length + urlDocs.facebook.length + urlDocs.rss.length);
             CategoryDb.deleteCategory(categoryId).then((message)=> {
                 fetchUrlsMock.verify();
                 deleteSourceUrlMock.verify();
-                deleteSourceUrlMock.restore();
-                fetchUrlsMock.restore();
+                pouchClientMock.verify();
                 done();
             });
         });
@@ -367,15 +380,25 @@ describe("CategoryDb", () => {
             let categoryId = 123;
             let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }]
             };
-            let fetchUrlsMock = sinon.mock(CategoriesApplicationQueries);
+            let categoryDoc = {
+                "_id": "06E26F38-1145-B850-AFE0-072537EDBC98",
+                "_rev": "24-4f80c047d21a5cd55bdae898eaa7f912",
+                "docType": "category",
+                "name": "Ull",
+                "createdTime": 1451373861028
+            };
+
+            let pouchClientMock = sandbox.mock(PouchClient);
+            pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
+            pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
+            let fetchUrlsMock = sandbox.mock(CategoriesApplicationQueries);
             fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
-            let deleteSourceUrlMock = sinon.mock(CategoryDb);
+            let deleteSourceUrlMock = sandbox.mock(CategoryDb);
             deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length);
             CategoryDb.deleteCategory(categoryId).then((message)=> {
                 fetchUrlsMock.verify();
                 deleteSourceUrlMock.verify();
-                deleteSourceUrlMock.restore();
-                fetchUrlsMock.restore();
+                pouchClientMock.verify();
                 done();
             });
         });

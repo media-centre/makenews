@@ -82,7 +82,7 @@ export default class Category extends Component {
 
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={this.props.params.categoryName} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
+              <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={this.props.params.categoryName} categoryId={this.props.params.categoryId} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
               <TabComponent tabToHighlight={this.props.highlightedTab} dispatch={this.props.dispatch}>{tabContent}</TabComponent>
           </div>
       );
