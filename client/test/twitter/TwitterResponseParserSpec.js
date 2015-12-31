@@ -27,7 +27,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "postedDate": "Dec 11, 2001 6:11 AM",
+            "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"]
         };
         let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
@@ -57,7 +57,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "postedDate": "Dec 11, 2001 6:11 AM",
+            "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"],
             "url": "https://www.test.com"
         };
@@ -89,7 +89,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
-            "postedDate": "Dec 11, 2001 6:11 AM",
+            "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"],
             "images": [
                 {

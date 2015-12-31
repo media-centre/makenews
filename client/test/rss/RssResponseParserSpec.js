@@ -65,7 +65,7 @@ describe("RssResponseParser", () => {
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
-                    "postedDate": "Nov 5, 2015 11:21 AM",
+                    "postedDate": "2015-11-05T11:21:20+00:00",
                     "tags": [""],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 },

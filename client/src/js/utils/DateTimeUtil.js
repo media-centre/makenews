@@ -7,10 +7,10 @@ export default class DateTimeUtil {
         return moment().utc().valueOf();
     }
     static getLocalTimeFromUTC(dateString) {
-        return moment.utc(dateString).local().format("lll");
+        return moment.utc(dateString).local().format("llll");
     }
     static getUTCDateAndTime(dateString) {
-        return moment(dateString).utc().format("lll");
+        return moment(dateString).utc().format();
 
     }
 }
