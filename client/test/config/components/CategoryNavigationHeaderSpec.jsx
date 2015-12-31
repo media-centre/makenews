@@ -5,6 +5,7 @@ import CategoryNavigationHeader from "../../../src/js/config/components/Category
 import { assert } from "chai";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
+import sinon from "sinon";
 
 
 describe("CategoryNavigationHeader", ()=> {
@@ -25,7 +26,33 @@ describe("CategoryNavigationHeader", ()=> {
     });
 
     it("Should display delete category text from the language file", () => {
-        assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel.innerHTML);
+        const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
+        assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
+    });
+
+    it("Should delete category if delete category is called and confirmed", () => {
+        const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
+        assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
+        let confirmMock = sinon.mock(window);
+        let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
+        confirmMock.expects("confirm").withArgs(confirmMessage).returns(true);
+        TestUtils.Simulate.click(deleteCategoryLinkLabel);
+        confirmMock.verify();
+        confirmMock.restore();
+    });
+
+    it("Should stay in same page if delete category is called and not confirmed", () => {
+        const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
+        assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
+        let confirmMock = sinon.mock(window);
+        let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
+        confirmMock.expects("confirm").withArgs(confirmMessage).returns(false);
+        let cancelTransistionStub = sinon.stub(CategoryNavigationHeader, "cancelTransistion");
+        TestUtils.Simulate.click(deleteCategoryLinkLabel);
+        confirmMock.verify();
+        assert.ok(cancelTransistionStub.called);
+        confirmMock.restore();
+        cancelTransistionStub.restore();
     });
 
 });
