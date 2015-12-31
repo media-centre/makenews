@@ -129,5 +129,4 @@ describe("AddURLComponent", () => {
         expect("Please enter RSS URL here").to.eq(AddURLComponentElement.props.hintMessage);
         expect("Example: thehindu.com/opinion/?service=rss").to.eq(AddURLComponentElement.props.exampleMessage);
     });
-
 });
