@@ -17,6 +17,12 @@ export default class AddURLComponent extends Component {
         this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
     }
 
+    _deleteUrl() {
+        //props.dispatch(deleteUrl(url, props.categoryId, (response) => {
+            this.setState = { "showUrlInput": false, "errorMessage": "deleted", "successResponse": false };
+        //}));
+    }
+
     _onKeyDownTextBox(event) {
         const ENTERKEY = 13;
         if(event.keyCode === ENTERKEY) {
@@ -76,7 +82,9 @@ export default class AddURLComponent extends Component {
                         {this.props.content.map((urlObj, index) =>
                             <li key={index} className="feed-url">
                                 <div className={urlObj.status + " feed"}>{urlObj.url}</div>
-                                <i className="border-blue circle fa fa-close close circle"></i>
+                                <div id="deleteUrlButton" onClick={() => this._deleteUrl()}>
+                                    <i className="border-blue circle fa fa-close close circle"></i>
+                                </div>
                             </li>
                         )}
                     </ul>

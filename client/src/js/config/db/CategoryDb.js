@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
+import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
 
 export default class CategoryDb {
 
@@ -144,6 +145,26 @@ export default class CategoryDb {
                 resolve({ "status": false });
             }).catch(error => {
                 reject({ "status": false, "error": error });
+            });
+        });
+    }
+
+    static deleteSource(sourceId) {
+        return new Promise((resolve, reject) => {
+            PouchClient.getDocument(sourceId).then((sourceDoc) => {
+                PouchClient.deleteDocument(sourceDoc).then((response) => {
+                    resolve(response);
+                });
+            });
+        });
+    }
+
+    static deleteSourceWithReference(sourceId) {
+        return new Promise((resolve, reject) => {
+            FeedApplicationQueries.deleteSurfFeeds(sourceId).then((surfFeedsResponse) => {
+                CategoryDb.deleteSource(sourceId).then(response => {
+                    resolve(response);
+                });
             });
         });
     }

@@ -2,6 +2,7 @@
 "use strict";
 
 import FeedDb from "./FeedDb.js";
+import PouchClient from "../../../js/db/PouchClient";
 
 export default class FeedApplicationQueries {
     static fetchAllFeedsWithCategoryName() {
@@ -54,6 +55,20 @@ export default class FeedApplicationQueries {
             }
         });
         return categoryNameMap;
+    }
+
+    static deleteSurfFeeds(sourceId) {
+        return new Promise((resolve, reject) => {
+            FeedDb.surfFeeds(sourceId).then((requiredSurfFeeds) => {
+                PouchClient.bulkDocuments(requiredSurfFeeds, { "_deleted": true }).then((response)=> {
+                    resolve(response);
+                }).catch(error => {
+                    reject(error);
+                });
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
 

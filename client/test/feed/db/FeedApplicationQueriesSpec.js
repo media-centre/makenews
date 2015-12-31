@@ -2,9 +2,10 @@
 
 "use strict";
 import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
+import PouchClient from "../../../src/js/db/PouchClient";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import sinon from "sinon";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 
 describe("FeedApplicationQueries", () => {
     describe("allFeedsWithCategoryNames", () => {
@@ -205,6 +206,83 @@ describe("FeedApplicationQueries", () => {
             return FeedApplicationQueries.updateFeed(rawFeedDoc).then(() => {
                 feedDbMock.verify();
                 FeedDb.updateFeed.restore();
+            });
+        });
+    });
+
+    describe("deleteSurfFeeds", () => {
+        let sourceId = null, surfFeeds = null;
+        before("surfFeeds", () => {
+            sourceId = "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48";
+            surfFeeds = [{
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Chennai Connect at The Hindu",
+                "feedType": "facebook",
+                "content": "Chennai patient receives heart from brain-dead man in CMC",
+                "tags": [
+                    "Dec 29 2015    7:47:59"
+                ],
+                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
+            }, {
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Timeline Photos",
+                "feedType": "facebook",
+                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                "tags": [
+                    "Dec 29 2015    8:9:17"
+                ],
+                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
+            }];
+        });
+
+        it("should delete surf feeds of given source id", (done) => {
+            let feedDbSurfFeedsMock = sinon.mock(FeedDb).expects("surfFeeds");
+            feedDbSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve(surfFeeds));
+            let pouchClientMock = sinon.mock(PouchClient).expects("bulkDocuments");
+            pouchClientMock.withArgs(surfFeeds, { "_deleted": true }).returns(Promise.resolve("surf feeds of given sourceId deleted"));
+
+            FeedApplicationQueries.deleteSurfFeeds(sourceId).then((response) => {
+
+                assert.strictEqual("surf feeds of given sourceId deleted", response);
+                feedDbSurfFeedsMock.verify();
+                pouchClientMock.verify();
+                FeedDb.surfFeeds.restore();
+                PouchClient.bulkDocuments.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if fetching surf feeds  fails", (done) => {
+            sourceId = "TestSourceId";
+            let feedDbSurfFeedsMock = sinon.mock(FeedDb).expects("surfFeeds");
+            feedDbSurfFeedsMock.withArgs(sourceId).returns(Promise.reject("Invalid Source Id"));
+            FeedApplicationQueries.deleteSurfFeeds(sourceId).catch((error) => {
+                assert.strictEqual("Invalid Source Id", error);
+                feedDbSurfFeedsMock.verify();
+                FeedDb.surfFeeds.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if deleting documents fails", (done) => {
+            let feedDbSurfFeedsMock = sinon.mock(FeedDb).expects("surfFeeds");
+            feedDbSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve(surfFeeds));
+            let pouchClientMock = sinon.mock(PouchClient).expects("bulkDocuments");
+            pouchClientMock.withArgs(surfFeeds, { "_deleted": true }).returns(Promise.reject("Invalid Source Id"));
+
+            FeedApplicationQueries.deleteSurfFeeds(sourceId).catch((error) => {
+
+                assert.strictEqual("Invalid Source Id", error);
+
+                feedDbSurfFeedsMock.verify();
+                pouchClientMock.verify();
+                FeedDb.surfFeeds.restore();
+                PouchClient.bulkDocuments.restore();
+                done();
             });
         });
     });

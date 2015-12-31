@@ -115,4 +115,11 @@ describe("AddURLComponent", () => {
 
         validateUrl.verify();
     });
+
+    it("should remove the url input box when we click on the deleteUrl button", () => {
+        let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#deleteUrlButton"));
+        expect(false).to.eq(AddURLComponentElement.state.showUrlInput);
+    });
+
 });

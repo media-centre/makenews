@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
+import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -341,4 +342,61 @@ describe("CategoryDb", () => {
             });
         });
     });
+
+    describe("deleteSource", () => {
+        let sourceId = null, sourceDoc = null;
+        before("deleteSource", () => {
+            sourceId = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
+            sourceDoc = {
+                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+                "docType": "source",
+                "sourceType": "twitter",
+                "url": "@balaswecha",
+                "categoryIds": [
+                    "95fa167311bf340b461ba414f1004074"
+                ],
+                "status": "valid"
+            };
+        });
+
+        it("should delete the source document with the given id", (done) => {
+            let pouchClientGetDocMock = sinon.mock(PouchClient).expects("getDocument");
+            pouchClientGetDocMock.withArgs(sourceId).returns(Promise.resolve(sourceDoc));
+            let pouchClientDeleteDocMock = sinon.mock(PouchClient).expects("deleteDocument");
+            pouchClientDeleteDocMock.withArgs(sourceDoc).returns(Promise.resolve("response"));
+
+            CategoryDb.deleteSource(sourceId).then((response) => {
+
+                pouchClientGetDocMock.verify();
+                pouchClientDeleteDocMock.verify();
+                PouchClient.getDocument.restore();
+                PouchClient.deleteDocument.restore();
+                done();
+            });
+        });
+    });
+
+    describe("deleteSourceWithReferences", () => {
+        let sourceId = null, sourceDoc = null;
+        before("deleteSource", () => {
+            sourceId = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
+        });
+
+        it("should delete the source document and all surf feeds of given source id", (done) => {
+            let categoryDbDeleteSourceMock = sinon.mock(CategoryDb).expects("deleteSource");
+            categoryDbDeleteSourceMock.withArgs(sourceId).returns(Promise.resolve("response"));
+
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            CategoryDb.deleteSourceWithReference(sourceId).then((response) => {
+                categoryDbDeleteSourceMock.verify();
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                CategoryDb.deleteSource.restore();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                done();
+            });
+        });
+    });
+
 });

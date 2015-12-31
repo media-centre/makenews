@@ -25,4 +25,8 @@ export default class FeedDb {
             });
         });
     }
+
+    static surfFeeds(sourceId) {
+        return PouchClient.fetchDocuments("category/surfFeeds", { "include_docs": true, "key": sourceId });
+    }
 }

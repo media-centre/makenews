@@ -5,6 +5,6 @@ import PouchClient from "../db/PouchClient.js";
 
 export default class TwitterDb {
     static addTweets(feeds) {
-        PouchClient.createBulkDocuments(feeds);
+        PouchClient.bulkDocuments(feeds);
     }
 }

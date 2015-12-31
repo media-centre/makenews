@@ -1,10 +1,12 @@
 /* eslint global-require:0 no-unused-expressions:0, max-nested-callbacks: [2, 7], no-magic-numbers:0, no-unused-vars:0*/
 
 "use strict";
-import DbSession from "../../src/js/db/DbSession.js";import { expect, assert } from "chai";
+import PouchClient from "../../src/js/db/PouchClient.js";
+import DbSession from "../../src/js/db/DbSession.js";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import { expect, assert } from "chai";
 import PouchDB from "pouchdb";
 import sinon from "sinon";
-import PouchClient from "../../src/js/db/PouchClient.js";
 
 describe("PouchClient", () => {
     let parkFeed = null, surfFeed = null;
@@ -333,7 +335,7 @@ describe("PouchClient", () => {
         });
     });
 
-    describe("createBulkDocuments", () => {
+    describe("bulkDocuments", () => {
         it("should create all the documents with the given json object", () => {
             let jsonDocument = [
                 {
@@ -347,7 +349,7 @@ describe("PouchClient", () => {
                     "title": "www.hindu.com/rss"
                 }];
 
-            return PouchClient.createBulkDocuments(jsonDocument).then((response) => {
+            return PouchClient.bulkDocuments(jsonDocument).then((response) => {
                 let expectedIds = ["guid1", "guid2"];
                 expect(response.length).to.eq(2);
                 expect(response.map(resp => {
@@ -358,25 +360,11 @@ describe("PouchClient", () => {
             });
         });
 
-        xit("should reject with the error in case of error while creating the documents", (done) => {
-            DbSession.instance().put({
-                "docType": "feed",
-                "title": "www.google.com/rss"
-            }, "guid1");
-
-            let jsonDocument = [
-                {
-                    "_id": "guid1",
-                    "docType": "feed",
-                    "title": "www.google.com/rss"
-                },
-                {
-                    "_id": "guid2",
-                    "docType": "feed",
-                    "title": "www.hindu.com/rss"
-                }];
-
-            PouchClient.createBulkDocuments(jsonDocument).then(() => {
+        it("should reject with the error in case of error while creating the documents", (done) => {
+            let invalidDocument = {"_id": "invalidId", "title": "INVALID"};
+            PouchClient.bulkDocuments(invalidDocument).catch((error) => {
+                assert.isTrue(error.error);
+                assert.equal(HttpResponseHandler.codes.BAD_REQUEST, error.status);
                 done();
             });
         });
@@ -405,7 +393,7 @@ describe("PouchClient", () => {
             let invalidDocument = { "_id": "invalidId", "title": "INVALID" };
             PouchClient.deleteDocument(invalidDocument).catch((error) => {
                 expect(error.error).to.be.true;
-                expect(error.status).to.eq(404);
+                expect(error.status).to.eq(HttpResponseHandler.code.NOT_FOUND);
                 done();
             });
         });

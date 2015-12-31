@@ -5,6 +5,6 @@ import PouchClient from "../db/PouchClient.js";
 
 export default class RssDb {
     static addRssFeeds(feedDocuments) {
-        return PouchClient.createBulkDocuments(feedDocuments);
+        return PouchClient.bulkDocuments(feedDocuments);
     }
 }

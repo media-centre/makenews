@@ -20,10 +20,10 @@ describe("RssDb", () => {
                     "title": "www.hindu.com/rss"
                 }];
 
-            let createMock = sinon.mock(PouchClient).expects("createBulkDocuments").withArgs(jsonDocument).returns(Promise.resolve([{ "id": "1", "ok": true }, { "id": "2", "ok": true }]));
+            let createMock = sinon.mock(PouchClient).expects("bulkDocuments").withArgs(jsonDocument).returns(Promise.resolve([{ "id": "1", "ok": true }, { "id": "2", "ok": true }]));
             return RssDb.addRssFeeds(jsonDocument).then(() => {
                 createMock.verify();
-                PouchClient.createBulkDocuments.restore();
+                PouchClient.bulkDocuments.restore();
             });
         });
     });
