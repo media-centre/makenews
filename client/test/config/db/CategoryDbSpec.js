@@ -543,6 +543,7 @@ describe("CategoryDb", () => {
             let fetchUrlsMock = sandbox.mock(CategoriesApplicationQueries);
             fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
             let deleteSourceUrlMock = sandbox.mock(CategoryDb);
+
             deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length + urlDocs.facebook.length + urlDocs.rss.length);
             CategoryDb.deleteCategory(categoryId).then((message)=> {
                 fetchUrlsMock.verify();
