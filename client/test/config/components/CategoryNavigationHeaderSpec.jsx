@@ -32,7 +32,7 @@ describe("CategoryNavigationHeader", ()=> {
         assert.isUndefined(categoryNavigationHeaderComponent.refs.confirmPopup);
     });
 
-    it("Should delete category if delete category is called and confirmed", () => {
+    it("Should delete category if delete category is called and confirmed", (done) => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let deleteCategoryMock = sinon.mock(CategoryDb);
