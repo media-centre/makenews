@@ -4,8 +4,7 @@ import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
 import { connect } from "react-redux";
 
-export default
-class CategoryNavigationHeader extends Component {
+export default class CategoryNavigationHeader extends Component {
 
     _validateCategoryTitle(event, props) {
         var categoryName = this.refs.categoryTitleElement.textContent.trim();
@@ -27,6 +26,19 @@ class CategoryNavigationHeader extends Component {
         return this.props.isValidName ? "t-center trans-border t-bold category-title" : "t-center t-bold error-border category-title";
     }
 
+    handleDelete(event, categoryName) {
+        let confirm = window.confirm(categoryName + " Category will be permanently deleted. You will not get feeds from this category.");//eslint-disable-line no-alert
+        if(confirm) {
+            console.log("deleted"); //eslint-disable-line no-console
+        } else {
+            CategoryNavigationHeader.cancelTransistion(event);
+        }
+    }
+
+    static cancelTransistion(event) {
+        event.preventDefault();
+    }
+
     render() {
 
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
@@ -36,7 +48,9 @@ class CategoryNavigationHeader extends Component {
             </div>
             <div className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
+        let deleteElement = this.props.isDefault ? null : <Link to="/configure/categories" onClick = {(event) => this.handleDelete(event, this.props.categoryName)} id="deleteCategoryLink">
+            <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel">{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
+        </Link>;
 
         return (
 

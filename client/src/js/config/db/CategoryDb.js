@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
+import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
 
 export default class CategoryDb {
 
@@ -130,6 +131,31 @@ export default class CategoryDb {
                 reject({ "status": false, "error": error });
             });
         });
+    }
+
+    static deleteCategory(categoryId) {
+        return new Promise((resolve, reject) => {
+            CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
+                CategoryDb.deleteUrls(sourceUrlsObj.rss);
+                CategoryDb.deleteUrls(sourceUrlsObj.facebook);
+                CategoryDb.deleteUrls(sourceUrlsObj.twitter);
+                resolve("deleted");
+            }).catch((error) => {
+                reject("not deleted");
+            });
+        });
+    }
+
+    static deleteUrls(sourceUrls) {
+        if(sourceUrls) {
+            sourceUrls.forEach((source) => {
+                CategoryDb.deleteSourceUrl(source);
+            });
+        }
+    }
+
+    static deleteSourceUrl(url) {
+        console.log("deleted " + url); //eslint-disable-line no-console
     }
 
     static getCategoryById(categoryId) {

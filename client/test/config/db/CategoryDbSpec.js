@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
+import CategoriesApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -337,6 +338,44 @@ describe("CategoryDb", () => {
             CategoryDb.updateCategory(document).catch(()=> {
                 updateMock.verify();
                 PouchClient.updateDocument.restore();
+                done();
+            });
+        });
+    });
+
+    describe.only("deleteCategory", ()=> {
+        it("should fetch all urls and call delete of all urls", (done)=> {
+            let categoryId = 123;
+            let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }],
+                "facebook": [{ "_id": "103", "url": "http://facebook.com/test1" }],
+                "rss": [{ "_id": "104", "url": "http://test.com/rss" }]
+            };
+            let fetchUrlsMock = sinon.mock(CategoriesApplicationQueries);
+            fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let deleteSourceUrlMock = sinon.mock(CategoryDb);
+            deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length + urlDocs.facebook.length + urlDocs.rss.length);
+            CategoryDb.deleteCategory(categoryId).then((message)=> {
+                fetchUrlsMock.verify();
+                deleteSourceUrlMock.verify();
+                deleteSourceUrlMock.restore();
+                fetchUrlsMock.restore();
+                done();
+            });
+        });
+
+        it("should delete urls even if some source types are not present ", (done)=> {
+            let categoryId = 123;
+            let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }]
+            };
+            let fetchUrlsMock = sinon.mock(CategoriesApplicationQueries);
+            fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let deleteSourceUrlMock = sinon.mock(CategoryDb);
+            deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length);
+            CategoryDb.deleteCategory(categoryId).then((message)=> {
+                fetchUrlsMock.verify();
+                deleteSourceUrlMock.verify();
+                deleteSourceUrlMock.restore();
+                fetchUrlsMock.restore();
                 done();
             });
         });
