@@ -67,6 +67,7 @@ export default class CategoryDb {
     }
 
     static isCategoryExists(categoryName, categoryId) {
+        
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then(categories => {
                 let isAlreadyExists = false;
