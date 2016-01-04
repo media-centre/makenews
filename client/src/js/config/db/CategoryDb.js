@@ -139,10 +139,22 @@ export default class CategoryDb {
                 CategoryDb.deleteUrls(sourceUrlsObj.rss);
                 CategoryDb.deleteUrls(sourceUrlsObj.facebook);
                 CategoryDb.deleteUrls(sourceUrlsObj.twitter);
-                resolve("deleted");
+                CategoryDb.deleteCategoryDocument(categoryId, resolve, reject);
             }).catch((error) => {
-                reject("not deleted");
+                reject(error);
             });
+        });
+    }
+
+    static deleteCategoryDocument(categoryId, resolve, reject) {
+        PouchClient.getDocument(categoryId).then((document) => {
+            PouchClient.deleteDocument(document).then(() => {
+                resolve(true);
+            }).catch((error) => {
+                reject(error);
+            });
+        }).catch((error) => {
+            reject(error);
         });
     }
 
@@ -154,8 +166,9 @@ export default class CategoryDb {
         }
     }
 
-    static deleteSourceUrl(url) {
-        console.log("deleted " + url); //eslint-disable-line no-console
+
+    static deleteSourceUrl(source) {
+        console.log("deleted " + source.url); //eslint-disable-line no-console
     }
 
     static getCategoryById(categoryId) {
