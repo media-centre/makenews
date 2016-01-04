@@ -33,6 +33,8 @@ export default class AddURLComponent extends Component {
             }).catch(()=> {
                 this.setState({ "showCustomPopup": false, "successResponse": false, "errorMessage": "Url deletion failed" });
             });
+        } else {
+            this.setState({ "showCustomPopup": false });
         }
     }
 
