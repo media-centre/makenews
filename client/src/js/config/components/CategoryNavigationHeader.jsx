@@ -70,7 +70,7 @@ export default class CategoryNavigationHeader extends Component {
                 </Link>
                 {deleteElement}
                 {titleElement}
-                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {this.props.categoryName + " Category will be permanently deleted. You will not get feeds from this category."} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
+                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {"Category will be permanently deleted. You will not get feeds from this category."} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
             </div>
         );
     }

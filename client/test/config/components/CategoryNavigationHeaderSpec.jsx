@@ -39,7 +39,7 @@ describe("CategoryNavigationHeader", ()=> {
         deleteCategoryMock.expects("deleteCategory").returns(Promise.resolve(true));
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
-        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name Category will be permanently deleted. You will not get feeds from this category.");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Category will be permanently deleted. You will not get feeds from this category.");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.confirmButton);
         deleteCategoryMock.verify();
         deleteCategoryMock.restore();
@@ -52,7 +52,7 @@ describe("CategoryNavigationHeader", ()=> {
         let deleteCategoryStub = sinon.stub(CategoryDb, "deleteCategory");
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
-        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name Category will be permanently deleted. You will not get feeds from this category.");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Category will be permanently deleted. You will not get feeds from this category.");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.cancelButton);
         confirmMock.verify();
         assert.isFalse(deleteCategoryStub.called);
