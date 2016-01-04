@@ -3,7 +3,6 @@
 
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
-import { getUrl } from "../../utils/FeedUtils";
 import Spinner from "../../utils/components/Spinner.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
 
@@ -41,7 +40,7 @@ export default class ImageGallery extends Component {
         let description = this.props.category.content ? <p className="surf-description">{this.props.category.content}</p> : null;
         return (
             <div className="image-gallery" style={feedStyle}>
-                <a target="_blank" href={getUrl(this.props.category)}>
+                <a target="_blank" href={this.props.category.link}>
                     <div className="title">{this.props.category.title}</div>
                     <ul className="gallery-list h-center">{images}</ul>
                     {description}

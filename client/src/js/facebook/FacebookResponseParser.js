@@ -27,6 +27,7 @@ export default class FacebookResponseParser {
             "type": "description",
             "title": post.name || "",
             "feedType": "facebook",
+            "link": "https://www.facebook.com/" + post.id,
             "content": post.message || "",
             "postedDate": post.created_time ? DateTimeUtil.getUTCDateAndTime(post.created_time) : null,
             "tags": [""]

@@ -3,7 +3,6 @@
 
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
-import { getUrl } from "../../utils/FeedUtils";
 import Spinner from "../../utils/components/Spinner.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
 
@@ -31,7 +30,7 @@ export default class ImageContent extends Component {
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
         return (
             <div className="image-content" style={feedStyle}>
-                <a target="_blank" href={getUrl(this.props.category)}>
+                <a target="_blank" href={this.props.category.link}>
                     <div className="title">{this.props.category.title}</div>
                     <div className="container clear-fix">
                         <div className="img-container box m-block left" ref="imageContent">

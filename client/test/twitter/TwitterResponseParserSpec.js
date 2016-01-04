@@ -27,6 +27,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
+            "link": "https://twitter.com/sourceId/status/123457",
             "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"]
         };
@@ -57,6 +58,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
+            "link": "https://twitter.com/sourceId/status/123457",
             "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"],
             "url": "https://www.test.com"
@@ -89,6 +91,7 @@ describe("createTwitterFeed", ()=> {
             "sourceId": sourceId,
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
+            "link": "https://twitter.com/sourceId/status/123457",
             "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"],
             "images": [

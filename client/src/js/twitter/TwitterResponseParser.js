@@ -24,6 +24,7 @@ export default class TwitterResponseParser {
             "type": "description",
             "feedType": "twitter",
             "content": tweet.text,
+            "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
             "postedDate": tweet.created_at ? DateTimeUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": TwitterResponseParser.hashTags(tweet)
         };
