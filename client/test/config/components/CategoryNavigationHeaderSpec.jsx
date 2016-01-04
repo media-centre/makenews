@@ -29,37 +29,33 @@ describe("CategoryNavigationHeader", ()=> {
     it("Should display delete category text from the language file", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
+        assert.isUndefined(categoryNavigationHeaderComponent.refs.confirmPopup);
     });
 
-    it("Should delete category if delete category is called and confirmed", (done) => {
+    it("Should delete category if delete category is called and confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
-        let confirmMock = sinon.mock(window);
-        let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
         let deleteCategoryMock = sinon.mock(CategoryDb);
         deleteCategoryMock.expects("deleteCategory").returns(Promise.resolve(true));
-        confirmMock.expects("confirm").withArgs(confirmMessage).returns(true);
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
-        setTimeout(() => {
-            deleteCategoryMock.verify();
-            confirmMock.verify();
-            confirmMock.restore();
-            deleteCategoryMock.restore();
-            done();
-        }, 0);
+        assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name Category will be permanently deleted. You will not get feeds from this category.");
+        TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.confirmButton);
+        deleteCategoryMock.verify();
+        deleteCategoryMock.restore();
     });
 
     it("Should stay in same page if delete category is called and not confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let confirmMock = sinon.mock(window);
-        let confirmMessage = "Test Category Name Category will be permanently deleted. You will not get feeds from this category.";
-        confirmMock.expects("confirm").withArgs(confirmMessage).returns(false);
         let deleteCategoryStub = sinon.stub(CategoryDb, "deleteCategory");
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
+        assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name Category will be permanently deleted. You will not get feeds from this category.");
+        TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.cancelButton);
         confirmMock.verify();
-        assert.notOk(deleteCategoryStub.called);
-        confirmMock.restore();
+        assert.isFalse(deleteCategoryStub.called);
         CategoryDb.deleteCategory.restore();
     });
 

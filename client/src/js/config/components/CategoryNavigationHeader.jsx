@@ -1,11 +1,19 @@
-/* eslint no-unused-vars:0, max-len:0 */
+/* eslint no-unused-vars:0, max-len:0  */
 "use strict";
 import CategoryDb from "../db/CategoryDb";
+import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 import React, { Component, PropTypes } from "react";
 import { Route, Link, History } from "react-router";
 import { connect } from "react-redux";
 
 export default class CategoryNavigationHeader extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            "showDeleteConfirm": false
+        };
+    }
 
     _validateCategoryTitle(event, props) {
         var categoryName = this.refs.categoryTitleElement.textContent.trim();
@@ -27,13 +35,21 @@ export default class CategoryNavigationHeader extends Component {
         return this.props.isValidName ? "t-center trans-border t-bold category-title" : "t-center t-bold error-border category-title";
     }
 
-    handleDelete(categoryName, categoryId) {
-        let confirm = window.confirm(categoryName + " Category will be permanently deleted. You will not get feeds from this category.");//eslint-disable-line no-alert
-        if(confirm) {
+    showConfirmPopup() {
+        this.setDeleteConfirmState(true);
+    }
+
+    setDeleteConfirmState(isConfirm) {
+        this.setState({ "showDeleteConfirm": isConfirm }); //eslint-disable-line react/no-set-state
+    }
+
+    handleDelete(event, categoryId) {
+        if(event.OK) {
             CategoryDb.deleteCategory(categoryId).then((result) => {
                 this.context.history.push("/configure/categories");
             });
         }
+        this.setDeleteConfirmState(false);
     }
 
     render() {
@@ -44,16 +60,17 @@ export default class CategoryNavigationHeader extends Component {
             </div>
             <div className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.handleDelete(this.props.categoryName, this.props.categoryId)}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
-        return (
+        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.showConfirmPopup(this.props.categoryName)}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 
-            <div className="navigation-header clear-fix">
+        return (
+            <div className="navigation-header clear-fix" >
                 <Link to="/configure/categories" className="navigation nav-control h-center left" id="allCategoriesButton">
                     <i className="fa fa-arrow-left"></i>
                     <span ref="allCategoriesLinkLabel">{this.props.categoryDetailsPageStrings.allCategoriesLinkLabel}</span>
                 </Link>
                 {deleteElement}
                 {titleElement}
+                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {this.props.categoryName + " Category will be permanently deleted. You will not get feeds from this category."} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
             </div>
         );
     }
@@ -82,6 +99,8 @@ CategoryNavigationHeader.defaultProps = {
 };
 
 CategoryNavigationHeader.contextTypes = {
-    "history": History.prototype
+    "history": function() {
+        return History.prototype;
+    }
 };
 
