@@ -5,6 +5,7 @@ import PouchClient from "../../db/PouchClient.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
 import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
+import Source from "../Source";
 
 export default class CategoryDb {
 
@@ -137,9 +138,9 @@ export default class CategoryDb {
     static deleteCategory(categoryId) {
         return new Promise((resolve, reject) => {
             CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
-                CategoryDb.deleteUrls(sourceUrlsObj.rss);
-                CategoryDb.deleteUrls(sourceUrlsObj.facebook);
-                CategoryDb.deleteUrls(sourceUrlsObj.twitter);
+                CategoryDb.deleteUrls(sourceUrlsObj.rss, categoryId);
+                CategoryDb.deleteUrls(sourceUrlsObj.facebook, categoryId);
+                CategoryDb.deleteUrls(sourceUrlsObj.twitter, categoryId);
                 CategoryDb.deleteCategoryDocument(categoryId, resolve, reject);
             }).catch((error) => {
                 reject(error);
@@ -159,17 +160,16 @@ export default class CategoryDb {
         });
     }
 
-    static deleteUrls(sourceUrls) {
+    static deleteUrls(sourceUrls, categoryId) {
         if(sourceUrls) {
             sourceUrls.forEach((source) => {
-                CategoryDb.deleteSourceUrl(source);
+                CategoryDb.deleteSourceUrl(source, categoryId);
             });
         }
     }
 
-
-    static deleteSourceUrl(source) {
-        console.log("deleted " + source.url); //eslint-disable-line no-console
+    static deleteSourceUrl(source, categoryId) {
+        new Source(source._id).delete(categoryId);
     }
 
     static getCategoryById(categoryId) {
