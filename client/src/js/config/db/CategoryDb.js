@@ -4,6 +4,7 @@
 import PouchClient from "../../db/PouchClient.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
+import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
 
 export default class CategoryDb {
 
@@ -131,6 +132,44 @@ export default class CategoryDb {
                 reject({ "status": false, "error": error });
             });
         });
+    }
+
+    static deleteCategory(categoryId) {
+        return new Promise((resolve, reject) => {
+            CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
+                CategoryDb.deleteUrls(sourceUrlsObj.rss);
+                CategoryDb.deleteUrls(sourceUrlsObj.facebook);
+                CategoryDb.deleteUrls(sourceUrlsObj.twitter);
+                CategoryDb.deleteCategoryDocument(categoryId, resolve, reject);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
+
+    static deleteCategoryDocument(categoryId, resolve, reject) {
+        PouchClient.getDocument(categoryId).then((document) => {
+            PouchClient.deleteDocument(document).then(() => {
+                resolve(true);
+            }).catch((error) => {
+                reject(error);
+            });
+        }).catch((error) => {
+            reject(error);
+        });
+    }
+
+    static deleteUrls(sourceUrls) {
+        if(sourceUrls) {
+            sourceUrls.forEach((source) => {
+                CategoryDb.deleteSourceUrl(source);
+            });
+        }
+    }
+
+
+    static deleteSourceUrl(source) {
+        console.log("deleted " + source.url); //eslint-disable-line no-console
     }
 
     static getCategoryById(categoryId) {

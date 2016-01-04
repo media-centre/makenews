@@ -1,0 +1,45 @@
+@import "../utils/variable";
+
+.confirm-mask {
+  background: $transparent-gray;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: $mask-layer-index;
+
+  .confirm-popup {
+    background: $primary-font-color;
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    top: 15%;
+    margin: auto;
+    z-index: $popup-layer-index;
+
+    .container {
+      padding: 20px;
+
+      .description {
+        color: $medium-gray-color;
+      }
+
+      .button-container {
+        button {
+          color: $app-header-bg-color;
+          background: $primary-font-color;
+          border-color: $app-header-bg-color;
+
+          &:hover {
+            color: $primary-font-color;
+            background: $app-header-bg-color;
+          }
+        }
+        .confirmButton {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+}
