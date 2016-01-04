@@ -60,7 +60,10 @@ export default class FeedApplicationQueries {
     static deleteSurfFeeds(sourceId) {
         return new Promise((resolve, reject) => {
             FeedDb.surfFeeds(sourceId).then((requiredSurfFeeds) => {
-                PouchClient.bulkDocuments(requiredSurfFeeds, { "_deleted": true }).then((response)=> {
+                requiredSurfFeeds.forEach(feed => {
+                    feed._deleted = true;
+                });
+                PouchClient.bulkDocuments(requiredSurfFeeds).then((response)=> {
                     resolve(response);
                 }).catch(error => {
                     reject(error);
@@ -70,5 +73,26 @@ export default class FeedApplicationQueries {
             });
         });
     }
+
+static removeParkFeedsSourceReference(sourceId) {
+    return new Promise((resolve, reject) => {
+        FeedDb.sourceParkFeeds(sourceId).then(parkFeeds => {
+            if(parkFeeds.length > 0) {
+                parkFeeds.forEach(parkFeed => {
+                    parkFeed.sourceId = "";
+                });
+                PouchClient.bulkDocuments(parkFeeds).then(response => { //eslint-disable-line
+                    resolve(true);
+                }).catch(error => {
+                    reject(error);
+                });
+            } else {
+                resolve(true);
+            }
+        }).catch(error => { //eslint-disable-line
+            reject(false);
+        });
+    });
+}
 }
 

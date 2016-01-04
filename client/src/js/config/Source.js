@@ -1,9 +1,10 @@
+/*eslint no-unused-vars:0 */
 "use strict";
 import PouchClient from "../db/PouchClient";
 import CategoryDb from "../config/db/CategoryDb";
 
 export default class Source {
-    constructor(sourceId){
+    constructor(sourceId) {
         this.sourceId = sourceId;
     }
 
@@ -16,23 +17,30 @@ export default class Source {
                     reject(false);
                 } else if(document.categoryIds.length > 1) {
                     document.categoryIds.splice(foundIndex, 1);
-                    PouchClient.updateDocument(document).then(response => {
-                       resolve(true);
-                    });
+                    updateDocument(document);
                 } else {
-                    CategoryDb.deleteSourceWithReference(this.sourceId).then(response => {
-                        resolve(true);
-                    });
+                    deleteSourceWithReference(this.sourceId);
                 }
+            }).catch(error => {
+                reject(false);
             });
+
+            function deleteSourceWithReference(sourceId) {
+                CategoryDb.deleteSourceWithReference(sourceId).then(response => {
+                    resolve(true);
+                }).catch(error => {
+                    reject(false);
+                });
+
+            }
+
+            function updateDocument(document) {
+                PouchClient.updateDocument(document).then(response => {
+                    resolve(true);
+                }).catch(error => {
+                    reject(false);
+                });
+            }
         });
     }
 }
-
-
-function deleteSource() {
-   let s = new Source("A7AE6BD7-0B65-01EF-AE07-DAE4727754E3");
-    s.delete("95fa167311bf340b461ba414f1004074");
-}
-
-window.deleteSource = deleteSource;

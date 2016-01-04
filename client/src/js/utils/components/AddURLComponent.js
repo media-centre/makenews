@@ -2,6 +2,7 @@
 
 "use strict";
 import React, { Component, PropTypes } from "react";
+//import Source from "../../config/Source";
 
 let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
@@ -17,10 +18,9 @@ export default class AddURLComponent extends Component {
         this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
     }
 
-    _deleteUrl() {
-        //props.dispatch(deleteUrl(url, props.categoryId, (response) => {
-            this.setState = { "showUrlInput": false, "errorMessage": "deleted", "successResponse": false };
-        //}));
+    _deleteUrl(sourceId, categoryId) { //eslint-disable-line
+        //let source = new Source(sourceId);
+        //source.delete(categoryId);
     }
 
     _onKeyDownTextBox(event) {
@@ -82,7 +82,7 @@ export default class AddURLComponent extends Component {
                         {this.props.content.map((urlObj, index) =>
                             <li key={index} className="feed-url">
                                 <div className={urlObj.status + " feed"}>{urlObj.url}</div>
-                                <div id="deleteUrlButton" onClick={() => this._deleteUrl()}>
+                                <div id="deleteUrlButton" onClick={() => this._deleteUrl(urlObj._id, this.props.categoryId)}>
                                     <i className="border-blue circle fa fa-close close circle"></i>
                                 </div>
                             </li>
@@ -109,7 +109,8 @@ AddURLComponent.propTypes = {
     "errorMessage": PropTypes.string.isRequired,
     "sourceDomainValidation": PropTypes.func.isRequired,
     "categoryDetailsPageStrings": PropTypes.object.isRequired,
-    "noValidation": PropTypes.bool
+    "noValidation": PropTypes.bool,
+    "categoryId": PropTypes.string.isRequired
 };
 AddURLComponent.defaultProps = {
     "noValidation": false,

@@ -29,4 +29,8 @@ export default class FeedDb {
     static surfFeeds(sourceId) {
         return PouchClient.fetchDocuments("category/surfFeeds", { "include_docs": true, "key": sourceId });
     }
+
+    static sourceParkFeeds(sourceId) {
+        return PouchClient.fetchDocuments("category/sourceParkFeeds", { "include_docs": true, "key": sourceId });
+    }
 }

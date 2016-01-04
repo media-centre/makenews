@@ -1,12 +1,13 @@
-/*eslint max-nested-callbacks:0 */
+/*eslint max-nested-callbacks:0, no-unused-vars:0 */
 "use strict";
 import Source from "../../src/js/config/Source.js";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import sinon from "sinon";
+import { assert } from "chai";
 
 describe("Source", () => {
-    describe.only("delete", () => {
+    describe("delete", () => {
         let sourceId = null, categoryId = null, sourceDocument = null;
         let pouchClientGetDocumentMock = null, categoryDbDeleteSourceWithReference = null, pouchClientUpdateDoucmentMock = null;
         beforeEach("delete", () => {
@@ -56,7 +57,7 @@ describe("Source", () => {
             });
         });
 
-        it.only("update source document by removing the category id if more than one category in the list", (done) => {
+        it("update source document by removing the category id if more than one category in the list", (done) => {
             sourceDocument = {
                 "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
                 "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
@@ -88,5 +89,66 @@ describe("Source", () => {
                 done();
             });
         });
+
+        it("should reject incase of error while fetching the source document", (done) => {
+            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.reject("Error"));
+
+            let source = new Source(sourceId);
+            source.delete(categoryId).catch(error => {
+
+                assert.isFalse(error);
+                pouchClientGetDocumentMock.verify();
+                done();
+            });
+        });
+
+        it("should reject incase of error while updating the source document", (done) => {
+            sourceDocument = {
+                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+                "docType": "source",
+                "sourceType": "twitter",
+                "url": "@balaswecha",
+                "categoryIds": [
+                    "95fa167311bf340b461ba414f1004073", "95fa167311bf340b461ba414f1004074", "95fa167311bf340b461ba414f1004075"
+                ],
+                "status": "valid"
+            };
+            let sourceUpdateDocument = {
+                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+                "docType": "source",
+                "sourceType": "twitter",
+                "url": "@balaswecha",
+                "categoryIds": [
+                    "95fa167311bf340b461ba414f1004073", "95fa167311bf340b461ba414f1004075"
+                ],
+                "status": "valid"
+            };
+            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
+            pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.reject("Failed"));
+            let source = new Source(sourceId);
+            source.delete(categoryId).catch(error => {
+
+                assert.isFalse(error);
+                pouchClientGetDocumentMock.verify();
+                pouchClientUpdateDoucmentMock.verify();
+                done();
+            });
+        });
+
+        it("should reject incase of error while deleting the source document along with the references", (done) => {
+            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
+            categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.reject("response"));
+            let source = new Source(sourceId);
+            source.delete(categoryId).catch(error => {
+
+                assert.isFalse(error);
+                pouchClientGetDocumentMock.verify();
+                categoryDbDeleteSourceWithReference.verify();
+                done();
+            });
+        });
     });
 });
+

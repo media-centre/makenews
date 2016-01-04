@@ -8,7 +8,6 @@ import { highlightedTab } from "./tabs/TabReducers.js";
 import { combineReducers } from "redux";
 import { mainHeaderLocale } from "./main/reducers/MainReducer.js";
 import { parkCounter } from "./feeds/reducers/FeedReducer.js";
-import Source from "./config/Source";
 
 const contentDiscoveryApp = combineReducers({
     login,

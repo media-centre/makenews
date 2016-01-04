@@ -115,5 +115,53 @@ describe("FeedDb", () => {
         });
 
     });
+
+
+    describe("sourceParkFeeds", () => {
+        let sourceId = null, expectedParkFeeds = null;
+        before("sourceParkFeeds", () => {
+            sourceId = "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48";
+            expectedParkFeeds = [{
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Chennai Connect at The Hindu",
+                "feedType": "facebook",
+                "content": "Chennai patient receives heart from brain-dead man in CMC",
+                "status": "park",
+                "tags": [
+                    "Dec 29 2015    7:47:59"
+                ],
+                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
+            }, {
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Timeline Photos",
+                "feedType": "facebook",
+                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                "status": "park",
+                "tags": [
+                    "Dec 29 2015    8:9:17"
+                ],
+                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
+            }];
+        });
+
+        it("should get all park feeds which belongs to some source(url) id", (done) => {
+            let fetchDocumentMock = sinon.mock(PouchClient);
+            fetchDocumentMock.expects("fetchDocuments").withArgs("category/sourceParkFeeds", {
+                "include_docs": true,
+                "key": sourceId
+            }).returns(Promise.resolve(expectedParkFeeds));
+            FeedDb.sourceParkFeeds(sourceId).then((parkFeedDocs) => {
+                assert.strictEqual("Chennai Connect at The Hindu", parkFeedDocs[0].title);
+                fetchDocumentMock.verify();
+                fetchDocumentMock.restore();
+                done();
+            });
+        });
+
+    });
 });
 

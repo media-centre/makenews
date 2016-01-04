@@ -1,4 +1,4 @@
-/* eslint no-underscore-dangle:0, no-unused-vars:0 */
+/* eslint no-underscore-dangle:0, no-unused-vars:0, max-nested-callbacks:0 */
 
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
@@ -154,7 +154,11 @@ export default class CategoryDb {
             PouchClient.getDocument(sourceId).then((sourceDoc) => {
                 PouchClient.deleteDocument(sourceDoc).then((response) => {
                     resolve(response);
+                }).catch(err => {
+                    reject(err);
                 });
+            }).catch(error => {
+                reject(error);
             });
         });
     }
@@ -163,8 +167,16 @@ export default class CategoryDb {
         return new Promise((resolve, reject) => {
             FeedApplicationQueries.deleteSurfFeeds(sourceId).then((surfFeedsResponse) => {
                 CategoryDb.deleteSource(sourceId).then(response => {
-                    resolve(response);
+                    FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).then(parkResponse => {
+                        resolve(parkResponse);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }).catch(err => {
+                    reject(err);
                 });
+            }).catch(error => {
+                reject(error);
             });
         });
     }

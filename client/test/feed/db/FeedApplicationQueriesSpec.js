@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0*/
+/* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0*/
 
 "use strict";
 import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
@@ -211,7 +211,7 @@ describe("FeedApplicationQueries", () => {
     });
 
     describe("deleteSurfFeeds", () => {
-        let sourceId = null, surfFeeds = null;
+        let sourceId = null, surfFeeds = null, deletedSurfFeeds = null;
         before("surfFeeds", () => {
             sourceId = "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48";
             surfFeeds = [{
@@ -237,13 +237,40 @@ describe("FeedApplicationQueries", () => {
                 ],
                 "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
             }];
+
+            deletedSurfFeeds = [{
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Chennai Connect at The Hindu",
+                "feedType": "facebook",
+                "content": "Chennai patient receives heart from brain-dead man in CMC",
+                "_deleted": true,
+                "tags": [
+                    "Dec 29 2015    7:47:59"
+                ],
+                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
+            }, {
+                "docType": "feed",
+                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                "type": "imagecontent",
+                "title": "Timeline Photos",
+                "feedType": "facebook",
+                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                "_deleted": true,
+                "tags": [
+                    "Dec 29 2015    8:9:17"
+                ],
+                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
+            }];
+
         });
 
         it("should delete surf feeds of given source id", (done) => {
             let feedDbSurfFeedsMock = sinon.mock(FeedDb).expects("surfFeeds");
             feedDbSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve(surfFeeds));
             let pouchClientMock = sinon.mock(PouchClient).expects("bulkDocuments");
-            pouchClientMock.withArgs(surfFeeds, { "_deleted": true }).returns(Promise.resolve("surf feeds of given sourceId deleted"));
+            pouchClientMock.withArgs(deletedSurfFeeds).returns(Promise.resolve("surf feeds of given sourceId deleted"));
 
             FeedApplicationQueries.deleteSurfFeeds(sourceId).then((response) => {
 
@@ -272,7 +299,7 @@ describe("FeedApplicationQueries", () => {
             let feedDbSurfFeedsMock = sinon.mock(FeedDb).expects("surfFeeds");
             feedDbSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve(surfFeeds));
             let pouchClientMock = sinon.mock(PouchClient).expects("bulkDocuments");
-            pouchClientMock.withArgs(surfFeeds, { "_deleted": true }).returns(Promise.reject("Invalid Source Id"));
+            pouchClientMock.withArgs(deletedSurfFeeds).returns(Promise.reject("Invalid Source Id"));
 
             FeedApplicationQueries.deleteSurfFeeds(sourceId).catch((error) => {
 
@@ -285,5 +312,123 @@ describe("FeedApplicationQueries", () => {
                 done();
             });
         });
+    });
+
+    describe("removeParkFeedsSourceReference", () => {
+        let sourceId = null, parkFeeds = null, updatedParkFeeds = null;
+        before("removeParkFeedsSourceReference", () => {
+            sourceId = "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48";
+            parkFeeds = [
+                {
+                    "docType": "feed",
+                    "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "park",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
+                },
+                {
+                    "docType": "feed",
+                    "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "park",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd1.net"
+                }
+            ];
+            updatedParkFeeds = [
+                {
+                    "docType": "feed",
+                    "sourceId": "",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "park",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
+                },
+                {
+                    "docType": "feed",
+                    "sourceId": "",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "park",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd1.net"
+                }
+            ];
+        });
+
+        it("should remove the source reference for a park feeds", (done) => {
+            let feedDbSourceparkFeedsMock = sinon.mock(FeedDb).expects("sourceParkFeeds");
+            feedDbSourceparkFeedsMock.withArgs(sourceId).returns(Promise.resolve(parkFeeds));
+            let pouchClientBulkDocuments = sinon.mock(PouchClient).expects("bulkDocuments");
+            pouchClientBulkDocuments.withArgs(updatedParkFeeds).returns(Promise.resolve("success"));
+            FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).then(response => {
+                feedDbSourceparkFeedsMock.verify();
+                pouchClientBulkDocuments.verify();
+                FeedDb.sourceParkFeeds.restore();
+                PouchClient.bulkDocuments.restore();
+                done();
+            });
+        });
+
+        it("should reject with false if there is error while updating bulk documents", (done) => {
+            let feedDbSourceparkFeedsMock = sinon.mock(FeedDb).expects("sourceParkFeeds");
+            feedDbSourceparkFeedsMock.withArgs(sourceId).returns(Promise.resolve(parkFeeds));
+            let pouchClientBulkDocuments = sinon.mock(PouchClient).expects("bulkDocuments");
+            pouchClientBulkDocuments.withArgs(updatedParkFeeds).returns(Promise.reject("Error occured"));
+            FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).catch(error => {
+                feedDbSourceparkFeedsMock.verify();
+                pouchClientBulkDocuments.verify();
+                FeedDb.sourceParkFeeds.restore();
+                PouchClient.bulkDocuments.restore();
+                done();
+            });
+        });
+
+        it("should reject with false if there is an error while fetching the source park feeds", (done) => {
+            let feedDbSourceparkFeedsMock = sinon.mock(FeedDb).expects("sourceParkFeeds");
+            feedDbSourceparkFeedsMock.withArgs(sourceId).returns(Promise.reject("Error occured"));
+
+            FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).catch(error => {
+
+                assert.isFalse(error);
+                feedDbSourceparkFeedsMock.verify();
+                FeedDb.sourceParkFeeds.restore();
+                done();
+            });
+        });
+
+        it("should resolve true if there are no park feeds", (done) => {
+            let feedDbSourceparkFeedsMock = sinon.mock(FeedDb).expects("sourceParkFeeds");
+            feedDbSourceparkFeedsMock.withArgs(sourceId).returns(Promise.resolve([]));
+
+
+            FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).then(response => {
+
+                feedDbSourceparkFeedsMock.verify();
+                FeedDb.sourceParkFeeds.restore();
+                done();
+            });
+        });
+
     });
 });

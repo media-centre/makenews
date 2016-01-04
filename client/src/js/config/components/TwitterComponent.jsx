@@ -27,7 +27,7 @@ export default class TwitterComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation />
+            <AddURLComponent categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation />
         );
     }
 }
@@ -36,6 +36,7 @@ TwitterComponent.displayName = "TwitterComponent";
 TwitterComponent.propTypes = {
     "content": PropTypes.array.isRequired,
     "content.details": PropTypes.array,
-    "categoryDetailsPageStrings": PropTypes.object.isRequired
+    "categoryDetailsPageStrings": PropTypes.object.isRequired,
+    "categoryId": PropTypes.string.isRequired
 };
 
