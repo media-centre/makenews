@@ -3,6 +3,7 @@
 
 import FeedDb from "./FeedDb.js";
 import PouchClient from "../../../js/db/PouchClient";
+import StringUtil from "../../../../../common/src/util/StringUtil.js";
 
 export default class FeedApplicationQueries {
     static fetchAllFeedsWithCategoryName() {
@@ -36,7 +37,11 @@ export default class FeedApplicationQueries {
         let categoryNameMap = FeedApplicationQueries._prepareCategoryNameMap(feedsAndCategoriesDocs);
         feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
             if (feedsAndCategoriesDoc.doc.docType === "feed") {
-                feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.key].join(", ");
+                if(StringUtil.validNonEmptyString(feedsAndCategoriesDoc.doc.sourceId)) {
+                    feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.doc.sourceId].join(", ");
+                } else {
+                    feedsAndCategoriesDoc.doc.categoryNames = "";
+                }
                 feeds.push(feedsAndCategoriesDoc.doc);
             }
         });

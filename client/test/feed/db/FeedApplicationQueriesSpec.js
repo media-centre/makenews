@@ -101,6 +101,7 @@ describe("FeedApplicationQueries", () => {
                 "doc": {
                     "docType": "category",
                     "name": "Sports",
+                    "sourceId": "fbId1",
                     "_id": "sportsCategoryId1",
                     "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
                 }
@@ -153,6 +154,55 @@ describe("FeedApplicationQueries", () => {
                 "status": "park",
                 "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
                 "categoryNames": "Sports, Politics"
+            }];
+
+            let fetchParkFeedssMock = sinon.mock(FeedDb).expects("fetchParkFeeds");
+            fetchParkFeedssMock.returns(Promise.resolve(resultDocs));
+            return FeedApplicationQueries.fetchAllParkedFeeds().then(sources => {
+                expect(expectedSources).to.deep.equal(sources);
+                fetchParkFeedssMock.verify();
+                FeedDb.fetchParkFeeds.restore();
+            });
+        });
+
+        it("should append category name as empty if the parked feeds does not have the source id", () => {
+            let resultDocs = [{
+                "key": "",
+                "id": "feedId2",
+                "value": "rssId1",
+                "doc": {
+                    "docType": "feed",
+                    "status": "park",
+                    "title": "tn",
+                    "description": "www.facebookpolitics.com",
+                    "sourceId": "",
+                    "_id": "feedId2",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
+                }
+            }, {
+                "key": "rssId1",
+                "id": "rssId1",
+                "value": {
+                    "_id": "sportsCategoryId1"
+                },
+                "doc": {
+                    "docType": "category",
+                    "name": "Sports",
+                    "_id": "sportsCategoryId1",
+                    "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
+                }
+            }];
+
+
+            let expectedSources = [{
+                "docType": "feed",
+                "title": "tn",
+                "description": "www.facebookpolitics.com",
+                "sourceId": "",
+                "_id": "feedId2",
+                "status": "park",
+                "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                "categoryNames": ""
             }];
 
             let fetchParkFeedssMock = sinon.mock(FeedDb).expects("fetchParkFeeds");
