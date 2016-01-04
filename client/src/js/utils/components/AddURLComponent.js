@@ -3,6 +3,8 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import Source from "../../config/Source";
+import ConfirmPopup from "./ConfirmPopup/ConfirmPopup";
+import { populateCategoryDetailsAsync } from "../../config/actions/CategoryActions.js";
 
 let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
@@ -11,16 +13,27 @@ export default class AddURLComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { "showUrlInput": false, "errorMessage": this.props.errorMessage, "successResponse": false };
+        this.state = { "showUrlInput": false, "errorMessage": this.props.errorMessage, "successResponse": false, "showCustomPopup": false };
     }
 
     _showAddUrlTextBox() {
         this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
     }
 
-    _deleteUrl(sourceId, categoryId) { //eslint-disable-line
-        let source = new Source(sourceId);
-        source.delete(categoryId);
+    _showConfirmPopup(sourceId) {
+        this.setState({ "showCustomPopup": true, "currentSourceId": sourceId });
+    }
+
+    handleDeleteClick(event) {
+        if(event.OK) {
+            let source = new Source(this.state.currentSourceId);
+            source.delete(this.props.categoryId).then(()=> {
+                this.props.dispatch(populateCategoryDetailsAsync(this.props.categoryId));
+                this.setState({ "showCustomPopup": false, "successResponse": true, "errorMessage": "Url successfully deleted" });
+            }).catch(()=> {
+                this.setState({ "showCustomPopup": false, "successResponse": false, "errorMessage": "Url deletion failed" });
+            });
+        }
     }
 
     _onKeyDownTextBox(event) {
@@ -59,7 +72,7 @@ export default class AddURLComponent extends Component {
 
     render() {
 
-        let inputBox = null;
+        let inputBox = null, confirmPopup = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
@@ -69,6 +82,7 @@ export default class AddURLComponent extends Component {
             );
         }
 
+        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"Are you sure want to delete this?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>
@@ -82,7 +96,7 @@ export default class AddURLComponent extends Component {
                         {this.props.content.map((urlObj, index) =>
                             <li key={index} className="feed-url">
                                 <div className={urlObj.status + " feed"}>{urlObj.url}</div>
-                                <div id="deleteUrlButton" onClick={() => this._deleteUrl(urlObj._id, this.props.categoryId)}>
+                                <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj._id)}>
                                     <i className="border-blue circle fa fa-close close circle"></i>
                                 </div>
                             </li>
@@ -93,6 +107,8 @@ export default class AddURLComponent extends Component {
                     <div className={this.state.successResponse ? "add-url-status success-message" : "add-url-status error-message"}>{this.state.errorMessage}</div>
 
                 </div>
+
+                {confirmPopup}
 
             </div>
 
@@ -110,7 +126,8 @@ AddURLComponent.propTypes = {
     "sourceDomainValidation": PropTypes.func.isRequired,
     "categoryDetailsPageStrings": PropTypes.object.isRequired,
     "noValidation": PropTypes.bool,
-    "categoryId": PropTypes.string.isRequired
+    "categoryId": PropTypes.string.isRequired,
+    "dispatch": PropTypes.func
 };
 AddURLComponent.defaultProps = {
     "noValidation": false,

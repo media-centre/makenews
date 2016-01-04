@@ -19,7 +19,7 @@ export default class RSSComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
+            <AddURLComponent dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
         );
     }
 }
@@ -29,6 +29,7 @@ RSSComponent.propTypes = {
     "content": PropTypes.array.isRequired,
     "content.details": PropTypes.array,
     "categoryDetailsPageStrings": PropTypes.object.isRequired,
-    "categoryId": PropTypes.string.isRequired
+    "categoryId": PropTypes.string.isRequired,
+    "dispatch": PropTypes.func.isRequired
 };
 
