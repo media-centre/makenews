@@ -484,7 +484,7 @@ describe("CategoryDb", () => {
                 CategoryDb.deleteSource.restore();
                 FeedApplicationQueries.deleteSurfFeeds.restore();
                 FeedApplicationQueries.removeParkFeedsSourceReference.restore();
-                 done();
+                done();
             });
         });
 
@@ -504,7 +504,7 @@ describe("CategoryDb", () => {
                 CategoryDb.deleteSource.restore();
                 FeedApplicationQueries.deleteSurfFeeds.restore();
                 FeedApplicationQueries.removeParkFeedsSourceReference.restore();
-                  done();
+                done();
             });
         });
 
