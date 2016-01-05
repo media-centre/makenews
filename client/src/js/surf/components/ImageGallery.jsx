@@ -5,6 +5,7 @@ import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import Spinner from "../../utils/components/Spinner.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
+import getHtmlContent from "../../utils/HtmContent.js";
 
 export default class ImageGallery extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ export default class ImageGallery extends Component {
 
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
 
-        let description = this.props.category.content ? <p className="surf-description">{this.props.category.content}</p> : null;
+        let description = this.props.category.content ? <p className="surf-description">{getHtmlContent(this.props.category.content)}</p> : null;
         return (
             <div className="image-gallery" style={feedStyle}>
                 <a target="_blank" href={this.props.category.link}>
