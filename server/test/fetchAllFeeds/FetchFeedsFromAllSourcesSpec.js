@@ -175,7 +175,6 @@ describe("FetchFeedsFromAllSources", () => {
                     ],
                     "facebookAccessToken": "test_token"
                 }
-
             };
             let response = mockResponse();
 
