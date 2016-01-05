@@ -6,26 +6,39 @@ import PouchDB from "pouchdb";
 
 export default class DbSession {
     static instance() {
-        if(!this.db) {
-            let dbParameters = DbParameters.instance();
-            if(dbParameters.type() !== "PouchDB") {
-                throw new Error("Unsupported database " + dbParameters.type());
+        return new Promise((resolve, reject) => {
+            if(this.db) {
+                resolve(this.db);
+            } else {
+                let dbParameters = DbParameters.instance();
+
+                new PouchDB(dbParameters.getLocalDb(), { "auto_compaction": "true" }).then(session => {
+                    this.db = session;
+                    DbSession.sync();
+                    resolve(this.db);
+                }).catch(error => {
+                    new PouchDB(dbParameters.getRemoteDb()).then(session => {
+                        this.db = session;
+                        resolve(session);
+                    });
+                });
             }
-            this.db = new PouchDB(dbParameters.getLocalDb());
-        }
-        return this.db;
+        });
     }
 
     static clearInstance() {
         this.db = null;
         DbParameters.instance().clearInstance();
+        if(this.currentSyn) {
+            this.currentSyn.cancel();
+            this.currentSyn = null;
+        }
     }
 
     static sync() {
-        DbSession.instance();
-
         if(this.currentSyn) {
             this.currentSyn.cancel();
+            this.currentSyn = null;
         }
         let dbParameters = DbParameters.instance();
         this.currentSyn = PouchDB.sync(dbParameters.getLocalDb(), dbParameters.getRemoteDb(), {

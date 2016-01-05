@@ -44,12 +44,16 @@ describe("DbSession", () => {
     });
 
     describe("instance", () => {
-        it("should create the new pouch db instance for the first time", () => {
+        it("should create the new pouch db instance", (done) => {
+            DbSession.clearInstance();
             dbParametesMock.expects("instance").atLeast(1).returns(parametersFake);
-
-            assert.isDefined(DbSession.instance());
-            assert.isDefined(DbSession.instance());
-            assert.isDefined(DbSession.instance());
+            let dbSessionSyncMock = sinon.mock(DbSession).expects("sync");
+            DbSession.instance().then(session => {
+                assert.isDefined(session);
+                dbSessionSyncMock.verify();
+                DbSession.sync.restore();
+                done();
+            });
         });
     });
 

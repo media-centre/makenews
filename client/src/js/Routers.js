@@ -52,5 +52,5 @@ function showLoginPage(nextState, replaceState) {
 
 function dbSync() {
     DbParameters.instance().setLocalDb(localStorage.getItem("userInfo"));
-    DbSession.sync();
+    DbSession.instance();
 }

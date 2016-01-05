@@ -11,52 +11,65 @@ import sinon from "sinon";
 describe("PouchClient", () => {
     let parkFeed = null, surfFeed = null;
     before("PouchClient", () => {
-        let pouch = new PouchDB("myDB", { "db": require("memdown") });
-        sinon.stub(DbSession, "instance", () => {
-            return pouch;
+        let pouch = new PouchDB("myDB", {"db": require("memdown")});
+        sinon.stub(DbSession, "instance").returns(Promise.resolve(pouch));
+
+        DbSession.instance().then(session => {
+            session.put({
+                "docType": "category",
+                "name": "Long Title",
+                "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5",
+                "_rev": "14-a050422e3a9367aa519109443f86810c"
+            });
         });
 
-        DbSession.instance().put({
-            "docType": "category",
-            "name": "Long Title",
-            "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5",
-            "_rev": "14-a050422e3a9367aa519109443f86810c"
+        DbSession.instance().then(session => {
+            session.put({
+                    "docType": "category",
+                    "name": "Sports"
+                }
+                , "sportsCategoryId1");
         });
 
-        DbSession.instance().put({
-            "docType": "category",
-            "name": "Sports"
-        }
-            , "sportsCategoryId1");
-        DbSession.instance().put({
-            "docType": "category",
-            "name": "Politics"
-        }
-            , "politicsCategoryId2");
+        DbSession.instance().then(session => {
+            session.put({
 
-        DbSession.instance().put({
-            "docType": "source",
-            "sourceType": "rss",
-            "url": "www.hindu.com/rss",
-            "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
-        }
-            , "rssId1");
+                    "docType": "category",
+                    "name": "Politics"
+                }
+                , "politicsCategoryId2");
+        });
 
-        DbSession.instance().put({
-            "docType": "source",
-            "sourceType": "facebook",
-            "url": "www.facebooksports.com",
-            "categoryIds": ["sportsCategoryId1"]
-        }
-            , "fbId1");
+        DbSession.instance().then(session => {
+            session.put({
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.hindu.com/rss",
+                    "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
+                }
+                , "rssId1");
+        });
 
-        DbSession.instance().put({
-            "docType": "source",
-            "sourceType": "rss",
-            "url": "www.facebookpolitics.com",
-            "categoryIds": ["politicsCategoryId2"]
-        }
-            , "rssId2");
+        DbSession.instance().then(session => {
+            session.put({
+
+                    "docType": "source",
+                    "sourceType": "facebook",
+                    "url": "www.facebooksports.com",
+                    "categoryIds": ["sportsCategoryId1"]
+                }
+                , "fbId1");
+        });
+
+        DbSession.instance().then(session => {
+            session.put({
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.facebookpolitics.com",
+                    "categoryIds": ["politicsCategoryId2"]
+                }
+                , "rssId2");
+        });
 
         surfFeed = {
             "docType": "feed",
@@ -64,8 +77,11 @@ describe("PouchClient", () => {
             "description": "www.facebookpolitics.com",
             "sourceId": "rssId1"
         };
-        DbSession.instance().put(surfFeed
-            , "feedId1");
+
+        DbSession.instance().then(session => {
+            session.put(surfFeed
+                , "feedId1");
+        });
 
         parkFeed = {
             "docType": "feed",
@@ -74,41 +90,45 @@ describe("PouchClient", () => {
             "sourceId": "fbId1",
             "status": "park"
         };
-        DbSession.instance().put(parkFeed, "feedId2");
+        DbSession.instance().then(session => {
+            session.put(parkFeed, "feedId2");
+        });
 
-        DbSession.instance().put({
-            "language": "javascript",
-            "views": {
-                "allCategories": {
-                    "map": "function(doc) { if(doc.docType == 'category') {emit(doc.docType, doc)} }"
-                },
-                "allCategoriesByName": {
-                    "map": "function(doc) { if(doc.docType == 'category') {emit(doc.name, doc)} }"
-                },
-                "sourceConfigurations": {
-                    "map": "function(doc) { if(doc.docType == 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
-                },
-                "allSourcesByUrl": {
-                    "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
-                },
-                "allFeedsAndCategoriesWithSource": {
-                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.sourceId, null);}}"
-                },
-                "parkedFeeds": {
-                    "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, null);}}"
-                },
-                "parkedFeedsCount": {
-                    "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",
-                    "reduce": "_count"
-                },
-                "surfFeeds": {
-                    "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) { emit(doc.sourceId, doc);}}"
-                },
-                "sourceParkFeeds": {
-                    "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
+        DbSession.instance().then(session => {
+            session.put({
+                "language": "javascript",
+                "views": {
+                    "allCategories": {
+                        "map": "function(doc) { if(doc.docType == 'category') {emit(doc.docType, doc)} }"
+                    },
+                    "allCategoriesByName": {
+                        "map": "function(doc) { if(doc.docType == 'category') {emit(doc.name, doc)} }"
+                    },
+                    "sourceConfigurations": {
+                        "map": "function(doc) { if(doc.docType == 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
+                    },
+                    "allSourcesByUrl": {
+                        "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
+                    },
+                    "allFeedsAndCategoriesWithSource": {
+                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.sourceId, null);}}"
+                    },
+                    "parkedFeeds": {
+                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, null);}}"
+                    },
+                    "parkedFeedsCount": {
+                        "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",
+                        "reduce": "_count"
+                    },
+                    "surfFeeds": {
+                        "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) { emit(doc.sourceId, doc);}}"
+                    },
+                    "sourceParkFeeds": {
+                        "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
+                    }
                 }
-            }
-        }, "_design/category");
+            }, "_design/category");
+        });
     });
 
     after("PouchClient", () => {

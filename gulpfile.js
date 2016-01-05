@@ -199,6 +199,11 @@ gulp.task("common:test-eslint", function() {
 });
 
 gulp.task("common:build", ["common:copy-js"]);
+gulp.task("common:clean", function() {
+    return gulp.src(parameters.common.distFolder, { "read": false })
+        .pipe(clean());
+});
+
 gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
 gulp.task("common:checkin-ready", ["common:eslint", "common:test"]);
 
@@ -322,7 +327,7 @@ gulp.task("list", (cb) => {
 });
 
 gulp.task("build", ["common:build", "client:build", "server:build"]);
-gulp.task("clean", ["client:clean", "server:clean"]);
+gulp.task("clean", ["client:clean", "common:clean", "server:clean"]);
 gulp.task("test", function(callback) {
     runSequence("common:test", "client:test", "server:test", callback);
 });
