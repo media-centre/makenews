@@ -11,7 +11,7 @@ import sinon from "sinon";
 describe("PouchClient", () => {
     let parkFeed = null, surfFeed = null;
     before("PouchClient", () => {
-        let pouch = new PouchDB("myDB", {"db": require("memdown")});
+        let pouch = new PouchDB("myDB", { "db": require("memdown") });
         sinon.stub(DbSession, "instance").returns(Promise.resolve(pouch));
 
         DbSession.instance().then(session => {
@@ -25,49 +25,49 @@ describe("PouchClient", () => {
 
         DbSession.instance().then(session => {
             session.put({
-                    "docType": "category",
-                    "name": "Sports"
-                }
+                "docType": "category",
+                "name": "Sports"
+            }
                 , "sportsCategoryId1");
         });
 
         DbSession.instance().then(session => {
             session.put({
 
-                    "docType": "category",
-                    "name": "Politics"
-                }
+                "docType": "category",
+                "name": "Politics"
+            }
                 , "politicsCategoryId2");
         });
 
         DbSession.instance().then(session => {
             session.put({
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.hindu.com/rss",
-                    "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
-                }
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.hindu.com/rss",
+                "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
+            }
                 , "rssId1");
         });
 
         DbSession.instance().then(session => {
             session.put({
 
-                    "docType": "source",
-                    "sourceType": "facebook",
-                    "url": "www.facebooksports.com",
-                    "categoryIds": ["sportsCategoryId1"]
-                }
+                "docType": "source",
+                "sourceType": "facebook",
+                "url": "www.facebooksports.com",
+                "categoryIds": ["sportsCategoryId1"]
+            }
                 , "fbId1");
         });
 
         DbSession.instance().then(session => {
             session.put({
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.facebookpolitics.com",
-                    "categoryIds": ["politicsCategoryId2"]
-                }
+                "docType": "source",
+                "sourceType": "rss",
+                "url": "www.facebookpolitics.com",
+                "categoryIds": ["politicsCategoryId2"]
+            }
                 , "rssId2");
         });
 
@@ -395,21 +395,23 @@ describe("PouchClient", () => {
 
     describe("deleteDocument", () => {
         it("should delete the given document", (done) => {
-            DbSession.instance().put({
-                "docType": "source",
-                "sourceType": "rss",
-                "url": "www.facebookpolitics.com",
-                "categoryIds": ["politicsCategoryId2"]
-            }
-                , "deleteId1").then(putResponse => {
-                    DbSession.instance().get("deleteId1").then(document => {
-                        PouchClient.deleteDocument(document).then((response) => {
-                            assert.isTrue(response.ok);
-                            assert.strictEqual("deleteId1", response.id);
-                            done();
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.facebookpolitics.com",
+                    "categoryIds": ["politicsCategoryId2"]
+                }
+                    , "deleteId1").then(putResponse => {
+                        session.get("deleteId1").then(document => {
+                            PouchClient.deleteDocument(document).then((response) => {
+                                assert.isTrue(response.ok);
+                                assert.strictEqual("deleteId1", response.id);
+                                done();
+                            });
                         });
                     });
-                });
+            });
         });
 
         it("should reject with an error while deleting the document", (done) => {
@@ -431,45 +433,52 @@ describe("PouchClient", () => {
 
     describe("surfFeeds", () => {
         before("surfFeeds", () => {
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "Chennai Connect at The Hindu",
-                "feedType": "facebook",
-                "content": "Chennai patient receives heart from brain-dead man in CMC",
-                "tags": [
-                    "Dec 29 2015    7:47:59"
-                ],
-                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
-            }, "S163974433696568_968907333203270");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
+                }, "S163974433696568_968907333203270");
+            });
 
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "Timeline Photos",
-                "feedType": "facebook",
-                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
-                "tags": [
-                    "Dec 29 2015    8:9:17"
-                ],
-                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
-            }, "S163974433696568_968914649869205");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Timeline Photos",
+                    "feedType": "facebook",
+                    "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                    "tags": [
+                        "Dec 29 2015    8:9:17"
+                    ],
+                    "url": "https://fbcdn-photos-h-a.akamaihd.net"
+                }, "S163974433696568_968914649869205");
+            });
 
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "1BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "The Hindu Lit for Life",
-                "feedType": "facebook",
-                "content": "Register for The Hindu Lit for Life 2016 soon!",
-                "tags": [
-                    "Dec 29 2015    14:32:13"
-                ],
-                "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
-            }, "S163974433696568_969041863189817");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "1BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "The Hindu Lit for Life",
+                    "feedType": "facebook",
+                    "content": "Register for The Hindu Lit for Life 2016 soon!",
+                    "tags": [
+                        "Dec 29 2015    14:32:13"
+                    ],
+                    "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
+                }, "S163974433696568_969041863189817");
+            });
         });
+
         it("should fetch all surf feeds ", (done) => {
             PouchClient.fetchDocuments("category/surfFeeds", {
                 "include_docs": true,
@@ -484,46 +493,52 @@ describe("PouchClient", () => {
 
     describe("sourceParkFeeds", () => {
         before("sourceParkFeeds", () => {
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "Chennai Connect at The Hindu",
-                "feedType": "facebook",
-                "content": "Chennai patient receives heart from brain-dead man in CMC",
-                "status": "park",
-                "tags": [
-                    "Dec 29 2015    7:47:59"
-                ],
-                "url": "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-xpl1/v/t1.0-0/s130x130/10402743_1012773958745185_3635117216496008201_n.jpg?oh=6654df3ae8d6a2accce78a8d39bd0e22&oe=5709CE3C&__gda__=1459644057_ac6d4414114d43b6cf927a34ba7e5612"
-            }, "P163974433696568_968907333203270");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "park",
+                    "tags": [
+                        "Dec 29 2015    7:47:59"
+                    ],
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
+                }, "P163974433696568_968907333203270");
+            });
 
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "Timeline Photos",
-                "feedType": "facebook",
-                "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
-                "tags": [
-                    "Dec 29 2015    8:9:17"
-                ],
-                "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
-            }, "P163974433696568_968914649869205");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Timeline Photos",
+                    "feedType": "facebook",
+                    "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                    "tags": [
+                        "Dec 29 2015    8:9:17"
+                    ],
+                    "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
+                }, "P163974433696568_968914649869205");
+            });
 
-            DbSession.instance().put({
-                "docType": "feed",
-                "sourceId": "2BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
-                "type": "imagecontent",
-                "title": "The Hindu Lit for Life",
-                "feedType": "facebook",
-                "content": "Register for The Hindu Lit for Life 2016 soon!",
-                "tags": [
-                    "Dec 29 2015    14:32:13"
-                ],
-                "status": "park",
-                "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
-            }, "P163974433696568_969041863189817");
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "feed",
+                    "sourceId": "2BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "The Hindu Lit for Life",
+                    "feedType": "facebook",
+                    "content": "Register for The Hindu Lit for Life 2016 soon!",
+                    "tags": [
+                        "Dec 29 2015    14:32:13"
+                    ],
+                    "status": "park",
+                    "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
+                }, "P163974433696568_969041863189817");
+            });
         });
         it("should fetch all surf feeds ", (done) => {
             PouchClient.fetchDocuments("category/sourceParkFeeds", {
