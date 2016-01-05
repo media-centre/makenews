@@ -74,13 +74,17 @@ export default class AddURLComponent extends Component {
 
     render() {
 
-        let inputBox = null, confirmPopup = null;
+        let inputBox = null, confirmPopup = null, exampleMessageDivision = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
-                    <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder="Enter url here" onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
+                    <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
+            );
+
+            exampleMessageDivision = (
+                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
             );
         }
 
@@ -105,6 +109,7 @@ export default class AddURLComponent extends Component {
                         )}
                     </ul>
 
+                    {exampleMessageDivision}
                     {inputBox}
                     <div className={this.state.successResponse ? "add-url-status success-message" : "add-url-status error-message"}>{this.state.errorMessage}</div>
 
@@ -129,7 +134,9 @@ AddURLComponent.propTypes = {
     "categoryDetailsPageStrings": PropTypes.object.isRequired,
     "noValidation": PropTypes.bool,
     "categoryId": PropTypes.string.isRequired,
-    "dispatch": PropTypes.func
+    "dispatch": PropTypes.func,
+    "exampleMessage": PropTypes.string.isRequired,
+    "hintMessage": PropTypes.string.isRequired
 };
 AddURLComponent.defaultProps = {
     "noValidation": false,

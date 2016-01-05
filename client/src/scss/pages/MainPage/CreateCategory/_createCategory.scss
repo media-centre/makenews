@@ -1,7 +1,7 @@
 @import "../../../utils/variable";
 
 .url-panel {
-  margin: 10px 0px;
+  margin: 10px 0;
 
   input.add-url-input.error-border {
     border: 1px solid $error-border-color !important;
@@ -55,7 +55,7 @@
 
   .add-url-input {
     width: 100%;
-    margin: 3px 0px;
+    margin: 3px 0;
     padding-left: 16px;
   }
 
@@ -69,8 +69,14 @@
   .success-message {
     color: $success-color;
   }
+  .example-url {
+    font-size: $small-font-size;
+    font-style: italic;
+    color: $example-url-color;
+    margin-left: 18px
+  }
 
   .spinner-msg {
-    padding: 0px 16px;
+    padding: 0 16px;
   }
 }

@@ -3,7 +3,7 @@
 .navigation-header {
     .navigation-title {
       color: $medium-gray-color;
-      margin: 0px 135px 0px 135px;
+      margin: 0 135px 0 135px;
       font-size: $large-font-size;
       outline: none;
     }
@@ -15,7 +15,7 @@
     .delete-category {
       border: none;
       color: $app-header-bg-color;
-      padding: 6px 0px;
+      padding: 6px 0;
     }
 
     .title-status {

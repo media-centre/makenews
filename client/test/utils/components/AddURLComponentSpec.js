@@ -25,7 +25,7 @@ describe("AddURLComponent", () => {
 
     before("TabComponent", () => {
         AddURLComponentElement = TestUtils.renderIntoDocument(
-            <AddURLComponent addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })} categoryDetailsPageStrings={categoryDetailsPageStrings}/> //eslint-disable-line max-len
+            <AddURLComponent exampleMessage="Example: thehindu.com/opinion/?service=rss" hintMessage = "Please enter RSS URL here" addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })} categoryDetailsPageStrings={categoryDetailsPageStrings}/> //eslint-disable-line max-len
         );
     });
 
@@ -120,6 +120,14 @@ describe("AddURLComponent", () => {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
         TestUtils.Simulate.click(addUrlDom.querySelector("#deleteUrlButton"));
         expect(false).to.eq(AddURLComponentElement.state.showUrlInput);
+    });
+
+    it("should display example message on clicking addUrlButton", () => {
+        let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
+        assert.isDefined(AddURLComponentElement.refs.exampleText, "Defined");
+        expect("Please enter RSS URL here").to.eq(AddURLComponentElement.props.hintMessage);
+        expect("Example: thehindu.com/opinion/?service=rss").to.eq(AddURLComponentElement.props.exampleMessage);
     });
 
 });

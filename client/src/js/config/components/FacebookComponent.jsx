@@ -9,7 +9,7 @@ export default class FacebookComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "" };
+        this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama/" };
     }
 
     _validateUrl(url, callback, props) {
@@ -24,7 +24,7 @@ export default class FacebookComponent extends Component {
     }
     render() {
         return (
-            <AddURLComponent dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
+            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
         );
     }
 }
