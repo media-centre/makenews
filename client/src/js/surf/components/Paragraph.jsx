@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import { parkFeed } from "../../feeds/actions/FeedsActions.js";
+import getHtmlContent from "../../utils/HtmContent.js";
 
 export default class Paragraph extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class Paragraph extends Component {
             <div style={feedStyle}>
             <a target="_blank" href={this.props.category.link}>
                 <div className="title">{this.props.category.title}</div>
-                <p className="surf-description">{this.props.category.content}</p>
+                <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>
             </a>
                 {header}
             </div>
