@@ -123,6 +123,29 @@ describe("addRssUrlAsync", () => {
         });
     });
 
+    it("should create rss source with latestFeedTimeStamp from the feed response", (done) => {
+        let type = "rss";
+        let categoryId = "categoryId";
+        let url = "www.hindu.com";
+        let allSources = [{ "url": url, "docType": "sources" }];
+        let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-06T02:15:53.000Z" }, { "title": "cricket", "pubDate": "2016-01-05T02:15:53.000Z" }] };
+        let sourceId = "sourceId";
+        ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
+
+        sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        let categoriesApplicationQueriesMock = sandbox.mock(CategoriesApplicationQueries).expects("addUrlConfiguration");
+        categoriesApplicationQueriesMock.withArgs(categoryId, type, url, STATUS_VALID, "Jan 6, 2016 2:15 AM").returns(Promise.resolve({ "id": sourceId, "ok": true }));
+        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+        categoriesApplicationQueriesCreateFeedsMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
+
+        let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
+        const store = mockStore(categorySourceConfig, expectedActions, done);
+        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
+            categoriesApplicationQueriesMock.verify();
+            categoriesApplicationQueriesCreateFeedsMock.verify();
+        });
+    });
+
     afterEach("After", () => {
         ajaxInstanceMock.verify();
         ajaxGetMock.verify();
@@ -157,7 +180,8 @@ describe("addTwitterUrlAsync", () => {
     it("should create twitter document with valid status on successful fetch", (done) => {
         let allSources = [{ "url": url, "docType": "sources" }];
 
-        let twitterFeed = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, { "id": 2, "id_str": "124", "text": "Tweet 2" }] };
+        let twitterFeed = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": "2016-01-06T02:15:53.000Z" }, { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": "2016-01-05T02:15:53.000Z" }] };
+
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(twitterFeed));
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let categoryDbMock = sandbox.mock(CategoryDb).expects("createOrUpdateSource");
