@@ -13,7 +13,11 @@ export default class RssClient {
 
     fetchRssFeeds(url) {
         return new Promise((resolve, reject) => {
-            let requestToUrl = request(url);
+            let requestToUrl = request.get({
+                "uri": url,
+                "timeout": 2000
+            });
+
             requestToUrl.on("error", (error) => {
                 logger.warn("Request failed for %s", url, error);
                 reject({ "message": "Request failed for " + url });

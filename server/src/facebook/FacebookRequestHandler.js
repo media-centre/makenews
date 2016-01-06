@@ -2,7 +2,7 @@
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import FacebookClient from "./FacebookClient.js";
 import CryptUtil from "../../src/util/CryptUtil.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 
 export default class FacebookRequestHandler {
 
@@ -40,7 +40,6 @@ export default class FacebookRequestHandler {
     }
 
     appSecretKey() {
-        let facebookConfig = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebook");
-        return facebookConfig.appSecretKey;
+        return ApplicationConfig.instance().facebook().appSecretKey;
     }
 }

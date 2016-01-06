@@ -13,7 +13,7 @@ import nock from "nock";
 
 describe("CreateCategoryDesignDocument", ()=> {
     let designDocument = null, response = null, accessToken = "YWRtaW46NTY3MzlGNDM6qVNIU4P7LcqONOyTkyVcTXVaAZ8", dbName = "test1";
-    let migrationLoggerStub = null;
+    let migrationLoggerStub = null, applicationConfig = null;
     before("CreateCategoryDesignDocument", () => {
         migrationLoggerStub = sinon.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
@@ -24,10 +24,15 @@ describe("CreateCategoryDesignDocument", ()=> {
             "debug": (message, ...insertions)=> {
             }
         });
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
     });
 
     after("CreateCategoryDesignDocument", () => {
         Migration.logger.restore();
+        ApplicationConfig.instance.restore();
+        applicationConfig.dbUrl.restore();
     });
     describe("up", () => {
 
@@ -51,17 +56,12 @@ describe("CreateCategoryDesignDocument", ()=> {
                 .put("/" + dbName + "/_design/category", designDocument)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let appEnvMock = sinon.mock(ApplicationConfig).expects("dbUrl");
-            appEnvMock.returns("http://localhost:5984");
-
             let designDocumentInstance = new CreateCategoryDesignDocument(dbName, accessToken);
             let getDocumentStub = sinon.stub(designDocumentInstance, "getDocument");
             getDocumentStub.returns(designDocument);
 
             designDocumentInstance.up().then((actualResponse)=> {
                 assert.deepEqual(response, actualResponse);
-                appEnvMock.verify();
-                ApplicationConfig.dbUrl.restore();
                 designDocumentInstance.getDocument.restore();
                 done();
             });
@@ -74,16 +74,11 @@ describe("CreateCategoryDesignDocument", ()=> {
                 .put("/" + dbName + "/_design/category", designDocument)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let appEnvMock = sinon.mock(ApplicationConfig).expects("dbUrl");
-            appEnvMock.returns("http://localhost:5984");
-
             let designDocumentInstance = new CreateCategoryDesignDocument(dbName, accessToken);
             let getDocumentStub = sinon.stub(designDocumentInstance, "getDocument");
             getDocumentStub.returns(designDocument);
 
             designDocumentInstance.up().catch(() => {
-                appEnvMock.verify();
-                ApplicationConfig.dbUrl.restore();
                 designDocumentInstance.getDocument.restore();
                 done();
             });

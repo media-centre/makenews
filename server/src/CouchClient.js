@@ -14,12 +14,13 @@ export default class CouchClient {
     constructor(dbName, accessToken) {
         this.dbName = dbName;
         this.accessToken = accessToken;
+        this.dbUrl = ApplicationConfig.instance().dbUrl();
     }
 
     saveDocument(documentId, documentObj) {
         return new Promise((resolve, reject) => {
             request.put({
-                "uri": ApplicationConfig.dbUrl() + "/" + this.dbName + "/" + documentId,
+                "uri": this.dbUrl + "/" + this.dbName + "/" + documentId,
                 "headers": {
                     "Cookie": "AuthSession=" + this.accessToken,
                     "Content-Type": "application/json",
@@ -45,7 +46,7 @@ export default class CouchClient {
     static getAllDbs() {
         return new Promise((resolve, reject) => {
             request.get({
-                "uri": ApplicationConfig.dbUrl() + "/_all_dbs"
+                "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
             },
             (error, response) => {
                 if(NodeErrorHandler.noError(error)) {

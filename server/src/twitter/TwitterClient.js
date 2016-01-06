@@ -2,11 +2,10 @@
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import Logger from "../logging/Logger.js";
 
-export const baseURL = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("twitterURL"),
-    searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
+export const searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
 let logger = Logger.instance();
 export default class TwitterClient {
 
@@ -20,10 +19,11 @@ export default class TwitterClient {
     fetchTweets(url) {
         return new Promise((resolve, reject) => {
             let options = {
-                "uri": baseURL + searchApi, "qs": { "q": url + searchParams }, "json": true,
+                "uri": this._baseUrl() + searchApi, "qs": { "q": url + searchParams }, "json": true,
                 "headers": {
                     "Authorization": this.bearerToken
-                }
+                },
+                "timeout": this._timeOut()
             };
             request.get(options, (error, response, body) => {
                 if(NodeErrorHandler.noError(error)) {
@@ -39,5 +39,13 @@ export default class TwitterClient {
                 }
             });
         });
+    }
+
+    _baseUrl() {
+        return ApplicationConfig.instance().twitter().url;
+    }
+
+    _timeOut() {
+        return ApplicationConfig.instance().twitter().timeOut;
     }
 }

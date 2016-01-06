@@ -12,7 +12,7 @@ export default class CouchSession {
   static login(username, password) {
       return new Promise((resolve, reject) => {
           request.post({
-              "uri": ApplicationConfig.dbUrl() + "/_session",
+              "uri": ApplicationConfig.instance().dbUrl() + "/_session",
               "headers": { "content-type": "application/x-www-form-urlencoded" },
               "body": querystring.stringify({ "name": username, "password": password })
           },
@@ -28,7 +28,7 @@ export default class CouchSession {
   static authenticate(token) {
       return new Promise((resolve, reject) => {
           request.get({
-              "url": ApplicationConfig.dbUrl() + "/_session",
+              "url": ApplicationConfig.instance().dbUrl() + "/_session",
               "headers": {
                   "Cookie": "AuthSession=" + token
               }

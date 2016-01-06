@@ -65,3 +65,9 @@
 {"level":"warn","message":"myTest, is not a valid twitter handler","timestamp":"2015-12-28T09:22:59.163Z"}
 {"level":"warn","message":"myTest, is not a valid twitter handler","timestamp":"2015-12-28T09:22:59.166Z"}
 {"level":"warn","message":"Request failed for twitter handler myTest1,Error: request failed","timestamp":"2015-12-28T09:22:59.168Z"}
+{"level":"warn","message":"http://www.google.com/users,Not a feed is not a proper feed","timestamp":"2016-01-06T20:15:29.302Z"}
+{"level":"warn","message":"Request failed for http://www.test1.com/cricket/,Error: Nock: No match for request GET http://www.test1.com/cricket/ ","timestamp":"2016-01-06T20:15:29.312Z"}
+{"level":"warn","message":"Request failed for http://www.test1.com/cricket/,Error: Nock: No match for request GET http://www.test1.com/cricket/ ","timestamp":"2016-01-06T20:15:29.317Z"}
+{"level":"warn","message":"myTest, is not a valid twitter handler","timestamp":"2016-01-06T20:15:29.345Z"}
+{"level":"warn","message":"myTest, is not a valid twitter handler","timestamp":"2016-01-06T20:15:29.351Z"}
+{"level":"warn","message":"Request failed for twitter handler myTest1,Error: request failed","timestamp":"2016-01-06T20:15:29.356Z"}

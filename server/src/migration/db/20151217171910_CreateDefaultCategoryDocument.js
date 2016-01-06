@@ -23,7 +23,7 @@ export default class CreateDefaultCategoryDocument {
             Migration.logger(this.dbName).info("CreateDefaultCategoryDocument::up - started");
             let categoryDocument = this.getDocument();
             request.post({
-                "uri": ApplicationConfig.dbUrl() + "/" + this.dbName,
+                "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName,
                 "headers": { "Cookie": "AuthSession=" + this.accessToken, "Content-Type": "application/json", "Accept": "application/json" },
                 "body": categoryDocument,
                 "json": true

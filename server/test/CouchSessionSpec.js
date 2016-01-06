@@ -11,6 +11,18 @@ import sinon from "sinon";
 
 
 describe("CouchSessionSpec", () => {
+    let applicationConfig = null;
+    before("CouchClient", () => {
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+    });
+
+    after("CouchClient", () => {
+        ApplicationConfig.instance.restore();
+        applicationConfig.dbUrl.restore();
+    });
+
 
     describe("login", () => {
         it("should login user with given username and password", (done) => {
@@ -25,12 +37,8 @@ describe("CouchSessionSpec", () => {
                     "set-cookie": ["test_token"]
                 });
 
-            let appConfigStub = sinon.stub(ApplicationConfig, "dbUrl");
-            appConfigStub.returns("http://localhost:5984");
-
             CouchSession.login(username, password).then((token) => {
                 expect(token).to.have.string("test_token");
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -50,14 +58,10 @@ describe("CouchSessionSpec", () => {
                     "address": "127.0.0.1",
                     "port": 5984
                 });
-            let appConfigStub = sinon.stub(ApplicationConfig, "dbUrl");
-            appConfigStub.returns("http://localhost:5984");
-
 
             CouchSession.login(username, password).catch((error) => {
                 expect(error.code).to.have.string("ECONNREFUSED");
                 expect(error.errno).to.have.string("ECONNREFUSED");
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -76,13 +80,8 @@ describe("CouchSessionSpec", () => {
             }
             );
 
-            let appConfigStub = sinon.stub(ApplicationConfig, "dbUrl");
-            appConfigStub.returns("http://localhost:5984");
-
-
             CouchSession.authenticate(token).then((userName) => {
                 expect("test_user").to.equal(userName);
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -99,13 +98,8 @@ describe("CouchSessionSpec", () => {
                 "userCtx": { "name": "", "roles": [] }
             });
 
-            let appConfigStub = sinon.stub(ApplicationConfig, "dbUrl");
-            appConfigStub.returns("http://localhost:5984");
-
-
             CouchSession.authenticate(token).catch((userName) => {
                 expect("").to.equal(userName);
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -126,21 +120,12 @@ describe("CouchSessionSpec", () => {
                 "port": 5984
             });
 
-            let appConfigStub = sinon.stub(ApplicationConfig, "dbUrl");
-            appConfigStub.returns("http://localhost:5984");
-
             CouchSession.authenticate(token).catch((error) => {
                 expect(error.code).to.have.string("ECONNREFUSED");
                 expect(error.errno).to.have.string("ECONNREFUSED");
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
     });
 
-    describe("logout", () => {
-        it("should clear the session when user logs out", () => {
-
-        });
-    });
 });

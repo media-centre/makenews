@@ -15,9 +15,9 @@ import nock from "nock";
 describe("SchemaInfo", () => {
     let dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", document = null;
     let migrationLoggerStub = null;
+    let applicationConfig = null;
+
     before("SchemaInfo", () => {
-        let dbUrlStub = sinon.stub(ApplicationConfig, "dbUrl");
-        dbUrlStub.returns("http://localhost:5984");
         migrationLoggerStub = sinon.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
             "error": (message, ...insertions) =>{
@@ -27,11 +27,16 @@ describe("SchemaInfo", () => {
             "debug": (message, ...insertions)=> {
             }
         });
+
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
     });
 
     after("SchemaInfo", () => {
-        ApplicationConfig.dbUrl.restore();
         Migration.logger.restore();
+        ApplicationConfig.instance.restore();
+        applicationConfig.dbUrl.restore();
     });
 
     describe("getSchemaInfo", () => {

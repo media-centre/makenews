@@ -1,14 +1,31 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-magic-numbers:0 */
 
 "use strict";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import FacebookClient from "../../src/facebook/FacebookClient.js";
 import NodeErrorHandler from "../../src/NodeErrorHandler.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import nock from "nock";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("FacebookClient", () => {
+    let applicationConfigFacebookStub = null, applicationConfig = null;
+    before("FacebookClient", () => {
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        applicationConfigFacebookStub = sinon.stub(applicationConfig, "facebook");
+        applicationConfigFacebookStub.returns({
+            "url": "https://graph.facebook.com/v2.5",
+            "appSecretKey": "appSecretKey",
+            "timeOutInSeconds": 10
+        });
+    });
+
+    after("FacebookClient", () => {
+        ApplicationConfig.instance.restore();
+        applicationConfig.facebook.restore();
+    });
 
     describe("pageFeeds", () => {
         let accessToken = null, appSecretProof = null, facebookUrl = null, remainingUrl = null;
@@ -101,6 +118,26 @@ describe("FacebookClient", () => {
             });
         });
 
+        it("should reject if the facebook takes too long to return the data", (done) => {
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .socketDelay(2000)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data":
+                        [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+                            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                });
+
+
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
+            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
+            facebookClient.pagePosts(facebookUrl).catch((error) => { //eslint-disable-line
+                facebookClient.getFacebookId.restore();
+                done();
+            });
+        });
+
         it("should throw an error when access token is null", () => {
 
             let createFacebookClient = () => {
@@ -178,6 +215,18 @@ describe("FacebookClient", () => {
             let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
             facebookClient.getFacebookId(facebookUrl1).then((id) => {
                 assert.deepEqual(response.id, id);
+                done();
+            });
+        });
+        it("should rejet if fetching facebook id is taking too longer", (done) => {
+
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .socketDelay(2000)
+                .reply(HttpResponseHandler.codes.OK, {});
+
+            let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
+            facebookClient.getFacebookId(facebookUrl1).catch((error) => { //eslint-disable-line
                 done();
             });
         });

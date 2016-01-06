@@ -1,6 +1,6 @@
 "use strict";
 import TwitterClient from "./TwitterClient.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 
 export default class TwitterRequestHandler {
 
@@ -23,6 +23,6 @@ export default class TwitterRequestHandler {
     }
 
     getBearerToken() {
-        return EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("twitterBearerToken");
+        return ApplicationConfig.instance().twitter().bearerToken;
     }
 }

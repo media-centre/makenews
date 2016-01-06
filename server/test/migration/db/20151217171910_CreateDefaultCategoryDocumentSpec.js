@@ -14,7 +14,7 @@ import nock from "nock";
 
 describe("CreateDefaultCategoryDocument", ()=> {
     let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
-    let migrationLoggerStub = null;
+    let migrationLoggerStub = null, applicationConfig = null;
     before("CreateDefaultCategoryDocument", () => {
         migrationLoggerStub = sinon.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
@@ -25,9 +25,15 @@ describe("CreateDefaultCategoryDocument", ()=> {
             "debug": (message, ...insertions)=> {
             }
         });
+
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
     });
 
     after("CreateDefaultCategoryDocument", () => {
+        ApplicationConfig.instance.restore();
+        applicationConfig.dbUrl.restore();
         Migration.logger.restore();
     });
 
@@ -50,17 +56,12 @@ describe("CreateDefaultCategoryDocument", ()=> {
                 .post("/" + dbName, defaultDocument)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let appEnvMock = sinon.mock(ApplicationConfig).expects("dbUrl");
-            appEnvMock.returns("http://localhost:5984");
-
             let defaultDocumentInstance = new CreateDefaultCategoryDocument(dbName, accessToken);
             let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
             defaultDocumentInstance.up().then((actualResponse)=> {
                 assert.deepEqual(response, actualResponse);
-                appEnvMock.verify();
-                ApplicationConfig.dbUrl.restore();
                 defaultDocumentInstance.getDocument.restore();
                 done();
             });
@@ -79,17 +80,12 @@ describe("CreateDefaultCategoryDocument", ()=> {
                 .post("/" + dbName, defaultDocument)
                 .replyWithError(errorObj);
 
-            let appEnvMock = sinon.mock(ApplicationConfig).expects("dbUrl");
-            appEnvMock.returns("http://localhost:5984");
-
             let defaultDocumentInstance = new CreateDefaultCategoryDocument(dbName, accessToken);
             let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
             defaultDocumentInstance.up().catch((error)=> {
                 assert.deepEqual(errorObj, error);
-                appEnvMock.verify();
-                ApplicationConfig.dbUrl.restore();
                 defaultDocumentInstance.getDocument.restore();
                 done();
             });
