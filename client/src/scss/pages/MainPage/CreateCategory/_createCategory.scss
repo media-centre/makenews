@@ -69,14 +69,34 @@
   .success-message {
     color: $success-color;
   }
-  .example-url {
-    font-size: $small-font-size;
-    font-style: italic;
-    color: $example-url-color;
-    margin-left: 18px
-  }
 
   .spinner-msg {
     padding: 0 16px;
   }
+
+  ::-webkit-input-placeholder {
+    color: #bcbec0;
+    font-size: 12px;
+    font-style: italic;
+
+  }
+  :-moz-placeholder {
+    color: #bcbec0;
+    font-size: 12px;
+    font-style: italic;
+  }
+  ::-moz-placeholder {
+    color: #bcbec0;
+    font-size: 12px;
+    font-style: italic;
+  }
+
 }
+.example-url {
+  margin-top: 10px;
+  font-size: 12px;
+  font-style: italic;
+  color: #838384;
+  margin-left: 18px;
+}
+

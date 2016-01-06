@@ -7,7 +7,7 @@ import AddURLComponent from "../../utils/components/AddURLComponent.js";
 export default class RSSComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": "Please enter RSS URL here", "exampleMessage": "Example: thehindu.com/opinion/?service=rss" };
+        this.state = { "errorMessage": "", "hintMessage": "Please enter RSS URL here", "exampleMessage": "Example: http://www.thehindu.com/opinion/?service=rss" };
     }
 
     _validateUrl(url, callback, props) {

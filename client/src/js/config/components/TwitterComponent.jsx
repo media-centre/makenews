@@ -10,7 +10,7 @@ export default class TwitterComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": "Please enter the @twitter handle name or #tag", "exampleMessage": "Example: @martinfowler, @thehindu, #climatechange, #savetheinternet" };
+        this.state = { "errorMessage": "", "hintMessage": "Please enter the @twitter handle name or #tag", "exampleMessage": "Example: @martinfowler, #savetheinternet" };
     }
 
     _validateUrl(url, callback, props) {

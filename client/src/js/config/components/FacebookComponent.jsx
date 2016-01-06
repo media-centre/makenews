@@ -9,7 +9,7 @@ export default class FacebookComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama/" };
+        this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama" };
     }
 
     _validateUrl(url, callback, props) {

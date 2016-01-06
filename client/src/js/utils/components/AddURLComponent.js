@@ -74,17 +74,13 @@ export default class AddURLComponent extends Component {
 
     render() {
 
-        let inputBox = null, confirmPopup = null, exampleMessageDivision = null;
+        let inputBox = null, confirmPopup = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
                     <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
-            );
-
-            exampleMessageDivision = (
-                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
             );
         }
 
@@ -96,6 +92,8 @@ export default class AddURLComponent extends Component {
                 <div className="nav-control h-center" id="addNewUrlButton" onClick={() => this._showAddUrlTextBox()}>
                     <i className="fa fa-plus"></i><span ref="addUrlLinkText">{this.props.addUrlLinkLabel}</span>
                 </div>
+
+                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
 
                 <div className="url-panel">
                     <ul className="url-list">
@@ -109,7 +107,6 @@ export default class AddURLComponent extends Component {
                         )}
                     </ul>
 
-                    {exampleMessageDivision}
                     {inputBox}
                     <div className={this.state.successResponse ? "add-url-status success-message" : "add-url-status error-message"}>{this.state.errorMessage}</div>
 

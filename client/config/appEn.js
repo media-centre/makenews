@@ -46,7 +46,7 @@ export default {
             "categoryDetailsPage": {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
-                "addUrlLinkLabel": "Add Url",
+                "addUrlLinkLabel": "Add URL",
                 "errorMessages": {
                     "urlSuccess": "Url is successfully added",
                     "invalidUrlFormat": "Invalid URL format",
