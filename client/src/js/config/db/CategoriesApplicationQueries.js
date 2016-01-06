@@ -83,7 +83,7 @@ export default class CategoriesApplicationQueries {
             }
         });
     }
-
+    
     static addRssFeeds(sourceId, feeds) {
         const feedDocuments = CategoryDocument.getNewFeedDocuments(sourceId, feeds);
         return CategoryDb.createFeeds(feedDocuments);
