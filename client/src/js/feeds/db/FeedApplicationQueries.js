@@ -36,9 +36,13 @@ export default class FeedApplicationQueries {
         let feeds = [];
         let categoryNameMap = FeedApplicationQueries._prepareCategoryNameMap(feedsAndCategoriesDocs);
         feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
-            if (feedsAndCategoriesDoc.doc.docType === "feed") {
+            if (feedsAndCategoriesDoc.doc && feedsAndCategoriesDoc.doc.docType === "feed") {
                 if(StringUtil.validNonEmptyString(feedsAndCategoriesDoc.doc.sourceId)) {
-                    feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.doc.sourceId].join(", ");
+                    try {
+                        feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.doc.sourceId].join(", ");
+                    } catch(error) {
+                        feedsAndCategoriesDoc.doc.categoryNames = "";
+                    }
                 } else {
                     feedsAndCategoriesDoc.doc.categoryNames = "";
                 }
@@ -51,7 +55,7 @@ export default class FeedApplicationQueries {
     static _prepareCategoryNameMap(feedsAndCategoriesDocs) {
         let categoryNameMap = {};
         feedsAndCategoriesDocs.forEach(feedsAndCategoriesDoc => {
-            if (feedsAndCategoriesDoc.doc.docType === "category") {
+            if (feedsAndCategoriesDoc.doc && feedsAndCategoriesDoc.doc.docType === "category") {
                 if (categoryNameMap[feedsAndCategoriesDoc.key]) {
                     categoryNameMap[feedsAndCategoriesDoc.key].push(feedsAndCategoriesDoc.doc.name);
                 } else {
