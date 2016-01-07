@@ -3,9 +3,29 @@
 import PouchClient from "../db/PouchClient";
 import CategoryDb from "../config/db/CategoryDb";
 
+export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
-    constructor(sourceId) {
-        this.sourceId = sourceId;
+    constructor(paramsObj) {
+        this.sourceId = paramsObj.sourceId;
+        this.docType = "source";
+        this.sourceType = paramsObj.sourceType;
+        this.url = paramsObj.url;
+        this.categoryIds = paramsObj.categoryIds;
+        this.status = paramsObj.status;
+    }
+
+    newDoc() {
+        return {
+            "docType": this.docType,
+            "sourceType": this.sourceType,
+            "url": this.url,
+            "categoryIds": this.categoryIds,
+            "status": this.status
+        };
+    }
+
+    save() {
+        return CategoryDb.createOrUpdateSource(this.newDoc());
     }
 
     delete(categoryId) {

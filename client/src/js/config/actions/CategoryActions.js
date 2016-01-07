@@ -2,8 +2,9 @@
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
+import Source, { STATUS_INVALID, STATUS_VALID } from "../Source.js";
 import CategoryDb from "../db/CategoryDb.js";
-import { CategoryDocument, STATUS_INVALID, STATUS_VALID } from "./CategoryDocuments.js";
+import { CategoryDocument } from "./CategoryDocuments.js";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 import RssDb from "../../rss/RssDb.js";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
@@ -69,7 +70,7 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
 
 function addUrlDocument(dispatch, categoryId, title, url, status) {
     return new Promise((resolve, reject) => {
-        CategoriesApplicationQueries.addUrlConfiguration(categoryId, title, url, status).then(response => {
+        new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status }).save().then(response => {
             dispatch(populateCategoryDetailsAsync(categoryId));
             resolve(response.id);
         }).catch(error => {

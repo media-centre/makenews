@@ -65,11 +65,6 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static addUrlConfiguration(categoryId, title, url, status) {
-        let rssConfigDocument = CategoryDocument.getNewDocument(categoryId, title, url, status);
-        return CategoryDb.createOrUpdateSource(rssConfigDocument);
-    }
-
     static addRssFeeds(sourceId, feeds) {
         const feedDocuments = CategoryDocument.getNewFeedDocuments(sourceId, feeds);
         return CategoryDb.createFeeds(feedDocuments);
