@@ -11,9 +11,21 @@ import { assert } from "chai";
 import nock from "nock";
 
 describe("CouchClient", () => {
-    let dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
+    let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
+    before("CouchClient", () => {
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+    });
+
+    after("CouchClient", () => {
+        ApplicationConfig.instance.restore();
+        applicationConfig.dbUrl.restore();
+    });
+
 
     describe("saveDocument", () => {
+
         before("saveDocument", () => {
             response = { "ok": true, "id": "schema_info", "rev": "1-917fa2381192822767f010b95b45325b" };
         });
@@ -28,14 +40,11 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let dbUrlStub = sinon.stub(ApplicationConfig, "dbUrl");
-            dbUrlStub.returns("http://localhost:5984");
             let couchClientInstance = new CouchClient(dbName, accessToken);
             couchClientInstance.saveDocument(documentId, documentObj).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -56,14 +65,11 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let dbUrlStub = sinon.stub(ApplicationConfig, "dbUrl");
-            dbUrlStub.returns("http://localhost:5984");
             let couchClientInstance = new CouchClient(dbName, accessToken);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });
@@ -75,8 +81,6 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, "unexpected response from the db");
 
-            let dbUrlStub = sinon.stub(ApplicationConfig, "dbUrl");
-            dbUrlStub.returns("http://localhost:5984");
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(dbName, accessToken);
@@ -84,7 +88,6 @@ describe("CouchClient", () => {
                 assert.strictEqual("unexpected response from the db", error);
                 nodeErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                ApplicationConfig.dbUrl.restore();
                 done();
             });
         });

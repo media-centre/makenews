@@ -8,51 +8,22 @@
   <pipelines group="MediaCenter">
     <pipeline name="build" isLocked="false" template="build_template">
       <materials>
-        <svn url="https://github.com/media-centre/ContentDiscovery.git" username="vikramkb" encryptedPassword="rF+KSA+PJYLw+EM7aAxRFg==" />
+        <svn url="https://github.com/media-centre/ContentDiscovery.git" username="anilkumarkodi" encryptedPassword="tyMPguWRafig/vndUePqbw==" />
       </materials>
     </pipeline>
-    <pipeline name="DevelopmentDeployment">
+    <pipeline name="DevelopmentDeployment" template="DevelopmentDeployment">
       <materials>
         <pipeline pipelineName="build" stageName="CreateTar" materialName="build" />
       </materials>
-      <stage name="StartServer">
-        <jobs>
-          <job name="UntarAndStartServer">
-            <tasks>
-              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
-                <runif status="passed" />
-              </fetchartifact>
-              <exec command="tar" workingdir="trunk">
-                <arg>-xvzf</arg>
-                <arg>dist.tar.gz</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_dev";/g' ./dist/client/app.js</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>killall node | pwd</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <artifact src="trunk" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
     </pipeline>
     <pipeline name="QaDeployment">
+      <environmentvariables>
+        <variable name="NODE_ENV">
+          <value>ci_qa</value>
+        </variable>
+      </environmentvariables>
       <materials>
-        <pipeline pipelineName="build" stageName="CreateTar" materialName="build" />
+        <pipeline pipelineName="DevelopmentDeployment" stageName="StartServer" materialName="Development" />
       </materials>
       <stage name="StartServer">
         <approval type="manual" />
@@ -64,7 +35,7 @@
               </variable>
             </environmentvariables>
             <tasks>
-              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
+              <fetchartifact pipeline="DevelopmentDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="trunk/dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
               <exec command="tar" workingdir="trunk">
@@ -84,10 +55,13 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <arg>NODE_ENV=ci_qa ./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
+            <artifacts>
+              <artifact src="trunk" />
+            </artifacts>
           </job>
         </jobs>
       </stage>
@@ -114,6 +88,14 @@
               </exec>
               <exec command="gulp" workingdir="trunk">
                 <arg>build</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="gulp" workingdir="trunk">
+                <arg>mobile:create</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="gulp" workingdir="trunk">
+                <arg>mobile:build</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -157,6 +139,48 @@
             </tasks>
             <artifacts>
               <artifact src="dist.tar.gz" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="DevelopmentDeployment">
+      <stage name="StartServer">
+        <approval type="manual" />
+        <jobs>
+          <job name="UntarAndStartServer">
+            <environmentvariables>
+              <variable name="NODE_ENV">
+                <value>ci_dev</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="tar" workingdir="trunk">
+                <arg>-xvzf</arg>
+                <arg>dist.tar.gz</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_dev";/g' ./dist/client/app.js</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>killall node | pwd</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>NODE_ENV=qa_dev ./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="trunk" />
             </artifacts>
           </job>
         </jobs>

@@ -3,7 +3,7 @@ import StringUtil from "../../../common/src/util/StringUtil.js";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 
 export default class FacebookClient {
 
@@ -16,6 +16,7 @@ export default class FacebookClient {
         }
         this.accessToken = accessToken;
         this.appSecretProof = appSecretProof;
+        this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
     pagePosts(pageName, fields = "link,message,picture,name,caption,place,tags,privacy,created_time") {
@@ -28,7 +29,8 @@ export default class FacebookClient {
             } else {
                 this.getFacebookId(pageName).then(facebookId => {
                     request.get({
-                        "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + facebookId + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+                        "url": this.facebookParameters.url + "/" + facebookId + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
+                        "timeout": this.facebookParameters.timeOutInSeconds
                     }, (error, response, body) => {
                         if (NodeErrorHandler.noError(error)) {
                             if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
@@ -46,12 +48,18 @@ export default class FacebookClient {
             }
         });
     }
-    getFacebookId(facebookUrl) {
+    getFacebookId(facebookPageUrl) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
-                "url": EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("facebookURL") + facebookUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof
+                "url": this.facebookParameters.url + "/" + facebookPageUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
+                "timeout": this.facebookParameters.timeOutInSeconds
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
-                resolve(JSON.parse(response.body).id);
+                if (NodeErrorHandler.noError(error)) {
+                    resolve(JSON.parse(response.body).id);
+                } else {
+                    reject(error);
+                }
+
             });
         });
     }

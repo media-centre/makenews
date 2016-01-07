@@ -22,7 +22,7 @@ export default class CreateCategoryDesignDocument {
             Migration.logger(this.dbName).info("CreateCategoryDesignDocument::up - started");
             let categoryDocument = this.getDocument();
             request.put({
-                "uri": ApplicationConfig.dbUrl() + "/" + this.dbName + "/_design/category",
+                "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_design/category",
                 "headers": { "Cookie": "AuthSession=" + this.accessToken, "Content-Type": "application/json", "Accept": "application/json" },
                 "body": categoryDocument,
                 "json": true

@@ -3,11 +3,13 @@ import { assert } from "chai";
 import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
-import { baseURL, searchApi, searchParams } from "../../../src/twitter/TwitterClient";
+import { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
+import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import sinon from "sinon";
 
 describe("TwitterRouteHelper", () => {
     function mockTwitterRequest() {
-        return nock(baseURL, {
+        return nock("https://api.twitter.com/1.1", {
             "reqheaders": {
                 "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
             }
@@ -26,6 +28,23 @@ describe("TwitterRouteHelper", () => {
         };
         return response;
     }
+
+    let applicationConfig = null;
+
+    before("TwitterRouteHelper", () => {
+        applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "twitter").returns({
+            "url": "https://api.twitter.com/1.1",
+            "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
+            "timeOut": 10000
+        });
+    });
+
+    after("TwitterRouteHelper", () => {
+        ApplicationConfig.instance.restore();
+        applicationConfig.twitter.restore();
+    });
 
     it("should return empty response if the url is empty", (done) => {
         let request = {

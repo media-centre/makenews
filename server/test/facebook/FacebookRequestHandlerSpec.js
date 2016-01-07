@@ -4,7 +4,7 @@
 import FacebookClient from "../../src/facebook/FacebookClient.js";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
 import CryptUtil from "../../src/util/CryptUtil.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -118,28 +118,18 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("appSecretKey", () => {
-        let applicationConfigFile = null;
-        before("appSecretKey", () => {
-            applicationConfigFile = {
-                "get": (key) => { //eslint-disable-line no-unused-vars
-                    return {
-                        "appSecretKey": "test_secret_key"
-                    };
-                }
-            };
-        });
         it("should get the app secret key from the configuration file", () => {
-
-            let environmentConfigMock = sinon.mock(EnvironmentConfig);
-            environmentConfigMock.expects("instance").withArgs(EnvironmentConfig.files.APPLICATION).returns(applicationConfigFile);
-
+            let applicationConfig = new ApplicationConfig();
+            sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sinon.stub(applicationConfig, "facebook").returns({
+                "appSecretKey": "test_secret_key"
+            });
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             let secretKey = facebookRequestHandler.appSecretKey();
             assert.strictEqual("test_secret_key", secretKey);
-            environmentConfigMock.verify();
-            environmentConfigMock.restore();
+            ApplicationConfig.instance.restore();
+            applicationConfig.facebook.restore();
         });
 
     });
-
 });
