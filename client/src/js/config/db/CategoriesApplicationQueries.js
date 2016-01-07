@@ -36,10 +36,32 @@ export default class CategoriesApplicationQueries {
                     }
                     sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url, "status": rssConfiguration.status });
                 });
+                this._sortSourceUrls(sourceUrls.rss);
+                this._sortSourceUrls(sourceUrls.facebook);
+                this._sortSourceUrls(sourceUrls.twitter);
                 resolve(sourceUrls);
             }).catch(error => {
                 reject(error);
             });
+        });
+    }
+
+    static _sortSourceUrls(sources) {
+        if(!sources) {
+            return;
+        }
+        sources.sort((source1, source2) => {
+            let lowerUrl1 = source1.url.toLowerCase();
+            let lowerUrl2 = source2.url.toLowerCase();
+            if(lowerUrl1 === lowerUrl2) {
+                return 0;
+            }
+            if(lowerUrl1 < lowerUrl2) {
+                return -1; //eslint-disable-line
+            }
+            if(lowerUrl1 > lowerUrl2) {
+                return 1;
+            }
         });
     }
 
