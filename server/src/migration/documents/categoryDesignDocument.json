@@ -14,10 +14,10 @@
             "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
         },
         "allFeedsAndCategoriesWithSource": {
-            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.sourceId, null);}}"
+            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
         },
         "parkedFeeds": {
-            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, null);}}"
+            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"
         },
         "parkedFeedsCount": {
             "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",

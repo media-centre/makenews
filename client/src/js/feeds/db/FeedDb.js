@@ -4,12 +4,12 @@
 import PouchClient from "../../db/PouchClient.js";
 
 export default class FeedDb {
-    static fetchSurfFeedsAndCategoriesWithSource() {
-        return PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true });
+    static fetchSurfFeedsAndCategoriesWithSource(options = { "include_docs": true, "descending": true }) {
+        return PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", options);
     }
 
-    static fetchParkFeeds() {
-        return PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true });
+    static fetchParkFeeds(options = { "include_docs": true, "descending": true }) {
+        return PouchClient.fetchLinkedDocuments("category/parkedFeeds", options);
     }
 
     static updateFeed(feedDoc) {

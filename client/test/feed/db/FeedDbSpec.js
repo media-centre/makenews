@@ -10,8 +10,18 @@ describe("FeedDb", () => {
     describe("fetchAllFeedsAndCategoriesWithSource", () => {
         it("should fetch all feeds and category documents", (done) => {
             let pouchClientMock = sinon.mock(PouchClient);
-            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).returns(Promise.resolve(""));
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", { "include_docs": true, "descending": true }).returns(Promise.resolve(""));
             FeedDb.fetchSurfFeedsAndCategoriesWithSource().then(() => {
+                pouchClientMock.verify();
+                pouchClientMock.restore();
+                done();
+            });
+        });
+        it("should fetch all feeds and category documents with the custom options", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient);
+            const options = { "include_docs": true, "descending": false };
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/allFeedsAndCategoriesWithSource", options).returns(Promise.resolve(""));
+            FeedDb.fetchSurfFeedsAndCategoriesWithSource(options).then(() => {
                 pouchClientMock.verify();
                 pouchClientMock.restore();
                 done();
@@ -21,8 +31,18 @@ describe("FeedDb", () => {
     describe("fetchParkFeeds", () => {
         it("should fetch all parked feeds and category documents", (done) => {
             let pouchClientMock = sinon.mock(PouchClient);
-            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/parkedFeeds", { "include_docs": true }).returns(Promise.resolve(""));
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/parkedFeeds", { "include_docs": true, "descending": true }).returns(Promise.resolve(""));
             FeedDb.fetchParkFeeds().then(() => {
+                pouchClientMock.verify();
+                pouchClientMock.restore();
+                done();
+            });
+        });
+        it("should fetch all parked feeds and category documents with the custom options", (done) => {
+            let pouchClientMock = sinon.mock(PouchClient);
+            const options = { "include_docs": true, "descending": false };
+            pouchClientMock.expects("fetchLinkedDocuments").withArgs("category/parkedFeeds", options).returns(Promise.resolve(""));
+            FeedDb.fetchParkFeeds(options).then(() => {
                 pouchClientMock.verify();
                 pouchClientMock.restore();
                 done();

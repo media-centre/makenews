@@ -75,7 +75,8 @@ describe("PouchClient", () => {
             "docType": "feed",
             "title": "tn",
             "description": "www.facebookpolitics.com",
-            "sourceId": "rssId1"
+            "sourceId": "rssId1",
+            "postedDate": "2015-10-02T04:09:17+00:00"
         };
 
         DbSession.instance().then(session => {
@@ -88,7 +89,8 @@ describe("PouchClient", () => {
             "title": "tn3",
             "description": "www.fbpolitics.com",
             "sourceId": "fbId1",
-            "status": "park"
+            "status": "park",
+            "postedDate": "2015-10-04T04:09:17+00:00"
         };
         DbSession.instance().then(session => {
             session.put(parkFeed, "feedId2");
@@ -111,10 +113,12 @@ describe("PouchClient", () => {
                         "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
                     },
                     "allFeedsAndCategoriesWithSource": {
-                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.sourceId, null);}}"
+                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
+                        "else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
                     },
                     "parkedFeeds": {
-                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, null);}}"
+                        "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
+                        "else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"
                     },
                     "parkedFeedsCount": {
                         "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",
@@ -230,12 +234,11 @@ describe("PouchClient", () => {
                 PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).then((doc) => {
                     expect(doc.map((item)=> {
                         return item.key;
-                    })).to.deep.eq(["fbId1", "rssId1", "rssId1", "rssId1", "rssId2"]);
+                    })).to.deep.eq(["2015-10-02T04:09:17+00:00", "fbId1", "rssId1", "rssId1", "rssId2"]);
 
                     let rssSourceRelatedDocTypes = doc.map(relatedDoc => {
                         return relatedDoc.doc.docType;
                     });
-                    expect(doc[0].doc.docType).not.to.eq("feed");
                     expect(rssSourceRelatedDocTypes).to.include("category");
                     expect(rssSourceRelatedDocTypes).to.include("feed");
                     done();
@@ -243,10 +246,10 @@ describe("PouchClient", () => {
             });
 
             it("should get surf feeds", (done) => {
-                PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true }).then((doc) => {
-                    assertFeedView(doc, "feedId1", "rssId1", surfFeed);
+                PouchClient.fetchLinkedDocuments("category/allFeedsAndCategoriesWithSource", { "include_docs": true, "descending": true }).then((doc) => {
+                    assertFeedView(doc, "feedId1", "2015-10-02T04:09:17+00:00", surfFeed);
+                    done();
                 });
-                done();
             });
         });
 
@@ -255,12 +258,11 @@ describe("PouchClient", () => {
                 PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true }).then((doc) => {
                     expect(doc.map((item)=> {
                         return item.key;
-                    })).to.deep.eq(["fbId1", "fbId1", "rssId1", "rssId1", "rssId2"]);
+                    })).to.deep.eq(["2015-10-04T04:09:17+00:00", "fbId1", "rssId1", "rssId1", "rssId2"]);
 
                     let rssSourceRelatedDocTypes = doc.map(relatedDoc => {
                         return relatedDoc.doc.docType;
                     });
-                    expect(doc[0].doc.docType).not.to.eq("feed");
                     expect(rssSourceRelatedDocTypes).to.include("category");
                     expect(rssSourceRelatedDocTypes).to.include("feed");
                     done();
@@ -269,7 +271,7 @@ describe("PouchClient", () => {
 
             it("should get park feeds", (done) => {
                 PouchClient.fetchLinkedDocuments("category/parkedFeeds", { "include_docs": true }).then((doc) => {
-                    assertFeedView(doc, "feedId2", "fbId1", parkFeed);
+                    assertFeedView(doc, "feedId2", "2015-10-04T04:09:17+00:00", parkFeed);
                     done();
                 });
             });
