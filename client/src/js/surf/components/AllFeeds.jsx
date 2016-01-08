@@ -10,9 +10,9 @@ export default class AllFeeds extends Component {
     render() {
 
         let categories = this.props.feeds.map((category, index)=>
-            category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/>
-                : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/>
-                    : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent}/> : null
+            category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/>
+                : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/>
+                    : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/> : null
 
         );
 
@@ -29,7 +29,8 @@ AllFeeds.displayName = "AllFeeds";
 AllFeeds.propTypes = {
     "dispatch": PropTypes.func,
     "feeds": PropTypes.array,
-    "actionComponent": PropTypes.func
+    "actionComponent": PropTypes.func,
+    "clickHandler": PropTypes.func
 };
 
 AllFeeds.defaultProps = {

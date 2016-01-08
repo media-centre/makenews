@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../../surf/components/AllFeeds.jsx";
 import { displayParkedFeedsAsync } from "../actions/ParkActions";
+import { unparkFeed } from "../../feeds/actions/FeedsActions";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
@@ -20,7 +21,7 @@ export class ParkPage extends Component {
         return (
             <div ref="parkItem" className="park-page feeds-container">
                 {defaultText}
-                <AllFeeds feeds={this.props.parkedItems} actionComponent={ParkFeedActionComponent}/>
+                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={unparkFeed}/>
             </div>
         );
     }

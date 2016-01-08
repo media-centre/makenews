@@ -29,5 +29,6 @@ FeedHeader.propTypes = {
     "feedType": PropTypes.string,
     "categoryNames": PropTypes.string,
     "tags": PropTypes.array,
-    "postedDate": PropTypes.string
+    "postedDate": PropTypes.string,
+    "feedAction": PropTypes.func
 };

@@ -4,15 +4,15 @@
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import Spinner from "../../utils/components/Spinner.jsx";
-import { parkFeed } from "../../feeds/actions/FeedsActions.js";
 import getHtmlContent from "../../utils/HtmContent.js";
+import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 
 export default class ImageContent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            "showFeed": true
+            "showFeed": true, "showCustomPopup": false
         };
     }
 
@@ -22,26 +22,47 @@ export default class ImageContent extends Component {
         item.querySelector(".custom-spinner").remove();
     }
 
+    _showConfirmPopup() {
+        this.setState({ "showCustomPopup": true });
+    }
+
     _parkFeed(feedDoc) {
-        this.setState({ "showFeed": false });
-        this.props.dispatch(parkFeed(feedDoc));
+        if(this.props.category.sourceId === "") {
+            this._showConfirmPopup();
+        } else {
+            this.props.dispatch(this.props.clickHandler(feedDoc));
+            this.setState({ "showFeed": false });
+        }
+    }
+    handleDeleteClick(event) {
+        if(event.OK) {
+            this.props.dispatch(this.props.clickHandler(this.props.category));
+            this.setState({ "showCustomPopup": false, "showFeed": false });
+        } else {
+            this.setState({ "showCustomPopup": false });
+        }
     }
     render() {
-        let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} parkFeed={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
+        let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
         let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
+        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This data will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+
         return (
-            <div className="image-content" style={feedStyle}>
-                <a target="_blank" href={this.props.category.link}>
-                    <div className="title">{this.props.category.title}</div>
-                    <div className="container clear-fix">
-                        <div className="img-container box m-block left" ref="imageContent">
-                            <img src={this.props.category.url} onLoad={() => this._onLoadImage()} className="hide"/>
-                            <Spinner/>
+            <div>
+                {confirmPopup}
+                <div className="image-content" style={feedStyle}>
+                    <a target="_blank" href={this.props.category.link}>
+                        <div className="title">{this.props.category.title}</div>
+                        <div className="container clear-fix">
+                            <div className="img-container box m-block left" ref="imageContent">
+                                <img src={this.props.category.url} onLoad={() => this._onLoadImage()} className="hide"/>
+                                <Spinner/>
+                            </div>
+                            <p className="box surf-description">{getHtmlContent(this.props.category.content)}</p>
                         </div>
-                        <p className="box surf-description">{getHtmlContent(this.props.category.content)}</p>
-                    </div>
-               </a>
-                {header}
+                   </a>
+                    {header}
+                </div>
             </div>
         );
     }
@@ -51,6 +72,6 @@ ImageContent.displayName = "ImageContent";
 ImageContent.propTypes = {
     "category": PropTypes.object,
     "dispatch": PropTypes.func,
-    "parkFeed": PropTypes.func,
+    "clickHandler": PropTypes.func,
     "actionComponent": PropTypes.func
 };
