@@ -2,7 +2,7 @@
     "language": "javascript",
     "views": {
         "allCategories": {
-            "map": "function(doc) { if(doc.docType == 'category') {emit(doc.docType, doc)} }"
+            "map": "function(doc) { if(doc.docType == 'category') {emit(doc._id, doc)} }"
         },
         "allCategoriesByName": {
             "map": "function(doc) { if(doc.docType == 'category') {emit(doc.name, doc)} }"

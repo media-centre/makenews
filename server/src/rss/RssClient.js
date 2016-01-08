@@ -4,8 +4,11 @@ import request from "request";
 import Logger from "../logging/Logger.js";
 import RssParser from "./RssParser";
 
-let logger = Logger.instance();
 export default class RssClient {
+
+    static logger() {
+        return Logger.instance();
+    }
 
     static instance() {
         return new RssClient();
@@ -19,7 +22,7 @@ export default class RssClient {
             });
 
             requestToUrl.on("error", (error) => {
-                logger.warn("Request failed for %s", url, error);
+                RssClient.logger().warn("Request failed for %s", url, error);
                 reject({ "message": "Request failed for " + url });
             });
             requestToUrl.on("response", function(res) {
@@ -32,7 +35,7 @@ export default class RssClient {
                         resolve(feeds);
                     })
                     .catch(error => {
-                        logger.warn("%s is not a proper feed", url, error);
+                        RssClient.logger().warn("%s is not a proper feed", url, error);
                         reject({ "message": url + " is not a proper feed" });
                     });
             });

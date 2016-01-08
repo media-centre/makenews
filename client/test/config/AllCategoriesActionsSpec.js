@@ -10,13 +10,13 @@ import { List } from "immutable";
 
 describe("AllCategoriesActions", () => {
     it("return type DISPLAY_ALL_CATEGORIES action", () => {
-        let categories = "{TimeLine, Sports}";
+        let categories = "{Default Category, Sports}";
         let allCategoreisAction = { "type": DISPLAY_ALL_CATEGORIES, categories };
         expect(allCategoreisAction).to.deep.equal(displayAllCategories(categories));
     });
 
     it("dispatch DISPLAY_ALL_CATEGORIES_ASYNC action", (done) => {
-        let categories = "{TimeLine, Sports}";
+        let categories = "{Default Category, Sports}";
         let store = mockStore({ "categories": new List([]) }, [{ "type": "DISPLAY_ALL_CATEGORIES", categories }], done);
         let allCategoriesDbMock = sinon.mock(CategoriesApplicationQueries).expects("fetchAllCategories");
         allCategoriesDbMock.returns(Promise.resolve(categories));

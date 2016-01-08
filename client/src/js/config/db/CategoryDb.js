@@ -13,6 +13,10 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true });
     }
 
+    static fetchCategoryById(categoryId) {
+        return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true, "key": categoryId });
+    }
+
     static fetchSourceConfigurationsByCategoryId(categoryId) {
         if(StringUtil.isEmptyString(categoryId)) {
             return new Promise((resolve, reject) => {

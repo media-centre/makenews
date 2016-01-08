@@ -6,9 +6,11 @@ import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import Logger from "../logging/Logger.js";
 
 export const searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
-let logger = Logger.instance();
 export default class TwitterClient {
 
+    static logger() {
+        return Logger.instance();
+    }
     static instance(bearerToken) {
         return new TwitterClient(bearerToken);
     }
@@ -30,11 +32,11 @@ export default class TwitterClient {
                     if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK) && response.body.statuses.length > 0) {
                         resolve(body);
                     } else {
-                        logger.warn("%s is not a valid twitter handler", url, error);
+                        TwitterClient.logger().warn("%s is not a valid twitter handler", url, error);
                         reject({ "message": url + " is not a valid twitter handler" });
                     }
                 } else {
-                    logger.warn("Request failed for twitter handler %s", url, error);
+                    TwitterClient.logger().warn("Request failed for twitter handler %s", url, error);
                     reject({ "message": "Request failed for twitter handler " + url });
                 }
             });

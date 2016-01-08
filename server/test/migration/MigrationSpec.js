@@ -9,6 +9,7 @@ import SchemaInfo from "../../src/migration/SchemaInfo.js";
 import CouchSession from "../../src/CouchSession.js";
 import Logger from "../../src/logging/Logger.js";
 import CouchClient from "../../src/CouchClient.js";
+import LogTestHelper from "../helpers/LogTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -18,18 +19,8 @@ describe("Migration", () => {
         dbName = "test";
         accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt";
         accessCookieHeader = "AuthSession=dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt; Version=1; Path=/; HttpOnly";
-        migrationLoggerStub = sinon.stub(Migration, "logger");
-        let loggerObject = {
-            "error": (message, ...insertions) => {
-            },
-            "info": (message, ...insertions)=> {
-            },
-            "debug": (message, ...insertions)=> {
-            }
-        };
-        migrationLoggerStub.returns(loggerObject);
-        let loggerInstanceStub = sinon.stub(Logger, "fileInstance");
-        loggerInstanceStub.returns(loggerObject);
+        migrationLoggerStub = sinon.stub(Migration, "logger").returns(LogTestHelper.instance());
+        let loggerInstanceStub = sinon.stub(Logger, "fileInstance").returns(LogTestHelper.instance());
     });
 
     after("Migration", () => {

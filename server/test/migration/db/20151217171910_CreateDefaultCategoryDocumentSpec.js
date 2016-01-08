@@ -43,7 +43,7 @@ describe("CreateDefaultCategoryDocument", ()=> {
 
             defaultDocument = {
                 "docType": "category",
-                "name": "TimeLine"
+                "name": "Default Category"
             };
             response = { "ok": true, "id": "87cd474590eb6e509c56b7f40f003272", "rev": "1-aeb207d8a0798b59973db0a86dc79a6a" };
 
@@ -98,7 +98,7 @@ describe("CreateDefaultCategoryDocument", ()=> {
         it("should fetch default category category json and return", () => {
             let defaultDocumentInstance = new CreateDefaultCategoryDocument(dbName, accessToken);
             let defaultCategoryJson = defaultDocumentInstance.getDocument();
-            assert.strictEqual("TimeLine", defaultCategoryJson.name);
+            assert.strictEqual("Default Category", defaultCategoryJson.name);
             assert.strictEqual("category", defaultCategoryJson.docType);
         });
     });

@@ -3,8 +3,9 @@ import { assert } from "chai";
 import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
-import { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
+import TwitterClient, { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 
 describe("TwitterRouteHelper", () => {
@@ -34,6 +35,7 @@ describe("TwitterRouteHelper", () => {
     before("TwitterRouteHelper", () => {
         applicationConfig = new ApplicationConfig();
         sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(TwitterClient, "logger").returns(LogTestHelper.instance());
         sinon.stub(applicationConfig, "twitter").returns({
             "url": "https://api.twitter.com/1.1",
             "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
@@ -43,6 +45,7 @@ describe("TwitterRouteHelper", () => {
 
     after("TwitterRouteHelper", () => {
         ApplicationConfig.instance.restore();
+        TwitterClient.logger.restore();
         applicationConfig.twitter.restore();
     });
 

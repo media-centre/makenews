@@ -61,7 +61,7 @@ describe("MigrationFile", () => {
 
     describe("getMigratableFileClassNames", () => {
         it("should give the class names of migratable files", () =>{
-            let fileNames = ["20151201155503_CreateCategoryDesignDocument.js", "20151201155501_CreateTimeLineDocument.js", "20151201155505_CreateDefaultDocument.js"];
+            let fileNames = ["20151201155503_CreateCategoryDesignDocument.js", "20151201155505_CreateDefaultDocument.js"];
             let schemaInfoTimestamp = "20151201155502";
             let migrationFileInstance = new MigrationFile(dbName, accessToken);
             let migrationFileInstanceStub = sinon.stub(migrationFileInstance, "getFileNames");
