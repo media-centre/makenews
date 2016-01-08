@@ -3,25 +3,24 @@
 import React, { PropTypes } from "react";
 import { History } from "react-router";
 
-let Login = React.createClass({
+export default class Login {
     displayName() {
         return "Login Component";
-    },
+    }
+
     propTypes() {
         return {
             "errorMessage": PropTypes.string.isRequired,
             "onLoginClick": PropTypes.func.isRequired
         };
-    },
-
-    mixins: [History], //eslint-disable-line quote-props
+    }
 
     handleClick(event) {
         event.preventDefault();
         let userName = this.refs.userName.value.trim();
         let password = this.refs.password.value.trim();
-        this.props.onLoginClick(this.history, userName, password);
-    },
+        this.props.onLoginClick(this.context.history, userName, password);
+    }
 
     render() {
         return (
@@ -53,6 +52,12 @@ let Login = React.createClass({
             </form>
         );
     }
-});
+}
 
-module.exports = Login;
+Login.displayName = "Login";
+
+Login.contextTypes = {
+    "history": function() {
+        return History.prototype;
+    }
+};
