@@ -16,8 +16,8 @@ describe("ParkFeedActionComponent", () => {
        );
     });
 
-    it("should have feed action image", () => {
-        let imageDOM = ReactDOM.findDOMNode(feedActionComponent.refs.image);
-        assert.isNotNull(imageDOM);
+    it("should have feed action icon to move back to surf", () => {
+        let iconDOM = ReactDOM.findDOMNode(feedActionComponent.refs.reply);
+        assert.equal(iconDOM._classList[1], "fa-reply");
     });
 });

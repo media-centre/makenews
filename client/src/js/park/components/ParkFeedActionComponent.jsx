@@ -1,13 +1,15 @@
 "use strict";
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 
 export default class ParkFeedActionComponent extends Component {
     render() {
         return (
-            <div className="feed-action right">
-                <img ref="image" src={"images/revert.png"}/>
-            </div>
+            <ul className="feed-actions right clear-fix" onClick={this.props.feedAction}><li className="left" title="Park this feed"><i ref="reply" className="fa fa-reply"></i></li></ul>
         );
     }
 }
 ParkFeedActionComponent.displayName = "ParkFeedActionComponent";
+
+ParkFeedActionComponent.propTypes = {
+    "feedAction": PropTypes.func.isRequired
+};

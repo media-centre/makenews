@@ -7,7 +7,7 @@ export default class FeedHeader extends Component {
     render() {
         let localDateTime = this.props.postedDate ? DateTimeUtil.getLocalTimeFromUTC(this.props.postedDate) : null;
         let tags = this.props.tags === "" ? this.props.tags.map((tag, index)=> <li className="tag" key={index}>{tag}</li>) : null;
-        let actionElement = this.props.actionComponent ? React.createElement(this.props.actionComponent, this.props) : null;
+        let actionElement = this.props.actionComponent ? React.createElement(this.props.actionComponent, { "feedAction": this.props.feedAction }) : null;
         return (
             <div className="feed-header border-bottom box h-center clear-fix">
                 <span className="icon-container header-item"><i className={"feed-icon fa fa-" + this.props.feedType.toLowerCase()}></i></span>
@@ -29,5 +29,6 @@ FeedHeader.propTypes = {
     "feedType": PropTypes.string,
     "categoryNames": PropTypes.string,
     "tags": PropTypes.array,
-    "postedDate": PropTypes.string
+    "postedDate": PropTypes.string,
+    "feedAction": PropTypes.func
 };

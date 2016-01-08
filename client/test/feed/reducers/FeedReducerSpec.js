@@ -2,7 +2,7 @@
 
 "use strict";
 import { parkCounter } from "../../../src/js/feeds/reducers/FeedReducer.js";
-import { INCREMENT_PARK_COUNTER, INITIALISE_PARK_COUNTER } from "../../../src/js/feeds/actions/FeedsActions.js";
+import { INCREMENT_PARK_COUNTER, INITIALISE_PARK_COUNTER, DECREMENT_PARK_COUNTER } from "../../../src/js/feeds/actions/FeedsActions.js";
 import { assert } from "chai";
 
 describe("FeedReducer", function() {
@@ -30,6 +30,12 @@ describe("FeedReducer", function() {
             let action = { "type": INITIALISE_PARK_COUNTER, "count": undefined };
             let state = parkCounter(0, action);
             assert.deepEqual(0, state);
+        });
+
+        it("should decrement counter for the valid action", function() {
+            let action = { "type": DECREMENT_PARK_COUNTER }, initialCount = 3, expectedCount = 2;
+            let state = parkCounter(initialCount, action);
+            assert.deepEqual(expectedCount, state);
         });
     });
 });
