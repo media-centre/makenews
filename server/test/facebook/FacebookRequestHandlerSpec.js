@@ -26,84 +26,6 @@ describe("FacebookRequestHandler", () => {
         });
     });
 
-    describe("pageFeeds", () => {
-        it("should throw error if the page name is null", (done) => {
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            facebookRequestHandler.pagePosts(null).catch(error => {
-                assert.strictEqual("page name can not be null", error);
-                done();
-            });
-        });
-
-        it("should resolve feeds for a public page", (done) => {
-            let actualFeeds = [
-                {
-                    "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
-                    "created_time": "2015-12-11T08:02:59+0000",
-                    "id": "163974433696568_958425464251457"
-                },
-                {
-                    "story": "The Hindu shared The Hindu Sports photo.",
-                    "created_time": "2015-12-11T07:46:47+0000",
-                    "id": "163974433696568_958422180918452"
-                },
-                {
-                    "message": "#TamilNaduFloods: Packaged water is still in short supply in most of the flood-affected areas. As a result, residents have to either wait for two or three days or pay through the nose for it.",
-                    "created_time": "2015-12-11T07:13:03+0000",
-                    "id": "163974433696568_958414857585851"
-                },
-                {
-                    "story": "The Hindu shared The Hindu Sports photo.",
-                    "created_time": "2015-12-11T07:46:35+0000",
-                    "id": "163974433696568_958422160918454"
-                },
-                {
-                    "message": "Shah Rukh unseats Salman as India’s top-earning celebrity\nbit.ly/1RHWZjk",
-                    "created_time": "2015-12-11T06:55:58+0000",
-                    "id": "163974433696568_958408404253163"
-                }];
-
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientInstanceMock = sinon.mock(FacebookClient).expects("instance");
-            facebookClientInstanceMock.withArgs(accessToken, appSecretProof).returns(facebookClient);
-            sinon.stub(facebookClient, "pagePosts").withArgs(pageName).returns(Promise.resolve(actualFeeds));
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            facebookRequestHandler.pagePosts(pageName).then(feeds => {
-                assert.deepEqual(actualFeeds, feeds);
-                facebookClientInstanceMock.verify();
-                FacebookClient.instance.restore();
-                facebookClient.pagePosts.restore();
-                facebookRequestHandler.appSecretProof.restore();
-                done();
-            });
-        });
-
-        it("should reject error message if there is any error while fetching feeds from public page", (done) => {
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientInstanceMock = sinon.mock(FacebookClient).expects("instance");
-            facebookClientInstanceMock.withArgs(accessToken, appSecretProof).returns(facebookClient);
-            sinon.stub(facebookClient, "pagePosts").withArgs(pageName).returns(Promise.reject({
-                "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
-                "type": "OAuthException",
-                "code": 190,
-                "error_subcode": 463,
-                "fbtrace_id": "AWpk5h2ceG6"
-            }));
-
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            facebookRequestHandler.pagePosts(pageName).catch(error => {
-                assert.strictEqual("error fetching feeds for a " + pageName + " page.", error);
-                facebookClientInstanceMock.verify();
-                FacebookClient.instance.restore();
-                facebookClient.pagePosts.restore();
-                done();
-            });
-        });
-
-    });
-
     describe("appSecretProof", () => {
         it("should get the encrypted access key for a facebook client access token and secret key", () => {
             let cryptUtilMock = sinon.mock(CryptUtil).expects("hmac");
@@ -129,6 +51,88 @@ describe("FacebookRequestHandler", () => {
             assert.strictEqual("test_secret_key", secretKey);
             ApplicationConfig.instance.restore();
             applicationConfig.facebook.restore();
+        });
+
+    });
+
+    describe("pagePosts", () => {
+        let facebookClientGetFacebookIdMock = null, facebookClient = null, facebookWebUrl = null, pageId = "12345", facebookRequestHandler = null, facebookClientPagePostsMock = null, feeds = null, requiredFields = null;
+        beforeEach("pagePosts", () => {
+            feeds = [
+                {
+                    "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
+                    "created_time": "2015-12-11T08:02:59+0000",
+                    "id": "163974433696568_958425464251457"
+                },
+                {
+                    "story": "The Hindu shared The Hindu Sports photo.",
+                    "created_time": "2015-12-11T07:46:47+0000",
+                    "id": "163974433696568_958422180918452"
+                },
+                {
+                    "message": "#TamilNaduFloods: Packaged water is still in short supply in most of the flood-affected areas. As a result, residents have to either wait for two or three days or pay through the nose for it.",
+                    "created_time": "2015-12-11T07:13:03+0000",
+                    "id": "163974433696568_958414857585851"
+                },
+                {
+                    "story": "The Hindu shared The Hindu Sports photo.",
+                    "created_time": "2015-12-11T07:46:35+0000",
+                    "id": "163974433696568_958422160918454"
+                },
+                {
+                    "message": "Shah Rukh unseats Salman as India’s top-earning celebrity\nbit.ly/1RHWZjk",
+                    "created_time": "2015-12-11T06:55:58+0000",
+                    "id": "163974433696568_958408404253163"
+                }
+            ];
+            facebookClient = new FacebookClient(accessToken, appSecretProof);
+            sinon.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof).returns(facebookClient);
+            facebookClientGetFacebookIdMock = sinon.mock(facebookClient).expects("getFacebookId");
+            facebookClientPagePostsMock = sinon.mock(facebookClient).expects("pagePosts");
+            facebookWebUrl = "https://www.facebook.com/TestPage";
+            facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
+            requiredFields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+        });
+
+        afterEach("pagePosts", () => {
+            FacebookClient.instance.restore();
+            facebookClient.getFacebookId.restore();
+            facebookClient.pagePosts.restore();
+            facebookRequestHandler.appSecretProof.restore();
+        });
+
+        it("should return the page posts for a given facebook web url", (done) => {
+            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
+            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).returns(Promise.resolve(feeds));
+            facebookRequestHandler.pagePosts(facebookWebUrl).then(actualFeeds => {
+                assert.deepEqual(feeds, actualFeeds);
+                facebookClientGetFacebookIdMock.verify();
+                facebookClientPagePostsMock.verify();
+                done();
+            });
+        });
+
+        it("should reject with error if there is error while fetching facebook id", (done) => {
+            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
+            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).never();
+            facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
+                assert.deepEqual("error fetching facebook id of web url = https://www.facebook.com/TestPage", error);
+                facebookClientGetFacebookIdMock.verify();
+                facebookClientPagePostsMock.verify();
+                done();
+            });
+        });
+
+        it("should reject with error if there is error while fetching facebook feeds", (done) => {
+            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
+            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).returns(Promise.reject("error"));
+            facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
+                assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
+                facebookClientGetFacebookIdMock.verify();
+                facebookClientPagePostsMock.verify();
+                done();
+            });
         });
 
     });

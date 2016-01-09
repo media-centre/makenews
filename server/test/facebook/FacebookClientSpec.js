@@ -28,12 +28,13 @@ describe("FacebookClient", () => {
     });
 
     describe("pageFeeds", () => {
-        let accessToken = null, appSecretProof = null, facebookUrl = null, remainingUrl = null;
+        let accessToken = null, appSecretProof = null, remainingUrl = null, userParameters = null, pageId=null;
         before("pageFeeds", () => {
             accessToken = "test_token";
             appSecretProof = "test_secret_proof";
-            facebookUrl = "http://www.facebook.com/thehindu";
+            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time" };
             remainingUrl = "/v2.5/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
+            pageId = "12345678";
         });
 
         it("should return feeds for a public page", (done) => {
@@ -48,14 +49,11 @@ describe("FacebookClient", () => {
                             { "message": "test news 2", "id": "163974433696568_957850670975603" }]
                 });
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
-            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
-            facebookClient.pagePosts(facebookUrl).then((feeds) => {
+            facebookClient.pagePosts(pageId, userParameters).then((feeds) => {
                 assert.strictEqual("test news 1", feeds[0].message);
                 assert.strictEqual("test news 2", feeds[1].message);
                 nodErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                facebookClient.getFacebookId.restore();
                 done();
             });
         });
@@ -78,14 +76,11 @@ describe("FacebookClient", () => {
                 );
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
-            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
-            facebookClient.pagePosts(facebookUrl).catch((error) => {
+            facebookClient.pagePosts(pageId, userParameters).catch((error) => {
                 assert.strictEqual("OAuthException", error.type);
                 assert.strictEqual("Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.", error.message);
                 nodErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                facebookClient.getFacebookId.restore();
                 done();
             });
         });
@@ -106,14 +101,11 @@ describe("FacebookClient", () => {
                 );
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
-            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
-            facebookClient.pagePosts(facebookUrl).catch((error) => {
+            facebookClient.pagePosts(pageId, userParameters).catch((error) => {
                 assert.strictEqual("ETIMEDOUT", error.code);
                 assert.strictEqual("ETIMEDOUT", error.errno);
                 nodErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
-                facebookClient.getFacebookId.restore();
                 done();
             });
         });
@@ -130,10 +122,7 @@ describe("FacebookClient", () => {
 
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
-            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
-            facebookClient.pagePosts(facebookUrl).catch((error) => { //eslint-disable-line
-                facebookClient.getFacebookId.restore();
+            facebookClient.pagePosts(pageId, userParameters).catch((error) => { //eslint-disable-line
                 done();
             });
         });
@@ -160,7 +149,7 @@ describe("FacebookClient", () => {
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.pagePosts(null).catch((error) => {
-                assert.strictEqual("page name cannot be empty", error.message);
+                assert.strictEqual("page id cannot be empty", error.message);
                 done();
             });
         });

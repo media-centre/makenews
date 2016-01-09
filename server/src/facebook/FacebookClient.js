@@ -4,6 +4,7 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil.js";
 
 export default class FacebookClient {
 
@@ -19,17 +20,20 @@ export default class FacebookClient {
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
-    pagePosts(pageName, fields = "link,message,picture,name,caption,place,tags,privacy,created_time") {
+    pagePosts(webUrl, parameters = {}) {
         return new Promise((resolve, reject) => {
-            if(StringUtil.isEmptyString(pageName)) {
+            if(StringUtil.isEmptyString(webUrl)) {
                 reject({
                     "message": "page name cannot be empty",
                     "type": "InvalidArgument"
                 });
             } else {
-                this.getFacebookId(pageName).then(facebookId => {
+                this.getFacebookId(webUrl).then(facebookId => {
+                    this._addDefaultParameters(parameters);
+                    parameters.fields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+
                     request.get({
-                        "url": this.facebookParameters.url + "/" + facebookId + "/posts?fields=" + fields + "&access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
+                        "url": this.facebookParameters.url + "/" + facebookId + "/posts?" + new HttpRequestUtil().queryString(parameters),
                         "timeout": this.facebookParameters.timeOutInSeconds
                     }, (error, response, body) => {
                         if (NodeErrorHandler.noError(error)) {
@@ -48,6 +52,34 @@ export default class FacebookClient {
             }
         });
     }
+    pagePosts(pageId, parameters = {}) {
+        return new Promise((resolve, reject) => {
+            if(StringUtil.isEmptyString(pageId)) {
+                reject({
+                    "message": "page id cannot be empty",
+                    "type": "InvalidArgument"
+                });
+            } else {
+                this._addDefaultParameters(parameters);
+                request.get({
+                    "url": this.facebookParameters.url + "/" + pageId + "/posts?" + new HttpRequestUtil().queryString(parameters, false),
+                    "timeout": this.facebookParameters.timeOutInSeconds
+                }, (error, response, body) => {
+                    if (NodeErrorHandler.noError(error)) {
+                        if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                            let feedResponse = JSON.parse(body);
+                            resolve(feedResponse.data);
+                        } else {
+                            let errorInfo = JSON.parse(body);
+                            reject(errorInfo.error);
+                        }
+                    } else {
+                        reject(error);
+                    }
+                });
+            }
+        });
+    }
     getFacebookId(facebookPageUrl) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
@@ -62,5 +94,10 @@ export default class FacebookClient {
 
             });
         });
+    }
+
+    _addDefaultParameters(receivedParameters) {
+        receivedParameters.access_token = this.accessToken; //eslint-disable-line
+        receivedParameters.appsecret_proof = this.appSecretProof; //eslint-disable-line
     }
 }

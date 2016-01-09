@@ -16,17 +16,19 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pagePosts(pageName) {
+    pagePosts(webUrl) {
         return new Promise((resolve, reject) => {
-            if(StringUtil.isEmptyString(pageName)) {
-                reject("page name can not be null");
-            } else {
-                this.facebookClient().pagePosts(pageName).then(feeds => {
+            let facebookClientInstance = this.facebookClient();
+            facebookClientInstance.getFacebookId(webUrl).then(pageId => {
+                let requiredFields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+                facebookClientInstance.pagePosts(pageId, { "fields": requiredFields }).then(feeds => {
                     resolve(feeds);
-                }).catch(error => { //eslint-disable-line no-unused-vars
-                    reject("error fetching feeds for a " + pageName + " page.");
+                }).catch(error => { //eslint-disable-line
+                    reject("error fetching facebook feeds of web url = " + webUrl);
                 });
-            }
+            }).catch(error => { //eslint-disable-line
+                reject("error fetching facebook id of web url = " + webUrl);
+            });
         });
     }
 
