@@ -6,7 +6,8 @@
     "facebook": {
       "url": "https://graph.facebook.com/v2.5",
       "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964",
-      "timeOut": 2000
+      "timeOut": 2000,
+      "limit": 500
     },
     "twitter": {
       "url": "https://api.twitter.com/1.1",

@@ -21,7 +21,7 @@ export default class FacebookRequestHandler {
             let facebookClientInstance = this.facebookClient();
             facebookClientInstance.getFacebookId(webUrl).then(pageId => {
                 facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-                    resolve(feeds);
+                    resolve(feeds.data);
                 }).catch(error => { //eslint-disable-line
                     reject("error fetching facebook feeds of web url = " + webUrl);
                 });
@@ -34,6 +34,7 @@ export default class FacebookRequestHandler {
     _getAllOptions(userOptions) {
         let allOptions = userOptions ? userOptions : {};
         allOptions.fields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+        allOptions.limit = 100;
         return allOptions;
     }
 

@@ -20,38 +20,30 @@ export default class FacebookClient {
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
-    pagePosts(webUrl, parameters = {}) {
+    pageNavigationFeeds(pageUrl) {
         return new Promise((resolve, reject) => {
-            if(StringUtil.isEmptyString(webUrl)) {
-                reject({
-                    "message": "page name cannot be empty",
-                    "type": "InvalidArgument"
-                });
-            } else {
-                this.getFacebookId(webUrl).then(facebookId => {
-                    this._addDefaultParameters(parameters);
-                    parameters.fields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+            let parameters = {};
+            this._addDefaultParameters(parameters);
+            request.get({
+                "url": pageUrl + "&" + new HttpRequestUtil().queryString(parameters, false),
+                "timeout": this.facebookParameters.timeOutInSeconds
+            }, (error, response, body) => {
+                if (NodeErrorHandler.noError(error)) {
+                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                        let feedResponse = JSON.parse(body);
+                        resolve(feedResponse);
+                    } else {
+                        let errorInfo = JSON.parse(body);
+                        reject(errorInfo.error);
+                    }
+                } else {
+                    reject(error);
+                }
+            });
 
-                    request.get({
-                        "url": this.facebookParameters.url + "/" + facebookId + "/posts?" + new HttpRequestUtil().queryString(parameters),
-                        "timeout": this.facebookParameters.timeOutInSeconds
-                    }, (error, response, body) => {
-                        if (NodeErrorHandler.noError(error)) {
-                            if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                                let feedResponse = JSON.parse(body);
-                                resolve(feedResponse.data);
-                            } else {
-                                let errorInfo = JSON.parse(body);
-                                reject(errorInfo.error);
-                            }
-                        } else {
-                            reject(error);
-                        }
-                    });
-                });
-            }
         });
     }
+
     pagePosts(pageId, parameters = {}) {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(pageId)) {
@@ -68,7 +60,7 @@ export default class FacebookClient {
                     if (NodeErrorHandler.noError(error)) {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
-                            resolve(feedResponse.data);
+                            resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);
                             reject(errorInfo.error);

@@ -55,10 +55,10 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("pagePosts", () => {
-        let facebookClientGetFacebookIdMock = null, facebookClient = null, facebookWebUrl = null, pageId = "12345", facebookRequestHandler = null, facebookClientPagePostsMock = null, feeds = null, requiredFields = null;
+        let facebookClientGetFacebookIdMock = null, facebookClient = null, facebookWebUrl = null, pageId = "12345", facebookRequestHandler = null, facebookClientPagePostsMock = null, feeds = null, requiredFields = null, optionsJson = null;
         beforeEach("pagePosts", () => {
-            feeds = [
-                {
+            feeds = {
+                "data": [{
                     "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
                     "created_time": "2015-12-11T08:02:59+0000",
                     "id": "163974433696568_958425464251457"
@@ -82,8 +82,8 @@ describe("FacebookRequestHandler", () => {
                     "message": "Shah Rukh unseats Salman as India’s top-earning celebrity\nbit.ly/1RHWZjk",
                     "created_time": "2015-12-11T06:55:58+0000",
                     "id": "163974433696568_958408404253163"
-                }
-            ];
+                }]
+            };
             facebookClient = new FacebookClient(accessToken, appSecretProof);
             sinon.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof).returns(facebookClient);
             facebookClientGetFacebookIdMock = sinon.mock(facebookClient).expects("getFacebookId");
@@ -92,6 +92,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
             requiredFields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+            optionsJson = { "fields": requiredFields, "limit":100 }; //eslint-disable-line
         });
 
         afterEach("pagePosts", () => {
@@ -103,9 +104,9 @@ describe("FacebookRequestHandler", () => {
 
         it("should return the page posts for a given facebook web url", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).returns(Promise.resolve(feeds));
+            facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.resolve(feeds));
             facebookRequestHandler.pagePosts(facebookWebUrl).then(actualFeeds => {
-                assert.deepEqual(feeds, actualFeeds);
+                assert.strictEqual(5, actualFeeds.length); //eslint-disable-line
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
@@ -114,7 +115,7 @@ describe("FacebookRequestHandler", () => {
 
         it("should reject with error if there is error while fetching facebook id", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
-            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).never();
+            facebookClientPagePostsMock.withArgs(pageId, optionsJson).never();
             facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
                 assert.deepEqual("error fetching facebook id of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
@@ -125,7 +126,7 @@ describe("FacebookRequestHandler", () => {
 
         it("should reject with error if there is error while fetching facebook feeds", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withArgs(pageId, { "fields": requiredFields }).returns(Promise.reject("error"));
+            facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.reject("error"));
             facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
                 assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
