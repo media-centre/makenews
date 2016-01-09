@@ -14,13 +14,13 @@ export default class FacebookClient {
         this.accessToken = accessToken;
     }
 
-    fetchPosts(nodeUrl) {
+    fetchPosts(webUrl) {
         return new Promise((resolve, reject) => {
-            if(StringUtil.isEmptyString(nodeUrl)) {
-                reject("page name can not be empty");
+            if(StringUtil.isEmptyString(webUrl)) {
+                reject("web url cannot be empty");
             }
             let ajaxClient = AjaxClient.instance("/facebook-posts");
-            ajaxClient.get({ "accessToken": this.accessToken, "nodeName": nodeUrl }).then(response => {
+            ajaxClient.get({ "accessToken": this.accessToken, "webUrl": webUrl }).then(response => {
                 resolve(response);
 
             }).catch(error => {

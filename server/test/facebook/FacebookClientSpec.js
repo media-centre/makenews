@@ -28,7 +28,7 @@ describe("FacebookClient", () => {
     });
 
     describe("pageFeeds", () => {
-        let accessToken = null, appSecretProof = null, remainingUrl = null, userParameters = null, pageId=null;
+        let accessToken = null, appSecretProof = null, remainingUrl = null, userParameters = null, pageId = null;
         before("pageFeeds", () => {
             accessToken = "test_token";
             appSecretProof = "test_secret_proof";

@@ -16,12 +16,11 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pagePosts(webUrl) {
+    pagePosts(webUrl, options = {}) {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = this.facebookClient();
             facebookClientInstance.getFacebookId(webUrl).then(pageId => {
-                let requiredFields = "link,message,picture,name,caption,place,tags,privacy,created_time";
-                facebookClientInstance.pagePosts(pageId, { "fields": requiredFields }).then(feeds => {
+                facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
                     resolve(feeds);
                 }).catch(error => { //eslint-disable-line
                     reject("error fetching facebook feeds of web url = " + webUrl);
@@ -30,6 +29,12 @@ export default class FacebookRequestHandler {
                 reject("error fetching facebook id of web url = " + webUrl);
             });
         });
+    }
+
+    _getAllOptions(userOptions) {
+        let allOptions = userOptions ? userOptions : {};
+        allOptions.fields = "link,message,picture,name,caption,place,tags,privacy,created_time";
+        return allOptions;
     }
 
     facebookClient() {

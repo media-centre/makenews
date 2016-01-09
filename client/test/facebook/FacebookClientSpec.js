@@ -9,9 +9,9 @@ import { assert } from "chai";
 import "../helper/TestHelper.js";
 
 describe("FacebookClient", () => {
-    let nodeName = null, serverUrl = null, accessToken = null, response = null;
+    let webUrl = null, serverUrl = null, accessToken = null, response = null;
     before("FacebookClient", () => {
-        nodeName = "thehindu";
+        webUrl = "https://www.facebook.com/thehindu";
         serverUrl = "/facebook-posts";
         accessToken = "test-access-token";
         response = {
@@ -53,10 +53,10 @@ describe("FacebookClient", () => {
         let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
         ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
         let ajaxGetMock = sinon.mock(ajaxClient).expects("get");
-        ajaxGetMock.withArgs({ "accessToken": accessToken, "nodeName": nodeName }).returns(Promise.resolve(response));
+        ajaxGetMock.withArgs({ "accessToken": accessToken, "webUrl": webUrl }).returns(Promise.resolve(response));
 
         let facebookClient = new FacebookClient(accessToken);
-        facebookClient.fetchPosts(nodeName).then(posts => {
+        facebookClient.fetchPosts(webUrl).then(posts => {
             assert.strictEqual("test-link1", posts.posts[0].link);
             assert.strictEqual("test-link2", posts.posts[1].link);
             assert.strictEqual("test-name1", posts.posts[0].name);
@@ -73,10 +73,10 @@ describe("FacebookClient", () => {
         let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
         ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
         let ajaxGetMock = sinon.mock(ajaxClient).expects("get");
-        ajaxGetMock.withArgs({ "accessToken": accessToken, "nodeName": nodeName }).returns(Promise.reject("error while fetching posts"));
+        ajaxGetMock.withArgs({ "accessToken": accessToken, "webUrl": webUrl }).returns(Promise.reject("error while fetching posts"));
 
         let facebookClient = new FacebookClient(accessToken);
-        facebookClient.fetchPosts(nodeName).catch(error => {
+        facebookClient.fetchPosts(webUrl).catch(error => {
             assert.strictEqual("error while fetching posts", error);
             ajaxGetMock.verify();
             AjaxClient.instance.restore();
@@ -96,7 +96,7 @@ describe("FacebookClient", () => {
     it("reject with error if the node url is empty", (done) => {
         let facebookClient = new FacebookClient(accessToken);
         facebookClient.fetchPosts(null).catch(error => {
-            assert.strictEqual(error, "page name can not be empty");
+            assert.strictEqual(error, "web url cannot be empty");
             done();
         });
     });

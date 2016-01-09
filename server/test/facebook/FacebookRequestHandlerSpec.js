@@ -9,12 +9,11 @@ import { assert } from "chai";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
-    let accessToken = null, appSecretKey = null, appSecretProof = null, pageName = null;
+    let accessToken = null, appSecretKey = null, appSecretProof = null;
     before("pageFeeds", () => {
         accessToken = "test_token";
         appSecretKey = "test_secret";
         appSecretProof = "test_secret_proof";
-        pageName = "thehindu";
     });
 
     describe("constructor", () => {
