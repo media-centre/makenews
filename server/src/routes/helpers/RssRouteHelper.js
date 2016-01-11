@@ -25,4 +25,22 @@ export default class RssRouteHelper {
             });
         }
     }
+
+    feedsForAllUrls() {
+        let allFeeds = {};
+        let rssRequestHandler = RssRequestHandler.instance();
+        this.request.body.data.forEach((item, index)=> {
+            rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
+                allFeeds[item.id] = feeds;
+                if(this.request.body.data.length - 1 === index) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                }
+            }).catch((err) => {
+                allFeeds[item.id] = "failed";
+                if(this.request.body.data.length - 1 === index) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                }
+            });
+        });
+    }
 }

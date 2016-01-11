@@ -30,4 +30,24 @@ export default class FacebookRouteHelper {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, error);
         });
     }
+
+    fetchMultiplePages() {
+        let accessTokenName = this.request.body.accessToken;
+        let facebookRequestHandler = FacebookRequestHandler.instance(accessTokenName);
+
+        let allFeeds = {};
+        this.request.body.data.forEach((item, index)=> {
+            facebookRequestHandler.pagePosts(item.url).then(feeds => {
+                allFeeds[item.id] = feeds;
+                if(this.request.body.data.length - 1 === index) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });
+                }
+            }).catch((err) => {
+                allFeeds[item.id] = "failed";
+                if (this.request.body.data.length - 1 === index) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });
+                }
+            });
+        });
+    }
 }
