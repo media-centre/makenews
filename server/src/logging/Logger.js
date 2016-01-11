@@ -9,7 +9,8 @@ export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR":
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-let LOG_DIR = path.join(__dirname, "../../logs"), LOG_FILE = "defaultLog.log";
+export let LOG_DIR = path.join(__dirname, "../../logs");
+let LOG_FILE = "defaultLog.log";
 
 export default class Logger {
 
@@ -19,10 +20,7 @@ export default class Logger {
 
     static initialize() {
         Logger.createDir(LOG_DIR);
-        if(!Logger._isCategoriesInitialized()) {
-            Logger._readLogConfig(EnvironmentConfig.files.LOGGING);
-        }
-        if(!defaultLogger) {
+        if(!Logger._getDefaultLogger()) {
             defaultLogger = new winston.Logger({
                 "transports": [new (winston.transports.File)({
                     "dirname": LOG_DIR,
@@ -32,11 +30,18 @@ export default class Logger {
                 ]
             });
         }
+        if(!Logger._isCategoriesInitialized()) {
+            Logger._readLogConfig(EnvironmentConfig.files.LOGGING);
+        }
     }
 
-    static createDir() {
-        if (!fs.existsSync(LOG_DIR)) {
-            fs.mkdirSync(LOG_DIR);
+    static _getDefaultLogger() {
+        return defaultLogger;
+    }
+
+    static createDir(dir) {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
         }
     }
 
@@ -64,16 +69,25 @@ export default class Logger {
                 let logDir = LOG_DIR;
                 if(loggingConfig.dir) {
                     logDir = path.join(__dirname, loggingConfig.dir);
-                    Logger.createDir(logDir);
+                    try {
+                        Logger.createDir(logDir);
+                    } catch(error) {
+                        Logger._getDefaultLogger().error("Unable to create directory %s. Error: ", logDir, error);
+                        logDir = LOG_DIR;
+                    }
                 }
                 for (let loggerName of Object.keys(loggingConfig)) {
                     let categoryConfig = loggingConfig[loggerName];
                     if (categoryConfig.file) {
                         categoryConfig.file.dirname = logDir;
                     }
-                    winston.loggers.add(loggerName, categoryConfig);
-                    if(loggerName === logCategories.DEFAULT) {
-                        defaultCategoryLogger = winston.loggers.get(loggerName);
+                    try {
+                        winston.loggers.add(loggerName, categoryConfig);
+                        if(loggerName === logCategories.DEFAULT) {
+                            defaultCategoryLogger = winston.loggers.get(loggerName);
+                        }
+                    } catch(error) {
+                        Logger._getDefaultLogger().log(logLevel.LOG_ERROR, "Creating logger for %s failed with error %s", loggerName, error);
                     }
                 }
                 categoriesInitialized = true;
@@ -162,7 +176,7 @@ export default class Logger {
     }
 
     getLogger() {
-        return this.logger || Logger._getDefaultCategoryLogger() || defaultLogger;
+        return this.logger || Logger._getDefaultCategoryLogger() || Logger._getDefaultLogger();
     }
 
     debug(message, ...insertions) {
