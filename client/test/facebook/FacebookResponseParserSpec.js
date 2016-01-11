@@ -86,7 +86,7 @@ describe("FacebookResponseParser", () => {
             sourceId = "test-source-d";
             posts = [
                 {
-                    "link": "test-link1",
+                    "link": "https://www.facebook.com/test-link1",
                     "message": "test-message1",
                     "name": "test-name1",
                     "caption": "thehindu.com",
@@ -113,8 +113,33 @@ describe("FacebookResponseParser", () => {
                         "deny": ""
                     },
                     "id": "test-id2"
+                },
+                {
+                    "link": "facebook.com/test-link3",
+                    "message": "test-message3",
+                    "name": "test-name3",
+                    "caption": "thehindu.com",
+                    "privacy": {
+                        "value": "",
+                        "description": "",
+                        "friends": "",
+                        "allow": "",
+                        "deny": ""
+                    },
+                    "id": "test-id3_post"
                 }
             ];
+        });
+        it("should use the post link in the feed document if the link starts with https://www.facebook.com/ else use postid", () => {
+            let feedDocuments = FacebookResponseParser.parsePosts(sourceId, posts);
+            assert.strictEqual("description", feedDocuments[0].type);
+            assert.strictEqual("imagecontent", feedDocuments[1].type);
+            assert.strictEqual("test-id1", feedDocuments[0]._id);
+            assert.strictEqual("test-id2", feedDocuments[1]._id);
+            assert.strictEqual("https://www.facebook.com/test-link1", feedDocuments[0].link);
+            assert.strictEqual("https://www.facebook.com/test-id3/posts/post", feedDocuments[2].link);
+
+
         });
 
         it("should covert facebook posts to db feed format", () => {

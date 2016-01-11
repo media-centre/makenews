@@ -17,9 +17,12 @@ export default class FacebookResponseParser {
 
     }
     static parsePost(sourceId, post) {
+        var facebookRegex = /^https:\/\/www\.facebook\.com/;
+        var postId = null;
         if(!post || StringUtil.isEmptyString(sourceId)) {
             throw new Error("post and source id can not be empty");
         }
+        postId = post.id.split("_");
         let feedDocument = {
             "_id": post.id,
             "docType": "feed",
@@ -27,7 +30,7 @@ export default class FacebookResponseParser {
             "type": "description",
             "title": post.name || "",
             "feedType": "facebook",
-            "link": "https://www.facebook.com/" + post.id,
+            "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),
             "content": post.message || "",
             "postedDate": post.created_time ? DateTimeUtil.getUTCDateAndTime(post.created_time) : null,
             "tags": [""]
