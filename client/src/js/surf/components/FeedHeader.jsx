@@ -6,7 +6,10 @@ import DateTimeUtil from "../../utils/DateTimeUtil.js";
 export default class FeedHeader extends Component {
     render() {
         let localDateTime = this.props.postedDate ? DateTimeUtil.getLocalTimeFromUTC(this.props.postedDate) : null;
-        let tags = this.props.tags === "" ? null : this.props.tags.map((tag, index)=> <li className="tag" key={index}>{tag}</li>);
+        let tags = this.props.tags && this.props.tags.length > 0 ? this.props.tags.map((tag, index) => {
+            if(tag !== "") {
+                return <li className="tag" key={index}>{tag}</li>;
+            } }) : null;
         let actionElement = this.props.actionComponent ? React.createElement(this.props.actionComponent, this.props) : null;
         return (
             <div className="feed-header border-bottom box h-center clear-fix">

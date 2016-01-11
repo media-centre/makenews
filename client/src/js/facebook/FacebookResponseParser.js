@@ -33,7 +33,7 @@ export default class FacebookResponseParser {
             "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),
             "content": post.message || "",
             "postedDate": post.created_time ? DateTimeUtil.getUTCDateAndTime(post.created_time) : null,
-            "tags": [""]
+            "tags": []
         };
 
         if(StringUtil.validString(post.picture)) {
