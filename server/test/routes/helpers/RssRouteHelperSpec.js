@@ -7,6 +7,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import LogTestHelper from "../../helpers/LogTestHelper";
+import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import { expect } from "chai";
 import sinon from "sinon";
 import nock from "nock";
