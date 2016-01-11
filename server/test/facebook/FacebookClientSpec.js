@@ -20,7 +20,7 @@ describe("FacebookClient", () => {
         applicationConfigFacebookStub.returns({
             "url": "https://graph.facebook.com/v2.5",
             "appSecretKey": "appSecretKey",
-            "timeOutInSeconds": 10
+            "timeOut": 10
         });
     });
 

@@ -15,7 +15,6 @@ const serverConfig = {
   serverAppPath: './server',
   srcPath: './server/src',
   testPath: './server/test',
-  functionalTestPath: './server/functionalTest',
   distFolder: './dist/server',
   distServerJsFolder: './dist',
   serverJsFile: 'server.js'
@@ -26,12 +25,17 @@ const commonConfig = {
   srcPath: './common/src',
   testPath: './common/test',
   distFolder: './dist/common'
-}
+};
 
 const mobileConfig = {
  appPath : './dist/client',
   cordovaPath: './dist/mobile/www',
   mobilePath: '/dist/mobile'
-}
+};
 
-module.exports = {"client": clientConfig, "server": serverConfig, "common": commonConfig,"mobile":mobileConfig};
+const functionalConfig = {
+  serverSpecPath: './server/functionalTest',
+  testServerPath: "./testserver"
+};
+
+module.exports = { "client": clientConfig, "server": serverConfig, "common": commonConfig, "mobile": mobileConfig, "functional": functionalConfig };

@@ -29,42 +29,46 @@ describe("FacbookPosts", () => {
         });
 
         it("should return feeds for public page", (done) => {
-            let expectedValues = {
-                "data":
-                    [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                        { "message": "test news 2", "id": "163974433696568_957850670975603" }]
-            };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
-                .get("/facebook-posts?nodeName=thehindu&accessToken=" + accessToken)
+                .get("/facebook-posts?webUrl=https://www.facebook.com/thehindu&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(res.statusCode, HttpResponseHandler.codes.OK);
-                    assert.strictEqual("test news 1", expectedValues.data[0].message);
-                    assert.strictEqual("test news 2", expectedValues.data[1].message);
+                    assert.equal(HttpResponseHandler.codes.OK, res.statusCode);
+                    assert.strictEqual("test news 1", res.body.posts[0].message);
+                    assert.strictEqual("test news 2", res.body.posts[1].message);
                     done();
                 });
         });
 
         it("should reject with error if the facebook page is not available", (done) => {
-
-            let expectedValues = {
-                "data":
-                    [{
-                        "code": "ETIMEDOUT",
-                        "errno": "ETIMEDOUT",
-                        "syscall": "connect",
-                        "address": "65.19.157.235",
-                        "port": 443
-                    }]
-            };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
-                .get("/facebook-posts?nodeName=doNotRespond&accessToken=" + accessToken)
+                .get("/facebook-posts?webUrl=https://www.facebook.com/doNotRespond&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    let timeOutPort = 443;
-                    assert.equal(res.statusCode, HttpResponseHandler.codes.NOT_FOUND);
-                    assert.strictEqual("ETIMEDOUT", expectedValues.data[0].code);
-                    assert.strictEqual(timeOutPort, expectedValues.data[0].port);
+                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
+                    assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/doNotRespond", res.body);
+                    done();
+                });
+        });
+
+        it("should timeout if the response takes more than 2 seconds while fetching facebook id of a page", (done) => {
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/facebook-posts?webUrl=https://www.facebook.com/idtimeout&accessToken=" + accessToken)
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
+                    assert.strictEqual("error fetching facebook id of web url = https://www.facebook.com/idtimeout", res.body);
+                    done();
+                });
+        });
+
+        it("should timeout if the response takes more than 2 seconds while fetching feeds of a facebook page", (done) => {
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/facebook-posts?webUrl=https://www.facebook.com/feedtimeout&accessToken=" + accessToken)
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
+                    assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/feedtimeout", res.body);
                     done();
                 });
         });

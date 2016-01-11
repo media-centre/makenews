@@ -40,16 +40,28 @@ describe("TwitterReaderSpec", () => {
                     done();
                 });
         });
+
         it("should return 404 error if url is invalid", (done) => {
-            let expectedValues = { "message": "myTest is not a valid twitter handler" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .get("/twitter-feeds?url=myTest&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
                     assert.equal(res.statusCode, HttpResponseHandler.codes.NOT_FOUND);
-                    assert.strictEqual("myTest is not a valid twitter handler", expectedValues.message);
+                    assert.strictEqual("myTest is not a valid twitter handler", res.body.message);
                     done();
                 });
         });
+
+        it("should timeout if the response from twitter takes more time", (done) => {
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/twitter-feeds?url=@timeout&accessToken=" + accessToken)
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
+                    assert.strictEqual("@timeout is not a valid twitter handler", res.body.message);
+                    done();
+                });
+        });
+
     });
 });

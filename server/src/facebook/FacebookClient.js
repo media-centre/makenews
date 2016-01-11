@@ -26,7 +26,7 @@ export default class FacebookClient {
             this._addDefaultParameters(parameters);
             request.get({
                 "url": pageUrl + "&" + new HttpRequestUtil().queryString(parameters, false),
-                "timeout": this.facebookParameters.timeOutInSeconds
+                "timeout": this.facebookParameters.timeOut
             }, (error, response, body) => {
                 if (NodeErrorHandler.noError(error)) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
@@ -55,7 +55,7 @@ export default class FacebookClient {
                 this._addDefaultParameters(parameters);
                 request.get({
                     "url": this.facebookParameters.url + "/" + pageId + "/posts?" + new HttpRequestUtil().queryString(parameters, false),
-                    "timeout": this.facebookParameters.timeOutInSeconds
+                    "timeout": this.facebookParameters.timeOut
                 }, (error, response, body) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
@@ -76,7 +76,7 @@ export default class FacebookClient {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
                 "url": this.facebookParameters.url + "/" + facebookPageUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
-                "timeout": this.facebookParameters.timeOutInSeconds
+                "timeout": this.facebookParameters.timeOut
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
                     resolve(JSON.parse(response.body).id);

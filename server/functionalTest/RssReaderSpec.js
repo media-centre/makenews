@@ -61,7 +61,19 @@ describe("RssReaderSpec", () => {
                 .set("Cookie", accessToken)
                 .end((err, res) => {
                     assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
-                    assert.strictEqual(res.body.message, "Request failed for http://localhost:3000/thehindu/error-feeds/");
+                    assert.strictEqual("Bad status code", res.body.message);
+                    done();
+                });
+        });
+
+        it("should timeout if fetching rss feeds exceeds time out", (done) => {
+            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+                .get("/rss-feeds")
+                .query("url=http://localhost:3000/gardian/timeout-feeds/")
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
+                    assert.strictEqual("Request failed for http://localhost:3000/gardian/timeout-feeds/", res.body.message);
                     done();
                 });
         });

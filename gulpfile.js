@@ -172,6 +172,20 @@ gulp.task("client:test-coverage", (cb) => {
     });
 });
 
+//-------------------------------- functional tests --------------------------------------
+
+gulp.task("functional:eslint", function() {
+    return gulp.src([parameters.functional.serverSpecPath + "/**/*.js", parameters.functional.testServerPath + "/*.js"])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task("functional:test", function() {
+    return gulp.src(parameters.functional.serverSpecPath + "**/**/*.js", { "read": false })
+        .pipe(mocha({ "timeout": 3000 }));
+});
+
 // -------------------------------common tasks -------------------------------------------
 gulp.task("common:copy-js", function() {
     gulp.src(parameters.common.srcPath + "/**/*.js")
@@ -246,11 +260,6 @@ gulp.task("server:test", function() {
     .pipe(mocha({ "timeout": 3000 }));
 });
 
-gulp.task("server:functionalTest", function() {
-    return gulp.src(parameters.server.functionalTestPath + "**/**/*.js", { "read": false })
-    .pipe(mocha({ "timeout": 3000 }));
-});
-
 gulp.task("server:build", ["server:copy-js"]);
 
 gulp.task("server:watch", function() {
@@ -275,13 +284,8 @@ gulp.task("server:test-eslint", function() {
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
-gulp.task("server:functionalTest-eslint", function() {
-    return gulp.src([parameters.server.functionalTestPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint", "server:functionalTest-eslint"]);
+
+gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint"]);
 gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 gulp.task("server:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
@@ -333,7 +337,7 @@ gulp.task("test", function(callback) {
 });
 
 gulp.task("watch", ["client:watch", "server:watch"]);
-gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint"]);
+gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint", "functional:eslint"]);
 gulp.task("checkin-ready", ["common:checkin-ready", "client:checkin-ready", "server:checkin-ready"]);
 
 gulp.task("test-coverage", (cb) => {
