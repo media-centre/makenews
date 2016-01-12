@@ -13,5 +13,9 @@ export default class FacebookRequestHandler {
             });
         });
     }
+
+    static getBatchPosts(accessToken, nodeUrl) {
+
+    }
 }
 

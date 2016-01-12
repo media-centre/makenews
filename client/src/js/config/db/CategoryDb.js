@@ -35,6 +35,10 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": url });
     }
 
+    static fetchSourceConfigurationBySourceType(type) {
+        return PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": type });
+    }
+
     static createOrUpdateSource(sourceConfigurationDocument) {
         return new Promise((resolve, reject) => {
             if(!sourceConfigurationDocument) {

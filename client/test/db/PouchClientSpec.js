@@ -129,6 +129,9 @@ describe("PouchClient", () => {
                     },
                     "sourceParkFeeds": {
                         "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
+                    },
+                    "allSourcesBySourceType": {
+                        "map": "function(doc) { if(doc.docType === 'source') {emit(doc.sourceType, doc)} }"
                     }
                 }
             }, "_design/category");
@@ -190,6 +193,17 @@ describe("PouchClient", () => {
                     "key": "www.hindu.com/rss"
                 }).then((docs) => {
                     let resultDoc = docs[0];
+                    expect(resultDoc.url).to.include("www.hindu.com/rss");
+                    done();
+                });
+            });
+        });
+
+        describe("allSourcesBySourceType", () => {
+            it("should index all sourceConfigurations by source type", (done) => {
+                PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": "rss" }).then((docs) => {
+                    let resultDoc = docs[0];
+                    expect(resultDoc.sourceType).to.include("rss");
                     expect(resultDoc.url).to.include("www.hindu.com/rss");
                     done();
                 });

@@ -1,7 +1,7 @@
 "use strict";
 
 import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
-
+import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler.js";
 export const DISPLAY_ALL_FEEDS = "DISPLAY_ALL_FEEDS";
 
 export function displayAllFeeds(feeds) {
@@ -12,10 +12,24 @@ export function displayAllFeedsAsync(callback) {
     return dispatch => {
         FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => {
             dispatch(displayAllFeeds(feeds));
-            callback(feeds);
+            if(callback) {
+                return callback(feeds);
+            }
         }).catch(error => { //eslint-disable-line no-unused-vars
             dispatch(displayAllFeeds([]));
-            callback([]);
+            if(callback) {
+                return callback([]);
+            }
+        });
+    };
+}
+
+export function getLatestFeedsFromAllSources() {
+    return dispatch => {
+        RefreshFeedsHandler.fetchLatestFeeds().then(feeds => {
+            dispatch(displayAllFeedsAsync());
+        }).catch(()=> {
+            dispatch(displayAllFeedsAsync());
         });
     };
 }

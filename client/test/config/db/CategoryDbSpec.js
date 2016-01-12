@@ -56,6 +56,15 @@ describe("CategoryDb", () => {
         });
     });
 
+    describe("fetchSourceConfigurationBySourceType", () => {
+        it("should fetch all the source configurations for a sourceType", () => {
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allSourcesBySourceType", { "include_docs": true, "key": "rss" });
+            CategoryDb.fetchSourceConfigurationBySourceType("rss");
+            pouchClientMock.verify();
+            PouchClient.fetchDocuments.restore();
+        });
+    });
+
     describe("createOrUpdateSource", () => {
         it("should create Source if no source with url is found", (done) => {
             let jsonDocument = {
