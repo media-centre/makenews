@@ -27,7 +27,7 @@ export function displayAllFeedsAsync(callback) {
 
 export function getLatestFeedsFromAllSources() {
     return dispatch => {
-        RefreshFeedsHandler.fetchLatestFeeds().then(feeds => {
+        new RefreshFeedsHandler().handleBatchRequests().then(feeds => {
             dispatch(displayAllFeedsAsync());
         }).catch(()=> {
             dispatch(displayAllFeedsAsync());

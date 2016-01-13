@@ -7,7 +7,9 @@ import EnvironmentConfig from "../../js/EnvironmentConfig.js";
 import RssResponseParser from "../rss/RssResponseParser.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
+import FacebookResponseParser from "../facebook/FacebookResponseParser.js";
 import RssDb from "../rss/RssDb.js";
+import FacebookDb from "../facebook/FacebookDb.js";
 
 const URLS_PER_BATCH = 5;
 export default class RefreshFeedsHandler {
@@ -43,8 +45,14 @@ export default class RefreshFeedsHandler {
     }
 
     _handleFacebookBatch(facebookBatch) {
+        let token = EnvironmentConfig.instance().get("facebookAccessToken");
         if(facebookBatch.length > 0) {
-            FacebookRequestHandler.getBatchPosts(this._constructRequestData(facebookBatch));
+            FacebookRequestHandler.getBatchPosts(token, this._constructRequestData(facebookBatch)).then((feedMap)=> {
+                Object.keys(feedMap.posts).map((sourceId)=> {
+                    let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feedMap.posts[sourceId]);
+                    FacebookDb.addFacebookFeeds(feedDocuments);
+                });
+            });
         }
     }
 

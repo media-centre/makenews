@@ -16,8 +16,16 @@ export default class FacebookRequestHandler {
         });
     }
 
-    static getBatchPosts(accessToken, nodeUrl) {
-
+    static getBatchPosts(accessToken, postData) {
+        return new Promise((resolve, reject)=> {
+            let facebookClient = FacebookClient.instance(accessToken);
+            facebookClient.fetchBatchPosts(postData).then(fbPostMap => {
+                resolve(fbPostMap);
+            }).catch(error => { // eslint-disable-line
+                console.log(error)
+                reject([]);
+            });
+        });
     }
 }
 

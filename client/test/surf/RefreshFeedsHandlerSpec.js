@@ -6,6 +6,7 @@ import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler.js";
 import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
+import FacebookDb from "../../src/js/facebook/FacebookDb.js";
 import EnvironmentConfig from "../../src/js/EnvironmentConfig.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -154,6 +155,43 @@ describe("RefreshFeedsHandler", () => {
             rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
             let refreshFeedsHandler = new RefreshFeedsHandler();
             refreshFeedsHandler._handleRssBatch(rssUrls);
+        });
+    });
+    
+    describe("_handleFacebookBatch", ()=> {
+        let fbRequestHandlerMock = null, fbDbSpy = null;
+        beforeEach("before", ()=> {
+            fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
+            fbDbSpy = sinon.spy(FacebookDb, "addFacebookFeeds");
+        });
+        afterEach("after", ()=> {
+            let maxCallCount = 2;
+            sinon.assert.callCount(fbDbSpy, maxCallCount);
+            fbRequestHandlerMock.verify();
+            FacebookRequestHandler.getBatchPosts.restore();
+            FacebookDb.addFacebookFeeds.restore();
+        });
+        it("should parse and add facebook feeds", ()=> {
+            let token = EnvironmentConfig.instance().get("facebookAccessToken");
+            let fbUrls = [
+                { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
+                { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+            ];
+            let postData = [
+                { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
+                { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
+            ];
+
+            let fbFeedMap = {
+                "posts": {
+                    "1": [{ "name": "test name1" }],
+                    "2": [{ "name": "test name2" }]
+                }
+            };
+
+            fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+            let refreshFeedsHandler = new RefreshFeedsHandler();
+            refreshFeedsHandler._handleFacebookBatch(fbUrls);
         });
     });
 
