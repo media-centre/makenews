@@ -54,5 +54,6 @@ Login.contextTypes = {
 
 Login.propTypes = {
     "errorMessage": PropTypes.string.isRequired,
-    "onLoginClick": PropTypes.func.isRequired
+    "onLoginClick": PropTypes.func.isRequired,
+    "loginStrings": PropTypes.object
 };
