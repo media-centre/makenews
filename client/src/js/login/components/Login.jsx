@@ -3,17 +3,7 @@
 import React, { PropTypes } from "react";
 import { History } from "react-router";
 
-export default class Login {
-    displayName() {
-        return "Login Component";
-    }
-
-    propTypes() {
-        return {
-            "errorMessage": PropTypes.string.isRequired,
-            "onLoginClick": PropTypes.func.isRequired
-        };
-    }
+export default class Login extends React.Component {
 
     handleClick(event) {
         event.preventDefault();
@@ -60,4 +50,9 @@ Login.contextTypes = {
     "history": function() {
         return History.prototype;
     }
+};
+
+Login.propTypes = {
+    "errorMessage": PropTypes.string.isRequired,
+    "onLoginClick": PropTypes.func.isRequired
 };
