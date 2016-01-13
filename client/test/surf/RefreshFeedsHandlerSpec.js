@@ -1,13 +1,13 @@
+/* eslint max-nested-callbacks:0 */
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler.js";
 import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
-import RssResponseParser from "../../src/js/rss/RssResponseParser.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
 import EnvironmentConfig from "../../src/js/EnvironmentConfig.js";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import sinon from "sinon";
 
 describe("RefreshFeedsHandler", () => {
@@ -108,7 +108,8 @@ describe("RefreshFeedsHandler", () => {
             rssDbSpy = sinon.spy(RssDb, "addRssFeeds");
         });
         afterEach("after", ()=> {
-            sinon.assert.callCount(rssDbSpy, 3);
+            let maxCallCount = 3;
+            sinon.assert.callCount(rssDbSpy, maxCallCount);
             rssRequestHandlerMock.verify();
             RssRequestHandler.fetchBatchRssFeeds.restore();
             RssDb.addRssFeeds.restore();

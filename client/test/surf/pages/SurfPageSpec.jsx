@@ -2,11 +2,9 @@
 "use strict";
 import { SurfPage } from "../../../src/js/surf/pages/SurfPage.jsx"; //eslint-disable-line no-unused-vars
 
-import { expect, assert } from "chai";
-import sinon from "sinon";
+import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import ReactDOM from "react-dom";
 import "../../helper/TestHelper.js";
 
 

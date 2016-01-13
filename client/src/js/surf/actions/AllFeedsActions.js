@@ -1,3 +1,4 @@
+/* eslint no-unused-vars:0 */
 "use strict";
 
 import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";

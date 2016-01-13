@@ -129,9 +129,6 @@ describe("PouchClient", () => {
                     },
                     "sourceParkFeeds": {
                         "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
-                    },
-                    "allSourcesBySourceType": {
-                        "map": "function(doc) { if(doc.docType === 'source') {emit(doc.sourceType, doc)} }"
                     }
                 }
             }, "_design/category");

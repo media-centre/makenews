@@ -42,7 +42,7 @@ export default class FacebookRouteHelper {
                 if(this.request.body.data.length - 1 === index) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });
                 }
-            }).catch((err) => {
+            }).catch(() => {
                 allFeeds[item.id] = "failed";
                 if (this.request.body.data.length - 1 === index) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });

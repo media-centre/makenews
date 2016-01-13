@@ -35,7 +35,7 @@ export default class RssRouteHelper {
                 if(this.request.body.data.length - 1 === index) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
                 }
-            }).catch((err) => {
+            }).catch(() => {
                 allFeeds[item.id] = "failed";
                 if(this.request.body.data.length - 1 === index) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);

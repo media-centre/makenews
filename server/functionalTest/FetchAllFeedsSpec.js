@@ -20,16 +20,10 @@ describe("FetchAllFeedsSpec", () => {
     describe("fetchFeeds", () => {
         xit("response to /fetch-all-feeds-from-all-sources with correct username and correct password ", (done) => {
             let requestData = {
-                    "data": [{
-                        "url": "http://localhost:3000/thehindu/rss-feeds/",
-                        "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                        "timestamp": "1232323"
-                    },
-                        {
-                            "url": "http://localhost:3000/thehindu/error-feeds",
-                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
-                            "timestamp": "3432424234"
-                        }]
+                "data": [
+                    { "url": "http://localhost:3000/thehindu/rss-feeds/", "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316", "timestamp": "1232323" },
+                    { "url": "http://localhost:3000/thehindu/error-feeds", "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249", "timestamp": "3432424234" }
+                ]
             };
 
             request(config[env].serverIpAddress + ":" + config[env].serverPort)

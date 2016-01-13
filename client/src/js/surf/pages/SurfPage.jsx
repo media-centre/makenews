@@ -1,3 +1,4 @@
+/* eslint brace-style:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";
@@ -35,7 +36,7 @@ export default class SurfPage extends Component {
 
     render() {
         let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
-        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds() }}>{"Refresh Feeds"}</div>
+        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}>{"Refresh Feeds"}</div>;
         return (
             <div className="surf-page feeds-container">
                 {refreshButton}

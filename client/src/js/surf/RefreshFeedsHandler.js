@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks:0 */
+/* eslint max-nested-callbacks:0, operator-assignment:0, no-unused-vars:0 */
 
 "use strict";
 import AjaxClient from "../utils/AjaxClient.js";
@@ -19,9 +19,9 @@ export default class RefreshFeedsHandler {
     }
 
     handleBatchRequests() {
-        let rssRequestPromises = this.fetchAllSourceUrls().then(() => {
+        this.fetchAllSourceUrls().then(() => {
             let maxCountOfUrls = 11;
-            let totalBatches = Math.ceil(maxCountOfUrls/URLS_PER_BATCH);
+            let totalBatches = Math.ceil(maxCountOfUrls / URLS_PER_BATCH);
             let lastIndex = 0;
             while(totalBatches > 0) {
                 this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));

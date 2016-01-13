@@ -1,3 +1,4 @@
+/* eslint max-nested-callbacks:0 */
 "use strict";
 import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
@@ -17,7 +18,7 @@ describe("RssRequestHandler", () => {
             let postData = {
                 "data": [
                     { "id": "rssid1", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
-                    { "id": "rssid2", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
+                    { "id": "rssid2", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 }
                 ]
             };
 

@@ -7,9 +7,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import { expect } from "chai";
-import sinon from "sinon";
 import nock from "nock";
 import sinon from "sinon";
 
@@ -166,16 +164,18 @@ describe("RssRouteHelper", () => {
 
             let requestData = {
                 "body": {
-                    "data": [{
-                        "url": "www.rssurl1.com/rss",
-                        "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                        "timestamp": "1232323"
-                    },
-                    {
-                        "url": "www.rssurl2.com/rss",
-                        "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
-                        "timestamp": "3432424234"
-                    }]
+                    "data": [
+                        {
+                            "url": "www.rssurl1.com/rss",
+                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
+                            "timestamp": "1232323"
+                        },
+                        {
+                            "url": "www.rssurl2.com/rss",
+                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
+                            "timestamp": "3432424234"
+                        }
+                    ]
                 }
             };
 
@@ -203,16 +203,18 @@ describe("RssRouteHelper", () => {
 
             let requestData = {
                 "body": {
-                    "data": [{
-                        "url": "www.rssurl1.com/rss",
-                        "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                        "timestamp": "1232323"
-                    },
-                    {
-                        "url": "www.rssurl2.com/rss",
-                        "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
-                        "timestamp": "3432424234"
-                    }]
+                    "data": [
+                        {
+                            "url": "www.rssurl1.com/rss",
+                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
+                            "timestamp": "1232323"
+                        },
+                        {
+                            "url": "www.rssurl2.com/rss",
+                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
+                            "timestamp": "3432424234"
+                        }
+                    ]
                 }
             };
 

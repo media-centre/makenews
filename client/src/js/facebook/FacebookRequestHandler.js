@@ -1,3 +1,5 @@
+/* eslint no-unused-vars:0 */
+
 "use strict";
 import FacebookClient from "./FacebookClient.js";
 

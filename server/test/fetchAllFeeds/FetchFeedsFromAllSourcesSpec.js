@@ -138,7 +138,7 @@ describe("FetchFeedsFromAllSources", () => {
             let requestData = {
                 "body": {
                     "data": [
-                        { "source": "twitter", "url": "http://www.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms", "timestamp": "12344568"  }
+                        { "source": "twitter", "url": "http://www.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms", "timestamp": "12344568" }
                     ],
                     "facebookAccessToken": "test_token"
                 }
