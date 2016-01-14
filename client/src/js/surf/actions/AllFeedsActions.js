@@ -25,12 +25,8 @@ export function displayAllFeedsAsync(callback) {
     };
 }
 
-export function getLatestFeedsFromAllSources() {
+export function getLatestFeedsFromAllSources(callback = ()=> {}) {
     return dispatch => {
-        new RefreshFeedsHandler().handleBatchRequests().then(feeds => {
-            dispatch(displayAllFeedsAsync());
-        }).catch(()=> {
-            dispatch(displayAllFeedsAsync());
-        });
+        new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, callback).handleBatchRequests();
     };
 }

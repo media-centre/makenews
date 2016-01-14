@@ -12,6 +12,16 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("RefreshFeedsHandler", () => {
+    let dispatch = null, displayAllFeedsAsync = null, uiCallback = null;
+    before("before", () => {
+        dispatch = (action) => {
+            action(uiCallback);
+        };
+        displayAllFeedsAsync = (callback) => {
+            callback();
+        };
+        uiCallback = () => {};
+    });
     it("should fetchSourcesByType", () =>{
         let sandbox = sinon.sandbox.create();
         let categoryDbMock = sandbox.stub(CategoryDb, "fetchSourceConfigurationBySourceType");
@@ -97,101 +107,172 @@ describe("RefreshFeedsHandler", () => {
             categoryDbStub.withArgs("rss").returns(Promise.resolve(rssUrls));
 
             let refreshFeedsHandler = new RefreshFeedsHandler();
-            refreshFeedsHandler.handleBatchRequests();
+            refreshFeedsHandler.handleBatchRequests(dispatch, displayAllFeedsAsync, uiCallback);
 
         });
     });
 
     describe("_handleRssBatch", ()=> {
-        let rssRequestHandlerMock = null, rssDbSpy = null;
-        beforeEach("before", ()=> {
-            rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
-            rssDbSpy = sinon.spy(RssDb, "addRssFeeds");
-        });
-        afterEach("after", ()=> {
-            let maxCallCount = 3;
-            sinon.assert.callCount(rssDbSpy, maxCallCount);
-            rssRequestHandlerMock.verify();
-            RssRequestHandler.fetchBatchRssFeeds.restore();
-            RssDb.addRssFeeds.restore();
-        });
-        it("should parse the rss feeds", ()=> {
-            let rssUrls = [
-                { "url": "rssUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "rssUrl2", "timestamp": "1234", "_id": "2" },
-                { "url": "rssUrl3", "timestamp": "1234", "_id": "3" },
-                { "url": "rssUrl4", "timestamp": "1234", "_id": "4" },
-                { "url": "rssUrl5", "timestamp": "1234", "_id": "5" }
-            ];
-            let postData = [
-                { "url": "rssUrl1", "timestamp": "1234", "id": "1" },
-                { "url": "rssUrl2", "timestamp": "1234", "id": "2" },
-                { "url": "rssUrl3", "timestamp": "1234", "id": "3" },
-                { "url": "rssUrl4", "timestamp": "1234", "id": "4" },
-                { "url": "rssUrl5", "timestamp": "1234", "id": "5" }
-            ];
+        describe("creation of feeds", () => {
+            let rssRequestHandlerMock = null, rssDbSpy = null;
+            beforeEach("before", ()=> {
+                rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
+                rssDbSpy = sinon.spy(RssDb, "addRssFeeds");
+            });
+            afterEach("after", ()=> {
+                let maxCallCount = 3;
+                sinon.assert.callCount(rssDbSpy, maxCallCount);
+                rssRequestHandlerMock.verify();
+                RssRequestHandler.fetchBatchRssFeeds.restore();
+                RssDb.addRssFeeds.restore();
+            });
+            it("should parse the rss feeds", ()=> {
+                let rssUrls = [
+                    { "url": "rssUrl1", "timestamp": "1234", "_id": "1" },
+                    { "url": "rssUrl2", "timestamp": "1234", "_id": "2" },
+                    { "url": "rssUrl3", "timestamp": "1234", "_id": "3" },
+                    { "url": "rssUrl4", "timestamp": "1234", "_id": "4" },
+                    { "url": "rssUrl5", "timestamp": "1234", "_id": "5" }
+                ];
+                let postData = [
+                    { "url": "rssUrl1", "timestamp": "1234", "id": "1" },
+                    { "url": "rssUrl2", "timestamp": "1234", "id": "2" },
+                    { "url": "rssUrl3", "timestamp": "1234", "id": "3" },
+                    { "url": "rssUrl4", "timestamp": "1234", "id": "4" },
+                    { "url": "rssUrl5", "timestamp": "1234", "id": "5" }
+                ];
 
-            let rssFeedMap = {
-                "1": {
-                    "items": [
-                        { "name": "test name1" },
-                        { "name": "test name1" }
-                    ]
-                },
-                "2": {
-                    "items": [
-                        { "name": "test name2" },
-                        { "name": "test name2" }
-                    ]
-                },
-                "3": {
-                    "items": [
-                        { "name": "test name" },
-                        { "name": "test name" }
-                    ]
-                }
-            };
+                let rssFeedMap = {
+                    "1": {
+                        "items": [
+                            { "name": "test name1" },
+                            { "name": "test name1" }
+                        ]
+                    },
+                    "2": {
+                        "items": [
+                            { "name": "test name2" },
+                            { "name": "test name2" }
+                        ]
+                    },
+                    "3": {
+                        "items": [
+                            { "name": "test name" },
+                            { "name": "test name" }
+                        ]
+                    }
+                };
 
-            rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
-            let refreshFeedsHandler = new RefreshFeedsHandler();
-            refreshFeedsHandler._handleRssBatch(rssUrls);
+                rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
+                let refreshFeedsHandler = new RefreshFeedsHandler();
+                refreshFeedsHandler._handleRssBatch(rssUrls);
+            });
+        });
+
+        describe("UICallback", ()=> {
+            let rssRequestHandlerStub = null, rssDbStub = null;
+            beforeEach("before", ()=> {
+                rssRequestHandlerStub = sinon.stub(RssRequestHandler, "fetchBatchRssFeeds");
+                rssDbStub = sinon.stub(RssDb, "addRssFeeds");
+            });
+            afterEach("after", ()=> {
+                RssRequestHandler.fetchBatchRssFeeds.restore();
+                RssDb.addRssFeeds.restore();
+            });
+            it("should parse the rss feeds", (done)=> {
+                uiCallback = () => {
+                    done();
+                };
+                let rssUrls = [{ "url": "rssUrl1", "timestamp": "1234", "_id": "1" }];
+                let postData = [{ "url": "rssUrl1", "timestamp": "1234", "id": "1" }];
+
+                let rssFeedMap = {
+                    "1": {
+                        "items": [
+                            { "name": "test name1" }
+                        ]
+                    }
+                };
+
+                rssRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
+                rssDbStub.returns(Promise.resolve());
+                let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                refreshFeedsHandler._handleRssBatch(rssUrls);
+            });
         });
     });
     
     describe("_handleFacebookBatch", ()=> {
-        let fbRequestHandlerMock = null, fbDbSpy = null;
-        beforeEach("before", ()=> {
-            fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
-            fbDbSpy = sinon.spy(FacebookDb, "addFacebookFeeds");
-        });
-        afterEach("after", ()=> {
-            let maxCallCount = 2;
-            sinon.assert.callCount(fbDbSpy, maxCallCount);
-            fbRequestHandlerMock.verify();
-            FacebookRequestHandler.getBatchPosts.restore();
-            FacebookDb.addFacebookFeeds.restore();
-        });
-        it("should parse and add facebook feeds", ()=> {
-            let token = EnvironmentConfig.instance().get("facebookAccessToken");
-            let fbUrls = [
-                { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
-            ];
-            let postData = [
-                { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
-                { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
-            ];
+        describe("creation of feeds", ()=> {
+            let fbRequestHandlerMock = null, fbDbSpy = null;
+            beforeEach("before", ()=> {
+                fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
+                fbDbSpy = sinon.spy(FacebookDb, "addFacebookFeeds");
+            });
+            afterEach("after", ()=> {
+                let maxCallCount = 2;
+                sinon.assert.callCount(fbDbSpy, maxCallCount);
+                fbRequestHandlerMock.verify();
+                FacebookRequestHandler.getBatchPosts.restore();
+                FacebookDb.addFacebookFeeds.restore();
+            });
+            it("should parse and add facebook feeds", ()=> {
+                let token = EnvironmentConfig.instance().get("facebookAccessToken");
+                let fbUrls = [
+                    { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
+                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                ];
+                let postData = [
+                    { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
+                    { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
+                ];
 
-            let fbFeedMap = {
-                "posts": {
-                    "1": [{ "name": "test name1" }],
-                    "2": [{ "name": "test name2" }]
-                }
-            };
+                let fbFeedMap = {
+                    "posts": {
+                        "1": [{ "name": "test name1", "id": "1" }],
+                        "2": [{ "name": "test name2", "id": "2" }]
+                    }
+                };
 
-            fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
-            let refreshFeedsHandler = new RefreshFeedsHandler();
-            refreshFeedsHandler._handleFacebookBatch(fbUrls);
+                fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                let refreshFeedsHandler = new RefreshFeedsHandler();
+                refreshFeedsHandler._handleFacebookBatch(fbUrls);
+            });
+        });
+
+        describe("UICallback", ()=> {
+            let fbRequestHandlerStub = null, fbDbStub = null;
+            beforeEach("before", ()=> {
+                fbRequestHandlerStub = sinon.stub(FacebookRequestHandler, "getBatchPosts");
+                fbDbStub = sinon.stub(FacebookDb, "addFacebookFeeds");
+            });
+            afterEach("after", ()=> {
+                FacebookRequestHandler.getBatchPosts.restore();
+                FacebookDb.addFacebookFeeds.restore();
+            });
+            it("should parse and add facebook feeds", (done) => {
+                uiCallback = () => {
+                    done();
+                };
+                let token = EnvironmentConfig.instance().get("facebookAccessToken");
+                let fbUrls = [
+                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                ];
+                let postData = [
+                    { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
+                ];
+
+                let fbFeedMap = {
+                    "posts": {
+                        "2": [{ "name": "test name2", "id": "2" }]
+                    }
+                };
+
+                fbRequestHandlerStub.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                fbDbStub.returns(Promise.resolve());
+                let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                refreshFeedsHandler._handleFacebookBatch(fbUrls);
+            });
         });
     });
 

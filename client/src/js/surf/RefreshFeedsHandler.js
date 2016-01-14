@@ -14,7 +14,10 @@ import FacebookDb from "../facebook/FacebookDb.js";
 const URLS_PER_BATCH = 5;
 export default class RefreshFeedsHandler {
 
-    constructor() {
+    constructor(dispatch, displayAllFeedsAsync, uiCallback) {
+        this.dispatch = dispatch;
+        this.displayAllFeedsAsync = displayAllFeedsAsync;
+        this.uiCallback = uiCallback;
         this.refreshInProgress = true;
         this.sourceUrlsMap = {};
         this.refreshCompletionPercentage = 0;
@@ -22,8 +25,7 @@ export default class RefreshFeedsHandler {
 
     handleBatchRequests() {
         this.fetchAllSourceUrls().then(() => {
-            let maxCountOfUrls = 11;
-            let totalBatches = Math.ceil(maxCountOfUrls / URLS_PER_BATCH);
+            let totalBatches = Math.ceil(this._maxCountOfUrls() / URLS_PER_BATCH);
             let lastIndex = 0;
             while(totalBatches > 0) {
                 this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));
@@ -38,7 +40,9 @@ export default class RefreshFeedsHandler {
         if(rssBatch.length > 0) {
             RssRequestHandler.fetchBatchRssFeeds(this._constructRequestData(rssBatch)).then((feedMap)=> {
                 Object.keys(feedMap).map((sourceId)=> {
-                    RssDb.addRssFeeds(RssResponseParser.parseFeeds(sourceId, feedMap[sourceId].items));
+                    RssDb.addRssFeeds(RssResponseParser.parseFeeds(sourceId, feedMap[sourceId].items)).then(() => {
+                        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this.refreshCompletionPercentage));
+                    });
                 });
             });
         }
@@ -50,7 +54,9 @@ export default class RefreshFeedsHandler {
             FacebookRequestHandler.getBatchPosts(token, this._constructRequestData(facebookBatch)).then((feedMap)=> {
                 Object.keys(feedMap.posts).map((sourceId)=> {
                     let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feedMap.posts[sourceId]);
-                    FacebookDb.addFacebookFeeds(feedDocuments);
+                    FacebookDb.addFacebookFeeds(feedDocuments).then(() => {
+                        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this.refreshCompletionPercentage));
+                    })
                 });
             });
         }
@@ -79,6 +85,13 @@ export default class RefreshFeedsHandler {
             return { "timestamp": source.timestamp, "url": source.url, "id": source._id };
         });
         return { "data": urls };
+    }
+
+    _maxCountOfUrls() {
+        let countOfUrls = Object.keys(this.sourceUrlsMap).map(sourceType => {
+            return this.sourceUrlsMap[sourceType].length;
+        });
+        return Math.max(...countOfUrls);
     }
 }
 
