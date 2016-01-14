@@ -1,0 +1,16 @@
+---
+# file: meta/main.yml
+
+galaxy_info:
+  author: Guillaume Dedrie
+  description: "Install CouchDB"
+  min_ansible_version: 1.4
+  license: GPL3
+  platforms:
+    - name: Debian
+      versions:
+        - wheezy
+  categories:
+    - database
+    - database:nosql
+    - web

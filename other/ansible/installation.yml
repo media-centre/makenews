@@ -1,0 +1,10 @@
+- hosts: web
+  sudo: True
+  roles:
+    - user
+    - Ansibles.build-essential
+    - ANXS.build-essential
+    - Ansibles.erlang
+    - guillaumededrie.couchdb
+    - gotansible.nodejs
+    - nodedependencies

@@ -1,0 +1,8 @@
+---
+# defaults file for user
+hosts: web
+sudo: yes
+deploy_username: deploy
+deploy_groupname: deploy
+ansible_os_family: "Debian"
+

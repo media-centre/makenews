@@ -1,0 +1,10 @@
+---
+- name: install PM2 npm module
+  npm: name=pm2 global=yes
+
+- name: install add-cors-to-couchdb npm module
+  npm: name=add-cors-to-couchdb global=yes
+
+- name: enable the CORS in couchdb
+  shell: add-cors-to-couchdb
+

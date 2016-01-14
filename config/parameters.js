@@ -17,7 +17,8 @@ const serverConfig = {
   testPath: './server/test',
   distFolder: './dist/server',
   distServerJsFolder: './dist',
-  serverJsFile: 'server.js'
+  serverJsFile: 'server.js',
+  packageJsonFile: 'package.json'
 };
 
 const commonConfig = {

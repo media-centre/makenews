@@ -1,0 +1,38 @@
+---
+# file: tasks/source.yml
+
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Setup CouchDB user
+  user: name=couchdb state=present system=yes
+  sudo: true
+
+- name: Download CouchDB
+  get_url: url={{ couchdb_tarball_url }} dest={{ couchdb_tmp_dir }}{{ couchdb_file_name }}
+
+- name: Verify SHASUM of CouchDB downloaded
+  shell: curl {{ couchdb_shasum_url }} | grep {{ couchdb_file_name }} | sha1sum -c chdir={{ couchdb_tmp_dir }}
+
+- name: Unpack CouchDB
+  command: tar -xvzf apache-couchdb-{{ couchdb_version }}.tar.gz chdir={{ couchdb_tmp_dir }}
+
+- name: Compile and install CouchDB
+  shell:
+    ./configure --prefix=/usr/local --with-js-lib=/usr/lib --with-js-include=/usr/include/mozjs --enable-init && make && make install
+    chdir={{ couchdb_tmp_dir }}{{ couchdb_file_tag }}
+  sudo: true
+
+- name: Link CouchDB exec prog
+  sudo: true
+  file: src=/usr/local/etc/init.d/couchdb dest=/etc/init.d/couchdb state=link
+
+- name: Create or update CouchDB directories
+  sudo: true
+  file: path={{ item }} state=directory recurse=yes owner=couchdb group=couchdb mode=0770
+  with_items:
+    - /usr/local/etc/couchdb
+    - /usr/local/lib/couchdb
+    - /usr/local/var/lib/couchdb
+    - /usr/local/var/log/couchdb
+    - /usr/local/var/run/couchdb

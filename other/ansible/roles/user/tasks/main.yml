@@ -1,0 +1,12 @@
+---
+- name: run apt-get upgrade
+  apt: update_cache=yes
+
+- name: create deployment group
+  group: name=medcen state=present
+
+- name: create deployment user
+  user: name={{deploy_username}} comment="media center user" group=medcen
+
+- name: Placing key
+  authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
