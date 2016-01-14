@@ -3,7 +3,6 @@
 "use strict";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import CategoryApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
-import { CategoryDocument } from "../../../src/js/config/actions/CategoryDocuments.js";
 import { STATUS_VALID } from "../../../src/js/config/Source.js";
 import sinon from "sinon";
 import { expect } from "chai";
