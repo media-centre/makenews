@@ -1,4 +1,4 @@
-/* eslint brace-style:0 */
+/* eslint brace-style:0, max-len:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";
@@ -15,7 +15,7 @@ import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js"
 export default class SurfPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "refreshState": false };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "refreshState": false, "refreshProgress": 0 };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -30,18 +30,29 @@ export default class SurfPage extends Component {
         if(this.state.refreshState) {
             return false;
         }
-        this.setState({ "refreshState": true });
-        this.props.dispatch(getLatestFeedsFromAllSources());
+        this.setState({ "refreshState": true, "refreshProgress": 0 });
+        this.props.dispatch(getLatestFeedsFromAllSources((feeds, percentage)=> {
+            this.setState({ "refreshProgress": percentage });
+            let totalPercentage = 100;
+            if(percentage === totalPercentage) {
+                this.setState({ "refreshState": false });
+            }
+        }));
     }
 
     render() {
         let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
-        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}>{"Refresh Feeds"}</div>;
+        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span><div>{this.state.refreshState ? "Refreshing..." : "Refresh Feeds"}</div></div>;
+
+        let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.state.refreshProgress + "%" }}></div>;
         return (
-            <div className="surf-page feeds-container">
+            <div className="surf-page-container">
+                {refreshStatus}
+                <div className="surf-page feeds-container">
                 {refreshButton}
                 {hintMsg}
-                <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={parkFeed}/>
+                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={parkFeed}/>
+                </div>
             </div>
         );
     }

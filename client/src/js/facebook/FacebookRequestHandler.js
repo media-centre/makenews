@@ -22,7 +22,6 @@ export default class FacebookRequestHandler {
             facebookClient.fetchBatchPosts(postData).then(fbPostMap => {
                 resolve(fbPostMap);
             }).catch(error => { // eslint-disable-line
-                console.log(error)
                 reject([]);
             });
         });

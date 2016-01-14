@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks:0 */
+/* eslint max-nested-callbacks:0, callback-return:0 */
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
@@ -8,7 +8,7 @@ import RssDb from "../../src/js/rss/RssDb.js";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
 import FacebookDb from "../../src/js/facebook/FacebookDb.js";
 import EnvironmentConfig from "../../src/js/EnvironmentConfig.js";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import sinon from "sinon";
 
 describe("RefreshFeedsHandler", () => {
@@ -108,7 +108,59 @@ describe("RefreshFeedsHandler", () => {
 
             let refreshFeedsHandler = new RefreshFeedsHandler();
             refreshFeedsHandler.handleBatchRequests(dispatch, displayAllFeedsAsync, uiCallback);
+        });
+    });
 
+    describe("refreshCompletionPercentage", () => {
+        let fbRequestHandlerStub = null, fbDbStub = null;
+        beforeEach("before", ()=> {
+            fbRequestHandlerStub = sinon.stub(FacebookRequestHandler, "getBatchPosts");
+            fbDbStub = sinon.stub(FacebookDb, "addFacebookFeeds");
+        });
+        afterEach("after", ()=> {
+            FacebookRequestHandler.getBatchPosts.restore();
+            FacebookDb.addFacebookFeeds.restore();
+        });
+
+        it("should update the progress percentage on success of updation", (done) => {
+            let counter = 0, percentageProgress = 25;
+            displayAllFeedsAsync = (callback, percentage) => {
+                counter += 1;
+                assert.strictEqual(percentage, counter * percentageProgress);
+                callback();
+                let maxCounterValue = 4;
+                if(counter === maxCounterValue) {
+                    done();
+                }
+            };
+            let token = EnvironmentConfig.instance().get("facebookAccessToken");
+            let fbUrls = [
+                { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
+                { "url": "fbUrl2", "timestamp": "1234", "_id": "2" },
+                { "url": "fbUrl3", "timestamp": "1234", "_id": "3" },
+                { "url": "fbUrl4", "timestamp": "1234", "_id": "4" }
+            ];
+            let postData = [
+                { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
+                { "url": "fbUrl2", "timestamp": "1234", "id": "2" },
+                { "url": "fbUrl3", "timestamp": "1234", "id": "3" },
+                { "url": "fbUrl4", "timestamp": "1234", "id": "4" }
+            ];
+
+            let fbFeedMap = {
+                "posts": {
+                    "1": [{ "name": "test name1", "id": "1" }],
+                    "2": [{ "name": "test name2", "id": "2" }],
+                    "3": [{ "name": "test name3", "id": "3" }],
+                    "4": [{ "name": "test name4", "id": "4" }]
+                }
+            };
+
+            fbRequestHandlerStub.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+            fbDbStub.returns(Promise.resolve());
+            let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+            refreshFeedsHandler.totalNumberOfUrls = 4;
+            refreshFeedsHandler._handleFacebookBatch(fbUrls);
         });
     });
 
@@ -180,8 +232,13 @@ describe("RefreshFeedsHandler", () => {
                 RssDb.addRssFeeds.restore();
             });
             it("should parse the rss feeds", (done)=> {
+                let hundredPercentage = 100;
                 uiCallback = () => {
                     done();
+                };
+                displayAllFeedsAsync = (callback, percentage) => {
+                    assert.strictEqual(percentage, hundredPercentage);
+                    callback();
                 };
                 let rssUrls = [{ "url": "rssUrl1", "timestamp": "1234", "_id": "1" }];
                 let postData = [{ "url": "rssUrl1", "timestamp": "1234", "id": "1" }];
@@ -197,6 +254,7 @@ describe("RefreshFeedsHandler", () => {
                 rssRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
                 rssDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                refreshFeedsHandler.totalNumberOfUrls = 1;
                 refreshFeedsHandler._handleRssBatch(rssUrls);
             });
         });
@@ -253,6 +311,9 @@ describe("RefreshFeedsHandler", () => {
             it("should parse and add facebook feeds", (done) => {
                 uiCallback = () => {
                     done();
+                };
+                displayAllFeedsAsync = () => {
+                    uiCallback();
                 };
                 let token = EnvironmentConfig.instance().get("facebookAccessToken");
                 let fbUrls = [

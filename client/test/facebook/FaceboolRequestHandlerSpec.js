@@ -85,9 +85,8 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("getBatchPosts", ()=> {
-        let nodeUrl = null, accessToken = null;
+        let accessToken = null;
         before("getPosts", () => {
-            nodeUrl = "test-node-name";
             accessToken = "test-access-token";
         });
 
@@ -117,7 +116,7 @@ describe("FacebookRequestHandler", () => {
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchBatchPosts");
             facebookFetchPostsMock.withArgs(postData).returns(Promise.resolve(fbPostMap));
 
-            FacebookRequestHandler.getBatchPosts(accessToken, postData).then(postMap => {
+            FacebookRequestHandler.getBatchPosts(accessToken, postData).then(() => {
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
 

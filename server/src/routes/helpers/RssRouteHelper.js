@@ -29,17 +29,20 @@ export default class RssRouteHelper {
     feedsForAllUrls() {
         let allFeeds = {};
         let rssRequestHandler = RssRequestHandler.instance();
-        this.request.body.data.forEach((item, index)=> {
+        let counter = 0;
+        this.request.body.data.forEach((item)=> {
             rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
                 allFeeds[item.id] = feeds;
-                if(this.request.body.data.length - 1 === index) {
+                if(this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
                 }
+                counter += 1;
             }).catch(() => {
                 allFeeds[item.id] = "failed";
-                if(this.request.body.data.length - 1 === index) {
+                if(this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
                 }
+                counter += 1;
             });
         });
     }

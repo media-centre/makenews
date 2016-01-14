@@ -9,17 +9,17 @@ export function displayAllFeeds(feeds) {
     return { "type": DISPLAY_ALL_FEEDS, feeds };
 }
 
-export function displayAllFeedsAsync(callback) {
+export function displayAllFeedsAsync(callback, progressPercentage) {
     return dispatch => {
         FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => {
             dispatch(displayAllFeeds(feeds));
             if(callback) {
-                return callback(feeds);
+                return callback(feeds, progressPercentage);
             }
         }).catch(error => { //eslint-disable-line no-unused-vars
             dispatch(displayAllFeeds([]));
             if(callback) {
-                return callback([]);
+                return callback([], progressPercentage);
             }
         });
     };

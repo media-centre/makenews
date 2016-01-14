@@ -13,18 +13,18 @@ import FacebookDb from "../facebook/FacebookDb.js";
 
 const URLS_PER_BATCH = 5;
 export default class RefreshFeedsHandler {
-
     constructor(dispatch, displayAllFeedsAsync, uiCallback) {
         this.dispatch = dispatch;
         this.displayAllFeedsAsync = displayAllFeedsAsync;
         this.uiCallback = uiCallback;
-        this.refreshInProgress = true;
         this.sourceUrlsMap = {};
-        this.refreshCompletionPercentage = 0;
+        this.totalNumberOfUrls = 0;
+        this.totalSuccessfullUrls = 0;
     }
 
     handleBatchRequests() {
         this.fetchAllSourceUrls().then(() => {
+            this.totalNumberOfUrls = this._calculateTotalUrls();
             let totalBatches = Math.ceil(this._maxCountOfUrls() / URLS_PER_BATCH);
             let lastIndex = 0;
             while(totalBatches > 0) {
@@ -40,10 +40,16 @@ export default class RefreshFeedsHandler {
         if(rssBatch.length > 0) {
             RssRequestHandler.fetchBatchRssFeeds(this._constructRequestData(rssBatch)).then((feedMap)=> {
                 Object.keys(feedMap).map((sourceId)=> {
-                    RssDb.addRssFeeds(RssResponseParser.parseFeeds(sourceId, feedMap[sourceId].items)).then(() => {
-                        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this.refreshCompletionPercentage));
-                    });
+                    if(feedMap[sourceId] === "failed") {
+                        this._updateCompletionPercentage();
+                    } else {
+                        RssDb.addRssFeeds(RssResponseParser.parseFeeds(sourceId, feedMap[sourceId].items)).then(() => {
+                            this._updateCompletionPercentage();
+                        });
+                    }
                 });
+            }).catch(()=> {
+                this._updateCompletionPercentage();
             });
         }
     }
@@ -53,11 +59,17 @@ export default class RefreshFeedsHandler {
         if(facebookBatch.length > 0) {
             FacebookRequestHandler.getBatchPosts(token, this._constructRequestData(facebookBatch)).then((feedMap)=> {
                 Object.keys(feedMap.posts).map((sourceId)=> {
-                    let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feedMap.posts[sourceId]);
-                    FacebookDb.addFacebookFeeds(feedDocuments).then(() => {
-                        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this.refreshCompletionPercentage));
-                    })
+                    if(feedMap.posts[sourceId] === "failed") {
+                        this._updateCompletionPercentage();
+                    } else {
+                        let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feedMap.posts[sourceId]);
+                        FacebookDb.addFacebookFeeds(feedDocuments).then(() => {
+                            this._updateCompletionPercentage();
+                        });
+                    }
                 });
+            }).catch(()=> {
+                this._updateCompletionPercentage();
             });
         }
     }
@@ -68,12 +80,14 @@ export default class RefreshFeedsHandler {
                 resolve();
             } else {
                 let sourceTypes = ["rss", "facebook", "twitter"];
-                sourceTypes.forEach((sourceType, index) => {
+                let counter = 0;
+                sourceTypes.forEach((sourceType) => {
                     CategoryDb.fetchSourceConfigurationBySourceType(sourceType).then(sources => {
                         this.sourceUrlsMap[sourceType] = sources;
-                        if(sourceTypes.length - 1 === index) {
+                        if(sourceTypes.length - 1 === counter) {
                             resolve();
                         }
+                        counter += 1;
                     });
                 });
             }
@@ -92,6 +106,24 @@ export default class RefreshFeedsHandler {
             return this.sourceUrlsMap[sourceType].length;
         });
         return Math.max(...countOfUrls);
+    }
+
+    _calculateTotalUrls() {
+        let count = 0;
+        Object.keys(this.sourceUrlsMap).map(sourceType => {
+            count += this.sourceUrlsMap[sourceType].length;
+        });
+        return count;
+    }
+
+    _refreshCompletionPercentage() {
+        var percentage = 100;
+        return Math.ceil((percentage * this.totalSuccessfullUrls) / this.totalNumberOfUrls);
+    }
+
+    _updateCompletionPercentage() {
+        this.totalSuccessfullUrls = this.totalSuccessfullUrls + 1;
+        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this._refreshCompletionPercentage()));
     }
 }
 

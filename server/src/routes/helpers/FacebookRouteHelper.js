@@ -36,17 +36,20 @@ export default class FacebookRouteHelper {
         let facebookRequestHandler = FacebookRequestHandler.instance(accessTokenName);
 
         let allFeeds = {};
-        this.request.body.data.forEach((item, index)=> {
+        let counter = 0;
+        this.request.body.data.forEach((item)=> {
             facebookRequestHandler.pagePosts(item.url).then(feeds => {
                 allFeeds[item.id] = feeds;
-                if(this.request.body.data.length - 1 === index) {
+                if(this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });
                 }
+                counter += 1;
             }).catch(() => {
                 allFeeds[item.id] = "failed";
-                if (this.request.body.data.length - 1 === index) {
+                if (this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });
                 }
+                counter += 1;
             });
         });
     }
