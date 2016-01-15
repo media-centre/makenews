@@ -4,7 +4,6 @@ var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var concat = require("gulp-concat");
-var clean = require("gulp-clean");
 var browserify = require("gulp-browserify");
 var babelify = require("babelify"); //eslint-disable-line
 var runSequence = require("run-sequence");
@@ -117,8 +116,7 @@ gulp.task("client:copy-resources", function() {
 });
 
 gulp.task("client:clean", function() {
-    return gulp.src(parameters.client.distFolder, { "read": false })
-        .pipe(clean());
+    del(parameters.client.distFolder);
 });
 
 gulp.task("client:test", function() {
@@ -212,8 +210,7 @@ gulp.task("common:test-eslint", function() {
 
 gulp.task("common:build", ["common:copy-js"]);
 gulp.task("common:clean", function() {
-    return gulp.src(parameters.common.distFolder, { "read": false })
-        .pipe(clean());
+    del(parameters.common.distFolder);
 });
 
 gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
@@ -249,11 +246,8 @@ gulp.task("server:copy-js", function() {
 });
 
 gulp.task("server:clean", function() {
-    gulp.src(parameters.server.distFolder, { "read": false })
-    .pipe(clean());
-
-    gulp.src(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile, { "read": false })
-        .pipe(clean());
+    del(parameters.server.distFolder);
+    del(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile);
 });
 
 gulp.task("server:test", function() {
@@ -304,8 +298,7 @@ gulp.task("other:copy-ansible-scripts", function() {
 });
 
 gulp.task("other:dist-clean", function() {
-    gulp.src(parameters.other.distFolder)
-        .pipe(clean());
+    del([parameters.other.distFolder]);
 });
 
 
@@ -344,7 +337,7 @@ gulp.task("list", (cb) => {
 });
 
 gulp.task("build", ["common:build", "client:build", "server:build", "other:copy-ansible-scripts"]);
-gulp.task("clean", ["client:clean", "common:clean", "server:clean", "other:dist-clean"]);
+gulp.task("clean", ["other:dist-clean"]);
 gulp.task("test", function(callback) {
     runSequence("common:test", "client:test", "server:test", callback);
 });
@@ -365,5 +358,5 @@ gulp.task("test-coverage", (cb) => {
 });
 
 gulp.task("clean-start", function(callback) {
-    runSequence("clean", "build", "stop", "start", callback);
+    runSequence("clean", "stop", "build", "start", callback);
 });
