@@ -10,11 +10,14 @@
       prompt: "Enter couchdb admin password"
       private: yes
       confirm: yes
+  vars:
+    - go_server_ip: 46.101.148.22
   roles:
-    - user
+    - InitEnvironment
     - Ansibles.build-essential
     - ANXS.build-essential
     - Ansibles.erlang
     - guillaumededrie.couchdb
     - gotansible.nodejs
     - nodedependencies
+    - goagent

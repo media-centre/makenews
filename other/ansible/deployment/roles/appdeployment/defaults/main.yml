@@ -1,0 +1,8 @@
+---
+# defaults file for appdeployment
+project_directory: /home/mediacenter/ContentDiscovery
+package_source_path: /var/lib/go-agent/pipelines/PreprodDeployment/trunk
+artifact: dist.tar.gz
+groupname: medcen
+owner: mediacenter
+

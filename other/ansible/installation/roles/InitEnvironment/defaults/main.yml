@@ -1,0 +1,8 @@
+---
+# defaults file for user
+hosts: web
+sudo: yes
+deploy_username: mediacenter
+deploy_groupname: medcen
+go_server_ip: 46.101.148.22
+

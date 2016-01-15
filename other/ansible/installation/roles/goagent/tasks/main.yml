@@ -1,0 +1,22 @@
+---
+- name: clear go agent apt get source list
+  shell: echo "deb http://dl.bintray.com/gocd/gocd-deb/ /" > /etc/apt/sources.list.d/gocd.list
+
+- name: download go agent to apt-get repository
+  shell: wget --quiet -O - "https://bintray.com/user/downloadSubjectPublicKey?username=gocd" | apt-key add -
+
+- name: do apt-get update
+  shell: apt-get update
+
+- name: install go agent
+  shell: apt-get install go-agent
+
+- name: start the go agent
+  service: name=go-agent state=restarted
+
+- name: map the go agent with the go server
+  shell: sed -i -e 's/GO_SERVER=127.0.0.1/GO_SERVER={{go_server_ip}}/g' /etc/default/go-agent
+
+- name: restart the go agent
+  service: name=go-agent state=restarted
+

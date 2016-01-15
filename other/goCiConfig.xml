@@ -8,7 +8,7 @@
   <pipelines group="MediaCenter">
     <pipeline name="build" isLocked="false" template="build_template">
       <materials>
-        <svn url="https://github.com/media-centre/ContentDiscovery.git" username="anilkumarkodi" encryptedPassword="tyMPguWRafig/vndUePqbw==" />
+        <svn url="https://github.com/media-centre/ContentDiscovery.git" username="vikramkb" encryptedPassword="dyVI49BHqhUj5+3/2LWK441W26TcdIyBxrnoXmLCj+t/izDbtLN/5qqb7I5Og6jp3Z7BHPwyrNE=" />
       </materials>
     </pipeline>
     <pipeline name="DevelopmentDeployment" template="DevelopmentDeployment">
@@ -26,7 +26,6 @@
         <pipeline pipelineName="DevelopmentDeployment" stageName="StartServer" materialName="Development" />
       </materials>
       <stage name="StartServer">
-        <approval type="manual" />
         <jobs>
           <job name="UntarAndStartServer">
             <environmentvariables>
@@ -35,7 +34,7 @@
               </variable>
             </environmentvariables>
             <tasks>
-              <fetchartifact pipeline="DevelopmentDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="trunk/dist.tar.gz" dest="trunk">
+              <fetchartifact pipeline="DevelopmentDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
               <exec command="tar" workingdir="trunk">
@@ -60,7 +59,27 @@
               </exec>
             </tasks>
             <artifacts>
-              <artifact src="trunk" />
+              <artifact src="trunk/dist.tar.gz" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="PreprodDeployment">
+      <materials>
+        <pipeline pipelineName="QaDeployment" stageName="StartServer" />
+      </materials>
+      <stage name="StartServer" cleanWorkingDir="true">
+        <approval type="manual" />
+        <jobs>
+          <job name="AnsibleDeploymentTask">
+            <tasks>
+              <fetchartifact pipeline="QaDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk">
+                <runif status="passed" />
+              </fetchartifact>
+            </tasks>
+            <artifacts>
+              <artifact src="trunk/dist.tar.gz" />
             </artifacts>
           </job>
         </jobs>
@@ -145,7 +164,7 @@
       </stage>
     </pipeline>
     <pipeline name="DevelopmentDeployment">
-      <stage name="StartServer">
+      <stage name="StartServer" artifactCleanupProhibited="true">
         <approval type="manual" />
         <jobs>
           <job name="UntarAndStartServer">
@@ -180,7 +199,7 @@
               </exec>
             </tasks>
             <artifacts>
-              <artifact src="trunk" />
+              <artifact src="trunk/dist.tar.gz" />
             </artifacts>
           </job>
         </jobs>
@@ -209,10 +228,20 @@
         <pipeline name="QaDeployment" />
       </pipelines>
     </environment>
+    <environment name="PreprodEnvironment">
+      <agents>
+        <physical uuid="e1e67b3c-a938-4399-a7b7-350442f51ad2" />
+      </agents>
+      <pipelines>
+        <pipeline name="PreprodDeployment" />
+      </pipelines>
+    </environment>
   </environments>
   <agents>
     <agent hostname="continuousintegrationserver" ipaddress="10.19.0.5" uuid="2eb05fac-008c-4e6e-b794-916c26121dd3" />
     <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="c76db453-bf00-4544-98e8-abf4d18ecb9e" />
     <agent hostname="Testing-Env" ipaddress="10.19.0.7" uuid="b40fdef2-f3ec-47dd-9fa1-fd5f16dc0a3e" />
+    <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="e1e67b3c-a938-4399-a7b7-350442f51ad2" />
   </agents>
 </cruise>
+

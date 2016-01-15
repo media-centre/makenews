@@ -10,3 +10,9 @@
 
 - name: Placing key
   authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
+
+- name: ensure ansible is installed
+  apt: pkg=ansible state=installed
+
+- name: ensure bash is added in .profile
+  lineinfile: dest=/home/mediacenter/.profile line="bash"

@@ -1,0 +1,19 @@
+---
+- name: stop the node servers
+  shell: pm2 stopAll
+  ignore_errors: yes
+
+- name: delete the old project directory
+  shell: rm -rf {{project_directory}}
+
+- name: create the project directory if it's not available
+  file: path={{project_directory}} state=directory group={{groupname}} owner={{owner}} mode=0744 recurse=yes
+
+- name: copy the dist.tar.gz to the project directory
+  shell: cp "{{package_source_path}}/{{artifact}}" {{project_directory}}
+
+- name: untar the project directory
+  shell: tar -xvzf "{{project_directory}}/{{artifact}}" --directory {{project_directory}}
+
+- name: start the application server
+  shell: pm2 start {{project_directory}}/dist/server.js
