@@ -5,21 +5,29 @@ import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
 import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler.js";
 export const DISPLAY_ALL_FEEDS = "DISPLAY_ALL_FEEDS";
 
-export function displayAllFeeds(feeds) {
-    return { "type": DISPLAY_ALL_FEEDS, feeds };
+let isRefreshing = false, totalPercentage = 100;
+
+export function displayAllFeeds(feeds, refreshState, progressPercentage = 0) {
+    return { "type": DISPLAY_ALL_FEEDS, feeds, refreshState, progressPercentage };
 }
 
 export function displayAllFeedsAsync(callback, progressPercentage) {
     return dispatch => {
         FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => {
-            dispatch(displayAllFeeds(feeds));
+            if(progressPercentage === totalPercentage) {
+                isRefreshing = false;
+            }
+            dispatch(displayAllFeeds(feeds, isRefreshing, progressPercentage));
             if(callback) {
-                return callback(feeds, progressPercentage);
+                return callback(feeds);
             }
         }).catch(error => { //eslint-disable-line no-unused-vars
-            dispatch(displayAllFeeds([]));
+            if(progressPercentage === totalPercentage) {
+                isRefreshing = false;
+            }
+            dispatch(displayAllFeeds([], isRefreshing, progressPercentage));
             if(callback) {
-                return callback([], progressPercentage);
+                return callback([]);
             }
         });
     };
@@ -27,6 +35,7 @@ export function displayAllFeedsAsync(callback, progressPercentage) {
 
 export function getLatestFeedsFromAllSources(callback = ()=> {}) {
     return dispatch => {
+        isRefreshing = true;
         new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, callback).handleBatchRequests();
     };
 }

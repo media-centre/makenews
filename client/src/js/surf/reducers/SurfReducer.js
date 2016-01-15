@@ -9,7 +9,7 @@ let surfMessages = Locale.applicationStrings().messages.surfPage;
 export function allFeeds(state = { "feeds": [], "messages": surfMessages }, action = {}) {
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
-        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages });
+        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
     default:
         return state;
     }

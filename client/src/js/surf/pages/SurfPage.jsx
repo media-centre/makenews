@@ -15,7 +15,7 @@ import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js"
 export default class SurfPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "refreshState": false, "refreshProgress": 0 };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -27,24 +27,17 @@ export default class SurfPage extends Component {
     }
 
     getLatestFeeds() {
-        if(this.state.refreshState) {
+        if(this.props.refreshState) {
             return false;
         }
-        this.setState({ "refreshState": true, "refreshProgress": 0 });
-        this.props.dispatch(getLatestFeedsFromAllSources((feeds, percentage)=> {
-            this.setState({ "refreshProgress": percentage });
-            let totalPercentage = 100;
-            if(percentage === totalPercentage) {
-                this.setState({ "refreshState": false });
-            }
-        }));
+        this.props.dispatch(getLatestFeedsFromAllSources(()=> {}));
     }
 
     render() {
         let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
-        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span><div>{this.state.refreshState ? "Refreshing..." : "Refresh Feeds"}</div></div>;
+        let refreshButton = this.props.feeds.length === 0 ? null : <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span><div>{this.props.refreshState ? "Refreshing..." : "Refresh Feeds"}</div></div>;
 
-        let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.state.refreshProgress + "%" }}></div>;
+        let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         return (
             <div className="surf-page-container">
                 {refreshStatus}
@@ -63,7 +56,9 @@ SurfPage.displayName = "SurfPage";
 SurfPage.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array,
-    "messages": PropTypes.object
+    "messages": PropTypes.object,
+    "progressPercentage": PropTypes.number,
+    "refreshState": PropTypes.bool
 };
 
 SurfPage.defaultProps = {
