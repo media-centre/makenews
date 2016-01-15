@@ -15,4 +15,4 @@
   apt: pkg=ansible state=installed
 
 - name: ensure bash is added in .profile
-  lineinfile: dest=/home/mediacenter/.profile line="bash"
+  lineinfile: dest=/home/go/.profile line="bash"

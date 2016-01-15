@@ -1,4 +1,4 @@
 - hosts: web
-  remote_user: mediacenter
+  remote_user: go
   roles:
     - appdeployment
