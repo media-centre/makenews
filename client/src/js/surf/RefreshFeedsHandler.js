@@ -49,7 +49,7 @@ export default class RefreshFeedsHandler {
                         let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
                             return feed.pubDate;
                         }));
-                        let parsedFeeds = RssResponseParser.parseFeeds(sourceId, feeds)
+                        let parsedFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
                         RssDb.addRssFeeds(parsedFeeds).then(() => {
                             this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
                             this._updateCompletionPercentage();

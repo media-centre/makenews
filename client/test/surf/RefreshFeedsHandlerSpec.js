@@ -446,7 +446,7 @@ describe("RefreshFeedsHandler", () => {
                         "content": "",
                         "postedDate": null,
                         "tags": []
-                    }]
+                    }];
 
                 fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
                 addFacebookFeedsMock.withArgs(bulkUpdateFeeds).returns(Promise.resolve());
