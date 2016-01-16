@@ -8,8 +8,11 @@ import RssResponseParser from "../rss/RssResponseParser.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
 import FacebookResponseParser from "../facebook/FacebookResponseParser.js";
+import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
+import TwitterResponseParser from "../twitter/TwitterResponseParser.js";
 import RssDb from "../rss/RssDb.js";
 import FacebookDb from "../facebook/FacebookDb.js";
+import TwitterDb from "../twitter/TwitterDb.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 import PouchClient from "../db/PouchClient.js";
 
@@ -32,6 +35,7 @@ export default class RefreshFeedsHandler {
             while(totalBatches > 0) {
                 this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));
                 this._handleFacebookBatch(this.sourceUrlsMap.facebook.slice(lastIndex, lastIndex + URLS_PER_BATCH));
+                this._handleTwitterBatch(this.sourceUrlsMap.twitter.slice(lastIndex, lastIndex + URLS_PER_BATCH));
                 lastIndex = lastIndex + URLS_PER_BATCH;
                 totalBatches = totalBatches - 1;
             }
@@ -84,6 +88,30 @@ export default class RefreshFeedsHandler {
                 });
             }).catch(()=> {
                 this._updateCompletionPercentage();
+            });
+        }
+    }
+
+    _handleTwitterBatch(twitterBatch) {
+        if(twitterBatch.length > 0) {
+            TwitterRequestHandler.fetchBatchTweets(this._constructRequestData(twitterBatch)).then((feedMap)=> {
+                Object.keys(feedMap).map((sourceId)=> {
+
+                    if(feedMap[sourceId] === "failed") {
+                        this._updateCompletionPercentage();
+                    } else {
+                        let feeds = feedMap[sourceId].statuses;
+                        let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
+                            return feed.pubDate;
+                        }));
+
+                        let feedDocuments = TwitterResponseParser.parseTweets(sourceId, feeds);
+                        TwitterDb.addTweets(feedDocuments).then(() => {
+                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            this._updateCompletionPercentage();
+                        });
+                    }
+                });
             });
         }
     }

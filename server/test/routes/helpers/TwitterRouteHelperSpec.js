@@ -140,4 +140,28 @@ describe("TwitterRouteHelper", () => {
         let twitterRouteHelper = new TwitterRouteHelper(request, response);
         twitterRouteHelper.twitterRouter();
     });
+
+    it("should return all feeds from all the tweet hashtags", (done)=> {
+        let expectedData = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, { "id": 2, "id_str": "124", "text": "Tweet 2" }] };
+        let request = {
+            "body": {
+                "data": [
+                    { "url": "@the_hindu", "timestamp": 12345, "id": "tweet1_id" },
+                    { "url": "@toi", "timestamp": 12345, "id": "tweet2_id" }
+                ]
+            }
+        };
+        mockTwitterRequest()
+            .query({ "q": "@the_hindu" + searchParams })
+            .reply(HttpResponseHandler.codes.OK, expectedData, expectedData);
+
+        mockTwitterRequest()
+            .query({ "q": "@toi" + searchParams })
+            .reply(HttpResponseHandler.codes.OK, expectedData, expectedData);
+
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": expectedData, "tweet2_id": expectedData } });
+
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterBatchFetch();
+    });
 });

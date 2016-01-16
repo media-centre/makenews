@@ -30,6 +30,29 @@ export default class TwitterRouteHelper {
         }
     }
 
+    twitterBatchFetch() {
+        let allFeeds = {};
+        let counter = 0;
+        let twitterRequestHandler = TwitterRequestHandler.instance();
+
+        this.request.body.data.forEach((item)=> {
+            twitterRequestHandler.fetchTweetsRequest(item.url).then(feeds => {
+                allFeeds[item.id] = feeds;
+                if(this.request.body.data.length - 1 === counter) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                }
+                counter += 1;
+            }).catch(() => {
+                allFeeds[item.id] = "failed";
+                if (this.request.body.data.length - 1 === counter) {
+                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+
+                }
+                counter += 1;
+            });
+        });
+    }
+
     setResponse(status, responseJson) {
         this.response.status(status);
         this.response.json(responseJson);

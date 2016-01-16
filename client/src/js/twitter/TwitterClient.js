@@ -18,4 +18,19 @@ export default class TwitterClient {
             });
         });
     }
+
+    fetchBatchTweets(feedBatch) {
+        return new Promise((resolve, reject) => {
+            let ajaxClient = AjaxClient.instance("/twitter-batch-feeds");
+            const headers = {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            };
+            ajaxClient.post(headers, feedBatch).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 }

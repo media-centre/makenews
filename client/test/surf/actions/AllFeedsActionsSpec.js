@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
 "use strict";
 import * as AllFeedsActions from "../../../src/js/surf/actions/AllFeedsActions.js";
@@ -52,7 +52,7 @@ describe("AllFeedsAction", () => {
         let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0 }], done);
+        let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": undefined, "progressPercentage": 0 }], done);
         return Promise.resolve(store.dispatch(AllFeedsActions.displayAllFeedsAsync([], 0))).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();

@@ -8,6 +8,8 @@ import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
 import FacebookDb from "../../src/js/facebook/FacebookDb.js";
+import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
+import TwitterDb from "../../src/js/twitter/TwitterDb.js";
 import EnvironmentConfig from "../../src/js/EnvironmentConfig.js";
 import { expect, assert } from "chai";
 import sinon from "sinon";
@@ -60,17 +62,20 @@ describe("RefreshFeedsHandler", () => {
     });
 
     describe("handleBatchRequests", () => {
-        let rssRequestHandlerMock = null, fbRequestHandlerMock = null;
+        let rssRequestHandlerMock = null, fbRequestHandlerMock = null, twitterRequestHandlerMock = null;
         beforeEach("before", () => {
             rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds").twice().returns(Promise.resolve());
             fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts").thrice().returns(Promise.resolve());
+            twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("fetchBatchTweets").twice().returns(Promise.resolve());
         });
         afterEach("after", () => {
             rssRequestHandlerMock.verify();
             fbRequestHandlerMock.verify();
+            twitterRequestHandlerMock.verify();
 
             RssRequestHandler.fetchBatchRssFeeds.restore();
             FacebookRequestHandler.getBatchPosts.restore();
+            TwitterRequestHandler.fetchBatchTweets.restore();
 
             CategoryDb.fetchSourceConfigurationBySourceType.restore();
         });
@@ -102,8 +107,19 @@ describe("RefreshFeedsHandler", () => {
                 { "url": "fbUrl10", "timestamp": "1234", "_id": "10" },
                 { "url": "fbUrl11", "timestamp": "1234", "_id": "11" }
             ];
+            let twitterUrls = [
+                { "url": "twitterUrl1", "timestamp": "1234", "_id": "1" },
+                { "url": "twitterUrl2", "timestamp": "1234", "_id": "2" },
+                { "url": "twitterUrl3", "timestamp": "1234", "_id": "3" },
+                { "url": "twitterUrl4", "timestamp": "1234", "_id": "4" },
+                { "url": "twitterUrl5", "timestamp": "1234", "_id": "5" },
+                { "url": "twitterUrl6", "timestamp": "1234", "_id": "6" },
+                { "url": "twitterUrl7", "timestamp": "1234", "_id": "7" },
+                { "url": "twitterUrl8", "timestamp": "1234", "_id": "8" },
+                { "url": "twitterUrl9", "timestamp": "1234", "_id": "9" }
+            ];
 
-            categoryDbStub.withArgs("twitter").returns(Promise.resolve([]));
+            categoryDbStub.withArgs("twitter").returns(Promise.resolve(twitterUrls));
             categoryDbStub.withArgs("facebook").returns(Promise.resolve(fbUrls));
             categoryDbStub.withArgs("rss").returns(Promise.resolve(rssUrls));
 
@@ -493,6 +509,168 @@ describe("RefreshFeedsHandler", () => {
                 fbDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
+            });
+        });
+    });
+
+    describe("_handleTwitterBatch", ()=> {
+        describe("creation of feeds", () => {
+            let twitterRequestHandlerMock = null, twitterDbSpy = null;
+            beforeEach("before", ()=> {
+                twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("fetchBatchTweets");
+                twitterDbSpy = sinon.spy(TwitterDb, "addTweets");
+            });
+            afterEach("after", ()=> {
+                let maxCallCount = 3;
+                sinon.assert.callCount(twitterDbSpy, maxCallCount);
+                twitterRequestHandlerMock.verify();
+                TwitterRequestHandler.fetchBatchTweets.restore();
+                TwitterDb.addTweets.restore();
+            });
+            it("should parse the twitter feeds", ()=> {
+                let twitterUrls = [
+                    { "url": "twitterUrl1", "timestamp": "1234", "_id": "1" },
+                    { "url": "twitterUrl2", "timestamp": "1234", "_id": "2" },
+                    { "url": "twitterUrl3", "timestamp": "1234", "_id": "3" },
+                    { "url": "twitterUrl4", "timestamp": "1234", "_id": "4" },
+                    { "url": "twitterUrl5", "timestamp": "1234", "_id": "5" }
+                ];
+                let postData = [
+                    { "url": "twitterUrl1", "timestamp": "1234", "id": "1" },
+                    { "url": "twitterUrl2", "timestamp": "1234", "id": "2" },
+                    { "url": "twitterUrl3", "timestamp": "1234", "id": "3" },
+                    { "url": "twitterUrl4", "timestamp": "1234", "id": "4" },
+                    { "url": "twitterUrl5", "timestamp": "1234", "id": "5" }
+                ];
+
+                let twitterFeedMap = {
+                    "1": { "statuses": [
+                        { "name": "test name1", "entities": { "hashtags": ["test"] } },
+                        { "name": "test name1", "entities": { "hashtags": ["test"] } }
+                    ] },
+                    "2": { "statuses":
+                        [
+                            { "name": "test name2", "entities": { "hashtags": ["test"] } },
+                            { "name": "test name2", "entities": { "hashtags": ["test"] } }
+                        ] },
+                    "3": { "statuses":
+                        [
+                            { "name": "test name", "entities": { "hashtags": ["test"] } },
+                            { "name": "test name", "entities": { "hashtags": ["test"] } }
+                        ] }
+                };
+
+                twitterRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
+                let refreshFeedsHandler = new RefreshFeedsHandler();
+                refreshFeedsHandler._handleTwitterBatch(twitterUrls);
+            });
+        });
+
+        describe("update the timestamp", () => {
+            let twitterRequestHandlerMock = null, twitterDbMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+            beforeEach("before", ()=> {
+                twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("fetchBatchTweets");
+                twitterDbMock = sinon.mock(TwitterDb).expects("addTweets");
+                pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
+                pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+            });
+            afterEach("after", ()=> {
+                twitterRequestHandlerMock.verify();
+                twitterDbMock.verify();
+                pouchClientGetDocumentMock.verify();
+                pouchClientUpdateDocumentMock.verify();
+
+                TwitterRequestHandler.fetchBatchTweets.restore();
+                TwitterDb.addTweets.restore();
+                PouchClient.getDocument.restore();
+                PouchClient.updateDocument.restore();
+            });
+            it("should update the latest timestamp post fetch", ()=> {
+                let urlDocument = {
+                    "docType": "source",
+                    "id": "1",
+                    "latestFeedTimestamp": "2016-01-16T07:37:48+00:00",
+                    "sourceType": "twitter",
+                    "url": "@myposts"
+                };
+                let twitterUrls = [
+                    { "url": "twitterUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                ];
+                let postData = [
+                    { "url": "twitterUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
+                ];
+
+                let feed = {
+                    "_id": undefined,
+                    "id": "1",
+                    "docType": "feed",
+                    "sourceId": "1",
+                    "type": "description",
+                    "title": "test name1",
+                    "link": undefined,
+                    "feedType": "facebook",
+                    "content": undefined,
+                    "postedDate": "2016-01-16T07:37:48+00:00",
+                    "tags": [""],
+                    "entities": { "hashtags": ["test"] }
+                };
+
+                let twitterFeedMap = { "1": { "statuses": [feed] } };
+
+                let bulkUpdateFeeds = [
+                    {
+                        "_id": undefined,
+                        "docType": "feed",
+                        "sourceId": "1",
+                        "type": "description",
+                        "feedType": "twitter",
+                        "content": undefined,
+                        "link": "https://twitter.com/1/status/undefined",
+                        "postedDate": null,
+                        "tags": [undefined]
+                    }
+                ];
+
+                twitterRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
+                twitterDbMock.withArgs(bulkUpdateFeeds).returns(Promise.resolve());
+                pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
+                pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
+
+                let refreshFeedsHandler = new RefreshFeedsHandler();
+                refreshFeedsHandler._handleTwitterBatch(twitterUrls);
+            });
+        });
+        describe("UICallback", ()=> {
+            let twitterRequestHandlerStub = null, twitterDbStub = null;
+            beforeEach("before", ()=> {
+                twitterRequestHandlerStub = sinon.stub(TwitterRequestHandler, "fetchBatchTweets");
+                twitterDbStub = sinon.stub(TwitterDb, "addTweets");
+            });
+            afterEach("after", ()=> {
+                TwitterRequestHandler.fetchBatchTweets.restore();
+            });
+            it("should parse and add twitter feed", (done) => {
+                uiCallback = () => {
+                    done();
+                };
+                displayAllFeedsAsync = () => {
+                    uiCallback();
+                };
+                let twitterUrls = [
+                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                ];
+                let postData = [
+                    { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
+                ];
+
+                let twitterFeedMap = {
+                    "2": { "statuses": [{ "name": "test name2", "id": "2", "entities": { "hashtags": ["test"] } }] }
+                };
+
+                twitterRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
+                twitterDbStub.returns(Promise.resolve());
+                let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                refreshFeedsHandler._handleTwitterBatch(twitterUrls);
             });
         });
     });

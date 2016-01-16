@@ -25,7 +25,7 @@ export function displayAllFeedsAsync(callback, progressPercentage) {
             if(progressPercentage === totalPercentage) {
                 isRefreshing = false;
             }
-            dispatch(displayAllFeeds([], isRefreshing, progressPercentage));
+            dispatch(displayAllFeeds([]));
             if(callback) {
                 return callback([]);
             }
