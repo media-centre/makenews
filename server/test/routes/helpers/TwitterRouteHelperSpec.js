@@ -6,6 +6,7 @@ import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
 import TwitterClient, { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
+import Logger from "../../../src/logging/Logger.js";
 import sinon from "sinon";
 
 describe("TwitterRouteHelper", () => {
@@ -41,12 +42,14 @@ describe("TwitterRouteHelper", () => {
             "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
             "timeOut": 10000
         });
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     after("TwitterRouteHelper", () => {
         ApplicationConfig.instance.restore();
         TwitterClient.logger.restore();
         applicationConfig.twitter.restore();
+        Logger.instance.restore();
     });
 
     it("should return empty response if the url is empty", (done) => {

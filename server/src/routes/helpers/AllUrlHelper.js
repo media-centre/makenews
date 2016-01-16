@@ -2,7 +2,6 @@
 "use strict";
 import CouchSession from "../../CouchSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import BoolUtil from "../../../../common/src/util/BoolUtil.js";
 
 export default class AllUrlHelper {
     static allUrlsCallback(request, next) {
@@ -26,7 +25,7 @@ export default class AllUrlHelper {
     }
 
     static whiteList(url) {
-        if(BoolUtil.isEmpty(url)) {
+        if(!url) {
             throw new Error("url can not be empty");
         }
 

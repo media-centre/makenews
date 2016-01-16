@@ -16,6 +16,8 @@ var argv = require("yargs").argv;
 var rename = require("gulp-rename");
 var del = require("del");
 var cordova = require("cordova-lib").cordova.raw;
+var minify = require("gulp-minify");
+var cssnano = require("gulp-cssnano");
 require("babel/register");
 
 
@@ -81,6 +83,7 @@ gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
           .pipe(sass())
           .pipe(concat(parameters.client.cssMainFile))
+          .pipe(cssnano())
           .pipe(gulp.dest(parameters.client.distFolder));
 });
 
@@ -98,8 +101,9 @@ gulp.task("client:build-sources", function() {
             "debug": true,
             "transform": ["babelify"]
         }))
-        .pipe(replace("__MEDIA_CENTER_CONTENT_CREATION_ENVIRONMENT__", clientEnvironment))
+        .pipe(replace("__CONTENT_DISCOVERY_ENVIRONMENT__", clientEnvironment))
         .pipe(rename("app.js"))
+        .pipe(minify())
         .pipe(gulp.dest(parameters.client.distFolder));
 });
 
