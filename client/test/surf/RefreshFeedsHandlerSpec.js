@@ -1,7 +1,8 @@
-/* eslint max-nested-callbacks:0, callback-return:0 */
+/* eslint max-nested-callbacks:0, callback-return:0, no-undefined:0 */
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import PouchClient from "../../src/js/db/PouchClient.js";
 import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler.js";
 import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
 import RssDb from "../../src/js/rss/RssDb.js";
@@ -221,6 +222,84 @@ describe("RefreshFeedsHandler", () => {
             });
         });
 
+        describe("_handleRssBatch", ()=> {
+            describe("update timestamp", () => {
+                let rssRequestHandlerMock = null, addRssFeedsMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+                beforeEach("before", ()=> {
+                    rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
+                    addRssFeedsMock = sinon.mock(RssDb).expects("addRssFeeds");
+                    pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
+                    pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+                });
+                afterEach("after", ()=> {
+                    addRssFeedsMock.verify();
+                    pouchClientGetDocumentMock.verify();
+                    rssRequestHandlerMock.verify();
+                    pouchClientUpdateDocumentMock.verify();
+
+                    RssDb.addRssFeeds.restore();
+                    RssRequestHandler.fetchBatchRssFeeds.restore();
+                    PouchClient.getDocument.restore();
+                    PouchClient.updateDocument.restore();
+                });
+                it("should update latest timestamp post refresh", ()=> {
+                    let urlDocument = {
+                        "docType": "source",
+                        "id": "1",
+                        "latestFeedTimestamp": "2016-01-16T07:37:48+00:00",
+                        "sourceType": "rss",
+                        "url": "www.google.com/rss"
+                    };
+
+                    let rssUrls = [
+                        { "url": "rssUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                    ];
+                    let postData = [
+                        { "url": "rssUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
+                    ];
+
+                    let feed = {
+                        "_id": undefined,
+                        "docType": "feed",
+                        "sourceId": "1",
+                        "type": "description",
+                        "title": "test name1",
+                        "link": undefined,
+                        "feedType": "rss",
+                        "content": undefined,
+                        "postedDate": null,
+                        "tags": [""]
+                    };
+                    let feed1 = {
+                        "_id": undefined,
+                        "docType": "feed",
+                        "sourceId": "1",
+                        "type": "description",
+                        "title": "test name1",
+                        "link": undefined,
+                        "feedType": "rss",
+                        "content": undefined,
+                        "postedDate": "2016-01-16T07:37:48+00:00",
+                        "tags": [""]
+                    };
+
+                    let rssFeedMap = {
+                        "1": {
+                            "items": [feed1]
+                        }
+                    };
+
+                    rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
+                    addRssFeedsMock.withArgs([feed]).returns(Promise.resolve());
+                    pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
+                    pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
+
+                    let refreshFeedsHandler = new RefreshFeedsHandler();
+                    refreshFeedsHandler._handleRssBatch(rssUrls);
+                });
+            });
+        });
+
         describe("UICallback", ()=> {
             let rssRequestHandlerStub = null, rssDbStub = null;
             beforeEach("before", ()=> {
@@ -293,6 +372,87 @@ describe("RefreshFeedsHandler", () => {
                 };
 
                 fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                let refreshFeedsHandler = new RefreshFeedsHandler();
+                refreshFeedsHandler._handleFacebookBatch(fbUrls);
+            });
+        });
+
+        describe("update timestamp", ()=> {
+            let fbRequestHandlerMock = null, addFacebookFeedsMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+
+            beforeEach("before", ()=> {
+                fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
+                addFacebookFeedsMock = sinon.mock(FacebookDb).expects("addFacebookFeeds");
+                pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
+                pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+            });
+            afterEach("after", ()=> {
+                fbRequestHandlerMock.verify();
+                addFacebookFeedsMock.verify();
+                pouchClientGetDocumentMock.verify();
+                pouchClientUpdateDocumentMock.verify();
+
+                FacebookRequestHandler.getBatchPosts.restore();
+                FacebookDb.addFacebookFeeds.restore();
+                PouchClient.getDocument.restore();
+                PouchClient.updateDocument.restore();
+            });
+            it("should update latest timestamp post refresh", ()=> {
+                let token = EnvironmentConfig.instance().get("facebookAccessToken");
+
+                let urlDocument = {
+                    "docType": "source",
+                    "id": "1",
+                    "latestFeedTimestamp": "2016-01-16T07:37:48+00:00",
+                    "sourceType": "facebook",
+                    "url": "www.facebook.com/myposts"
+                };
+
+                let feed = {
+                    "_id": undefined,
+                    "id": "1",
+                    "docType": "feed",
+                    "sourceId": "1",
+                    "type": "description",
+                    "title": "test name1",
+                    "link": undefined,
+                    "feedType": "facebook",
+                    "content": undefined,
+                    "postedDate": "2016-01-16T07:37:48+00:00",
+                    "tags": [""]
+                };
+
+                let fbUrls = [
+                    { "url": "fbUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                ];
+                let postData = [
+                    { "url": "fbUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
+                ];
+
+                let fbFeedMap = {
+                    "posts": {
+                        "1": [feed]
+                    }
+                };
+                let bulkUpdateFeeds = [
+                    {
+                        "_id": "1",
+                        "docType": "feed",
+                        "sourceId": "1",
+                        "type": "description",
+                        "title": "",
+                        "feedType": "facebook",
+                        "link": "https://www.facebook.com/1/posts/undefined",
+                        "content": "",
+                        "postedDate": null,
+                        "tags": []
+                    }]
+
+                fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                addFacebookFeedsMock.withArgs(bulkUpdateFeeds).returns(Promise.resolve());
+                pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
+                pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
+
                 let refreshFeedsHandler = new RefreshFeedsHandler();
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
             });

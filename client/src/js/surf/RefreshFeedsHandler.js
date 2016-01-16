@@ -10,6 +10,8 @@ import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
 import FacebookResponseParser from "../facebook/FacebookResponseParser.js";
 import RssDb from "../rss/RssDb.js";
 import FacebookDb from "../facebook/FacebookDb.js";
+import DateTimeUtil from "../utils/DateTimeUtil.js";
+import PouchClient from "../db/PouchClient.js";
 
 const URLS_PER_BATCH = 5;
 export default class RefreshFeedsHandler {
@@ -43,7 +45,13 @@ export default class RefreshFeedsHandler {
                     if(feedMap[sourceId] === "failed") {
                         this._updateCompletionPercentage();
                     } else {
-                        RssDb.addRssFeeds(RssResponseParser.parseFeeds(sourceId, feedMap[sourceId].items)).then(() => {
+                        let feeds = feedMap[sourceId].items;
+                        let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
+                            return feed.pubDate;
+                        }));
+                        let parsedFeeds = RssResponseParser.parseFeeds(sourceId, feeds)
+                        RssDb.addRssFeeds(parsedFeeds).then(() => {
+                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
                             this._updateCompletionPercentage();
                         });
                     }
@@ -62,8 +70,14 @@ export default class RefreshFeedsHandler {
                     if(feedMap.posts[sourceId] === "failed") {
                         this._updateCompletionPercentage();
                     } else {
-                        let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feedMap.posts[sourceId]);
+                        let feeds = feedMap.posts[sourceId];
+                        let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
+                            return feed.pubDate;
+                        }));
+
+                        let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feeds);
                         FacebookDb.addFacebookFeeds(feedDocuments).then(() => {
+                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
                             this._updateCompletionPercentage();
                         });
                     }
@@ -124,6 +138,13 @@ export default class RefreshFeedsHandler {
     _updateCompletionPercentage() {
         this.totalSuccessfullUrls = this.totalSuccessfullUrls + 1;
         this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this._refreshCompletionPercentage()));
+    }
+
+    _updateSourceUrlWithLatestTimestamp(sourceId, latestFeedTimestamp) {
+        PouchClient.getDocument(sourceId).then((sourceDoc) => {
+            sourceDoc.latestFeedTimestamp = latestFeedTimestamp;
+            PouchClient.updateDocument(sourceDoc);
+        });
     }
 }
 
