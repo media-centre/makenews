@@ -18,14 +18,11 @@
   when: erlang_downloaded.changed
 
 - name: Erlang | Build erlang from source - pt. 1 (configure)
-  command: "./configure chdir=/tmp/otp_src_{{erlang_version}}"
-  when: erlang_downloaded.changed
+  shell: "./configure chdir=/tmp/otp_src_{{erlang_version}}"
 
 - name: Erlang | Build erlang from source - pt. 2 (make)
-  command: "make chdir=/tmp/otp_src_{{erlang_version}}"
-  when: erlang_downloaded.changed
+  shell: "make chdir=/tmp/otp_src_{{erlang_version}}"
 
 - name: Erlang | Build erlang from source - pt. 3 (make install)
   sudo: true
-  command: "make install chdir=/tmp/otp_src_{{erlang_version}}"
-  when: erlang_downloaded.changed
+  shell: "make install chdir=/tmp/otp_src_{{erlang_version}}"

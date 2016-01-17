@@ -13,11 +13,11 @@
   vars:
     - go_server_ip: 46.101.148.22
   roles:
-    - InitEnvironment
+    - PreInstallationTasks
     - Ansibles.build-essential
     - ANXS.build-essential
     - Ansibles.erlang
     - guillaumededrie.couchdb
     - gotansible.nodejs
-    - nodedependencies
+    - PostInstallationTasks
     - goagent

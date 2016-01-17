@@ -20,7 +20,8 @@
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "request": "^2.65.0",
-    "winston": "^2.1.1"
+    "winston": "^2.1.1",
+    "yargs": "^3.30.0"
   },
   "devDependencies": {
     "babel": "^5.8.29",
@@ -55,7 +56,6 @@
     "react-dom": "^0.14.1",
     "run-sequence": "^1.1.4",
     "sinon": "^1.17.1",
-    "supertest": "^1.1.0",
-    "yargs": "^3.30.0"
+    "supertest": "^1.1.0"
   }
 }
