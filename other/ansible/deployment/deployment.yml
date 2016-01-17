@@ -1,4 +1,0 @@
-- hosts: web
-  remote_user: go
-  roles:
-    - appdeployment

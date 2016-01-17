@@ -1,7 +1,6 @@
 ---
 # defaults file for appdeployment
 project_directory: /home/go/ContentDiscovery
-package_source_path: /var/lib/go-agent/pipelines/PreprodDeployment/trunk
 artifact: dist.tar.gz
 groupname: go
 owner: go
