@@ -13,7 +13,7 @@
     </pipeline>
     <pipeline name="DevelopmentDeployment" template="DevelopmentDeployment">
       <materials>
-        <pipeline pipelineName="build" stageName="CreateTar" materialName="build" />
+        <pipeline pipelineName="build" stageName="build" materialName="build" />
       </materials>
     </pipeline>
     <pipeline name="QaDeployment">
@@ -37,24 +37,19 @@
               <fetchartifact pipeline="DevelopmentDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
-              <exec command="tar" workingdir="trunk">
-                <arg>-xvzf</arg>
-                <arg>dist.tar.gz</arg>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>tar -xzf dist.tar.gz</arg>
                 <runif status="passed" />
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_qa";/g' ./dist/client/app.js</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/qa-deployment.yml -u go -i ./dist/ansible/deployment/inventories/qa -c local</arg>
                 <runif status="passed" />
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>killall node | pwd</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>NODE_ENV=ci_qa ./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "ci_qa";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -77,6 +72,21 @@
               <fetchartifact pipeline="QaDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>tar -xzf dist.tar.gz</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/preprod-deployment.yml -u go -i ./dist/ansible/deployment/inventories/pre-prod -c local</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "pre-prod";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
+                <runif status="passed" />
+              </exec>
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
@@ -88,36 +98,19 @@
   </pipelines>
   <templates>
     <pipeline name="build_template">
-      <stage name="NodeModules">
+      <stage name="build">
         <jobs>
-          <job name="npm-install">
+          <job name="build">
             <tasks>
-              <exec command="npm" workingdir="trunk">
-                <arg>install</arg>
-                <runif status="passed" />
-              </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>npm rebuild node-sass</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="gulp" workingdir="trunk">
-                <arg>clean</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="gulp" workingdir="trunk">
-                <arg>build</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="gulp" workingdir="trunk">
-                <arg>mobile:create</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="gulp" workingdir="trunk">
-                <arg>mobile:build</arg>
+                <arg>./build.sh</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
+            <artifacts>
+              <artifact src="trunk/dist.tar.gz" />
+            </artifacts>
           </job>
         </jobs>
       </stage>
@@ -145,23 +138,6 @@
           </job>
         </jobs>
       </stage>
-      <stage name="CreateTar">
-        <jobs>
-          <job name="generate-tar-file">
-            <tasks>
-              <exec command="tar" workingdir="trunk">
-                <arg>cvzf</arg>
-                <arg>../dist.tar.gz</arg>
-                <arg>.</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <artifact src="dist.tar.gz" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
     </pipeline>
     <pipeline name="DevelopmentDeployment">
       <stage name="StartServer" artifactCleanupProhibited="true">
@@ -174,27 +150,22 @@
               </variable>
             </environmentvariables>
             <tasks>
-              <fetchartifact pipeline="build" stage="CreateTar" job="generate-tar-file" srcfile="dist.tar.gz" dest="trunk">
+              <fetchartifact pipeline="build" stage="build" job="build" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
-              <exec command="tar" workingdir="trunk">
-                <arg>-xvzf</arg>
-                <arg>dist.tar.gz</arg>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>tar -xzf dist.tar.gz</arg>
                 <runif status="passed" />
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>sed -i -e 's/var ENVIRONMENT = "development";/var ENVIRONMENT = "ci_dev";/g' ./dist/client/app.js</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/dev-deployment.yml -u go -i ./dist/ansible/deployment/inventories/dev -c local</arg>
                 <runif status="passed" />
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>killall node | pwd</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>NODE_ENV=qa_dev ./node_modules/forever/bin/forever start dist/server.js &gt; /dev/null 2&gt;&amp;1</arg>
+                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "ci_dev";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -214,7 +185,7 @@
         </variable>
       </environmentvariables>
       <agents>
-        <physical uuid="c76db453-bf00-4544-98e8-abf4d18ecb9e" />
+        <physical uuid="fd03899d-7788-47b9-afee-e8036b0060e1" />
       </agents>
       <pipelines>
         <pipeline name="DevelopmentDeployment" />
@@ -222,7 +193,7 @@
     </environment>
     <environment name="QaDeployment">
       <agents>
-        <physical uuid="b40fdef2-f3ec-47dd-9fa1-fd5f16dc0a3e" />
+        <physical uuid="67c1a041-f3c6-4c87-b206-766ac2b55ef7" />
       </agents>
       <pipelines>
         <pipeline name="QaDeployment" />
@@ -230,7 +201,7 @@
     </environment>
     <environment name="PreprodEnvironment">
       <agents>
-        <physical uuid="e1e67b3c-a938-4399-a7b7-350442f51ad2" />
+        <physical uuid="30b3f773-06f0-4966-a7b3-5a1128ccb059" />
       </agents>
       <pipelines>
         <pipeline name="PreprodDeployment" />
@@ -239,9 +210,8 @@
   </environments>
   <agents>
     <agent hostname="continuousintegrationserver" ipaddress="10.19.0.5" uuid="2eb05fac-008c-4e6e-b794-916c26121dd3" />
-    <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="c76db453-bf00-4544-98e8-abf4d18ecb9e" />
-    <agent hostname="Testing-Env" ipaddress="10.19.0.7" uuid="b40fdef2-f3ec-47dd-9fa1-fd5f16dc0a3e" />
-    <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="e1e67b3c-a938-4399-a7b7-350442f51ad2" />
+    <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="fd03899d-7788-47b9-afee-e8036b0060e1" />
+    <agent hostname="Testing-Env" ipaddress="10.19.0.7" uuid="67c1a041-f3c6-4c87-b206-766ac2b55ef7" />
+    <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="30b3f773-06f0-4966-a7b3-5a1128ccb059" />
   </agents>
 </cruise>
-
