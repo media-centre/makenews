@@ -39,7 +39,7 @@ describe("Source", () => {
         it("delete source document along with the references when category id is available in the cateogry list", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.resolve("response"));
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).then(response => {
                 pouchClientGetDocumentMock.verify();
                 categoryDbDeleteSourceWithReference.verify();
@@ -50,7 +50,7 @@ describe("Source", () => {
         it("should not delete the source document if the category id does not exists in list of categories", (done) => {
             categoryId = "test-category-id";
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
                 pouchClientGetDocumentMock.verify();
                 done();
@@ -82,7 +82,7 @@ describe("Source", () => {
             };
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.resolve("success"));
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).then(response => {
                 pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDoucmentMock.verify();
@@ -93,7 +93,7 @@ describe("Source", () => {
         it("should reject incase of error while fetching the source document", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.reject("Error"));
 
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
                 assert.isFalse(error);
                 pouchClientGetDocumentMock.verify();
@@ -126,7 +126,7 @@ describe("Source", () => {
             };
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.reject("Failed"));
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
                 assert.isFalse(error);
                 pouchClientGetDocumentMock.verify();
@@ -138,7 +138,7 @@ describe("Source", () => {
         it("should reject incase of error while deleting the source document along with the references", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.reject("response"));
-            let source = new Source({ "sourceId": sourceId });
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
 
                 assert.isFalse(error);

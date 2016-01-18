@@ -8,7 +8,7 @@ import DateTimeUtil from "../utils/DateTimeUtil.js";
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
     constructor(paramsObj) {
-        this.sourceId = paramsObj.sourceId;
+        this.sourceId = paramsObj._id;
         this.docType = "source";
         this.sourceType = paramsObj.sourceType;
         this.url = paramsObj.url;
