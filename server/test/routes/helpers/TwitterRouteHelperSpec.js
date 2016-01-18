@@ -19,7 +19,7 @@ describe("TwitterRouteHelper", () => {
     }
 
     function mockResponse(done, expectedValues) {
-        let response = {
+        return {
             "status": (status) => {
                 assert.strictEqual(status, expectedValues.status);
             },
@@ -28,10 +28,10 @@ describe("TwitterRouteHelper", () => {
                 done();
             }
         };
-        return response;
     }
 
     let applicationConfig = null;
+    const FEEDS_COUNT = 100;
 
     before("TwitterRouteHelper", () => {
         applicationConfig = new ApplicationConfig();
@@ -82,7 +82,7 @@ describe("TwitterRouteHelper", () => {
             }
         };
         mockTwitterRequest()
-            .query({ "q": "@the_hindu" + searchParams })
+            .query({ "q": "@the_hindu", "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, expectedData, expectedData);
 
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
@@ -95,7 +95,7 @@ describe("TwitterRouteHelper", () => {
     it("should return 404 error if url is invalid", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.NOT_IMPLEMENTED, "");
 
         let request = {
@@ -111,7 +111,7 @@ describe("TwitterRouteHelper", () => {
     it("should return 404 error if url is not valid twitter url", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, { "statuses": [], "search_metadata": { "completed_in": 0.01 } });
 
         let request = {
@@ -127,7 +127,7 @@ describe("TwitterRouteHelper", () => {
     it("should return error if request to url returns error", (done) => {
         let url = "myTest1";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .replyWithError("request failed");
 
         let request = {
