@@ -32,7 +32,7 @@ describe("DbParameters", () => {
 
     it("should get the proper remote db url", () => {
         let dbParameters = new DbParameters(localDbUrl, remoteDbUrl);
-        assert.strictEqual(remoteDbUrl, dbParameters.getRemoteDb());
+        assert.strictEqual(remoteDbUrl + "/" + localDbUrl, dbParameters.getRemoteDb());
     });
 
     describe("clearInstance", ()=> {

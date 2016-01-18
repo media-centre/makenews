@@ -18,7 +18,7 @@ export default class DbParameters {
             throw new Error("db parameters can not be empty");
         }
         this.localDbUrl = localDbUrl;
-        this.remoteDbUrl = remoteDbUrl;
+        this.remoteDbUrl = remoteDbUrl + "/" + localDbUrl;
     }
 
     type() {
