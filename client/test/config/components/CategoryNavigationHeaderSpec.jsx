@@ -3,7 +3,7 @@
 import "../../helper/TestHelper.js";
 import CategoryNavigationHeader from "../../../src/js/config/components/CategoryNavigationHeader.jsx";
 import CategoryDb from "../../../src/js/config/db/CategoryDb";
-
+import Category from "../../../src/js/config/components/Category.jsx";
 import { assert } from "chai";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
@@ -18,7 +18,7 @@ describe("CategoryNavigationHeader", ()=> {
             "addUrlLinkLabel": "Add Url Test"
         };
         categoryNavigationHeaderComponent = TestUtils.renderIntoDocument(
-            <CategoryNavigationHeader categoryName="Test Category Name" categoryId="Test Category id" categoryDetailsPageStrings={categoryDetailsPageStrings}/>
+            <CategoryNavigationHeader updateCategoryName={()=> {}} categoryName="Test Category Name" categoryId="Test Category id" categoryDetailsPageStrings={categoryDetailsPageStrings}/>
         );
     });
 
@@ -57,6 +57,13 @@ describe("CategoryNavigationHeader", ()=> {
         confirmMock.verify();
         assert.isFalse(deleteCategoryStub.called);
         CategoryDb.deleteCategory.restore();
+    });
+    xit("Should  display empty message when category name is not updated", () => {
+        const categoryTitleElement = categoryNavigationHeaderComponent.refs.categoryTitleElement;
+        TestUtils.Simulate.keyPress(categoryTitleElement, { "key": "Enter", "keyCode": 13, "which": 13 });
+        let deleteCategoryMock = sinon.mock(Category);
+        deleteCategoryMock.expects("updateCategoryName").returns("hjh");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.errorMessage.innerHTML, "hgjh");
     });
 
 });

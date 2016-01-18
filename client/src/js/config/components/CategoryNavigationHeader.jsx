@@ -16,23 +16,23 @@ export default class CategoryNavigationHeader extends Component {
     }
 
     _validateCategoryTitle(event, props) {
-        var categoryName = this.refs.categoryTitleElement.textContent.trim();
-        if (categoryName.toLowerCase() !== this.props.categoryName.toLowerCase()) {
-            props.updateCategoryName(categoryName);
-        }
+        var categoryName = this.refs.categoryTitleElement.value;
+        props.updateCategoryName(categoryName);
+        this.refs.categoryTitleElement.blur();
     }
 
     _handleEnterKey(event, props) {
         const ENTERKEY = 13;
-        if (event.keyCode === ENTERKEY) {
+        if (event.keyCode || event.which === ENTERKEY) {
             event.preventDefault();
-            this.refs.categoryTitleElement.blur(event, props);
+            this._validateCategoryTitle(event, props);
+            this.refs.categoryTitleElement.blur();
         }
 
     }
 
     _highlightEditableTitle() {
-        return this.props.isValidName ? "t-center trans-border t-bold category-title" : "t-center t-bold error-border category-title";
+        return this.props.isValidName ? "t-center trans-border t-bold custom-category-name" : "t-center t-bold error-border custom-category-name";
     }
 
     showConfirmPopup() {
@@ -54,10 +54,10 @@ export default class CategoryNavigationHeader extends Component {
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
-            <div className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" contentEditable onKeyDown={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._validateCategoryTitle(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
-                    {this.props.categoryName}
-            </div>
-            <div className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
+            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._validateCategoryTitle(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
+
+            </input>
+            <div ref="errorMessage" className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
         let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.showConfirmPopup(this.props.categoryName)}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 

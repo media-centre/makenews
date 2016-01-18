@@ -56,6 +56,11 @@ export default class Category extends Component {
     }
 
     _updateCategoryName(categoryName) {
+        if(categoryName.toLowerCase() === this.state.categoryName.toLowerCase()) {
+            this.setState({ "titleErrorMessage": "", "isValidName": true, "categoryName": this.state.categoryName });
+            return;
+        }
+
         if(!categoryName) {
             this.setState({ "titleErrorMessage": "Category name can not be empty", "isValidName": false });
             return;
