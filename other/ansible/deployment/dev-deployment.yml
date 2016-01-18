@@ -4,3 +4,4 @@
     - appdeployment
   vars:
     package_source_path: /var/lib/go-agent/pipelines/DevelopmentDeployment/trunk
+    environment: ci_dev
