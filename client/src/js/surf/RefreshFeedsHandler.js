@@ -112,6 +112,8 @@ export default class RefreshFeedsHandler {
                         });
                     }
                 });
+            }).catch(()=> {
+                this._updateCompletionPercentage();
             });
         }
     }

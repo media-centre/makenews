@@ -26,6 +26,11 @@ describe("AllFeedsAction", () => {
         expect(AllFeedsActions.displayAllFeeds(feeds, false)).to.deep.equal(displayAllFeedsAction);
     });
 
+    it("return type DISPLAY_EXISTING_FEEDS action", () => {
+        let displayExistingFeedsAction = { "type": AllFeedsActions.DISPLAY_EXISTING_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0 };
+        expect(AllFeedsActions.displayExistingFeeds([], false)).to.deep.equal(displayExistingFeedsAction);
+    });
+
     xit("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
         let feeds = [
             {
