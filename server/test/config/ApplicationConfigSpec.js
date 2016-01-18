@@ -16,6 +16,11 @@ describe("ApplicationConfig", () => {
                     "serverIpAddress": "localhost",
                     "serverPort": 5000,
                     "couchDbUrl": "http://localhost:5984",
+                    "adminDetails": {
+                        "username": "admin",
+                        "password": "admin",
+                        "db": "admin"
+                    },
                     "facebook": {
                         "url": "https://graph.facebook.com/v2.5",
                         "appSecretKey": "appSecretKey",
@@ -43,6 +48,16 @@ describe("ApplicationConfig", () => {
         it("should return db URL from application configuration file", ()=> {
             let applicationConfig = new ApplicationConfig();
             assert.strictEqual("http://localhost:5984", applicationConfig.dbUrl());
+        });
+    });
+
+    describe("adminDetails", () => {
+
+        it("should return admin details from application configuration file", ()=> {
+            let adminDetails = new ApplicationConfig().adminDetails();
+            assert.strictEqual("admin", adminDetails.username);
+            assert.strictEqual("admin", adminDetails.password);
+            assert.strictEqual("admin", adminDetails.db);
         });
     });
 

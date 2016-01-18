@@ -130,4 +130,44 @@ describe("AddURLComponent", () => {
         expect("Example: thehindu.com/opinion/?service=rss").to.eq(AddURLComponentElement.props.exampleMessage);
     });
 
+    it("should have addUrlTextBox if addURLHandler property is not present", () => {
+        let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
+        assert.isDefined(AddURLComponentElement.refs.addUrlTextBox);
+    });
+
+    it("should not have addUrlTextBox if addURLHandler validation rejected", (done) => {
+        let addURLComponentTest = TestUtils.renderIntoDocument(
+            <AddURLComponent exampleMessage="test" hintMessage = "test" categoryId="test" addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]}
+                errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })}
+                categoryDetailsPageStrings={categoryDetailsPageStrings} addURLHandler={() => {
+                    return new Promise((resolve, reject) => {
+                        reject("error");
+                    });
+                }}/>); //eslint-disable-line react/jsx-closing-bracket-location
+        let addUrlDom = ReactDOM.findDOMNode(addURLComponentTest);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
+        setTimeout(() => {
+            assert.isUndefined(addURLComponentTest.refs.addUrlTextBox, "Defined");
+            done();
+        }, 0);
+    });
+
+    it("should have addUrlTextBox if addURLHandler validation succeed", (done) => {
+        let addURLComponentTest = TestUtils.renderIntoDocument(
+            <AddURLComponent exampleMessage="test" hintMessage = "test" categoryId="test" addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]}
+                errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })}
+                categoryDetailsPageStrings={categoryDetailsPageStrings} addURLHandler={() => {
+                    return new Promise((resolve) => {
+                        resolve("success");
+                    });
+                }}/>); //eslint-disable-line react/jsx-closing-bracket-location
+        let addUrlDom = ReactDOM.findDOMNode(addURLComponentTest);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
+        setTimeout(() => {
+            assert.isDefined(addURLComponentTest.refs.addUrlTextBox, "Defined");
+            done();
+        }, 0);
+    });
+
 });

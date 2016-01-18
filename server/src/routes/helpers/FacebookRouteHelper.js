@@ -4,6 +4,7 @@ import moment from "moment";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
+import FacebookAccessToken from "../../facebook/FacebookAccessToken.js";
 import ResponseUtil from "../../util/ResponseUtil";
 
 export default class FacebookRouteHelper {
@@ -14,9 +15,8 @@ export default class FacebookRouteHelper {
 
     pageRouter() {
         let webUrl = this.request.query.webUrl;
-        let accessTokenName = this.request.query.accessToken;
         let since = this.request.query.since;
-        if(StringUtil.isEmptyString(webUrl) || StringUtil.isEmptyString(accessTokenName) || (since && !moment(since).isValid())) {
+        if(StringUtil.isEmptyString(webUrl) || (since && !moment(since).isValid())) {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
             return;
         }
@@ -24,8 +24,25 @@ export default class FacebookRouteHelper {
         if(since) {
             options.since = moment(since).toISOString();
         }
-        FacebookRequestHandler.instance(accessTokenName).pagePosts(webUrl, options).then(feeds => {
-            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": feeds });
+        FacebookAccessToken.instance().getAccesToken().then((token) => {
+            FacebookRequestHandler.instance(token).pagePosts(webUrl, options).then(feeds => {
+                ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": feeds });
+            }).catch(error => {
+                ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, error);
+            });
+        }).catch(error => {
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, error);
+        });
+    }
+
+    tokenRouter() {
+        let accessToken = this.request.body.accessToken;
+        if(StringUtil.isEmptyString(accessToken)) {
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
+            return;
+        }
+        FacebookRequestHandler.instance(accessToken).setToken().then(expiresAfter => {
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "expires_after": expiresAfter });
         }).catch(error => {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, error);
         });

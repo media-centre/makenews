@@ -94,6 +94,68 @@ describe("CouchClient", () => {
 
     });
 
+    describe("getDocument", () => {
+
+        it("should get the document with the success status code", (done) => {
+            let docId = "123456";
+            let documentObj = { "_id": docId, "test": "abcd" };
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .get("/" + dbName + "/" + docId)
+                .reply(HttpResponseHandler.codes.OK, documentObj);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.getDocument(docId).then((actualResponse) => {
+                assert.deepEqual(actualResponse, documentObj);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if couchdb returns status not success", (done) => {
+            let docId = "123456";
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .get("/" + dbName + "/" + docId)
+                .reply(HttpResponseHandler.codes.NOT_FOUND, "");
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.getDocument(docId).catch((error) => {
+                assert.strictEqual(error, "unexpected response from the db");
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
+        it("should reject with error if couchdb returns error", (done) => {
+            let docId = "123456";
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .get("/" + dbName + "/" + docId)
+                .replyWithError("error message");
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(false);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.getDocument(docId).catch((error) => {
+                assert.deepEqual(error, new Error("error message"));
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
+    });
+
     describe("getAllDbs", () => {
         it("should get all db names in a couch db", (done) => {
             nock("http://localhost:5984")

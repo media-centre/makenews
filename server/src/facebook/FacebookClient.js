@@ -8,15 +8,16 @@ import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil.js";
 
 export default class FacebookClient {
 
-    static instance(accessToken, appSecretProof) {
-        return new FacebookClient(accessToken, appSecretProof);
+    static instance(accessToken, appSecretProof, appId) {
+        return new FacebookClient(accessToken, appSecretProof, appId);
     }
-    constructor(accessToken, appSecretProof) {
+    constructor(accessToken, appSecretProof, appId) {
         if(StringUtil.isEmptyString(accessToken) || StringUtil.isEmptyString(appSecretProof)) {
             throw new Error("access token or application secret proof can not be null");
         }
         this.accessToken = accessToken;
         this.appSecretProof = appSecretProof;
+        this.appId = appId;
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
@@ -72,6 +73,7 @@ export default class FacebookClient {
             }
         });
     }
+
     getFacebookId(facebookPageUrl) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
@@ -80,6 +82,28 @@ export default class FacebookClient {
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
                     resolve(JSON.parse(response.body).id);
+                } else {
+                    reject(error);
+                }
+
+            });
+        });
+    }
+
+    getLongLivedToken() {
+        return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
+            request.get({
+                "url": this.facebookParameters.url + "/oauth/access_token?grant_type=fb_exchange_token&client_id=" + this.appId + "&client_secret=" + this.appSecretProof + "&fb_exchange_token=" + this.accessToken,
+                "timeout": this.facebookParameters.timeOut
+            }, (error, response, body) => { //eslint-disable-line no-unused-vars
+                if (NodeErrorHandler.noError(error)) {
+                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                        let feedResponse = JSON.parse(body);
+                        resolve(feedResponse);
+                    } else {
+                        let errorInfo = JSON.parse(body);
+                        reject(errorInfo.error);
+                    }
                 } else {
                     reject(error);
                 }

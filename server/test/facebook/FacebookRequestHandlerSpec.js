@@ -5,15 +5,24 @@ import FacebookClient from "../../src/facebook/FacebookClient.js";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
 import CryptUtil from "../../src/util/CryptUtil.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import LogTestHelper from "../helpers/LogTestHelper";
+import AdminDbClient from "../../src/db/AdminDbClient";
+import CouchClient from "../../src/CouchClient";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
-    let accessToken = null, appSecretKey = null, appSecretProof = null;
-    before("pageFeeds", () => {
+    let accessToken = null, appSecretKey = null, appSecretProof = null, appId = null;
+    before("FacebookRequestHandler", () => {
         accessToken = "test_token";
         appSecretKey = "test_secret";
         appSecretProof = "test_secret_proof";
+        appId = "test_app_id";
+        sinon.stub(FacebookRequestHandler, "logger").returns(LogTestHelper.instance());
+    });
+
+    after("FacebookRequestHandler", () => {
+        FacebookRequestHandler.logger.restore();
     });
 
     describe("constructor", () => {
@@ -48,6 +57,21 @@ describe("FacebookRequestHandler", () => {
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             let secretKey = facebookRequestHandler.appSecretKey();
             assert.strictEqual("test_secret_key", secretKey);
+            ApplicationConfig.instance.restore();
+            applicationConfig.facebook.restore();
+        });
+
+    });
+
+    describe("appId", () => {
+        it("should get the app Id from the configuration file", () => {
+            let applicationConfig = new ApplicationConfig();
+            sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sinon.stub(applicationConfig, "facebook").returns({
+                "appId": "test_app_id"
+            });
+            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            assert.strictEqual("test_app_id", facebookRequestHandler.appId());
             ApplicationConfig.instance.restore();
             applicationConfig.facebook.restore();
         });
@@ -135,5 +159,82 @@ describe("FacebookRequestHandler", () => {
             });
         });
 
+    });
+
+    describe("setToken", () => {
+        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486;
+
+        beforeEach("setToken", () => {
+            sandbox = sinon.sandbox.create();
+            let facebookClient = new FacebookClient(accessToken, appSecretProof, appId);
+            sandbox.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof, appId).returns(facebookClient);
+            facebookClientPagePostsMock = sandbox.mock(facebookClient).expects("getLongLivedToken");
+            facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            sandbox.stub(facebookRequestHandler, "appSecretKey").returns(appSecretProof);
+            sandbox.stub(facebookRequestHandler, "appId").returns(appId);
+            sandbox.stub(FacebookRequestHandler, "getCurrentTime").returns(currentTime);
+        });
+
+        afterEach("setToken", () => {
+            sandbox.restore();
+        });
+
+        it("should create document for long lived token if there is no document", (done) => {
+            const expiresIn = 12345;
+            const tokenResponse = { "expires_in": expiresIn };
+            facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
+            let couchClient = new CouchClient();
+            let getDocStub = sinon.stub(couchClient, "getDocument");
+            getDocStub.withArgs("facebookToken").returns(Promise.reject("error"));
+            let saveDocStub = sinon.stub(couchClient, "saveDocument");
+            saveDocStub.withArgs("facebookToken", tokenResponse).returns(Promise.resolve("save doc"));
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
+                return Promise.resolve(couchClient);
+            } });
+            facebookRequestHandler.setToken().then(response => {
+                assert.strictEqual(expiresIn + currentTime, response);
+                facebookClientPagePostsMock.verify();
+                adminDbMock.verify();
+                assert(getDocStub.called);
+                assert(saveDocStub.called);
+                done();
+            });
+        });
+
+        it("should update document for long lived token if document is there", (done) => {
+            const expiresIn = 12345;
+            const tokenResponse = { "access_token": "test1222",
+                "token_type": "bearer",
+                "expires_in": expiresIn };
+            facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
+            let couchClient = new CouchClient();
+            let getDocStub = sinon.stub(couchClient, "getDocument");
+            getDocStub.withArgs("facebookToken").returns(Promise.resolve({ "_id": "facebookToken",
+                "_rev": "1aa",
+                "access_token": "test11",
+                "token_type": "bearer",
+                "expires_in": "123" }));
+            let saveDocStub = sinon.stub(couchClient, "saveDocument");
+            saveDocStub.withArgs("facebookToken", tokenResponse).returns(Promise.resolve("save doc"));
+
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
+                return Promise.resolve(couchClient);
+            } });
+            facebookRequestHandler.setToken().then(response => {
+                assert.strictEqual(expiresIn + currentTime, response);
+                facebookClientPagePostsMock.verify();
+                adminDbMock.verify();
+                done();
+            });
+        });
+
+        it("should throw error if long lived token not fetched", (done) => {
+            facebookClientPagePostsMock.returns(Promise.reject("error"));
+            facebookRequestHandler.setToken().catch(error => {
+                assert.strictEqual(error, "error getting long lived token with token " + accessToken);
+                facebookClientPagePostsMock.verify();
+                done();
+            });
+        });
     });
 });

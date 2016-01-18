@@ -12,12 +12,21 @@ export default class AddURLComponent extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = { "showUrlInput": false, "errorMessage": this.props.errorMessage, "successResponse": false, "showCustomPopup": false };
     }
 
     _showAddUrlTextBox() {
-        this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
+        if(this.props.addURLHandler) {
+            this.props.addURLHandler().then((response) => {
+                if(response) {
+                    this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
+                }
+            }).catch(() => {
+                return;
+            });
+        } else {
+            this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
+        }
     }
 
     _showConfirmPopup(sourceId) {
@@ -132,6 +141,7 @@ AddURLComponent.propTypes = {
     "noValidation": PropTypes.bool,
     "categoryId": PropTypes.string.isRequired,
     "dispatch": PropTypes.func,
+    "addURLHandler": PropTypes.func,
     "exampleMessage": PropTypes.string.isRequired,
     "hintMessage": PropTypes.string.isRequired
 };

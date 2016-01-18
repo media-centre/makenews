@@ -16,6 +16,10 @@ export default class ApplicationConfig {
         return this.environmentConfig.get("couchDbUrl");
     }
 
+    adminDetails() {
+        return this.environmentConfig.get("adminDetails");
+    }
+
     facebook() {
         return this.environmentConfig.get("facebook");
     }

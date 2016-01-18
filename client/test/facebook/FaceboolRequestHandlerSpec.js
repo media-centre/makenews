@@ -83,4 +83,27 @@ describe("FacebookRequestHandler", () => {
         });
 
     });
+
+    describe("setToken", () => {
+        let sandbox = null;
+        beforeEach(() => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach(() => {
+            sandbox.restore();
+        });
+
+        it("should fetch and parse the facebook posts which can be saved into the db directly", () => {
+            const accessToken1 = "12345";
+            let faceFacebookClient = new FacebookClient(accessToken1);
+            let facebookClientMock = sandbox.mock(FacebookClient).expects("instance");
+            facebookClientMock.withArgs(accessToken1).returns(faceFacebookClient);
+            let facebookSetTokenMock = sandbox.mock(faceFacebookClient).expects("setLongLivedToken");
+
+            FacebookRequestHandler.setToken(accessToken1);
+            facebookClientMock.verify();
+            facebookSetTokenMock.verify();
+        });
+    });
 });

@@ -7,14 +7,14 @@ import NodeErrorHandler from "./NodeErrorHandler.js";
 import request from "request";
 
 export default class CouchClient {
-    static instance(dbName, accessToken) {
-        return new CouchClient(dbName, accessToken);
+    static instance(dbName, accessToken, dbUrl) {
+        return new CouchClient(dbName, accessToken, dbUrl);
     }
 
-    constructor(dbName, accessToken) {
+    constructor(dbName, accessToken, dbUrl) {
         this.dbName = dbName;
         this.accessToken = accessToken;
-        this.dbUrl = ApplicationConfig.instance().dbUrl();
+        this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
     }
 
     saveDocument(documentId, documentObj) {
@@ -27,6 +27,31 @@ export default class CouchClient {
                     "Accept": "application/json"
                 },
                 "body": documentObj,
+                "json": true
+            },
+                (error, response) => {
+                    if(NodeErrorHandler.noError(error)) {
+                        if(new HttpResponseHandler(response.statusCode).success()) {
+                            resolve(response.body);
+                        } else {
+                            reject("unexpected response from the db");
+                        }
+                    } else {
+                        reject(error);
+                    }
+                });
+        });
+    }
+
+    getDocument(documentId) {
+        return new Promise((resolve, reject) => {
+            request.get({
+                "uri": this.dbUrl + "/" + this.dbName + "/" + documentId,
+                "headers": {
+                    "Cookie": "AuthSession=" + this.accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
                 "json": true
             },
                 (error, response) => {

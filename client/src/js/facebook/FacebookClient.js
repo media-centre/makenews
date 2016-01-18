@@ -1,6 +1,7 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import AjaxClient from "../utils/AjaxClient.js";
+import FacebookDb from "./FacebookDb";
 
 export default class FacebookClient {
 
@@ -25,6 +26,22 @@ export default class FacebookClient {
 
             }).catch(error => {
                 reject(error);
+            });
+        });
+    }
+
+    setLongLivedToken() {
+        const headers = {
+            "Accept": "application/json",
+            "Content-type": "application/json"
+        };
+        let ajaxClient = AjaxClient.instance("/facebook-set-token");
+        ajaxClient.post(headers, { "accessToken": this.accessToken }).then(response => {
+            FacebookDb.getTokenDocument().then((document) => {
+                document.expiredAfter = response.expires_after;
+                FacebookDb.updateTokenDocument(response.expires_after);
+            }).catch(() => {
+                FacebookDb.createTokenDocument(response.expires_after);
             });
         });
     }

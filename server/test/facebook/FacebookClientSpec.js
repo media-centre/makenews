@@ -220,6 +220,48 @@ describe("FacebookClient", () => {
             });
         });
     });
+
+    describe("getLongLivedToken", () => {
+        let accessToken1 = null, appSecretProof1 = null, remainingUrl = null, appId = null;
+        before("getLongLivedToken", () => {
+            accessToken1 = "test_token";
+            appSecretProof1 = "test_secret_proof";
+            appId = "123456";
+            remainingUrl = "/v2.5/oauth/access_token?grant_type=fb_exchange_token&client_id=" + appId + "&client_secret=" + appSecretProof1 + "&fb_exchange_token=" + accessToken1;
+        });
+
+        it("should return long-lived token for a valid short-lived token", (done) => {
+
+            let response = {
+                "access_token": "test token",
+                "token_type": "bearer",
+                "expires_in": 123456
+            };
+
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .reply(HttpResponseHandler.codes.OK, response);
+
+            let facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
+            facebookClient.getLongLivedToken().then((result) => {
+                assert.deepEqual(response.id, result.id);
+                done();
+            });
+        });
+
+        it("should reject if long-lived token from fb response is throw error", (done) => {
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .replyWithError("error");
+
+            let facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
+            facebookClient.getLongLivedToken().catch((error) => {
+                assert.strictEqual(error.message, "error");
+                done();
+            });
+        });
+    });
+
     describe("pageNavigationFeeds", () => {
         let navigationPageUrl = null;
         before("pageNavigationFeeds", () => {

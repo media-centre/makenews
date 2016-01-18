@@ -13,5 +13,10 @@ export default class FacebookRequestHandler {
             });
         });
     }
+
+    static setToken(accessToken) {
+        let facebookClient = FacebookClient.instance(accessToken);
+        facebookClient.setLongLivedToken();
+    }
 }
 

@@ -3,9 +3,15 @@
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
+    "adminDetails": {
+      "username": "admin",
+      "password": "admin",
+      "db": "admin"
+    },
     "facebook": {
       "url": "https://graph.facebook.com/v2.5",
-      "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964",
+      "appSecretKey": "ad21d28752f81892bf6b408d0125de01",
+      "appId": "939803976108942",
       "timeOut": 2000,
       "limit": 500
     },
@@ -31,9 +37,15 @@
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
+    "adminDetails": {
+      "username": "admin",
+      "password": "admin",
+      "db": "admin"
+    },
     "facebook": {
       "url": "http://localhost:3000",
-      "appSecretKey": "abf3d1db7a48cb08f936d6caae17b964",
+      "appSecretKey": "ad21d28752f81892bf6b408d0125de01",
+      "appId": "939803976108942",
       "timeOut": 2000
     },
     "twitter": {

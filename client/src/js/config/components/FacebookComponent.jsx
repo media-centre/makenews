@@ -3,12 +3,17 @@
 import React, { Component, PropTypes } from "react";
 import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
+import FacebookLogin from "../../facebook/FacebookLogin";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
+import FacebookDb from "./../../facebook/FacebookDb";
 
 export const fbRegex = /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
 export default class FacebookComponent extends Component {
 
     constructor(props) {
         super(props);
+        this.fbLogin = FacebookLogin.instance();
+        this.facebookLogin = this.facebookLogin.bind(this);
         this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama" };
     }
 
@@ -22,9 +27,43 @@ export default class FacebookComponent extends Component {
             return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidFacebookUrl });
         }
     }
+
+    facebookLogin() {
+        return new Promise((resolve, reject) => {
+            this.isTokenExpired().then((tokenExpired) => {
+                if(!tokenExpired || this.fbLogin.isLoggedIn()) {
+                    resolve(true);
+                } else {
+                    this.fbLogin.login((response, error) => {
+                        if(response) {
+                            FacebookRequestHandler.setToken(response.accessToken);
+                            resolve(true);
+                        } else {
+                            reject(error);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    isTokenExpired() {
+        return new Promise((resolve, reject) => {
+            FacebookDb.getTokenDocument().then((document) => {
+                resolve(FacebookComponent.getCurrentTime() > document.expiredAfter);
+            }).catch((error) => {
+                resolve(true);
+            });
+        });
+    }
+
+    static getCurrentTime() {
+        return new Date().getTime();
+    }
+
     render() {
         return (
-            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
+            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} addURLHandler= {this.facebookLogin} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
         );
     }
 }
