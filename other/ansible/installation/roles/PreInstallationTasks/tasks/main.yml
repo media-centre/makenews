@@ -17,5 +17,8 @@
 - name: ensure ansible is installed
   apt: pkg=ansible state=installed
 
-- name: ensure bash is added in .profile
-  lineinfile: dest=/home/go/.profile line="bash"
+- name: ensure bash is added in .bashrc
+  lineinfile: dest=/home/go/.bashrc line="bash"
+
+- name: ensure NODE_ENV is set in .bashrc
+  lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"
