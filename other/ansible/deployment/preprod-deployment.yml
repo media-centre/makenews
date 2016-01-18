@@ -4,4 +4,4 @@
     - appdeployment
   vars:
     package_source_path: /var/lib/go-agent/pipelines/PreprodDeployment/trunk
-    environment: pre-prod
+    project_environment: pre-prod

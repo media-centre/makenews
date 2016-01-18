@@ -4,4 +4,4 @@
     - appdeployment
   vars:
     package_source_path: /var/lib/go-agent/pipelines/QaDeployment/trunk
-    environment: ci_qa
+    project_environment: ci_qa

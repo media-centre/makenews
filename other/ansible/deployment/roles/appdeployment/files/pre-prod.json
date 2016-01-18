@@ -1,8 +1,8 @@
 {
-  \"name\": \"ContentDiscoveryWebServer\",
-  \"script\" : \"/home/go/ContentDiscovery/dist/server.js\",
-  \"watch\": true,
-  \"env\": {
-    \"NODE_ENV\": \"pre-prod\"
+  "name": "ContentDiscoveryWebServer",
+  "script" : "/home/go/ContentDiscovery/dist/server.js",
+  "watch": true,
+  "env": {
+    "NODE_ENV": "pre-prod"
   }
 }
