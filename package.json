@@ -10,6 +10,7 @@
     "forever": "^0.15.1",
     "fs": "0.0.2",
     "helmet": "^0.15.0",
+    "helmet-csp": "^0.3.0",
     "history": "^1.13.0",
     "immutable": "^3.7.5",
     "moment": "^2.10.6",
