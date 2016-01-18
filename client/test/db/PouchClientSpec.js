@@ -116,6 +116,9 @@ describe("PouchClient", () => {
                         "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
                         "else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
                     },
+                    "allSourcesBySourceType": {
+                        "map": "function(doc) { if(doc.docType === 'source') {emit(doc.sourceType, doc)} }"
+                    },
                     "parkedFeeds": {
                         "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
                         "else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"

@@ -159,11 +159,11 @@ describe("TwitterRouteHelper", () => {
             }
         };
         mockTwitterRequest()
-            .query({ "q": "@the_hindu&since:2016-01-17" + searchParams })
+            .query({ "q": "@the_hindu&since:2016-01-17", "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, hinduResponseWithTimestamp, hinduResponseWithTimestamp);
 
         mockTwitterRequest()
-            .query({ "q": "@toi&since:2016-01-18" + searchParams })
+            .query({ "q": "@toi&since:2016-01-18", "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, toiResponseWithTimestamp, toiResponseWithTimestamp);
 
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });

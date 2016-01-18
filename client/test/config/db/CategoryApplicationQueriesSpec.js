@@ -159,25 +159,5 @@ describe("CategoryApplicationQueries", () => {
             });
         });
     });
-<<<<<<< ee747c822d1e06b028aeee8a2c6b5fd2487d4b4a
-=======
-
-    describe("addRssUrlConfiguration", () => {
-        it("should add or udpate the rss url configuration", () => {
-            let categoryId = "test_id";
-            let url = "url";
-            let status = STATUS_VALID, latestFeedTimestamp = "Jan 3", title = "rss";
-            let categoryDocMock = sinon.mock(CategoryDocument).expects("getNewDocument");
-            categoryDocMock.withExactArgs(categoryId, title, url, status, latestFeedTimestamp).returns({});
-            let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
-            createOrUpdateMock.withArgs({});
-            CategoryApplicationQueries.addUrlConfiguration(categoryId, title, url, status, latestFeedTimestamp);
-            categoryDocMock.verify();
-            createOrUpdateMock.verify();
-            CategoryDocument.getNewDocument.restore();
-            CategoryDb.createOrUpdateSource.restore();
-        });
-    });
->>>>>>> #103 [Vin/Dee] Stored latestFeedTimestamp in sourceDocument
 });
 

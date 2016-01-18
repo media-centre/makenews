@@ -155,13 +155,14 @@ describe("Source", () => {
             let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
             let url = "test url";
             let status = STATUS_VALID;
-            sourceParamsObject = { "categoryIds": [categoryId], "sourceType": "rss", "url": url, "status": status };
+            sourceParamsObject = { "categoryIds": [categoryId], "sourceType": "rss", "url": url, "status": status, "latestFeedTimestamp": "2016-01-18T15:01:47+00:00" };
             expectedDocument = {
                 "docType": "source",
                 "sourceType": "rss",
                 "url": url,
                 "categoryIds": [categoryId],
-                "status": status
+                "status": status,
+                "latestFeedTimestamp": "2016-01-18T15:01:47+00:00"
             };
         });
 

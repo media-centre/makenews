@@ -139,10 +139,7 @@ describe("FacebookClient", () => {
 
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let facebookClientGetFacebookIdStub = sinon.stub(facebookClient, "getFacebookId");
-            facebookClientGetFacebookIdStub.withArgs(facebookUrl).returns(Promise.resolve("12345678"));
-            facebookClient.pagePosts(facebookUrl).catch((error) => { //eslint-disable-line
-                facebookClient.getFacebookId.restore();
+            facebookClient.pagePosts(pageId, userParameters).catch((error) => { //eslint-disable-line
                 done();
             });
         });

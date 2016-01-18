@@ -4,7 +4,6 @@
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
-import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { displayAllFeedsAsync, getLatestFeedsFromAllSources } from "../actions/AllFeedsActions.js";
 import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";

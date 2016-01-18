@@ -3,7 +3,6 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
-import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import CategoriesApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
