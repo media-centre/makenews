@@ -19,6 +19,12 @@
       "remoteDbUrl": "http://46.101.195.133:5984"
     }
   },
+  "pre-prod": {
+    "db": {
+      "serverUrl": "http://46.101.185.145:5000",
+      "remoteDbUrl": "http://46.101.185.145:5984"
+    }
+  },
   "production": {
 
   }
