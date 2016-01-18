@@ -1,6 +1,10 @@
 ---
-- name: stop the node servers
-  shell: pm2 stopAll
+- name: stop the ContentDiscovery node server
+  shell: pm2 stop {{ContentDiscoveryWebServerName}}
+  ignore_errors: yes
+
+- name: delete the ContentDiscovery node server from the service list
+  shell: pm2 delete {{ContentDiscoveryWebServerName}}
   ignore_errors: yes
 
 - name: delete the old project directory
@@ -15,5 +19,8 @@
 - name: untar the project directory
   shell: tar -xvzf "{{project_directory}}/{{artifact}}" --directory {{project_directory}}
 
+- name: migrate all the dbs
+  shell: node {{project_directory}}/dist/server/src/migration.js --admin_user_name='admin' --admin_password='M@d!ac3nt53'
+
 - name: start the application server
-  shell: pm2 start {{project_directory}}/dist/server.js
+  shell: pm2 start {{project_directory}}/dist/server.js --name="{{ContentDiscoveryWebServerName}}"
