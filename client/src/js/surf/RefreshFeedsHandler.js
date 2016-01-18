@@ -76,7 +76,7 @@ export default class RefreshFeedsHandler {
                     } else {
                         let feeds = feedMap.posts[sourceId];
                         let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
-                            return feed.pubDate;
+                            return feed.created_time;
                         }));
 
                         let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feeds);
@@ -102,7 +102,7 @@ export default class RefreshFeedsHandler {
                     } else {
                         let feeds = feedMap[sourceId].statuses;
                         let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
-                            return feed.pubDate;
+                            return feed.created_at;
                         }));
 
                         let feedDocuments = TwitterResponseParser.parseTweets(sourceId, feeds);
@@ -140,7 +140,7 @@ export default class RefreshFeedsHandler {
 
     _constructRequestData(sources) {
         let urls = sources.map(source => {
-            return { "timestamp": source.timestamp, "url": source.url, "id": source._id };
+            return { "timestamp": source.latestFeedTimestamp, "url": source.url, "id": source._id };
         });
         return { "data": urls };
     }

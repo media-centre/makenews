@@ -84,39 +84,39 @@ describe("RefreshFeedsHandler", () => {
             let categoryDbStub = sinon.stub(CategoryDb, "fetchSourceConfigurationBySourceType");
 
             let rssUrls = [
-                { "url": "rssUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "rssUrl2", "timestamp": "1234", "_id": "2" },
-                { "url": "rssUrl3", "timestamp": "1234", "_id": "3" },
-                { "url": "rssUrl4", "timestamp": "1234", "_id": "4" },
-                { "url": "rssUrl5", "timestamp": "1234", "_id": "5" },
-                { "url": "rssUrl6", "timestamp": "1234", "_id": "6" },
-                { "url": "rssUrl7", "timestamp": "1234", "_id": "7" },
-                { "url": "rssUrl8", "timestamp": "1234", "_id": "8" },
-                { "url": "rssUrl9", "timestamp": "1234", "_id": "9" }
+                { "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                { "url": "rssUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                { "url": "rssUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                { "url": "rssUrl4", "latestFeedTimestamp": "1234", "_id": "4" },
+                { "url": "rssUrl5", "latestFeedTimestamp": "1234", "_id": "5" },
+                { "url": "rssUrl6", "latestFeedTimestamp": "1234", "_id": "6" },
+                { "url": "rssUrl7", "latestFeedTimestamp": "1234", "_id": "7" },
+                { "url": "rssUrl8", "latestFeedTimestamp": "1234", "_id": "8" },
+                { "url": "rssUrl9", "latestFeedTimestamp": "1234", "_id": "9" }
             ];
             let fbUrls = [
-                { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "fbUrl2", "timestamp": "1234", "_id": "2" },
-                { "url": "fbUrl3", "timestamp": "1234", "_id": "3" },
-                { "url": "fbUrl4", "timestamp": "1234", "_id": "4" },
-                { "url": "fbUrl5", "timestamp": "1234", "_id": "5" },
-                { "url": "fbUrl6", "timestamp": "1234", "_id": "6" },
-                { "url": "fbUrl7", "timestamp": "1234", "_id": "7" },
-                { "url": "fbUrl8", "timestamp": "1234", "_id": "8" },
-                { "url": "fbUrl9", "timestamp": "1234", "_id": "9" },
-                { "url": "fbUrl10", "timestamp": "1234", "_id": "10" },
-                { "url": "fbUrl11", "timestamp": "1234", "_id": "11" }
+                { "url": "fbUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                { "url": "fbUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                { "url": "fbUrl4", "latestFeedTimestamp": "1234", "_id": "4" },
+                { "url": "fbUrl5", "latestFeedTimestamp": "1234", "_id": "5" },
+                { "url": "fbUrl6", "latestFeedTimestamp": "1234", "_id": "6" },
+                { "url": "fbUrl7", "latestFeedTimestamp": "1234", "_id": "7" },
+                { "url": "fbUrl8", "latestFeedTimestamp": "1234", "_id": "8" },
+                { "url": "fbUrl9", "latestFeedTimestamp": "1234", "_id": "9" },
+                { "url": "fbUrl10", "latestFeedTimestamp": "1234", "_id": "10" },
+                { "url": "fbUrl11", "latestFeedTimestamp": "1234", "_id": "11" }
             ];
             let twitterUrls = [
-                { "url": "twitterUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "twitterUrl2", "timestamp": "1234", "_id": "2" },
-                { "url": "twitterUrl3", "timestamp": "1234", "_id": "3" },
-                { "url": "twitterUrl4", "timestamp": "1234", "_id": "4" },
-                { "url": "twitterUrl5", "timestamp": "1234", "_id": "5" },
-                { "url": "twitterUrl6", "timestamp": "1234", "_id": "6" },
-                { "url": "twitterUrl7", "timestamp": "1234", "_id": "7" },
-                { "url": "twitterUrl8", "timestamp": "1234", "_id": "8" },
-                { "url": "twitterUrl9", "timestamp": "1234", "_id": "9" }
+                { "url": "twitterUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                { "url": "twitterUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                { "url": "twitterUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                { "url": "twitterUrl4", "latestFeedTimestamp": "1234", "_id": "4" },
+                { "url": "twitterUrl5", "latestFeedTimestamp": "1234", "_id": "5" },
+                { "url": "twitterUrl6", "latestFeedTimestamp": "1234", "_id": "6" },
+                { "url": "twitterUrl7", "latestFeedTimestamp": "1234", "_id": "7" },
+                { "url": "twitterUrl8", "latestFeedTimestamp": "1234", "_id": "8" },
+                { "url": "twitterUrl9", "latestFeedTimestamp": "1234", "_id": "9" }
             ];
 
             categoryDbStub.withArgs("twitter").returns(Promise.resolve(twitterUrls));
@@ -152,10 +152,10 @@ describe("RefreshFeedsHandler", () => {
             };
             let token = EnvironmentConfig.instance().get("facebookAccessToken");
             let fbUrls = [
-                { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
-                { "url": "fbUrl2", "timestamp": "1234", "_id": "2" },
-                { "url": "fbUrl3", "timestamp": "1234", "_id": "3" },
-                { "url": "fbUrl4", "timestamp": "1234", "_id": "4" }
+                { "url": "fbUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                { "url": "fbUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                { "url": "fbUrl4", "latestFeedTimestamp": "1234", "_id": "4" }
             ];
             let postData = [
                 { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
@@ -197,11 +197,11 @@ describe("RefreshFeedsHandler", () => {
             });
             it("should parse the rss feeds", ()=> {
                 let rssUrls = [
-                    { "url": "rssUrl1", "timestamp": "1234", "_id": "1" },
-                    { "url": "rssUrl2", "timestamp": "1234", "_id": "2" },
-                    { "url": "rssUrl3", "timestamp": "1234", "_id": "3" },
-                    { "url": "rssUrl4", "timestamp": "1234", "_id": "4" },
-                    { "url": "rssUrl5", "timestamp": "1234", "_id": "5" }
+                    { "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                    { "url": "rssUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                    { "url": "rssUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                    { "url": "rssUrl4", "latestFeedTimestamp": "1234", "_id": "4" },
+                    { "url": "rssUrl5", "latestFeedTimestamp": "1234", "_id": "5" }
                 ];
                 let postData = [
                     { "url": "rssUrl1", "timestamp": "1234", "id": "1" },
@@ -268,7 +268,7 @@ describe("RefreshFeedsHandler", () => {
                     };
 
                     let rssUrls = [
-                        { "url": "rssUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                        { "url": "rssUrl1", "latestFeedTimestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
                     ];
                     let postData = [
                         { "url": "rssUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
@@ -335,7 +335,7 @@ describe("RefreshFeedsHandler", () => {
                     assert.strictEqual(percentage, hundredPercentage);
                     callback();
                 };
-                let rssUrls = [{ "url": "rssUrl1", "timestamp": "1234", "_id": "1" }];
+                let rssUrls = [{ "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" }];
                 let postData = [{ "url": "rssUrl1", "timestamp": "1234", "id": "1" }];
 
                 let rssFeedMap = {
@@ -372,8 +372,8 @@ describe("RefreshFeedsHandler", () => {
             it("should parse and add facebook feeds", ()=> {
                 let token = EnvironmentConfig.instance().get("facebookAccessToken");
                 let fbUrls = [
-                    { "url": "fbUrl1", "timestamp": "1234", "_id": "1" },
-                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                    { "url": "fbUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                    { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" }
                 ];
                 let postData = [
                     { "url": "fbUrl1", "timestamp": "1234", "id": "1" },
@@ -439,7 +439,7 @@ describe("RefreshFeedsHandler", () => {
                 };
 
                 let fbUrls = [
-                    { "url": "fbUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                    { "url": "fbUrl1", "latestFeedTimestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
                 ];
                 let postData = [
                     { "url": "fbUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
@@ -493,7 +493,7 @@ describe("RefreshFeedsHandler", () => {
                 };
                 let token = EnvironmentConfig.instance().get("facebookAccessToken");
                 let fbUrls = [
-                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                    { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" }
                 ];
                 let postData = [
                     { "url": "fbUrl2", "timestamp": "1234", "id": "2" }
@@ -529,11 +529,11 @@ describe("RefreshFeedsHandler", () => {
             });
             it("should parse the twitter feeds", ()=> {
                 let twitterUrls = [
-                    { "url": "twitterUrl1", "timestamp": "1234", "_id": "1" },
-                    { "url": "twitterUrl2", "timestamp": "1234", "_id": "2" },
-                    { "url": "twitterUrl3", "timestamp": "1234", "_id": "3" },
-                    { "url": "twitterUrl4", "timestamp": "1234", "_id": "4" },
-                    { "url": "twitterUrl5", "timestamp": "1234", "_id": "5" }
+                    { "url": "twitterUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
+                    { "url": "twitterUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
+                    { "url": "twitterUrl3", "latestFeedTimestamp": "1234", "_id": "3" },
+                    { "url": "twitterUrl4", "latestFeedTimestamp": "1234", "_id": "4" },
+                    { "url": "twitterUrl5", "latestFeedTimestamp": "1234", "_id": "5" }
                 ];
                 let postData = [
                     { "url": "twitterUrl1", "timestamp": "1234", "id": "1" },
@@ -594,7 +594,7 @@ describe("RefreshFeedsHandler", () => {
                     "url": "@myposts"
                 };
                 let twitterUrls = [
-                    { "url": "twitterUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
+                    { "url": "twitterUrl1", "latestFeedTimestamp": "2016-01-16T07:36:17+00:00", "_id": "1" }
                 ];
                 let postData = [
                     { "url": "twitterUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
@@ -657,7 +657,7 @@ describe("RefreshFeedsHandler", () => {
                     uiCallback();
                 };
                 let twitterUrls = [
-                    { "url": "fbUrl2", "timestamp": "1234", "_id": "2" }
+                    { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" }
                 ];
                 let postData = [
                     { "url": "fbUrl2", "timestamp": "1234", "id": "2" }

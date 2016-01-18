@@ -38,7 +38,12 @@ export default class FacebookRouteHelper {
         let allFeeds = {};
         let counter = 0;
         this.request.body.data.forEach((item)=> {
-            facebookRequestHandler.pagePosts(item.url).then(feeds => {
+
+            let options = {};
+            if(item.timestamp) {
+                options.since = moment(item.timestamp).toISOString();
+            }
+            facebookRequestHandler.pagePosts(item.url, options).then(feeds => {
                 allFeeds[item.id] = feeds;
                 if(this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": allFeeds });

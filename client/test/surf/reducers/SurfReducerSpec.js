@@ -51,7 +51,7 @@ describe("Surf Reducer", () => {
                     "type": "description"
                 }
             ];
-            let prevState = { "feeds": feeds, "messages": messages, "refreshState": false, "progressPercentage": 0  }
+            let prevState = { "feeds": feeds, "messages": messages, "refreshState": false, "progressPercentage": 0 };
             let action = { "type": DISPLAY_EXISTING_FEEDS, "feeds": [], "refreshState": true, "progressPercentage": 100 };
 
             expect({ "feeds": feeds, "messages": messages, "refreshState": true, "progressPercentage": 100 }).to.deep.equal(allFeeds(prevState, action));

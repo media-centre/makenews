@@ -190,12 +190,12 @@ describe("FacebookRouteHelper", () => {
                     "data": [{
                         "url": "http://facebook.com/TOI",
                         "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                        "timestamp": "1232323"
+                        "timestamp": "2016-01-10T10:58:18+00:00"
                     },
                         {
                             "url": "http://facebook.com/hindu",
                             "id": "163974433696568_958425464251457",
-                            "timestamp": "1232323"
+                            "timestamp": "2016-01-10T10:58:18+00:00"
                         }],
                     "accessToken": "test_token"
                 }
@@ -234,8 +234,8 @@ describe("FacebookRouteHelper", () => {
             facebookRequestHandlerMock.withArgs(requestData.body.accessToken).returns(facebookRequestHandlerInstance);
 
             let fetchFacebookFeedRequestStub = sinon.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(urlResponse1));
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[1].url).returns(Promise.resolve(urlResponse2));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[1].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
 
             let facebookRouteHelper = new FacebookRouteHelper(requestData, response);
             facebookRouteHelper.fetchMultiplePages();
@@ -250,12 +250,12 @@ describe("FacebookRouteHelper", () => {
                     "data": [{
                         "url": "http://facebook.com/TOI",
                         "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                        "timestamp": "1232323"
+                        "timestamp": "2016-01-10T10:58:18+00:00"
                     },
                         {
                             "url": "http://facebook.com/hindu",
                             "id": "163974433696568_958425464251457",
-                            "timestamp": "1232323"
+                            "timestamp": "2016-01-10T10:58:18+00:00"
                         }],
                     "accessToken": "test_token"
                 }

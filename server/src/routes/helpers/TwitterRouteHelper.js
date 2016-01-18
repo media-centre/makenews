@@ -36,7 +36,7 @@ export default class TwitterRouteHelper {
         let twitterRequestHandler = TwitterRequestHandler.instance();
 
         this.request.body.data.forEach((item)=> {
-            twitterRequestHandler.fetchTweetsRequest(item.url).then(feeds => {
+            twitterRequestHandler.fetchTweetsRequest(item.url, item.timestamp).then(feeds => {
                 allFeeds[item.id] = feeds;
                 if(this.request.body.data.length - 1 === counter) {
                     ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
