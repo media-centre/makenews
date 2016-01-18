@@ -64,6 +64,7 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
             let sortedDates = DateTimeUtil.getSortedUTCDates(originalPosts.map(feed => {
                 return feed.created_time;
             }));
+
             addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let feedDocuments = FacebookResponseParser.parsePosts(documentId, originalPosts);
                 FacebookDb.addFacebookFeeds(feedDocuments);

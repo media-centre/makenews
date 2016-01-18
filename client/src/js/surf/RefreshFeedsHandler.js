@@ -55,7 +55,9 @@ export default class RefreshFeedsHandler {
                         }));
                         let parsedFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
                         RssDb.addRssFeeds(parsedFeeds).then(() => {
-                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            if(sortedDates.length > 0) {
+                                this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            }
                             this._updateCompletionPercentage();
                         });
                     }
@@ -81,7 +83,9 @@ export default class RefreshFeedsHandler {
 
                         let feedDocuments = FacebookResponseParser.parsePosts(sourceId, feeds);
                         FacebookDb.addFacebookFeeds(feedDocuments).then(() => {
-                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            if(sortedDates.length > 0) {
+                                this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            }
                             this._updateCompletionPercentage();
                         });
                     }
@@ -107,7 +111,9 @@ export default class RefreshFeedsHandler {
 
                         let feedDocuments = TwitterResponseParser.parseTweets(sourceId, feeds);
                         TwitterDb.addTweets(feedDocuments).then(() => {
-                            this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            if(sortedDates.length > 0) {
+                                this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
+                            }
                             this._updateCompletionPercentage();
                         });
                     }

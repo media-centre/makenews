@@ -5,6 +5,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import RssRequestHandler from "../../rss/RssRequestHandler";
 import ResponseUtil from "../../util/ResponseUtil";
+import BatchRequestsRouteHelper from "./BatchRequestsRouteHelper.js";
 
 export default class RssRouteHelper {
     constructor(request, response) {
@@ -27,23 +28,28 @@ export default class RssRouteHelper {
     }
 
     feedsForAllUrls() {
-        let allFeeds = {};
-        let rssRequestHandler = RssRequestHandler.instance();
-        let counter = 0;
-        this.request.body.data.forEach((item)=> {
-            rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
-                allFeeds[item.id] = feeds;
-                if(this.request.body.data.length - 1 === counter) {
-                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
-                }
-                counter += 1;
-            }).catch(() => {
-                allFeeds[item.id] = "failed";
-                if(this.request.body.data.length - 1 === counter) {
-                    ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
-                }
-                counter += 1;
+        let batchRequestsRouteHelper = new BatchRequestsRouteHelper(this.request, this.response);
+        if(batchRequestsRouteHelper.isValidRequestData()) {
+            let allFeeds = {};
+            let rssRequestHandler = RssRequestHandler.instance();
+            let counter = 0;
+            this.request.body.data.forEach((item)=> {
+                rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
+                    allFeeds[item.id] = feeds;
+                    if (this.request.body.data.length - 1 === counter) {
+                        ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                    }
+                    counter += 1;
+                }).catch(() => {
+                    allFeeds[item.id] = "failed";
+                    if (this.request.body.data.length - 1 === counter) {
+                        ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                    }
+                    counter += 1;
+                });
             });
-        });
+        } else {
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
+        }
     }
 }
