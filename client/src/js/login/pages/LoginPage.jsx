@@ -8,7 +8,7 @@ import Logo from "../../utils/components/Logo.jsx";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
-let userName = "";
+let loginUserName = "";
 export class LoginPage extends Component {
 
     componentWillMount() {
@@ -20,12 +20,12 @@ export class LoginPage extends Component {
     }
 
     static getUserName() {
-        return userName;
+        return loginUserName;
     }
 
     render() {
         const { dispatch } = this.props;
-        userName = this.props.login.userName;
+        loginUserName = this.props.login.userName;
         return (
             <div>
                 <header className="app-header login app-">

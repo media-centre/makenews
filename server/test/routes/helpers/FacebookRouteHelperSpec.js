@@ -217,7 +217,7 @@ describe("FacebookRouteHelper", () => {
     });
 
     describe("tokenRouter", () => {
-        let facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null, userName = "test";
+        let facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null;
         beforeEach("tokenRouter", () => {
             sandbox = sinon.sandbox.create();
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
