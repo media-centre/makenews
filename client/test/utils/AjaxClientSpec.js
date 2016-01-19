@@ -90,7 +90,7 @@ describe("AjaxClient", function() {
         it("should handle for 404", () => {
             nock("http://localhost:5000")
                 .get("/rss-feeds")
-                .reply(HttpResponseHandler.codes.NOT_FOUND);
+                .reply(HttpResponseHandler.codes.NOT_FOUND, "error");
 
             let ajax = new AjaxClient("/rss-feeds");
             return ajax.get({}).catch(errorData => {

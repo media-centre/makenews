@@ -7,7 +7,7 @@ import { assert } from "chai";
 import sinon from "sinon";
 
 describe("FacebookAccessToken", () => {
-    let sandbox = null, token = "12345";
+    let sandbox = null, token = "12345", userName = "test1", tokenDocId = userName + "_facebookToken";
     beforeEach("FacebookAccessToken", () => {
         sandbox = sinon.sandbox.create();
     });
@@ -15,34 +15,26 @@ describe("FacebookAccessToken", () => {
     afterEach("FacebookAccessToken", () => {
         sandbox.restore();
     });
-    describe("getAccesToken", () => {
-        it("if long lived token exists return existing token", (done) => {
-            sandbox.stub(FacebookAccessToken, "getToken").returns(token);
-            FacebookAccessToken.instance().getAccesToken().then((response) => {
-                assert.deepEqual(response, token);
-                done();
-            });
-        });
 
-        it("if long lived token not exists then should get token from db and returns", (done) => {
-            sandbox.stub(FacebookAccessToken, "getToken").returns(null);
+    describe("getAccesToken", () => {
+
+        it("should get token from db and returns", (done) => {
             let adminDbClient = new AdminDbClient();
             sandbox.stub(AdminDbClient, "instance").returns(adminDbClient);
-            sandbox.stub(adminDbClient, "getDocument").withArgs("facebookToken").returns(Promise.resolve({ "access_token": token }));
+            sandbox.stub(adminDbClient, "getDocument").withArgs(tokenDocId).returns(Promise.resolve({ "access_token": token }));
 
-            FacebookAccessToken.instance().getAccesToken().then((response) => {
+            FacebookAccessToken.instance().getAccesToken(userName).then((response) => {
                 assert.deepEqual(response, token);
                 done();
             });
         });
 
         it("error should thrown if facebook token document is not present", (done) => {
-            sandbox.stub(FacebookAccessToken, "getToken").returns(null);
             let adminDbClient = new AdminDbClient();
             sandbox.stub(AdminDbClient, "instance").returns(adminDbClient);
-            sandbox.stub(adminDbClient, "getDocument").withArgs("facebookToken").returns(Promise.reject());
+            sandbox.stub(adminDbClient, "getDocument").withArgs(tokenDocId).returns(Promise.reject());
 
-            FacebookAccessToken.instance().getAccesToken().catch((error) => {
+            FacebookAccessToken.instance().getAccesToken(userName).catch((error) => {
                 assert.strictEqual(error, "access token not there");
                 done();
             });

@@ -54,7 +54,7 @@ describe("AdminDbClient", () => {
             sandbox.stub(adminDbClient, "getDb").returns(Promise.resolve(couchClient));
             const doc = { "_id": "facebookToken", "token": "123" };
             getDocumentStub.withArgs("facebookToken").returns(Promise.resolve(doc));
-            adminDbClient.getDocument().then((response) => {
+            adminDbClient.getDocument("facebookToken").then((response) => {
                 assert.deepEqual(response, doc);
                 done();
             });

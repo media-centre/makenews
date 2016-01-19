@@ -28,21 +28,21 @@ export default class FacebookRequestHandler {
             let facebookClientInstance = this.facebookClient();
             facebookClientInstance.getFacebookId(webUrl).then(pageId => {
                 facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-                    FacebookRequestHandler.logger().debug("PagePosts response: %s", feeds);
+                    FacebookRequestHandler.logger().debug("PagePosts response: %s", feeds.data);
                     resolve(feeds.data);
                 }).catch(error => {
-                    FacebookRequestHandler.logger().error("error fetching facebook feeds of web url = %s. Error: %s", webUrl, error);
+                    FacebookRequestHandler.logger().error("error fetching facebook feeds of web url = %s.", webUrl, error);
                     reject("error fetching facebook feeds of web url = " + webUrl);
                 });
             }).catch(error => {
-                FacebookRequestHandler.logger().error("error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-                reject("error fetching facebook id of web url = " + webUrl);
+                FacebookRequestHandler.logger().error("error fetching facebook id of web url = %s.", webUrl, error);
+                reject(error);
             });
         });
     }
 
-    saveToken(dbInstance, document, resolve, reject) {
-        dbInstance.saveDocument("facebookToken", document).then(() => {
+    saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {
+        dbInstance.saveDocument(tokenDocumentId, document).then(() => {
             resolve(document.expired_after);
         }).catch(error => {
             FacebookRequestHandler.logger().error("error while saving facebook long lived token with error %s", error);
@@ -54,22 +54,24 @@ export default class FacebookRequestHandler {
         return new Date().getTime();
     }
 
-    setToken() {
+    setToken(userName) {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = FacebookClient.instance(this.accessToken, this.appSecretKey(), this.appId());
             let currentTime = FacebookRequestHandler.getCurrentTime();
             facebookClientInstance.getLongLivedToken().then(response => {
-                response.expired_after = currentTime + response.expires_in; //eslint-disable-line camelcase
+                const milliSeconds = 1000;
+                response.expired_after = currentTime + (response.expires_in * milliSeconds); //eslint-disable-line camelcase
                 FacebookRequestHandler.logger().debug("getLongLivedToken response: %s", response);
                 AdminDbClient.instance().getDb().then((dbInstance) => {
-                    dbInstance.getDocument("facebookToken").then((document) => { //eslint-disable-line max-nested-callbacks
+                    let tokenDocumentId = userName + "_facebookToken";
+                    dbInstance.getDocument(tokenDocumentId).then((document) => { //eslint-disable-line max-nested-callbacks
                         document.access_token = response.access_token; //eslint-disable-line camelcase
                         document.token_type = response.token_type; //eslint-disable-line camelcase
                         document.expires_in = response.expires_in; //eslint-disable-line camelcase
                         document.expired_after = response.expired_after; //eslint-disable-line camelcase
-                        this.saveToken(dbInstance, document, resolve, reject);
+                        this.saveToken(dbInstance, tokenDocumentId, document, resolve, reject);
                     }).catch(() => { //eslint-disable-line max-nested-callbacks
-                        this.saveToken(dbInstance, response, resolve, reject);
+                        this.saveToken(dbInstance, tokenDocumentId, response, resolve, reject);
                     });
                 });
             }).catch(error => {

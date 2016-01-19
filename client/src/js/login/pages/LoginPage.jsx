@@ -8,6 +8,7 @@ import Logo from "../../utils/components/Logo.jsx";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
+let userName = "";
 export class LoginPage extends Component {
 
     componentWillMount() {
@@ -18,8 +19,13 @@ export class LoginPage extends Component {
         document.getElementsByTagName("html")[0].classList.remove("login-bg");
     }
 
+    static getUserName() {
+        return userName;
+    }
+
     render() {
         const { dispatch } = this.props;
+        userName = this.props.login.userName;
         return (
             <div>
                 <header className="app-header login app-">

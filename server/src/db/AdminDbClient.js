@@ -29,10 +29,10 @@ export default class AdminDbClient {
         });
     }
 
-    getDocument() {
+    getDocument(documentId) {
         return new Promise((resolve, reject) => {
             this.getDb().then((dbInstance) => {
-                dbInstance.getDocument("facebookToken").then((document) => {
+                dbInstance.getDocument(documentId).then((document) => {
                     resolve(document);
                 }).catch((error) => {
                     reject(error);

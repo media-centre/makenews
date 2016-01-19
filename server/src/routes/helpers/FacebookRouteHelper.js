@@ -16,7 +16,8 @@ export default class FacebookRouteHelper {
     pageRouter() {
         let webUrl = this.request.query.webUrl;
         let since = this.request.query.since;
-        if(StringUtil.isEmptyString(webUrl) || (since && !moment(since).isValid())) {
+        let userName = this.request.query.userName;
+        if(StringUtil.isEmptyString(webUrl) || StringUtil.isEmptyString(userName) || (since && !moment(since).isValid())) {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
             return;
         }
@@ -24,7 +25,7 @@ export default class FacebookRouteHelper {
         if(since) {
             options.since = moment(since).toISOString();
         }
-        FacebookAccessToken.instance().getAccesToken().then((token) => {
+        FacebookAccessToken.instance().getAccesToken(userName).then((token) => {
             FacebookRequestHandler.instance(token).pagePosts(webUrl, options).then(feeds => {
                 ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "posts": feeds });
             }).catch(error => {
@@ -37,11 +38,12 @@ export default class FacebookRouteHelper {
 
     tokenRouter() {
         let accessToken = this.request.body.accessToken;
-        if(StringUtil.isEmptyString(accessToken)) {
+        let userName = this.request.body.userName;
+        if(StringUtil.isEmptyString(accessToken) || StringUtil.isEmptyString(userName)) {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
             return;
         }
-        FacebookRequestHandler.instance(accessToken).setToken().then(expiresAfter => {
+        FacebookRequestHandler.instance(accessToken).setToken(userName).then(expiresAfter => {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "expires_after": expiresAfter });
         }).catch(error => {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, error);

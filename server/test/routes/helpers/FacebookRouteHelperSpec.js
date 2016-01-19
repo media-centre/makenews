@@ -9,7 +9,7 @@ import { assert } from "chai";
 
 
 describe("FacebookRouteHelper", () => {
-    let request = null, facebookRequestHandler = null, accessToken = null, webUrl = null, posts = null;
+    let request = null, facebookRequestHandler = null, accessToken = null, webUrl = null, posts = null, userName = "test1";
     before("FacebookRouteHelper", () => {
         accessToken = "test_access_token";
         webUrl = "https://facebook.com/testpage";
@@ -17,7 +17,8 @@ describe("FacebookRouteHelper", () => {
             "query": {
                 "webUrl": webUrl,
                 "accessToken": accessToken,
-                "since": "2015-12-21T21:47:11+00:00"
+                "since": "2015-12-21T21:47:11+00:00",
+                "userName": userName
             }
         };
     });
@@ -44,7 +45,7 @@ describe("FacebookRouteHelper", () => {
         });
 
         it("should set the the facebook feeds on response", (done) => {
-            sinon.stub(facebookAccessToken, "getAccesToken").returns(Promise.resolve(accessToken));
+            sinon.stub(facebookAccessToken, "getAccesToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
             let response = {
@@ -67,7 +68,7 @@ describe("FacebookRouteHelper", () => {
         });
 
         it("should set the error on the response in case if feeds can not be fetched from facebook", (done) => {
-            sinon.stub(facebookAccessToken, "getAccesToken").returns(Promise.resolve(accessToken));
+            sinon.stub(facebookAccessToken, "getAccesToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
             let error = {
@@ -101,11 +102,12 @@ describe("FacebookRouteHelper", () => {
                 "query": {
                     "webUrl": webUrl,
                     "accessToken": accessToken,
-                    "since": "2015-12-21T21:47:11+00:00"
+                    "since": "2015-12-21T21:47:11+00:00",
+                    "userName": userName
                 }
             };
 
-            sinon.stub(facebookAccessToken, "getAccesToken").returns(Promise.resolve(accessToken));
+            sinon.stub(facebookAccessToken, "getAccesToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerPagePostsMock = sinon.mock(facebookRequestHandler).expects("pagePosts");
             facebookRequestHandlerPagePostsMock.withArgs(webUrl, { "since": "2015-12-21T21:47:11.000Z" }).returns(Promise.resolve(posts));
@@ -142,7 +144,8 @@ describe("FacebookRouteHelper", () => {
             let facebookRouteHelper = new FacebookRouteHelper({
                 "query": {
                     "accessToken": accessToken,
-                    "since": "2015-12-21T21:47:11+00:00"
+                    "since": "2015-12-21T21:47:11+00:00",
+                    "userName": userName
                 }
             }, response);
             facebookRouteHelper.pageRouter();
@@ -162,10 +165,11 @@ describe("FacebookRouteHelper", () => {
             let facebookRouteHelper = new FacebookRouteHelper({
                 "query": {
                     "webUrl": webUrl,
-                    "since": "2015-12-21T21:47:11+00:00"
+                    "since": "2015-12-21T21:47:11+00:00",
+                    "userName": userName
                 }
             }, response);
-            sinon.stub(facebookAccessToken, "getAccesToken").returns(Promise.reject("access token not there"));
+            sinon.stub(facebookAccessToken, "getAccesToken").withArgs(userName).returns(Promise.reject("access token not there"));
             facebookRouteHelper.pageRouter();
         });
 
@@ -190,17 +194,38 @@ describe("FacebookRouteHelper", () => {
             facebookRouteHelper.pageRouter();
         });
 
+        it("should reject the request if user name is missing", (done) => {
+            let response = {
+                "status": (status) => {
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    done();
+                },
+                "json": (json) => { //eslint-disable-line
+
+                }
+            };
+
+            let facebookRouteHelper = new FacebookRouteHelper({
+                "query": {
+                    "webUrl": webUrl,
+                    "since": "2015-12-21T21:47:11+00:00"
+                }
+            }, response);
+            facebookRouteHelper.pageRouter();
+        });
+
     });
 
     describe("tokenRouter", () => {
-        let facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null;
+        let facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null, userName = "test";
         beforeEach("tokenRouter", () => {
             sandbox = sinon.sandbox.create();
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             facebookRequestHandlerInstanceMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             request1 = {
                 "body": {
-                    "accessToken": accessToken
+                    "accessToken": accessToken,
+                    "userName": userName
                 }
             };
         });
@@ -209,7 +234,7 @@ describe("FacebookRouteHelper", () => {
             sandbox.restore();
         });
 
-        it("should respons with long lived token expiration time", (done) => {
+        it("should response with long lived token expiration time", (done) => {
             let expiresAfter = "12233";
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
@@ -225,7 +250,7 @@ describe("FacebookRouteHelper", () => {
                 }
             };
 
-            facebookRequestHandlerStub.returns(Promise.resolve(expiresAfter));
+            facebookRequestHandlerStub.withArgs(userName).returns(Promise.resolve(expiresAfter));
 
             let facebookRouteHelper = new FacebookRouteHelper(request1, response);
             facebookRouteHelper.tokenRouter();
@@ -235,7 +260,7 @@ describe("FacebookRouteHelper", () => {
 
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
-            facebookRequestHandlerStub.returns(Promise.reject("error"));
+            facebookRequestHandlerStub.withArgs(userName).returns(Promise.reject("error"));
 
             let response = {
                 "status": (status) => {
@@ -267,6 +292,25 @@ describe("FacebookRouteHelper", () => {
             let facebookRouteHelper = new FacebookRouteHelper({
                 "body": {
 
+                }
+            }, response);
+            facebookRouteHelper.tokenRouter();
+        });
+
+        it("should reject the request if user name is missing", (done) => {
+            let response = {
+                "status": (status) => {
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    done();
+                },
+                "json": (json) => { //eslint-disable-line
+
+                }
+            };
+
+            let facebookRouteHelper = new FacebookRouteHelper({
+                "body": {
+                    "accessToken": accessToken
                 }
             }, response);
             facebookRouteHelper.tokenRouter();

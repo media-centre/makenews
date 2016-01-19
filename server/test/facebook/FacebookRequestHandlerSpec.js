@@ -141,7 +141,7 @@ describe("FacebookRequestHandler", () => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
             facebookClientPagePostsMock.withArgs(pageId, optionsJson).never();
             facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
-                assert.deepEqual("error fetching facebook id of web url = https://www.facebook.com/TestPage", error);
+                assert.deepEqual("error", error);
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
@@ -152,7 +152,7 @@ describe("FacebookRequestHandler", () => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
             facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.reject("error"));
             facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
-                assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
+                assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
@@ -162,7 +162,7 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("setToken", () => {
-        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486;
+        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486, tokenDocId = "test_facebookToken", milliSeconds = 1000;
 
         beforeEach("setToken", () => {
             sandbox = sinon.sandbox.create();
@@ -185,14 +185,14 @@ describe("FacebookRequestHandler", () => {
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
             let couchClient = new CouchClient();
             let getDocStub = sinon.stub(couchClient, "getDocument");
-            getDocStub.withArgs("facebookToken").returns(Promise.reject("error"));
+            getDocStub.withArgs(tokenDocId).returns(Promise.reject("error"));
             let saveDocStub = sinon.stub(couchClient, "saveDocument");
-            saveDocStub.withArgs("facebookToken", tokenResponse).returns(Promise.resolve("save doc"));
+            saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
                 return Promise.resolve(couchClient);
             } });
-            facebookRequestHandler.setToken().then(response => {
-                assert.strictEqual(expiresIn + currentTime, response);
+            facebookRequestHandler.setToken("test").then(response => {
+                assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
                 facebookClientPagePostsMock.verify();
                 adminDbMock.verify();
                 assert(getDocStub.called);
@@ -209,19 +209,19 @@ describe("FacebookRequestHandler", () => {
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
             let couchClient = new CouchClient();
             let getDocStub = sinon.stub(couchClient, "getDocument");
-            getDocStub.withArgs("facebookToken").returns(Promise.resolve({ "_id": "facebookToken",
+            getDocStub.withArgs(tokenDocId).returns(Promise.resolve({ "_id": "facebookToken",
                 "_rev": "1aa",
                 "access_token": "test11",
                 "token_type": "bearer",
                 "expires_in": "123" }));
             let saveDocStub = sinon.stub(couchClient, "saveDocument");
-            saveDocStub.withArgs("facebookToken", tokenResponse).returns(Promise.resolve("save doc"));
+            saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
 
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
                 return Promise.resolve(couchClient);
             } });
-            facebookRequestHandler.setToken().then(response => {
-                assert.strictEqual(expiresIn + currentTime, response);
+            facebookRequestHandler.setToken("test").then(response => {
+                assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
                 facebookClientPagePostsMock.verify();
                 adminDbMock.verify();
                 done();
@@ -230,7 +230,7 @@ describe("FacebookRequestHandler", () => {
 
         it("should throw error if long lived token not fetched", (done) => {
             facebookClientPagePostsMock.returns(Promise.reject("error"));
-            facebookRequestHandler.setToken().catch(error => {
+            facebookRequestHandler.setToken("test").catch(error => {
                 assert.strictEqual(error, "error getting long lived token with token " + accessToken);
                 facebookClientPagePostsMock.verify();
                 done();

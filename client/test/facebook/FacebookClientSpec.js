@@ -2,6 +2,7 @@
 
 "use strict";
 import FacebookClient from "../../src/js/facebook/FacebookClient.js";
+import LoginPage from "../../src/js/login/pages/LoginPage.jsx";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 
 import sinon from "sinon";
@@ -11,11 +12,10 @@ import "../helper/TestHelper.js";
 describe("FacebookClient", () => {
 
     describe("fetchPosts", () => {
-        let webUrl = null, serverUrl = null, accessToken = null, response = null;
+        let webUrl = null, serverUrl = null, response = null, sandbox = null, userName = "test1", accessToken = "123";
         before("FacebookClient", () => {
             webUrl = "https://www.facebook.com/thehindu";
             serverUrl = "/facebook-posts";
-            accessToken = "test-access-token";
             response = {
                 "posts": [
                     {
@@ -50,12 +50,22 @@ describe("FacebookClient", () => {
             };
         });
 
+        beforeEach(() => {
+            sandbox = sinon.sandbox.create();
+            sandbox.stub(LoginPage, "getUserName").returns(userName);
+        });
+
+        afterEach(() => {
+            sandbox.restore();
+        });
+
+
         it("should fetch facebook posts from the given node(page/user/..etc)", (done) => {
             let ajaxClient = new AjaxClient(serverUrl);
-            let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
+            let ajaxInstanceStub = sandbox.stub(AjaxClient, "instance");
             ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
-            let ajaxGetMock = sinon.mock(ajaxClient).expects("get");
-            ajaxGetMock.withArgs({ "accessToken": accessToken, "webUrl": webUrl }).returns(Promise.resolve(response));
+            let ajaxGetMock = sandbox.mock(ajaxClient).expects("get");
+            ajaxGetMock.withArgs({ "webUrl": webUrl, "userName": userName }).returns(Promise.resolve(response));
 
             let facebookClient = new FacebookClient(accessToken);
             facebookClient.fetchPosts(webUrl).then(posts => {
@@ -64,25 +74,21 @@ describe("FacebookClient", () => {
                 assert.strictEqual("test-name1", posts.posts[0].name);
                 assert.strictEqual("test-name2", posts.posts[1].name);
                 ajaxGetMock.verify();
-                AjaxClient.instance.restore();
-                ajaxClient.get.restore();
                 done();
             });
         });
 
         it("should reject with the error if the fetching of feeds from the node is failed", (done) => {
             let ajaxClient = new AjaxClient(serverUrl);
-            let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
+            let ajaxInstanceStub = sandbox.stub(AjaxClient, "instance");
             ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
-            let ajaxGetMock = sinon.mock(ajaxClient).expects("get");
-            ajaxGetMock.withArgs({ "accessToken": accessToken, "webUrl": webUrl }).returns(Promise.reject("error while fetching posts"));
+            let ajaxGetMock = sandbox.mock(ajaxClient).expects("get");
+            ajaxGetMock.withArgs({ "webUrl": webUrl, "userName": userName }).returns(Promise.reject("error while fetching posts"));
 
             let facebookClient = new FacebookClient(accessToken);
             facebookClient.fetchPosts(webUrl).catch(error => {
                 assert.strictEqual("error while fetching posts", error);
                 ajaxGetMock.verify();
-                AjaxClient.instance.restore();
-                ajaxClient.get.restore();
                 done();
             });
 
@@ -105,11 +111,12 @@ describe("FacebookClient", () => {
     });
 
     describe("setLongLivedToken", () => {
-        let url = "/facebook-set-token", sandbox = null;
+        let url = "/facebook-set-token", sandbox = null, userName = "test2";
         let accessToken = "123";
 
         beforeEach(() => {
             sandbox = sinon.sandbox.create();
+            sandbox.stub(LoginPage, "getUserName").returns(userName);
         });
 
         afterEach(() => {
@@ -125,7 +132,7 @@ describe("FacebookClient", () => {
                 "Accept": "application/json",
                 "Content-type": "application/json"
             };
-            ajaxPostMock.withArgs(headers, { "accessToken": accessToken }).returns(Promise.resolve("12345"));
+            ajaxPostMock.withArgs(headers, { "accessToken": accessToken, "userName": userName }).returns(Promise.resolve("12345"));
 
             let facebookClient = new FacebookClient(accessToken);
             facebookClient.setLongLivedToken();

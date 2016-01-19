@@ -1,6 +1,7 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import AjaxClient from "../utils/AjaxClient.js";
+import LoginPage from "../login/pages/LoginPage.jsx";
 import FacebookDb from "./FacebookDb";
 
 export default class FacebookClient {
@@ -21,9 +22,8 @@ export default class FacebookClient {
                 reject("web url cannot be empty");
             }
             let ajaxClient = AjaxClient.instance("/facebook-posts");
-            ajaxClient.get({ "accessToken": this.accessToken, "webUrl": webUrl }).then(response => {
+            ajaxClient.get({ "webUrl": webUrl, "userName": LoginPage.getUserName() }).then(response => {
                 resolve(response);
-
             }).catch(error => {
                 reject(error);
             });
@@ -36,7 +36,7 @@ export default class FacebookClient {
             "Content-type": "application/json"
         };
         let ajaxClient = AjaxClient.instance("/facebook-set-token");
-        ajaxClient.post(headers, { "accessToken": this.accessToken }).then(response => {
+        ajaxClient.post(headers, { "accessToken": this.accessToken, "userName": LoginPage.getUserName() }).then(response => {
             FacebookDb.getTokenDocument().then((document) => {
                 document.expiredAfter = response.expires_after;
                 FacebookDb.updateTokenDocument(response.expires_after);

@@ -81,7 +81,12 @@ export default class FacebookClient {
                 "timeout": this.facebookParameters.timeOut
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
-                    resolve(JSON.parse(response.body).id);
+                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                        resolve(JSON.parse(response.body).id);
+                    } else {
+                        let errorInfo = JSON.parse(body);
+                        reject(errorInfo.error);
+                    }
                 } else {
                     reject(error);
                 }

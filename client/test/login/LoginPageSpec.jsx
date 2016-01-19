@@ -14,7 +14,8 @@ describe("login page component", () => {
     before("login page component", () => {
         let props = {
             "login": {
-                "errorMessage": "invalid credentials"
+                "errorMessage": "invalid credentials",
+                "userName": "test"
             },
             "loginPageStrings": {
                 "login": {
@@ -67,6 +68,10 @@ describe("login page component", () => {
 
     it("should have branding component", () => {
         assert.strictEqual("sample branding", loginPage.refs.branding.props.branding.text);
+    });
+
+    it("should return user name", () => {
+        assert.strictEqual(LoginPage.getUserName(), "test");
     });
 
     /*intentionally added integration tests*/

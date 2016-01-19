@@ -62,7 +62,7 @@ export default class AjaxClient {
                   } else if(xhttp.status === response.BAD_GATEWAY) {
                       reject("connection refused");
                   }
-                  reject("error");
+                  reject(event.target.response);
               }
           };
       });
