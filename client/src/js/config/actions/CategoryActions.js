@@ -16,6 +16,7 @@ import RssResponseParser from "../../rss/RssResponseParser";
 import TwitterDb from "../../twitter/TwitterDb";
 import EnvironmentConfig from "../../EnvironmentConfig.js";
 import FacebookDb from "../../facebook/FacebookDb.js";
+import DateTimeUtil from "../../utils/DateTimeUtil.js";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 export const DEFAULT_CATEGORY = "Default Category";
@@ -41,7 +42,10 @@ export function populateCategoryDetails(sourceUrlsObj) {
 export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
         RssRequestHandler.fetchRssFeeds(url).then((responseFeed) => {
-            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID).then(documentId => {
+            let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
+                return feed.pubDate;
+            }));
+            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let feeds = RssResponseParser.parseFeeds(documentId, responseFeed.items);
                 RssDb.addRssFeeds(feeds);
                 callback(STATUS_VALID);
@@ -57,7 +61,11 @@ export function addRssUrlAsync(categoryId, url, callback) {
 export function addFacebookUrlAsync(categoryId, url, callback) {
     return dispatch => {
         FacebookRequestHandler.getPosts(EnvironmentConfig.instance().get("facebookAccessToken"), url).then((originalPosts)=> {
-            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID).then(documentId => {
+            let sortedDates = DateTimeUtil.getSortedUTCDates(originalPosts.map(feed => {
+                return feed.created_time;
+            }));
+
+            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let feedDocuments = FacebookResponseParser.parsePosts(documentId, originalPosts);
                 FacebookDb.addFacebookFeeds(feedDocuments);
             });
@@ -68,9 +76,9 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-function addUrlDocument(dispatch, categoryId, title, url, status) {
+function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) {
     return new Promise((resolve, reject) => {
-        new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status }).save().then(response => {
+        new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status, "latestFeedTimestamp": latestFeedTimestamp }).save().then(response => {
             dispatch(populateCategoryDetailsAsync(categoryId));
             resolve(response.id);
         }).catch(error => {
@@ -82,7 +90,10 @@ function addUrlDocument(dispatch, categoryId, title, url, status) {
 export function addTwitterUrlAsync(categoryId, url, callback) {
     return dispatch => {
         TwitterRequestHandler.fetchTweets(url).then((responseTweet) => {
-            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID).then(documentId => {
+            let sortedDates = DateTimeUtil.getSortedUTCDates(responseTweet.map(tweet => {
+                return tweet.created_at;
+            }));
+            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let tweets = TwitterResponseParser.parseTweets(documentId, responseTweet);
                 TwitterDb.addTweets(tweets);
             });

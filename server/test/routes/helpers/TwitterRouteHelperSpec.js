@@ -140,4 +140,35 @@ describe("TwitterRouteHelper", () => {
         let twitterRouteHelper = new TwitterRouteHelper(request, response);
         twitterRouteHelper.twitterRouter();
     });
+
+    it("should return all feeds from all the tweet hashtags", (done)=> {
+        var Jan18Timestamp = "2016-01-18T06:12:19+00:00";
+        var Jan17Timestamp = "2016-01-17T06:12:19+00:00";
+
+        let hinduResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp },
+            { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": Jan17Timestamp }] };
+
+        let toiResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp }] };
+
+        let request = {
+            "body": {
+                "data": [
+                    { "url": "@the_hindu", "timestamp": Jan17Timestamp, "id": "tweet1_id" },
+                    { "url": "@toi", "timestamp": Jan18Timestamp, "id": "tweet2_id" }
+                ]
+            }
+        };
+        mockTwitterRequest()
+            .query({ "q": "@the_hindu&since:2016-01-17", "count": FEEDS_COUNT + searchParams })
+            .reply(HttpResponseHandler.codes.OK, hinduResponseWithTimestamp, hinduResponseWithTimestamp);
+
+        mockTwitterRequest()
+            .query({ "q": "@toi&since:2016-01-18", "count": FEEDS_COUNT + searchParams })
+            .reply(HttpResponseHandler.codes.OK, toiResponseWithTimestamp, toiResponseWithTimestamp);
+
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });
+
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterBatchFetch();
+    });
 });

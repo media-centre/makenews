@@ -13,5 +13,15 @@ export default class TwitterRequestHandler {
             });
         });
     }
+    static fetchBatchTweets(twitterBatch) {
+        return new Promise((resolve, reject) => {
+            let twitterClient = TwitterClient.instance();
+            twitterClient.fetchBatchTweets(twitterBatch).then(feedMap => {
+                resolve(feedMap);
+            }).catch(error => { // eslint-disable-line
+                reject([]);
+            });
+        });
+    }
 }
 

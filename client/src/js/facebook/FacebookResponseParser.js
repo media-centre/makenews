@@ -1,3 +1,4 @@
+/* eslint no-empty:0 */
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";

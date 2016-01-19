@@ -51,7 +51,6 @@ export default class CategoryNavigationHeader extends Component {
         }
         this.setDeleteConfirmState(false);
     }
-
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">

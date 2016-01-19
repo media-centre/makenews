@@ -83,4 +83,47 @@ describe("FacebookRequestHandler", () => {
         });
 
     });
+
+    describe("getBatchPosts", ()=> {
+        let accessToken = null;
+        before("getPosts", () => {
+            accessToken = "test-access-token";
+        });
+
+        it("should get all posts from the batch of urls", (done)=> {
+
+            let postData = {
+                "data": [
+                    { "id": "fbid1", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
+                    { "id": "fbid2", "url": "@Chennai since:2016-01-02", "timestamp": 123456 }
+                ]
+            };
+
+            let fbPostMap = {
+                "fbid1": [
+                    { "name": "test name1" }
+                ],
+                "fbid2": [
+                    { "name": "test name2" }
+                ]
+            };
+
+
+            let faceFacebookClient = new FacebookClient(accessToken);
+            let facebookClientMock = sinon.mock(FacebookClient).expects("instance");
+            facebookClientMock.withArgs(accessToken).returns(faceFacebookClient);
+
+            let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchBatchPosts");
+            facebookFetchPostsMock.withArgs(postData).returns(Promise.resolve(fbPostMap));
+
+            FacebookRequestHandler.getBatchPosts(accessToken, postData).then(() => {
+                facebookClientMock.verify();
+                facebookFetchPostsMock.verify();
+
+                FacebookClient.instance.restore();
+                faceFacebookClient.fetchBatchPosts.restore();
+                done();
+            });
+        });
+    });
 });

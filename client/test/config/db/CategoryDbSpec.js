@@ -3,8 +3,8 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
-import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import CategoriesApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
+import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { expect, assert } from "chai";
 
@@ -53,6 +53,15 @@ describe("CategoryDb", () => {
                 expect("url should not be empty").to.equal(error);
                 done();
             });
+        });
+    });
+
+    describe("fetchSourceConfigurationBySourceType", () => {
+        it("should fetch all the source configurations for a sourceType", () => {
+            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allSourcesBySourceType", { "include_docs": true, "key": "rss" });
+            CategoryDb.fetchSourceConfigurationBySourceType("rss");
+            pouchClientMock.verify();
+            PouchClient.fetchDocuments.restore();
         });
     });
 
@@ -339,6 +348,233 @@ describe("CategoryDb", () => {
             CategoryDb.updateCategory(document).catch(()=> {
                 updateMock.verify();
                 PouchClient.updateDocument.restore();
+                done();
+            });
+        });
+    });
+
+    describe("deleteSource", () => {
+        let sourceId = null, sourceDoc = null;
+        before("deleteSource", () => {
+            sourceId = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
+            sourceDoc = {
+                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+                "docType": "source",
+                "sourceType": "twitter",
+                "url": "@balaswecha",
+                "categoryIds": [
+                    "95fa167311bf340b461ba414f1004074"
+                ],
+                "status": "valid"
+            };
+        });
+
+        it("should delete the source document with the given id", (done) => {
+            let pouchClientGetDocMock = sinon.mock(PouchClient).expects("getDocument");
+            pouchClientGetDocMock.withArgs(sourceId).returns(Promise.resolve(sourceDoc));
+            let pouchClientDeleteDocMock = sinon.mock(PouchClient).expects("deleteDocument");
+            pouchClientDeleteDocMock.withArgs(sourceDoc).returns(Promise.resolve("response"));
+
+            CategoryDb.deleteSource(sourceId).then((response) => {
+
+                pouchClientGetDocMock.verify();
+                pouchClientDeleteDocMock.verify();
+                PouchClient.getDocument.restore();
+                PouchClient.deleteDocument.restore();
+                done();
+            });
+        });
+
+        it("should reject if get document rejects for an invalid source id", (done) => {
+            sourceId = "test-source-id";
+            let pouchClientGetDocMock = sinon.mock(PouchClient).expects("getDocument");
+            pouchClientGetDocMock.withArgs(sourceId).returns(Promise.reject("Invalid source id"));
+
+            CategoryDb.deleteSource(sourceId).catch(error => {
+
+                assert.strictEqual("Invalid source id", error);
+                pouchClientGetDocMock.verify();
+                PouchClient.getDocument.restore();
+                done();
+            });
+        });
+
+        it("should reject if delete document rejects", (done) => {
+            let pouchClientGetDocMock = sinon.mock(PouchClient).expects("getDocument");
+            pouchClientGetDocMock.withArgs(sourceId).returns(Promise.resolve(sourceDoc));
+            let pouchClientDeleteDocMock = sinon.mock(PouchClient).expects("deleteDocument");
+            pouchClientDeleteDocMock.withArgs(sourceDoc).returns(Promise.reject("Error occured while deleting document"));
+
+            CategoryDb.deleteSource(sourceId).catch(error => {
+
+                assert.strictEqual("Error occured while deleting document", error);
+                pouchClientGetDocMock.verify();
+                pouchClientDeleteDocMock.verify();
+                PouchClient.getDocument.restore();
+                PouchClient.deleteDocument.restore();
+                done();
+            });
+        });
+    });
+
+    describe("deleteSourceWithReferences", () => {
+        let sourceId = null, sourceDoc = null;
+        before("deleteSource", () => {
+            sourceId = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
+        });
+
+        it("should delete the source document and all surf feeds of given source id", (done) => {
+            let categoryDbDeleteSourceMock = sinon.mock(CategoryDb).expects("deleteSource");
+            categoryDbDeleteSourceMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesRmveParkFeedsSourceRefMock = sinon.mock(FeedApplicationQueries).expects("removeParkFeedsSourceReference");
+            feedAppQueriesRmveParkFeedsSourceRefMock.withArgs(sourceId).returns(Promise.resolve("success"));
+
+
+            CategoryDb.deleteSourceWithReference(sourceId).then((response) => {
+
+                categoryDbDeleteSourceMock.verify();
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                feedAppQueriesRmveParkFeedsSourceRefMock.verify();
+                CategoryDb.deleteSource.restore();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                FeedApplicationQueries.removeParkFeedsSourceReference.restore();
+                done();
+            });
+        });
+
+        it("should reject if there is error while deleting surf feeds", (done) => {
+            sourceId = "test-source-id";
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.reject("Invalid source id"));
+
+            CategoryDb.deleteSourceWithReference(sourceId).catch((error) => {
+
+                assert.strictEqual("Invalid source id", error);
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                done();
+            });
+        });
+
+        it("should reject if there is error while deleting source", (done) => {
+            let categoryDbDeleteSourceMock = sinon.mock(CategoryDb).expects("deleteSource");
+            categoryDbDeleteSourceMock.withArgs(sourceId).returns(Promise.reject("Error occured while deleting the source"));
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve("response"));
+
+            CategoryDb.deleteSourceWithReference(sourceId).catch(error => {
+
+                assert.strictEqual("Error occured while deleting the source", error);
+
+                categoryDbDeleteSourceMock.verify();
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                CategoryDb.deleteSource.restore();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                done();
+            });
+        });
+
+        it("should delete the source document, all surf feeds of given source id and source reference for a park feeds", (done) =>{
+            let categoryDbDeleteSourceMock = sinon.mock(CategoryDb).expects("deleteSource");
+            categoryDbDeleteSourceMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesRmveParkFeedsSourceRefMock = sinon.mock(FeedApplicationQueries).expects("removeParkFeedsSourceReference");
+            feedAppQueriesRmveParkFeedsSourceRefMock.withArgs(sourceId).returns(Promise.resolve("success"));
+
+            CategoryDb.deleteSourceWithReference(sourceId).then(response => {
+
+                categoryDbDeleteSourceMock.verify();
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                feedAppQueriesRmveParkFeedsSourceRefMock.verify();
+                CategoryDb.deleteSource.restore();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                FeedApplicationQueries.removeParkFeedsSourceReference.restore();
+                done();
+            });
+        });
+
+        it("should reject if there is error while removing park feeds source reference", (done) =>{
+            let categoryDbDeleteSourceMock = sinon.mock(CategoryDb).expects("deleteSource");
+            categoryDbDeleteSourceMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesDeleteSurfFeedsMock = sinon.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+            feedAppQueriesDeleteSurfFeedsMock.withArgs(sourceId).returns(Promise.resolve("response"));
+            let feedAppQueriesRmveParkFeedsSourceRefMock = sinon.mock(FeedApplicationQueries).expects("removeParkFeedsSourceReference");
+            feedAppQueriesRmveParkFeedsSourceRefMock.withArgs(sourceId).returns(Promise.reject("Error occured"));
+
+            CategoryDb.deleteSourceWithReference(sourceId).catch(error => {
+
+                categoryDbDeleteSourceMock.verify();
+                feedAppQueriesDeleteSurfFeedsMock.verify();
+                feedAppQueriesRmveParkFeedsSourceRefMock.verify();
+                CategoryDb.deleteSource.restore();
+                FeedApplicationQueries.deleteSurfFeeds.restore();
+                FeedApplicationQueries.removeParkFeedsSourceReference.restore();
+                done();
+            });
+        });
+
+    });
+
+    describe("deleteCategory", ()=> {
+        let sandbox = sinon.sandbox.create();
+        afterEach("afterEach", () => {
+            sandbox.restore();
+        });
+        it("should fetch all urls and call delete of all urls", (done)=> {
+            let categoryId = 123;
+            let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }],
+                "facebook": [{ "_id": "103", "url": "http://facebook.com/test1" }],
+                "rss": [{ "_id": "104", "url": "http://test.com/rss" }]
+            };
+            let categoryDoc = {
+                "_id": "06E26F38-1145-B850-AFE0-072537EDBC98",
+                "_rev": "24-4f80c047d21a5cd55bdae898eaa7f912",
+                "docType": "category",
+                "name": "Ull",
+                "createdTime": 1451373861028
+            };
+            let pouchClientMock = sandbox.mock(PouchClient);
+            pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
+            pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
+            let fetchUrlsMock = sandbox.mock(CategoriesApplicationQueries);
+            fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let deleteSourceUrlMock = sandbox.mock(CategoryDb);
+            deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length + urlDocs.facebook.length + urlDocs.rss.length);
+            CategoryDb.deleteCategory(categoryId).then((message)=> {
+                fetchUrlsMock.verify();
+                deleteSourceUrlMock.verify();
+                pouchClientMock.verify();
+                done();
+            });
+        });
+
+        it("should delete urls even if some source types are not present ", (done)=> {
+            let categoryId = 123;
+            let urlDocs = { "twitter": [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" }]
+            };
+            let categoryDoc = {
+                "_id": "06E26F38-1145-B850-AFE0-072537EDBC98",
+                "_rev": "24-4f80c047d21a5cd55bdae898eaa7f912",
+                "docType": "category",
+                "name": "Ull",
+                "createdTime": 1451373861028
+            };
+
+            let pouchClientMock = sandbox.mock(PouchClient);
+            pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
+            pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
+            let fetchUrlsMock = sandbox.mock(CategoriesApplicationQueries);
+            fetchUrlsMock.expects("fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let deleteSourceUrlMock = sandbox.mock(CategoryDb);
+            deleteSourceUrlMock.expects("deleteSourceUrl").exactly(urlDocs.twitter.length);
+            CategoryDb.deleteCategory(categoryId).then((message)=> {
+                fetchUrlsMock.verify();
+                deleteSourceUrlMock.verify();
+                pouchClientMock.verify();
                 done();
             });
         });

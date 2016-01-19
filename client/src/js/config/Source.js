@@ -1,17 +1,20 @@
 /*eslint no-unused-vars:0 */
+
 "use strict";
 import PouchClient from "../db/PouchClient";
 import CategoryDb from "../config/db/CategoryDb";
+import DateTimeUtil from "../utils/DateTimeUtil.js";
 
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
     constructor(paramsObj) {
-        this.sourceId = paramsObj.sourceId;
+        this.sourceId = paramsObj._id;
         this.docType = "source";
         this.sourceType = paramsObj.sourceType;
         this.url = paramsObj.url;
         this.categoryIds = paramsObj.categoryIds;
         this.status = paramsObj.status;
+        this.latestFeedTimestamp = paramsObj.latestFeedTimestamp || DateTimeUtil.getUTCDateAndTime(Date.now());
     }
 
     newDoc() {
@@ -20,7 +23,8 @@ export default class Source {
             "sourceType": this.sourceType,
             "url": this.url,
             "categoryIds": this.categoryIds,
-            "status": this.status
+            "status": this.status,
+            "latestFeedTimestamp": this.latestFeedTimestamp
         };
     }
 

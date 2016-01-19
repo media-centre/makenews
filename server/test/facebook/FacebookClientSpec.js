@@ -127,6 +127,23 @@ describe("FacebookClient", () => {
             });
         });
 
+        it("should reject if the facebook takes too long to return the data", (done) => {
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .socketDelay(2000)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data":
+                        [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+                            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                });
+
+
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            facebookClient.pagePosts(pageId, userParameters).catch((error) => { //eslint-disable-line
+                done();
+            });
+        });
+
         it("should throw an error when access token is null", () => {
 
             let createFacebookClient = () => {

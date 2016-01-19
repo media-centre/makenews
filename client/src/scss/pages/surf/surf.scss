@@ -1,9 +1,42 @@
 @import "../../utils/variable";
+.surf-page-container {
+  padding: 0px !important;
 
-.feeds-container {
-  color: $dark-gray-color;
+  .refresh-status {
+    height: 8px;
+    padding: 0px;
+    position: fixed;
+    left: 0px;
+    z-index: $min-index;
+  }
 
-  .feed-header {
+  .feeds-container {
+    color: $dark-gray-color;
+    padding: 20px;
+
+    .surf-refresh-button.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .surf-refresh-button {
+      position: fixed;
+      top: 92px;
+      left: 0px;
+      right: 0px;
+      margin: auto;
+      max-width: 120px;
+      text-align: center;
+      color: $app-header-bg-color;
+      z-index: $min-index;
+      cursor: pointer;
+      font-size: $small-font-size;
+
+      span {
+        $large-font-size: 20px;
+      }
+    }
+
+    .feed-header {
       padding-bottom: 5px;
       border-color: $dark-border-color;
 
@@ -41,81 +74,82 @@
       }
 
       li:before {
-          content: ' ';
-          display: inline-block;
-          background: $dark-gray-color;
-          width: 7px;
-          height: 7px;
-          margin-right: 10px;
-          @extend .circle;
+        content: ' ';
+        display: inline-block;
+        background: $dark-gray-color;
+        width: 7px;
+        height: 7px;
+        margin-right: 10px;
+        @extend .circle;
 
       }
     }
 
-  /* feed styles */
-  .all-feeds {
-    a {
-      font-size: $medium-font-size;
-      color: #545454;
-      p {
-        font-size: $small-font-size;
+    /* feed styles */
+    .all-feeds {
+      a {
+        font-size: $medium-font-size;
+        color: #545454;
+        p {
+          font-size: $small-font-size;
+        }
+      }
+
+
+      .custom-spinner {
+        @extend .h-v-center;
+      }
+
+      img {
+        width: 100%;
+        margin: 0px;
+        max-width: 200px;
+        height: 100%;
+        max-height: 200px;
+      }
+      p.surf-description {
+        overflow: auto;
+      }
+      div.title {
+        font-weight: bold;
+        font-size: $medium-font-size;
+        padding-top: 15px;
+        color: #545454;
       }
     }
 
+    /* ended */
 
-    .custom-spinner {
-      @extend .h-v-center;
-    }
+    .image-gallery {
+      ul.gallery-list {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding: 10px 0px;
 
-    img {
-      width: 100%;
-      margin: 0px;
-      max-width: 200px;
-      height: 100%;
-      max-height: 200px;
-    }
-    p.surf-description {
-      overflow: auto;
-    }
-    div.title {
-      font-weight: bold;
-      font-size: $medium-font-size;
-      padding-top: 15px;
-      color: #545454;
-    }
-  }
-
-  /* ended */
-
-  .image-gallery {
-    ul.gallery-list {
-      margin-left: -10px;
-      margin-right: -10px;
-      padding: 10px 0px;
-
-      li.image-container {
-        width: 200px;
-        padding: 10px;
-        vertical-align: top;
-        position: relative;
+        li.image-container {
+          width: 200px;
+          padding: 10px;
+          vertical-align: top;
+          position: relative;
+        }
+      }
+      p.surf-description {
+        margin: 0px 0px 5px 0px;
       }
     }
-    p.surf-description {
-      margin: 0px 0px 5px 0px;
-    }
-  }
 
-  .image-content {
-    .container {
-      padding: 10px 0px;
+    .image-content {
+      .container {
+        padding: 10px 0px;
 
-      .img-container {
-        width: 200px;
-        padding: 10px 15px 10px 10px;
-        position: relative;
-      }
-      p {
-        margin: 5px;
+        .img-container {
+          width: 200px;
+          padding: 10px 15px 10px 10px;
+          position: relative;
+        }
+        p {
+          margin: 5px;
+        }
       }
     }
   }

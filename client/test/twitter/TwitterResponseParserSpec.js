@@ -68,6 +68,7 @@ describe("createTwitterFeed", ()=> {
     });
 
     it("should return tweets with the desired format of type gallery", ()=> {
+
         let sourceId = "sourceId";
         let actualTweet = {
             "metadata": {
