@@ -1,0 +1,36 @@
+---
+
+- name: update apt
+  command: apt-get update
+
+- name: install nginx
+  action: apt name=nginx
+
+- name: delete default in sites-available
+  action: file path=/etc/nginx/sites-enabled/default state=absent
+
+- name: copy mediacenter to sites-available
+  template: src=mediacenter dest=/etc/nginx/sites-available/mediacenter mode=0644
+
+- name: link mediacenter in sites-enabled
+  file: src=/etc/nginx/sites-available/mediacenter dest=/etc/nginx/sites-enabled/mediacenter state=link
+  notify:
+    - restart nginx
+
+- name: update apt
+  command: apt-get update
+
+- name: install openssl
+  action: apt name=openssl
+
+- name: create ssl directory in nginx
+  file: path=/etc/nginx/ssl state=directory
+
+
+- name: create self-signed SSL cert
+  command: openssl req -new -nodes -x509 -subj "/C={{ssl_country}}/ST={{ssl_state}}/L={{ssl_locality}}/O={{ssl_organization}}/CN={{nginx_domain}}" -days 3650 -keyout /etc/nginx/ssl/mediacenter.key -out /etc/nginx/ssl/mediacenter.crt -extensions v3_ca creates=/etc/nginx/ssl/mediacenter.crt
+  notify:
+    - restart nginx
+
+
+

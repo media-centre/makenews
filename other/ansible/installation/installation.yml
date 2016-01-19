@@ -21,3 +21,4 @@
     - gotansible.nodejs
     - PostInstallationTasks
     - goagent
+    - nginx

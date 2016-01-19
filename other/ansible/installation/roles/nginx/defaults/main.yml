@@ -1,0 +1,8 @@
+---
+# defaults file for nginx
+
+nginx_apt_package: nginx-full
+ssl_country: IN
+ssl_state: DL
+ssl_locality: DL
+ssl_organization: mediacenter

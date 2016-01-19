@@ -1,0 +1,4 @@
+---
+# handlers file for nginx
+- name: restart nginx
+  action: service name=nginx pattern=/etc/init.d/nginx state=restarted enabled=yes
