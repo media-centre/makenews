@@ -1,18 +1,18 @@
 {
   "default": {
     "serverUrl": "http://localhost:5000",
-    "remoteDbUrl": "http://localhost:5984",
     "facebookAccessToken": "CAAGG4KNMtVEBAHQfesxMdFURJxr5IZATdUYhZCHYaZBRkZCEMabTBOEm6HCsdfEQsK6dlcYtiO2aNG0IXMLPlubUoUb0Qqi4vkEIv6h6jbV4CkmFpvnAHXsZCA5uQggYgAZB3Coh1Tf7vs427bZCZC0eJDL579VrnIdpTqU1RQyod7uJ1UbiZC8yx2UjkZB0iZA1kEZD"
   },
   "development": {
   },
   "ci_dev": {
-    "serverUrl": "http://46.101.252.58:5000",
-    "remoteDbUrl": "http://46.101.252.58:5984"
+    "serverUrl": "http://46.101.252.58:5000"
   },
   "ci_qa": {
-    "serverUrl": "http://46.101.195.133:5000",
-    "remoteDbUrl": "http://46.101.195.133:5984"
+    "serverUrl": "http://46.101.195.133:5000"
+  },
+  "pre-prod": {
+    "serverUrl": "http://46.101.185.145:5000"
   },
   "production": {
 

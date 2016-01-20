@@ -1,0 +1,14 @@
+---
+
+- name: depend - install apt packages
+  apt:
+    name={{ item }}
+    update_cache=yes
+    state=latest
+    cache_valid_time=3600
+  with_items:
+    - build-essential
+    - libssl-dev
+    - git
+    - curl
+  when: ansible_os_family == 'Debian'

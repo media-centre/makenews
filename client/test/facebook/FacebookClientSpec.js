@@ -11,11 +11,13 @@ import "../helper/TestHelper.js";
 
 describe("FacebookClient", () => {
 
+    let accessToken = null, serverUrl = null;
     describe("fetchPosts", () => {
-        let webUrl = null, serverUrl = null, response = null, sandbox = null, userName = "test1", accessToken = "123";
+        let webUrl = null, response = null, sandbox = null, userName = "test1";
         before("FacebookClient", () => {
             webUrl = "https://www.facebook.com/thehindu";
             serverUrl = "/facebook-posts";
+            accessToken = "123";
             response = {
                 "posts": [
                     {
@@ -58,7 +60,6 @@ describe("FacebookClient", () => {
         afterEach(() => {
             sandbox.restore();
         });
-
 
         it("should fetch facebook posts from the given node(page/user/..etc)", (done) => {
             let ajaxClient = new AjaxClient(serverUrl);
@@ -139,4 +140,57 @@ describe("FacebookClient", () => {
             ajaxPostMock.verify();
         });
     });
+
+    describe("getBatchPosts", ()=> {
+        before("getPosts", () => {
+            accessToken = "test-access-token";
+        });
+
+        it("should get all posts from the batch of urls", (done)=> {
+            serverUrl = "/facebook-batch-posts";
+            let postData = {
+                "data": [
+                    { "id": "fbid1", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
+                    { "id": "fbid2", "url": "@Chennai since:2016-01-02", "timestamp": 123456 }
+                ]
+            };
+
+            let ajaxPostData = {
+                "data": [
+                    { "id": "fbid1", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
+                    { "id": "fbid2", "url": "@Chennai since:2016-01-02", "timestamp": 123456 }
+                ],
+                "accessToken": accessToken
+            };
+
+            let fbPostMap = {
+                "fbid1": [
+                    { "name": "test name1" }
+                ],
+                "fbid2": [
+                    { "name": "test name2" }
+                ]
+            };
+            let requestHeader = { "Accept": "application/json", "Content-type": "application/json" };
+            let ajaxClient = new AjaxClient(serverUrl);
+            let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
+            ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
+            let ajaxPostMock = sinon.mock(ajaxClient).expects("post");
+            ajaxPostMock.withArgs(requestHeader, ajaxPostData).returns(Promise.resolve(fbPostMap));
+
+            let facebookClient = new FacebookClient(accessToken);
+            facebookClient.fetchBatchPosts(postData).then(posts => {
+                assert.deepEqual(posts, fbPostMap);
+                ajaxPostMock.verify();
+                AjaxClient.instance.restore();
+                ajaxClient.post.restore();
+                done();
+            });
+        });
+    });
 });
+
+
+
+
+

@@ -1,12 +1,11 @@
-/*eslint no-console:0 */
+/*eslint no-console:0, no-path-concat:0 */
 "use strict";
 var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var concat = require("gulp-concat");
-var clean = require("gulp-clean");
-var browserify = require('gulp-browserify')
-var babelify = require("babelify");
+var browserify = require("gulp-browserify");
+var babelify = require("babelify"); //eslint-disable-line
 var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
@@ -15,68 +14,68 @@ var exec = require("child_process").exec;
 var replace = require("gulp-replace");
 var argv = require("yargs").argv;
 var rename = require("gulp-rename");
+var del = require("del");
+var cordova = require("cordova-lib").cordova.raw;
+var minify = require("gulp-minify");
+var cssnano = require("gulp-cssnano");
 require("babel/register");
-var del = require('del');
-var cordova = require('cordova-lib').cordova.raw;
 
 
 gulp.task("mobile:remove-directory", function(cb) {
-	del(["."+parameters.mobile.mobilePath], function() {
-		cb();
-	});
+    del(["." + parameters.mobile.mobilePath], function() {
+        cb();
+    });
 });
 
-gulp.task("mobile:init",["mobile:remove-directory"],function(cb) {
-    process.chdir(__dirname + '/dist/');
-	exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            process.chdir('../');
-            cb(err);
-        });
+gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
+    process.chdir(__dirname + "/dist/");
+    exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        process.chdir("../");
+        cb(err);
+    });
 });
 
-gulp.task("mobile:create",["mobile:init"],function(cb) {
+gulp.task("mobile:create", ["mobile:init"], function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
-	exec("cordova platform add android ", (err, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            cb(err);
-        });
+    exec("cordova platform add android ", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
 });
 
 
 gulp.task("mobile:clean-files", function(cb) {
-	del([ parameters.mobile.cordovaPath + '/*' ], function() {
-		cb();
-	});
+    del([parameters.mobile.cordovaPath + "/*"], function() {
+        cb();
+    });
 });
 
-gulp.task("mobile:copy-files", [ "mobile:clean-files" ], function(cb) {
-	return gulp.src([ parameters.mobile.appPath + '/**/*' ])
-		.pipe(gulp.dest(parameters.mobile.cordovaPath));
+gulp.task("mobile:copy-files", ["mobile:clean-files"], function() {
+    return gulp.src([parameters.mobile.appPath + "/**/*"])
+    .pipe(gulp.dest(parameters.mobile.cordovaPath));
 });
 
-
-
-gulp.task("mobile:build",["mobile:copy-files"], function(cb) {
-	process.chdir(__dirname + parameters.mobile.mobilePath);
-	cordova
-		.build()
-		.then(function() {
-			process.chdir('../');
-			cb();
-		});
+gulp.task("mobile:build", ["mobile:copy-files"], function(cb) {
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+    cordova
+    .build()
+    .then(function() {
+        process.chdir("../");
+        cb();
+    });
 });
 
 gulp.task("mobile:emulate", function(cb) {
-	process.chdir(__dirname + parameters.mobile.mobilePath);
-	cordova
-		.run({ platforms: [ 'android' ] })
-		.then(function() {
-			process.chdir('../');
-			cb();
-		});
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+    cordova
+    .run({ "platforms": ["android"] })
+    .then(function() {
+        process.chdir("../");
+        cb();
+    });
 });
 
 
@@ -84,6 +83,7 @@ gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
           .pipe(sass())
           .pipe(concat(parameters.client.cssMainFile))
+          .pipe(cssnano())
           .pipe(gulp.dest(parameters.client.distFolder));
 });
 
@@ -98,11 +98,12 @@ gulp.task("client:build-sources", function() {
 
     gulp.src(parameters.client.srcPath + "/index.jsx")
         .pipe(browserify({
-            "debug" : true,
+            "debug": true,
             "transform": ["babelify"]
         }))
-        .pipe(replace("__MEDIA_CENTER_CONTENT_CREATION_ENVIRONMENT__", clientEnvironment))
+        .pipe(replace("__CONTENT_DISCOVERY_ENVIRONMENT__", clientEnvironment))
         .pipe(rename("app.js"))
+        .pipe(minify())
         .pipe(gulp.dest(parameters.client.distFolder));
 });
 
@@ -119,11 +120,10 @@ gulp.task("client:copy-resources", function() {
 });
 
 gulp.task("client:clean", function() {
-    return gulp.src(parameters.client.distFolder, { "read": false })
-        .pipe(clean());
+    del(parameters.client.distFolder);
 });
 
-gulp.task("client:test", function(done) {
+gulp.task("client:test", function() {
     return gulp.src([parameters.client.testPath + "**/**/*.jsx", parameters.client.testPath + "**/**/*.js"], { "read": false })
     .pipe(mocha());
 });
@@ -214,8 +214,7 @@ gulp.task("common:test-eslint", function() {
 
 gulp.task("common:build", ["common:copy-js"]);
 gulp.task("common:clean", function() {
-    return gulp.src(parameters.common.distFolder, { "read": false })
-        .pipe(clean());
+    del(parameters.common.distFolder);
 });
 
 gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
@@ -245,14 +244,14 @@ gulp.task("server:copy-js", function() {
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
+    gulp.src("./" + parameters.server.packageJsonFile)
+    .pipe(gulp.dest(parameters.server.distServerJsFolder));
+
 });
 
 gulp.task("server:clean", function() {
-    gulp.src(parameters.server.distFolder, { "read": false })
-    .pipe(clean());
-
-    gulp.src(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile, { "read": false })
-        .pipe(clean());
+    del(parameters.server.distFolder);
+    del(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile);
 });
 
 gulp.task("server:test", function() {
@@ -295,6 +294,17 @@ gulp.task("server:test-coverage", (cb) => {
     });
 });
 
+// ------------------------------- any other tasks ---------------------------------------
+
+gulp.task("other:copy-ansible-scripts", function() {
+    gulp.src(parameters.other.ansibleScrptsPath + "/**/*", { "base": "./other/ansible" })
+        .pipe(gulp.dest(parameters.other.ansibleDistFolder));
+});
+
+gulp.task("other:dist-clean", function() {
+    del([parameters.other.distFolder]);
+});
+
 
 // -------------------------------single task to cover client, common and server  -------------------------------------------
 
@@ -307,7 +317,7 @@ gulp.task("start", (cb) => {
 });
 
 gulp.task("stop", (cb) => {
-    exec("./node_modules/forever/bin/forever stop dist/server.js", (err, stdout, stderr) => {
+    exec("./node_modules/forever/bin/forever stop dist/server.js", (err, stdout, stderr) => { //eslint-disable-line
         console.log(stdout);
         console.log(stderr);
         cb();
@@ -330,8 +340,8 @@ gulp.task("list", (cb) => {
     });
 });
 
-gulp.task("build", ["common:build", "client:build", "server:build"]);
-gulp.task("clean", ["client:clean", "common:clean", "server:clean"]);
+gulp.task("build", ["common:build", "client:build", "server:build", "other:copy-ansible-scripts"]);
+gulp.task("clean", ["other:dist-clean"]);
 gulp.task("test", function(callback) {
     runSequence("common:test", "client:test", "server:test", callback);
 });
@@ -352,5 +362,5 @@ gulp.task("test-coverage", (cb) => {
 });
 
 gulp.task("clean-start", function(callback) {
-    runSequence("clean", "build", "stop", "start", callback);
+    runSequence("clean", "stop", "build", "start", callback);
 });

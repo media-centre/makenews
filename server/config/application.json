@@ -33,6 +33,11 @@
     "serverPort": 5000,
     "couchDbUrl": "http://46.101.195.133:5984"
   },
+  "pre-prod": {
+    "serverIpAddress": "46.101.185.145",
+    "serverPort": 5000,
+    "couchDbUrl": "http://46.101.185.145:5984"
+  },
   "qa": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,

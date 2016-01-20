@@ -379,7 +379,6 @@ describe("FeedApplicationQueries", () => {
                 ],
                 "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
             }];
-
         });
 
         it("should delete surf feeds of given source id", (done) => {

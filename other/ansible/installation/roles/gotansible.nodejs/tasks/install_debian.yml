@@ -1,0 +1,15 @@
+---
+
+- name: setup nodesouce apt
+  shell: curl -sL https://deb.nodesource.com/setup_4.x | bash -
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+
+- name: depend - install apt packages
+  apt:
+    name={{ item }}
+    update_cache=yes
+    state=latest
+    cache_valid_time=3600
+  with_items:
+    - nodejs

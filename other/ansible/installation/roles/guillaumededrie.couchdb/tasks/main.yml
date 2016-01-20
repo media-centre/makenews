@@ -1,0 +1,29 @@
+---
+# file: tasks/main.yml
+
+- name: Checking if CouchDB is installed
+  uri: url=http://127.0.0.1:5984/ return_content=yes
+  ignore_errors: True
+  register: couchdb_response
+
+- name: Retrieve CouchDB version
+  set_fact: couchdb_version_installed="{{ (couchdb_response.content|from_json).version }}"
+  when: couchdb_response|success
+
+- name: Stop CouchDB
+  service: name=couchdb enabled=yes state=stopped
+  when: couchdb_version_installed != "{{ couchdb_version }}"
+  ignore_errors: True
+
+- include: package.yml
+  when: couchdb_install_method == "package" and couchdb_version_installed != "{{ couchdb_version }}"
+
+- include: source.yml
+  when: couchdb_install_method == "source" and couchdb_version_installed != "{{ couchdb_version }}"
+
+- name: Start CouchDB
+  sudo: true
+  service: name=couchdb enabled=yes state=started
+  when: couchdb_version_installed != "{{ couchdb_version }}"
+
+- wait_for: port=5984 delay=1

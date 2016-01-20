@@ -1,0 +1,19 @@
+---
+- name: install PM2 npm module
+  npm: name=pm2 global=yes
+
+- name: change the bind address to 0.0.0.0 in couchdb to make it available outside
+  shell: curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
+
+- name: Create couchdb admin user
+  shell: curl -X PUT http://localhost:5984/_config/admins/{{couchdb_admin_user}} -d '"{{couchdb_admin_password}}"'
+
+- name: install add-cors-to-couchdb npm module
+  npm: name=add-cors-to-couchdb global=yes
+
+- name: enable the CORS in couchdb
+  shell: add-cors-to-couchdb -u {{couchdb_admin_user}} -p {{couchdb_admin_password}}
+
+- name: restart couchdb
+  service: name=couchdb state=restarted
+

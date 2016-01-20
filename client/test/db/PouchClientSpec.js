@@ -116,6 +116,9 @@ describe("PouchClient", () => {
                         "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
                         "else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
                     },
+                    "allSourcesBySourceType": {
+                        "map": "function(doc) { if(doc.docType === 'source') {emit(doc.sourceType, doc)} }"
+                    },
                     "parkedFeeds": {
                         "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} " +
                         "else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"
@@ -190,6 +193,17 @@ describe("PouchClient", () => {
                     "key": "www.hindu.com/rss"
                 }).then((docs) => {
                     let resultDoc = docs[0];
+                    expect(resultDoc.url).to.include("www.hindu.com/rss");
+                    done();
+                });
+            });
+        });
+
+        describe("allSourcesBySourceType", () => {
+            it("should index all sourceConfigurations by source type", (done) => {
+                PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": "rss" }).then((docs) => {
+                    let resultDoc = docs[0];
+                    expect(resultDoc.sourceType).to.include("rss");
                     expect(resultDoc.url).to.include("www.hindu.com/rss");
                     done();
                 });

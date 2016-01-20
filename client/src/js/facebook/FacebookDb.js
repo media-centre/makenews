@@ -6,7 +6,7 @@ import FacebookDocument from "../facebook/FacebookDb.js";
 
 export default class FacebookDb {
     static addFacebookFeeds(feeds) {
-        PouchClient.bulkDocuments(feeds);
+        return PouchClient.bulkDocuments(feeds);
     }
 
     static getTokenDocument() {

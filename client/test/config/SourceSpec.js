@@ -1,6 +1,6 @@
 /*eslint max-nested-callbacks:0, no-unused-vars:0 */
 "use strict";
-import Source from "../../src/js/config/Source.js";
+import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import sinon from "sinon";
@@ -39,7 +39,7 @@ describe("Source", () => {
         it("delete source document along with the references when category id is available in the cateogry list", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.resolve("response"));
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).then(response => {
                 pouchClientGetDocumentMock.verify();
                 categoryDbDeleteSourceWithReference.verify();
@@ -50,7 +50,7 @@ describe("Source", () => {
         it("should not delete the source document if the category id does not exists in list of categories", (done) => {
             categoryId = "test-category-id";
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
                 pouchClientGetDocumentMock.verify();
                 done();
@@ -82,7 +82,7 @@ describe("Source", () => {
             };
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.resolve("success"));
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).then(response => {
                 pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDoucmentMock.verify();
@@ -93,9 +93,8 @@ describe("Source", () => {
         it("should reject incase of error while fetching the source document", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.reject("Error"));
 
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
-
                 assert.isFalse(error);
                 pouchClientGetDocumentMock.verify();
                 done();
@@ -127,9 +126,8 @@ describe("Source", () => {
             };
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.reject("Failed"));
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
-
                 assert.isFalse(error);
                 pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDoucmentMock.verify();
@@ -140,13 +138,47 @@ describe("Source", () => {
         it("should reject incase of error while deleting the source document along with the references", (done) => {
             pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
             categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.reject("response"));
-            let source = new Source(sourceId);
+            let source = new Source({ "_id": sourceId });
             source.delete(categoryId).catch(error => {
 
                 assert.isFalse(error);
                 pouchClientGetDocumentMock.verify();
                 categoryDbDeleteSourceWithReference.verify();
                 done();
+            });
+        });
+    });
+
+    describe("save", () => {
+        let sourceParamsObject = null, expectedDocument = null;
+        before("save", () => {
+            let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
+            let url = "test url";
+            let status = STATUS_VALID;
+            sourceParamsObject = { "categoryIds": [categoryId], "sourceType": "rss", "url": url, "status": status, "latestFeedTimestamp": "2016-01-18T15:01:47+00:00" };
+            expectedDocument = {
+                "docType": "source",
+                "sourceType": "rss",
+                "url": url,
+                "categoryIds": [categoryId],
+                "status": status,
+                "latestFeedTimestamp": "2016-01-18T15:01:47+00:00"
+            };
+        });
+
+        describe("newDoc", () => {
+            it("should return the new source document", () => {
+                assert.deepEqual(expectedDocument, new Source(sourceParamsObject).newDoc());
+            });
+        });
+
+        describe("save", () => {
+            it("should add or udpate the rss url configuration", () => {
+                let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
+                createOrUpdateMock.withArgs(expectedDocument);
+                new Source(sourceParamsObject).save();
+                createOrUpdateMock.verify();
+                CategoryDb.createOrUpdateSource.restore();
             });
         });
     });

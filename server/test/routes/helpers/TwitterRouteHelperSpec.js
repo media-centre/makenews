@@ -6,6 +6,7 @@ import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
 import TwitterClient, { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
+import Logger from "../../../src/logging/Logger.js";
 import sinon from "sinon";
 
 describe("TwitterRouteHelper", () => {
@@ -18,7 +19,7 @@ describe("TwitterRouteHelper", () => {
     }
 
     function mockResponse(done, expectedValues) {
-        let response = {
+        return {
             "status": (status) => {
                 assert.strictEqual(status, expectedValues.status);
             },
@@ -27,10 +28,10 @@ describe("TwitterRouteHelper", () => {
                 done();
             }
         };
-        return response;
     }
 
     let applicationConfig = null;
+    const FEEDS_COUNT = 100;
 
     before("TwitterRouteHelper", () => {
         applicationConfig = new ApplicationConfig();
@@ -41,12 +42,14 @@ describe("TwitterRouteHelper", () => {
             "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
             "timeOut": 10000
         });
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     after("TwitterRouteHelper", () => {
         ApplicationConfig.instance.restore();
         TwitterClient.logger.restore();
         applicationConfig.twitter.restore();
+        Logger.instance.restore();
     });
 
     it("should return empty response if the url is empty", (done) => {
@@ -79,7 +82,7 @@ describe("TwitterRouteHelper", () => {
             }
         };
         mockTwitterRequest()
-            .query({ "q": "@the_hindu" + searchParams })
+            .query({ "q": "@the_hindu", "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, expectedData, expectedData);
 
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
@@ -92,7 +95,7 @@ describe("TwitterRouteHelper", () => {
     it("should return 404 error if url is invalid", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.NOT_IMPLEMENTED, "");
 
         let request = {
@@ -108,7 +111,7 @@ describe("TwitterRouteHelper", () => {
     it("should return 404 error if url is not valid twitter url", (done) => {
         let url = "myTest";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .reply(HttpResponseHandler.codes.OK, { "statuses": [], "search_metadata": { "completed_in": 0.01 } });
 
         let request = {
@@ -124,7 +127,7 @@ describe("TwitterRouteHelper", () => {
     it("should return error if request to url returns error", (done) => {
         let url = "myTest1";
         mockTwitterRequest()
-            .query({ "q": url + searchParams })
+            .query({ "q": url, "count": FEEDS_COUNT + searchParams })
             .replyWithError("request failed");
 
         let request = {
@@ -136,5 +139,36 @@ describe("TwitterRouteHelper", () => {
         { "message": "Request failed for twitter handler " + url } });
         let twitterRouteHelper = new TwitterRouteHelper(request, response);
         twitterRouteHelper.twitterRouter();
+    });
+
+    it("should return all feeds from all the tweet hashtags", (done)=> {
+        var Jan18Timestamp = "2016-01-18T06:12:19+00:00";
+        var Jan17Timestamp = "2016-01-17T06:12:19+00:00";
+
+        let hinduResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp },
+            { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": Jan17Timestamp }] };
+
+        let toiResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp }] };
+
+        let request = {
+            "body": {
+                "data": [
+                    { "url": "@the_hindu", "timestamp": Jan17Timestamp, "id": "tweet1_id" },
+                    { "url": "@toi", "timestamp": Jan18Timestamp, "id": "tweet2_id" }
+                ]
+            }
+        };
+        mockTwitterRequest()
+            .query({ "q": "@the_hindu&since:2016-01-17", "count": FEEDS_COUNT + searchParams })
+            .reply(HttpResponseHandler.codes.OK, hinduResponseWithTimestamp, hinduResponseWithTimestamp);
+
+        mockTwitterRequest()
+            .query({ "q": "@toi&since:2016-01-18", "count": FEEDS_COUNT + searchParams })
+            .reply(HttpResponseHandler.codes.OK, toiResponseWithTimestamp, toiResponseWithTimestamp);
+
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });
+
+        let twitterRouteHelper = new TwitterRouteHelper(request, response);
+        twitterRouteHelper.twitterBatchFetch();
     });
 });

@@ -1,0 +1,17 @@
+# file: erlang/meta/main.yml
+
+galaxy_info:
+  author: pjan vandaele
+  company: ANXS
+  description: Install erlang
+  min_ansible_version: 1.4
+  license: MIT
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies:
+  - ANXS.build-essential

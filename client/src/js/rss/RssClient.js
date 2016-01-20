@@ -17,4 +17,19 @@ export default class RssClient {
             });
         });
     }
+
+    fetchBatchRssFeeds(sourceUrlDetails) {
+        return new Promise((resolve, reject) => {
+            let ajaxClient = AjaxClient.instance("/fetch-all-rss");
+            const headers = {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            };
+            ajaxClient.post(headers, sourceUrlDetails).then((feedMap)=> {
+                resolve(feedMap);
+            }).catch((err)=> {
+                reject(err);
+            });
+        });
+    }
 }

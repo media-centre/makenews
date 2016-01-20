@@ -1,4 +1,5 @@
 "use strict";
+
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import FacebookClient from "./FacebookClient.js";
 import CryptUtil from "../../src/util/CryptUtil.js";

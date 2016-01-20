@@ -1,0 +1,28 @@
+# file: erlang/tasks/source.yml
+
+- name: Erlang | Make sure the build dependencies are installed
+  sudo: true
+  apt:
+    pkg: "{{item}}"
+    state: present
+  with_items: ["libncurses5-dev", "openssl", "libssl-dev", "fop"]
+
+- name: Erlang | Download the erlang source
+  get_url:
+    url: "http://erlang.org/download/otp_src_{{erlang_version}}.tar.gz"
+    dest: "/tmp/otp_src_{{erlang_version}}.tar.gz"
+  register: erlang_downloaded
+
+- name: Erlang | Unpack the compressed erlang source
+  command: tar -xvzf /tmp/otp_src_{{erlang_version}}.tar.gz chdir=/tmp creates=/tmp/otp_src_{{erlang_version}}/README.md
+  when: erlang_downloaded.changed
+
+- name: Erlang | Build erlang from source - pt. 1 (configure)
+  shell: "./configure chdir=/tmp/otp_src_{{erlang_version}}"
+
+- name: Erlang | Build erlang from source - pt. 2 (make)
+  shell: "make chdir=/tmp/otp_src_{{erlang_version}}"
+
+- name: Erlang | Build erlang from source - pt. 3 (make install)
+  sudo: true
+  shell: "make install chdir=/tmp/otp_src_{{erlang_version}}"

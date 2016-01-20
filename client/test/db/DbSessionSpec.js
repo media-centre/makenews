@@ -2,7 +2,7 @@
 
 "use strict";
 import DbSession from "../../src/js/db/DbSession.js";
-import DbParameters from "../../src/js/db/config/DbParameters.js";
+import DbParameters from "../../src/js/db/DbParameters.js";
 import { assert } from "chai";
 import sinon from "sinon";
 import PouchDB from "pouchdb";

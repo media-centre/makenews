@@ -1,0 +1,14 @@
+---
+# file: tasks/Debian.yml
+
+- name: Install CouchDB Debian dependencies
+  sudo: true
+  apt: pkg={{ item }} state=present update_cache=yes
+  with_items:
+    - curl
+    - openssl
+    - unixodbc-dev
+    - libmozjs185-1.0
+    - libmozjs185-dev
+    - libicu-dev
+    - python-httplib2

@@ -1,0 +1,24 @@
+---
+- name: install apt-transport-https package
+  apt: name=apt-transport-https state=present
+
+- name: run apt-get upgrade
+  apt: update_cache=yes
+
+- name: create deployment group
+  group: name=medcen state=present
+
+- name: create deployment user
+  user: name={{deploy_username}} comment="media center user" group=medcen
+
+- name: Placing key
+  authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
+
+- name: ensure ansible is installed
+  apt: pkg=ansible state=installed
+
+- name: ensure bash is added in .bashrc
+  lineinfile: dest=/home/go/.bashrc line="bash"
+
+- name: ensure NODE_ENV is set in .bashrc
+  lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"

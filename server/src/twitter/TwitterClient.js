@@ -5,7 +5,7 @@ import NodeErrorHandler from "../NodeErrorHandler.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import Logger from "../logging/Logger.js";
 
-export const searchApi = "/search/tweets.json", searchParams = "-filter:retweets";
+export const searchApi = "/search/tweets.json", searchParams = "filter:retweets", FEEDS_COUNT = 100;
 export default class TwitterClient {
 
     static logger() {
@@ -18,10 +18,11 @@ export default class TwitterClient {
         this.bearerToken = bearerToken;
     }
 
-    fetchTweets(url) {
+    fetchTweets(url, timestamp) {
         return new Promise((resolve, reject) => {
+            let timestampQuery = timestamp ? "&since:" + this._getTwitterTimestampFormat(timestamp) : "";
             let options = {
-                "uri": this._baseUrl() + searchApi, "qs": { "q": url + searchParams }, "json": true,
+                "uri": this._baseUrl() + searchApi, "qs": { "q": url + timestampQuery, "count": FEEDS_COUNT + searchParams }, "json": true,
                 "headers": {
                     "Authorization": this.bearerToken
                 },
@@ -49,5 +50,10 @@ export default class TwitterClient {
 
     _timeOut() {
         return ApplicationConfig.instance().twitter().timeOut;
+    }
+
+    _getTwitterTimestampFormat(timestamp) {
+        let dateObj = new Date(timestamp);
+        return dateObj.getFullYear() + "-" + dateObj.getMonth() + 1 + "-" + dateObj.getDate();
     }
 }

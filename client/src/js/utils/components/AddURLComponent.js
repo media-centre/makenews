@@ -29,13 +29,13 @@ export default class AddURLComponent extends Component {
         }
     }
 
-    _showConfirmPopup(sourceId) {
-        this.setState({ "showCustomPopup": true, "currentSourceId": sourceId });
+    _showConfirmPopup(sourceObject) {
+        this.setState({ "showCustomPopup": true, "currentSourceId": sourceObject._id, "sourceObject": sourceObject });
     }
 
     handleDeleteClick(event) {
         if(event.OK) {
-            let source = new Source(this.state.currentSourceId);
+            let source = new Source(this.state.sourceObject);
             source.delete(this.props.categoryId).then(()=> {
                 this.props.dispatch(populateCategoryDetailsAsync(this.props.categoryId));
                 this.setState({ "showCustomPopup": false, "successResponse": true, "errorMessage": "Url successfully deleted" });
@@ -109,7 +109,7 @@ export default class AddURLComponent extends Component {
                         {this.props.content.map((urlObj, index) =>
                             <li key={index} className="feed-url">
                                 <div className={urlObj.status + " feed"}>{urlObj.url}</div>
-                                <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj._id)}>
+                                <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj)}>
                                     <i className="border-blue circle fa fa-close close circle"></i>
                                 </div>
                             </li>

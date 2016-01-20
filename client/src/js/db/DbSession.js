@@ -1,7 +1,7 @@
 /* eslint no-unused-vars:0, handle-callback-err:0 */
 
 "use strict";
-import DbParameters from "./config/DbParameters.js";
+import DbParameters from "./DbParameters.js";
 import PouchDB from "pouchdb";
 
 export default class DbSession {
@@ -28,7 +28,7 @@ export default class DbSession {
 
     static clearInstance() {
         this.db = null;
-        DbParameters.instance().clearInstance();
+        DbParameters.clearInstance();
         if(this.currentSyn) {
             this.currentSyn.cancel();
             this.currentSyn = null;

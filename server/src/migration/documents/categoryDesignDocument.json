@@ -1,33 +1,36 @@
 {
-    "language": "javascript",
-    "views": {
-        "allCategories": {
-            "map": "function(doc) { if(doc.docType == 'category') {emit(doc._id, doc)} }"
-        },
-        "allCategoriesByName": {
-            "map": "function(doc) { if(doc.docType == 'category') {emit(doc.name, doc)} }"
-        },
-        "sourceConfigurations": {
-            "map": "function(doc) { if(doc.docType == 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
-        },
-        "allSourcesByUrl": {
-            "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
-        },
-        "allFeedsAndCategoriesWithSource": {
-            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
-        },
-        "parkedFeeds": {
-            "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"
-        },
-        "parkedFeedsCount": {
-            "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",
-            "reduce": "_count"
-        },
-        "surfFeeds": {
-            "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) { emit(doc.sourceId, doc);}}"
-        },
-        "sourceParkFeeds": {
-            "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
-        }
+  "language": "javascript",
+  "views": {
+    "allCategories": {
+      "map": "function(doc) { if(doc.docType == 'category') {emit(doc._id, doc)} }"
+    },
+    "allCategoriesByName": {
+      "map": "function(doc) { if(doc.docType == 'category') {emit(doc.name, doc)} }"
+    },
+    "sourceConfigurations": {
+      "map": "function(doc) { if(doc.docType == 'source') {doc.categoryIds.forEach(function(id){emit(id, doc)})} }"
+    },
+    "allSourcesByUrl": {
+      "map": "function(doc) { if(doc.docType == 'source') {emit(doc.url, doc)} }"
+    },
+    "allSourcesBySourceType": {
+      "map": "function(doc) { if(doc.docType === 'source') {emit(doc.sourceType, doc)} }"
+    },
+    "allFeedsAndCategoriesWithSource": {
+      "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && (!doc.status || doc.status == 'surf')) { emit(doc.postedDate, doc.sourceId);}}"
+    },
+    "parkedFeeds": {
+      "map": "function(doc) { if(doc.docType == 'source') { doc.categoryIds.forEach(function(id) {emit(doc._id, {_id:id});});} else if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.postedDate, doc.sourceId);}}"
+    },
+    "parkedFeedsCount": {
+      "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc._id, null);}}",
+      "reduce": "_count"
+    },
+    "surfFeeds": {
+      "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) { emit(doc.sourceId, doc);}}"
+    },
+    "sourceParkFeeds": {
+      "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
     }
+  }
 }

@@ -1,0 +1,103 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Franklin Wise
+  description: Installs NodeJS
+  company: 
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+  #  - saucy
+    - trusty
+  - name: Debian
+  #  versions:
+  #  - all
+  #  - etch
+  #  - lenny
+  #  - squeeze
+  #  - wheezy
+  #- name: Amazon
+  #  versions:
+  #  - all
+  #  - 2013.03
+  #  - 2013.09
+  #- name: EL
+  #  versions:
+  #  - all
+  #  - 5
+  #  - 6
+  #  - 7
+  #- name: Fedora
+  #  versions:
+  #  - all
+  #  - 16
+  #  - 17
+  #  - 18
+  #  - 19
+  #  - 20
+  #- name: GenericBSD
+  #  versions:
+  #  - all
+  #  - any
+  #- name: FreeBSD
+  #  versions:
+  #  - all
+  #  - 8.0
+  #  - 8.1
+  #  - 8.2
+  #  - 8.3
+  #  - 8.4
+  #  - 9.0
+  #  - 9.1
+  #  - 9.1
+  #  - 9.2
+  #- name: GenericLinux
+  #  versions:
+  #  - all
+  #  - any
+  #- name: GenericUNIX
+  #  versions:
+  #  - all
+  #  - any
+  #- name: SmartOS
+  #  versions:
+  #  - all
+  #  - any
+  #- name: opensuse
+  #  versions:
+  #  - all
+  #  - 12.1
+  #  - 12.2
+  #  - 12.3
+  #  - 13.1
+  #  - 13.2
+  #- name: SLES
+  #  versions:
+  #  - all
+  #  - 10SP3
+  #  - 10SP4
+  #  - 11
+  #  - 11SP1
+  #  - 11SP2
+  #  - 11SP3
+  #
+  categories:
+  #- cloud
+  #- cloud:ec2
+  #- cloud:gce
+  #- cloud:rax
+  #- clustering
+  #- database
+  #- database:nosql
+  #- database:sql
+  - development
+  #- monitoring
+  #- networking
+  #- packaging
+  #- system
+  - web
+

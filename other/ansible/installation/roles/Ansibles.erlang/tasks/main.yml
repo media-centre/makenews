@@ -1,0 +1,11 @@
+# file: erlang/tasks/main.yml
+
+- name: Erlang | Check if the Erlang version is already installed
+  command: cat /var/cache/anxs-erlang-version
+  register: current_erlang_version
+  ignore_errors: yes
+  changed_when: current_erlang_version.rc != 0 or current_erlang_version.stdout != "{{erlang_version}}"
+- include: source.yml
+  when: current_erlang_version.changed
+- name: Erlang | Persist current version
+  copy: dest=/var/cache/anxs-erlang-version content="{{erlang_version}}"

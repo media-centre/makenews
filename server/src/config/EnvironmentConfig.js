@@ -12,5 +12,6 @@ export default class EnvironmentConfig {
 
 EnvironmentConfig.files = {
     "APPLICATION": path.join(__dirname, "../../config/application.json"),
+    "CLIENT_PARAMETERS": path.join(__dirname, "../../config/clientParameters.json"),
     "LOGGING": path.join(__dirname, "../../config/logging.json")
 };

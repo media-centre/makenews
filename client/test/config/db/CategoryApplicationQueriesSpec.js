@@ -3,7 +3,7 @@
 "use strict";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import CategoryApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
-import { CategoryDocument, STATUS_VALID } from "../../../src/js/config/actions/CategoryDocuments.js";
+import { STATUS_VALID } from "../../../src/js/config/Source.js";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -157,21 +157,6 @@ describe("CategoryApplicationQueries", () => {
                 CategoryDb.fetchSourceConfigurationsByCategoryId.restore();
                 done();
             });
-        });
-    });
-
-    describe("addRssUrlConfiguration", () => {
-        it("should add or udpate the rss url configuration", () => {
-            let categoryId = "test_id";
-            let url = "url";
-            let status = STATUS_VALID;
-            sinon.stub(CategoryDocument, "getNewDocument").withArgs(categoryId, url, status).returns({});
-            let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
-            createOrUpdateMock.withArgs({});
-            CategoryApplicationQueries.addUrlConfiguration(categoryId, url, status);
-            createOrUpdateMock.verify();
-            CategoryDocument.getNewDocument.restore();
-            CategoryDb.createOrUpdateSource.restore();
         });
     });
 });

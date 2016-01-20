@@ -1,0 +1,8 @@
+---
+# defaults file for appdeployment
+project_directory: /home/go/ContentDiscovery
+artifact: dist.tar.gz
+groupname: go
+owner: go
+ContentDiscoveryWebServerName: ContentDiscoveryWebServer
+

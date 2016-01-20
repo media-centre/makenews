@@ -1,7 +1,5 @@
 /* eslint react/display-name:0 */
 "use strict";
-import DbParameters from "./db/config/DbParameters.js";
-import DbSession from "./db/DbSession.js";
 import App from "./App.jsx";
 import LoginPage from "./login/pages/LoginPage.jsx";
 import MainPage from "./main/pages/MainPage.jsx";
@@ -19,8 +17,8 @@ export function renderRoutes() {
 
     return (
         <Route component={App}>
-            <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
-            <Route path="/main" component={MainPage} onEnter={isLoggedIn}>
+            <Route path="/" component={LoginPage}/>
+            <Route path="/main" component={MainPage}>
 
                 <Route path="/configure" component={ConfigurePage}>
                     <Route path="/configure/categories" component={AllCategories} />
@@ -32,25 +30,4 @@ export function renderRoutes() {
             </Route>
         </Route>
     );
-}
-
-function isLoggedIn(nextState, replaceState) {
-    if(localStorage.getItem("userInfo")) {
-        dbSync();
-    } else {
-        replaceState({ "nextPathname": nextState.location.pathname }, "/");
-    }
-
-}
-
-function showLoginPage(nextState, replaceState) {
-    if(localStorage.getItem("userInfo")) {
-        replaceState({ "nextPathname": nextState.location.pathname }, "/surf");
-    }
-}
-
-
-function dbSync() {
-    DbParameters.instance().setLocalDb(localStorage.getItem("userInfo"));
-    DbSession.instance();
 }

@@ -35,6 +35,10 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": url });
     }
 
+    static fetchSourceConfigurationBySourceType(type) {
+        return PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": type });
+    }
+
     static createOrUpdateSource(sourceConfigurationDocument) {
         return new Promise((resolve, reject) => {
             if(!sourceConfigurationDocument) {
@@ -63,6 +67,7 @@ export default class CategoryDb {
     }
 
     static isCategoryExists(categoryName, categoryId) {
+
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then(categories => {
                 let isAlreadyExists = false;
@@ -173,7 +178,7 @@ export default class CategoryDb {
     }
 
     static deleteSourceUrl(source, categoryId) {
-        new Source(source._id).delete(categoryId);
+        new Source(source).delete(categoryId);
     }
 
     static getCategoryById(categoryId) {

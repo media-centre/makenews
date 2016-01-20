@@ -65,9 +65,23 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static addUrlConfiguration(categoryId, title, url, status) {
-        let rssConfigDocument = CategoryDocument.getNewDocument(categoryId, title, url, status);
-        return CategoryDb.createOrUpdateSource(rssConfigDocument);
+    static _sortSourceUrls(sources) {
+        if(!sources) {
+            return;
+        }
+        sources.sort((source1, source2) => {
+            let lowerUrl1 = source1.url.toLowerCase();
+            let lowerUrl2 = source2.url.toLowerCase();
+            if(lowerUrl1 === lowerUrl2) {
+                return 0;
+            }
+            if(lowerUrl1 < lowerUrl2) {
+                return -1; //eslint-disable-line
+            }
+            if(lowerUrl1 > lowerUrl2) {
+                return 1;
+            }
+        });
     }
 
     static addRssFeeds(sourceId, feeds) {

@@ -1,7 +1,7 @@
 "use strict";
 import StringUtil from "../util/StringUtil.js";
 
-export default class EnvironemntReader {
+export default class EnvironmentReader {
     constructor(envFile, environment) {
         if(!envFile || !StringUtil.validNonEmptyString(environment)) {
             throw new Error("envFile or environment can not be empty");
