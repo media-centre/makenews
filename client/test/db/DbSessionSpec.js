@@ -14,10 +14,10 @@ describe("DbSession", () => {
             "type": () => {
                 return "PouchDB";
             },
-            "getLocalDb": () => {
+            "getLocalDbUrl": () => {
                 return "localDb";
             },
-            "getRemoteDb": () => {
+            "getRemoteDbUrl": () => {
                 return "remoteDb";
             },
             "clearInstance": () => {}
@@ -29,7 +29,6 @@ describe("DbSession", () => {
     });
 
     afterEach("DbSession", () => {
-        DbSession.clearInstance();
         dbParametesMock.verify();
         dbParametesMock.restore();
     });

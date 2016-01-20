@@ -1,0 +1,6 @@
+---
+tunght13488_buildpack_deps_curl_packages:
+  # curl
+  - ca-certificates
+  - curl
+  - wget

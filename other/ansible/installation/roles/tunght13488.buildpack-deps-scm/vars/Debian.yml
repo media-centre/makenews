@@ -1,0 +1,8 @@
+---
+tunght13488_buildpack_deps_scm_packages:
+  # SCM
+  - bzr
+  - git
+  - mercurial
+  - openssh-client
+  - subversion

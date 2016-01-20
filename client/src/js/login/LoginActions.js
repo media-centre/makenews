@@ -1,7 +1,7 @@
 "use strict";
 import AjaxClient from "../utils/AjaxClient";
-import DbParameters from "../db/DbParameters.js";
 import DbSession from "../db/DbSession.js";
+import AppSessionStorage from "../utils/AppSessionStorage.js";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
@@ -15,10 +15,12 @@ export function userLogin(history, userName, password) {
         };
         const data = { "username": userName, "password": password };
         ajax.post(headers, data)
-            .then(succesData => {
-                DbParameters.instance(succesData.userName, succesData.dbParameters.remoteDbUrl);
+            .then(successData => {
+                let appSessionStorage = new AppSessionStorage();
+                appSessionStorage.setValue(AppSessionStorage.KEYS.USERNAME, successData.userName);
+                appSessionStorage.setValue(AppSessionStorage.KEYS.REMOTEDBURL, successData.dbParameters.remoteDbUrl);
                 DbSession.instance().then(session => { //eslint-disable-line no-unused-vars
-                    dispatch(loginSuccess(succesData.userName));
+                    dispatch(loginSuccess(successData.userName));
                     history.push("/surf");
                 });
             })

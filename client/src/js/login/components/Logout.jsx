@@ -1,14 +1,15 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import DbSession from "../../../../src/js/db/DbSession.js";
+import AppSessionStorage from "../../../../src/js/utils/AppSessionStorage.js";
 import { logout } from "../LogoutActions";
 import { Link } from "react-router";
 
 
 export default class Logout extends Component {
     _logout() {
-        localStorage.setItem("userInfo", "");
         DbSession.clearInstance();
+        AppSessionStorage.instance().clear();
         logout();
     }
 

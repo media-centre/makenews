@@ -15,18 +15,16 @@ export default class CategoryNavigationHeader extends Component {
         };
     }
 
-    _validateCategoryTitle(event, props) {
+    _updateCategoryName(event, props) {
         var categoryName = this.refs.categoryTitleElement.value;
         props.updateCategoryName(categoryName);
-        this.refs.categoryTitleElement.blur();
     }
 
     _handleEnterKey(event, props) {
         const ENTERKEY = 13;
         if (event.keyCode || event.which === ENTERKEY) {
             event.preventDefault();
-            this._validateCategoryTitle(event, props);
-            this.refs.categoryTitleElement.blur();
+            this._updateCategoryName(event, props);
         }
 
     }
@@ -54,7 +52,7 @@ export default class CategoryNavigationHeader extends Component {
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
-            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._validateCategoryTitle(event, this.props)} onBlur={(event)=> this._validateCategoryTitle(event, this.props)}>
+            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)} onBlur={(event)=> this._updateCategoryName(event, this.props)}>
 
             </input>
             <div ref="errorMessage" className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>

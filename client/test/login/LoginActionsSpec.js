@@ -6,7 +6,6 @@ import AjaxClient from "../../src/js/utils/AjaxClient";
 import { expect } from "chai";
 import sinon from "sinon";
 import mockStore from "../helper/ActionHelper.js";
-import DbParameters from "../../src/js/db/DbParameters.js";
 import DbSession from "../../src/js/db/DbSession.js";
 
 describe("actions", () => {
@@ -42,12 +41,9 @@ describe("userLogin", () => {
     });
 
     xit("should dispatch login successful action if the login is successful", (done) => {
-        let dbParametersInstanceMock = sinon.mock(DbParameters).expects("instance");
-        dbParametersInstanceMock.withArgs(userName, "http://localhost:5984");
 
         let dbSessionInstanceMock = sinon.mock(DbSession).expects("instance");
         dbSessionInstanceMock.returns(Promise.resolve({}));
-
         ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
         const expectedActions = [
             { "type": LOGIN_SUCCESS, "userName": userName }
@@ -55,11 +51,9 @@ describe("userLogin", () => {
         sinon.mock(history).expects("push").withArgs("/surf");
         const store = mockStore({ "errorMessage": "" }, expectedActions, done);
         store.dispatch(userLogin(history, userName, password));
-        dbParametersInstanceMock.verify();
         dbSessionInstanceMock.verify();
         history.push.restore();
         DbSession.instance.restore();
-        DbParameters.instance.restore();
     });
 
     it("should dispatch login failure action if the login is not successful", (done) => {

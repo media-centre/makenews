@@ -1,11 +1,13 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
+import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
 import Logout from "../../../src/js/login/components/Logout.jsx";
 import { expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { Link } from "react-router";
 import { assert } from "chai";
+import sinon from "sinon";
 import "../../helper/TestHelper.js";
 
 describe("Logout", () => {
@@ -37,10 +39,15 @@ describe("Logout", () => {
     });
 
     xit("should clear the authsession cookie and localstorage on logout", () => {
-        localStorage.setItem("userInfo", "test");
+        let appSessionStorage = new AppSessionStorage();
+        sinon.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+        let appSessionStorageClearMock = sinon.mock(appSessionStorage).expects("clear");
         let listComponents = TestUtils.scryRenderedComponentsWithType(logoutComponent, "span");
         TestUtils.Simulate.click(listComponents[0]);
-        expect(localStorage.getItem("userInfo")).to.eq("");
+        appSessionStorageClearMock.verify();
+        appSessionStorage.clear.restore();
+        AppSessionStorage.instance.restore();
+
     });
 });
 

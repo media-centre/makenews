@@ -12,12 +12,12 @@ export default class DbSession {
             } else {
                 let dbParameters = DbParameters.instance();
 
-                new PouchDB(dbParameters.getLocalDb(), { "auto_compaction": "true" }).then(session => {
+                new PouchDB(dbParameters.getLocalDbUrl(), { "auto_compaction": "true" }).then(session => {
                     this.db = session;
                     DbSession.sync();
                     resolve(this.db);
                 }).catch(error => {
-                    new PouchDB(dbParameters.getRemoteDb()).then(session => {
+                    new PouchDB(dbParameters.getRemoteDbUrl()).then(session => {
                         this.db = session;
                         resolve(session);
                     });
@@ -28,7 +28,6 @@ export default class DbSession {
 
     static clearInstance() {
         this.db = null;
-        DbParameters.clearInstance();
         if(this.currentSyn) {
             this.currentSyn.cancel();
             this.currentSyn = null;
@@ -41,7 +40,7 @@ export default class DbSession {
             this.currentSyn = null;
         }
         let dbParameters = DbParameters.instance();
-        this.currentSyn = PouchDB.sync(dbParameters.getLocalDb(), dbParameters.getRemoteDb(), {
+        this.currentSyn = PouchDB.sync(dbParameters.getLocalDbUrl(), dbParameters.getRemoteDbUrl(), {
             "live": true,
             "retry": true
         }).on("change", (info) => {

@@ -1,35 +1,29 @@
 "use strict";
+import AppSessionStorage from "../utils/AppSessionStorage.js";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 
 export default class DbParameters {
-    static instance(localDbUrl, remoteDbUrl) {
-        if(!this.dbParameters) {
-            this.dbParameters = new DbParameters(localDbUrl, remoteDbUrl);
+
+    static instance() {
+        return new DbParameters();
+    }
+    constructor() {
+        this.appSession = AppSessionStorage.instance();
+    }
+
+    getLocalDbUrl() {
+        let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
+        if(StringUtil.isEmptyString(localDbUrl)) {
+            throw new Error("local db url can not be empty");
         }
-        return this.dbParameters;
+        return localDbUrl;
     }
 
-    static clearInstance() {
-        this.dbParameters = null;
-    }
-
-    constructor(localDbUrl, remoteDbUrl) {
-        if(StringUtil.isEmptyString(localDbUrl) || StringUtil.isEmptyString(remoteDbUrl)) {
-            throw new Error("db parameters can not be empty");
+    getRemoteDbUrl() {
+        let remoteDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.REMOTEDBURL);
+        if(StringUtil.isEmptyString(remoteDbUrl)) {
+            throw new Error("remote db url can not be empty");
         }
-        this.localDbUrl = localDbUrl;
-        this.remoteDbUrl = remoteDbUrl + "/" + localDbUrl;
-    }
-
-    type() {
-        return "PouchDB";
-    }
-
-    getLocalDb() {
-        return this.localDbUrl;
-    }
-
-    getRemoteDb() {
-        return this.remoteDbUrl;
+        return remoteDbUrl + "/" + this.getLocalDbUrl();
     }
 }
