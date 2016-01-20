@@ -113,9 +113,9 @@ describe("FacebookClient", () => {
 
     describe("setLongLivedToken", () => {
         let url = "/facebook-set-token", sandbox = null, userName = "test2";
-        let accessToken = "123";
 
         beforeEach(() => {
+            accessToken = "123";
             sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
         });
@@ -189,8 +189,4 @@ describe("FacebookClient", () => {
         });
     });
 });
-
-
-
-
 
