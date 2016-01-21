@@ -2,7 +2,17 @@
 import moment from "moment";
 import { logout } from "../login/LogoutActions.js";
 const nineMinutes = 540000;
+let linkTransition = Symbol();
+
 export default class UserSession {
+    static instance(history) {
+        return new UserSession(history);
+    }
+
+    constructor(history) {
+        this[linkTransition] = history;
+    }
+
     get lastAccessedTime() {
         return this._lastAccessedTime;
     }
@@ -16,16 +26,22 @@ export default class UserSession {
         return currentTime - this.lastAccessedTime < nineMinutes;
     }
 
-    continueSessionIfActive() {
+    startSlidingSession() {
+        this._lastAccessedTime = moment().valueOf();
+        this._continueSessionIfActive();
+    }
+
+    _continueSessionIfActive() {
         let timer = setInterval(() => {
             if(!this.isActiveContinuously()) {
-                _logoutAndClearInterval();
+                _logoutAndClearInterval(this);
             }
         }, nineMinutes);
 
-        function _logoutAndClearInterval() {
+        function _logoutAndClearInterval(_this) {
             logout();
             clearInterval(timer);
+            _this[linkTransition].push("/");
         }
     }
 }

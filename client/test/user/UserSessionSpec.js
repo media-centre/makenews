@@ -9,9 +9,14 @@ import moment from "moment";
 import sinon from "sinon";
 
 describe("UserSession", () => {
+    let history = null;
+    before("before", () => {
+        history = { "push": () => {} };
+    });
+
     it("should set lastAccessedTime", () => {
         let lastAccessedTime = new Date().getTime();
-        let userSession = new UserSession();
+        let userSession = UserSession.instance(history);
         userSession.lastAccessedTime = lastAccessedTime;
         assert.strictEqual(userSession.lastAccessedTime, lastAccessedTime);
     });
@@ -20,7 +25,7 @@ describe("UserSession", () => {
         it("should return the true if active within 9 minutes", () => {
             var fiveMinute = 5;
             let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
-            let userSession = new UserSession();
+            let userSession = new UserSession(history);
             userSession.lastAccessedTime = lastAccessedTime;
             assert.strictEqual(userSession.isActiveContinuously(), true);
         });
@@ -28,7 +33,7 @@ describe("UserSession", () => {
         xit("should return the false if not active for 9 minutes", () => {
             var nineMinute = 9;
             let lastAccessedTime = moment().subtract(nineMinute, "m").valueOf();
-            let userSession = new UserSession();
+            let userSession = new UserSession(history);
             userSession.lastAccessedTime = lastAccessedTime;
             assert.strictEqual(userSession.isActiveContinuously(), false);
         });
@@ -36,7 +41,7 @@ describe("UserSession", () => {
         it("should return the false if not active for more than 9 minutes", () => {
             var tenMinute = 10;
             let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
-            let userSession = new UserSession();
+            let userSession = new UserSession(history);
             userSession.lastAccessedTime = lastAccessedTime;
             assert.strictEqual(userSession.isActiveContinuously(), false);
         });
@@ -44,7 +49,7 @@ describe("UserSession", () => {
 
     describe("continueSessionIfActive", () => {
         it("should logout if user inactive for 9 minutes", () => {
-            let userSession = new UserSession();
+            let userSession = new UserSession(history);
             var tenMinute = 10;
             userSession.lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
             let sandbox = sinon.sandbox.create();
@@ -57,15 +62,18 @@ describe("UserSession", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
             sandbox.stub(appSessionStorage, "clear");
-            userSession.continueSessionIfActive();
+            let historyMock = sandbox.mock(history).expects("push");
+            historyMock.withArgs("/");
+            userSession._continueSessionIfActive();
             clock.tick(nineMinutes);
             clock.tick(nineMinutes);
+            historyMock.verify();
             ajaxGetMock.verify();
             sandbox.restore();
         });
 
         it("should not call logout if user active continuously within 9 minutes", () => {
-            let userSession = new UserSession();
+            let userSession = new UserSession(history);
             let sandbox = sinon.sandbox.create();
             let clock = sandbox.useFakeTimers();
             let nineMinutes = 540000;
@@ -76,10 +84,18 @@ describe("UserSession", () => {
             userSession.lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
             ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
             let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").never();
-            userSession.continueSessionIfActive();
+            userSession._continueSessionIfActive();
             clock.tick(nineMinutes);
             ajaxGetMock.verify();
             sandbox.restore();
+        });
+
+        describe("startSlidingSession", () => {
+            it("should set the lastAccessedTime to current time", () => {
+                let userSession = new UserSession(history);
+                userSession.startSlidingSession();
+                assert.strictEqual(new Date(userSession.lastAccessedTime).getHours(), new Date(moment().valueOf()).getHours());
+            });
         });
     });
 });

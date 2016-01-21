@@ -3,6 +3,8 @@
 "use strict";
 import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } from "../../src/js/login/LoginActions.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
+import UserSession from "../../src/js/user/UserSession.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import mockStore from "../helper/ActionHelper.js";
@@ -22,7 +24,7 @@ describe("actions", () => {
 });
 
 describe("userLogin", () => {
-    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null, history = null;
+    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null, history = null, sandbox = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
@@ -32,37 +34,61 @@ describe("userLogin", () => {
             "Content-type": "application/json"
         };
         data = { "username": userName, "password": password };
-        ajaxPostMock = sinon.mock(AjaxClient.prototype).expects("post");
+        sandbox = sinon.sandbox.create();
+        let ajaxInstance = new AjaxClient("/login");
+        let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
+        ajaxInstanceMock.withArgs("/login").returns(ajaxInstance);
+        ajaxPostMock = sandbox.mock(ajaxInstance).expects("post");
     });
 
     afterEach("userLogin", () => {
         ajaxPostMock.verify();
-        AjaxClient.prototype.post.restore();
+        sandbox.restore();
     });
 
-    xit("should dispatch login successful action if the login is successful", (done) => {
+    describe("success", () => {
+        let dbSessionInstanceMock = null, historyMock = null, appSessionStorageClearMock = null, userSessionMock = null;
+        beforeEach("userLogin", () => {
+            let appSessionStorage = new AppSessionStorage();
+            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+            appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("setValue").twice();
 
-        let dbSessionInstanceMock = sinon.mock(DbSession).expects("instance");
-        dbSessionInstanceMock.returns(Promise.resolve({}));
-        ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
-        const expectedActions = [
-            { "type": LOGIN_SUCCESS, "userName": userName }
-        ];
-        sinon.mock(history).expects("push").withArgs("/surf");
-        const store = mockStore({ "errorMessage": "" }, expectedActions, done);
-        store.dispatch(userLogin(history, userName, password));
-        dbSessionInstanceMock.verify();
-        history.push.restore();
-        DbSession.instance.restore();
+            let userSession = new UserSession();
+            sandbox.stub(UserSession, "instance").returns(userSession);
+            userSessionMock = sandbox.mock(userSession).expects("startSlidingSession");
+            dbSessionInstanceMock = sandbox.mock(DbSession).expects("instance");
+            historyMock = sandbox.mock(history).expects("push");
+        });
+
+        afterEach("userLogin", () => {
+            appSessionStorageClearMock.verify();
+            userSessionMock.verify();
+            dbSessionInstanceMock.verify();
+            historyMock.verify();
+        });
+
+        it("should dispatch login successful action if the login is successful", (done) => {
+            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
+            dbSessionInstanceMock.returns(Promise.resolve({}));
+            historyMock.withArgs("/surf");
+            const expectedActions = [
+                { "type": LOGIN_SUCCESS, "userName": userName }
+            ];
+
+            const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+            store.dispatch(userLogin(history, userName, password));
+        });
     });
 
-    it("should dispatch login failure action if the login is not successful", (done) => {
-        ajaxPostMock.withArgs(headers, data).returns(Promise.reject("error"));
-        const expectedActions = [
-            { "type": LOGIN_FAILED, "responseMessage": "Invalid user name or password" }
-        ];
-        const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+    describe("failure", () => {
+        it("should dispatch login failure action if the login is not successful", (done) => {
+            ajaxPostMock.withArgs(headers, data).returns(Promise.reject("error"));
+            const expectedActions = [
+                { "type": LOGIN_FAILED, "responseMessage": "Invalid user name or password" }
+            ];
+            const store = mockStore({ "errorMessage": "" }, expectedActions, done);
 
-        store.dispatch(userLogin(history, userName, password));
+            store.dispatch(userLogin(history, userName, password));
+        });
     });
 });
