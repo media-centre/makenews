@@ -67,7 +67,7 @@ describe("DbSession", () => {
             DbSession.clearInstance();
             dbParametesMock.expects("instance").returns(parametersFake);
             sandbox.stub(DbSession, "sync");
-            DbSession.instance().then(ses => {
+            DbSession.instance().then(() => {
                 userSessionMock.verify();
                 sandbox.restore();
                 done();

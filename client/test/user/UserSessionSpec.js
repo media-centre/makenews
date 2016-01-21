@@ -32,7 +32,7 @@ describe("UserSession", () => {
     });
 
     describe("", () => {
-        let appSessionStorage = null, sandbox = null, appSessionStorageGetStub;
+        let appSessionStorage = null, sandbox = null, appSessionStorageGetStub = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
             appSessionStorage = new AppSessionStorage();
