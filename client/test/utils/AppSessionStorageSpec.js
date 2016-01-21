@@ -8,7 +8,7 @@ describe("AppSessionStorage", ()=> {
     let key = null, value = null;
     before("AppSessionStorage", () => {
         key = "test_key";
-        value = "test_value";
+        value = 1234;
 
     });
 
@@ -38,7 +38,7 @@ describe("AppSessionStorage", ()=> {
         it("should throw an error if value is empty", () => {
             let appSessionStorage = new AppSessionStorage();
             let setValueFn = () => {
-                appSessionStorage.setValue(key, " ");
+                appSessionStorage.setValue(key, "");
             };
             assert.throw(setValueFn, "Key or value cannot be empty");
         });

@@ -7,7 +7,7 @@ export default class AppSessionStorage {
     }
 
     setValue(key, value) {
-        if(StringUtil.isEmptyString(key) || StringUtil.isEmptyString(value)) {
+        if(StringUtil.isEmptyString(key) || !value) {
             throw new Error("Key or value cannot be empty");
         }
         this.getLocalStorage().setItem(key, value);
