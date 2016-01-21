@@ -12,7 +12,6 @@ export function login(state = { "errorMessage": "" }, action = {}) {
             "errorMessage": action.responseMessage
         };
     case LOGIN_SUCCESS:
-        localStorage.setItem("userInfo", action.userName);
         return {
             "errorMessage": "",
             "userName": action.userName

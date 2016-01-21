@@ -14,6 +14,9 @@ export default class TwitterComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
+        if(!url) {
+            return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.emptyUrl });
+        }
         if(url.match(twRegexHandler) || url.match(twRegexHashtag)) {
             props.dispatch(addTwitterUrlAsync(props.categoryId, url, (response)=> {
                 let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;

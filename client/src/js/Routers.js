@@ -8,6 +8,9 @@ import AllCategories from "./config/components/AllCategories.jsx";
 import CategoryPage from "./config/components/Category.jsx";
 import SurfPage from "./surf/pages/SurfPage.jsx";
 import ParkPage from "./park/pages/ParkPage.jsx";
+import AppSessionStorage from "./utils/AppSessionStorage.js";
+import StringUtil from "../../../common/src/util/StringUtil.js";
+import DbSession from "./db/DbSession.js";
 import React from "react";
 import "babel/polyfill";
 import { Route } from "react-router";
@@ -17,8 +20,8 @@ export function renderRoutes() {
 
     return (
         <Route component={App}>
-            <Route path="/" component={LoginPage}/>
-            <Route path="/main" component={MainPage}>
+            <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
+            <Route path="/main" component={MainPage} onEnter={isLoggedIn}>
 
                 <Route path="/configure" component={ConfigurePage}>
                     <Route path="/configure/categories" component={AllCategories} />
@@ -30,4 +33,24 @@ export function renderRoutes() {
             </Route>
         </Route>
     );
+}
+
+function isLoggedIn(nextState, replaceState) {
+
+    if(StringUtil.validNonEmptyString(AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME))) {
+        dbSync();
+    } else {
+        replaceState({ "nextPathname": nextState.location.pathname }, "/");
+    }
+
+}
+
+function showLoginPage(nextState, replaceState) {
+    if(StringUtil.validNonEmptyString(AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME))) {
+        replaceState({ "nextPathname": nextState.location.pathname }, "/surf");
+    }
+}
+
+function dbSync() {
+    DbSession.instance();
 }

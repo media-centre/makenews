@@ -25,6 +25,16 @@
     .error-msg {
       color: $error-border-color;
     }
+  #categoryTitle {
+    width: 95%;
+    font-size: $large-font-size;
+    border: none;
+
+    &:focus {
+      box-shadow:  0 0 2px 2px $app-header-bg-color;
+    }
+  }
+
 
 }
 

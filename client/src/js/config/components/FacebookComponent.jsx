@@ -18,6 +18,9 @@ export default class FacebookComponent extends Component {
     }
 
     _validateUrl(url, callback, props) {
+        if(!url) {
+            return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.emptyUrl });
+        }
         if(url.match(fbRegex)) {
             props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
                 let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;

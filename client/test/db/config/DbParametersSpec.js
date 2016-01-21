@@ -2,46 +2,80 @@
 
 "use strict";
 import DbParameters from "../../../src/js/db/DbParameters.js";
+import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
+import sinon from "sinon";
 import { assert } from "chai";
 
 describe("DbParameters", () => {
-    let localDbUrl = null, remoteDbUrl = null;
+    let localDbName = null, remoteDbUrl = null;
     before("DbParameters", () => {
-        localDbUrl = "local_db_url";
+        localDbName = "local_db_url";
         remoteDbUrl = "remote_db_url";
     });
 
-    it("should throw error if local db url is empty", () => {
-        let dbParamtersNewFun = () => {
-            return new DbParameters(" ", remoteDbUrl);
-        };
-        assert.throw(dbParamtersNewFun, "db parameters can not be empty");
+    describe("getRemoteDbUrl", () => {
+        let appSessionStorage = null, appSessionStorageGetValueMock = null, instance = null;
+        beforeEach("getRemoteDbUrl", () => {
+            appSessionStorage = new AppSessionStorage();
+            sinon.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+            appSessionStorageGetValueMock = sinon.mock(appSessionStorage).expects("getValue");
+            instance = new DbParameters();
+        });
+
+        afterEach("getRemoteDbUrl", () => {
+            appSessionStorageGetValueMock.verify();
+            appSessionStorage.getValue.restore();
+            AppSessionStorage.instance.restore();
+
+        });
+
+        it("should return remote db url", () => {
+            appSessionStorageGetValueMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL).returns(remoteDbUrl);
+            sinon.stub(instance, "getLocalDbUrl").returns(localDbName);
+            let actualRemoteDbUrl = instance.getRemoteDbUrl();
+            assert.strictEqual(remoteDbUrl + "/" + localDbName, actualRemoteDbUrl);
+            instance.getLocalDbUrl.restore();
+        });
+
+        it("should throw error if there is no remote db url", () => {
+            appSessionStorageGetValueMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL).returns("  ");
+            let remoteDBUrlFn = () => {
+                instance.getRemoteDbUrl();
+            };
+            assert.throw(remoteDBUrlFn, "remote db url can not be empty");
+            appSessionStorageGetValueMock.verify();
+        });
     });
 
-    it("should throw error if remote db url is empty", () => {
-        let dbParamtersNewFun = () => {
-            return new DbParameters(localDbUrl, " ");
-        };
-        assert.throw(dbParamtersNewFun, "db parameters can not be empty");
-    });
+    describe("getLocalDbUrl", () => {
+        let appSessionStorage = null, appSessionStorageGetValueMock = null, instance = null;
+        beforeEach("getLocalDbUrl", () => {
+            appSessionStorage = new AppSessionStorage();
+            sinon.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+            appSessionStorageGetValueMock = sinon.mock(appSessionStorage).expects("getValue");
+            instance = new DbParameters();
+        });
 
-    it("should get the proper local db url", () => {
-        let dbParameters = new DbParameters(localDbUrl, remoteDbUrl);
-        assert.strictEqual(localDbUrl, dbParameters.getLocalDb());
-    });
+        afterEach("getLocalDbUrl", () => {
+            appSessionStorageGetValueMock.verify();
+            appSessionStorage.getValue.restore();
+            AppSessionStorage.instance.restore();
 
-    it("should get the proper remote db url", () => {
-        let dbParameters = new DbParameters(localDbUrl, remoteDbUrl);
-        assert.strictEqual(remoteDbUrl + "/" + localDbUrl, dbParameters.getRemoteDb());
-    });
+        });
 
-    describe("clearInstance", ()=> {
-        it("should clear parameter instance", ()=> {
-            let instance1 = DbParameters.instance("url1", remoteDbUrl);
-            DbParameters.clearInstance();
-            assert.isUndefined(instance1.dbParameters);
-            let instance2 = DbParameters.instance("url2", remoteDbUrl);
-            assert.strictEqual("url2", instance2.getLocalDb());
+        it("should return local db url", () => {
+            appSessionStorageGetValueMock.withArgs(AppSessionStorage.KEYS.USERNAME).returns(localDbName);
+            let localDbUrl = instance.getLocalDbUrl();
+            assert.strictEqual(localDbName, localDbUrl);
+        });
+
+        it("should throw error if there is no local db url", () => {
+            appSessionStorageGetValueMock.withArgs(AppSessionStorage.KEYS.USERNAME).returns("  ");
+            let localDBUrlFn = () => {
+                instance.getLocalDbUrl();
+            };
+            assert.throw(localDBUrlFn, "local db url can not be empty");
+            appSessionStorageGetValueMock.verify();
         });
     });
 });
