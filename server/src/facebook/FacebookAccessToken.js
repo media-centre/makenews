@@ -7,7 +7,7 @@ export default class FacebookAccessToken {
         return new FacebookAccessToken();
     }
 
-    getAccesToken(userName) {
+    getAccessToken(userName) {
         return new Promise((resolve, reject) => {
             AdminDbClient.instance().getDocument(userName + "_facebookToken").then((document) => {
                 resolve(document.access_token);

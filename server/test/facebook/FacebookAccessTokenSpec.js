@@ -23,7 +23,7 @@ describe("FacebookAccessToken", () => {
             sandbox.stub(AdminDbClient, "instance").returns(adminDbClient);
             sandbox.stub(adminDbClient, "getDocument").withArgs(tokenDocId).returns(Promise.resolve({ "access_token": token }));
 
-            FacebookAccessToken.instance().getAccesToken(userName).then((response) => {
+            FacebookAccessToken.instance().getAccessToken(userName).then((response) => {
                 assert.deepEqual(response, token);
                 done();
             });
@@ -34,7 +34,7 @@ describe("FacebookAccessToken", () => {
             sandbox.stub(AdminDbClient, "instance").returns(adminDbClient);
             sandbox.stub(adminDbClient, "getDocument").withArgs(tokenDocId).returns(Promise.reject());
 
-            FacebookAccessToken.instance().getAccesToken(userName).catch((error) => {
+            FacebookAccessToken.instance().getAccessToken(userName).catch((error) => {
                 assert.strictEqual(error, "access token not there");
                 done();
             });

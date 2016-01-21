@@ -1,6 +1,8 @@
 /* eslint no-undef:0 */
 
 "use strict";
+import FacebookRequestHandler from "./FacebookRequestHandler";
+import FacebookDb from "./FacebookDb";
 
 export default class FacebookLogin {
 
@@ -44,13 +46,46 @@ export default class FacebookLogin {
         this.status = response.status;
     }
 
-    login(callback) {
+    showLogin(callback) {
         FB.login((response) => {
             if (response.authResponse) {
                 return (callback(response.authResponse));
             }
-            return (callback(null, response.error));
-        }, { "scope": "public_profile, email, user_friends, user_likes" });
+            return (callback(null, response));
+        }, { "scope": "public_profile, email, user_friends, user_likes, user_photos, user_posts, user_actions.news, user_actions.video" });
+    }
+
+    login() {
+        return new Promise((resolve, reject) => {
+            this.isTokenExpired().then((tokenExpired) => {
+                if(tokenExpired) {
+                    this.showLogin((response, error) => {
+                        if(response) {
+                            FacebookRequestHandler.setToken(response.accessToken);
+                            resolve(true);
+                        } else {
+                            reject(error);
+                        }
+                    });
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    }
+
+    static getCurrentTime() {
+        return new Date().getTime();
+    }
+
+    isTokenExpired() {
+        return new Promise((resolve) => {
+            FacebookDb.getTokenDocument().then((document) => {
+                resolve(FacebookLogin.getCurrentTime() > document.expiredAfter);
+            }).catch(() => {
+                resolve(true);
+            });
+        });
     }
 
 

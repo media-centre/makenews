@@ -21,6 +21,7 @@ describe("AdminDbClient", () => {
         it("if admin session exists return existing couchClient", (done) => {
             let obj = {};
             sandbox.stub(AdminDbClient, "getDbInstance").returns(obj);
+            sandbox.stub(AdminDbClient, "isSessionExpired").returns(false);
             AdminDbClient.instance().getDb().then((response) => {
                 assert.deepEqual(response, obj);
                 done();
@@ -29,6 +30,24 @@ describe("AdminDbClient", () => {
 
         it("if admin session not exists should login and returns couchClient", (done) => {
             sandbox.stub(AdminDbClient, "getDbInstance").returns(null);
+            let applicationConfig = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));
+            sandbox.stub(applicationConfig, "adminDetails").returns({
+                "username": "adminUser",
+                "password": "adminPwd",
+                "db": "adminDb"
+            });
+
+            AdminDbClient.instance().getDb().then((response) => {
+                assert.deepEqual(response, new CouchClient("adminDb", "Token1-2"));
+                done();
+            });
+        });
+
+        it("if admin session expires it should login and returns couchClient", (done) => {
+            sandbox.stub(AdminDbClient, "getDbInstance").returns({});
+            sandbox.stub(AdminDbClient, "isSessionExpired").returns(true);
             let applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));

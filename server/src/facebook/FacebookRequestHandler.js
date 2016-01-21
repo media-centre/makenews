@@ -3,6 +3,7 @@
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import FacebookClient from "./FacebookClient.js";
 import CryptUtil from "../../src/util/CryptUtil.js";
+import DateUtil from "../../src/util/DateUtil.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
@@ -51,14 +52,10 @@ export default class FacebookRequestHandler {
         });
     }
 
-    static getCurrentTime() {
-        return new Date().getTime();
-    }
-
     setToken(userName) {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = FacebookClient.instance(this.accessToken, this.appSecretKey(), this.appId());
-            let currentTime = FacebookRequestHandler.getCurrentTime();
+            let currentTime = DateUtil.getCurrentTime();
             facebookClientInstance.getLongLivedToken().then(response => {
                 const milliSeconds = 1000;
                 response.expired_after = currentTime + (response.expires_in * milliSeconds); //eslint-disable-line camelcase

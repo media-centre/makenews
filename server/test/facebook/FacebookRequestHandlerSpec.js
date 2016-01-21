@@ -4,6 +4,7 @@
 import FacebookClient from "../../src/facebook/FacebookClient.js";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
 import CryptUtil from "../../src/util/CryptUtil.js";
+import DateUtil from "../../src/util/DateUtil.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import LogTestHelper from "../helpers/LogTestHelper";
 import AdminDbClient from "../../src/db/AdminDbClient";
@@ -172,7 +173,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sandbox.stub(facebookRequestHandler, "appSecretKey").returns(appSecretProof);
             sandbox.stub(facebookRequestHandler, "appId").returns(appId);
-            sandbox.stub(FacebookRequestHandler, "getCurrentTime").returns(currentTime);
+            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
         });
 
         afterEach("setToken", () => {

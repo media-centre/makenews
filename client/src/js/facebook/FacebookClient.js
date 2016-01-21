@@ -3,6 +3,7 @@ import StringUtil from "../../../../common/src/util/StringUtil.js";
 import AjaxClient from "../utils/AjaxClient.js";
 import LoginPage from "../login/pages/LoginPage.jsx";
 import FacebookDb from "./FacebookDb";
+import FacebookLogin from "./FacebookLogin";
 
 export default class FacebookClient {
 
@@ -14,6 +15,7 @@ export default class FacebookClient {
             throw new Error("access token can not be empty");
         }
         this.accessToken = accessToken;
+        this.facebookLogin = FacebookLogin.instance();
     }
 
     fetchPosts(webUrl) {
@@ -48,15 +50,19 @@ export default class FacebookClient {
 
     fetchBatchPosts(postData) {
         return new Promise((resolve, reject)=> {
-            postData.accessToken = this.accessToken;
-            const headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json"
-            };
-            let ajaxClient = AjaxClient.instance("/facebook-batch-posts");
-            ajaxClient.post(headers, postData).then(response => {
-                resolve(response);
-            }).catch(error => {
+            this.facebookLogin.login().then(() => {
+                postData.userName = LoginPage.getUserName();
+                const headers = {
+                    "Accept": "application/json",
+                    "Content-type": "application/json"
+                };
+                let ajaxClient = AjaxClient.instance("/facebook-batch-posts");
+                ajaxClient.post(headers, postData).then(response => { // eslint-disable-line max-nested-callbacks
+                    resolve(response);
+                }).catch(error => {
+                    reject(error);
+                });
+            }).catch((error) => {
                 reject(error);
             });
         });

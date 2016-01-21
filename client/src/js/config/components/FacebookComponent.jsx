@@ -13,7 +13,7 @@ export default class FacebookComponent extends Component {
     constructor(props) {
         super(props);
         this.fbLogin = FacebookLogin.instance();
-        this.facebookLogin = this.facebookLogin.bind(this);
+        this.facebookLoginHandler = this.facebookLoginHandler.bind(this);
         this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama" };
     }
 
@@ -28,42 +28,13 @@ export default class FacebookComponent extends Component {
         }
     }
 
-    facebookLogin() {
-        return new Promise((resolve, reject) => {
-            this.isTokenExpired().then((tokenExpired) => {
-                if(!tokenExpired || this.fbLogin.isLoggedIn()) {
-                    resolve(true);
-                } else {
-                    this.fbLogin.login((response, error) => {
-                        if(response) {
-                            FacebookRequestHandler.setToken(response.accessToken);
-                            resolve(true);
-                        } else {
-                            reject(error);
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    isTokenExpired() {
-        return new Promise((resolve, reject) => {
-            FacebookDb.getTokenDocument().then((document) => {
-                resolve(FacebookComponent.getCurrentTime() > document.expiredAfter);
-            }).catch((error) => {
-                resolve(true);
-            });
-        });
-    }
-
-    static getCurrentTime() {
-        return new Date().getTime();
+    facebookLoginHandler() {
+        return this.fbLogin.login();
     }
 
     render() {
         return (
-            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} addURLHandler= {this.facebookLogin} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
+            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} addURLHandler= {this.facebookLoginHandler} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
         );
     }
 }

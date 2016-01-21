@@ -2,6 +2,7 @@
 
 "use strict";
 import FacebookClient from "../../src/js/facebook/FacebookClient.js";
+import FacebookLogin from "../../src/js/facebook/FacebookLogin.js";
 import LoginPage from "../../src/js/login/pages/LoginPage.jsx";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 
@@ -55,6 +56,9 @@ describe("FacebookClient", () => {
         beforeEach(() => {
             sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
+            sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
+                return Promise.resolve(true);
+            } });
         });
 
         afterEach(() => {
@@ -118,6 +122,9 @@ describe("FacebookClient", () => {
             accessToken = "123";
             sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
+            sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
+                return Promise.resolve(true);
+            } });
         });
 
         afterEach(() => {
@@ -142,8 +149,17 @@ describe("FacebookClient", () => {
     });
 
     describe("getBatchPosts", ()=> {
-        before("getPosts", () => {
-            accessToken = "test-access-token";
+        let sandbox = null, user = "test2";
+        beforeEach("getPosts", () => {
+            sandbox = sinon.sandbox.create();
+            sandbox.stub(LoginPage, "getUserName").returns(user);
+            sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
+                return Promise.resolve(true);
+            } });
+        });
+
+        afterEach("getPosts", () => {
+            sandbox.restore();
         });
 
         it("should get all posts from the batch of urls", (done)=> {
@@ -160,7 +176,7 @@ describe("FacebookClient", () => {
                     { "id": "fbid1", "url": "@Bangalore since:2016-01-02", "timestamp": 123456 },
                     { "id": "fbid2", "url": "@Chennai since:2016-01-02", "timestamp": 123456 }
                 ],
-                "accessToken": accessToken
+                "userName": user
             };
 
             let fbPostMap = {
@@ -173,17 +189,14 @@ describe("FacebookClient", () => {
             };
             let requestHeader = { "Accept": "application/json", "Content-type": "application/json" };
             let ajaxClient = new AjaxClient(serverUrl);
-            let ajaxInstanceStub = sinon.stub(AjaxClient, "instance");
+            let ajaxInstanceStub = sandbox.stub(AjaxClient, "instance");
             ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
-            let ajaxPostMock = sinon.mock(ajaxClient).expects("post");
+            let ajaxPostMock = sandbox.mock(ajaxClient).expects("post");
             ajaxPostMock.withArgs(requestHeader, ajaxPostData).returns(Promise.resolve(fbPostMap));
-
             let facebookClient = new FacebookClient(accessToken);
             facebookClient.fetchBatchPosts(postData).then(posts => {
                 assert.deepEqual(posts, fbPostMap);
                 ajaxPostMock.verify();
-                AjaxClient.instance.restore();
-                ajaxClient.post.restore();
                 done();
             });
         });

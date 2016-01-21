@@ -12,8 +12,8 @@ import csp from "helmet-csp";
 let app = express();
 app.use(helmet.hidePoweredBy());
 app.use(csp({
- 	scriptSrc : ["'self'", "'unsafe-eval'"],
- 	styleSrc : ["'self'", "'unsafe-inline'"]
+	scriptSrc : ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net"],
+	styleSrc : ["'self'", "'unsafe-inline'"]
  }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));

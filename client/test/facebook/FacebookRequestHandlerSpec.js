@@ -3,12 +3,24 @@
 "use strict";
 import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
 import FacebookClient from "../../src/js/facebook/FacebookClient.js";
+import FacebookLogin from "../../src/js/facebook/FacebookLogin.js";
 
 import sinon from "sinon";
 import { assert } from "chai";
 import "../helper/TestHelper.js";
 
 describe("FacebookRequestHandler", () => {
+
+    before("", () => {
+        sinon.stub(FacebookLogin, "instance").returns({ "login": () => {
+            return Promise.resolve(true);
+        } });
+    });
+
+    after("getPosts", () => {
+        FacebookLogin.instance.restore();
+    });
+
     describe("getPosts", () => {
         let nodeUrl = null, accessToken = null, facebookOriginalFeeds = null;
         before("getPosts", () => {

@@ -3,8 +3,9 @@
 import CouchSession from "../CouchSession";
 import CouchClient from "../CouchClient";
 import ApplicationConfig from "../config/ApplicationConfig";
+import DateUtil from "../util/DateUtil";
 
-let _dbinstance = null;
+let _dbInstance = null, loginTime = null;
 export default class AdminDbClient {
     static instance() {
         return new AdminDbClient();
@@ -12,7 +13,7 @@ export default class AdminDbClient {
 
     getDb() {
         return new Promise((resolve, reject) => {
-            if(AdminDbClient.getDbInstance()) {
+            if(AdminDbClient.getDbInstance() && !AdminDbClient.isSessionExpired()) {
                 resolve(AdminDbClient.getDbInstance());
             } else {
                 const adminDetails = ApplicationConfig.instance().adminDetails();
@@ -20,8 +21,9 @@ export default class AdminDbClient {
                     if(token && token.split(";")[0]) {
                         this.accessToken = token.split(";")[0].split("=")[1];
                     }
-                    _dbinstance = CouchClient.instance(adminDetails.db, this.accessToken);
-                    resolve(_dbinstance);
+                    _dbInstance = CouchClient.instance(adminDetails.db, this.accessToken);
+                    loginTime = DateUtil.getCurrentTime();
+                    resolve(_dbInstance);
                 }).catch((error) => {
                     reject(error);
                 });
@@ -44,7 +46,12 @@ export default class AdminDbClient {
     }
 
 
+    static isSessionExpired() {
+        let minutes = 5, seconds = 60, milliseconds = 1000;
+        return DateUtil.getCurrentTime() > loginTime + (minutes * seconds * milliseconds);
+    }
+
     static getDbInstance() {
-        return _dbinstance;
+        return _dbInstance;
     }
 }
