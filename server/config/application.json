@@ -4,9 +4,9 @@
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
     "adminDetails": {
-      "username": "admin",
-      "password": "admin",
-      "db": "admin"
+      "username": "common",
+      "password": "common",
+      "db": "common"
     },
     "facebook": {
       "url": "https://graph.facebook.com/v2.5",
@@ -22,30 +22,50 @@
     }
   },
   "development": {
+    "adminDetails": {
+      "username": "common",
+      "password": "common",
+      "db": "common"
+    }
   },
   "ci_dev": {
     "serverIpAddress": "46.101.252.58",
     "serverPort": 5000,
-    "couchDbUrl": "http://46.101.252.58:5984"
+    "couchDbUrl": "http://46.101.252.58:5984",
+    "adminDetails": {
+      "username": "common",
+      "password": "common",
+      "db": "common"
+    }
   },
   "ci_qa": {
     "serverIpAddress": "46.101.195.133",
     "serverPort": 5000,
-    "couchDbUrl": "http://46.101.195.133:5984"
+    "couchDbUrl": "http://46.101.195.133:5984",
+    "adminDetails": {
+      "username": "common",
+      "password": "common",
+      "db": "common"
+    }
   },
   "pre-prod": {
     "serverIpAddress": "46.101.185.145",
     "serverPort": 5000,
-    "couchDbUrl": "http://46.101.185.145:5984"
+    "couchDbUrl": "http://46.101.185.145:5984",
+    "adminDetails": {
+      "username": "common",
+      "password": "common",
+      "db": "common"
+    }
   },
   "qa": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
     "adminDetails": {
-      "username": "admin",
-      "password": "admin",
-      "db": "admin"
+      "username": "common",
+      "password": "common",
+      "db": "common"
     },
     "facebook": {
       "url": "http://localhost:3000",
@@ -60,6 +80,10 @@
     }
   },
   "production": {
-
+    "adminDetails": {
+      "username": "common",
+      "password": "common",
+      "db": "common"
+    }
   }
 }
