@@ -11,14 +11,16 @@ var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
 var eslint = require("gulp-eslint");
 var exec = require("child_process").exec;
-var replace = require("gulp-replace");
-var argv = require("yargs").argv;
 var rename = require("gulp-rename");
 var del = require("del");
 var cordova = require("cordova-lib").cordova.raw;
 var minify = require("gulp-minify");
 var cssnano = require("gulp-cssnano");
+var environments = require("gulp-environments");
 require("babel/register");
+
+var development = environments.development;
+var production = environments.production;
 
 
 gulp.task("mobile:remove-directory", function(cb) {
@@ -83,7 +85,7 @@ gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
           .pipe(sass())
           .pipe(concat(parameters.client.cssMainFile))
-          .pipe(cssnano())
+          .pipe(production(cssnano()))
           .pipe(gulp.dest(parameters.client.distFolder));
 });
 
@@ -94,15 +96,13 @@ gulp.task("client:images", function() {
 });
 
 gulp.task("client:build-sources", function() {
-    let clientEnvironment = argv.client_environment || "development";
-
     gulp.src(parameters.client.srcPath + "/index.jsx")
         .pipe(browserify({
-            "debug": true,
+            "debug": development(),
             "transform": ["babelify"]
         }))
         .pipe(rename("app.js"))
-        .pipe(minify())
+        .pipe(production(minify()))
         .pipe(gulp.dest(parameters.client.distFolder));
 
     gulp.src(parameters.client.clientAppPath + "/config/*.js")
