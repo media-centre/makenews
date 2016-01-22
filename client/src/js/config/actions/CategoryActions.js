@@ -14,7 +14,6 @@ import TwitterResponseParser from "../../twitter/TwitterResponseParser";
 import RssRequestHandler from "../../rss/RssRequestHandler.js";
 import RssResponseParser from "../../rss/RssResponseParser";
 import TwitterDb from "../../twitter/TwitterDb";
-import EnvironmentConfig from "../../EnvironmentConfig.js";
 import FacebookDb from "../../facebook/FacebookDb.js";
 import DateTimeUtil from "../../utils/DateTimeUtil.js";
 
@@ -60,7 +59,7 @@ export function addRssUrlAsync(categoryId, url, callback) {
 
 export function addFacebookUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        FacebookRequestHandler.getPosts(EnvironmentConfig.instance().get("facebookAccessToken"), url).then((originalPosts)=> {
+        FacebookRequestHandler.getPosts(url).then((originalPosts)=> {
             let sortedDates = DateTimeUtil.getSortedUTCDates(originalPosts.map(feed => {
                 return feed.created_time;
             }));

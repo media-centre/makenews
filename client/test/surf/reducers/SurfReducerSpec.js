@@ -2,11 +2,22 @@
 
 "use strict";
 import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer.js";
+import Locale from "../../../src/js/utils/Locale.js";
 import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS } from "../../../src/js/surf/actions/AllFeedsActions.js";
 import { expect } from "chai";
+import sinon from "sinon";
 
-let messages = { "fetchingFeeds": "Fetching feeds...", "noFeeds": "No feeds available" };
 describe("Surf Reducer", () => {
+    let messages = { "fetchingFeeds": "Fetching feeds...", "noFeeds": "No feeds available" };
+    before("Surf Reducer", () => {
+        sinon.stub(Locale, "applicationStrings").returns({ "messages": { "surfPage": messages } });
+    });
+
+    after("Surf Reducer", () => {
+        Locale.applicationStrings.restore();
+    });
+
+
     describe("allFeeds", () => {
         it("default state should return empty list", () => {
             expect({ "feeds": [], "messages": messages }).to.deep.equal(allFeeds());

@@ -29,7 +29,7 @@ export default class AllUrlHelper {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/app.js/g, /^\/app.css/g, /^\/images\/.*/g, /^\/fonts\/.*/g];
+        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/app.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
         return whitelistUrls.filter((item) => {
             return url.match(item);
         }).length > 0;

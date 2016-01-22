@@ -22,10 +22,9 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("getPosts", () => {
-        let nodeUrl = null, accessToken = null, facebookOriginalFeeds = null;
+        let nodeUrl = null, facebookOriginalFeeds = null;
         before("getPosts", () => {
             nodeUrl = "test-node-name";
-            accessToken = "test-access-token";
             facebookOriginalFeeds = {
                 "posts": [
                     {
@@ -61,13 +60,13 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should fetch and parse the facebook posts which can be saved into the db directly", (done) => {
-            let faceFacebookClient = new FacebookClient(accessToken);
+            let faceFacebookClient = new FacebookClient();
             let facebookClientMock = sinon.mock(FacebookClient).expects("instance");
-            facebookClientMock.withArgs(accessToken).returns(faceFacebookClient);
+            facebookClientMock.withArgs().returns(faceFacebookClient);
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchPosts");
             facebookFetchPostsMock.withArgs(nodeUrl).returns(Promise.resolve(facebookOriginalFeeds));
 
-            FacebookRequestHandler.getPosts(accessToken, nodeUrl).then(posts => {
+            FacebookRequestHandler.getPosts(nodeUrl).then(posts => {
                 assert.strictEqual(2, posts.length);
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
@@ -78,13 +77,13 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should resolve to empty posts if there is any issue while fetching feeds from facebook", (done) => {
-            let faceFacebookClient = new FacebookClient(accessToken);
+            let faceFacebookClient = new FacebookClient();
             let facebookClientMock = sinon.mock(FacebookClient).expects("instance");
-            facebookClientMock.withArgs(accessToken).returns(faceFacebookClient);
+            facebookClientMock.withArgs().returns(faceFacebookClient);
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchPosts");
             facebookFetchPostsMock.withArgs(nodeUrl).returns(Promise.reject("error"));
 
-            FacebookRequestHandler.getPosts(accessToken, nodeUrl).catch(posts => {
+            FacebookRequestHandler.getPosts(nodeUrl).catch(posts => {
                 assert.strictEqual(0, posts.length);
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
@@ -121,10 +120,6 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("getBatchPosts", ()=> {
-        let accessToken = null;
-        before("getPosts", () => {
-            accessToken = "test-access-token";
-        });
 
         it("should get all posts from the batch of urls", (done)=> {
 
@@ -145,14 +140,14 @@ describe("FacebookRequestHandler", () => {
             };
 
 
-            let faceFacebookClient = new FacebookClient(accessToken);
+            let faceFacebookClient = new FacebookClient();
             let facebookClientMock = sinon.mock(FacebookClient).expects("instance");
-            facebookClientMock.withArgs(accessToken).returns(faceFacebookClient);
+            facebookClientMock.withArgs().returns(faceFacebookClient);
 
             let facebookFetchPostsMock = sinon.mock(faceFacebookClient).expects("fetchBatchPosts");
             facebookFetchPostsMock.withArgs(postData).returns(Promise.resolve(fbPostMap));
 
-            FacebookRequestHandler.getBatchPosts(accessToken, postData).then(() => {
+            FacebookRequestHandler.getBatchPosts(postData).then(() => {
                 facebookClientMock.verify();
                 facebookFetchPostsMock.verify();
 

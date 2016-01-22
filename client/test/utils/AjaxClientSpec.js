@@ -3,6 +3,7 @@
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 import UserSession from "../../src/js/user/UserSession.js";
+import AppWindow from "../../src/js/utils/AppWindow.js";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import { expect } from "chai";
 import nock from "nock";
@@ -15,10 +16,15 @@ describe("AjaxClient", function() {
         let userSession = new UserSession();
         sandbox.stub(UserSession, "instance").returns(userSession);
         userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
+        let appWindow = new AppWindow();
+        sinon.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost:5000");
+        sinon.stub(AppWindow, "instance").returns(appWindow);
+
     });
 
     afterEach("afterEach", () => {
         sandbox.restore();
+        AppWindow.instance.restore();
     });
 
     describe("post", () => {

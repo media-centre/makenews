@@ -12,13 +12,12 @@ import "../helper/TestHelper.js";
 
 describe("FacebookClient", () => {
 
-    let accessToken = null, serverUrl = null;
+    let serverUrl = null;
     describe("fetchPosts", () => {
         let webUrl = null, response = null, sandbox = null, userName = "test1";
         before("FacebookClient", () => {
             webUrl = "https://www.facebook.com/thehindu";
             serverUrl = "/facebook-posts";
-            accessToken = "123";
             response = {
                 "posts": [
                     {
@@ -72,7 +71,7 @@ describe("FacebookClient", () => {
             let ajaxGetMock = sandbox.mock(ajaxClient).expects("get");
             ajaxGetMock.withArgs({ "webUrl": webUrl, "userName": userName }).returns(Promise.resolve(response));
 
-            let facebookClient = new FacebookClient(accessToken);
+            let facebookClient = new FacebookClient();
             facebookClient.fetchPosts(webUrl).then(posts => {
                 assert.strictEqual("test-link1", posts.posts[0].link);
                 assert.strictEqual("test-link2", posts.posts[1].link);
@@ -90,7 +89,7 @@ describe("FacebookClient", () => {
             let ajaxGetMock = sandbox.mock(ajaxClient).expects("get");
             ajaxGetMock.withArgs({ "webUrl": webUrl, "userName": userName }).returns(Promise.reject("error while fetching posts"));
 
-            let facebookClient = new FacebookClient(accessToken);
+            let facebookClient = new FacebookClient();
             facebookClient.fetchPosts(webUrl).catch(error => {
                 assert.strictEqual("error while fetching posts", error);
                 ajaxGetMock.verify();
@@ -99,15 +98,8 @@ describe("FacebookClient", () => {
 
         });
 
-        it("throw error if the access token is empty", () => {
-            let facebookClientFun = () => {
-                return new FacebookClient(null);
-            };
-            assert.throw(facebookClientFun, Error, "access token can not be empty");
-        });
-
         it("reject with error if the node url is empty", (done) => {
-            let facebookClient = new FacebookClient(accessToken);
+            let facebookClient = new FacebookClient();
             facebookClient.fetchPosts(null).catch(error => {
                 assert.strictEqual(error, "web url cannot be empty");
                 done();
@@ -116,10 +108,9 @@ describe("FacebookClient", () => {
     });
 
     describe("setLongLivedToken", () => {
-        let url = "/facebook-set-token", sandbox = null, userName = "test2";
+        let url = "/facebook-set-token", sandbox = null, userName = "test2", accessToken = "123";
 
         beforeEach(() => {
-            accessToken = "123";
             sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
             sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
@@ -193,7 +184,7 @@ describe("FacebookClient", () => {
             ajaxInstanceStub.withArgs(serverUrl).returns(ajaxClient);
             let ajaxPostMock = sandbox.mock(ajaxClient).expects("post");
             ajaxPostMock.withArgs(requestHeader, ajaxPostData).returns(Promise.resolve(fbPostMap));
-            let facebookClient = new FacebookClient(accessToken);
+            let facebookClient = new FacebookClient();
             facebookClient.fetchBatchPosts(postData).then(posts => {
                 assert.deepEqual(posts, fbPostMap);
                 ajaxPostMock.verify();

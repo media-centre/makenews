@@ -11,9 +11,6 @@ export default class FacebookClient {
         return new FacebookClient(accessToken);
     }
     constructor(accessToken) {
-        if(StringUtil.isEmptyString(accessToken)) {
-            throw new Error("access token can not be empty");
-        }
         this.accessToken = accessToken;
         this.facebookLogin = FacebookLogin.instance();
     }

@@ -1,8 +1,8 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import EnvironmentConfig from "../EnvironmentConfig.js";
 import UserSession from "../user/UserSession.js";
+import AppWindow from "../utils/AppWindow.js";
 
 export default class AjaxClient {
   static instance(url) {
@@ -10,7 +10,7 @@ export default class AjaxClient {
   }
   constructor(url) {
       UserSession.instance().setLastAccessedTime();
-      this.url = EnvironmentConfig.instance().get("serverUrl") + url;
+      this.url = AppWindow.instance().get("serverUrl") + url;
   }
 
   post(headers, data) {

@@ -3,7 +3,6 @@
 "use strict";
 import AjaxClient from "../utils/AjaxClient.js";
 import CategoryDb from "../config/db/CategoryDb.js";
-import EnvironmentConfig from "../../js/EnvironmentConfig.js";
 import RssResponseParser from "../rss/RssResponseParser.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
@@ -69,9 +68,8 @@ export default class RefreshFeedsHandler {
     }
 
     _handleFacebookBatch(facebookBatch) {
-        let token = EnvironmentConfig.instance().get("facebookAccessToken");
         if(facebookBatch.length > 0) {
-            FacebookRequestHandler.getBatchPosts(token, this._constructRequestData(facebookBatch)).then((feedMap)=> {
+            FacebookRequestHandler.getBatchPosts(this._constructRequestData(facebookBatch)).then((feedMap)=> {
                 Object.keys(feedMap.posts).map((sourceId)=> {
                     if(feedMap.posts[sourceId] === "failed") {
                         this._updateCompletionPercentage();

@@ -5,9 +5,9 @@ import FacebookClient from "./FacebookClient.js";
 
 export default class FacebookRequestHandler {
 
-    static getPosts(accessToken, nodeUrl) {
+    static getPosts(nodeUrl) {
         return new Promise((resolve, reject) => {
-            let facebookClient = FacebookClient.instance(accessToken);
+            let facebookClient = FacebookClient.instance();
             facebookClient.fetchPosts(nodeUrl).then(originalFeeds => {
                 resolve(originalFeeds.posts);
             }).catch(error => { // eslint-disable-line
@@ -21,9 +21,9 @@ export default class FacebookRequestHandler {
         facebookClient.setLongLivedToken();
     }
 
-    static getBatchPosts(accessToken, postData) {
+    static getBatchPosts(postData) {
         return new Promise((resolve, reject)=> {
-            let facebookClient = FacebookClient.instance(accessToken);
+            let facebookClient = FacebookClient.instance();
             facebookClient.fetchBatchPosts(postData).then(fbPostMap => {
                 resolve(fbPostMap);
             }).catch(error => { // eslint-disable-line

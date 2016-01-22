@@ -10,7 +10,6 @@ import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler
 import FacebookDb from "../../src/js/facebook/FacebookDb.js";
 import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
 import TwitterDb from "../../src/js/twitter/TwitterDb.js";
-import EnvironmentConfig from "../../src/js/EnvironmentConfig.js";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -150,7 +149,6 @@ describe("RefreshFeedsHandler", () => {
                     done();
                 }
             };
-            let token = EnvironmentConfig.instance().get("facebookAccessToken");
             let fbUrls = [
                 { "url": "fbUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
                 { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" },
@@ -173,7 +171,7 @@ describe("RefreshFeedsHandler", () => {
                 }
             };
 
-            fbRequestHandlerStub.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+            fbRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
             fbDbStub.returns(Promise.resolve());
             let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
             refreshFeedsHandler.totalNumberOfUrls = 4;
@@ -370,7 +368,6 @@ describe("RefreshFeedsHandler", () => {
                 FacebookDb.addFacebookFeeds.restore();
             });
             it("should parse and add facebook feeds", ()=> {
-                let token = EnvironmentConfig.instance().get("facebookAccessToken");
                 let fbUrls = [
                     { "url": "fbUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
                     { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" }
@@ -387,7 +384,7 @@ describe("RefreshFeedsHandler", () => {
                     }
                 };
 
-                fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                fbRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
                 let refreshFeedsHandler = new RefreshFeedsHandler();
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
             });
@@ -414,7 +411,6 @@ describe("RefreshFeedsHandler", () => {
                 PouchClient.updateDocument.restore();
             });
             it("should update latest timestamp post refresh", ()=> {
-                let token = EnvironmentConfig.instance().get("facebookAccessToken");
 
                 let urlDocument = {
                     "docType": "source",
@@ -464,7 +460,7 @@ describe("RefreshFeedsHandler", () => {
                         "tags": []
                     }];
 
-                fbRequestHandlerMock.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                fbRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
                 addFacebookFeedsMock.withArgs(bulkUpdateFeeds).returns(Promise.resolve());
                 pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
                 pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
@@ -491,7 +487,6 @@ describe("RefreshFeedsHandler", () => {
                 displayAllFeedsAsync = () => {
                     uiCallback();
                 };
-                let token = EnvironmentConfig.instance().get("facebookAccessToken");
                 let fbUrls = [
                     { "url": "fbUrl2", "latestFeedTimestamp": "1234", "_id": "2" }
                 ];
@@ -505,7 +500,7 @@ describe("RefreshFeedsHandler", () => {
                     }
                 };
 
-                fbRequestHandlerStub.withArgs(token, { "data": postData }).returns(Promise.resolve(fbFeedMap));
+                fbRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
                 fbDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
@@ -695,8 +690,7 @@ describe("RefreshFeedsHandler", () => {
             "latestFeedTimestamp": "Jan 6, 2016 9:21 AM"
         }];
         let postData = {
-            "data": [{ "source": "twitter", "url": "" }],
-            "facebookAccessToken": EnvironmentConfig.instance().get("facebookAccessToken")
+            "data": [{ "source": "twitter", "url": "" }]
         };
         let sandbox = sinon.sandbox.create();
         let categoryDbMock = sandbox.mock(CategoryDb).expects("fetchAllSources");

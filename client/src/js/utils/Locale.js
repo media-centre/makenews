@@ -1,16 +1,17 @@
 "use strict";
-import appEn from "../../../config/appEn.js";
+import AppWindow from "./AppWindow.js";
 
 export default class Locale {
     static applicationStrings(language = Locale.languages.ENGLISH) {
         if(!language) {
             throw new Error("language can not be null");
         }
+        let appWindowInstance = AppWindow.instance();
         switch(language) {
         case Locale.languages.ENGLISH:
-            return appEn;
+            return appWindowInstance.get("appEn");
         default:
-            return appEn;
+            return appWindowInstance.get("appEn");
         }
     }
 }

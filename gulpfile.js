@@ -101,10 +101,13 @@ gulp.task("client:build-sources", function() {
             "debug": true,
             "transform": ["babelify"]
         }))
-        .pipe(replace("__CONTENT_DISCOVERY_ENVIRONMENT__", clientEnvironment))
         .pipe(rename("app.js"))
         .pipe(minify())
         .pipe(gulp.dest(parameters.client.distFolder));
+
+    gulp.src(parameters.client.clientAppPath + "/config/*.js")
+        .pipe(gulp.dest(parameters.client.distFolder + "/config"));
+
 });
 
 
