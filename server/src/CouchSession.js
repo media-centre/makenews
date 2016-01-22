@@ -26,18 +26,22 @@ export default class CouchSession {
   }
 
   static authenticate(token) {
+      let authSessionToken = "AuthSession=" + token;
       return new Promise((resolve, reject) => {
           request.get({
               "url": ApplicationConfig.instance().dbUrl() + "/_session",
               "headers": {
-                  "Cookie": "AuthSession=" + token
+                  "Cookie": authSessionToken
               }
           }, (error, response, body) => {
               if(CouchSession.requestSuccessful(error, response)) {
                   let userJson = JSON.parse(body);
-
                   if(StringUtil.validNonEmptyString(userJson.userCtx.name)) {
-                      resolve(userJson.userCtx.name);
+                      if(response.headers["set-cookie"]) {
+                          resolve(response.headers["set-cookie"][0]);
+                      } else {
+                          resolve(authSessionToken);
+                      }
                   }
                   reject("");
               }

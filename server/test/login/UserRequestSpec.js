@@ -98,37 +98,5 @@ describe("UserRequest", () => {
             });
         });
     });
-
-    describe("getUserName", () => {
-        let token = null, couchSessionAuthenticateMock = null;
-        beforeEach("getUserName", () => {
-            token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
-            userName = "test_user_name";
-            couchSessionAuthenticateMock = sinon.mock(CouchSession).expects("authenticate");
-        });
-        afterEach("getUserName", () => {
-            CouchSession.authenticate.restore();
-        });
-
-        it("should give the user name if the valid token is given", (done) => {
-            couchSessionAuthenticateMock.withArgs(token).returns(Promise.resolve(userName));
-            let userRequest = UserRequest.instance(userName, password);
-            userRequest.getUserName(token).then(actualUsserName => {
-                assert.strictEqual(userName, actualUsserName);
-                couchSessionAuthenticateMock.verify();
-                done();
-            });
-        });
-
-        it("should reject with error if the token is invalid", (done) => {
-            couchSessionAuthenticateMock.withArgs(token).returns(Promise.reject("error"));
-            let userRequest = UserRequest.instance(userName, password);
-            userRequest.getUserName(token).catch(error => {
-                assert.strictEqual("can not get the user name", error);
-                couchSessionAuthenticateMock.verify();
-                done();
-            });
-        });
-    });
 });
 

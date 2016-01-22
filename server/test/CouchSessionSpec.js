@@ -68,8 +68,7 @@ describe("CouchSessionSpec", () => {
     });
 
     describe("authenticate", () => {
-
-        it("should send the valid user name if it is successful", (done) => {
+        it("should send the auth token if authCookie is present in couch response", (done) => {
             let token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }
@@ -77,11 +76,28 @@ describe("CouchSessionSpec", () => {
             .get("/_session")
             .reply(HttpResponseHandler.codes.OK, {
                 "userCtx": { "name": "test_user", "roles": [] }
-            }
-            );
+            }, {
+                "set-cookie": ["test_token"]
+            });
 
-            CouchSession.authenticate(token).then((userName) => {
-                expect("test_user").to.equal(userName);
+            CouchSession.authenticate(token).then((newToken) => {
+                expect(newToken).to.have.string("test_token");
+                done();
+            });
+        });
+
+        it("should send the auth token if authCookie is present in couch response", (done) => {
+            let token = "12345678";
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + token }
+            })
+            .get("/_session")
+            .reply(HttpResponseHandler.codes.OK, {
+                "userCtx": { "name": "test_user", "roles": [] }
+            });
+
+            CouchSession.authenticate(token).then((newToken) => {
+                expect(newToken).to.have.string(token);
                 done();
             });
         });

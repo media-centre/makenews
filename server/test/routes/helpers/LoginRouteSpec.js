@@ -21,7 +21,7 @@ describe("LoginRoute", () => {
         Logger.instance.restore();
     });
     describe("handle", () => {
-        let token = null, authSessionCookie = null, next = null, userReqGetAuthSessionCookieMock = null, userReqGetUserNameMock = null, userRequest = null;
+        let token = null, authSessionCookie = null, next = null, userReqGetAuthSessionCookieMock = null, userRequest = null;
         beforeEach("handle", () => {
             request = {
                 "body": {
@@ -34,12 +34,10 @@ describe("LoginRoute", () => {
             userRequest = new UserRequest(userName, password);
             sinon.stub(UserRequest, "instance").withArgs(userName, password).returns(userRequest);
             userReqGetAuthSessionCookieMock = sinon.mock(userRequest).expects("getAuthSessionCookie");
-            userReqGetUserNameMock = sinon.mock(userRequest).expects("getUserName");
         });
 
         afterEach("handle", () => {
             userRequest.getAuthSessionCookie.restore();
-            userRequest.getUserName.restore();
             UserRequest.instance.restore();
         });
 
@@ -66,7 +64,6 @@ describe("LoginRoute", () => {
             };
             next = () => {
                 userReqGetAuthSessionCookieMock.verify();
-                userReqGetUserNameMock.verify();
                 EnvironmentConfig.instance.restore();
                 done();
             };
@@ -83,7 +80,6 @@ describe("LoginRoute", () => {
             sinon.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
-            userReqGetUserNameMock.withArgs(token).returns(Promise.resolve(userName));
 
             let loginRoute = new LoginRoute(request, response, next);
             loginRoute.handle();
@@ -106,30 +102,6 @@ describe("LoginRoute", () => {
             };
 
             userReqGetAuthSessionCookieMock.returns(Promise.reject("error"));
-
-            let loginRoute = new LoginRoute(request, response, next);
-            loginRoute.handle();
-        });
-
-        it("should respond with unauthorized if fetching user name is failed", (done) => {
-            response = {
-                "status": (statusCode) => {
-                    assert.equal(HttpResponseHandler.codes.UNAUTHORIZED, statusCode);
-                    return response;
-                },
-                "json": (data) => {
-                    assert.deepEqual({ "message": "unauthorized" }, data);
-                }
-            };
-
-            next = () => {
-                userReqGetAuthSessionCookieMock.verify();
-                userReqGetUserNameMock.verify();
-                done();
-            };
-
-            userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
-            userReqGetUserNameMock.withArgs(token).returns(Promise.reject("reject"));
 
             let loginRoute = new LoginRoute(request, response, next);
             loginRoute.handle();

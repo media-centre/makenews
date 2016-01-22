@@ -2,6 +2,7 @@
 import AllUrlHelper from "./helpers/AllUrlHelper.js";
 import LoginRoute from "./helpers/LoginRoute.js";
 import LogoutRouterHelper from "./helpers/LogoutRouteHelper.js";
+import RenewSessionHelper from "./helpers/RenewSessionHelper.js";
 import RouteLogger from "./RouteLogger.js";
 
 
@@ -29,6 +30,15 @@ export default (app) => {
             AllUrlHelper.allUrlsCallback(request, next);
         } catch(error) {
             RouteLogger.instance().error("AuthorizationRoutes: all url error", error);
+        }
+    });
+
+    app.get("/renew_session", (request, response) => {
+        RouteLogger.instance().info("AuthorizationRoutes: /renew_session request received. url = ", request.url);
+        try {
+            new RenewSessionHelper(request, response).authenticateAgain();
+        } catch(error) {
+            RouteLogger.instance().error("/session error", error);
         }
     });
 };
