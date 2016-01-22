@@ -4,11 +4,10 @@
 import DbParameters from "./DbParameters.js";
 import UserSession from "../user/UserSession.js";
 import PouchDB from "pouchdb";
-import moment from "moment";
 
 export default class DbSession {
     static instance() {
-        UserSession.instance().setLastAccessedTime(moment().valueOf());
+        UserSession.instance().setLastAccessedTime();
         return new Promise((resolve, reject) => {
             if(this.db) {
                 resolve(this.db);

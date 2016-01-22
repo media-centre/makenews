@@ -21,7 +21,7 @@ export default class AppSessionStorage {
     }
 
     getLocalStorage() {
-        return window.localStorage;
+        return localStorage;
     }
 
     remove(key) {
@@ -30,12 +30,14 @@ export default class AppSessionStorage {
     }
 
     clear() {
-        this.remove(AppSessionStorage.KEYS.USERNAME);
-        this.remove(AppSessionStorage.KEYS.REMOTEDBURL);
+        Object.keys(AppSessionStorage.KEYS).forEach((key) => {
+            this.remove(AppSessionStorage.KEYS[key]);
+        });
     }
 }
 
 AppSessionStorage.KEYS = {
     "USERNAME": "UserName",
-    "REMOTEDBURL": "RemoteUrl"
+    "REMOTEDBURL": "RemoteUrl",
+    "LAST_ACCESSED_TIME": "LastAccessedTime"
 };

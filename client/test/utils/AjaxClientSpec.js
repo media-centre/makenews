@@ -2,11 +2,25 @@
 
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
+import UserSession from "../../src/js/user/UserSession.js";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import { expect } from "chai";
 import nock from "nock";
+import sinon from "sinon";
 
 describe("AjaxClient", function() {
+    let userSessionMock = null, sandbox = null;
+    beforeEach("beforeEach", () => {
+        sandbox = sinon.sandbox.create();
+        let userSession = new UserSession();
+        sandbox.stub(UserSession, "instance").returns(userSession);
+        userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
+    });
+
+    afterEach("afterEach", () => {
+        sandbox.restore();
+    });
+
     describe("post", () => {
         it("should post and return success promise on success", function(done) {
             let url = "/login";
@@ -16,6 +30,7 @@ describe("AjaxClient", function() {
                 .post(url, JSON.stringify(data))
                 .reply(HttpResponseHandler.codes.OK, { "data": "success" }, {});
             let ajax = new AjaxClient(url);
+            userSessionMock.verify();
             ajax.post(headers, data)
                 .then(succesData => {
                     expect(succesData.data).to.eq("success");

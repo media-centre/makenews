@@ -86,7 +86,7 @@ describe("AppSessionStorage", ()=> {
         it("should clear all keys from local storage", () => {
             let appSessionStorage = new AppSessionStorage();
             let appSessionStorageMock = sinon.mock(appSessionStorage).expects("remove");
-            appSessionStorageMock.twice();
+            appSessionStorageMock.thrice();
             appSessionStorage.clear();
             appSessionStorageMock.verify();
             appSessionStorage.remove.restore();

@@ -15,11 +15,11 @@ export default class UserSession {
     }
 
     getLastAccessedTime() {
-        return AppSessionStorage.instance().getValue("lastAccessedTime");
+        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME);
     }
 
-    setLastAccessedTime(time) {
-        AppSessionStorage.instance().setValue("lastAccessedTime", time);
+    setLastAccessedTime(time = moment().valueOf()) {
+        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time);
     }
 
     isActiveContinuously() {
@@ -28,7 +28,7 @@ export default class UserSession {
     }
 
     startSlidingSession() {
-        this.setLastAccessedTime(moment().valueOf());
+        this.setLastAccessedTime();
         this._continueSessionIfActive();
     }
 

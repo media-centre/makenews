@@ -9,29 +9,43 @@ import moment from "moment";
 import sinon from "sinon";
 
 describe("UserSession", () => {
-    let history = null;
+    let history = null, clearTimer = null;
     before("before", () => {
+        let tenMinutes = 600000;
+        clearTimer = (clock, timeToMoveForward = tenMinutes) => {
+            clock.tick(timeToMoveForward);
+        };
         history = { "push": () => {} };
     });
 
-    it("should set lastAccessedTime", () => {
-        let sandbox = sinon.sandbox.create();
-        let appSessionStorage = new AppSessionStorage();
-        sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-        let lastAccessedTime = new Date().getTime();
-        let userSession = UserSession.instance(history);
-        let appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
-        let appSessionStorageGetMock = sandbox.mock(appSessionStorage).expects("getValue");
-        appSessionStorageSetMock.withArgs("lastAccessedTime", lastAccessedTime);
-        appSessionStorageGetMock.withArgs("lastAccessedTime").returns(lastAccessedTime);
-        userSession.setLastAccessedTime(lastAccessedTime);
-        assert.strictEqual(userSession.getLastAccessedTime(), lastAccessedTime);
-        appSessionStorageSetMock.verify();
-        appSessionStorageGetMock.verify();
-        sandbox.restore();
+    describe("setLastAccessedTime", () => {
+        it("should set lastAccessedTime", () => {
+            let sandbox = sinon.sandbox.create();
+            let appSessionStorage = new AppSessionStorage();
+            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+            let lastAccessedTime = new Date().getTime();
+            let userSession = UserSession.instance(history);
+            let appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
+            let appSessionStorageGetMock = sandbox.mock(appSessionStorage).expects("getValue");
+            appSessionStorageSetMock.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, lastAccessedTime);
+            appSessionStorageGetMock.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
+            userSession.setLastAccessedTime(lastAccessedTime);
+            assert.strictEqual(userSession.getLastAccessedTime(), lastAccessedTime);
+            appSessionStorageSetMock.verify();
+            appSessionStorageGetMock.verify();
+            sandbox.restore();
+        });
+
+        it("should set lastAccessedTime to current time when no parameters passed", () => {
+            let lastAccessedTime = new Date().getTime();
+            let userSession = UserSession.instance(history);
+            userSession.setLastAccessedTime();
+            assert.strictEqual(new Date(userSession.getLastAccessedTime()).getHours(), new Date(lastAccessedTime).getHours());
+        });
     });
 
-    describe("", () => {
+
+    describe("user activity", () => {
         let appSessionStorage = null, sandbox = null, appSessionStorageGetStub = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
@@ -49,7 +63,7 @@ describe("UserSession", () => {
                 var fiveMinute = 5;
                 let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
                 let userSession = new UserSession(history);
-                appSessionStorageGetStub.withArgs("lastAccessedTime").returns(lastAccessedTime);
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
 
@@ -65,7 +79,7 @@ describe("UserSession", () => {
                 var tenMinute = 10;
                 let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
                 let userSession = new UserSession(history);
-                appSessionStorageGetStub.withArgs("lastAccessedTime").returns(lastAccessedTime);
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
         });
@@ -74,7 +88,7 @@ describe("UserSession", () => {
             it("should logout if user inactive for 9 minutes", () => {
                 let userSession = new UserSession(history);
                 var tenMinute = 10;
-                appSessionStorageGetStub.withArgs("lastAccessedTime").returns(moment().subtract(tenMinute, "m").valueOf());
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(moment().subtract(tenMinute, "m").valueOf());
                 let clock = sandbox.useFakeTimers();
                 let nineMinutes = 540000;
                 let ajaxInstance = new AjaxClient("/logout");
@@ -99,23 +113,28 @@ describe("UserSession", () => {
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
 
                 var fiveMinute = 5;
-                appSessionStorageGetStub.withArgs("lastAccessedTime").returns(moment().add(fiveMinute, "m").valueOf());
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(moment().add(fiveMinute, "m").valueOf());
                 ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
                 let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").never();
                 userSession._continueSessionIfActive();
                 clock.tick(nineMinutes);
                 ajaxGetMock.verify();
+                clearTimer(clock, nineMinutes);
             });
         });
 
-        describe("startSlidingSession", () => {
-            it("should set the lastAccessedTime to current time", () => {
-                let userSession = new UserSession(history);
-                let appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
-                //appSessionStorageSetMock.withArgs("lastAccessedTime", moment().valueOf());
-                userSession.startSlidingSession();
-                appSessionStorageSetMock.verify();
-            });
+    });
+
+    describe("startSlidingSession", () => {
+        it("should set the lastAccessedTime and start timer", () => {
+            let lastAccessedTime = new Date().getTime();
+            let sandbox = sinon.sandbox.create();
+            let clock = sandbox.useFakeTimers();
+            let userSession = UserSession.instance(history);
+            userSession.startSlidingSession();
+            assert.strictEqual(new Date(userSession.getLastAccessedTime()).getHours(), new Date(lastAccessedTime).getHours());
+            clearTimer(clock);
+            sandbox.restore();
         });
     });
 });

@@ -2,12 +2,14 @@
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import EnvironmentConfig from "../EnvironmentConfig.js";
+import UserSession from "../user/UserSession.js";
 
 export default class AjaxClient {
   static instance(url) {
       return new AjaxClient(url);
   }
   constructor(url) {
+      UserSession.instance().setLastAccessedTime();
       this.url = EnvironmentConfig.instance().get("serverUrl") + url;
   }
 
