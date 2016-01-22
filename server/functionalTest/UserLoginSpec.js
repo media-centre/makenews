@@ -16,7 +16,7 @@ describe("UserLoginTests", () => {
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
-                .expect(HttpResponseHandler.codes.OK, "{\"userName\":\"test\",\"message\":\"login successful\"}", done);
+                .expect(HttpResponseHandler.codes.OK, "{\"userName\":\"test\",\"dbParameters\":{\"serverUrl\":\"http://localhost:5000\",\"remoteDbUrl\":\"http://localhost:5984\"}}", done);
 
 
         });
@@ -33,7 +33,7 @@ describe("UserLoginTests", () => {
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
-                .expect(HttpResponseHandler.codes.UNAUTHORIZED, "{\"message\":\"invalid user or password\"}", done);
+                .expect(HttpResponseHandler.codes.UNAUTHORIZED, "{\"message\":\"unauthorized\"}", done);
 
         });
         it("response to /login long  username and password ", (done) => {

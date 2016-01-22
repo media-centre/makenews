@@ -52,7 +52,7 @@ describe("TwitterReaderSpec", () => {
                 });
         });
 
-        it("should timeout if the response from twitter takes more time", (done) => {
+        xit("should timeout if the response from twitter takes more time", (done) => {
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .get("/twitter-feeds?url=@timeout&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
