@@ -1,12 +1,12 @@
 @import "../../utils/variable";
 .surf-page-container {
-  padding: 0px !important;
+  padding: 0 !important;
 
   .refresh-status {
-    height: 8px;
-    padding: 0px;
+    height: 3px;
+    padding: 0;
     position: fixed;
-    left: 0px;
+    left: 0;
     z-index: $min-index;
   }
 
@@ -17,19 +17,22 @@
     .surf-refresh-button.disabled {
       opacity: 0.4;
       cursor: not-allowed;
+      visibility: hidden;
     }
     .surf-refresh-button {
       position: fixed;
       top: 92px;
-      left: 0px;
-      right: 0px;
+      left: 0;
+      right: 0;
       margin: auto;
       max-width: 120px;
       text-align: center;
-      color: $app-header-bg-color;
+      color: $primary-font-color;
       z-index: $min-index;
       cursor: pointer;
       font-size: $small-font-size;
+      background-color: $app-header-bg-color;
+      border-radius: 2px;
 
       span {
         $large-font-size: 20px;
@@ -100,6 +103,12 @@
         @extend .h-v-center;
       }
 
+      .park-feed{
+        height: 25px;
+        width: 25px;
+        cursor: pointer;
+      }
+
       img {
         width: 100%;
         margin: 0px;
@@ -124,7 +133,7 @@
       ul.gallery-list {
         margin-left: -10px;
         margin-right: -10px;
-        padding: 10px 0px;
+        padding: 10px 0;
 
         li.image-container {
           width: 200px;
@@ -134,13 +143,13 @@
         }
       }
       p.surf-description {
-        margin: 0px 0px 5px 0px;
+        margin: 0 0 5px 0;
       }
     }
 
     .image-content {
       .container {
-        padding: 10px 0px;
+        padding: 10px 0;
 
         .img-container {
           width: 200px;

@@ -47,7 +47,7 @@
       width: 7px;
       height: 7px;
       margin-right: 10px;
-      @extend .circle;
+      border-radius: 100%;
 
     }
   }
@@ -107,7 +107,8 @@
 
   .image-content {
     .container {
-      padding: 10px 0px;
+      padding: 10px 0;
+      padding: 10px 0;
 
       .img-container {
         width: 200px;
