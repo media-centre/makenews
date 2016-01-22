@@ -60,7 +60,7 @@ describe("UserSession", () => {
 
         describe("isActiveContinuously", () => {
             it("should return the true if active within 9 minutes", () => {
-                var fiveMinute = 5;
+                let fiveMinute = 5;
                 let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
                 let userSession = new UserSession(history);
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
@@ -68,7 +68,7 @@ describe("UserSession", () => {
             });
 
             xit("should return the false if not active for 9 minutes", () => {
-                var nineMinute = 9;
+                let nineMinute = 9;
                 let lastAccessedTime = moment().subtract(nineMinute, "m").valueOf();
                 let userSession = new UserSession(history);
                 userSession.lastAccessedTime = lastAccessedTime;
@@ -76,7 +76,7 @@ describe("UserSession", () => {
             });
 
             it("should return the false if not active for more than 9 minutes", () => {
-                var tenMinute = 10;
+                let tenMinute = 10;
                 let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
                 let userSession = new UserSession(history);
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
@@ -86,10 +86,6 @@ describe("UserSession", () => {
 
         describe("continueSessionIfActive", () => {
             it("should logout if user inactive for 9 minutes", () => {
-                let userSession = new UserSession(history);
-                var tenMinute = 10;
-                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(moment().subtract(tenMinute, "m").valueOf());
-                let clock = sandbox.useFakeTimers();
                 let nineMinutes = 540000;
                 let ajaxInstance = new AjaxClient("/logout");
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
@@ -98,6 +94,9 @@ describe("UserSession", () => {
                 sandbox.stub(appSessionStorage, "clear");
                 let historyMock = sandbox.mock(history).expects("push");
                 historyMock.withArgs("/");
+                let clock = sandbox.useFakeTimers();
+                let userSession = new UserSession(history);
+                sandbox.stub(userSession, "isActiveContinuously").returns(false);
                 userSession._continueSessionIfActive();
                 clock.tick(nineMinutes);
                 clock.tick(nineMinutes);
@@ -107,15 +106,13 @@ describe("UserSession", () => {
 
             it("should not call logout if user active continuously within 9 minutes", () => {
                 let userSession = new UserSession(history);
-                let clock = sandbox.useFakeTimers();
                 let nineMinutes = 540000;
                 let ajaxInstance = new AjaxClient("/logout");
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-
-                var fiveMinute = 5;
-                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(moment().add(fiveMinute, "m").valueOf());
+                let clock = sandbox.useFakeTimers();
                 ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
                 let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").never();
+                sandbox.stub(userSession, "isActiveContinuously").returns(true);
                 userSession._continueSessionIfActive();
                 clock.tick(nineMinutes);
                 ajaxGetMock.verify();
@@ -127,13 +124,13 @@ describe("UserSession", () => {
 
     describe("startSlidingSession", () => {
         it("should set the lastAccessedTime and start timer", () => {
-            let lastAccessedTime = new Date().getTime();
             let sandbox = sinon.sandbox.create();
-            let clock = sandbox.useFakeTimers();
             let userSession = UserSession.instance(history);
+            let setLastAccessedTimeMock = sandbox.mock(userSession).expects("setLastAccessedTime");
+            let setTimerMock = sandbox.mock(userSession).expects("_continueSessionIfActive");
             userSession.startSlidingSession();
-            assert.strictEqual(new Date(userSession.getLastAccessedTime()).getHours(), new Date(lastAccessedTime).getHours());
-            clearTimer(clock);
+            setLastAccessedTimeMock.verify();
+            setTimerMock.verify();
             sandbox.restore();
         });
     });

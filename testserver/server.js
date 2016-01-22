@@ -1,6 +1,5 @@
 /*eslint no-magic-numbers:0*/
 "use strict";
-var routes = require("./routes.js");
 var express = require("express");
 
 const PORT = 3000;
@@ -8,7 +7,7 @@ const PORT = 3000;
 var app = express();
 //routes(app)
 
-console.log("listening on port " + PORT); //eslintdisableline
+console.log("listening on port " + PORT); //eslint-disable-line no-console
 app.listen(PORT);
 
 app.get("/https://www.facebook.com/thehindu", (request, response, next) => {
@@ -30,19 +29,18 @@ app.get("/https://www.facebook.com/doNotRespond/", (request, response, next) => 
 app.get("/163974433696568_957858557641481/posts", (request, response, next) => {
     response.status(200);
     response.json({
-        "data": [{"message": "test news 1", "id": "163974433696568_957858557641481"},
-            {"message": "test news 2", "id": "163974433696568_957850670975603"}]
+        "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
     });
     next();
 });
 
 app.get("/123456789012345/posts", (request, response, next) => {
-    console.log("******************");
-    setTimeout(function () {
+    setTimeout(function() {
         response.status(200);
         response.json({
-            "data": [{"message": "test news 1", "id": "163974433696568_957858557641481"},
-                {"message": "test news 2", "id": "163974433696568_957850670975603"}]
+            "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+                { "message": "test news 2", "id": "163974433696568_957850670975603" }]
         });
     }, 3000);
     next();
