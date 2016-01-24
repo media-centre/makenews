@@ -18,7 +18,7 @@ describe("AllUrlHelper", () => {
         });
 
         it("should return true if the url is in app.js", () => {
-            const url = "/app.js";
+            const url = "/app-min.js";
             expect(AllUrlHelper.whiteList(url)).to.be.ok;
         });
 

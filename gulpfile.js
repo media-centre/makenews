@@ -101,13 +101,13 @@ gulp.task("client:build-sources", function() {
             "debug": development(),
             "transform": ["babelify"]
         }))
-        .pipe(rename("app.js"))
+        .pipe(production(rename("app.js")))
+        .pipe(development(rename("app-min.js")))
         .pipe(production(minify()))
         .pipe(gulp.dest(parameters.client.distFolder));
 
     gulp.src(parameters.client.clientAppPath + "/config/*.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
-
 });
 
 
