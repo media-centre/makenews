@@ -4,7 +4,7 @@
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
-import { displayAllFeedsAsync, getLatestFeedsFromAllSources } from "../actions/AllFeedsActions.js";
+import { displayAllFeedsAsync, getLatestFeedsFromAllSources, storeFilterAndSourceHashMap } from "../actions/AllFeedsActions.js";
 import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
@@ -18,6 +18,7 @@ export class SurfPage extends Component {
     }
     componentWillMount() {
         window.scrollTo(0, 0);
+        this.props.dispatch(storeFilterAndSourceHashMap());
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayAllFeedsAsync());

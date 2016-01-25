@@ -3,7 +3,9 @@
 "use strict";
 import * as AllFeedsActions from "../../../src/js/surf/actions/AllFeedsActions.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
+//import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
 import RefreshFeedsHandler from "../../../src/js/surf/RefreshFeedsHandler.js";
+import FilterFeedsHandler from "../../../src/js/surf/FilterFeedsHandler.js";
 import mockStore from "../../helper/ActionHelper.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -99,4 +101,32 @@ describe("AllFeedsAction", () => {
             return Promise.resolve(store.dispatch(AllFeedsActions.getLatestFeedsFromAllSources()));
         });
     });
+
+    describe("getSourceIdMapAndFilter", () => {
+        it("should trigger filter action to get filter and hashmap", () => {
+            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {} };
+            expect(AllFeedsActions.storeFilterSourceMap({}, {})).to.deep.equal(filterAction);
+        });
+
+        xit("should get filter and source hash map and store it in redux store", (done) => {
+            let resultHashMap = {
+                "sourceId_01": ["Sports"],
+                "sourceId_02": ["Politics"]
+            };
+
+            let filterFeedsHandler = new FilterFeedsHandler();
+
+            let fetchAllFeedsWithCategoryNameMock = sinon.mock(filterFeedsHandler).expects("getSourceAndCategoryMap");
+            fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(resultHashMap));
+
+            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {} };
+
+            let store = mockStore({ "surfFilter": {}, "sourceHashMap": {} }, [filterAction], done);
+            return Promise.resolve(store.dispatch(AllFeedsActions.storeFilterAndSourceHashMap())).then(() => {
+                fetchAllFeedsWithCategoryNameMock.verify();
+                filterFeedsHandler.getSourceAndCategoryMap.restore();
+            });
+        });
+    });
+
 });

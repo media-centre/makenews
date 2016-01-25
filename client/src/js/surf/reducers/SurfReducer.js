@@ -1,6 +1,6 @@
 /*eslint new-cap:0, no-unused-vars:0*/
 "use strict";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED } from "../actions/AllFeedsActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 
@@ -15,6 +15,12 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
     case PARK_FEED:
         let parkedItems = List(state.feeds);
         return Object.assign({}, state, { "feeds": List(parkedItems.delete(parkedItems.indexOf(action.feed))).toArray(), "messages": surfMessages });
+    case STORE_FILTER_SOURCE_MAP:
+        if(!action.surfFilter || !action.sourceHashMap) {
+            action.surfFilter = state.surfFilter;
+            action.sourceHashMap = state.sourceHashMap;
+        }
+        return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap });
     default:
         return state;
     }
