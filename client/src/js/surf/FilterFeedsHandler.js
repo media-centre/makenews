@@ -36,7 +36,11 @@ export default class FilterFeedsHandler {
             let count = 0, result = {};
             this.fetchFilterDocument().then((filterDocument)=> {
                 count += 1;
-                result.surfFilter = filterDocument.length > 0 ? filterDocument[0] : {};
+                let newFilterDocument = this.getNewFilterDocument();
+                if(filterDocument.length === 0) {
+                    PouchClient.createDocument(newFilterDocument);
+                }
+                result.surfFilter = filterDocument.length > 0 ? filterDocument[0] : newFilterDocument;
                 if(count === 2) {
                     resolve(result);
                 }
@@ -53,5 +57,13 @@ export default class FilterFeedsHandler {
                 reject(err);
             });
         });
+    }
+
+    getNewFilterDocument() {
+        return {
+            "_id": "surf-filter-id",
+            "docType": "surf-filter",
+            "categoryIds": []
+        };
     }
 }
