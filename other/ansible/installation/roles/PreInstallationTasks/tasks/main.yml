@@ -1,9 +1,9 @@
 ---
-- name: install apt-transport-https package
-  apt: name=apt-transport-https state=present
-
 - name: run apt-get upgrade
   apt: update_cache=yes
+
+- name: install apt-transport-https package
+  apt: name=apt-transport-https state=present
 
 - name: create deployment group
   group: name=medcen state=present
