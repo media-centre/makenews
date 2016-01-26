@@ -28,7 +28,7 @@ fi
 echo "--- gulp clean completed"
 
 echo "--- gulp build started"
-gulp build
+NODE_ENV=production gulp build
 if [ "$?" -ne 0 ]
 then
   echo "*** gulp build failed."

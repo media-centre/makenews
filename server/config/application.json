@@ -22,68 +22,15 @@
     }
   },
   "development": {
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    }
   },
   "ci_dev": {
-    "serverIpAddress": "46.101.252.58",
-    "serverPort": 5000,
-    "couchDbUrl": "http://46.101.252.58:5984",
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    }
   },
   "ci_qa": {
-    "serverIpAddress": "46.101.195.133",
-    "serverPort": 5000,
-    "couchDbUrl": "http://46.101.195.133:5984",
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    }
   },
   "pre-prod": {
-    "serverIpAddress": "46.101.185.145",
-    "serverPort": 5000,
-    "couchDbUrl": "http://46.101.185.145:5984",
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    }
   },
   "qa": {
-    "serverIpAddress": "localhost",
-    "serverPort": 5000,
-    "couchDbUrl": "http://localhost:5984",
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    },
-    "facebook": {
-      "url": "http://localhost:3000",
-      "appSecretKey": "ad21d28752f81892bf6b408d0125de01",
-      "appId": "939803976108942",
-      "timeOut": 2000
-    },
-    "twitter": {
-      "url": "http://localhost:3000",
-      "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
-      "timeOut": 2000
-    }
   },
   "production": {
-    "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common"
-    }
   }
 }

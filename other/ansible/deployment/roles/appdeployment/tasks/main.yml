@@ -19,6 +19,15 @@
 - name: untar the project directory
   shell: tar -xvzf "{{project_directory}}/{{artifact}}" --directory {{project_directory}}
 
+- name: copy the server application json file
+  shell: cp "{{ConfigFilesPath}}/server_application.json" "{{project_directory}}/dist/server/config/application.json"
+
+- name: copy the server client parameters file
+  shell: cp "{{ConfigFilesPath}}/server_clientParameters.json" "{{project_directory}}/dist/server/config/clientParameters.json"
+
+- name: copy the client config file
+  shell: cp "{{ConfigFilesPath}}/client_config.js" "{{project_directory}}/dist/client/config/config.js"
+
 - name: migrate all the dbs
   shell: node {{project_directory}}/dist/server/src/migration.js --admin_user_name='admin' --admin_password='M@d!ac3nt53'
 

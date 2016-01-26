@@ -5,4 +5,5 @@ artifact: dist.tar.gz
 groupname: go
 owner: go
 ContentDiscoveryWebServerName: ContentDiscoveryWebServer
+ConfigFilesPath: /etc/ContentDiscovery
 

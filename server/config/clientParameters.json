@@ -8,22 +8,10 @@
   "development": {
   },
   "ci_dev": {
-    "db": {
-      "serverUrl": "http://46.101.252.58:5000",
-      "remoteDbUrl": "http://46.101.252.58:5984"
-    }
   },
   "ci_qa": {
-    "db": {
-      "serverUrl": "http://46.101.195.133:5000",
-      "remoteDbUrl": "http://46.101.195.133:5984"
-    }
   },
   "pre-prod": {
-    "db": {
-      "serverUrl": "http://46.101.185.145:5000",
-      "remoteDbUrl": "http://46.101.185.145:5984"
-    }
   },
   "production": {
 
