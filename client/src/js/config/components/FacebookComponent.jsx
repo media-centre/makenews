@@ -14,7 +14,7 @@ export default class FacebookComponent extends Component {
         super(props);
         this.fbLogin = FacebookLogin.instance();
         this.facebookLoginHandler = this.facebookLoginHandler.bind(this);
-        this.state = { "errorMessage": "", "hintMessage": "Please enter Facebook URL here", "exampleMessage": "Example: https://www.facebook.com/barackobama" };
+        this.state = { "errorMessage": "", "hintMessage": "Example: https://www.facebook.com/barackobama" };
     }
 
     _validateUrl(url, callback, props) {
@@ -37,7 +37,7 @@ export default class FacebookComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} addURLHandler= {this.facebookLoginHandler} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
+            <AddURLComponent hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} addURLHandler= {this.facebookLoginHandler} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation/>
         );
     }
 }

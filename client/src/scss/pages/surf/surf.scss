@@ -105,8 +105,13 @@
 
       .park-feed{
         height: 25px;
-        width: 25px;
+        width: 32px;
         cursor: pointer;
+        background-image: url(images/main/park-blue.png);
+        background-size: cover;
+        &:hover {
+          background-image: url(images/main/park.png);
+        }
       }
 
       img {

@@ -9,9 +9,9 @@ export default class AllUrlHelper {
             return next();
         } else if(request.cookies.AuthSession) {
             CouchSession.authenticate(request.cookies.AuthSession)
-                .then((userName) => {
+                .then(() => {
                     next();
-                }).catch((error) => {
+                }).catch(() => {
                     proceedToUnAuthorizedError();
                 });
         } else {
@@ -29,7 +29,7 @@ export default class AllUrlHelper {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
+        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
         return whitelistUrls.filter((item) => {
             return url.match(item);
         }).length > 0;

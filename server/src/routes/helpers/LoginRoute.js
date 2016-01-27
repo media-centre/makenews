@@ -24,13 +24,7 @@ export default class LoginRoute {
 
             let userRequest = UserRequest.instance(this.request.body.username, this.request.body.password);
             userRequest.getAuthSessionCookie().then(authSessionCookie => {
-                let token = userRequest.extractToken(authSessionCookie);
-                userRequest.getUserName(token).then(userName => {
-                    this._handleLoginSuccess(authSessionCookie, userName);
-                }).catch(error => { //eslint-disable-line
-                    RouteLogger.instance().error("LoginRoute::handle Failed while fetching the user name");
-                    this._handleLoginFailure();
-                });
+                this._handleLoginSuccess(authSessionCookie, this.request.body.username);
             }).catch(error => { //eslint-disable-line
                 RouteLogger.instance().error("LoginRoute::handle Failed while fetching auth session cookie");
                 this._handleLoginFailure();

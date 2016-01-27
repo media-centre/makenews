@@ -102,8 +102,6 @@ export default class AddURLComponent extends Component {
                     <i className="fa fa-plus"></i><span ref="addUrlLinkText">{this.props.addUrlLinkLabel}</span>
                 </div>
 
-                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
-
                 <div className="url-panel">
                     <ul className="url-list">
                         {this.props.content.map((urlObj, index) =>
@@ -142,7 +140,6 @@ AddURLComponent.propTypes = {
     "categoryId": PropTypes.string.isRequired,
     "dispatch": PropTypes.func,
     "addURLHandler": PropTypes.func,
-    "exampleMessage": PropTypes.string.isRequired,
     "hintMessage": PropTypes.string.isRequired
 };
 AddURLComponent.defaultProps = {

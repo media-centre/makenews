@@ -1,7 +1,10 @@
+/* eslint no-use-before-define:0, no-unused-expressions: 0 */
+
 "use strict";
 import moment from "moment";
 import { logout } from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
+import AjaxClient from "../utils/AjaxClient.js";
 const nineMinutes = 540000;
 let linkTransition = Symbol();
 
@@ -34,15 +37,21 @@ export default class UserSession {
 
     _continueSessionIfActive() {
         let timer = setInterval(() => {
-            if(!this.isActiveContinuously()) {
-                _logoutAndClearInterval(this);
-            }
+            this.isActiveContinuously() ? _renewSession() : _logoutAndClearInterval();
         }, nineMinutes);
 
-        function _logoutAndClearInterval(_this) {
+        let _logoutAndClearInterval = () => {
             logout();
             clearInterval(timer);
-            _this[linkTransition].push("/");
-        }
+            this[linkTransition].push("/");
+        };
+
+        let _renewSession = () => {
+            AjaxClient.instance("/renew_session").get();
+        };
+
+        return () => {
+            return timer;
+        };
     }
 }

@@ -9,12 +9,8 @@ import moment from "moment";
 import sinon from "sinon";
 
 describe("UserSession", () => {
-    let history = null, clearTimer = null;
+    let history = null;
     before("before", () => {
-        let tenMinutes = 600000;
-        clearTimer = (clock, timeToMoveForward = tenMinutes) => {
-            clock.tick(timeToMoveForward);
-        };
         history = { "push": () => {} };
     });
 
@@ -106,17 +102,19 @@ describe("UserSession", () => {
 
             it("should not call logout if user active continuously within 9 minutes", () => {
                 let userSession = new UserSession(history);
+                userSession.setLastAccessedTime();
                 let nineMinutes = 540000;
-                let ajaxInstance = new AjaxClient("/logout");
+                let ajaxInstance = new AjaxClient("/renew_session");
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
                 let clock = sandbox.useFakeTimers();
-                ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
-                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").never();
+                ajaxInstanceMock.withArgs("/renew_session").returns(ajaxInstance);
+                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").atLeast(1);
                 sandbox.stub(userSession, "isActiveContinuously").returns(true);
-                userSession._continueSessionIfActive();
+
+                let timer = userSession._continueSessionIfActive();
                 clock.tick(nineMinutes);
                 ajaxGetMock.verify();
-                clearTimer(clock, nineMinutes);
+                clearInterval(timer);
             });
         });
 
