@@ -9,10 +9,6 @@ export default class SurfFilterItem extends Component {
         this.state = { "filterItems": this.props.filterItems };
     }
 
-    getFilteredFeeds(item, props) {
-
-    }
-
     _highlightFilter(item) {
         let className = this.props.type === "text" ? "item surf-image category" : "item surf-image";
         this.state.filterItems.forEach((filterItem)=> {
