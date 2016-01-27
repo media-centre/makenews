@@ -2,6 +2,72 @@
 .surf-page-container {
   padding: 0 !important;
 
+  .surf-filter {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    z-index: $medium-index;
+
+    button {
+      background-color: $app-header-bg-color;
+      display: block;
+      padding: 5px 25px;
+      margin: 6px auto auto auto;
+    }
+
+    .show-filter-container.show {
+      height: 245px;
+    }
+
+    .show-filter-container {
+      height: 0px;
+      overflow: hidden;
+      background-color: $app-header-bg-color;
+    }
+
+    .surf-filter-item:first-child {
+      @extend .border-bottom;
+      border-bottom-color: #656565;
+    }
+    .surf-filter-item {
+      padding: 20px;
+      min-height: 82px;
+
+      label {
+        width: 30%;
+        color: $filter-label-type;
+      }
+
+      ul {
+        width: 70%;
+
+        li.content-type {
+          font-size: $medium-font-size;
+        }
+
+        li {
+          padding: 0px;
+          font-size: $extra-small-font-size;
+          color: $primary-font-color;
+          margin: 0px 20px 20px 20px;
+          cursor: pointer;
+          text-align: center;
+
+          .image {
+            font-size: $max-font-size;
+          }
+
+          &:hover {
+            color: $secondary-font-color;
+          }
+        }
+        li.selected {
+          color: $secondary-font-color;
+        }
+      }
+    }
+  }
+
   .refresh-status {
     height: 3px;
     padding: 0;
@@ -21,7 +87,7 @@
     }
     .surf-refresh-button {
       position: fixed;
-      top: 92px;
+      top: 115px;
       left: 0;
       right: 0;
       margin: auto;

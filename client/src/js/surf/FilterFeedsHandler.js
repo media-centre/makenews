@@ -63,7 +63,8 @@ export default class FilterFeedsHandler {
         return {
             "_id": "surf-filter-id",
             "docType": "surf-filter",
-            "categoryIds": []
+            "categoryIds": [],
+            "content": []
         };
     }
 }

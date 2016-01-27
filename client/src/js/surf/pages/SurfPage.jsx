@@ -4,6 +4,7 @@
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
+import SurfFilter from "../components/SurfFilter.jsx";
 import { displayAllFeedsAsync, getLatestFeedsFromAllSources, storeFilterAndSourceHashMap } from "../actions/AllFeedsActions.js";
 import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
@@ -52,6 +53,7 @@ export class SurfPage extends Component {
         let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         return (
             <div className="surf-page-container">
+                <SurfFilter />
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                 {refreshButton}

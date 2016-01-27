@@ -575,7 +575,8 @@ describe("PouchClient", () => {
             DbSession.instance().then(session => {
                 session.put({
                     "docType": "surf-filter",
-                    "categoryIds": ["sports_category_id_01", "politics_category_id_02"]
+                    "categoryIds": [{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }],
+                    "content": ["image", "video", "text"]
                 }, "surf-filter-id");
             });
         });
@@ -583,7 +584,8 @@ describe("PouchClient", () => {
             PouchClient.fetchDocuments("category/surfFilter", {
                 "include_docs": true
             }).then((docs) => {
-                assert.deepEqual(["sports_category_id_01", "politics_category_id_02"], docs[0].categoryIds);
+                assert.deepEqual([{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }], docs[0].categoryIds);
+                assert.deepEqual(["image", "video", "text"], docs[0].content);
                 done();
             });
         });
