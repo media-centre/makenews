@@ -122,14 +122,6 @@ describe("AddURLComponent", () => {
         expect(false).to.eq(AddURLComponentElement.state.showUrlInput);
     });
 
-    it("should display example message on clicking addUrlButton", () => {
-        let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
-        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
-        assert.isDefined(AddURLComponentElement.refs.exampleText, "Defined");
-        expect("Please enter RSS URL here").to.eq(AddURLComponentElement.props.hintMessage);
-        expect("Example: thehindu.com/opinion/?service=rss").to.eq(AddURLComponentElement.props.exampleMessage);
-    });
-
     it("should have addUrlTextBox if addURLHandler property is not present", () => {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));

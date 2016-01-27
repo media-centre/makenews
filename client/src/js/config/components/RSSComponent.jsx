@@ -7,7 +7,7 @@ import AddURLComponent from "../../utils/components/AddURLComponent.js";
 export default class RSSComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": "Example: http://www.thehindu.com/opinion/?service=rss"};
+        this.state = { "errorMessage": "", "hintMessage": "Example: http://www.thehindu.com/opinion/?service=rss" };
     }
 
     _validateUrl(url, callback, props) {
@@ -19,7 +19,7 @@ export default class RSSComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent  hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
+            <AddURLComponent hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
         );
     }
 }
