@@ -39,12 +39,12 @@ export default class FeedApplicationQueries {
             if (feedsAndCategoriesDoc.doc && feedsAndCategoriesDoc.doc.docType === "feed") {
                 if(StringUtil.validNonEmptyString(feedsAndCategoriesDoc.doc.sourceId)) {
                     try {
-                        feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.doc.sourceId].join(", ");
+                        feedsAndCategoriesDoc.doc.categoryNames = categoryNameMap[feedsAndCategoriesDoc.doc.sourceId];
                     } catch(error) {
-                        feedsAndCategoriesDoc.doc.categoryNames = "";
+                        feedsAndCategoriesDoc.doc.categoryNames = [];
                     }
                 } else {
-                    feedsAndCategoriesDoc.doc.categoryNames = "";
+                    feedsAndCategoriesDoc.doc.categoryNames = [];
                 }
                 feeds.push(feedsAndCategoriesDoc.doc);
             }

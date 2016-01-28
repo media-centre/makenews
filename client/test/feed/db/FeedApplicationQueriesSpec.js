@@ -10,19 +10,20 @@ import { expect, assert } from "chai";
 describe("FeedApplicationQueries", () => {
     describe("allFeedsWithCategoryNames", () => {
         it("should fetch all surf feeds and return with category name", () => {
-            let resultDocs = [{
-                "key": "fbId1",
-                "id": "fbId1",
-                "value": {
+            let resultDocs = [
+                {
+                    "key": "fbId1",
+                    "id": "fbId1",
+                    "value": {
                     "_id": "sportsCategoryId1"
                 },
-                "doc": {
+                    "doc": {
                     "docType": "category",
                     "name": "Sports",
                     "_id": "sportsCategoryId1",
                     "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
                 }
-            }, {
+                }, {
                 "key": "2015-10-03T04:09:17+00:00",
                 "id": "feedId1",
                 "value": "rssId1",
@@ -64,7 +65,13 @@ describe("FeedApplicationQueries", () => {
                 "id": "test1",
                 "value": {
                     "_id": "politicsCategoryId2"
-                }
+                },
+                "doc": {
+                        "docType": "category",
+                        "name": "noCategoryUrl",
+                        "_id": "politicsCategoryId2",
+                        "_rev": "1-175853337b49fcd1db6474777f871d4a"
+                    }
             }, {
                 "key": "2015-10-04T04:09:17+00:00",
                 "id": "test1",
@@ -78,19 +85,21 @@ describe("FeedApplicationQueries", () => {
                     "_id": "feed2",
                     "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
                 }
-            }];
+            }
+            ];
 
 
-            let expectedSources = [{
-                "docType": "feed",
-                "title": "tn",
-                "description": "www.facebookpolitics.com",
-                "sourceId": "rssId1",
-                "postedDate": "2015-10-03T04:09:17+00:00",
-                "_id": "feedId1",
-                "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": "Sports, Politics"
-            }, {
+            let expectedSources = [
+                {
+                    "docType": "feed",
+                    "title": "tn",
+                    "description": "www.facebookpolitics.com",
+                    "sourceId": "rssId1",
+                    "postedDate": "2015-10-03T04:09:17+00:00",
+                    "_id": "feedId1",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                    "categoryNames": ["Sports", "Politics"]
+                }, {
                 "docType": "feed",
                 "title": "test title",
                 "description": "www.facebooksports.com",
@@ -98,8 +107,9 @@ describe("FeedApplicationQueries", () => {
                 "postedDate": "2015-10-04T04:09:17+00:00",
                 "_id": "feed2",
                 "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": ""
-            }];
+                "categoryNames": ["noCategoryUrl"]
+            }
+            ];
 
             let fetchAllSourcesWithCategoriesMock = sinon.mock(FeedDb).expects("fetchSurfFeedsAndCategoriesWithSource");
             fetchAllSourcesWithCategoriesMock.returns(Promise.resolve(resultDocs));
@@ -107,6 +117,7 @@ describe("FeedApplicationQueries", () => {
                 expect(expectedSources).to.deep.equal(sources);
                 fetchAllSourcesWithCategoriesMock.verify();
                 FeedDb.fetchSurfFeedsAndCategoriesWithSource.restore();
+
             });
         });
 
@@ -183,7 +194,7 @@ describe("FeedApplicationQueries", () => {
                 "_id": "feedId2",
                 "status": "park",
                 "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": "Sports, Politics"
+                "categoryNames": ["Sports", "Politics"]
             }];
 
             let fetchParkFeedssMock = sinon.mock(FeedDb).expects("fetchParkFeeds");
@@ -232,7 +243,7 @@ describe("FeedApplicationQueries", () => {
                 "_id": "feedId2",
                 "status": "park",
                 "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": ""
+                "categoryNames": []
             }];
 
             let fetchParkFeedssMock = sinon.mock(FeedDb).expects("fetchParkFeeds");

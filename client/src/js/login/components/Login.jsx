@@ -27,9 +27,7 @@ export default class Login extends React.Component {
 
                     <div className="left m-block password-container">
                         <input type="password" id="password" placeholder={this.props.loginStrings.passwordPlaceHoder} ref="password" name="password" className="m-input-block box small-text" required/>
-                        <p className="help-login extra-small-text t-right">
-                            {this.props.loginStrings.loginHelpLabel}
-                        </p>
+
                     </div>
 
                     <div className="left m-block m-t-center">
