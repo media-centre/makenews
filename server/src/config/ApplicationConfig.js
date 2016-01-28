@@ -27,4 +27,12 @@ export default class ApplicationConfig {
     twitter() {
         return this.environmentConfig.get("twitter");
     }
+
+    serverIpAddress() {
+        return this.environmentConfig.get("serverIpAddress");
+    }
+
+    serverPort() {
+        return this.environmentConfig.get("serverPort");
+    }
 }

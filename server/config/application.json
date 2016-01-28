@@ -30,6 +30,16 @@
   "pre-prod": {
   },
   "qa": {
+    "facebook": {
+      "url": "http://localhost:3000",
+      "appSecretKey": "test_app_secret_key",
+      "appId": "test_app_id",
+      "timeOut": 2000,
+      "limit": 500
+    },
+    "twitter": {
+      "url": "http://localhost:3000"
+    }
   },
   "production": {
   }

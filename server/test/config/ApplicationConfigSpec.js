@@ -8,12 +8,12 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("ApplicationConfig", () => {
-    let environmentConfigStub = null;
+    let environmentConfigStub = null, applicationConfig = null;
     beforeEach("ApplicationConfig", () => {
         let applicationJson = {
             "get": (config)=> {
                 let json = {
-                    "serverIpAddress": "localhost",
+                    "serverIpAddress": "http://localhost",
                     "serverPort": 5000,
                     "couchDbUrl": "http://localhost:5984",
                     "adminDetails": {
@@ -37,6 +37,7 @@ describe("ApplicationConfig", () => {
         };
         environmentConfigStub = sinon.stub(EnvironmentConfig, "instance");
         environmentConfigStub.withArgs(EnvironmentConfig.files.APPLICATION).returns(applicationJson);
+        applicationConfig = new ApplicationConfig();
     });
 
     afterEach("ApplicationConfig", () => {
@@ -46,7 +47,7 @@ describe("ApplicationConfig", () => {
     describe("dbUrl", () => {
 
         it("should return db URL from application configuration file", ()=> {
-            let applicationConfig = new ApplicationConfig();
+
             assert.strictEqual("http://localhost:5984", applicationConfig.dbUrl());
         });
     });
@@ -63,7 +64,7 @@ describe("ApplicationConfig", () => {
 
     describe("facebook", () => {
         it("should return facebook url from application configuration file", ()=> {
-            let applicationConfig = new ApplicationConfig();
+
             let facebookConfig = applicationConfig.facebook();
 
             assert.strictEqual("https://graph.facebook.com/v2.5", facebookConfig.url);
@@ -74,11 +75,25 @@ describe("ApplicationConfig", () => {
 
     describe("twitter", () => {
         it("should return twitter url from application configuration file", ()=> {
-            let applicationConfig = new ApplicationConfig();
+
             let twitterConfig = applicationConfig.twitter();
             assert.strictEqual("https://api.twitter.com/1.1", twitterConfig.url);
             assert.strictEqual("BearerToken", twitterConfig.bearerToken);
             assert.equal(10000, twitterConfig.timeOut);
+        });
+    });
+
+    describe("serverIpAddress", () => {
+        it("should return the server ip address from the application configuration file", ()=> {
+            let serverIpAddress = applicationConfig.serverIpAddress();
+            assert.strictEqual("http://localhost", serverIpAddress);
+        });
+    });
+
+    describe("serverPort", () => {
+        it("should return the server port from the application configuration file", ()=> {
+            let serverPort = applicationConfig.serverPort();
+            assert.strictEqual(5000, serverPort);
         });
     });
 

@@ -3,16 +3,16 @@
 
 import request from "supertest";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
-import config from "../config/application.json";
-import argv from "yargs";
+import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import { assert, expect } from "chai";
 import CouchSession from "../src/CouchSession";
 
-let env = argv.client_environment || "qa";
 describe("RssReaderSpec", () => {
     describe("RssReaderSpec", () => {
-        let accessToken = null;
+        let accessToken = null, applicationConfig = null, serverIp = null;
         before("RssReaderSpec", (done)=> {
+            applicationConfig = new ApplicationConfig();
+            serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
             CouchSession.login("test", "test").then((token) => {
                 accessToken = token;
                 done();
@@ -20,7 +20,7 @@ describe("RssReaderSpec", () => {
         });
 
         it("should return status OK if the url is empty", (done) => {
-            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+            request(serverIp)
                 .get("/rss-feeds")
                 .query("url=")
                 .set("Cookie", accessToken)
@@ -37,7 +37,7 @@ describe("RssReaderSpec", () => {
                 ]
             };
 
-            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+            request(serverIp)
                 .get("/rss-feeds")
                 .query("url=http://localhost:3000/thehindu/rss-feeds/")
                 .set("Cookie", accessToken)
@@ -55,7 +55,7 @@ describe("RssReaderSpec", () => {
         });
 
         it("responds with 404 for /rss-feeds if rss fetch returns error", (done) => {
-            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+            request(serverIp)
                 .get("/rss-feeds")
                 .query("url=http://localhost:3000/thehindu/error-feeds/")
                 .set("Cookie", accessToken)
@@ -67,7 +67,7 @@ describe("RssReaderSpec", () => {
         });
 
         xit("should timeout if fetching rss feeds exceeds time out", (done) => {
-            request(config[env].serverIpAddress + ":" + config[env].serverPort)
+            request(serverIp)
                 .get("/rss-feeds")
                 .query("url=http://localhost:3000/gardian/timeout-feeds/")
                 .set("Cookie", accessToken)
