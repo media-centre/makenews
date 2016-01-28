@@ -29,7 +29,7 @@
   },
   "pre-prod": {
   },
-  "qa": {
+  "ci-server-tests": {
     "facebook": {
       "url": "http://localhost:3000",
       "appSecretKey": "test_app_secret_key",
