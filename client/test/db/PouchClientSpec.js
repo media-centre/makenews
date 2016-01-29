@@ -135,6 +135,9 @@ describe("PouchClient", () => {
                     },
                     "surfFilter": {
                         "map": "function(doc) { if(doc.docType == 'surf-filter') {emit(doc._id, doc)} }"
+                    },
+                    "latestFeeds": {
+                        "map": "function(doc) { if(doc.docType == 'feed') {emit(doc.postedDate, null)} }"
                     }
                 }
             }, "_design/category");

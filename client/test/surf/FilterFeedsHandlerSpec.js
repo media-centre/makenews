@@ -124,4 +124,78 @@ describe("displayFilteredFeeds", ()=> {
         });
 
     });
+
+    it("should update filter document", (done)=> {
+        let currentDocument = {
+            "categories": [],
+            "mediaTypes": []
+        };
+        let updatedDocument = {
+            "categories": [
+                {
+                    "_id": "12345",
+                    "name": "Category 1"
+                },
+                {
+                    "_id": "123456",
+                    "name": "Category 2"
+                }
+            ],
+            "mediaTypes": []
+        };
+        let updateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+        updateDocumentMock.withArgs(updatedDocument).returns(Promise.resolve(currentDocument));
+
+        let getDocumentMock = sinon.mock(PouchClient).expects("getDocument");
+        getDocumentMock.withArgs("surf-filter-id").returns(Promise.resolve({}));
+
+        let filterFeedsHandler = new FilterFeedsHandler();
+        return filterFeedsHandler.updateFilterDocument(updatedDocument).then(()=> {
+            getDocumentMock.verify();
+            PouchClient.getDocument.restore();
+
+            updateDocumentMock.verify();
+            PouchClient.updateDocument.restore();
+            done();
+        });
+    });
+
+    it("should throw error on updating filter document", (done)=> {
+        let updatedDocument = {
+            "categories": [
+                {
+                    "_id": "12345",
+                    "name": "Category 1"
+                },
+                {
+                    "_id": "123456",
+                    "name": "Category 2"
+                }],
+            "mediaTypes": []
+        };
+        let currentDocument = {
+            "categories": [],
+            "mediaTypes": []
+        };
+
+        let getDocumentMock = sinon.mock(PouchClient).expects("getDocument");
+        getDocumentMock.withArgs("surf-filter-id").returns(Promise.resolve(currentDocument));
+
+        let updateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+        updateDocumentMock.withArgs(updatedDocument).returns(Promise.reject("error"));
+
+        let filterFeedsHandler = new FilterFeedsHandler();
+        return filterFeedsHandler.updateFilterDocument(updatedDocument).catch(()=> {
+            getDocumentMock.verify();
+            PouchClient.getDocument.restore();
+
+            updateDocumentMock.verify();
+            PouchClient.updateDocument.restore();
+            done();
+        });
+    });
+
+    it("should create sourceId list based on categories filtered", ()=> {
+
+    });
 });

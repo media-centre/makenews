@@ -63,8 +63,30 @@ export default class FilterFeedsHandler {
         return {
             "_id": "surf-filter-id",
             "docType": "surf-filter",
-            "categoryIds": [],
-            "content": []
+            "categories": [],
+            "mediaTypes": []
         };
+    }
+
+    updateFilterDocument(latestFilterDocument) {
+        return new Promise((resolve, reject)=> {
+            PouchClient.getDocument("surf-filter-id").then((currentFilterDocument)=> {
+                currentFilterDocument.categories = latestFilterDocument.categories;
+                currentFilterDocument.mediaTypes = latestFilterDocument.mediaTypes;
+                PouchClient.updateDocument(currentFilterDocument).then((response)=> {
+                    resolve(response);
+                }).catch((err)=> {
+                    reject(err);
+                });
+            }).catch((err)=> {
+                reject(err);
+            });
+        });
+    }
+
+    fetchFeedsByFilter(filterAndSourceMap) { //eslint-disable-line no-unused-vars
+        return new Promise((resolve, reject)=> { //eslint-disable-line no-unused-vars
+            resolve();
+        });
     }
 }

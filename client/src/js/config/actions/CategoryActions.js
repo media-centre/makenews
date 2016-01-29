@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0, max-params:1 */
+/* eslint no-unused-vars:0, max-params:0 */
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";

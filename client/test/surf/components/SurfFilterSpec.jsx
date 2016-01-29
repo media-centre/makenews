@@ -10,7 +10,7 @@ import ReactDom from "react-dom";
 import "../../helper/TestHelper.js";
 
 describe("SurfFilter Component", ()=> {
-    let contentItems = [
+    let mediaTypes = [
         {
             "name": "Text",
             "image": "file-text-o"
@@ -33,21 +33,21 @@ describe("SurfFilter Component", ()=> {
     ];
     let filter = {
         "categories": categories,
-        "contentItems": contentItems
+        "mediaTypes": mediaTypes
     };
 
     describe("Category Filter", ()=> {
         it("should be present", ()=> {
 
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter}/>
+                <SurfFilter filter={filter} categories={categories}/>
             );
             assert.isDefined(surfFilter, "defined");
         });
 
         it("should toggle button and which should show and hide the filter component", ()=> {
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter}/>
+                <SurfFilter filter={filter} categories={categories}/>
             );
             let surfFilterDom = ReactDom.findDOMNode(surfFilter);
             TestUtils.Simulate.click(surfFilterDom.querySelector("#filterToggle"));
@@ -56,7 +56,7 @@ describe("SurfFilter Component", ()=> {
 
         it("should toggle button and which should show and hide the filter component", ()=> {
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter}/>
+                <SurfFilter filter={filter} categories={categories}/>
             );
             surfFilter.state.show = true;
             let surfFilterDom = ReactDom.findDOMNode(surfFilter);

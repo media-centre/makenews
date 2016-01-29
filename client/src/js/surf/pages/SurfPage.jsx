@@ -5,7 +5,7 @@ import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
 import SurfFilter from "../components/SurfFilter.jsx";
-import { displayAllFeedsAsync, getLatestFeedsFromAllSources, storeFilterAndSourceHashMap } from "../actions/AllFeedsActions.js";
+import { displayAllFeedsAsync, getLatestFeedsFromAllSources, storeFilterAndSourceHashMap, fetchFeedsByFilter, fetchAllCategories } from "../actions/AllFeedsActions.js";
 import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
@@ -15,17 +15,27 @@ import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js"
 export class SurfPage extends Component {
     constructor(props) {
         super(props);
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds };
+        let filter = {
+            "mediaTypes": [],
+            "categories": []
+        };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
-        this.props.dispatch(storeFilterAndSourceHashMap());
+        this.props.dispatch(storeFilterAndSourceHashMap((result)=> {
+            this.setState({ "filter": result.surfFilter });
+        }));
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
-        this.props.dispatch(displayAllFeedsAsync());
+        this.props.dispatch(displayAllFeedsAsync((feeds)=> {
+            this.setState({ "fetchHintMessage": feeds.length > 0 ? "" : this.props.messages.noFeeds });
+        }));
+        this.props.dispatch(fetchAllCategories((categories)=> {
+            this.setState({ "categories": categories });
+        }));
     }
-
-
+    
     getLatestFeeds() {
         if(this.props.refreshState) {
             return false;
@@ -47,13 +57,17 @@ export class SurfPage extends Component {
         return null;
     }
 
+    updateFilter(latestFilterDocument) {
+        this.props.dispatch(fetchFeedsByFilter(latestFilterDocument));
+    }
+
     render() {
         let refreshButton = this.props.feeds.length === 0 ? null : <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
 
         let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         return (
             <div className="surf-page-container">
-                <SurfFilter />
+                <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.state.categories} filter={this.state.filter}/>
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                 {refreshButton}

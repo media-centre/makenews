@@ -3,6 +3,7 @@
 "use strict";
 import * as AllFeedsActions from "../../../src/js/surf/actions/AllFeedsActions.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
+import PouchClient from "../../../src/js/db/PouchClient.js";
 //import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
 import RefreshFeedsHandler from "../../../src/js/surf/RefreshFeedsHandler.js";
 import FilterFeedsHandler from "../../../src/js/surf/FilterFeedsHandler.js";
@@ -125,6 +126,73 @@ describe("AllFeedsAction", () => {
             return Promise.resolve(store.dispatch(AllFeedsActions.storeFilterAndSourceHashMap())).then(() => {
                 fetchAllFeedsWithCategoryNameMock.verify();
                 filterFeedsHandler.getSourceAndCategoryMap.restore();
+            });
+        });
+    });
+
+    describe("fetchAllCategories", ()=> {
+        it("should fetch all the categories", (done)=> {
+            let fetchDocumentsMock = sinon.mock(PouchClient).expects("fetchDocuments");
+            fetchDocumentsMock.withArgs("category/allCategories", { "include_docs": true }).returns(Promise.resolve([]));
+            let store = mockStore({ "categories": [] }, [{ "type": AllFeedsActions.FETCH_ALL_CATEGORIES, "categories": [] }], done);
+            //return Promise.resolve(store.dispatch(AllFeedsActions.fetchAllCategories(()=> {})).then(() => {
+            //    fetchDocumentsMock.verify();
+            //    PouchClient.fetchDocuments.restore();
+            //    done();
+            //}));
+            store.dispatch(AllFeedsActions.fetchAllCategories(()=> {}));
+            fetchDocumentsMock.verify();
+            PouchClient.fetchDocuments.restore();
+        });
+    });
+
+    describe("fetchFeedsByFilter", ()=> {
+        xit("should upadte the filter document before fetching feeds", (done)=> {
+            let updatedFilterDocument = {
+                "categories": [
+                    {
+                        "_id": "12345",
+                        "name": "Category 1"
+                    }
+                ],
+                "mediaTypes": [{
+                    "name": "Videos",
+                    "_id": "Videos"
+                }]
+            };
+
+            let feeds = [
+                {
+                    "url": "www.hindu.com",
+                    "categoryNames": ["hindu"],
+                    "items": [
+                        { "title": "climate changes", "desc": "desc" }
+                    ]
+                }, {
+                    "_id": "2",
+                    "url": "www.yahoonews.com",
+                    "categoryNames": ["yahoo"]
+                }
+            ];
+
+            let filterFeedsHandler = new FilterFeedsHandler();
+
+
+            let updateFilterDocument = sinon.mock(filterFeedsHandler).expects("updateFilterDocument");
+            updateFilterDocument.returns(Promise.resolve("result"));
+
+            let fetchFeedsByFilter = sinon.mock(filterFeedsHandler).expects("fetchFeedsByFilter");
+            fetchFeedsByFilter.withArgs({}).returns(Promise.resolve(feeds));
+
+            let filterAction = { "type": AllFeedsActions.FETCH_FEEDS_BY_FILTER, "feeds": feeds };
+
+            let store = mockStore({ "feeds": feeds }, [filterAction], done);
+            return Promise.resolve(store.dispatch(AllFeedsActions.fetchFeedsByFilter(updatedFilterDocument))).then(() => {
+                updateFilterDocument.verify();
+                filterFeedsHandler.updateFilterDocument.restore();
+                fetchFeedsByFilter.verify();
+                filterFeedsHandler.fetchFeedsByFilter.restore();
+                done();
             });
         });
     });

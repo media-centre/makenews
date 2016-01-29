@@ -1,6 +1,6 @@
 /*eslint new-cap:0, no-unused-vars:0*/
 "use strict";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP } from "../actions/AllFeedsActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 
@@ -10,6 +10,8 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
         return Object.assign({}, state, { "feeds": List(action.feeds).toArray(), "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
+    case FETCH_ALL_CATEGORIES:
+        return Object.assign({}, state, { "categories": action.categories });
     case DISPLAY_EXISTING_FEEDS:
         return Object.assign({}, state, { "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
     case PARK_FEED:
