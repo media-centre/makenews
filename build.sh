@@ -9,14 +9,14 @@ then
 fi
 echo "--- npm install completed"
 
-#echo "--- npm rebuild node-sass started"
-#npm rebuild node-sass
-#if [ "$?" -ne 0 ]
-#then
-#  echo "*** npm rebuild node-sass failed."
-#  exit
-#fi
-#echo "--- npm rebuild node-sass completed"
+echo "--- npm rebuild node-sass started"
+npm rebuild node-sass
+if [ "$?" -ne 0 ]
+then
+  echo "*** npm rebuild node-sass failed."
+  exit
+fi
+echo "--- npm rebuild node-sass completed"
 
 echo "--- gulp clean started"
 gulp clean
