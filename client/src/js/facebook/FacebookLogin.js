@@ -3,6 +3,7 @@
 "use strict";
 import FacebookRequestHandler from "./FacebookRequestHandler";
 import FacebookDb from "./FacebookDb";
+import AppWindow from "../../js/utils/AppWindow";
 
 export default class FacebookLogin {
 
@@ -16,7 +17,7 @@ export default class FacebookLogin {
 
     initialize() {
         window.fbAsyncInit = () => {
-            FB.init({ "appId": "939803976108942",
+            FB.init({ "appId": new AppWindow().get("facebookAppId"),
                 "cookie": true,
                 "xfbml": true,
                 "version": "v2.5"
