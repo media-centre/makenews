@@ -15,77 +15,77 @@ describe("FeedApplicationQueries", () => {
                     "key": "fbId1",
                     "id": "fbId1",
                     "value": {
-                    "_id": "sportsCategoryId1"
-                },
+                        "_id": "sportsCategoryId1"
+                    },
                     "doc": {
-                    "docType": "category",
-                    "name": "Sports",
-                    "_id": "sportsCategoryId1",
-                    "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
-                }
+                        "docType": "category",
+                        "name": "Sports",
+                        "_id": "sportsCategoryId1",
+                        "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
+                    }
                 }, {
-                "key": "2015-10-03T04:09:17+00:00",
-                "id": "feedId1",
-                "value": "rssId1",
-                "doc": {
-                    "docType": "feed",
-                    "title": "tn",
-                    "description": "www.facebookpolitics.com",
-                    "sourceId": "rssId1",
-                    "postedDate": "2015-10-03T04:09:17+00:00",
-                    "_id": "feedId1",
-                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
-                }
-            }, {
-                "key": "rssId1",
-                "id": "rssId1",
-                "value": {
-                    "_id": "sportsCategoryId1"
-                },
-                "doc": {
-                    "docType": "category",
-                    "name": "Sports",
-                    "_id": "sportsCategoryId1",
-                    "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
-                }
-            }, {
-                "key": "rssId1",
-                "id": "rssId1",
-                "value": {
-                    "_id": "politicsCategoryId2"
-                },
-                "doc": {
-                    "docType": "category",
-                    "name": "Politics",
-                    "_id": "politicsCategoryId2",
-                    "_rev": "1-175853337b49fcd1db6474777f871d4a"
-                }
-            }, {
-                "key": "noCategoryUrl",
-                "id": "test1",
-                "value": {
-                    "_id": "politicsCategoryId2"
-                },
-                "doc": {
+                    "key": "2015-10-03T04:09:17+00:00",
+                    "id": "feedId1",
+                    "value": "rssId1",
+                    "doc": {
+                        "docType": "feed",
+                        "title": "tn",
+                        "description": "www.facebookpolitics.com",
+                        "sourceId": "rssId1",
+                        "postedDate": "2015-10-03T04:09:17+00:00",
+                        "_id": "feedId1",
+                        "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
+                    }
+                }, {
+                    "key": "rssId1",
+                    "id": "rssId1",
+                    "value": {
+                        "_id": "sportsCategoryId1"
+                    },
+                    "doc": {
+                        "docType": "category",
+                        "name": "Sports",
+                        "_id": "sportsCategoryId1",
+                        "_rev": "1-4b61e9edacc78ab1f189b68345d4d410"
+                    }
+                }, {
+                    "key": "rssId1",
+                    "id": "rssId1",
+                    "value": {
+                        "_id": "politicsCategoryId2"
+                    },
+                    "doc": {
+                        "docType": "category",
+                        "name": "Politics",
+                        "_id": "politicsCategoryId2",
+                        "_rev": "1-175853337b49fcd1db6474777f871d4a"
+                    }
+                }, {
+                    "key": "noCategoryUrl",
+                    "id": "test1",
+                    "value": {
+                        "_id": "politicsCategoryId2"
+                    },
+                    "doc": {
                         "docType": "category",
                         "name": "noCategoryUrl",
                         "_id": "politicsCategoryId2",
                         "_rev": "1-175853337b49fcd1db6474777f871d4a"
                     }
-            }, {
-                "key": "2015-10-04T04:09:17+00:00",
-                "id": "test1",
-                "value": "noCategoryUrl",
-                "doc": {
-                    "docType": "feed",
-                    "title": "test title",
-                    "description": "www.facebooksports.com",
-                    "sourceId": "noCategoryUrl",
-                    "postedDate": "2015-10-04T04:09:17+00:00",
-                    "_id": "feed2",
-                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
+                }, {
+                    "key": "2015-10-04T04:09:17+00:00",
+                    "id": "test1",
+                    "value": "noCategoryUrl",
+                    "doc": {
+                        "docType": "feed",
+                        "title": "test title",
+                        "description": "www.facebooksports.com",
+                        "sourceId": "noCategoryUrl",
+                        "postedDate": "2015-10-04T04:09:17+00:00",
+                        "_id": "feed2",
+                        "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53"
+                    }
                 }
-            }
             ];
 
 
@@ -100,15 +100,15 @@ describe("FeedApplicationQueries", () => {
                     "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
                     "categoryNames": ["Sports", "Politics"]
                 }, {
-                "docType": "feed",
-                "title": "test title",
-                "description": "www.facebooksports.com",
-                "sourceId": "noCategoryUrl",
-                "postedDate": "2015-10-04T04:09:17+00:00",
-                "_id": "feed2",
-                "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
-                "categoryNames": ["noCategoryUrl"]
-            }
+                    "docType": "feed",
+                    "title": "test title",
+                    "description": "www.facebooksports.com",
+                    "sourceId": "noCategoryUrl",
+                    "postedDate": "2015-10-04T04:09:17+00:00",
+                    "_id": "feed2",
+                    "_rev": "1-e41ef125b2f5fbef4f20d8c896eeea53",
+                    "categoryNames": ["noCategoryUrl"]
+                }
             ];
 
             let fetchAllSourcesWithCategoriesMock = sinon.mock(FeedDb).expects("fetchSurfFeedsAndCategoriesWithSource");
