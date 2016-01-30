@@ -11,7 +11,7 @@
       private: yes
       confirm: yes
   vars:
-    - go_server_ip: 46.101.148.22
+    - go_server_ip: 46.101.245.151
   roles:
     - PreInstallationTasks
     - Ansibles.build-essential

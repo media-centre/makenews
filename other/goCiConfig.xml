@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="75">
-  <server artifactsdir="artifacts" commandRepositoryLocation="default" serverId="ebe86205-7318-4fec-afb3-d346b355db74">
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="77">
+  <server artifactsdir="artifacts" commandRepositoryLocation="default" serverId="93ec79c6-d7ee-4aec-b499-5c0d884af44a">
     <security>
       <passwordFile path="/var/lib/go-server/passwd-file" />
     </security>
   </server>
   <pipelines group="MediaCenter">
-    <pipeline name="build" isLocked="false" template="build_template">
+    <pipeline name="ServerTests" isLocked="false" template="build_template">
       <materials>
         <svn url="https://github.com/media-centre/ContentDiscovery.git" username="vikramkb" encryptedPassword="dyVI49BHqhUj5+3/2LWK441W26TcdIyBxrnoXmLCj+t/izDbtLN/5qqb7I5Og6jp3Z7BHPwyrNE=" />
       </materials>
     </pipeline>
     <pipeline name="DevelopmentDeployment" template="DevelopmentDeployment">
       <materials>
-        <pipeline pipelineName="build" stageName="build" materialName="build" />
+        <pipeline pipelineName="ServerTests" stageName="build" materialName="build" />
       </materials>
     </pipeline>
     <pipeline name="QaDeployment">
@@ -47,11 +47,6 @@
                 <arg>ansible-playbook -vvvv ./dist/ansible/deployment/qa-deployment.yml -u go -i ./dist/ansible/deployment/inventories/qa -c local</arg>
                 <runif status="passed" />
               </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "ci_qa";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
-                <runif status="passed" />
-              </exec>
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
@@ -82,15 +77,131 @@
                 <arg>ansible-playbook -vvvv ./dist/ansible/deployment/preprod-deployment.yml -u go -i ./dist/ansible/deployment/inventories/pre-prod -c local</arg>
                 <runif status="passed" />
               </exec>
-              <exec command="bash">
-                <arg>-c</arg>
-                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "pre-prod";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
-                <runif status="passed" />
-              </exec>
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
             </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
+  <pipelines group="CUCUMBER_TEST_GROUP">
+    <pipeline name="CUCUMBER_TESTS_DEV_ENV">
+      <environmentvariables>
+        <variable name="fileName">
+          <value>dev_envfile</value>
+        </variable>
+        <variable name="browser">
+          <value>chrome</value>
+        </variable>
+      </environmentvariables>
+      <materials>
+        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
+      </materials>
+      <stage name="MAVEN_STAGE">
+        <jobs>
+          <job name="MAVEN_COMPILE">
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>compile</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="DEV_RUN_STAGE">
+        <jobs>
+          <job name="TEST_ON_CHROME_BROWSER">
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>test</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="CUCUMBER_TESTS_QA_ENV">
+      <environmentvariables>
+        <variable name="fileName">
+          <value>qa_envfile</value>
+        </variable>
+        <variable name="browser">
+          <value>chrome</value>
+        </variable>
+        <variable name="DISPLAY">
+          <value>0</value>
+        </variable>
+      </environmentvariables>
+      <materials>
+        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
+      </materials>
+      <stage name="MAVEN_TASKS">
+        <jobs>
+          <job name="MAVEN_COMPILE">
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>compile</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="QA_RUN_STAGE">
+        <jobs>
+          <job name="TEST_ON_CHROME_BROWSER">
+            <environmentvariables>
+              <variable name="fileName">
+                <value>qa_envfile</value>
+              </variable>
+              <variable name="browser">
+                <value>chrome</value>
+              </variable>
+              <variable name="DISPLAY">
+                <value>:0.0</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>test</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="CUCUMBER_TESTS_PREPROD_ENV">
+      <materials>
+        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
+      </materials>
+      <stage name="MAVEN_STAGE">
+        <jobs>
+          <job name="MAVEN_COMPILE">
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>compile</arg>
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="PREPROD_RUN_STAGE">
+        <jobs>
+          <job name="TEST_ON_CHROME_BROWSER">
+            <environmentvariables>
+              <variable name="fileName">
+                <value>preprod_envfile</value>
+              </variable>
+              <variable name="browser">
+                <value>chrome</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>test</arg>
+              </exec>
+            </tasks>
           </job>
         </jobs>
       </stage>
@@ -107,9 +218,16 @@
                 <arg>./build.sh</arg>
                 <runif status="passed" />
               </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>tar -zcf server.tar.gz server</arg>
+                <runif status="passed" />
+              </exec>
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
+              <artifact src="trunk/testserver" />
+              <artifact src="trunk/server.tar.gz" />
             </artifacts>
           </job>
         </jobs>
@@ -138,6 +256,34 @@
           </job>
         </jobs>
       </stage>
+      <stage name="ServerTests">
+        <jobs>
+          <job name="ServerTests">
+            <tasks>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>/etc/ContentDiscovery/delete_fake_server_cleanly.sh</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/server-tests-deployment.yml -u go -i ./dist/ansible/deployment/inventories/server-tests -c local</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>pm2 start --name ContentDiscoveryFakeServer ./testserver/server.js</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>gulp functional:test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
     </pipeline>
     <pipeline name="DevelopmentDeployment">
       <stage name="StartServer" artifactCleanupProhibited="true">
@@ -150,7 +296,7 @@
               </variable>
             </environmentvariables>
             <tasks>
-              <fetchartifact pipeline="build" stage="build" job="build" srcfile="dist.tar.gz" dest="trunk">
+              <fetchartifact pipeline="ServerTests" stage="build" job="build" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
               <exec command="bash" workingdir="trunk">
@@ -163,15 +309,23 @@
                 <arg>ansible-playbook -vvvv ./dist/ansible/deployment/dev-deployment.yml -u go -i ./dist/ansible/deployment/inventories/dev -c local</arg>
                 <runif status="passed" />
               </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>sed -i -e 's/var CONTENT_DISCOVERY_ENVIRONMENT = "development";/var CONTENT_DISCOVERY_ENVIRONMENT = "ci_dev";/g' /home/go/ContentDiscovery/dist/client/app.js</arg>
-                <runif status="passed" />
-              </exec>
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
             </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="CUCUMBER_TEST_TEMPLATE">
+      <stage name="CUCUMBER_DEV">
+        <jobs>
+          <job name="CUCUMBER_DEV_ENV">
+            <tasks>
+              <exec command="mvn" workingdir="trunk/">
+                <arg>test</arg>
+              </exec>
+            </tasks>
           </job>
         </jobs>
       </stage>
@@ -193,7 +347,7 @@
     </environment>
     <environment name="QaDeployment">
       <agents>
-        <physical uuid="67c1a041-f3c6-4c87-b206-766ac2b55ef7" />
+        <physical uuid="4b9908c8-79eb-458d-9156-aedfa687dcd3" />
       </agents>
       <pipelines>
         <pipeline name="QaDeployment" />
@@ -201,17 +355,45 @@
     </environment>
     <environment name="PreprodEnvironment">
       <agents>
-        <physical uuid="30b3f773-06f0-4966-a7b3-5a1128ccb059" />
+        <physical uuid="d029afb8-6952-4776-9146-848dad530f73" />
       </agents>
       <pipelines>
         <pipeline name="PreprodDeployment" />
       </pipelines>
     </environment>
+    <environment name="CUCUMBER_TESTS">
+      <agents>
+        <physical uuid="3c203044-7013-48d1-ba47-ab6e7645cf3b" />
+      </agents>
+      <pipelines>
+        <pipeline name="CUCUMBER_TESTS_DEV_ENV" />
+        <pipeline name="CUCUMBER_TESTS_PREPROD_ENV" />
+        <pipeline name="CUCUMBER_TESTS_QA_ENV" />
+      </pipelines>
+    </environment>
+    <environment name="CUCUMBER_DEV_ENV">
+      <agents>
+        <physical uuid="3c203044-7013-48d1-ba47-ab6e7645cf3b" />
+      </agents>
+    </environment>
+    <environment name="ServerTests">
+      <agents>
+        <physical uuid="0f2f1c30-0220-4d72-bf45-976d0a65e92d" />
+      </agents>
+      <pipelines>
+        <pipeline name="ServerTests" />
+      </pipelines>
+    </environment>
   </environments>
   <agents>
-    <agent hostname="continuousintegrationserver" ipaddress="10.19.0.5" uuid="2eb05fac-008c-4e6e-b794-916c26121dd3" />
     <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="fd03899d-7788-47b9-afee-e8036b0060e1" />
-    <agent hostname="Testing-Env" ipaddress="10.19.0.7" uuid="67c1a041-f3c6-4c87-b206-766ac2b55ef7" />
-    <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="30b3f773-06f0-4966-a7b3-5a1128ccb059" />
+    <agent hostname="test-automation" ipaddress="10.19.0.10" uuid="3c203044-7013-48d1-ba47-ab6e7645cf3b">
+      <resources>
+        <resource>Automation</resource>
+      </resources>
+    </agent>
+    <agent hostname="ServerTests" ipaddress="10.19.0.12" uuid="0f2f1c30-0220-4d72-bf45-976d0a65e92d" />
+    <agent hostname="Test-Env" ipaddress="10.19.0.11" uuid="4b9908c8-79eb-458d-9156-aedfa687dcd3" />
+    <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="d029afb8-6952-4776-9146-848dad530f73" />
   </agents>
 </cruise>
