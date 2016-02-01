@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0, handle-callback-err:0 */
+/* eslint no-unused-vars:0, handle-callback-err:0, no-console:0 */
 
 "use strict";
 import DbParameters from "./DbParameters.js";
@@ -12,37 +12,35 @@ export default class DbSession {
             if(this.db) {
                 resolve(this.db);
             } else {
-                let dbParameters = DbParameters.instance();
-
-                new PouchDB(dbParameters.getLocalDbUrl(), { "auto_compaction": "true" }).then(session => {
+                DbSession.new().remoteDbInstance().then(session => {
                     this.db = session;
-                    DbSession.sync();
-                    resolve(this.db);
-                }).catch(error => {
-                    new PouchDB(dbParameters.getRemoteDbUrl()).then(session => {
-                        this.db = session;
-                        resolve(session);
-                    });
+                    resolve(session);
                 });
             }
         });
     }
 
-    static clearInstance() {
-        this.db = null;
-        if(this.currentSyn) {
-            this.currentSyn.cancel();
-            this.currentSyn = null;
-        }
+    constructor() {
+        this.dbParameters = DbParameters.instance();
     }
 
-    static sync() {
-        if(this.currentSyn) {
-            this.currentSyn.cancel();
-            this.currentSyn = null;
+    remoteDbInstance() {
+        return new Promise((resolve, reject) => {
+            DbSession.newRemotePouchDb().then(session => {
+                this.replicateRemoteDb();
+                resolve(session);
+            });
+        });
+    }
+
+
+    sync() {
+        if(DbSession.currentSyn) {
+            DbSession.currentSyn.cancel();
+            DbSession.currentSyn = null;
         }
-        let dbParameters = DbParameters.instance();
-        this.currentSyn = PouchDB.sync(dbParameters.getLocalDbUrl(), dbParameters.getRemoteDbUrl(), {
+
+        DbSession.currentSyn = PouchDB.sync(this.dbParameters.getLocalDbUrl(), this.dbParameters.getRemoteDbUrl(), {
             "live": true,
             "retry": true
         }).on("change", (info) => {
@@ -52,11 +50,58 @@ export default class DbSession {
         }).on("active", () => {
             // replicate resumed (e.g. user went back online)
         }).on("denied", (info) => {
+            console.warn("replication denied", info);
             // a document failed to replicate, e.g. due to permissions
         }).on("complete", (info) => {
             // handle complete
         }).on("error", (err) => {
+            console.warn("replication errored", err);
+        });
+    }
+
+    replicateRemoteDb() {
+        PouchDB.replicate(this.dbParameters.getRemoteDbUrl(), this.dbParameters.getLocalDbUrl(), {
+            "retry": true
+        }).on("change", (info) => {
+            // handle change
+        }).on("paused", () => {
+            // replication paused (e.g. user went offline)
+        }).on("active", () => {
+            // replicate resumed (e.g. user went back online)
+        }).on("denied", (info) => {
+            console.warn("replication denied", info);
+            // a document failed to replicate, e.g. due to permissions
+        }).on("complete", (info) => {
+            DbSession.newLocalPouchDb().then(session => {
+                DbSession.db = session;
+                this.sync();
+            }).catch(error => {
+                console.warn("error while creating db", error);
+            });
+            // handle complete
+        }).on("error", (err) => {
+            console.warn("replication errored", err);
             // handle error
         });
+    }
+
+    static new() {
+        return new DbSession();
+    }
+
+    static newRemotePouchDb() {
+        return new PouchDB(DbParameters.instance().getRemoteDbUrl());
+    }
+
+    static newLocalPouchDb() {
+        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": "true" });
+    }
+
+    static clearInstance() {
+        DbSession.db = null;
+        if(DbSession.currentSyn) {
+            DbSession.currentSyn.cancel();
+            DbSession.currentSyn = null;
+        }
     }
 }
