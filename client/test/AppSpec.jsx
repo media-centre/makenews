@@ -2,7 +2,7 @@
 
 "use strict";
 import "./helper/TestHelper.js";
-import { App } from "../src/js/App.jsx";
+import App from "../src/js/App.jsx";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";

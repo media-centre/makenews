@@ -11,7 +11,7 @@ import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 
 
-export default class SurfPage extends Component {
+export class SurfPage extends Component {
     constructor(props) {
         super(props);
         this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds };

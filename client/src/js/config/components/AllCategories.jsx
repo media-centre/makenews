@@ -8,18 +8,7 @@ import { highLightTabAction } from "../../tabs/TabActions.js";
 import { createCategory } from "../actions/CategoryActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 
-let AllCategories = React.createClass({
-    displayName() {
-        return "All Categories";
-    },
-    propTypes() {
-        return {
-            "categories": PropTypes.object.isRequired,
-            "dispatch": PropTypes.func.isRequired
-        };
-    },
-
-    mixins: [History], //eslint-disable-line quote-props
+export class AllCategories extends React.Component {
 
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -27,14 +16,14 @@ let AllCategories = React.createClass({
         this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayAllCategoriesAsync());
 
-    },
+    }
 
     _createNewCategory() {
-        let history = this.history;
+        let history = this.context.history;
         this.props.dispatch(createCategory("", (response)=>{
             history.push("/configure/category/" + response.id + "/" + response.name);
         }));
-    },
+    }
 
     renderCategoryLists() {
         let categoriesArray = [];
@@ -57,7 +46,7 @@ let AllCategories = React.createClass({
             )
         );
         return categoriesArray;
-    },
+    }
 
     render() {
         return (
@@ -73,12 +62,23 @@ let AllCategories = React.createClass({
             </div>
         );
     }
-});
+}
 
-export { AllCategories };
+AllCategories.displayName = "All Categories";
+
+AllCategories.contextTypes = {
+    "history": function() {
+        return History.prototype;
+    }
+};
+
+AllCategories.propTypes = {
+    "allCategories": PropTypes.object.isRequired,
+    "allCategoriesPageStrings": PropTypes.object.isRequired,
+    "dispatch": PropTypes.func.isRequired
+};
 
 function select(store) {
     return { "allCategories": store.allCategories, "allCategoriesPageStrings": store.configurePageLocale.allCategories };
 }
 export default connect(select)(AllCategories);
-
