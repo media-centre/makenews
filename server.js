@@ -13,7 +13,7 @@ import hsts from "hsts";
 let app = express();
 app.use(helmet.hidePoweredBy());
 app.use(csp({
-	scriptSrc : ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net"],
+	scriptSrc : ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
 	styleSrc : ["'self'", "'unsafe-inline'"]
  }));
 let ninetyDaysInMilliseconds = 7776000000;

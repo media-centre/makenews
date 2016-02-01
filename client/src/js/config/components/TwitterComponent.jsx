@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from "react";
 import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
+import TwitterLogin from "../../twitter/TwitterLogin.js"
 
 export const twRegexHandler = (/[@][a-zA-Z0-9_]{1,15}$/);
 export const twRegexHashtag = /[#][a-zA-Z][a-zA-Z0-9_]{1,140}$/;
@@ -28,9 +29,22 @@ export default class TwitterComponent extends Component {
         }
     }
 
+    twitterLoginHandler() {
+        return new Promise((res, rej) => {
+            let clientCallbackUrl = window.location.href;
+            TwitterLogin.instance().requestToken(clientCallbackUrl).then((response) => {
+                window.location.assign(response.authenticateUrl);
+                res(true);
+            });
+        });
+    }
+
     render() {
         return (
-            <AddURLComponent hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)} noValidation />
+            <AddURLComponent hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content}
+                             categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel}
+                             errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}
+                             noValidation addURLHandler= {this.twitterLoginHandler} />
         );
     }
 }

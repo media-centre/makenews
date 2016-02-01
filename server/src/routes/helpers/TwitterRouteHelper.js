@@ -5,9 +5,11 @@ import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import EnvironmentConfig from "../../config/EnvironmentConfig";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
+import TwitterLogin from "../../twitter/TwitterLogin.js";
 import ResponseUtil from "../../util/ResponseUtil";
 import restRequest from "request";
 import BatchRequestsRouteHelper from "./BatchRequestsRouteHelper.js";
+import ApplicationConfig from "../../config/ApplicationConfig.js";
 
 export default class TwitterRouteHelper {
 
@@ -58,8 +60,18 @@ export default class TwitterRouteHelper {
         }
     }
 
-    setResponse(status, responseJson) {
-        this.response.status(status);
-        this.response.json(responseJson);
+    requestToken() {
+        let serverCallbackUrl = this.request.query.serverCallbackUrl, clientCallbackUrl = this.request.query.clientCallbackUrl;
+        TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).then((instance) => {
+            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
+        });
+    }
+
+    twitterAuthenticateCallback() {
+        TwitterLogin.instance({"previouslyFetchedOauthToken": this.request.query.oauth_token}).then((twitterLoginInstance) => {
+            twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier).then((clientRedirectUrl) => {
+                this.response.redirect(clientRedirectUrl);
+            });
+        });
     }
 }
