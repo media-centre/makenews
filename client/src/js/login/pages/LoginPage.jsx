@@ -5,10 +5,10 @@ import Branding from "../components/Branding.jsx";
 import FeaturesHelp from "../components/FeaturesHelp.jsx";
 import { userLogin } from "../LoginActions.js";
 import Logo from "../../utils/components/Logo.jsx";
+import AppSessionStorage from "../../../js/utils/AppSessionStorage";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
-let loginUserName = "";
 export class LoginPage extends Component {
 
     componentWillMount() {
@@ -20,12 +20,11 @@ export class LoginPage extends Component {
     }
 
     static getUserName() {
-        return loginUserName;
+        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
     }
 
     render() {
         const { dispatch } = this.props;
-        loginUserName = this.props.login.userName;
         return (
             <div>
                 <header className="app-header login app-">

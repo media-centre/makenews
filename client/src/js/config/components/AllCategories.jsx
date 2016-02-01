@@ -27,7 +27,7 @@ export class AllCategories extends React.Component {
 
     renderCategoryLists() {
         let categoriesArray = [];
-        categoriesArray.push(<li className="add-new" id="addNewCategoryButton" key ="0" onClick={this._createNewCategory}>
+        categoriesArray.push(<li className="add-new" id="addNewCategoryButton" key ="0" onClick={() => this._createNewCategory()}>
             <div className="navigation-link">
                 <div className="v-center t-center text-container">
                     <span ref="addNewCategoryLink">{this.props.allCategoriesPageStrings.addNewCategoryLabel}</span>
