@@ -68,7 +68,7 @@ export default class TwitterRouteHelper {
     }
 
     twitterAuthenticateCallback() {
-        TwitterLogin.instance({"previouslyFetchedOauthToken": this.request.query.oauth_token}).then((twitterLoginInstance) => {
+        TwitterLogin.instance({ "previouslyFetchedOauthToken": this.request.query.oauth_token }).then((twitterLoginInstance) => {
             twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier).then((clientRedirectUrl) => {
                 this.response.redirect(clientRedirectUrl);
             });

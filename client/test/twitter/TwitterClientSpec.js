@@ -8,9 +8,9 @@ import sinon from "sinon";
 describe("TwitterClient", () => {
     describe("requestToken", () => {
         it("should get oauth_token from twitter", () => {
-            let response = { "authorizeUrl" : "url" };
+            let response = { "authorizeUrl": "url" };
             let clientCallbackUrl = "clientCallbackUrl", serverCallbackUrl = "serverCallbackUrl";
-            let query = { "clientCallbackUrl": clientCallbackUrl, "serverCallbackUrl": serverCallbackUrl }
+            let query = { "clientCallbackUrl": clientCallbackUrl, "serverCallbackUrl": serverCallbackUrl };
             let sandbox = sinon.sandbox.create();
             let ajaxMock = new AjaxClient("/twitter-request-token");
             let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");

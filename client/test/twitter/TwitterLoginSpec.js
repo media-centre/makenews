@@ -3,7 +3,6 @@
 import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
 import TwitterLogin from "../../src/js/twitter/TwitterLogin.js";
 import AppWindow from "../../src/js/utils/AppWindow.js";
-import { expect } from "chai";
 import sinon from "sinon";
 
 describe("TwitterLogin", () => {

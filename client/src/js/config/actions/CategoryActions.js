@@ -75,7 +75,7 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) {
+function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) { //eslint-disable-line max-params
     return new Promise((resolve, reject) => {
         new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status, "latestFeedTimestamp": latestFeedTimestamp }).save().then(response => {
             dispatch(populateCategoryDetailsAsync(categoryId));

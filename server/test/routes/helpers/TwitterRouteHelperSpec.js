@@ -194,7 +194,7 @@ describe("TwitterRouteHelper", () => {
             let clientCallbackUrl = "clientUrl", serverCallbackUrl = "serverUrl";
             twitterLogin.oauthToken = token;
             let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).returns(Promise.resolve(twitterLogin));
-            let response = {"status": () => {}, "json": () => {}};
+            let response = { "status": () => {}, "json": () => {} };
             let request = {
                 "query": {
                     "clientCallbackUrl": clientCallbackUrl,
@@ -203,7 +203,7 @@ describe("TwitterRouteHelper", () => {
             };
             let responseMock = sandbox.mock(response);
             responseMock.expects("status").withArgs(HttpResponseHandler.codes.OK);
-            responseMock.expects("json").withArgs({"authenticateUrl": expectedUrl});
+            responseMock.expects("json").withArgs({ "authenticateUrl": expectedUrl });
             let twitterRouteHelper = new TwitterRouteHelper(request, response);
             return Promise.resolve(twitterRouteHelper.requestToken()).then(() => {
                 twitterLoginMock.verify();
@@ -224,9 +224,8 @@ describe("TwitterRouteHelper", () => {
 
         it("should return the clientCallbackUrl on success", () => {
             let twitterLogin = new TwitterLogin();
-            let token = "token";
             let oauthToken = "oauth_token", oauthVerifier = "oauth_verifier", clientRedirectUrl = "clientRedirectUrl";
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({"previouslyFetchedOauthToken": oauthToken}).returns(Promise.resolve(twitterLogin));
+            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "previouslyFetchedOauthToken": oauthToken }).returns(Promise.resolve(twitterLogin));
             let accessTokenFromTwitterMock = sandbox.mock(twitterLogin).expects("accessTokenFromTwitter").withArgs(oauthVerifier).returns(Promise.resolve(clientRedirectUrl));
             let response = { "redirect": () => {} };
             let request = {
