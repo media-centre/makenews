@@ -19,7 +19,10 @@ export default class ImageContent extends Component {
     _onLoadImage() {
         let item = this.refs.imageContent;
         item.querySelector("img").classList.remove("hide");
-        item.querySelector(".custom-spinner").remove();
+        const spinner = item.querySelector(".custom-spinner");
+        if(spinner) {
+            spinner.remove();
+        }
     }
 
     _showConfirmPopup() {
@@ -55,7 +58,7 @@ export default class ImageContent extends Component {
                         <div className="title">{this.props.category.title}</div>
                         <div className="container clear-fix">
                             <div className="img-container box m-block left" ref="imageContent">
-                                <img src={this.props.category.url} onLoad={() => this._onLoadImage()} className="hide"/>
+                                <img src={this.props.category.url} onLoad={() => this._onLoadImage()} onError={() => this._onLoadImage()} className="hide"/>
                                 <Spinner/>
                             </div>
                             <p className="box surf-description">{getHtmlContent(this.props.category.content)}</p>

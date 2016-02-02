@@ -20,7 +20,10 @@ export default class ImageGallery extends Component {
     _onLoadImage(index) {
         let item = this.refs["gallery-item-" + index];
         item.querySelector("img").classList.remove("hide");
-        item.querySelector(".custom-spinner").remove();
+        const spinner = item.querySelector(".custom-spinner");
+        if(spinner) {
+            spinner.remove();
+        }
     }
 
     _showConfirmPopup() {
@@ -49,7 +52,7 @@ export default class ImageGallery extends Component {
         let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
         let images = this.props.category.images.map((image, index)=>
             <li className="image-container box" ref={"gallery-item-" + index} key={index}>
-                <img src={image.url} onLoad={() => this._onLoadImage(index)} className="hide"/>
+                <img src={image.url} onLoad={() => this._onLoadImage(index)} onError={() => this._onLoadImage(index)} className="hide"/>
                 <Spinner/>
             </li>
         );
