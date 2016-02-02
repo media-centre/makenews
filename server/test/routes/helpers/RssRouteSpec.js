@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import RssRouteHelper from "../../../src/routes/helpers/RssRouteHelper";
+import RssRoute from "../../../src/routes/helpers/RssRoute";
 import RssClient from "../../../src/rss/RssClient";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
@@ -10,7 +10,7 @@ import { expect } from "chai";
 import nock from "nock";
 import sinon from "sinon";
 
-describe("RssRouteHelper", () => {
+describe("RssRoute", () => {
     function mockResponse(done, expectedValues) {
         let response = {
             "status": (status) => {
@@ -70,8 +70,8 @@ describe("RssRouteHelper", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": url + " is not a proper feed" } });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": url + " is not a proper feed" } });
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
@@ -98,11 +98,11 @@ describe("RssRouteHelper", () => {
                 "description": "news cricket" }]
         };
         let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
-    it("should return 404 error if url is invalid", (done) => {
+    it("should return 500 error if url is invalid", (done) => {
         nock("http://www.test1.com/cricket")
             .get("/", {
             })
@@ -114,8 +114,8 @@ describe("RssRouteHelper", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "Request failed for " + url } });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": "Request failed for " + url } });
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
@@ -131,9 +131,9 @@ describe("RssRouteHelper", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json":
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json":
         { "message": "Request failed for " + url } });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
@@ -144,7 +144,7 @@ describe("RssRouteHelper", () => {
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
@@ -154,7 +154,7 @@ describe("RssRouteHelper", () => {
             }
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
-        let rssRouteHelper = new RssRouteHelper(request, response);
+        let rssRouteHelper = new RssRoute(request, response);
         rssRouteHelper.feedsForUrl();
     });
 
@@ -183,7 +183,7 @@ describe("RssRouteHelper", () => {
                 "6E4B3A-5B3E-15CD-95CB-7E9D82343249": { "items": [{ "title": "test1", "description": "news cricket1" }] }
             };
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedResponse });
-            let rssRouteHelper = new RssRouteHelper(requestData, response);
+            let rssRouteHelper = new RssRoute(requestData, response);
 
             let sandbox = sinon.sandbox.create();
             let rssRequestHandlerInstance = new RssRequestHandler();
@@ -222,7 +222,7 @@ describe("RssRouteHelper", () => {
                 "6E4B3A-5B3E-15CD-95CB-7E9D82343249": "failed"
             };
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedResponse });
-            let rssRouteHelper = new RssRouteHelper(requestData, response);
+            let rssRouteHelper = new RssRoute(requestData, response);
 
             let sandbox = sinon.sandbox.create();
             let rssRequestHandlerInstance = new RssRequestHandler();

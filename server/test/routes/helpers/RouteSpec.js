@@ -1,15 +1,19 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
 
-import BatchRequestsRouteHelper from "../../../src/routes/helpers/BatchRequestsRouteHelper.js";
+import Route from "../../../src/routes/helpers/Route.js";
 import { assert } from "chai";
 
-describe("BatchRequestsRouteHelper", () => {
-    describe("BatchRequestsRouteHelper", () => {
+describe.only("Route", () => {
+    describe("isValidRequestData", () => {
+        let response = null, next = null;
+        before("Route", () => {
+            response = {};
+            next = {};
+        });
         it("should validate the invalid request data and throw error", () => {
-            let response = {};
-            let batchFeedsRequest = new BatchRequestsRouteHelper({}, response);
-            assert.strictEqual(false, batchFeedsRequest.isValidRequestData());
+            let route = new Route({}, response);
+            assert.strictEqual(false, route.isValidRequestData());
 
         });
 
@@ -20,8 +24,8 @@ describe("BatchRequestsRouteHelper", () => {
                     { "timestamp": "12556", "url": "http://www.test.com/testfeeds" }
                 ]
             };
-            let batchFeedsRequest = new BatchRequestsRouteHelper({ "body": requestBody }, {});
-            assert.strictEqual(false, batchFeedsRequest.isValidRequestData());
+            let route = new Route({ "body": requestBody }, response, next);
+            assert.strictEqual(false, route.isValidRequestData());
         });
 
         it("should return false if url is not present in the request body", () => {
@@ -32,8 +36,8 @@ describe("BatchRequestsRouteHelper", () => {
                 ]
             };
 
-            let batchFeedsRequest = new BatchRequestsRouteHelper({ "body": requestBody }, {});
-            assert.strictEqual(false, batchFeedsRequest.isValidRequestData());
+            let route = new Route({ "body": requestBody }, response, next);
+            assert.strictEqual(false, route.isValidRequestData());
         });
 
         it("should return false if timestamp is not present in the request body", () => {
@@ -44,8 +48,8 @@ describe("BatchRequestsRouteHelper", () => {
                 ]
             };
 
-            let batchFeedsRequest = new BatchRequestsRouteHelper({ "body": requestBody }, {});
-            assert.strictEqual(false, batchFeedsRequest.isValidRequestData());
+            let route = new Route({ "body": requestBody }, response, next);
+            assert.strictEqual(false, route.isValidRequestData());
         });
 
         it("should not return false if request body is valid", () => {
@@ -56,8 +60,8 @@ describe("BatchRequestsRouteHelper", () => {
                 ]
             };
 
-            let batchFeedsRequest = new BatchRequestsRouteHelper({ "body": requestBody }, {});
-            assert.strictEqual(true, batchFeedsRequest.isValidRequestData());
+            let route = new Route({ "body": requestBody }, response, next);
+            assert.strictEqual(true, route.isValidRequestData());
         });
     });
 });

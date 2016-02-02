@@ -3,19 +3,12 @@ import UserRequest from "../../../src/login/UserRequest.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import ClientConfig from "../../../src/config/ClientConfig.js";
 import RouteLogger from "../RouteLogger.js";
+import Route from "./Route.js";
 
-export default class LoginRoute {
-    static instance(request, response, next) {
-        return new LoginRoute(request, response, next);
-    }
+
+export default class LoginRoute extends Route {
     constructor(request, response, next) {
-        if(!request || !response) {
-            throw new Error("request or response can not be empty");
-        }
-
-        this.request = request;
-        this.response = response;
-        this.next = next;
+        super(request, response, next);
     }
 
     handle() {
@@ -27,11 +20,11 @@ export default class LoginRoute {
                 this._handleLoginSuccess(authSessionCookie, this.request.body.username);
             }).catch(error => { //eslint-disable-line
                 RouteLogger.instance().error("LoginRoute::handle Failed while fetching auth session cookie");
-                this._handleLoginFailure();
+                this._handleFailure({ "message": "unauthorized" });
             });
         } catch(error) {
             RouteLogger.instance().error("LoginRoute::handle Unexpected error = ", error);
-            this._handleLoginFailure();
+            this._handleFailure({ "message": "unauthorized" });
         }
     }
 
@@ -43,14 +36,10 @@ export default class LoginRoute {
 
         RouteLogger.instance().info("LoginRoute::_handleLoginSuccess: Login request successful");
         RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": userName, "dbParameters": dbJson }));
-
-        this.next();
     }
 
-    _handleLoginFailure() {
-        this.response.status(HttpResponseHandler.codes.UNAUTHORIZED)
-            .json({ "message": "unauthorized" });
-        RouteLogger.instance().error("LoginRoute::_handleLoginFailure: Login request failed for the user = ", this.request.body.username);
-        this.next();
+    _handleFailure(error) {
+        this.response.status(HttpResponseHandler.codes.UNAUTHORIZED);
+        this.response.json(error);
     }
 }

@@ -2,14 +2,14 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import CouchSession from "../../CouchSession.js";
 import RouteLogger from "../RouteLogger.js";
+import Route from "./Route.js";
 
-export default class RenewSessionHelper {
-    constructor(request, response) {
-        this.request = request;
-        this.response = response;
+export default class RenewSessionRoute extends Route {
+    constructor(request, response, next) {
+        super(request, response, next);
     }
 
-    authenticateAgain() {
+    handle() {
         if(this.request.cookies && this.request.cookies.AuthSession) {
             CouchSession.authenticate(this.request.cookies.AuthSession).then(newAuthSessionCookie => {
                 this._handleSuccess(newAuthSessionCookie);

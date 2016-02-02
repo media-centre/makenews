@@ -60,12 +60,10 @@ describe("LoginRoute", () => {
                               "remoteDbUrl": "http://localhost:5984"
                           }
                         }, data);
+                    userReqGetAuthSessionCookieMock.verify();
+                    EnvironmentConfig.instance.restore();
+                    done();
                 }
-            };
-            next = () => {
-                userReqGetAuthSessionCookieMock.verify();
-                EnvironmentConfig.instance.restore();
-                done();
             };
 
             let clientConfig = {
@@ -85,20 +83,16 @@ describe("LoginRoute", () => {
             loginRoute.handle();
         });
 
-        it("should respond with unauthorized if fetching authsession cookie is failed", (done) => {
+        it.only("should respond with unauthorized if fetching authsession cookie is failed", (done) => {
             response = {
                 "status": (statusCode) => {
                     assert.equal(HttpResponseHandler.codes.UNAUTHORIZED, statusCode);
-                    return response;
                 },
                 "json": (data) => {
                     assert.deepEqual({ "message": "unauthorized" }, data);
+                    userReqGetAuthSessionCookieMock.verify();
+                    done();
                 }
-            };
-
-            next = () => {
-                userReqGetAuthSessionCookieMock.verify();
-                done();
             };
 
             userReqGetAuthSessionCookieMock.returns(Promise.reject("error"));

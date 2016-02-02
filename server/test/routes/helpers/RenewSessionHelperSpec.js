@@ -1,13 +1,13 @@
 "use strict";
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import RenewSessionHelper from "../../../src/routes/helpers/RenewSessionHelper.js";
+import RenewSessionRoute from "../../../src/routes/helpers/RenewSessionRoute.js";
 import CouchSession from "../../../src/CouchSession.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
-describe("RenewSessionHelper", () => {
-    let token = null, couchSessionAuthenticateMock = null, request = null;
+describe("RenewSessionRoute", () => {
+    let token = null, couchSessionAuthenticateMock = null, request = null, next = null;
     beforeEach("getUserName", () => {
         token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
         request = {
@@ -16,6 +16,7 @@ describe("RenewSessionHelper", () => {
             }
         };
         couchSessionAuthenticateMock = sinon.mock(CouchSession).expects("authenticate");
+        next = {};
     });
     afterEach("getUserName", () => {
         CouchSession.authenticate.restore();
@@ -34,8 +35,8 @@ describe("RenewSessionHelper", () => {
         };
 
         couchSessionAuthenticateMock.withArgs(token).returns(Promise.reject("failed"));
-        let renewSessionHelper = new RenewSessionHelper(request, response);
-        renewSessionHelper.authenticateAgain();
+        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        renewSessionHelper.handle();
         couchSessionAuthenticateMock.verify();
     });
 
@@ -56,8 +57,8 @@ describe("RenewSessionHelper", () => {
             }
         };
 
-        let renewSessionHelper = new RenewSessionHelper(request, response);
-        renewSessionHelper.authenticateAgain();
+        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        renewSessionHelper.handle();
     });
 
     it("should return unauthorised if cookie in header is empty", (done) => {
@@ -73,8 +74,8 @@ describe("RenewSessionHelper", () => {
             }
         };
 
-        let renewSessionHelper = new RenewSessionHelper(request, response);
-        renewSessionHelper.authenticateAgain();
+        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        renewSessionHelper.handle();
     });
 
     it("should return auth session cookie for success", (done) => {
@@ -95,8 +96,8 @@ describe("RenewSessionHelper", () => {
             }
         };
         couchSessionAuthenticateMock.withArgs(token).returns(Promise.resolve(renewedCookie));
-        let renewSessionHelper = new RenewSessionHelper(request, response);
-        renewSessionHelper.authenticateAgain();
+        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        renewSessionHelper.handle();
         couchSessionAuthenticateMock.verify();
     });
 });

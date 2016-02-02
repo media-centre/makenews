@@ -1,8 +1,8 @@
 "use strict";
-import AllUrlHelper from "./helpers/AllUrlHelper.js";
+import DefaultRoute from "./helpers/DefaultRoute.js";
 import LoginRoute from "./helpers/LoginRoute.js";
-import LogoutRouterHelper from "./helpers/LogoutRouteHelper.js";
-import RenewSessionHelper from "./helpers/RenewSessionHelper.js";
+import LogoutRoute from "./helpers/LogoutRoute.js";
+import RenewSessionRoute from "./helpers/RenewSessionRoute.js";
 import RouteLogger from "./RouteLogger.js";
 
 
@@ -10,16 +10,16 @@ export default (app) => {
     app.post("/login", (request, response, next) => {
         RouteLogger.instance().info("AuthorizationRoutes: /login request received. url = ", request.url);
         try {
-            LoginRoute.instance(request, response, next).handle();
+            new LoginRoute(request, response, next).handle();
         } catch(error) {
             RouteLogger.instance().error("/login error", error);
         }
     });
 
-    app.get("/logout", (request, response) => {
+    app.get("/logout", (request, response, next) => {
         RouteLogger.instance().info("AuthorizationRoutes: /logout request received");
         try {
-            LogoutRouterHelper.logoutCallback(response);
+            new LogoutRoute(request, response, next).handle();
         } catch(error) {
             RouteLogger.instance().error("AuthorizationRoutes: /logout error", error);
         }
@@ -27,16 +27,16 @@ export default (app) => {
 
     app.use((request, response, next) => {
         try {
-            AllUrlHelper.allUrlsCallback(request, next);
+            new DefaultRoute(request, response, next).handle();
         } catch(error) {
             RouteLogger.instance().error("AuthorizationRoutes: all url error", error);
         }
     });
 
-    app.get("/renew_session", (request, response) => {
+    app.get("/renew_session", (request, response, next) => {
         RouteLogger.instance().info("AuthorizationRoutes: /renew_session request received. url = ", request.url);
         try {
-            new RenewSessionHelper(request, response).authenticateAgain();
+            new RenewSessionRoute(request, response, next).handle();
         } catch(error) {
             RouteLogger.instance().error("/session error", error);
         }

@@ -10,12 +10,12 @@ import ResponseUtil from "../../util/ResponseUtil";
 import restRequest from "request";
 import BatchRequestsRouteHelper from "./BatchRequestsRouteHelper.js";
 import ApplicationConfig from "../../config/ApplicationConfig.js";
+import Route from "./Route.js";
 
-export default class TwitterRouteHelper {
+export default class TwitterRoute extends Route {
 
-    constructor(request, response) {
-        this.request = request;
-        this.response = response;
+    constructor(request, response, next) {
+        super(request, response, next);
     }
 
     twitterRouter() {
@@ -26,16 +26,15 @@ export default class TwitterRouteHelper {
         } else {
             let twitterRequestHandler = TwitterRequestHandler.instance();
             twitterRequestHandler.fetchTweetsRequest(url, userName).then(feeds => {
-                ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, feeds);
+                this._handleSuccess(feeds);
             }).catch(error => {
-                ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.NOT_FOUND, error);
+                this._handleFailure(error);
             });
         }
     }
 
     twitterBatchFetch() {
-        let batchRequestsRouteHelper = new BatchRequestsRouteHelper(this.request, this.response);
-        if(batchRequestsRouteHelper.isValidRequestData()) {
+        if(this.isValidRequestData()) {
             let allFeeds = {};
             let counter = 0;
             let twitterRequestHandler = TwitterRequestHandler.instance();
@@ -44,20 +43,19 @@ export default class TwitterRouteHelper {
                 twitterRequestHandler.fetchTweetsRequest(item.url, userName, item.timestamp).then(feeds => {
                     allFeeds[item.id] = feeds;
                     if (this.request.body.data.length - 1 === counter) {
-                        ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
+                        this._handleSuccess(allFeeds);
                     }
                     counter += 1;
                 }).catch(() => {
                     allFeeds[item.id] = "failed";
                     if (this.request.body.data.length - 1 === counter) {
-                        ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
-
+                        this._handleSuccess(allFeeds);
                     }
                     counter += 1;
                 });
             });
         } else {
-            ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.BAD_REQUEST, "bad request");
+            this._handleInvalidRoute();
         }
     }
 
