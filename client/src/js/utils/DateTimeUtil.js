@@ -10,7 +10,9 @@ export default class DateTimeUtil {
         return moment.utc(dateString).local().format("llll");
     }
     static getUTCDateAndTime(dateString) {
-        return moment(dateString).utc().format();
+        let date = new Date(dateString);
+        let dateToISO = isNaN(date.getTime()) ? dateString : date.toISOString();
+        return moment(dateToISO).utc().format();
     }
     static getTimestamp(dateString) {
         return new Date(DateTimeUtil.getUTCDateAndTime(dateString)).getTime();

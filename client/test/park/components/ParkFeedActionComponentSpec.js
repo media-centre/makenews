@@ -12,7 +12,7 @@ describe("ParkFeedActionComponent", () => {
 
     before("ParkFeedActionComponent", () => {
         feedActionComponent = TestUtils.renderIntoDocument(
-          <ParkFeedActionComponent />
+          <ParkFeedActionComponent feedAction={()=> {}}/>
        );
     });
 

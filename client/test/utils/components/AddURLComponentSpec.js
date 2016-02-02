@@ -25,7 +25,10 @@ describe("AddURLComponent", () => {
 
     before("TabComponent", () => {
         AddURLComponentElement = TestUtils.renderIntoDocument(
-            <AddURLComponent exampleMessage="Example: thehindu.com/opinion/?service=rss" hintMessage = "Please enter RSS URL here" addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage="" sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })} categoryDetailsPageStrings={categoryDetailsPageStrings}/> //eslint-disable-line max-len
+            <AddURLComponent exampleMessage="Example: thehindu.com/opinion/?service=rss" hintMessage = "Please enter RSS URL here"
+                addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage=""
+                sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })}
+                categoryDetailsPageStrings={categoryDetailsPageStrings} categoryId="testCategory"/> //eslint-disable-line react/jsx-closing-bracket-location
         );
     });
 

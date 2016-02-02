@@ -18,7 +18,7 @@ describe("MainHeaderTab", () => {
 
     it("should have link to url", () => {
         mainHeaderTab = TestUtils.renderIntoDocument(
-            <MainHeaderTab name="Park" url="/park" tabToHighlight={highlightedTab} className="park" parkCounter={parkCounter} />
+            <MainHeaderTab name="Park" url="/park" tabToHighlight={highlightedTab} className="park" parkCounter={parkCounter} id="1"/>
         );
         let linkElement = TestUtils.scryRenderedComponentsWithType(mainHeaderTab, Link);
         let linkProps = linkElement[0].props;
@@ -32,7 +32,7 @@ describe("MainHeaderTab", () => {
 
     it("should not add selected class name from park", () => {
         mainHeaderTab = TestUtils.renderIntoDocument(
-            <MainHeaderTab name="Surf" url="/surf" tabToHighlight={highlightedTab} className="surf" parkCounter={parkCounter}/>
+            <MainHeaderTab name="Surf" url="/surf" tabToHighlight={highlightedTab} className="surf" parkCounter={parkCounter} id="1"/>
         );
         let linkElement = TestUtils.scryRenderedComponentsWithType(mainHeaderTab, Link);
         assert.strictEqual("", linkElement[0].props.className);

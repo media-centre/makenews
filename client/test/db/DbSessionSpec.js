@@ -12,6 +12,7 @@ describe("DbSession", () => {
     let parametersFake = null, allSandbox = null;
     before("DbSession", () => {
         allSandbox = sinon.sandbox.create();
+        allSandbox.stub(console, "warn");
         parametersFake = {
             "type": () => {
                 return "PouchDB";
