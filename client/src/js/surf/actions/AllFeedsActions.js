@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0, callback-return:0 */
+/* eslint no-unused-vars:0, callback-return:0, max-nested-callbacks:0 */
 "use strict";
 
 import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
@@ -10,6 +10,8 @@ export const DISPLAY_EXISTING_FEEDS = "DISPLAY_EXISTING_FEEDS";
 export const PARK_FEED = "PARK_FEED";
 export const STORE_FILTER_SOURCE_MAP = "STORE_FILTER_SOURCE_MAP";
 export const FETCH_ALL_CATEGORIES = "FETCH_ALL_CATEGORIES";
+export const FETCH_FEEDS_BY_PAGE = "FETCH_FEEDS_BY_PAGE";
+export const PAGINATION_FEEDS = "PAGINATION_FEEDS";
 
 let isRefreshing = false, totalPercentage = 100;
 
@@ -24,11 +26,14 @@ export function removeParkItem(feed) {
 export function displayExistingFeeds(feeds, refreshState, progressPercentage = 0) {
     return { "type": DISPLAY_EXISTING_FEEDS, feeds, refreshState, progressPercentage };
 }
-export function storeFilterSourceMap(surfFilter, sourceHashMap) {
-    return { "type": STORE_FILTER_SOURCE_MAP, surfFilter, sourceHashMap };
+export function storeFilterSourceMap(surfFilter, sourceHashMap, sourceIds) {
+    return { "type": STORE_FILTER_SOURCE_MAP, surfFilter, sourceHashMap, sourceIds };
 }
 export function fetchAllCatgories(categories) {
     return { "type": FETCH_ALL_CATEGORIES, categories };
+}
+export function paginationFeeds(feeds, refreshState = false, progressPercentage = 0) {
+    return { "type": PAGINATION_FEEDS, feeds, refreshState, progressPercentage };
 }
 
 export function displayAllFeedsAsync(callback, progressPercentage) {
@@ -78,23 +83,44 @@ export function storeFilterAndSourceHashMap(callback) {
             let filterFeedsHandler = new FilterFeedsHandler();
             filterFeedsHandler.getFilterAndSourceHashMap().then((result)=> {
                 callback(result);
-                dispatch(storeFilterSourceMap(result.surfFilter, result.sourceHashMap));
+                dispatch(storeFilterSourceMap(result.surfFilter, result.sourceHashMap, result.sourceIds));
             });
         } else {
             callback(currentStore);
-            dispatch(storeFilterSourceMap(currentStore.surfFilter, currentStore.sourceHashMap));
+            dispatch(storeFilterSourceMap(currentStore.surfFilter, currentStore.sourceHashMap, currentStore.sourceIds));
         }
     };
 }
 
-export function fetchFeedsByFilter(latestFilterDocument) {
+export function fetchFeedsByPage(lastIndex, callback = ()=> {}) {
+    return dispatch => {
+        let filterObj = dispatch(storeFilterSourceMap());
+        if(filterObj.surfFilter) {
+            let filterFeedsHandler = new FilterFeedsHandler();
+            filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, lastIndex).then((result)=> {
+                dispatch(paginationFeeds(result.feeds, false, 0));
+                callback(result);
+            }).catch(()=> {
+                callback({ "lastIndex": lastIndex });
+            });
+        } else {
+            callback({ "lastIndex": lastIndex });
+        }
+    };
+}
+
+export function fetchFeedsByFilter(latestFilterDocument, callback = ()=> {}) {
     return dispatch => {
         let currentStore = dispatch(storeFilterSourceMap());
         currentStore.surfFilter = latestFilterDocument;
+        dispatch(storeFilterSourceMap(currentStore.surfFilter, currentStore.sourceHashMap, currentStore.sourceIds));
         let filterFeedsHandler = new FilterFeedsHandler();
         filterFeedsHandler.updateFilterDocument(latestFilterDocument).then(()=> {
-            filterFeedsHandler.fetchFeedsByFilter(currentStore).then((feeds)=> {
-                dispatch(displayAllFeeds(feeds));
+            filterFeedsHandler.getFilterAndSourceHashMap().then((filterObj) => {
+                filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, 0).then((result)=> {
+                    dispatch(displayAllFeeds(result.feeds));
+                    callback(result);
+                });
             });
         });
     };

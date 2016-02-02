@@ -4,14 +4,9 @@ import React, { Component, PropTypes } from "react";
 
 export default class SurfFilterItem extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = { "filterItems": this.props.filterItems };
-    }
-
     _highlightFilter(item) {
         let className = this.props.type === "text" ? "item surf-image category" : "item surf-image";
-        this.state.filterItems.forEach((filterItem)=> {
+        this.props.filterItems.forEach((filterItem)=> {
             if(filterItem._id === item._id) {
                 className += " selected";
             }
@@ -22,18 +17,18 @@ export default class SurfFilterItem extends Component {
     filterItem(item) {
         let NOT_FOUND = -1;
         let index = this.getItemIndex(item);
+        let filterItems = this.props.filterItems;
         if(index === NOT_FOUND) {
-            this.state.filterItems.push(item);
+            filterItems.push(item);
         } else {
-            this.state.filterItems.splice(index, 1);
+            filterItems.splice(index, 1);
         }
-
-        this.props.dispatchFilterAction(this.props.type, this.state.filterItems);
+        this.props.dispatchFilterAction(this.props.type, filterItems);
     }
 
     getItemIndex(item) {
         let itemIndex = -1;
-        this.state.filterItems.forEach((filterItem, index)=> {
+        this.props.filterItems.forEach((filterItem, index)=> {
             if(filterItem._id === item._id) {
                 itemIndex = index;
             }

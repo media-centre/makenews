@@ -1,4 +1,4 @@
-/* eslint react/no-danger:0 max-len:0 */
+/* eslint react/no-danger:0 max-len:0, no-set-state:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";

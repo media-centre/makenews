@@ -105,8 +105,8 @@ describe("AllFeedsAction", () => {
 
     describe("getSourceIdMapAndFilter", () => {
         it("should trigger filter action to get filter and hashmap", () => {
-            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {} };
-            expect(AllFeedsActions.storeFilterSourceMap({}, {})).to.deep.equal(filterAction);
+            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {}, "sourceIds": [] };
+            expect(AllFeedsActions.storeFilterSourceMap({}, {}, [])).to.deep.equal(filterAction);
         });
 
         xit("should get filter and source hash map and store it in redux store", (done) => {
@@ -143,6 +143,50 @@ describe("AllFeedsAction", () => {
             store.dispatch(AllFeedsActions.fetchAllCategories(()=> {}));
             fetchDocumentsMock.verify();
             PouchClient.fetchDocuments.restore();
+        });
+    });
+
+    describe("displayFeedsByPage", ()=> {
+        xit("should display only 20 feeds per page", (done)=> {
+            let filterStore = {
+                "surfFilter": {
+                    "_id": "surf-filter-id",
+                    "categories": [{
+                        "_id": "5B5AE0E9-2C36-0070-8569-AD5A68C0EFD7",
+                        "name": "Untitled Category 1"
+                    }],
+                    "mediaTypes": []
+                },
+                "sourceIds": ["9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF", "70F0C613-A7CE-5A3B-B152-7B534EBCA87F"],
+                "sourceHashMap": {
+                    "9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF": ["Untitled Category 1"],
+                    "812B88E6-7178-3735-A0C0-49609F0C99EB": ["Untitled Category 1"]
+                }
+            };
+            let feeds = [
+                {
+                    "doc": {
+                        "docType": "feed",
+                        "sourceId": "9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF"
+                    }
+                },
+                {
+                    "doc": {
+                        "docType": "feed",
+                        "sourceId": "some other source id"
+                    }
+                }
+            ];
+
+            let store = mockStore({ "feeds": feeds }, [{ "type": AllFeedsActions.FETCH_FEEDS_BY_PAGE, "feeds": feeds }], done);
+
+            let filterFeedsHandler = new FilterFeedsHandler();
+            let filterFeedsHandlerMock = sinon.mock(filterFeedsHandler).expects("fetchFeedsByPageWithFilter");
+            filterFeedsHandlerMock.withArgs(filterStore).returns(Promise.resolve(feeds));
+
+            store.dispatch(AllFeedsActions.fetchFeedsByPage(0));
+            filterFeedsHandlerMock.verify();
+            filterFeedsHandler.fetchFeedsByPageWithFilter.restore();
         });
     });
 
@@ -187,7 +231,7 @@ describe("AllFeedsAction", () => {
             let filterAction = { "type": AllFeedsActions.FETCH_FEEDS_BY_FILTER, "feeds": feeds };
 
             let store = mockStore({ "feeds": feeds }, [filterAction], done);
-            return Promise.resolve(store.dispatch(AllFeedsActions.fetchFeedsByFilter(updatedFilterDocument))).then(() => {
+            return Promise.resolve(store.dispatch(AllFeedsActions.fetchFeedsByPageWithFilter(updatedFilterDocument))).then(() => {
                 updateFilterDocument.verify();
                 filterFeedsHandler.updateFilterDocument.restore();
                 fetchFeedsByFilter.verify();

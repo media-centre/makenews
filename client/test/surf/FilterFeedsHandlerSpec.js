@@ -93,33 +93,59 @@ describe("displayFilteredFeeds", ()=> {
     it("should get both filter document and source hashmap", (done)=> {
         let filterDocument = [{
             "docType": "surf-filter",
-            "categoryIds": ["sports_category_id_01", "politics_category_id_02"]
+            "categoryIds": ["sports_category_id_01", "politics_category_id_02"],
+            "categories": [{ "_id": 1 }]
         }];
 
         let result = {
+            "surfFilter": {
+                "docType": "surf-filter",
+                "categoryIds": ["sports_category_id_01", "politics_category_id_02"],
+                "categories": [{ "_id": 1 }]
+            },
             "sourceHashMap": {
                 "sourceId_01": ["Sports"],
                 "sourceId_02": ["Politics"]
-            },
-            "surfFilter": {
-                "docType": "surf-filter",
-                "categoryIds": ["sports_category_id_01", "politics_category_id_02"]
             }
         };
+        let sourceUrlDocs = [{
+            "value": {
+                "categoryIds": [
+                    "sports_category_id_01"
+                ]
+            },
+            "key": "@martinfowler",
+            "id": "812B88E6-7178-3735-A0C0-49609F0C99EB"
+        }, {
+            "value": {
+                "categoryIds": [
+                    "politics_category_id_02"
+                ]
+            },
+            "key": "@martinfowler",
+            "id": "812B88E6-7178-3735-A0C0-49609F0C99EB"
+        }];
+
+        let filterFeedsHandler = new FilterFeedsHandler();
+
+        let surfFilterMock = sinon.mock(filterFeedsHandler).expects("fetchFilterDocument");
+        surfFilterMock.returns(Promise.resolve(filterDocument));
 
         let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments");
-        pouchClientMock.withArgs("category/surfFilter").returns(Promise.resolve(filterDocument));
+        pouchClientMock.withArgs("category/allSourcesBySourceType", { "include_docs": true }).returns(Promise.resolve(sourceUrlDocs));
 
         let feedDbMock = sinon.mock(FeedDb).expects("fetchSurfFeedsAndCategoriesWithSource");
         feedDbMock.returns(Promise.resolve(feedsAndCategoriesDocs));
 
-        let filterFeedsHandler = new FilterFeedsHandler();
-        filterFeedsHandler.getFilterAndSourceHashMap().then((filterAndSourceHashMap)=> {
+
+        return filterFeedsHandler.getFilterAndSourceHashMap().then((filterAndSourceHashMap)=> {
             expect(result).to.deep.equal(filterAndSourceHashMap);
             pouchClientMock.verify();
             PouchClient.fetchDocuments.restore();
             feedDbMock.verify();
             FeedDb.fetchSurfFeedsAndCategoriesWithSource.restore();
+            surfFilterMock.verify();
+            filterFeedsHandler.fetchFilterDocument.restore();
             done();
         });
 
@@ -195,7 +221,46 @@ describe("displayFilteredFeeds", ()=> {
         });
     });
 
-    it("should create sourceId list based on categories filtered", ()=> {
+    xit("should fetch feeds page by page with filter", (done)=> {
+        let filterStore = {
+            "surfFilter": {
+                "_id": "surf-filter-id",
+                "categories": [{
+                    "_id": "5B5AE0E9-2C36-0070-8569-AD5A68C0EFD7",
+                    "name": "Untitled Category 1"
+                }],
+                "mediaTypes": []
+            },
+            "sourceIds": ["9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF", "70F0C613-A7CE-5A3B-B152-7B534EBCA87F"],
+            "sourceHashMap": {
+                "9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF": ["Untitled Category 1"],
+                "812B88E6-7178-3735-A0C0-49609F0C99EB": ["Untitled Category 1"]
+            }
+        };
+        let feeds = [
+            {
+                "doc": {
+                    "docType": "feed",
+                    "sourceId": "9DD0ACE1-645C-2E0D-8EE2-3DFA423294AF"
+                }
+            },
+            {
+                "doc": {
+                    "docType": "feed",
+                    "sourceId": "some other source id"
+                }
+            }
+        ];
+        let sandbox = sinon.sandbox.create();
+        let pouchClientMock = sandbox.stub(PouchClient, "fetchDocuments");
+        let query = "category/latestFeeds?include_docs=true&descending=true&limit=200&skip=1";
+        pouchClientMock.withArgs(query).returns(Promise.resolve(feeds));
 
+
+        let filterFeedsHandler = new FilterFeedsHandler();
+        return filterFeedsHandler.fetchFeedsByPageWithFilter(filterStore).then(()=> {
+            sandbox.restore();
+            done();
+        });
     });
 });

@@ -171,7 +171,7 @@ describe("SurfFilterItem Component", ()=> {
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             let filterDomElements = surfFilterItemDom.querySelectorAll("ul li.selected");
             TestUtils.Simulate.click(filterDomElements[1]);
-            assert.isUndefined(surfFilterItem.state.filterItems[2]);
+            assert.isUndefined(surfFilterItem.props.filterItems[2]);
 
         });
     });

@@ -1,6 +1,6 @@
 /*eslint new-cap:0, no-unused-vars:0*/
 "use strict";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES } from "../actions/AllFeedsActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/AllFeedsActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 
@@ -21,8 +21,12 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         if(!action.surfFilter || !action.sourceHashMap) {
             action.surfFilter = state.surfFilter;
             action.sourceHashMap = state.sourceHashMap;
+            action.sourceIds = state.sourceIds;
         }
-        return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap });
+        return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap, "sourceIds": action.sourceIds });
+    case PAGINATION_FEEDS:
+        action.feeds = state.feeds.concat(action.feeds);
+        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
     default:
         return state;
     }
