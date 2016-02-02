@@ -31,9 +31,7 @@ export default class TwitterComponent extends Component {
 
     twitterLoginHandler() {
         return new Promise((res, rej) => {
-            let clientCallbackUrl = window.location.href;
-            TwitterLogin.instance().requestToken(clientCallbackUrl).then((response) => {
-                window.location.assign(response.authenticateUrl);
+            TwitterLogin.instance().requestToken().then((response) => {
                 res(true);
             });
         });

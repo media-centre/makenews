@@ -8,7 +8,8 @@ import sinon from "sinon";
 describe("TwitterLogin", () => {
     describe("requestToken", () => {
         it("should request to twitter through TwitterRequestHandler", () => {
-            let clientCallbackUrl = "clientCallbackUrl", serverUrl = "http://localhost:5000", serverCallbackUrl = "http://localhost:5000/twitter-oauth-callback";
+            let clientCallbackUrl = "http://localhost:5000/#/twitterSuccess", serverUrl = "http://localhost:5000",
+                serverCallbackUrl = "http://localhost:5000/twitter-oauth-callback";
             let sandbox = sinon.sandbox.create();
             let appWindowMock = new AppWindow();
             let appWindowInstanceMock = sandbox.mock(AppWindow).expects("instance");
@@ -17,7 +18,7 @@ describe("TwitterLogin", () => {
             appWindowGetMock.withExactArgs("serverUrl").returns(serverUrl);
             let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("requestToken");
             twitterRequestHandlerMock.withArgs(clientCallbackUrl, serverCallbackUrl).returns(Promise.resolve("response"));
-            return Promise.resolve(TwitterLogin.instance().requestToken(clientCallbackUrl)).then(() => {
+            return Promise.resolve(TwitterLogin.instance().requestToken()).then(() => {
                 appWindowInstanceMock.verify();
                 appWindowGetMock.verify();
                 twitterRequestHandlerMock.verify();

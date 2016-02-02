@@ -57,15 +57,17 @@ describe("FacebookTwitterDB", () => {
                 updateDocumentMock.verify();
             });
 
-            it("should update document if it is already present", () => {
+            it("should update document if it is already present", (done) => {
                 let jsonDocument = {
                     "twitterAuthenticated": true
                 };
 
                 let alreadyCreatedDocument = { "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": false };
                 getDocumentMock.returns(Promise.resolve(alreadyCreatedDocument));
-                updateDocumentMock.withArgs({ "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": true });
-                FacebookTwitterDb.createOrUpdateTokenDocument(jsonDocument);
+                updateDocumentMock.withArgs({ "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": true }).returns(Promise.resolve());
+                FacebookTwitterDb.createOrUpdateTokenDocument(jsonDocument).then((value) => {
+                    done();
+                });
             });
         });
     });

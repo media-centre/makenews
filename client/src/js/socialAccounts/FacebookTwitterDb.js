@@ -16,11 +16,11 @@ export default class FacebookTwitterDb {
     }
 
     static createOrUpdateTokenDocument(paramsObj) {
-        PouchClient.getDocument(socialAccountId).then((document) => {
-            PouchClient.updateDocument(Object.assign({}, document, paramsObj));
+        return PouchClient.getDocument(socialAccountId).then((document) => {
+            return PouchClient.updateDocument(Object.assign({}, document, paramsObj));
         }).catch(() => {
             let document = { "_id": socialAccountId, "facebookExpiredAfter": paramsObj.facebookExpiredAfter, "twitterAuthenticated": paramsObj.twitterAuthenticated || false };
-            PouchClient.createDocument(document);
+            return PouchClient.createDocument(document);
         });
     }
 }

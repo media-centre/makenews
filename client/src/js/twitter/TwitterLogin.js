@@ -7,8 +7,10 @@ export default class TwitterLogin {
         return new TwitterLogin();
     }
 
-    requestToken(clientCallbackUrl) {
-        let serverCallbackUrl = AppWindow.instance().get("serverUrl") + "/twitter-oauth-callback";
+    requestToken() {
+        var appServerUrl = AppWindow.instance().get("serverUrl");
+        let serverCallbackUrl = appServerUrl + "/twitter-oauth-callback";
+        let clientCallbackUrl = appServerUrl + "/#/twitterSuccess";
         return TwitterRequestHandler.requestToken(clientCallbackUrl, serverCallbackUrl);
     }
 }
