@@ -9,12 +9,15 @@ import EnvironmentConfig from "./server/src/config/EnvironmentConfig.js";
 import path from "path";
 import helmet from "helmet";
 import csp from "helmet-csp";
+import hsts from "hsts";
 let app = express();
 app.use(helmet.hidePoweredBy());
 app.use(csp({
 	scriptSrc : ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net"],
 	styleSrc : ["'self'", "'unsafe-inline'"]
  }));
+let ninetyDaysInMilliseconds = 7776000000;
+app.use(helmet.hsts({ maxAge: ninetyDaysInMilliseconds }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
