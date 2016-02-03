@@ -5,11 +5,16 @@ import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
 import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler.js";
 export const DISPLAY_ALL_FEEDS = "DISPLAY_ALL_FEEDS";
 export const DISPLAY_EXISTING_FEEDS = "DISPLAY_EXISTING_FEEDS";
+export const PARK_FEED = "PARK_FEED";
 
 let isRefreshing = false, totalPercentage = 100;
 
 export function displayAllFeeds(feeds, refreshState, progressPercentage = 0) {
     return { "type": DISPLAY_ALL_FEEDS, feeds, refreshState, progressPercentage };
+}
+
+export function removeParkItem(feed) {
+    return { "type": PARK_FEED, feed };
 }
 
 export function displayExistingFeeds(feeds, refreshState, progressPercentage = 0) {

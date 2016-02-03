@@ -9,6 +9,7 @@ import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import { List } from "immutable";
 
 
 export class SurfPage extends Component {
@@ -32,6 +33,10 @@ export class SurfPage extends Component {
         this.props.dispatch(getLatestFeedsFromAllSources());
     }
 
+    parkFeedItem(feedDoc) {
+        this.props.dispatch(parkFeed(feedDoc));
+    }
+
     render() {
         let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
         let refreshButton = this.props.feeds.length === 0 ? null : <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
@@ -43,7 +48,7 @@ export class SurfPage extends Component {
                 <div className="surf-page feeds-container">
                 {refreshButton}
                 {hintMsg}
-                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={parkFeed}/>
+                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>
                 </div>
             </div>
         );
