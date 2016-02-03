@@ -39,7 +39,8 @@
       "limit": 500
     },
     "twitter": {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:3000",
+      "timeOut": 2000
     }
   },
   "production": {

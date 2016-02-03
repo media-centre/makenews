@@ -51,7 +51,7 @@ describe("FacbookPosts", () => {
                 });
         });
 
-        xit("should timeout if the response takes more than 2 seconds while fetching facebook id of a page", (done) => {
+        it("should timeout if the response takes more than 2 seconds while fetching facebook id of a page", (done) => {
             request(serverIp)
                 .get("/facebook-posts?webUrl=https://www.facebook.com/idtimeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
@@ -62,7 +62,7 @@ describe("FacbookPosts", () => {
                 });
         });
 
-        xit("should timeout if the response takes more than 2 seconds while fetching feeds of a facebook page", (done) => {
+        it("should timeout if the response takes more than 2 seconds while fetching feeds of a facebook page", (done) => {
             request(serverIp)
                 .get("/facebook-posts?webUrl=https://www.facebook.com/feedtimeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)

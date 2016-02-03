@@ -51,13 +51,13 @@ describe("TwitterReaderSpec", () => {
                 });
         });
 
-        xit("should timeout if the response from twitter takes more time", (done) => {
+        it("should timeout if the response from twitter takes more time", (done) => {
             request(serverIp)
-                .get("/twitter-feeds?url=@timeout&accessToken=" + accessToken)
+                .get("/twitter-feeds?url=timeout&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
-                    assert.strictEqual("@timeout is not a valid twitter handler", res.body.message);
+                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
+                    assert.strictEqual("Request failed for twitter handler timeout", res.body.message);
                     done();
                 });
         });

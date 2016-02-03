@@ -38,7 +38,7 @@ export default class FacebookRequestHandler {
                 });
             }).catch(error => {
                 FacebookRequestHandler.logger().error("error fetching facebook id of web url = %s.", webUrl, error);
-                reject(error);
+                reject("error fetching facebook feeds of web url = " + webUrl);
             });
         });
     }

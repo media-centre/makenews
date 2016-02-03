@@ -142,7 +142,7 @@ describe("FacebookRequestHandler", () => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
             facebookClientPagePostsMock.withArgs(pageId, optionsJson).never();
             facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
-                assert.deepEqual("error", error);
+                assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();

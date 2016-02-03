@@ -66,14 +66,14 @@ describe("RssReaderSpec", () => {
                 });
         });
 
-        xit("should timeout if fetching rss feeds exceeds time out", (done) => {
+        it("should timeout if fetching rss feeds exceeds time out", (done) => {
             request(serverIp)
                 .get("/rss-feeds")
                 .query("url=http://localhost:3000/gardian/timeout-feeds/")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
-                    assert.strictEqual("Bad status code", res.body.message);
+                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
+                    assert.strictEqual("Request failed for http://localhost:3000/gardian/timeout-feeds/", res.body.message);
                     done();
                 });
         });
