@@ -29,7 +29,6 @@ export default class FacebookPostsRoute extends Route {
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }
-
         FacebookAccessToken.instance().getAccessToken(this.userName).then((token) => {
             FacebookRequestHandler.instance(token).pagePosts(this.webUrl, this.options).then(feeds => {
                 this._handleSuccess({ "posts": feeds });

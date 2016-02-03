@@ -25,7 +25,7 @@ describe("RssReaderSpec", () => {
                 .query("url=")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
                     done();
                 });
         });
@@ -54,13 +54,13 @@ describe("RssReaderSpec", () => {
                 });
         });
 
-        it("responds with 404 for /rss-feeds if rss fetch returns error", (done) => {
+        it("responds with 501 for /rss-feeds if rss fetch returns error", (done) => {
             request(serverIp)
                 .get("/rss-feeds")
                 .query("url=http://localhost:3000/thehindu/error-feeds/")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
+                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
                     assert.strictEqual("Bad status code", res.body.message);
                     done();
                 });

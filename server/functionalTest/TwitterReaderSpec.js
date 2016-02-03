@@ -40,12 +40,12 @@ describe("TwitterReaderSpec", () => {
                 });
         });
 
-        it("should return 404 error if url is invalid", (done) => {
+        it("should return 500 error if url is invalid", (done) => {
             request(serverIp)
                 .get("/twitter-feeds?url=myTest&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(res.statusCode, HttpResponseHandler.codes.NOT_FOUND);
+                    assert.equal(res.statusCode, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR);
                     assert.strictEqual("myTest is not a valid twitter handler", res.body.message);
                     done();
                 });

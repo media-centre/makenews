@@ -14,7 +14,7 @@ describe("RenewSession", () => {
         request(config[env].serverIpAddress + ":" + config[env].serverPort)
             .get("/renew_session")
             .end((err, res) => {
-                expect(res.statusCode).to.eq(HttpResponseHandler.codes.UNAUTHORIZED);
+                expect(res.statusCode).to.eq(HttpResponseHandler.codes.BAD_REQUEST);
                 done();
             });
     });
