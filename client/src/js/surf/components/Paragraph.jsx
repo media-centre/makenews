@@ -10,7 +10,7 @@ export default class Paragraph extends Component {
         super(props);
 
         this.state = {
-            "showFeed": true, "showCustomPopup": false
+            "showCustomPopup": false
         };
     }
     _showConfirmPopup() {
@@ -21,15 +21,14 @@ export default class Paragraph extends Component {
         if(this.props.category.sourceId === "") {
             this._showConfirmPopup();
         } else {
-            this.props.dispatch(this.props.clickHandler(feedDoc));
-            this.setState({ "showFeed": false });
+            this.props.clickHandler(feedDoc);
         }
     }
 
     handleDeleteClick(event) {
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
-            this.setState({ "showCustomPopup": false, "showFeed": false });
+            this.setState({ "showCustomPopup": false });
         } else {
             this.setState({ "showCustomPopup": false });
         }
@@ -37,11 +36,10 @@ export default class Paragraph extends Component {
 
     render() {
         let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
-        let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This data will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This feed item will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
-            <div style={feedStyle}>
+            <div>
             <a target="_blank" href={this.props.category.link}>
                 <div className="title">{this.props.category.title}</div>
                 <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>

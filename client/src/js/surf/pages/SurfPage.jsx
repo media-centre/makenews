@@ -20,10 +20,9 @@ export class SurfPage extends Component {
         window.scrollTo(0, 0);
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
-        this.props.dispatch(displayAllFeedsAsync((feeds)=> {
-            this.setState({ "fetchHintMessage": feeds.length > 0 ? "" : this.props.messages.noFeeds });
-        }));
+        this.props.dispatch(displayAllFeedsAsync());
     }
+
 
     getLatestFeeds() {
         if(this.props.refreshState) {
@@ -32,8 +31,21 @@ export class SurfPage extends Component {
         this.props.dispatch(getLatestFeedsFromAllSources());
     }
 
+    parkFeedItem(feedDoc) {
+        this.props.dispatch(parkFeed(feedDoc));
+    }
+
+    getHintMessage() {
+        if (this.props.feeds.length === 0) {
+            if (this.state.fetchHintMessage === this.props.messages.fetchingFeeds) {
+                return <div className="t-center">{this.state.fetchHintMessage}</div>;
+            }
+            return <div className="t-center">{this.props.messages.noFeeds}</div>;
+        }
+        return null;
+    }
+
     render() {
-        let hintMsg = this.props.feeds.length === 0 ? <div className="t-center">{this.state.fetchHintMessage}</div> : null;
         let refreshButton = this.props.feeds.length === 0 ? null : <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
 
         let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
@@ -42,8 +54,8 @@ export class SurfPage extends Component {
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                 {refreshButton}
-                {hintMsg}
-                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={parkFeed}/>
+                {this.getHintMessage()}
+                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>
                 </div>
             </div>
         );
