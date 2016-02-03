@@ -1,9 +1,12 @@
 "use strict";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import AdminDbClient from "../db/AdminDbClient";
 import OAuth from "oauth";
+
 let oauthTokenMap = {};
 export default class TwitterLogin {
-    constructor(oauthToken, oauthTokenSecret, clientCallbackUrl) {
+    constructor(oauthToken, oauthTokenSecret, clientCallbackUrl, userName) {
+        this.userName = userName;
         this.oauthToken = oauthToken;
         this.oauthTokenSecret = oauthTokenSecret;
         this.clientCallbackUrl = clientCallbackUrl;
@@ -13,11 +16,11 @@ export default class TwitterLogin {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             if(options.previouslyFetchedOauthToken) {
                 let tokenInfo = oauthTokenMap[options.previouslyFetchedOauthToken];
-                let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl);
+                let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, tokenInfo.userName);
                 resolve(twitterInstance);
             } else {
                 new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl).then(instance => {
-                    oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl };
+                    oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl, "userName": options.userName };
                     resolve(instance);
                 });
             }
@@ -52,9 +55,31 @@ export default class TwitterLogin {
     accessTokenFromTwitter(oauthVerifier) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             this.oauth.getOAuthAccessToken(this.oauthToken, this.oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret, results) => {
-                console.log(oauthAccessToken, oauthAccessTokenSecret, results); //eslint-disable-line no-console
+                this.saveToken(oauthAccessToken, oauthAccessTokenSecret).then(() => {
+                    resolve(this.clientCallbackUrl);
+                });
             });
-            resolve(this.clientCallbackUrl);
+        });
+    }
+
+    saveToken(oauthAccessToken, oauthAccessTokenSecret) {
+        let tokenDocumentId = this.userName + "_twitterToken";
+        let document = {
+            "oauthAccessToken": oauthAccessToken,
+            "oauthAccessTokenSecret": oauthAccessTokenSecret
+        };
+        return new Promise((resolve, reject) => {
+            AdminDbClient.instance().getDb().then((dbInstance) => {
+                dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => { //eslint-disable-line max-nested-callbacks
+                    dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => {
+                        resolve();
+                    });
+                }).catch(() => { //eslint-disable-line max-nested-callbacks
+                    dbInstance.saveDocument(tokenDocumentId, document).then(() => {
+                        resolve();
+                    });
+                });
+            });
         });
     }
 

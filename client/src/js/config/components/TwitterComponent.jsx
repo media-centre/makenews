@@ -30,9 +30,9 @@ export default class TwitterComponent extends Component {
     }
 
     twitterLoginHandler() {
-        return new Promise((res, rej) => {
-            TwitterLogin.instance().requestToken().then((response) => {
-                res(true);
+        return new Promise((resolve) => {
+            TwitterLogin.instance().login().then(() => {
+                resolve(true);
             });
         });
     }

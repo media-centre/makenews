@@ -24,10 +24,10 @@ export default class TwitterRequestHandler {
         });
     }
 
-    static requestToken(clientCallbackUrl, serverCallbackUrl) {
+    static requestToken(clientCallbackUrl, serverCallbackUrl, userName) {
         return new Promise((resolve, reject) => {
             let twitterClient = TwitterClient.instance();
-            twitterClient.requestToken(clientCallbackUrl, serverCallbackUrl).then(response => {
+            twitterClient.requestToken(clientCallbackUrl, serverCallbackUrl, userName).then(response => {
                 resolve(response);
             }).catch(error => { // eslint-disable-line
                 reject([]);

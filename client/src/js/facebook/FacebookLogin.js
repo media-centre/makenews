@@ -2,7 +2,7 @@
 
 "use strict";
 import FacebookRequestHandler from "./FacebookRequestHandler";
-import FacebookDb from "./FacebookDb";
+import FacebookTwitterDb from "../socialAccounts/FacebookTwitterDb.js";
 import AppWindow from "../../js/utils/AppWindow";
 
 export default class FacebookLogin {
@@ -81,13 +81,14 @@ export default class FacebookLogin {
 
     isTokenExpired() {
         return new Promise((resolve) => {
-            FacebookDb.getTokenDocument().then((document) => {
-                resolve(FacebookLogin.getCurrentTime() > document.expiredAfter);
+            FacebookTwitterDb.getTokenDocument().then((document) => {
+                if(!document.facebookExpiredAfter) {
+                    resolve(true);
+                }
+                resolve(FacebookLogin.getCurrentTime() > document.facebookExpiredAfter);
             }).catch(() => {
                 resolve(true);
             });
         });
     }
-
-
 }

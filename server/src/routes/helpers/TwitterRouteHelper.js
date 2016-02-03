@@ -61,8 +61,8 @@ export default class TwitterRouteHelper {
     }
 
     requestToken() {
-        let serverCallbackUrl = this.request.query.serverCallbackUrl, clientCallbackUrl = this.request.query.clientCallbackUrl;
-        TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).then((instance) => {
+        let serverCallbackUrl = this.request.query.serverCallbackUrl, clientCallbackUrl = this.request.query.clientCallbackUrl, userName = this.request.query.userName;
+        TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": userName }).then((instance) => {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, { "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
         });
     }

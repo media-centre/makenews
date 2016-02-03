@@ -34,10 +34,10 @@ export default class TwitterClient {
         });
     }
 
-    requestToken(clientCallbackUrl, serverCallbackUrl) {
+    requestToken(clientCallbackUrl, serverCallbackUrl, userName) {
         return new Promise((resolve, reject) => {
             let ajaxClient = AjaxClient.instance("/twitter-request-token");
-            ajaxClient.get({ "clientCallbackUrl": clientCallbackUrl, "serverCallbackUrl": serverCallbackUrl }).then(response => {
+            ajaxClient.get({ "clientCallbackUrl": clientCallbackUrl, "serverCallbackUrl": serverCallbackUrl, "userName": userName }).then(response => {
                 resolve(response);
             }).catch(error => {
                 reject(error);
