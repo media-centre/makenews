@@ -11,6 +11,7 @@ import TwitterDb from "../../src/js/twitter/TwitterDb";
 import RssResponseParser from "../../src/js/rss/RssResponseParser";
 import mockStore from "../helper/ActionHelper.js";
 import RssDb from "../../src/js/rss/RssDb.js";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -162,14 +163,16 @@ describe("addRssUrlAsync", () => {
 });
 
 describe("addTwitterUrlAsync", () => {
-    let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null, url = null, type = null, categoryId = null;
+    let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null, url = null, type = null, categoryId = null, userName = null;
 
     beforeEach("Before", () => {
         sandbox = sinon.sandbox.create();
         let ajaxMock = new AjaxClient("/twitter-feeds");
+        userName = "Maharjun";
         ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
         ajaxInstanceMock.withArgs("/twitter-feeds").returns(ajaxMock);
         ajaxGetMock = sandbox.mock(ajaxMock).expects("get");
+        sandbox.stub(AppSessionStorage, "instance").returns({ "getValue": () => { return userName } });
     });
 
     before("Before", () => {
@@ -190,7 +193,7 @@ describe("addTwitterUrlAsync", () => {
 
         let twitterFeed = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": "2016-01-06T02:15:53.000Z" }, { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": "2016-01-05T02:15:53.000Z" }] };
 
-        ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(twitterFeed));
+        ajaxGetMock.withArgs({ "url": url, "userName": userName }).returns(Promise.resolve(twitterFeed));
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let categoryDbMock = sandbox.mock(CategoryDb).expects("createOrUpdateSource");
         categoryDbMock.withArgs({ "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "docType": "source", "latestFeedTimestamp": "2016-01-06T02:15:53+00:00" }).returns(Promise.resolve({ "id": "url", "ok": true }));
@@ -207,9 +210,8 @@ describe("addTwitterUrlAsync", () => {
 
     it("should create twitter document with invalid status if url is invalid", (done) => {
         let allSources = [{ "url": url, "docType": "sources" }];
-        ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
+        ajaxGetMock.withArgs({ "url": url, "userName": userName }).returns(Promise.reject("error"));
         sandbox.stub(CategoriesApplicationQueries, "fetchSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions);
         return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, (response) => {

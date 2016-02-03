@@ -1,5 +1,6 @@
 "use strict";
 import AjaxClient from "../utils/AjaxClient.js";
+import AppSessionStorage from "../utils/AppSessionStorage.js";
 
 export default class TwitterClient {
 
@@ -10,7 +11,8 @@ export default class TwitterClient {
     fetchTweets(url) {
         return new Promise((resolve, reject) => {
             let ajaxClient = AjaxClient.instance("/twitter-feeds");
-            ajaxClient.get({ "url": url }).then(response => {
+            let userName = AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
+            ajaxClient.get({ "url": url, "userName": userName }).then(response => {
                 resolve(response);
 
             }).catch(error => {
@@ -22,10 +24,12 @@ export default class TwitterClient {
     fetchBatchTweets(feedBatch) {
         return new Promise((resolve, reject) => {
             let ajaxClient = AjaxClient.instance("/twitter-batch-feeds");
+            let userName = AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
             const headers = {
                 "Accept": "application/json",
                 "Content-type": "application/json"
             };
+            feedBatch.userName = userName;
             ajaxClient.post(headers, feedBatch).then(response => {
                 resolve(response);
             }).catch(error => {

@@ -18,7 +18,6 @@
     "twitter": {
       "url": "https://api.twitter.com/1.1",
       "authenticateUrl": "https://api.twitter.com/oauth/authenticate",
-      "bearerToken": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8",
       "consumerKey": "rEJ8ax8SVQqr8MYYJjNjzliC8",
       "consumerSecret": "LX3wq9xdboDYSRw25BUwM1eUBrTKW9kTBCjOA0FtsUIKnUn1vq",
       "timeOut": 2000

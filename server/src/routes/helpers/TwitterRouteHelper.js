@@ -20,11 +20,12 @@ export default class TwitterRouteHelper {
 
     twitterRouter() {
         let url = this.request.query.url;
+        let userName = this.request.query.userName;
         if(StringUtil.isEmptyString(url)) {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, {});
         } else {
             let twitterRequestHandler = TwitterRequestHandler.instance();
-            twitterRequestHandler.fetchTweetsRequest(url).then(feeds => {
+            twitterRequestHandler.fetchTweetsRequest(url, userName).then(feeds => {
                 ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, feeds);
             }).catch(error => {
                 ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.NOT_FOUND, error);
@@ -38,9 +39,9 @@ export default class TwitterRouteHelper {
             let allFeeds = {};
             let counter = 0;
             let twitterRequestHandler = TwitterRequestHandler.instance();
-
+            let userName = this.request.body.userName;
             this.request.body.data.forEach((item)=> {
-                twitterRequestHandler.fetchTweetsRequest(item.url, item.timestamp).then(feeds => {
+                twitterRequestHandler.fetchTweetsRequest(item.url, userName, item.timestamp).then(feeds => {
                     allFeeds[item.id] = feeds;
                     if (this.request.body.data.length - 1 === counter) {
                         ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, allFeeds);
