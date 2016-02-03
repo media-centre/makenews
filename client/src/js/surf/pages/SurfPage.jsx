@@ -19,7 +19,7 @@ export class SurfPage extends Component {
             "mediaTypes": [],
             "categories": []
         };
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": this.props.lastIndex || 0, "showPaginationSpinner": false, "hasMoreFeeds": typeof this.props.hasMoreFeeds === "undefined" ? true : this.props.hasMoreFeeds, "showFilterSpinner": false };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -33,9 +33,10 @@ export class SurfPage extends Component {
         }));
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
+    }
 
+    componentDidMount() {
         this.paginateFeeds();
-
     }
 
     componentWillUnmount() {

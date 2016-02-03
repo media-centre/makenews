@@ -140,10 +140,9 @@ describe("RefreshFeedsHandler", () => {
 
         it("should update the progress percentage on success of updation", (done) => {
             let counter = 0, percentageProgress = 25;
-            displayAllFeedsAsync = (callback, percentage) => {
+            displayAllFeedsAsync = (percentage) => {
                 counter += 1;
                 assert.strictEqual(percentage, counter * percentageProgress);
-                callback();
                 let maxCounterValue = 4;
                 if(counter === maxCounterValue) {
                     done();
@@ -314,7 +313,7 @@ describe("RefreshFeedsHandler", () => {
             });
         });
 
-        describe("UICallback", ()=> {
+        describe("Handler should update the completion percentage", ()=> {
             let rssRequestHandlerStub = null, rssDbStub = null;
             beforeEach("before", ()=> {
                 rssRequestHandlerStub = sinon.stub(RssRequestHandler, "fetchBatchRssFeeds");
@@ -326,12 +325,9 @@ describe("RefreshFeedsHandler", () => {
             });
             it("should parse the rss feeds", (done)=> {
                 let hundredPercentage = 100;
-                uiCallback = () => {
-                    done();
-                };
-                displayAllFeedsAsync = (callback, percentage) => {
+                displayAllFeedsAsync = (percentage) => {
                     assert.strictEqual(percentage, hundredPercentage);
-                    callback();
+                    done();
                 };
                 let rssUrls = [{ "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" }];
                 let postData = [{ "url": "rssUrl1", "timestamp": "1234", "id": "1" }];

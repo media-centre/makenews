@@ -25,7 +25,7 @@ describe("AllFeedsAction", () => {
                 "url": "www.yahoonews.com",
                 "categoryNames": ["yahoo"]
             }];
-        let displayAllFeedsAction = { "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": undefined, "lastIndex": 0 };
+        let displayAllFeedsAction = { "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 };
         expect(AllFeedsActions.displayAllFeeds(feeds, false)).to.deep.equal(displayAllFeedsAction);
     });
 
@@ -60,7 +60,7 @@ describe("AllFeedsAction", () => {
         let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": undefined, "lastIndex": 0 }], done);
+        let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
         return Promise.resolve(store.dispatch(AllFeedsActions.displayAllFeedsAsync([], 0))).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();

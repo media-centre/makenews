@@ -171,7 +171,7 @@ export default class RefreshFeedsHandler {
 
     _updateCompletionPercentage() {
         this.totalSuccessfullUrls = this.totalSuccessfullUrls + 1;
-        this.dispatch(this.displayAllFeedsAsync(this.uiCallback, this._refreshCompletionPercentage()));
+        this.dispatch(this.displayAllFeedsAsync(this._refreshCompletionPercentage()));
     }
 
     _updateSourceUrlWithLatestTimestamp(sourceId, latestFeedTimestamp) {

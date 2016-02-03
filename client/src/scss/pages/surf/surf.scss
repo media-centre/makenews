@@ -239,7 +239,8 @@
     padding: 10px;
     width: 200px;
     margin: 20px auto;
-    background: #DEB887;
+    background: $app-header-bg-color;
+    color: $primary-font-color;
   }
 
   .mask {
