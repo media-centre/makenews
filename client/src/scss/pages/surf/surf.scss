@@ -241,4 +241,26 @@
     margin: 20px auto;
     background: #DEB887;
   }
+
+  .mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: $mask-layer-index;
+
+    .spinner {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      height: 50px;
+      margin: auto;
+      text-align: center;
+      color: $secondary-font-color;
+    }
+  }
 }

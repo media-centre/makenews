@@ -19,7 +19,7 @@ export class SurfPage extends Component {
             "mediaTypes": [],
             "categories": []
         };
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": this.props.lastIndex || 0, "showPaginationSpinner": false, "hasMoreFeeds": typeof this.props.hasMoreFeeds === "undefined" ? true : this.props.hasMoreFeeds, "showFilterSpinner": false };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -45,18 +45,22 @@ export class SurfPage extends Component {
     paginateFeeds() {
         document.addEventListener("scroll", ()=> {
             if (document.body.scrollHeight === document.body.scrollTop + window.innerHeight) {
-                if(!this.state.showPaginationSpinner && this.state.hasMoreFeeds) {
-                    this.setState({ "showPaginationSpinner": true });
-                    this.props.dispatch(fetchFeedsByPage(this.state.lastIndex, (result)=> {
-                        result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex;
-                        result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
-                        this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
-                    }));
-                }
+                this.getMoreFeeds();
             }
         });
     }
-    
+
+    getMoreFeeds() {
+        if(!this.state.showPaginationSpinner && this.state.hasMoreFeeds) {
+            this.setState({ "showPaginationSpinner": true });
+            this.props.dispatch(fetchFeedsByPage(this.state.lastIndex, (result)=> {
+                result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex;
+                result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
+                this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
+            }));
+        }
+    }
+
     getLatestFeeds() {
         if(this.props.refreshState) {
             return false;
@@ -79,8 +83,9 @@ export class SurfPage extends Component {
     }
 
     updateFilter(latestFilterDocument) {
+        this.setState({ "showFilterSpinner": true });
         this.props.dispatch(fetchFeedsByFilter(latestFilterDocument, (result)=> {
-            this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
+            this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds, "showFilterSpinner": false });
         }));
     }
 
@@ -89,6 +94,7 @@ export class SurfPage extends Component {
 
         let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         let paginationSpinner = this.state.showPaginationSpinner ? <div className="pagination-spinner">{"Fetching Feeds ..."}</div> : null;
+        let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
         return (
             <div className="surf-page-container">
                 <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.state.categories} filter={this.state.filter}/>
@@ -99,6 +105,7 @@ export class SurfPage extends Component {
                     <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>
                     {paginationSpinner}
                 </div>
+                {mask}
             </div>
         );
     }
@@ -111,7 +118,9 @@ SurfPage.propTypes = {
     "feeds": PropTypes.array,
     "messages": PropTypes.object,
     "progressPercentage": PropTypes.number,
-    "refreshState": PropTypes.bool
+    "refreshState": PropTypes.bool,
+    "hasMoreFeeds": PropTypes.bool,
+    "lastIndex": PropTypes.number
 };
 
 SurfPage.defaultProps = {

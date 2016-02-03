@@ -9,7 +9,7 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
     let surfMessages = Locale.applicationStrings().messages.surfPage;
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:
-        return Object.assign({}, state, { "feeds": List(action.feeds).toArray(), "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
+        return Object.assign({}, state, { "feeds": List(action.feeds).toArray(), "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });
     case FETCH_ALL_CATEGORIES:
         return Object.assign({}, state, { "categories": action.categories });
     case DISPLAY_EXISTING_FEEDS:
@@ -26,7 +26,7 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap, "sourceIds": action.sourceIds });
     case PAGINATION_FEEDS:
         action.feeds = state.feeds.concat(action.feeds);
-        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
+        return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });
     default:
         return state;
     }
