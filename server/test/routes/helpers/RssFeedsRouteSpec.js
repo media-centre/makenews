@@ -143,7 +143,7 @@ describe("RssFeedsRoute", () => {
                 "url": ""
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.feedsForUrl();
     });
@@ -153,7 +153,7 @@ describe("RssFeedsRoute", () => {
             "query": {
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.feedsForUrl();
     });

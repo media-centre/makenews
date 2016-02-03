@@ -25,43 +25,43 @@ describe("DefaultRoute", () => {
     describe("whiteList", () => {
         it("should return true if the url is login", () => {
             request.originalUrl = "/login";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.ok;
         });
 
         it("should return true if the url is in app.js", () => {
             request.originalUrl = "/app-min.js";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.ok;
         });
 
         it("should return true if the url is in app.css", () => {
             request.originalUrl = "/app.css";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.ok;
         });
 
         it("should return true if the url is in images nesting", () => {
             request.originalUrl = "/images/abc.jpg";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.ok;
         });
 
         it("should return true if the url is in fonts nesting", () => {
             request.originalUrl = "/fonts/abc.woff";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.ok;
         });
 
         it("should return false if the url is not in whiteList", () => {
             request.originalUrl = "/test";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.not.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.not.ok;
         });
 
         it("should return false if the url is login/123", () => {
             request.originalUrl = "/login/abcd";
-            expect(new DefaultRoute(request, response, next).whiteList()).to.be.not.ok;
+            expect(new DefaultRoute(request, response, next).isWhitelistUrl()).to.be.not.ok;
         });
 
         it("should validate for the non empty url", () => {
             request.originalUrl = "";
             try {
-                new DefaultRoute(request, response, next).whiteList();
+                new DefaultRoute(request, response, next).isWhitelistUrl();
             } catch(error) {
                 expect(error.message).to.equal("url can not be empty");
             }

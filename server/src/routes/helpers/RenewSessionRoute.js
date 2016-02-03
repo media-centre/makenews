@@ -3,22 +3,33 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import CouchSession from "../../CouchSession.js";
 import RouteLogger from "../RouteLogger.js";
 import Route from "./Route.js";
+import StringUtil from "../../../../common/src/util/StringUtil.js";
 
 export default class RenewSessionRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
+        if(this.request.cookies) {
+            this.authSession = this.request.cookies.AuthSession;
+        }
+    }
+
+    valid() {
+        if(StringUtil.isEmptyString(this.authSession)) {
+            return false;
+        }
+        return true;
     }
 
     handle() {
-        if(this.request.cookies && this.request.cookies.AuthSession) {
-            CouchSession.authenticate(this.request.cookies.AuthSession).then(newAuthSessionCookie => {
-                this._handleSuccess(newAuthSessionCookie);
-            }).catch(() => {
-                this._handleError();
-            });
-        } else {
-            this._handleUnauthorisedError();
+        if(!this.valid()) {
+            return this._handleInvalidRoute();
         }
+
+        CouchSession.authenticate(this.authSession).then(newAuthSessionCookie => {
+            this._handleSuccess(newAuthSessionCookie);
+        }).catch(() => {
+            this._handleError();
+        });
     }
 
     _handleSuccess(newAuthSessionCookie) {

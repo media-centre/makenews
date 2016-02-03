@@ -16,7 +16,7 @@ export default class TwitterBatchFeedsRoute extends Route {
     }
     twitterBatchFetch() {
         if(!this.valid()) {
-            this._handleInvalidRoute();
+            return this._handleInvalidRoute();
         }
 
         let allFeeds = {};

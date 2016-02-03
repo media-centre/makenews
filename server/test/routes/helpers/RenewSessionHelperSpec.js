@@ -48,11 +48,11 @@ describe("RenewSessionRoute", () => {
 
         let response = {
             "status": function(status) {
-                expect(HttpResponseHandler.codes.UNAUTHORIZED).to.equal(status);
+                expect(HttpResponseHandler.codes.BAD_REQUEST).to.equal(status);
                 return response;
             },
             "json": function(data) {
-                expect(data).to.deep.equal({ "message": "Set AuthSession cookie in request header" });
+                expect(data).to.deep.equal({ "message": "bad request" });
                 done();
             }
         };
@@ -65,11 +65,11 @@ describe("RenewSessionRoute", () => {
         request = {};
         let response = {
             "status": function(status) {
-                expect(HttpResponseHandler.codes.UNAUTHORIZED).to.equal(status);
+                expect(HttpResponseHandler.codes.BAD_REQUEST).to.equal(status);
                 return response;
             },
             "json": function(data) {
-                expect(data).to.deep.equal({ "message": "Set AuthSession cookie in request header" });
+                expect(data).to.deep.equal({ "message": "bad request" });
                 done();
             }
         };

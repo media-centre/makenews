@@ -2,6 +2,7 @@
 import CouchSession from "../../CouchSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import Route from "./Route.js";
+import StringUtil from "../../../../common/src/util/StringUtil.js";
 
 export default class DefaultRoute extends Route {
     constructor(request, response, next) {
@@ -10,8 +11,19 @@ export default class DefaultRoute extends Route {
         this.authSessionCookie = request.cookies.AuthSession;
     }
 
+    valid() {
+        if(StringUtil.isEmptyString(this.url)) {
+            return false;
+        }
+        return true;
+    }
+
     handle() {
-        if(this.whiteList(this.url)) {
+        if(!this.valid()) {
+            return this._handleInvalidRoute();
+        }
+
+        if(this.isWhitelistUrl()) {
             return this.next();
         } else if(this.authSessionCookie) {
             CouchSession.authenticate(this.authSessionCookie)
@@ -31,7 +43,7 @@ export default class DefaultRoute extends Route {
         this.next(error);
     }
 
-    whiteList() {
+    isWhitelistUrl() {
         if(!this.url) {
             throw new Error("url can not be empty");
         }

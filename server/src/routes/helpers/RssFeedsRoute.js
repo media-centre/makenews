@@ -8,19 +8,26 @@ import Route from "./Route.js";
 export default class RssFeedsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
+        this.url = this.request.query.url;
+    }
+
+    valid() {
+        if(StringUtil.isEmptyString(this.url)) {
+            return false;
+        }
+        return true;
     }
 
     feedsForUrl() {
-        let url = this.request.query.url;
-        if(StringUtil.isEmptyString(url)) {
-            this._handleSuccess({});
-        } else {
-            let rssRequestHandler = RssRequestHandler.instance();
-            rssRequestHandler.fetchRssFeedRequest(url).then(feeds => {
-                this._handleSuccess(feeds);
-            }).catch(error => {
-                this._handleFailure(error);
-            });
+        if(!this.valid()) {
+            return this._handleInvalidRoute();
         }
+
+        let rssRequestHandler = RssRequestHandler.instance();
+        rssRequestHandler.fetchRssFeedRequest(this.url).then(feeds => {
+            this._handleSuccess(feeds);
+        }).catch(error => {
+            this._handleFailure(error);
+        });
     }
 }
