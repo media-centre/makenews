@@ -3,6 +3,7 @@
 
 import UserRequest from "../../src/login/UserRequest.js";
 import CouchSession from "../../src/CouchSession.js";
+import LogTestHelper from "../../test/helpers/LogTestHelper";
 import sinon from "sinon";
 
 import { assert } from "chai";
@@ -12,6 +13,11 @@ describe("UserRequest", () => {
     before("UserRequest", () => {
         userName = "test_user_name";
         password = "test_password";
+        sinon.stub(UserRequest, "logger").returns(LogTestHelper.instance());
+    });
+
+    after("UserRequest", () => {
+        UserRequest.logger.restore();
     });
 
     describe("instance", () => {
