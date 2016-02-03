@@ -1,7 +1,6 @@
 "use strict";
 
 import { INCREMENT_PARK_COUNTER, INITIALISE_PARK_COUNTER, DECREMENT_PARK_COUNTER } from "../actions/FeedsActions.js";
-import { displayParkedFeedsAsync } from "../../park/actions/ParkActions"
 
 export function parkCounter(state = 0, action = {}) {
     switch (action.type) {
