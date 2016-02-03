@@ -40,7 +40,7 @@ describe("CategoryNavigationHeader", ()=> {
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
         assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "This category will be deleted  and you will no longer receive feeds from its URLs." +
-            " Parked items will remain unaffected. Are you sure you want to continue? ");
+            " Parked items will remain unaffected. Are you sure you want to continue?");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.confirmButton);
         deleteCategoryMock.verify();
         deleteCategoryMock.restore();
@@ -54,7 +54,7 @@ describe("CategoryNavigationHeader", ()=> {
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
         assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "This category will be deleted  and you will no longer receive feeds from its URLs." +
-            " Parked items will remain unaffected. Are you sure you want to continue? ");
+            " Parked items will remain unaffected. Are you sure you want to continue?");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.cancelButton);
         confirmMock.verify();
         assert.isFalse(deleteCategoryStub.called);
