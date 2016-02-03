@@ -1,11 +1,12 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../../surf/components/AllFeeds.jsx";
-import { displayParkedFeedsAsync } from "../actions/ParkActions";
+import { displayParkedFeedsAsync  } from "../actions/ParkActions";
 import { unparkFeed } from "../../feeds/actions/FeedsActions";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import { List } from "immutable";
 import { connect } from "react-redux";
 
 export class ParkPage extends Component {
@@ -16,15 +17,21 @@ export class ParkPage extends Component {
         this.props.dispatch(displayParkedFeedsAsync());
     }
 
+    parkClickHandler(feedDoc) {
+        this.props.dispatch(unparkFeed(feedDoc));
+    }
+
     render() {
         let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{"No feeds found"}</div> : null;
+
         return (
             <div ref="parkItem" className="park-page feeds-container">
                 {defaultText}
-                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={unparkFeed}/>
+                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={(feedDoc) => this.parkClickHandler(feedDoc)}/>
             </div>
         );
     }
+
 }
 
 ParkPage.displayName = "ParkPage";
