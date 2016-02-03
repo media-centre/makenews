@@ -8,7 +8,7 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 
-describe.only("DefaultRoute", () => {
+describe("DefaultRoute", () => {
     let request = null, response = null, next = null;
     beforeEach("DefaultRoute", () => {
         request = {

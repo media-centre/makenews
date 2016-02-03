@@ -4,7 +4,7 @@
 import Route from "../../../src/routes/helpers/Route.js";
 import { assert } from "chai";
 
-describe.only("Route", () => {
+describe("Route", () => {
     describe("isValidRequestData", () => {
         let response = null, next = null;
         before("Route", () => {

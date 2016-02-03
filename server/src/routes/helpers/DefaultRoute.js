@@ -1,4 +1,3 @@
-/* eslint no-unused-vars:0 */
 "use strict";
 import CouchSession from "../../CouchSession.js";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";

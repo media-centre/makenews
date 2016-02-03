@@ -1,10 +1,8 @@
-/* eslint consistent-this:0 no-unused-vars:0*/
+/* eslint consistent-this:0*/
 "use strict";
 
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import RssRequestHandler from "../../rss/RssRequestHandler";
-import ResponseUtil from "../../util/ResponseUtil";
 import Route from "./Route.js";
 
 export default class RssRoute extends Route {

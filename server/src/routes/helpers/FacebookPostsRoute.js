@@ -1,7 +1,6 @@
-/* eslint consistent-this:0 no-unused-vars:0*/
+/* eslint consistent-this:0*/
 "use strict";
 import moment from "moment";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
 import FacebookAccessToken from "../../facebook/FacebookAccessToken.js";

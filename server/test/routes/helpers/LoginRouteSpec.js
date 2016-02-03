@@ -83,7 +83,7 @@ describe("LoginRoute", () => {
             loginRoute.handle();
         });
 
-        it.only("should respond with unauthorized if fetching authsession cookie is failed", (done) => {
+        it("should respond with unauthorized if fetching authsession cookie is failed", (done) => {
             response = {
                 "status": (statusCode) => {
                     assert.equal(HttpResponseHandler.codes.UNAUTHORIZED, statusCode);

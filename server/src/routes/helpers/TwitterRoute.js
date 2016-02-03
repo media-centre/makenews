@@ -5,11 +5,8 @@ import NodeErrorHandler from "../../NodeErrorHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import EnvironmentConfig from "../../config/EnvironmentConfig";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
-import TwitterLogin from "../../twitter/TwitterLogin.js";
 import ResponseUtil from "../../util/ResponseUtil";
 import restRequest from "request";
-import BatchRequestsRouteHelper from "./BatchRequestsRouteHelper.js";
-import ApplicationConfig from "../../config/ApplicationConfig.js";
 import Route from "./Route.js";
 
 export default class TwitterRoute extends Route {
@@ -20,12 +17,11 @@ export default class TwitterRoute extends Route {
 
     twitterRouter() {
         let url = this.request.query.url;
-        let userName = this.request.query.userName;
         if(StringUtil.isEmptyString(url)) {
             ResponseUtil.setResponse(this.response, HttpResponseHandler.codes.OK, {});
         } else {
             let twitterRequestHandler = TwitterRequestHandler.instance();
-            twitterRequestHandler.fetchTweetsRequest(url, userName).then(feeds => {
+            twitterRequestHandler.fetchTweetsRequest(url).then(feeds => {
                 this._handleSuccess(feeds);
             }).catch(error => {
                 this._handleFailure(error);
@@ -38,9 +34,9 @@ export default class TwitterRoute extends Route {
             let allFeeds = {};
             let counter = 0;
             let twitterRequestHandler = TwitterRequestHandler.instance();
-            let userName = this.request.body.userName;
+
             this.request.body.data.forEach((item)=> {
-                twitterRequestHandler.fetchTweetsRequest(item.url, userName, item.timestamp).then(feeds => {
+                twitterRequestHandler.fetchTweetsRequest(item.url, item.timestamp).then(feeds => {
                     allFeeds[item.id] = feeds;
                     if (this.request.body.data.length - 1 === counter) {
                         this._handleSuccess(allFeeds);
@@ -58,7 +54,6 @@ export default class TwitterRoute extends Route {
             this._handleInvalidRoute();
         }
     }
-
     requestToken() {
         let serverCallbackUrl = this.request.query.serverCallbackUrl, clientCallbackUrl = this.request.query.clientCallbackUrl, userName = this.request.query.userName;
         TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": userName }).then((instance) => {
@@ -73,4 +68,5 @@ export default class TwitterRoute extends Route {
             });
         });
     }
+    
 }
