@@ -13,14 +13,13 @@ export default class TwitterClient {
     static logger() {
         return Logger.instance();
     }
+
     static instance() {
         return new TwitterClient();
     }
-    constructor() {
-    }
 
     fetchTweets(url, userName, timestamp) {
-        let timestampQuery = timestamp ? "&since:" + encodeURIComponent(this._getTwitterTimestampFormat(timestamp)) : "";
+        let timestampQuery = timestamp ? encodeURIComponent(" since:") + this._getTwitterTimestampFormat(timestamp) : "";
 
         return new Promise((resolve, reject) => {
             this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
@@ -52,42 +51,12 @@ export default class TwitterClient {
         });
     }
 
-    //fetchTweetsOld(url, userName, timestamp) {
-    //    return new Promise((resolve, reject) => {
-    //        let timestampQuery = timestamp ? "&since:" + this._getTwitterTimestampFormat(timestamp) : "";
-    //        let options = {
-    //            "uri": this._baseUrl() + searchApi, "qs": { "q": url + timestampQuery, "count": FEEDS_COUNT + searchParams }, "json": true,
-    //            "headers": {
-    //                "Authorization": this.bearerToken
-    //            },
-    //            "timeout": this._timeOut()
-    //        };
-    //        request.get(options, (error, response, body) => {
-    //            if(NodeErrorHandler.noError(error)) {
-    //                if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK) && response.body.statuses.length > 0) {
-    //                    resolve(body);
-    //                } else {
-    //                    TwitterClient.logger().warn("%s is not a valid twitter handler", url, error);
-    //                    reject({ "message": url + " is not a valid twitter handler" });
-    //                }
-    //            } else {
-    //                TwitterClient.logger().warn("Request failed for twitter handler %s", url, error);
-    //                reject({ "message": "Request failed for twitter handler " + url });
-    //            }
-    //        });
-    //    });
-    //}
-
     _baseUrl() {
         return ApplicationConfig.instance().twitter().url;
     }
 
-    _timeOut() {
-        return ApplicationConfig.instance().twitter().timeOut;
-    }
-
     _getTwitterTimestampFormat(timestamp) {
         let dateObj = new Date(timestamp);
-        return dateObj.getFullYear() + "-" + dateObj.getMonth() + 1 + "-" + dateObj.getDate();
+        return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
     }
 }

@@ -42,8 +42,8 @@ describe("TwitterRouteHelper", () => {
         sinon.stub(applicationConfig, "twitter").returns({
             "url": "https://api.twitter.com/1.1",
             "authenticateUrl": "https://api.twitter.com/oauth/authenticate",
-            "consumerKey": "rEJ8ax8SVQqr8MYYJjNjzliC8",
-            "consumerSecret": "LX3wq9xdboDYSRw25BUwM1eUBrTKW9kTBCjOA0FtsUIKnUn1vq",
+            "consumerKey": "consumerKey",
+            "consumerSecret": "consimerSecret",
             "timeOut": 10000
         });
         sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
@@ -170,7 +170,7 @@ describe("TwitterRouteHelper", () => {
     });
 
     describe("twitterBatchFetch", () => {
-        xit("should return all feeds from all the tweet hashtags", (done)=> {
+        it("should return all feeds from all the tweet hashtags", (done)=> {
             let Jan18Timestamp = "2016-01-18T06:12:19+00:00", sandbox = sinon.sandbox.create();
             let Jan17Timestamp = "2016-01-17T06:12:19+00:00";
 
@@ -189,20 +189,13 @@ describe("TwitterRouteHelper", () => {
                 }
             };
 
-            let twitterRequestHandler = new TwitterRequestHandler();
+            let urlResponse = { "@the_hindu": Promise.resolve(hinduResponseWithTimestamp), "@toi": Promise.resolve(toiResponseWithTimestamp) };
+            let twitterRequestHandler = {
+                "fetchTweetsRequest": (url) => {
+                    return urlResponse[url];
+                }
+            };
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
-            let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
-            fetchTweetsRequestMock.withArgs("@the_hindu", "testUser").returns(Promise.resolve(hinduResponseWithTimestamp));
-            fetchTweetsRequestMock.withArgs("@toi", "testUser").returns(Promise.resolve({ "message": toiResponseWithTimestamp }));
-
-            //mockTwitterRequest()
-            //    .query({ "q": "@the_hindu&since:2016-01-17", "count": FEEDS_COUNT + searchParams })
-            //    .reply(HttpResponseHandler.codes.OK, hinduResponseWithTimestamp, hinduResponseWithTimestamp);
-            //
-            //mockTwitterRequest()
-            //    .query({ "q": "@toi&since:2016-01-18", "count": FEEDS_COUNT + searchParams })
-            //    .reply(HttpResponseHandler.codes.OK, toiResponseWithTimestamp, toiResponseWithTimestamp);
-
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });
             let twitterRouteHelper = new TwitterRouteHelper(request, response);
             twitterRouteHelper.twitterBatchFetch();

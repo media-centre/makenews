@@ -1,9 +1,7 @@
 "use strict";
 import TwitterClient from "./TwitterClient.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 
 export default class TwitterRequestHandler {
-
     static instance() {
         return new TwitterRequestHandler();
     }
@@ -19,10 +17,6 @@ export default class TwitterRequestHandler {
     }
 
     twitterClient() {
-        return TwitterClient.instance(this.getBearerToken());
-    }
-
-    getBearerToken() {
-        return ApplicationConfig.instance().twitter().bearerToken;
+        return TwitterClient.instance();
     }
 }

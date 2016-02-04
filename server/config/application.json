@@ -19,8 +19,7 @@
       "url": "https://api.twitter.com/1.1",
       "authenticateUrl": "https://api.twitter.com/oauth/authenticate",
       "consumerKey": "rEJ8ax8SVQqr8MYYJjNjzliC8",
-      "consumerSecret": "LX3wq9xdboDYSRw25BUwM1eUBrTKW9kTBCjOA0FtsUIKnUn1vq",
-      "timeOut": 2000
+      "consumerSecret": "LX3wq9xdboDYSRw25BUwM1eUBrTKW9kTBCjOA0FtsUIKnUn1vq"
     }
   },
   "development": {
