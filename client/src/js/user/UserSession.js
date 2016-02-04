@@ -6,7 +6,6 @@ import { logout } from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import AjaxClient from "../utils/AjaxClient.js";
 const nineMinutes = 540000;
-let linkTransition = Symbol();
 
 export default class UserSession {
     static instance(history) {
@@ -14,7 +13,7 @@ export default class UserSession {
     }
 
     constructor(history) {
-        this[linkTransition] = history;
+        this.linkTransition = history;
     }
 
     getLastAccessedTime() {
@@ -43,7 +42,7 @@ export default class UserSession {
         let _logoutAndClearInterval = () => {
             logout();
             clearInterval(timer);
-            this[linkTransition].push("/");
+            this.linkTransition.push("/");
         };
 
         let _renewSession = () => {
