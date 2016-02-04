@@ -1,9 +1,9 @@
+/*eslint max-nested-callbacks:0*/
 "use strict";
 import { assert } from "chai";
-import nock from "nock";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
-import TwitterClient, { searchApi, searchParams } from "../../../src/twitter/TwitterClient";
+import TwitterClient from "../../../src/twitter/TwitterClient";
 import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler.js";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
@@ -12,13 +12,6 @@ import Logger from "../../../src/logging/Logger.js";
 import sinon from "sinon";
 
 describe("TwitterRouteHelper", () => {
-    function mockTwitterRequest() {
-        return nock("https://api.twitter.com/1.1", {
-            "reqheaders": {
-                "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAD%2BCjAAAAAAA6o%2F%2B5TG9BK7jC7dzrp%2F2%2Bs5lWFE%3DZATD8UM6YQoou2tGt68hoFR4VuJ4k791pcLtmIvTyfoVbMtoD8"
-            }
-        }).get(searchApi);
-    }
 
     function mockResponse(done, expectedValues) {
         return {
@@ -33,7 +26,6 @@ describe("TwitterRouteHelper", () => {
     }
 
     let applicationConfig = null;
-    const FEEDS_COUNT = 100;
 
     before("TwitterRouteHelper", () => {
         applicationConfig = new ApplicationConfig();
@@ -120,7 +112,7 @@ describe("TwitterRouteHelper", () => {
             let twitterRequestHandler = new TwitterRequestHandler();
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
-            fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ message: 'myTest is not a valid twitter handler' }));
+            fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
 
             let twitterRouteHelper = new TwitterRouteHelper(request, response);
@@ -139,7 +131,7 @@ describe("TwitterRouteHelper", () => {
             let twitterRequestHandler = new TwitterRequestHandler();
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
-            fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ message: 'myTest is not a valid twitter handler' }));
+            fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
 
             let twitterRouteHelper = new TwitterRouteHelper(request, response);

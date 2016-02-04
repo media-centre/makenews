@@ -60,7 +60,7 @@ describe("TwitterLogin", () => {
                 "oauthAccessTokenSecret": "oldSecret"
             }));
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
-            saveDocStub.withArgs(twitterDocId, {"oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret}).returns(Promise.resolve());
+            saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": () => {
                 return Promise.resolve(couchClient);
             } });
@@ -91,7 +91,7 @@ describe("TwitterLogin", () => {
             let getDocStub = sinon.stub(couchClient, "getDocument");
             getDocStub.withArgs(twitterDocId).returns(Promise.reject());
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
-            saveDocStub.withArgs(twitterDocId, {"oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret}).returns(Promise.resolve());
+            saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": () => {
                 return Promise.resolve(couchClient);
             } });

@@ -172,7 +172,9 @@ describe("addTwitterUrlAsync", () => {
         ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
         ajaxInstanceMock.withArgs("/twitter-feeds").returns(ajaxMock);
         ajaxGetMock = sandbox.mock(ajaxMock).expects("get");
-        sandbox.stub(AppSessionStorage, "instance").returns({ "getValue": () => { return userName } });
+        sandbox.stub(AppSessionStorage, "instance").returns({ "getValue": () => {
+            return userName;
+        } });
     });
 
     before("Before", () => {

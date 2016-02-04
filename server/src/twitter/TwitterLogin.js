@@ -54,7 +54,7 @@ export default class TwitterLogin {
 
     accessTokenFromTwitter(oauthVerifier) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
-            this.oauth.getOAuthAccessToken(this.oauthToken, this.oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret, results) => {
+            this.oauth.getOAuthAccessToken(this.oauthToken, this.oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
                 this.saveToken(oauthAccessToken, oauthAccessTokenSecret).then(() => {
                     resolve(this.clientCallbackUrl);
                 });
@@ -68,14 +68,14 @@ export default class TwitterLogin {
             "oauthAccessToken": oauthAccessToken,
             "oauthAccessTokenSecret": oauthAccessTokenSecret
         };
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             AdminDbClient.instance().getDb().then((dbInstance) => {
-                dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => { //eslint-disable-line max-nested-callbacks
-                    dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => {
+                dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => {
+                    dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => { //eslint-disable-line max-nested-callbacks
                         resolve();
                     });
-                }).catch(() => { //eslint-disable-line max-nested-callbacks
-                    dbInstance.saveDocument(tokenDocumentId, document).then(() => {
+                }).catch(() => {
+                    dbInstance.saveDocument(tokenDocumentId, document).then(() => { //eslint-disable-line max-nested-callbacks
                         resolve();
                     });
                 });

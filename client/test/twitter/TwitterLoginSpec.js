@@ -92,21 +92,21 @@ describe("TwitterLogin", () => {
         it("should return false if socialAccounts document is not present", () => {
             facebookTwitterDbMock.returns(Promise.reject());
             return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
-                assert.strictEqual(authenticatedStatus, false)
+                assert.strictEqual(authenticatedStatus, false);
             });
         });
 
         it("should return false if twitterAuthenticated is false", () => {
-            facebookTwitterDbMock.returns(Promise.resolve({ "_id": "socialAccountId", "facebookExpiredAfter": undefined, "twitterAuthenticated": false }));
+            facebookTwitterDbMock.returns(Promise.resolve({ "_id": "socialAccountId", "facebookExpiredAfter": undefined, "twitterAuthenticated": false })); //eslint-disable-line no-undefined
             return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
-                assert.strictEqual(authenticatedStatus, false)
+                assert.strictEqual(authenticatedStatus, false);
             });
         });
 
         it("should return true if twitterAuthenticated", () => {
-            facebookTwitterDbMock.returns(Promise.resolve({ "_id": "socialAccountId", "facebookExpiredAfter": undefined, "twitterAuthenticated": true }));
+            facebookTwitterDbMock.returns(Promise.resolve({ "_id": "socialAccountId", "facebookExpiredAfter": undefined, "twitterAuthenticated": true })); //eslint-disable-line no-undefined
             return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
-                assert.strictEqual(authenticatedStatus, true)
+                assert.strictEqual(authenticatedStatus, true);
             });
         });
     });

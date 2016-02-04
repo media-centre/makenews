@@ -1,7 +1,4 @@
 "use strict";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
-import request from "request";
-import NodeErrorHandler from "../NodeErrorHandler.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import Logger from "../logging/Logger.js";
 import AdminDbClient from "../db/AdminDbClient";
@@ -25,7 +22,7 @@ export default class TwitterClient {
             this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
                 let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
                 let oauth = TwitterLogin.createOAuthInstance();
-                let searchUrl = `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT+searchParams)}`;
+                let searchUrl = `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
                 oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                     if(error) {
                         reject(error);
