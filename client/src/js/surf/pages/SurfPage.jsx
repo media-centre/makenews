@@ -10,6 +10,7 @@ import { parkFeed } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 
 export class SurfPage extends Component {
@@ -59,6 +60,9 @@ export class SurfPage extends Component {
                 result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
                 this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
             }));
+        }
+        if(!this.state.hasMoreFeeds) {
+            Toast.show("No more feeds");
         }
     }
 

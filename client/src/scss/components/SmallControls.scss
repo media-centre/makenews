@@ -74,3 +74,19 @@
        -webkit-transform: scaleY(1.0);
      }
 }
+
+.custom-toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 10%;
+  width: 80%;
+  background: $app-header-bg-color;
+  margin: auto;
+  padding: 10px;
+  color: $primary-font-color;
+
+  button {
+    display: block;
+  }
+}

@@ -1,3 +1,5 @@
+@import "../../utils/variable";
+
 @media (max-width: 600px) {
 
   .max-width {
@@ -133,4 +135,20 @@
     }
 
   }
+
+  body .custom-toast {
+    padding: 8px;
+    width: 85%;
+    font-size: $small-font-size;
+    text-align: center;
+
+    button {
+      width: 80px;
+      margin: 8px auto auto auto;
+      padding: 5px;
+      font-size: $small-font-size;
+      float: none;
+    }
+  }
+
 }

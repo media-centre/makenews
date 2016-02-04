@@ -12,6 +12,7 @@ import FacebookComponent from "./FacebookComponent.jsx";
 import TwitterComponent from "./TwitterComponent.jsx";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 const RSS = "rss";
 const FACEBOOK = "facebook";
@@ -70,6 +71,7 @@ export default class Category extends Component {
         if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
                 if(response.status) {
+                    Toast.show(categoryName + " is updated");
                     this.setState({ "titleErrorMessage": "Category name is updated", "isValidName": true, "categoryName": categoryName });
                 } else {
                     this.setState({ "titleErrorMessage": "Category name already exists", "isValidName": false, "categoryName": this.state.categoryName });

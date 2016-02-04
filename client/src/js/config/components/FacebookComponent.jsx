@@ -6,6 +6,7 @@ import AddURLComponent from "../../utils/components/AddURLComponent.js";
 import FacebookLogin from "../../facebook/FacebookLogin";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
 import FacebookDb from "./../../facebook/FacebookDb";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 export const fbRegex = /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
 export default class FacebookComponent extends Component {
@@ -24,6 +25,9 @@ export default class FacebookComponent extends Component {
         if(url.match(fbRegex)) {
             props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
                 let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+                if(response !== "invalid") {
+                    Toast.show(errorMsg);
+                }
                 return callback({ "error": errorMsg, "urlAdded": response === "valid" });
             }));
         } else {

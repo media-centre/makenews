@@ -5,6 +5,7 @@ import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 import React, { Component, PropTypes } from "react";
 import { Route, Link, History } from "react-router";
 import { connect } from "react-redux";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 export default class CategoryNavigationHeader extends Component {
 
@@ -44,6 +45,7 @@ export default class CategoryNavigationHeader extends Component {
     handleDelete(event, categoryId) {
         if(event.OK) {
             CategoryDb.deleteCategory(categoryId).then((result) => {
+                Toast.show("Category is deleted");
                 this.context.history.push("/configure/categories");
             });
         }

@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import getHtmlContent from "../../utils/HtmContent.js";
 import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 export default class Paragraph extends Component {
     constructor(props) {
@@ -22,6 +23,7 @@ export default class Paragraph extends Component {
             this._showConfirmPopup();
         } else {
             this.props.clickHandler(feedDoc);
+            Toast.show(feedDoc.status === "park" ? "News is unparked" : "News is parked");
         }
     }
 

@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../actions/CategoryActions.js";
 import AddURLComponent from "../../utils/components/AddURLComponent.js";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 export default class RSSComponent extends Component {
     constructor(props) {
@@ -13,6 +14,9 @@ export default class RSSComponent extends Component {
     _validateUrl(url, callback, props) {
         props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
             let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+            if(response !== "invalid") {
+                Toast.show(errorMsg);
+            }
             return callback({ "error": errorMsg, "urlAdded": response === "valid" });
         }));
     }

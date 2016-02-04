@@ -6,6 +6,7 @@ import FeedHeader from "./FeedHeader.jsx";
 import Spinner from "../../utils/components/Spinner.jsx";
 import getHtmlContent from "../../utils/HtmContent.js";
 import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
+import Toast from "../../utils/custom_templates/Toast.js";
 
 export default class ImageContent extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ export default class ImageContent extends Component {
             this._showConfirmPopup();
         } else {
             this.props.clickHandler(feedDoc);
+            Toast.show(feedDoc.status === "park" ? "News is unparked" : "News is parked");
         }
     }
     handleDeleteClick(event) {
