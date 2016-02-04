@@ -18,54 +18,61 @@ export default class CouchClient {
     }
 
     saveDocument(documentId, documentObj) {
-        return new Promise((resolve, reject) => {
-            request.put({
-                "uri": this.dbUrl + "/" + this.dbName + "/" + documentId,
-                "headers": {
-                    "Cookie": "AuthSession=" + this.accessToken,
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                "body": documentObj,
-                "json": true
-            },
-                (error, response) => {
-                    if(NodeErrorHandler.noError(error)) {
-                        if(new HttpResponseHandler(response.statusCode).success()) {
-                            resolve(response.body);
-                        } else {
-                            reject("unexpected response from the db");
-                        }
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        const path = "/" + this.dbName + "/" + documentId;
+        return this.put(path, documentObj);
     }
 
     getDocument(documentId) {
+        const path = "/" + this.dbName + "/" + documentId;
+        return this.get(path);
+    }
+
+    put(path, body) {
         return new Promise((resolve, reject) => {
-            request.get({
-                "uri": this.dbUrl + "/" + this.dbName + "/" + documentId,
+            request.put({
+                "uri": this.dbUrl + path,
                 "headers": {
                     "Cookie": "AuthSession=" + this.accessToken,
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
+                "body": body || {},
                 "json": true
             },
-                (error, response) => {
-                    if(NodeErrorHandler.noError(error)) {
-                        if(new HttpResponseHandler(response.statusCode).success()) {
-                            resolve(response.body);
-                        } else {
-                            reject("unexpected response from the db");
-                        }
-                    } else {
-                        reject(error);
-                    }
-                });
+            (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
         });
+    }
+
+    get(path, data) {
+        return new Promise((resolve, reject) => {
+            request.get({
+                "uri": this.dbUrl + path,
+                "headers": {
+                    "Cookie": "AuthSession=" + this.accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                "data": data || {},
+                "json": true
+            },
+            (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
+        });
+    }
+
+    handleResponse(error, response, resolve, reject) {
+        if (NodeErrorHandler.noError(error)) {
+            if (new HttpResponseHandler(response.statusCode).success()) {
+                resolve(response.body);
+            } else {
+                reject("unexpected response from the db");
+            }
+        } else {
+            reject(error);
+        }
     }
 
     static getAllDbs() {

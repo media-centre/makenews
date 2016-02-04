@@ -189,9 +189,7 @@ describe("FacebookRequestHandler", () => {
             getDocStub.withArgs(tokenDocId).returns(Promise.reject("error"));
             let saveDocStub = sinon.stub(couchClient, "saveDocument");
             saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
-                return Promise.resolve(couchClient);
-            } });
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
             facebookRequestHandler.setToken("test").then(response => {
                 assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
                 facebookClientPagePostsMock.verify();
@@ -218,9 +216,7 @@ describe("FacebookRequestHandler", () => {
             let saveDocStub = sinon.stub(couchClient, "saveDocument");
             saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
 
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": ()=> {
-                return Promise.resolve(couchClient);
-            } });
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
             facebookRequestHandler.setToken("test").then(response => {
                 assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
                 facebookClientPagePostsMock.verify();

@@ -2,56 +2,71 @@
 
 import CouchSession from "../CouchSession";
 import CouchClient from "../CouchClient";
-import ApplicationConfig from "../config/ApplicationConfig";
 import DateUtil from "../util/DateUtil";
 
-let _dbInstance = null, loginTime = null;
-export default class AdminDbClient {
-    static instance() {
-        return new AdminDbClient();
+let dbInstanceMap = new Map();
+export default class AdminDbClient extends CouchClient {
+
+
+    constructor(userName, token) {
+        super(userName, token);
     }
 
-    getDb() {
+    static instance(userName, password, db) {
         return new Promise((resolve, reject) => {
-            if(AdminDbClient.getDbInstance() && !AdminDbClient.isSessionExpired()) {
-                resolve(AdminDbClient.getDbInstance());
-            } else {
-                const adminDetails = ApplicationConfig.instance().adminDetails();
-                CouchSession.login(adminDetails.username, adminDetails.password).then((token) => {
-                    if(token && token.split(";")[0]) {
-                        this.accessToken = token.split(";")[0].split("=")[1];
-                    }
-                    _dbInstance = CouchClient.instance(adminDetails.db, this.accessToken);
-                    loginTime = DateUtil.getCurrentTime();
-                    resolve(_dbInstance);
+            if(AdminDbClient.isSessionExpired(userName)) {
+                CouchSession.login(userName, password).then((token) => {
+                    resolve(AdminDbClient.createInstance(token, db, userName));
                 }).catch((error) => {
                     reject(error);
                 });
+            } else {
+                resolve(AdminDbClient.getDbInstance(userName).instance);
             }
         });
     }
 
-    getDocument(documentId) {
-        return new Promise((resolve, reject) => {
-            this.getDb().then((dbInstance) => {
-                dbInstance.getDocument(documentId).then((document) => {
-                    resolve(document);
-                }).catch((error) => {
-                    reject(error);
-                });
-            }).catch((error) => {
-                reject(error);
-            });
-        });
+    static createInstance(token, db, userName) {
+        let accessToken = "";
+        if (token && token.split(";")[0]) {
+            accessToken = token.split(";")[0].split("=")[1];
+        }
+        const adminDbClient = new AdminDbClient(db, accessToken);
+        dbInstanceMap.set(userName, { "instance": adminDbClient, "expiration": AdminDbClient.getExpirationTime() });
+        return adminDbClient;
+    }
+
+    createUser(userName, password) {
+        const path = "/_users/org.couchdb.user:" + userName;
+        const body = { "_id": "org.couchdb.user:" + userName, "name": userName, "roles": [], "type": "user", "password": password, "generated": true };
+        return this.put(path, body);
+    }
+
+    createDb(dbName) {
+        return this.put("/" + dbName);
     }
 
 
-    static isSessionExpired() {
+    setPermissions(userName, dbName) {
+        const path = "/" + dbName + "/_security";
+        const body = { "admins": { "names": [], "roles": [] }, "members": { "names": [userName], "roles": [] } };
+        return this.put(path, body);
+    }
+
+    static getExpirationTime() {
         let minutes = 5, seconds = 60, milliseconds = 1000;
-        return DateUtil.getCurrentTime() > loginTime + (minutes * seconds * milliseconds);
+        return DateUtil.getCurrentTime() + (minutes * seconds * milliseconds);
     }
 
-    static getDbInstance() {
-        return _dbInstance;
+    static isSessionExpired(userName) {
+        let dbInstance = AdminDbClient.getDbInstance(userName);
+        if(!dbInstance) {
+            return true;
+        }
+        return DateUtil.getCurrentTime() > dbInstance.expiration;
+    }
+
+    static getDbInstance(userName) {
+        return dbInstanceMap.get(userName);
     }
 }

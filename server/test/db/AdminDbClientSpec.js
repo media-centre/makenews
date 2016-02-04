@@ -4,12 +4,12 @@
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchSession from "../../src/CouchSession";
 import CouchClient from "../../src/CouchClient";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("AdminDbClient", () => {
     let sandbox = null;
+
     beforeEach("AdminDbClient", () => {
         sandbox = sinon.sandbox.create();
     });
@@ -17,87 +17,68 @@ describe("AdminDbClient", () => {
     afterEach("AdminDbClient", () => {
         sandbox.restore();
     });
-    describe("getDb", () => {
+
+    describe("instance", () => {
         it("if admin session exists return existing couchClient", (done) => {
-            let obj = {};
-            sandbox.stub(AdminDbClient, "getDbInstance").returns(obj);
-            sandbox.stub(AdminDbClient, "isSessionExpired").returns(false);
-            AdminDbClient.instance().getDb().then((response) => {
-                assert.deepEqual(response, obj);
+            let obj = { "instance": "test" }, userName = "test";
+            sandbox.stub(AdminDbClient, "getDbInstance").withArgs(userName).returns(obj);
+            sandbox.stub(AdminDbClient, "isSessionExpired").withArgs(userName).returns(false);
+            AdminDbClient.instance(userName).then((response) => {
+                assert.deepEqual(response, obj.instance);
                 done();
             });
         });
 
         it("if admin session not exists should login and returns couchClient", (done) => {
-            sandbox.stub(AdminDbClient, "getDbInstance").returns(null);
-            let applicationConfig = new ApplicationConfig();
-            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(AdminDbClient, "getDbInstance").withArgs("adminUser").returns(null);
             sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));
-            sandbox.stub(applicationConfig, "adminDetails").returns({
-                "username": "adminUser",
-                "password": "adminPwd",
-                "db": "adminDb"
-            });
 
-            AdminDbClient.instance().getDb().then((response) => {
+            AdminDbClient.instance("adminUser", "adminPwd", "adminDb").then((response) => {
                 assert.deepEqual(response, new CouchClient("adminDb", "Token1-2"));
                 done();
             });
         });
 
         it("if admin session expires it should login and returns couchClient", (done) => {
-            sandbox.stub(AdminDbClient, "getDbInstance").returns({});
-            sandbox.stub(AdminDbClient, "isSessionExpired").returns(true);
-            let applicationConfig = new ApplicationConfig();
-            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(AdminDbClient, "isSessionExpired").withArgs("adminUser").returns(true);
             sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));
-            sandbox.stub(applicationConfig, "adminDetails").returns({
-                "username": "adminUser",
-                "password": "adminPwd",
-                "db": "adminDb"
-            });
 
-            AdminDbClient.instance().getDb().then((response) => {
+            AdminDbClient.instance("adminUser", "adminPwd", "adminDb").then((response) => {
                 assert.deepEqual(response, new CouchClient("adminDb", "Token1-2"));
                 done();
             });
         });
     });
 
-    describe("getDocument", () => {
-
-        it("should resolve document if exist", (done) => {
-            let couchClient = new CouchClient();
-            let getDocumentStub = sinon.stub(couchClient, "getDocument");
-            let adminDbClient = AdminDbClient.instance();
-            sandbox.stub(adminDbClient, "getDb").returns(Promise.resolve(couchClient));
-            const doc = { "_id": "facebookToken", "token": "123" };
-            getDocumentStub.withArgs("facebookToken").returns(Promise.resolve(doc));
-            adminDbClient.getDocument("facebookToken").then((response) => {
-                assert.deepEqual(response, doc);
-                done();
-            });
+    describe("createUser", () => {
+        it("should call put with _users/user", () => {
+            let adminDbClient = new AdminDbClient("admin", "token1");
+            let putMock = sandbox.mock(adminDbClient).expects("put");
+            let body = { "_id": "org.couchdb.user:test", "name": "test", "roles": [], "type": "user", "password": "password", "generated": true };
+            putMock.withArgs("/_users/org.couchdb.user:test", body);
+            adminDbClient.createUser("test", "password");
+            putMock.verify();
         });
+    });
 
-        it("should reject document if not exist", (done) => {
-            let couchClient = new CouchClient();
-            let getDocumentStub = sinon.stub(couchClient, "getDocument");
-            let adminDbClient = AdminDbClient.instance();
-            sandbox.stub(adminDbClient, "getDb").returns(Promise.resolve(couchClient));
-            getDocumentStub.withArgs("facebookToken").returns(Promise.reject("error"));
-            adminDbClient.getDocument("facebookToken").catch((error) => {
-                assert.deepEqual(error, "error");
-                done();
-            });
+    describe("createDb", () => {
+        it("should call put with /dbName", () => {
+            let adminDbClient = new AdminDbClient("admin", "token1");
+            let putMock = sandbox.mock(adminDbClient).expects("put");
+            putMock.withArgs("/testdb");
+            adminDbClient.createDb("testdb");
+            putMock.verify();
         });
+    });
 
-        it("should reject document if dbInstance throws error", (done) => {
-            let adminDbClient = AdminDbClient.instance();
-            sandbox.stub(adminDbClient, "getDb").returns(Promise.reject("db error"));
-            adminDbClient.getDocument("facebookToken").catch((error) => {
-                assert.deepEqual(error, "db error");
-                done();
-            });
+    describe("setPermissions", () => {
+        it("should call put with ", () => {
+            let adminDbClient = new AdminDbClient("admin", "token1");
+            let putMock = sandbox.mock(adminDbClient).expects("put");
+            let body = { "admins": { "names": [], "roles": [] }, "members": { "names": ["test"], "roles": [] } };
+            putMock.withArgs("/testdb/_security", body);
+            adminDbClient.setPermissions("test", "testdb");
+            putMock.verify();
         });
     });
 });

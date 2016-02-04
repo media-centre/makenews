@@ -60,7 +60,8 @@ export default class FacebookRequestHandler {
                 const milliSeconds = 1000;
                 response.expired_after = currentTime + (response.expires_in * milliSeconds); //eslint-disable-line camelcase
                 FacebookRequestHandler.logger().debug("getLongLivedToken response: %s", response);
-                AdminDbClient.instance().getDb().then((dbInstance) => {
+                const adminDetails = ApplicationConfig.instance().adminDetails();
+                AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
                     let tokenDocumentId = userName + "_facebookToken";
                     dbInstance.getDocument(tokenDocumentId).then((document) => { //eslint-disable-line max-nested-callbacks
                         document.access_token = response.access_token; //eslint-disable-line camelcase
