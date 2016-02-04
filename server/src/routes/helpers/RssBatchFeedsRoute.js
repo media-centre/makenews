@@ -9,7 +9,7 @@ export default class RssBatchFeedsRoute extends Route {
         super(request, response, next);
     }
 
-    feedsForAllUrls() {
+    handle() {
         if(this.isValidRequestData()) {
             let allFeeds = {};
             let rssRequestHandler = RssRequestHandler.instance();

@@ -18,7 +18,7 @@ export default class TwitterFeedsRoute extends Route {
         return true;
     }
 
-    twitterRouter() {
+    handle() {
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }

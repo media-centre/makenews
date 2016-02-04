@@ -18,7 +18,7 @@ export default class RssFeedsRoute extends Route {
         return true;
     }
 
-    feedsForUrl() {
+    handle() {
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }

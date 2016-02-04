@@ -4,10 +4,10 @@ import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute.js";
 
 export default (app) => {
     app.get("/rss-feeds", (request, response, next) => {
-        new RssFeedsRoute(request, response, next).feedsForUrl();
+        new RssFeedsRoute(request, response, next).handle();
     });
 
     app.post("/fetch-all-rss", (request, response, next) => {
-        new RssBatchFeedsRoute(request, response, next).feedsForAllUrls();
+        new RssBatchFeedsRoute(request, response, next).handle();
     });
 };

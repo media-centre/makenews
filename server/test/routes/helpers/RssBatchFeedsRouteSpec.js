@@ -66,7 +66,7 @@ describe("RssBatchFeedsRoute", () => {
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
             fetchRssFeedRequestMock.withArgs(requestData.body.data[0].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
             fetchRssFeedRequestMock.withArgs(requestData.body.data[1].url).returns(Promise.resolve({ "items": [{ "title": "test1", "description": "news cricket1" }] }));
-            rssRouteHelper.feedsForAllUrls();
+            rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();
         });
@@ -105,7 +105,7 @@ describe("RssBatchFeedsRoute", () => {
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
             fetchRssFeedRequestMock.withArgs(requestData.body.data[0].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
             fetchRssFeedRequestMock.withArgs(requestData.body.data[1].url).returns(Promise.reject("some error"));
-            rssRouteHelper.feedsForAllUrls();
+            rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();
         });

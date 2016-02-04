@@ -81,6 +81,6 @@ describe("TwitterBatchFeedsRoute", () => {
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });
 
         let twitterRouteHelper = new TwitterBatchFeedsRoute(request, response, next);
-        twitterRouteHelper.twitterBatchFetch();
+        twitterRouteHelper.handle();
     });
 });

@@ -14,7 +14,7 @@ export default class TwitterBatchFeedsRoute extends Route {
         }
         return true;
     }
-    twitterBatchFetch() {
+    handle() {
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }

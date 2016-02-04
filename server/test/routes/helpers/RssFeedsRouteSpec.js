@@ -72,7 +72,7 @@ describe("RssFeedsRoute", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": url + " is not a proper feed" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
     it("should return feeds for the given url of a user", (done) => {
@@ -99,7 +99,7 @@ describe("RssFeedsRoute", () => {
         };
         let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
     it("should return 500 error if url is invalid", (done) => {
@@ -116,7 +116,7 @@ describe("RssFeedsRoute", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": "Request failed for " + url } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
     it("should return error if request to url returns error", (done) => {
@@ -134,7 +134,7 @@ describe("RssFeedsRoute", () => {
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json":
         { "message": "Request failed for " + url } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
     it("should return empty response if url is empty", (done) => {
@@ -145,7 +145,7 @@ describe("RssFeedsRoute", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
     it("should return empty response if url is not present", (done) => {
@@ -155,7 +155,7 @@ describe("RssFeedsRoute", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
-        rssRouteHelper.feedsForUrl();
+        rssRouteHelper.handle();
     });
 
 });
