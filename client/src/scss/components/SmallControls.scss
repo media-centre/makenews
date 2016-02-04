@@ -75,6 +75,10 @@
      }
 }
 
+.custom-toast.hide {
+  z-index: -1;
+}
+
 .custom-toast {
   position: fixed;
   left: 0;

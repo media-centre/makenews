@@ -147,12 +147,11 @@ function fetchFeeds(lastIndex, filterObj, callback, dispatch) {
 
 export function fetchFeedsByFilter(latestFilterDocument, callback = ()=> {}) {
     return dispatch => {
-        let currentStore = dispatch(storeFilterSourceMap());
-        currentStore.surfFilter = latestFilterDocument;
-        dispatch(storeFilterSourceMap(currentStore.surfFilter, currentStore.sourceHashMap, currentStore.sourceIds));
         let filterFeedsHandler = new FilterFeedsHandler();
         filterFeedsHandler.updateFilterDocument(latestFilterDocument).then(()=> {
             filterFeedsHandler.getFilterAndSourceHashMap().then((filterObj) => {
+                dispatch(storeFilterSourceMap(filterObj.surfFilter, filterObj.sourceHashMap, filterObj.sourceIds));
+
                 filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, 0).then((result)=> {
                     dispatch(displayAllFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds));
                     callback(result);

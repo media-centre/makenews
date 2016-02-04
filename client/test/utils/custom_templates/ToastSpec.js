@@ -28,7 +28,7 @@ describe("Toast", () => {
             clock.tick(time);
             assert.isTrue(document.getElementById("custom-toast").classList.contains("hide"));
         });
-        
+
         it("should reuse the toast when it is called multiple times", ()=> {
             let clock = sinon.useFakeTimers();
             Toast.show("Category created!!");

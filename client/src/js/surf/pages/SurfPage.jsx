@@ -33,9 +33,6 @@ export class SurfPage extends Component {
         }));
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
-    }
-
-    componentDidMount() {
         this.paginateFeeds();
     }
 
@@ -52,16 +49,22 @@ export class SurfPage extends Component {
     }
 
     getMoreFeeds() {
-        if(!this.state.showPaginationSpinner && this.state.hasMoreFeeds) {
+        if(!this._reactInternalInstance) {
+            return;
+        }
+
+        if(!this.state.hasMoreFeeds) {
+            Toast.show("No more feeds");
+            return;
+        }
+
+        if(!this.state.showPaginationSpinner) {
             this.setState({ "showPaginationSpinner": true });
             this.props.dispatch(fetchFeedsByPage(this.state.lastIndex, (result)=> {
                 result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex;
                 result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
                 this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
             }));
-        }
-        if(!this.state.hasMoreFeeds) {
-            Toast.show("No more feeds");
         }
     }
 

@@ -150,7 +150,7 @@ export default class FilterFeedsHandler {
                                 lastFilteredFeed = feeds.length === 0 ? lastIndex : index;
                             }
                         } else {
-                            if(filterObj.sourceIds.length === 0 && contentTypeFilter.length === 0) {
+                            if(filterObj.surfFilter.categories.length === 0 && contentTypeFilter.length === 0) {
                                 feed.categoryNames = filterObj.sourceHashMap[feed.sourceId];
                                 result.feeds.push(feed);
                                 totalCollectedFeeds += 1;
@@ -166,7 +166,7 @@ export default class FilterFeedsHandler {
                                     result.feeds.push(feed);
                                     totalCollectedFeeds += 1;
                                 }
-                            } else if(contentTypeFilter.length > 0) {
+                            } else if(contentTypeFilter.length > 0 && !(filterObj.surfFilter.categories.length > 0 && filterObj.sourceIds.length === 0)) {
                                 if(contentTypeFilter.indexOf(feed.type) !== NOT_FOUND) {
                                     feed.categoryNames = filterObj.sourceHashMap[feed.sourceId];
                                     result.feeds.push(feed);
