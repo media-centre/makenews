@@ -77,6 +77,68 @@ describe("RssReaderSpec", () => {
                     done();
                 });
         });
+
+        it("should fetch feeds for multiple rss urls", (done) => {
+            let expectedResponse = {
+                "B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4": {
+                    "items": [
+                        {
+                            "title": "CNG stations ready, where are the buses?",
+                            "description": "Will any bus use the Compressed Natural Gas (CNG) that is expected to be supplied from March"
+                        },
+                        {
+                            "title": "Leaders fret over traffic congestion",
+                            "description": "It is not only common people who are cribbing about traffic congestion"
+                        }
+                    ]
+                },
+                "214F7943-36F3-84F3-9E21-CDC9939E1468": {
+                    "items": [
+                        {
+                            "title": "Sewage woes plague road-users in Chennai",
+                            "description": "Incidents of sewage overflowing on arterial roads due to obstructions in the underground sewer network have been reported from different localities across the city"
+                        },
+                        {
+                            "title": "Not many takers for first class in Metro",
+                            "description": "As the majority of Metro users believe the fares for the first class have been priced too high, this coach has less takers, commuters say"
+                        }
+                    ]
+
+                }
+            };
+
+            request(serverIp)
+                .post("/fetch-all-rss")
+                .send({
+                    "data": [
+                        {
+                            "timestamp": "2016-02-04T04:46:39+00:00",
+                            "url": "http://localhost:3000/news/cities/bangalore/?service=rss",
+                            "id": "B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"
+                        },
+                        {
+                            "timestamp": "2016-02-04T04:48:10+00:00",
+                            "url": "http://localhost:3000/news/cities/chennai/?service=rss",
+                            "id": "214F7943-36F3-84F3-9E21-CDC9939E1468"
+                        }
+                    ]
+                })
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.strictEqual(res.body["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[0].title, expectedResponse["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[0].title);
+                    assert.strictEqual(res.body["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[0].description, expectedResponse["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[0].description);
+                    assert.strictEqual(res.body["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[1].title, expectedResponse["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[1].title);
+                    assert.strictEqual(res.body["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[1].description, expectedResponse["B7CF1576-05BB-DD75-BA53-9E9EC1E6C5D4"].items[1].description);
+
+                    assert.strictEqual(res.body["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[0].title, expectedResponse["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[0].title);
+                    assert.strictEqual(res.body["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[0].description, expectedResponse["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[0].description);
+                    assert.strictEqual(res.body["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[1].title, expectedResponse["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[1].title);
+                    assert.strictEqual(res.body["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[1].description, expectedResponse["214F7943-36F3-84F3-9E21-CDC9939E1468"].items[1].description);
+
+                    assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
+                    done();
+                });
+
+        });
     });
 });
-

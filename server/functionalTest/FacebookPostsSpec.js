@@ -73,5 +73,54 @@ describe("FacbookPosts", () => {
                 });
         });
 
+        it("should fetch feeds for multiple facebook urls", (done) => {
+            let expectedResponse = {
+                "posts": {
+                    "95B3612A-B090-4185-93CC-49877FD97201": [
+                        {
+                            "message": "ur1 1 message 1",
+                            "id": "163974433696568_647858557641482"
+                        },
+                        {
+                            "message": "ur1 1 message 2",
+                            "id": "163974433696568_647858557641482"
+                        }
+                    ],
+                    "A524A8C4-B6F9-7932-921A-22E1B120D277": [
+                        {
+                            "message": "ur1 2 message 1",
+                            "id": "163974433696568_657858557641482"
+                        },
+                        {
+                            "message": "ur1 2 message 2",
+                            "id": "163974433696568_657858557641482"
+                        }
+                    ]
+                }
+            };
+            request(serverIp)
+                .post("/facebook-batch-posts")
+                .send({
+                    "userName": "test",
+                    "data": [
+                        {
+                            "timestamp": "2016-02-03T22:09:38+00:00",
+                            "url": "https://www.facebook.com/BatchFacebookUrl1",
+                            "id": "95B3612A-B090-4185-93CC-49877FD97201"
+                        },
+                        {
+                            "timestamp": "2016-02-03T08:43:40+00:00",
+                            "url": "https://www.facebook.com/BatchFacebookUrl2",
+                            "id": "A524A8C4-B6F9-7932-921A-22E1B120D277"
+                        }
+                    ]
+                })
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    assert.deepEqual(res.body, expectedResponse);
+                    assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
+                    done();
+                });
+        });
     });
 });

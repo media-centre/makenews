@@ -12,10 +12,7 @@ export default class DefaultRoute extends Route {
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.url)) {
-            return false;
-        }
-        return true;
+        return !StringUtil.isEmptyString(this.url);
     }
 
     handle() {
