@@ -132,6 +132,12 @@ describe("PouchClient", () => {
                     },
                     "sourceParkFeeds": {
                         "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
+                    },
+                    "surfFilter": {
+                        "map": "function(doc) { if(doc.docType == 'surf-filter') {emit(doc._id, doc)} }"
+                    },
+                    "latestFeeds": {
+                        "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) {emit(doc.postedDate, doc)} }"
                     }
                 }
             }, "_design/category");
@@ -562,6 +568,27 @@ describe("PouchClient", () => {
                 "key": "0AD6EF4F-3DED-BA7D-9878-9A616E16DF48"
             }).then((docs) => {
                 assert.strictEqual("Chennai patient receives heart from brain-dead man in CMC", docs[0].content);
+                done();
+            });
+        });
+    });
+
+    describe("surfFilter", () => {
+        before("surfFilter", () => {
+            DbSession.instance().then(session => {
+                session.put({
+                    "docType": "surf-filter",
+                    "categoryIds": [{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }],
+                    "content": ["image", "video", "text"]
+                }, "surf-filter-id");
+            });
+        });
+        it("should fetch surf filter document", (done) => {
+            PouchClient.fetchDocuments("category/surfFilter", {
+                "include_docs": true
+            }).then((docs) => {
+                assert.deepEqual([{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }], docs[0].categoryIds);
+                assert.deepEqual(["image", "video", "text"], docs[0].content);
                 done();
             });
         });

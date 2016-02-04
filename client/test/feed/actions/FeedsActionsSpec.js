@@ -2,6 +2,8 @@
 
 "use strict";
 import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions.js";
+import * as AllFeedsActions from "../../../src/js/surf/actions/AllFeedsActions";
+import * as ParkActions from "../../../src/js/park/actions/ParkActions.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
 import mockStore from "../../helper/ActionHelper.js";
@@ -20,7 +22,7 @@ describe("parkFeed", ()=> {
         };
 
         let feedStatus = "park";
-        let store = mockStore({ "parkFeedCount": 2 }, [{ "type": FeedActions.INCREMENT_PARK_COUNTER }], done);
+        let store = mockStore({ "parkFeedCount": 2 }, [{ "type": FeedActions.INCREMENT_PARK_COUNTER }, { "type": AllFeedsActions.PARK_FEED, "feed": feedDocument }], done);
         let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
         feedApplicationQueriesMock.withExactArgs(feedDocument, feedStatus).returns(Promise.resolve({ "ok": true }));
         return Promise.resolve(store.dispatch(FeedActions.parkFeed(feedDocument))).then(() => {
@@ -62,7 +64,7 @@ describe("unparkFeeds", () => {
         };
 
         let feedStatus = "surf";
-        let store = mockStore({ "parkFeedCount": 1 }, [{ "type": FeedActions.DECREMENT_PARK_COUNTER }], done);
+        let store = mockStore({ "parkFeedCount": 1 }, [{ "type": FeedActions.DECREMENT_PARK_COUNTER }, { "type": ParkActions.UNPARK_FEED, "feed": feedDocument }], done);
         let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
         feedApplicationQueriesMock.withExactArgs(feedDocument, feedStatus).returns(Promise.resolve({ "ok": true }));
 
@@ -101,7 +103,7 @@ describe("unparkFeeds", () => {
             "description": "www.facebookpolitics.com",
             "sourceId": ""
         };
-        let store = mockStore({ "parkFeedCount": 2 }, [{ "type": FeedActions.DECREMENT_PARK_COUNTER }], done);
+        let store = mockStore({ "parkFeedCount": 2 }, [{ "type": FeedActions.DECREMENT_PARK_COUNTER }, { "type": ParkActions.UNPARK_FEED, "feed": feedDocument }], done);
         let pouchClientDeleteDcMock = sinon.mock(PouchClient).expects("deleteDocument");
         pouchClientDeleteDcMock.withArgs(feedDocument).returns(Promise.resolve({ "ok": true }));
 

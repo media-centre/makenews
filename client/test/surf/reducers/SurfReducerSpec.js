@@ -44,9 +44,9 @@ describe("Surf Reducer", () => {
                     "type": "description"
                 }
             ];
-            let action = { "type": DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0 };
+            let action = { "type": DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": false, "lastIndex": 0 };
 
-            expect({ "feeds": feeds, "messages": messages, "refreshState": false, "progressPercentage": 0 }).to.deep.equal(allFeeds(undefined, action));
+            expect({ "feeds": feeds, "messages": messages, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": false, "lastIndex": 0 }).to.deep.equal(allFeeds(undefined, action));
         });
 
         it("should return previous state feeds", () => {

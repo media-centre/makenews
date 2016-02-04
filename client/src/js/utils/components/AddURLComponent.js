@@ -93,7 +93,7 @@ export default class AddURLComponent extends Component {
             );
         }
 
-        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"Are you sure want to delete this?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>

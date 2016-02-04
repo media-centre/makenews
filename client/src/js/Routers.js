@@ -8,6 +8,7 @@ import AllCategories from "./config/components/AllCategories.jsx";
 import CategoryPage from "./config/components/Category.jsx";
 import SurfPage from "./surf/pages/SurfPage.jsx";
 import ParkPage from "./park/pages/ParkPage.jsx";
+import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import AppSessionStorage from "./utils/AppSessionStorage.js";
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import DbSession from "./db/DbSession.js";
@@ -30,6 +31,7 @@ export function renderRoutes() {
 
                 <Route path="/surf" component={SurfPage} />
                 <Route path="/park" component={ParkPage} />
+                <Route path="/twitterSuccess" component={TwitterSuccess} />
             </Route>
         </Route>
     );

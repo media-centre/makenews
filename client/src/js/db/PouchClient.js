@@ -21,6 +21,8 @@ export default class PouchClient {
                     }
                 });
 
+            }).catch((error) => {
+                reject(error);
             });
         });
     }

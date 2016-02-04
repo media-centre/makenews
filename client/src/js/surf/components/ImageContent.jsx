@@ -1,4 +1,4 @@
-/* eslint react/no-danger:0 max-len:0 */
+/* eslint react/no-danger:0 max-len:0, no-set-state:0 */
 "use strict";
 
 import React, { Component, PropTypes } from "react";
@@ -33,27 +33,25 @@ export default class ImageContent extends Component {
         if(this.props.category.sourceId === "") {
             this._showConfirmPopup();
         } else {
-            this.props.dispatch(this.props.clickHandler(feedDoc));
-            this.setState({ "showFeed": false });
+            this.props.clickHandler(feedDoc);
         }
     }
     handleDeleteClick(event) {
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
-            this.setState({ "showCustomPopup": false, "showFeed": false });
+            this.setState({ "showCustomPopup": false });
         } else {
             this.setState({ "showCustomPopup": false });
         }
     }
     render() {
         let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
-        let feedStyle = this.state.showFeed ? { "display": "block" } : { "display": "none" };
-        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This data will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This feed item will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>
                 {confirmPopup}
-                <div className="image-content" style={feedStyle}>
+                <div className="image-content" >
                     <a target="_blank" href={this.props.category.link}>
                         <div className="title">{this.props.category.title}</div>
                         <div className="container clear-fix">

@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0, max-params:1 */
+/* eslint no-unused-vars:0, max-params:0 */
 
 "use strict";
 import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
@@ -75,7 +75,7 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) {
+function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) { //eslint-disable-line max-params
     return new Promise((resolve, reject) => {
         new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status, "latestFeedTimestamp": latestFeedTimestamp }).save().then(response => {
             dispatch(populateCategoryDetailsAsync(categoryId));

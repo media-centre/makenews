@@ -12,8 +12,7 @@ export default class AllFeeds extends Component {
         let categories = this.props.feeds.map((category, index)=>
             category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/>
                 : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/>
-                    : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/> : null
-
+                : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler}/> : null
         );
 
         return (

@@ -16,15 +16,21 @@ export class ParkPage extends Component {
         this.props.dispatch(displayParkedFeedsAsync());
     }
 
+    parkClickHandler(feedDoc) {
+        this.props.dispatch(unparkFeed(feedDoc));
+    }
+
     render() {
         let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{"No feeds found"}</div> : null;
+
         return (
             <div ref="parkItem" className="park-page feeds-container">
                 {defaultText}
-                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={unparkFeed}/>
+                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={(feedDoc) => this.parkClickHandler(feedDoc)}/>
             </div>
         );
     }
+
 }
 
 ParkPage.displayName = "ParkPage";
