@@ -51,6 +51,11 @@ export default class CategoryNavigationHeader extends Component {
         }
         this.setDeleteConfirmState(false);
     }
+    deleteCategory() {
+        if(!this.props.isDefault) {
+            this.showConfirmPopup(this.props.categoryName);
+        }
+    }
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
@@ -59,7 +64,6 @@ export default class CategoryNavigationHeader extends Component {
             </input>
             <div ref="errorMessage" className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
         </div>;
-        let deleteElement = this.props.isDefault ? null : <button className="delete-category right" id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.showConfirmPopup(this.props.categoryName)}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>;
 
         return (
             <div className="navigation-header clear-fix" >
@@ -67,7 +71,7 @@ export default class CategoryNavigationHeader extends Component {
                     <i className="fa fa-arrow-left"></i>
                     <span ref="allCategoriesLinkLabel">{this.props.categoryDetailsPageStrings.allCategoriesLinkLabel}</span>
                 </Link>
-                {deleteElement}
+                <button className={this.props.isDefault ? "delete-category right disable" : "delete-category right"} id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.deleteCategory()}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
                 {titleElement}
                 {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {"This category will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?"} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
             </div>

@@ -17,9 +17,12 @@
       }
 
       .user-info {
-        width: 80px;
-        margin: 20px 0px 0px 0px;
-        text-align: right;
+        a {
+          width: 200px;
+          margin: 20px 0px 0px 0px;
+          text-align: right;
+          display: block;
+        }
       }
 
       .flexible {

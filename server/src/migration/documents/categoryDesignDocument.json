@@ -31,6 +31,12 @@
     },
     "sourceParkFeeds": {
       "map": "function(doc) { if(doc.docType == 'feed' && doc.status == 'park') { emit(doc.sourceId, doc);}}"
+    },
+    "surfFilter": {
+      "map": "function(doc) { if(doc.docType == 'surf-filter') {emit(doc._id, doc)} }"
+    },
+    "latestFeeds": {
+      "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) {emit(doc.postedDate, doc)} }"
     }
   }
 }

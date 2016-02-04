@@ -28,15 +28,16 @@ describe("Toast", () => {
             clock.tick(time);
             assert.isTrue(document.getElementById("custom-toast").classList.contains("hide"));
         });
-
+        
         it("should reuse the toast when it is called multiple times", ()=> {
-            let clock = sandbox.useFakeTimers();
+            let clock = sinon.useFakeTimers();
             Toast.show("Category created!!");
             let time = 2000;
             clock.tick(time);
             Toast.show("Category re-created!!");
             assert.isFalse(document.getElementById("custom-toast").classList.contains("hide"));
             assert.strictEqual("Category re-created!!", document.querySelector("#custom-toast .message").textContent);
+            clock.restore();
         });
 
         it("should close the toast by clicking close button", ()=> {

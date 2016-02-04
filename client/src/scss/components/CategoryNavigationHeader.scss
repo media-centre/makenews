@@ -6,7 +6,6 @@
       margin: 0 135px 0 135px;
       font-size: $large-font-size;
       outline: none;
-      width: 80% !important;
     }
 
     .custom-category-name {
@@ -17,19 +16,25 @@
       border: none;
       color: $app-header-bg-color;
       padding: 6px 0;
+      width: 125px;
     }
 
     .title-status {
       font-size: $extra-small-font-size;
       height: 17px;
     }
+
     .error-msg {
       color: $error-border-color;
     }
-  #categoryTitle {
-    width: 95%;
-    font-size: $large-font-size;
-    border: none;
+
+    #categoryTitle {
+      border: none;
+      display: block;
+      width: 95%;
+      margin: auto;
+      padding: 6px 0px;
+      font-size: $large-font-size;
 
     &:focus {
       box-shadow:  0 0 2px 2px $app-header-bg-color;

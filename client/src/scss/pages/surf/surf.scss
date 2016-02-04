@@ -17,6 +17,7 @@
 
     .show-filter-container.show {
       height: 245px;
+      overflow: auto;
     }
 
     .show-filter-container {
@@ -35,7 +36,7 @@
 
       label {
         width: 30%;
-        color: $filter-label-type;
+        color: $primary-font-color;
       }
 
       ul {

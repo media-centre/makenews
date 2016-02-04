@@ -1,5 +1,24 @@
 @import "../../utils/variable";
 
+@media (max-width: 700px) {
+  .main-page {
+    header {
+      .fixed-header {
+        .app-logo-container {
+          img {
+            width: 150px;
+            margin-top: 14px;
+          }
+        }
+        .user-info {
+          a {
+            width: 150px;
+          }
+        }
+      }
+    }
+  }
+}
 @media (max-width: 600px) {
 
   .max-width {
@@ -148,6 +167,25 @@
       padding: 5px;
       font-size: $small-font-size;
       float: none;
+    }
+  }
+
+  .surf-page-container .surf-filter .show-filter-container .surf-filter-item {
+    label {
+      width: 25%;
+      font-size: $extra-small-font-size;
+      margin-top: 7px;
+    }
+    ul {
+      width: 75%;
+
+      li {
+        margin: 8px;
+
+        .image {
+          font-size: $extra-large-font-size;
+        }
+      }
     }
   }
 
