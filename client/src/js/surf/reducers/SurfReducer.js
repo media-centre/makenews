@@ -1,6 +1,6 @@
 /*eslint new-cap:0, no-unused-vars:0, max-len:0 */
 "use strict";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/AllFeedsActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/SurfActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 

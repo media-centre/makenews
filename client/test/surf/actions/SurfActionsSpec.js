@@ -1,7 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
 "use strict";
-import * as AllFeedsActions from "../../../src/js/surf/actions/AllFeedsActions.js";
+import * as SurfActions from "../../../src/js/surf/actions/SurfActions.js";
+import * as FeedsActions from "../../../src/js/feeds/actions/FeedsActions";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 //import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
@@ -11,7 +12,7 @@ import mockStore from "../../helper/ActionHelper.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
-describe("AllFeedsAction", () => {
+describe("SurfActions", () => {
     it("return type DISPLAY_ALL_FEEDS action", () => {
         let feeds = [
             {
@@ -25,13 +26,13 @@ describe("AllFeedsAction", () => {
                 "url": "www.yahoonews.com",
                 "categoryNames": ["yahoo"]
             }];
-        let displayAllFeedsAction = { "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 };
-        expect(AllFeedsActions.displayAllFeeds(feeds, false)).to.deep.equal(displayAllFeedsAction);
+        let displayAllFeedsAction = { "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 };
+        expect(SurfActions.displayAllFeeds(feeds, false)).to.deep.equal(displayAllFeedsAction);
     });
 
     it("return type DISPLAY_EXISTING_FEEDS action", () => {
-        let displayExistingFeedsAction = { "type": AllFeedsActions.DISPLAY_EXISTING_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0 };
-        expect(AllFeedsActions.displayExistingFeeds([], false)).to.deep.equal(displayExistingFeedsAction);
+        let displayExistingFeedsAction = { "type": SurfActions.DISPLAY_EXISTING_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0 };
+        expect(SurfActions.displayExistingFeeds([], false)).to.deep.equal(displayExistingFeedsAction);
     });
 
     xit("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
@@ -49,8 +50,8 @@ describe("AllFeedsAction", () => {
         let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(feeds));
 
-        let store = mockStore({ "feeds": [], "messages": messages }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
-        return Promise.resolve(store.dispatch(AllFeedsActions.displayAllFeedsAsync())).then(() => {
+        let store = mockStore({ "feeds": [], "messages": messages }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
+        return Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync())).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
@@ -60,8 +61,8 @@ describe("AllFeedsAction", () => {
         let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
-        let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
-        return Promise.resolve(store.dispatch(AllFeedsActions.displayAllFeedsAsync([], 0))).then(() => {
+        let store = mockStore({ "feeds": [] }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
+        return Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync([], 0))).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
@@ -92,21 +93,21 @@ describe("AllFeedsAction", () => {
             ];
 
             refreshHandlerMock.returns(Promise.resolve(feeds));
-            let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
-            return Promise.resolve(store.dispatch(AllFeedsActions.getLatestFeedsFromAllSources()));
+            let store = mockStore({ "feeds": [] }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
+            return Promise.resolve(store.dispatch(SurfActions.getLatestFeedsFromAllSources()));
         });
 
         xit("dispatch getLatestFeedsFromAllSources action with empty array if rejected on request", (done) => {
             refreshHandlerMock.returns(Promise.reject("error"));
-            let store = mockStore({ "feeds": [] }, [{ "type": AllFeedsActions.DISPLAY_ALL_FEEDS, "feeds": [] }], done);
-            return Promise.resolve(store.dispatch(AllFeedsActions.getLatestFeedsFromAllSources()));
+            let store = mockStore({ "feeds": [] }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": [] }], done);
+            return Promise.resolve(store.dispatch(SurfActions.getLatestFeedsFromAllSources()));
         });
     });
 
     describe("getSourceIdMapAndFilter", () => {
         it("should trigger filter action to get filter and hashmap", () => {
-            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {}, "sourceIds": [] };
-            expect(AllFeedsActions.storeFilterSourceMap({}, {}, [])).to.deep.equal(filterAction);
+            let filterAction = { "type": SurfActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {}, "sourceIds": [] };
+            expect(SurfActions.storeFilterSourceMap({}, {}, [])).to.deep.equal(filterAction);
         });
 
         xit("should get filter and source hash map and store it in redux store", (done) => {
@@ -120,10 +121,10 @@ describe("AllFeedsAction", () => {
             let fetchAllFeedsWithCategoryNameMock = sinon.mock(filterFeedsHandler).expects("getSourceAndCategoryMap");
             fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(resultHashMap));
 
-            let filterAction = { "type": AllFeedsActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {} };
+            let filterAction = { "type": SurfActions.STORE_FILTER_SOURCE_MAP, "surfFilter": {}, "sourceHashMap": {} };
 
             let store = mockStore({ "surfFilter": {}, "sourceHashMap": {} }, [filterAction], done);
-            return Promise.resolve(store.dispatch(AllFeedsActions.storeFilterAndSourceHashMap())).then(() => {
+            return Promise.resolve(store.dispatch(SurfActions.storeFilterAndSourceHashMap())).then(() => {
                 fetchAllFeedsWithCategoryNameMock.verify();
                 filterFeedsHandler.getSourceAndCategoryMap.restore();
             });
@@ -134,13 +135,13 @@ describe("AllFeedsAction", () => {
         it("should fetch all the categories", (done)=> {
             let fetchDocumentsMock = sinon.mock(PouchClient).expects("fetchDocuments");
             fetchDocumentsMock.withArgs("category/allCategories", { "include_docs": true }).returns(Promise.resolve([]));
-            let store = mockStore({ "categories": [] }, [{ "type": AllFeedsActions.FETCH_ALL_CATEGORIES, "categories": [] }], done);
+            let store = mockStore({ "categories": [] }, [{ "type": SurfActions.FETCH_ALL_CATEGORIES, "categories": [] }], done);
             //return Promise.resolve(store.dispatch(AllFeedsActions.fetchAllCategories(()=> {})).then(() => {
             //    fetchDocumentsMock.verify();
             //    PouchClient.fetchDocuments.restore();
             //    done();
             //}));
-            store.dispatch(AllFeedsActions.fetchAllCategories(()=> {}));
+            store.dispatch(SurfActions.fetchAllCategories(()=> {}));
             fetchDocumentsMock.verify();
             PouchClient.fetchDocuments.restore();
         });
@@ -178,13 +179,13 @@ describe("AllFeedsAction", () => {
                 }
             ];
 
-            let store = mockStore({ "feeds": feeds }, [{ "type": AllFeedsActions.FETCH_FEEDS_BY_PAGE, "feeds": feeds }], done);
+            let store = mockStore({ "feeds": feeds }, [{ "type": SurfActions.FETCH_FEEDS_BY_PAGE, "feeds": feeds }], done);
 
             let filterFeedsHandler = new FilterFeedsHandler();
             let filterFeedsHandlerMock = sinon.mock(filterFeedsHandler).expects("fetchFeedsByPageWithFilter");
             filterFeedsHandlerMock.withArgs(filterStore).returns(Promise.resolve(feeds));
 
-            store.dispatch(AllFeedsActions.fetchFeedsByPage(0));
+            store.dispatch(SurfActions.fetchFeedsByPage(0));
             filterFeedsHandlerMock.verify();
             filterFeedsHandler.fetchFeedsByPageWithFilter.restore();
         });
@@ -228,15 +229,58 @@ describe("AllFeedsAction", () => {
             let fetchFeedsByFilter = sinon.mock(filterFeedsHandler).expects("fetchFeedsByFilter");
             fetchFeedsByFilter.withArgs({}).returns(Promise.resolve(feeds));
 
-            let filterAction = { "type": AllFeedsActions.FETCH_FEEDS_BY_FILTER, "feeds": feeds };
+            let filterAction = { "type": SurfActions.FETCH_FEEDS_BY_FILTER, "feeds": feeds };
 
             let store = mockStore({ "feeds": feeds }, [filterAction], done);
-            return Promise.resolve(store.dispatch(AllFeedsActions.fetchFeedsByPageWithFilter(updatedFilterDocument))).then(() => {
+            return Promise.resolve(store.dispatch(SurfActions.fetchFeedsByPageWithFilter(updatedFilterDocument))).then(() => {
                 updateFilterDocument.verify();
                 filterFeedsHandler.updateFilterDocument.restore();
                 fetchFeedsByFilter.verify();
                 filterFeedsHandler.fetchFeedsByFilter.restore();
                 done();
+            });
+        });
+    });
+
+    describe("parkFeed", ()=> {
+
+        it("should change status of given surf feed to park feed and increment counter", (done) => {
+            let feedDocument = {
+                "_id": "feedId",
+                "docType": "feed",
+                "title": "tn",
+                "description": "www.facebookpolitics.com",
+                "sourceId": "rssId1"
+            };
+
+            let feedStatus = "park";
+            let store = mockStore({ "parkFeedCount": 2 }, [{ "type": SurfActions.PARK_FEED, "feed": feedDocument }, { "type": FeedsActions.INCREMENT_PARK_COUNTER }], done);
+            let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
+            feedApplicationQueriesMock.withExactArgs(feedDocument, feedStatus).returns(Promise.resolve({ "ok": true }));
+            return Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
+                feedApplicationQueriesMock.verify();
+                FeedApplicationQueries.updateFeed.restore();
+            });
+        });
+
+        it("should not dispatch INCREMENT_PARK_COUNTER if no feed document is passed", (done) => {
+            let feedDocument = {};
+            let store = mockStore({}, [], done);
+            let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
+            feedApplicationQueriesMock.withArgs(feedDocument).never();
+            return Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
+                feedApplicationQueriesMock.verify();
+                FeedApplicationQueries.updateFeed.restore();
+            });
+        });
+
+        it("should not dispatch INCREMENT_PARK_COUNTER if feed document is undefined", (done) => {
+            let store = mockStore({}, [], done);
+            let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
+            feedApplicationQueriesMock.never();
+            return Promise.resolve(store.dispatch(SurfActions.parkFeed())).then(() => {
+                feedApplicationQueriesMock.verify();
+                FeedApplicationQueries.updateFeed.restore();
             });
         });
     });

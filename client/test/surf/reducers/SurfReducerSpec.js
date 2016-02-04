@@ -3,7 +3,7 @@
 "use strict";
 import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer.js";
 import Locale from "../../../src/js/utils/Locale.js";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS } from "../../../src/js/surf/actions/AllFeedsActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS } from "../../../src/js/surf/actions/SurfActions.js";
 import { expect } from "chai";
 import sinon from "sinon";
 

@@ -1,8 +1,7 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../../surf/components/AllFeeds.jsx";
-import { displayParkedFeedsAsync } from "../actions/ParkActions";
-import { unparkFeed } from "../../feeds/actions/FeedsActions";
+import { unparkFeedAsync, displayParkedFeedsAsync } from "../actions/ParkActions";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
@@ -17,7 +16,7 @@ export class ParkPage extends Component {
     }
 
     parkClickHandler(feedDoc) {
-        this.props.dispatch(unparkFeed(feedDoc));
+        this.props.dispatch(unparkFeedAsync(feedDoc));
     }
 
     render() {

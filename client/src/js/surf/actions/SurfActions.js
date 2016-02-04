@@ -5,6 +5,7 @@ import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
 import PouchClient from "../../db/PouchClient.js";
 import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler.js";
 import FilterFeedsHandler from "../FilterFeedsHandler.js";
+import { parkFeedCounter } from "../../feeds/actions/FeedsActions.js";
 export const DISPLAY_ALL_FEEDS = "DISPLAY_ALL_FEEDS";
 export const DISPLAY_EXISTING_FEEDS = "DISPLAY_EXISTING_FEEDS";
 export const PARK_FEED = "PARK_FEED";
@@ -34,6 +35,17 @@ export function fetchAllCatgories(categories) {
 }
 export function paginationFeeds(feeds, refreshState = false, progressPercentage = 0, lastIndex = 0, hasMoreFeeds = true) {
     return { "type": PAGINATION_FEEDS, feeds, refreshState, progressPercentage, lastIndex, hasMoreFeeds };
+}
+
+export function parkFeed(feedDoc) {
+    if(feedDoc && Object.keys(feedDoc).length !== 0) {
+        return dispatch => {
+            FeedApplicationQueries.updateFeed(feedDoc, "park").then(() => {
+                dispatch(removeParkItem(feedDoc));
+                dispatch(parkFeedCounter());
+            });
+        };
+    }
 }
 
 export function displayAllFeedsAsync(callback, progressPercentage) {
