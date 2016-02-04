@@ -69,7 +69,8 @@ export default class TwitterLogin {
             "oauthAccessTokenSecret": oauthAccessTokenSecret
         };
         return new Promise((resolve) => {
-            AdminDbClient.instance().getDb().then((dbInstance) => {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
                 dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => {
                     dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => { //eslint-disable-line max-nested-callbacks
                         resolve();

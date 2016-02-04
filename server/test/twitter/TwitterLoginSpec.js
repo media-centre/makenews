@@ -61,9 +61,7 @@ describe("TwitterLogin", () => {
             }));
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
             saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": () => {
-                return Promise.resolve(couchClient);
-            } });
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
 
             TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "userName" }).then((firstInstance) => {
                 let twitterLoginPromise = TwitterLogin.instance({ "previouslyFetchedOauthToken": firstInstance.oauthToken });
@@ -92,9 +90,7 @@ describe("TwitterLogin", () => {
             getDocStub.withArgs(twitterDocId).returns(Promise.reject());
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
             saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns({ "getDb": () => {
-                return Promise.resolve(couchClient);
-            } });
+            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
 
             TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "userName" }).then((firstInstance) => {
                 let twitterLoginPromise = TwitterLogin.instance({ "previouslyFetchedOauthToken": firstInstance.oauthToken });

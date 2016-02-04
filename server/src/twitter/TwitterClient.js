@@ -38,7 +38,8 @@ export default class TwitterClient {
     getAccessTokenAndSecret(userName) {
         return new Promise((resolve, reject) => {
             let tokenDocumentId = userName + "_twitterToken";
-            AdminDbClient.instance().getDb().then((dbInstance) => {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
                 dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => { //eslint-disable-line max-nested-callbacks
                     resolve([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
                 }).catch(() => { //eslint-disable-line max-nested-callbacks
