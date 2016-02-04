@@ -1,3 +1,4 @@
+/* eslint max-nested-callbacks: [2, 7] */
 "use strict";
 
 import Toast from "../../../src/js/utils/custom_templates/Toast";
