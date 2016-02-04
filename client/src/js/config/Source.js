@@ -8,7 +8,12 @@ import DateTimeUtil from "../utils/DateTimeUtil.js";
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
     constructor(paramsObj) {
-        this.sourceId = paramsObj._id;
+        if(paramsObj._id) {
+            this._id = paramsObj._id;
+        }
+        if(paramsObj._rev) {
+            this._rev = paramsObj._rev;
+        }
         this.docType = "source";
         this.sourceType = paramsObj.sourceType;
         this.url = paramsObj.url;
@@ -17,8 +22,12 @@ export default class Source {
         this.latestFeedTimestamp = paramsObj.latestFeedTimestamp || DateTimeUtil.getUTCDateAndTime(Date.now());
     }
 
-    newDoc() {
-        return {
+    static instance(paramsObj) {
+        return new Source(paramsObj);
+    }
+
+    getDocument() {
+        let docObj = {
             "docType": this.docType,
             "sourceType": this.sourceType,
             "url": this.url,
@@ -26,15 +35,52 @@ export default class Source {
             "status": this.status,
             "latestFeedTimestamp": this.latestFeedTimestamp
         };
+        if(this._id) {
+            docObj._id = this._id;
+        }
+        if(this._rev) {
+            docObj._rev = this._rev;
+        }
+        return docObj;
     }
 
     save() {
-        return CategoryDb.createOrUpdateSource(this.newDoc());
+        return new Promise((resolve, reject) => {
+            CategoryDb.fetchSourceConfigurationByUrl(this.url).then(docs => {
+                let existingDocument = docs[0], NEGATIVE_INDEX = -1;
+                if(existingDocument) {
+                    if(existingDocument.categoryIds.indexOf(this.categoryIds[0]) === NEGATIVE_INDEX) {
+                        existingDocument.categoryIds.push(this.categoryIds[0]);
+                    }
+                    this.update(existingDocument).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                } else {
+                    PouchClient.createDocument(this.getDocument()).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }
+            });
+        });
+    }
+
+    update(updateParams) {
+        return new Promise((resolve, reject) => {
+            PouchClient.updateDocument(Object.assign({}, this.getDocument(), updateParams)).then(response => {
+                resolve(response);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 
     delete(categoryId) {
         return new Promise((resolve, reject) => {
-            PouchClient.getDocument(this.sourceId).then(document => {
+            PouchClient.getDocument(this._id).then(document => {
                 const NEGATIVE_INDEX = -1;
                 const foundIndex = document.categoryIds.indexOf(categoryId);
                 if(foundIndex === NEGATIVE_INDEX) {
@@ -43,7 +89,7 @@ export default class Source {
                     document.categoryIds.splice(foundIndex, 1);
                     updateDocument(document);
                 } else {
-                    deleteSourceWithReference(this.sourceId);
+                    deleteSourceWithReference(this._id);
                 }
             }).catch(error => {
                 reject(false);

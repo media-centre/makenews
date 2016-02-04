@@ -151,9 +151,8 @@ describe("Source", () => {
 
     describe("save", () => {
         let sourceParamsObject = null, expectedDocument = null;
+        let categoryId = "8bc3db40aa04d6c65fd10d833f00163e", url = "test url";
         before("save", () => {
-            let categoryId = "8bc3db40aa04d6c65fd10d833f00163e";
-            let url = "test url";
             let status = STATUS_VALID;
             sourceParamsObject = { "categoryIds": [categoryId], "sourceType": "rss", "url": url, "status": status, "latestFeedTimestamp": "2016-01-18T15:01:47+00:00" };
             expectedDocument = {
@@ -166,21 +165,134 @@ describe("Source", () => {
             };
         });
 
-        describe("newDoc", () => {
+        describe("getDocument", () => {
             it("should return the new source document", () => {
-                assert.deepEqual(expectedDocument, new Source(sourceParamsObject).newDoc());
+                assert.deepEqual(expectedDocument, new Source(sourceParamsObject).getDocument());
             });
         });
 
-        describe("save", () => {
-            it("should add or udpate the rss url configuration", () => {
-                let createOrUpdateMock = sinon.mock(CategoryDb).expects("createOrUpdateSource");
-                createOrUpdateMock.withArgs(expectedDocument);
-                new Source(sourceParamsObject).save();
-                createOrUpdateMock.verify();
-                CategoryDb.createOrUpdateSource.restore();
+        describe("createOrUpdateSource", () => {
+            it("should create Source if no source with url is found", (done) => {
+                let jsonDocument = {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.google.com/rss",
+                    "categoryId": [
+                        "8bc3db40aa04d6c65fd10d833f00163e"
+                    ]
+                };
+                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
+                fetchDocumentsStub.returns(Promise.resolve([]));
+                let source = Source.instance(jsonDocument);
+                let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(source.getDocument()).returns(Promise.resolve("resolve"));
+                source.save().then(() => {
+                    pouchClientMock.verify();
+                    PouchClient.createDocument.restore();
+                    PouchClient.fetchDocuments.restore();
+                    done();
+                });
+            });
+
+            it("should update Source if a source with given url exists", (done) => {
+                let existingDocument = {
+                    "_id": "12345",
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.google.com/rss",
+                    "categoryIds": [
+                        "id1"
+                    ]
+                };
+                let expectedCreateDocument = {
+                    "_id": "12345",
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.google.com/rss",
+                    "categoryIds": [
+                        "id1", "id2"
+                    ]
+                };
+
+                let jsonDocument = {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.google.com/rss",
+                    "categoryIds": [
+                        "id2"
+                    ]
+                };
+
+                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
+                fetchDocumentsStub.returns(Promise.resolve([existingDocument]));
+                let pouchClientMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(Source.instance(expectedCreateDocument).getDocument()).returns(Promise.resolve(""));
+                Source.instance(jsonDocument).save().then(() => {
+                    pouchClientMock.verify();
+                    PouchClient.updateDocument.restore();
+                    PouchClient.fetchDocuments.restore();
+                    done();
+                });
+            });
+
+            it("should not update or create if the category id of a url is already exists in the document fetched from db", (done) => {
+                let newUrlDocument = {
+                    "categoryIds": ["F2B643BE-FC17-AE81-85AF-D6136EB5E1C8"],
+                    "docType": "source",
+                    "sourceType": "facebook",
+                    "status": "invalid",
+                    "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+                };
+
+                let existingDocuments = [{
+                    "_id": "73C6D95C-C62B-B263-9885-C48CBA039B14",
+                    "_rev": "11-4b90658a579a7fbd19658f87e9280683",
+                    "categoryIds": ["F2B643BE-FC17-AE81-85AF-D6136EB5E1C8"],
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "status": "valid",
+                    "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+                }];
+                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": newUrlDocument.url });
+                fetchDocumentsStub.returns(Promise.resolve(existingDocuments));
+
+                let pouchClientStub = sinon.mock(PouchClient).expects("updateDocument");
+                pouchClientStub.withArgs(Source.instance(existingDocuments[0]).getDocument()).returns(Promise.resolve({}));
+
+                Source.instance(newUrlDocument).save().then((response)=> {
+                    pouchClientStub.verify();
+                    PouchClient.updateDocument.restore();
+                    PouchClient.fetchDocuments.restore();
+                    done();
+                });
+
+            });
+        });
+
+
+        describe("update", () => {
+            it("should update the document with new values", () => {
+                let source = new Source(sourceParamsObject);
+                let updatedParams = {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": url,
+                    "categoryIds": [categoryId, "1234"],
+                    "status": STATUS_INVALID,
+                    "latestFeedTimestamp": "2016-01-18T15:01:47+00:00"
+                };
+
+                let pouchClientUpdateMock = sinon.mock(PouchClient).expects("updateDocument");
+                pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
+                return source.update({ "status": STATUS_INVALID, "categoryIds": [categoryId, "1234"] }).then(() => {
+                    pouchClientUpdateMock.verify();
+                    PouchClient.updateDocument.restore();
+                });
             });
         });
     });
+
+
 });
 

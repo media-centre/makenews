@@ -1,4 +1,4 @@
-/* eslint no-underscore-dangle:0, no-unused-vars:0, max-nested-callbacks:0 */
+/* eslint no-underscore-dangle:0, no-unused-vars:0, max-nested-callbacks:0, no-inline-comments:0, no-warning-comments:0 */
 
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
@@ -39,7 +39,7 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": type });
     }
 
-    static createOrUpdateSource(sourceConfigurationDocument) {
+    static createOrUpdateSource(sourceConfigurationDocument) { //TODO: move
         return new Promise((resolve, reject) => {
             if(!sourceConfigurationDocument) {
                 reject("document should not be empty");
@@ -67,7 +67,6 @@ export default class CategoryDb {
     }
 
     static isCategoryExists(categoryName, categoryId) {
-
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then(categories => {
                 let isAlreadyExists = false;
@@ -169,7 +168,7 @@ export default class CategoryDb {
         });
     }
 
-    static deleteUrls(sourceUrls, categoryId) {
+    static deleteUrls(sourceUrls, categoryId) { //TODO: move
         if(sourceUrls) {
             sourceUrls.forEach((source) => {
                 CategoryDb.deleteSourceUrl(source, categoryId);
@@ -177,7 +176,7 @@ export default class CategoryDb {
         }
     }
 
-    static deleteSourceUrl(source, categoryId) {
+    static deleteSourceUrl(source, categoryId) { //TODO: move
         new Source(source).delete(categoryId);
     }
 
@@ -197,7 +196,7 @@ export default class CategoryDb {
         });
     }
 
-    static deleteSource(sourceId) {
+    static deleteSource(sourceId) { //TODO: move
         return new Promise((resolve, reject) => {
             PouchClient.getDocument(sourceId).then((sourceDoc) => {
                 PouchClient.deleteDocument(sourceDoc).then((response) => {
@@ -211,7 +210,7 @@ export default class CategoryDb {
         });
     }
 
-    static deleteSourceWithReference(sourceId) {
+    static deleteSourceWithReference(sourceId) { //TODO: move
         return new Promise((resolve, reject) => {
             FeedApplicationQueries.deleteSurfFeeds(sourceId).then((surfFeedsResponse) => {
                 CategoryDb.deleteSource(sourceId).then(response => {

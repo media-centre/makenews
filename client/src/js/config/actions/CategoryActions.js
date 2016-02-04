@@ -44,7 +44,7 @@ export function addRssUrlAsync(categoryId, url, callback) {
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
                 return feed.pubDate;
             }));
-            addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
+            _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let feeds = RssResponseParser.parseFeeds(documentId, responseFeed.items);
                 RssDb.addRssFeeds(feeds);
                 callback(STATUS_VALID);
@@ -64,7 +64,7 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
                 return feed.created_time;
             }));
 
-            addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
+            _addUrlDocument(dispatch, categoryId, FACEBOOK_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let feedDocuments = FacebookResponseParser.parsePosts(documentId, originalPosts);
                 FacebookDb.addFacebookFeeds(feedDocuments);
             });
@@ -75,24 +75,13 @@ export function addFacebookUrlAsync(categoryId, url, callback) {
     };
 }
 
-function addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) { //eslint-disable-line max-params
-    return new Promise((resolve, reject) => {
-        new Source({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status, "latestFeedTimestamp": latestFeedTimestamp }).save().then(response => {
-            dispatch(populateCategoryDetailsAsync(categoryId));
-            resolve(response.id);
-        }).catch(error => {
-            reject("error while creating document");
-        });
-    });
-}
-
 export function addTwitterUrlAsync(categoryId, url, callback) {
     return dispatch => {
         TwitterRequestHandler.fetchTweets(url).then((responseTweet) => {
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseTweet.map(tweet => {
                 return tweet.created_at;
             }));
-            addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
+            _addUrlDocument(dispatch, categoryId, TWITTER_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                 let tweets = TwitterResponseParser.parseTweets(documentId, responseTweet);
                 TwitterDb.addTweets(tweets);
             });
@@ -192,3 +181,15 @@ function generateCategoryName() {
         });
     });
 }
+
+function _addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) { //eslint-disable-line max-params
+    return new Promise((resolve, reject) => {
+        Source.instance({ "categoryIds": [categoryId], "sourceType": title, "url": url, "status": status, "latestFeedTimestamp": latestFeedTimestamp }).save().then(response => {
+            dispatch(populateCategoryDetailsAsync(categoryId));
+            resolve(response.id);
+        }).catch(error => {
+            reject("error while creating document");
+        });
+    });
+}
+
