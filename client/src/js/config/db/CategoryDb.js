@@ -17,7 +17,7 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true, "key": categoryId });
     }
 
-    static fetchSourceConfigurationsByCategoryId(categoryId) {
+    static fetchSourceConfigurationsByCategoryId(categoryId) { // TODO: move
         if(StringUtil.isEmptyString(categoryId)) {
             return new Promise((resolve, reject) => {
                 reject("category id should not be empty");
@@ -26,7 +26,7 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": categoryId });
     }
 
-    static fetchSourceConfigurationByUrl(url) {
+    static fetchSourceConfigurationByUrl(url) { // TODO: move
         if(StringUtil.isEmptyString(url)) {
             return new Promise((resolve, reject) => {
                 reject("url should not be empty");
@@ -35,35 +35,8 @@ export default class CategoryDb {
         return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": url });
     }
 
-    static fetchSourceConfigurationBySourceType(type) {
+    static fetchSourceConfigurationBySourceType(type) { // TODO: move
         return PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": type });
-    }
-
-    static createOrUpdateSource(sourceConfigurationDocument) { //TODO: move
-        return new Promise((resolve, reject) => {
-            if(!sourceConfigurationDocument) {
-                reject("document should not be empty");
-            }
-            CategoryDb.fetchSourceConfigurationByUrl(sourceConfigurationDocument.url).then(docs => {
-                if(docs.length === 0) {
-                    PouchClient.createDocument(sourceConfigurationDocument).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                } else {
-                    let existingDocument = docs[0], NEGATIVE_INDEX = -1;
-                    if(existingDocument.categoryIds.indexOf(sourceConfigurationDocument.categoryIds[0]) === NEGATIVE_INDEX) {
-                        existingDocument.categoryIds.push(sourceConfigurationDocument.categoryIds[0]);
-                    }
-                    PouchClient.updateDocument(existingDocument).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }
-            });
-        });
     }
 
     static isCategoryExists(categoryName, categoryId) {
@@ -145,10 +118,10 @@ export default class CategoryDb {
 
     static deleteCategory(categoryId) {
         return new Promise((resolve, reject) => {
-            CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
-                CategoryDb.deleteUrls(sourceUrlsObj.rss, categoryId);
-                CategoryDb.deleteUrls(sourceUrlsObj.facebook, categoryId);
-                CategoryDb.deleteUrls(sourceUrlsObj.twitter, categoryId);
+            CategoryDb.fetchSourceConfigurationsByCategoryId(categoryId).then(sourceUrlsObj => {
+                sourceUrlsObj.forEach((sourceUrlObj) => {
+                    Source.instance(sourceUrlObj).delete(categoryId);
+                });
                 CategoryDb.deleteCategoryDocument(categoryId, resolve, reject);
             }).catch((error) => {
                 reject(error);
@@ -168,18 +141,6 @@ export default class CategoryDb {
         });
     }
 
-    static deleteUrls(sourceUrls, categoryId) { //TODO: move
-        if(sourceUrls) {
-            sourceUrls.forEach((source) => {
-                CategoryDb.deleteSourceUrl(source, categoryId);
-            });
-        }
-    }
-
-    static deleteSourceUrl(source, categoryId) { //TODO: move
-        new Source(source).delete(categoryId);
-    }
-
     static getCategoryById(categoryId) {
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then(categories => {
@@ -192,38 +153,6 @@ export default class CategoryDb {
                 resolve({ "status": false });
             }).catch(error => {
                 reject({ "status": false, "error": error });
-            });
-        });
-    }
-
-    static deleteSource(sourceId) { //TODO: move
-        return new Promise((resolve, reject) => {
-            PouchClient.getDocument(sourceId).then((sourceDoc) => {
-                PouchClient.deleteDocument(sourceDoc).then((response) => {
-                    resolve(response);
-                }).catch(err => {
-                    reject(err);
-                });
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
-
-    static deleteSourceWithReference(sourceId) { //TODO: move
-        return new Promise((resolve, reject) => {
-            FeedApplicationQueries.deleteSurfFeeds(sourceId).then((surfFeedsResponse) => {
-                CategoryDb.deleteSource(sourceId).then(response => {
-                    FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).then(parkResponse => {
-                        resolve(parkResponse);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }).catch(err => {
-                    reject(err);
-                });
-            }).catch(error => {
-                reject(error);
             });
         });
     }

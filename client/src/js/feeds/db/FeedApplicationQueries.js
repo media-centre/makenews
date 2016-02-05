@@ -66,6 +66,20 @@ export default class FeedApplicationQueries {
         return categoryNameMap;
     }
 
+    static deleteFeeds(sourceId) {
+        return new Promise((resolve, reject) => {
+            FeedApplicationQueries.deleteSurfFeeds(sourceId).then(() => {
+                FeedApplicationQueries.removeParkFeedsSourceReference(sourceId).then(() => {
+                    resolve(true);
+                }).catch(error => {
+                    reject(error);
+                });
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
     static deleteSurfFeeds(sourceId) {
         return new Promise((resolve, reject) => {
             FeedDb.surfFeeds(sourceId).then((requiredSurfFeeds) => {
@@ -83,25 +97,25 @@ export default class FeedApplicationQueries {
         });
     }
 
-static removeParkFeedsSourceReference(sourceId) {
-    return new Promise((resolve, reject) => {
-        FeedDb.sourceParkFeeds(sourceId).then(parkFeeds => {
-            if(parkFeeds.length > 0) {
-                parkFeeds.forEach(parkFeed => {
-                    parkFeed.sourceId = "";
-                });
-                PouchClient.bulkDocuments(parkFeeds).then(response => { //eslint-disable-line
+    static removeParkFeedsSourceReference(sourceId) {
+        return new Promise((resolve, reject) => {
+            FeedDb.sourceParkFeeds(sourceId).then(parkFeeds => {
+                if(parkFeeds.length > 0) {
+                    parkFeeds.forEach(parkFeed => {
+                        parkFeed.sourceId = "";
+                    });
+                    PouchClient.bulkDocuments(parkFeeds).then(response => { //eslint-disable-line
+                        resolve(true);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                } else {
                     resolve(true);
-                }).catch(error => {
-                    reject(error);
-                });
-            } else {
-                resolve(true);
-            }
-        }).catch(error => { //eslint-disable-line
-            reject(false);
+                }
+            }).catch(error => { //eslint-disable-line
+                reject(false);
+            });
         });
-    });
-}
+    }
 }
 

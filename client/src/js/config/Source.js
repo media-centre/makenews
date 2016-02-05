@@ -4,6 +4,7 @@
 import PouchClient from "../db/PouchClient";
 import CategoryDb from "../config/db/CategoryDb";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
+import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries";
 
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
@@ -80,34 +81,26 @@ export default class Source {
 
     delete(categoryId) {
         return new Promise((resolve, reject) => {
-            PouchClient.getDocument(this._id).then(document => {
-                const NEGATIVE_INDEX = -1;
-                const foundIndex = document.categoryIds.indexOf(categoryId);
-                if(foundIndex === NEGATIVE_INDEX) {
-                    reject(false);
-                } else if(document.categoryIds.length > 1) {
-                    document.categoryIds.splice(foundIndex, 1);
-                    updateDocument(document);
-                } else {
-                    deleteSourceWithReference(this._id);
-                }
-            }).catch(error => {
-                reject(false);
-            });
-
-            function deleteSourceWithReference(sourceId) {
-                CategoryDb.deleteSourceWithReference(sourceId).then(response => {
+            const foundIndex = this.categoryIds.indexOf(categoryId);
+            if (this.categoryIds.length > 1) {
+                this.categoryIds.splice(foundIndex, 1);
+                this.update({ "categoryIds": this.categoryIds }).then(() => {
                     resolve(true);
-                }).catch(error => {
+                }).catch(() => {
                     reject(false);
                 });
-
+            } else {
+                deleteSourceWithReference.bind(this)();
             }
 
-            function updateDocument(document) {
-                PouchClient.updateDocument(document).then(response => {
-                    resolve(true);
-                }).catch(error => {
+            function deleteSourceWithReference() {
+                FeedApplicationQueries.deleteFeeds(this._id).then(() => {
+                    PouchClient.deleteDocument(this.getDocument()).then(() => {
+                        resolve(true);
+                    }).catch(() => {
+                        reject(false);
+                    });
+                }).catch(() => {
                     reject(false);
                 });
             }

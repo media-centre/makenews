@@ -3,14 +3,25 @@
 import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import FeedApplicationQueries from "../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("Source", () => {
+    let sandbox = null;
+    beforeEach("before each", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("after each", () => {
+        sandbox.restore();
+    });
+
     describe("delete", () => {
         let sourceId = null, categoryId = null, sourceDocument = null;
-        let pouchClientGetDocumentMock = null, categoryDbDeleteSourceWithReference = null, pouchClientUpdateDoucmentMock = null;
+        let pouchClientGetDocumentMock = null, pouchClientDeleteDoucmentMock = null, pouchClientUpdateDoucmentMock = null;
         beforeEach("delete", () => {
+            sandbox = sinon.sandbox.create();
             sourceId = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
             categoryId = "95fa167311bf340b461ba414f1004074";
             sourceDocument = {
@@ -25,35 +36,31 @@ describe("Source", () => {
                 "status": "valid"
             };
 
-            pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
-            categoryDbDeleteSourceWithReference = sinon.mock(CategoryDb).expects("deleteSourceWithReference");
-            pouchClientUpdateDoucmentMock = sinon.mock(PouchClient).expects("updateDocument");
+            pouchClientDeleteDoucmentMock = sandbox.mock(PouchClient).expects("deleteDocument");
+            pouchClientUpdateDoucmentMock = sandbox.mock(PouchClient).expects("updateDocument");
         });
 
-        afterEach("delete", () => {
-            PouchClient.getDocument.restore();
-            CategoryDb.deleteSourceWithReference.restore();
-            PouchClient.updateDocument.restore();
-        });
-
-        it("delete source document along with the references when category id is available in the cateogry list", (done) => {
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.resolve("response"));
-            let source = new Source({ "_id": sourceId });
-            source.delete(categoryId).then(response => {
-                pouchClientGetDocumentMock.verify();
-                categoryDbDeleteSourceWithReference.verify();
-                done();
+        it("delete source document along with the references when category id is available in the category list", () => {
+            let source = new Source(sourceDocument);
+            let feedsDeleteMock = sandbox.mock(FeedApplicationQueries).expects("deleteFeeds");
+            feedsDeleteMock.withArgs(sourceId).returns(Promise.resolve(true));
+            pouchClientDeleteDoucmentMock.withArgs(source.getDocument()).returns(Promise.resolve("response"));
+            return source.delete(categoryId).then((response) => {
+                assert.isTrue(response);
+                feedsDeleteMock.verify();
+                pouchClientDeleteDoucmentMock.verify();
             });
         });
 
-        it("should not delete the source document if the category id does not exists in list of categories", (done) => {
-            categoryId = "test-category-id";
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            let source = new Source({ "_id": sourceId });
-            source.delete(categoryId).catch(error => {
-                pouchClientGetDocumentMock.verify();
-                done();
+        it("should reject with false if feeds deletion fails", () => {
+            let source = new Source(sourceDocument);
+            let feedsDeleteMock = sandbox.mock(FeedApplicationQueries).expects("deleteFeeds");
+            feedsDeleteMock.withArgs(sourceId).returns(Promise.reject("error"));
+            pouchClientDeleteDoucmentMock.withArgs(source.getDocument()).never();
+            return source.delete(categoryId).catch((response) => {
+                assert.isFalse(response);
+                feedsDeleteMock.verify();
+                pouchClientDeleteDoucmentMock.verify();
             });
         });
 
@@ -80,23 +87,10 @@ describe("Source", () => {
                 ],
                 "status": "valid"
             };
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.resolve("success"));
-            let source = new Source({ "_id": sourceId });
+            pouchClientUpdateDoucmentMock.withArgs(Source.instance(sourceUpdateDocument).getDocument()).returns(Promise.resolve("success"));
+            let source = new Source(sourceDocument);
             source.delete(categoryId).then(response => {
-                pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDoucmentMock.verify();
-                done();
-            });
-        });
-
-        it("should reject incase of error while fetching the source document", (done) => {
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.reject("Error"));
-
-            let source = new Source({ "_id": sourceId });
-            source.delete(categoryId).catch(error => {
-                assert.isFalse(error);
-                pouchClientGetDocumentMock.verify();
                 done();
             });
         });
@@ -124,27 +118,24 @@ describe("Source", () => {
                 ],
                 "status": "valid"
             };
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            pouchClientUpdateDoucmentMock.withArgs(sourceUpdateDocument).returns(Promise.reject("Failed"));
-            let source = new Source({ "_id": sourceId });
+            pouchClientUpdateDoucmentMock.withArgs(Source.instance(sourceUpdateDocument).getDocument()).returns(Promise.reject("Failed"));
+            let source = new Source(sourceDocument);
             source.delete(categoryId).catch(error => {
                 assert.isFalse(error);
-                pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDoucmentMock.verify();
                 done();
             });
         });
 
-        it("should reject incase of error while deleting the source document along with the references", (done) => {
-            pouchClientGetDocumentMock.withArgs(sourceId).returns(Promise.resolve(sourceDocument));
-            categoryDbDeleteSourceWithReference.withArgs(sourceId).returns(Promise.reject("response"));
-            let source = new Source({ "_id": sourceId });
-            source.delete(categoryId).catch(error => {
-
-                assert.isFalse(error);
-                pouchClientGetDocumentMock.verify();
-                categoryDbDeleteSourceWithReference.verify();
-                done();
+        it("should reject incase of error while deleting the source document along with the references", () => {
+            let source = new Source(sourceDocument);
+            let feedsDeleteMock = sandbox.mock(FeedApplicationQueries).expects("deleteFeeds");
+            feedsDeleteMock.withArgs(sourceId).returns(Promise.resolve(true));
+            pouchClientDeleteDoucmentMock.withArgs(source.getDocument()).returns(Promise.reject("error"));
+            return source.delete(categoryId).catch((response) => {
+                assert.isFalse(response);
+                feedsDeleteMock.verify();
+                pouchClientDeleteDoucmentMock.verify();
             });
         });
     });
@@ -181,11 +172,11 @@ describe("Source", () => {
                         "8bc3db40aa04d6c65fd10d833f00163e"
                     ]
                 };
-                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                let fetchDocumentsStub = sandbox.stub(PouchClient, "fetchDocuments");
                 fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
                 fetchDocumentsStub.returns(Promise.resolve([]));
                 let source = Source.instance(jsonDocument);
-                let pouchClientMock = sinon.mock(PouchClient).expects("createDocument").withArgs(source.getDocument()).returns(Promise.resolve("resolve"));
+                let pouchClientMock = sandbox.mock(PouchClient).expects("createDocument").withArgs(source.getDocument()).returns(Promise.resolve("resolve"));
                 source.save().then(() => {
                     pouchClientMock.verify();
                     PouchClient.createDocument.restore();
@@ -223,10 +214,10 @@ describe("Source", () => {
                     ]
                 };
 
-                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                let fetchDocumentsStub = sandbox.stub(PouchClient, "fetchDocuments");
                 fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": jsonDocument.url });
                 fetchDocumentsStub.returns(Promise.resolve([existingDocument]));
-                let pouchClientMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(Source.instance(expectedCreateDocument).getDocument()).returns(Promise.resolve(""));
+                let pouchClientMock = sandbox.mock(PouchClient).expects("updateDocument").withArgs(Source.instance(expectedCreateDocument).getDocument()).returns(Promise.resolve(""));
                 Source.instance(jsonDocument).save().then(() => {
                     pouchClientMock.verify();
                     PouchClient.updateDocument.restore();
@@ -253,11 +244,11 @@ describe("Source", () => {
                     "status": "valid",
                     "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
                 }];
-                let fetchDocumentsStub = sinon.stub(PouchClient, "fetchDocuments");
+                let fetchDocumentsStub = sandbox.stub(PouchClient, "fetchDocuments");
                 fetchDocumentsStub.withArgs("category/allSourcesByUrl", { "include_docs": true, "key": newUrlDocument.url });
                 fetchDocumentsStub.returns(Promise.resolve(existingDocuments));
 
-                let pouchClientStub = sinon.mock(PouchClient).expects("updateDocument");
+                let pouchClientStub = sandbox.mock(PouchClient).expects("updateDocument");
                 pouchClientStub.withArgs(Source.instance(existingDocuments[0]).getDocument()).returns(Promise.resolve({}));
 
                 Source.instance(newUrlDocument).save().then((response)=> {
@@ -283,7 +274,7 @@ describe("Source", () => {
                     "latestFeedTimestamp": "2016-01-18T15:01:47+00:00"
                 };
 
-                let pouchClientUpdateMock = sinon.mock(PouchClient).expects("updateDocument");
+                let pouchClientUpdateMock = sandbox.mock(PouchClient).expects("updateDocument");
                 pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
                 return source.update({ "status": STATUS_INVALID, "categoryIds": [categoryId, "1234"] }).then(() => {
                     pouchClientUpdateMock.verify();
@@ -292,7 +283,4 @@ describe("Source", () => {
             });
         });
     });
-
-
 });
-

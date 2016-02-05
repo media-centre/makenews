@@ -23,18 +23,18 @@ export default class CategoriesApplicationQueries {
         });
     }
 
-    static fetchSourceUrlsObj(categoryId) {
+    static fetchSortedSourceUrlsObj(categoryId) {
         return new Promise((resolve, reject) => {
             if(StringUtil.isEmptyString(categoryId)) {
                 reject("category id can not be empty");
             }
             CategoryDb.fetchSourceConfigurationsByCategoryId(categoryId).then(rssConfigurations => {
                 let sourceUrls = {};
-                rssConfigurations.forEach((rssConfiguration) => {
-                    if (!sourceUrls[rssConfiguration.sourceType]) {
-                        sourceUrls[rssConfiguration.sourceType] = [];
+                rssConfigurations.forEach((sourceConfiguration) => {
+                    if (!sourceUrls[sourceConfiguration.sourceType]) {
+                        sourceUrls[sourceConfiguration.sourceType] = [];
                     }
-                    sourceUrls[rssConfiguration.sourceType].push({ "_id": rssConfiguration._id, "url": rssConfiguration.url, "status": rssConfiguration.status });
+                    sourceUrls[sourceConfiguration.sourceType].push(sourceConfiguration);
                 });
                 this._sortSourceUrls(sourceUrls.rss);
                 this._sortSourceUrls(sourceUrls.facebook);

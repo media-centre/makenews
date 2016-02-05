@@ -557,4 +557,47 @@ describe("FeedApplicationQueries", () => {
         });
 
     });
+
+    describe("deleteFeeds", () => {
+        let sandbox = null, parkFeedDeleteMock = null, surfFeedDeleteMock = null, sourceId = null;
+        beforeEach("before", () => {
+            sandbox = sinon.sandbox.create();
+            sourceId = "sourceId";
+            parkFeedDeleteMock = sandbox.mock(FeedApplicationQueries).expects("removeParkFeedsSourceReference");
+            surfFeedDeleteMock = sandbox.mock(FeedApplicationQueries).expects("deleteSurfFeeds");
+        });
+
+        afterEach("after", () => {
+            parkFeedDeleteMock.verify();
+            surfFeedDeleteMock.verify();
+            sandbox.restore();
+        });
+
+        it("should resolve true  if delete surf feeds and removal of park feed reference is success", () => {
+            parkFeedDeleteMock.withArgs(sourceId).returns(Promise.resolve([]));
+            surfFeedDeleteMock.withArgs(sourceId).returns(Promise.resolve([]));
+
+            return FeedApplicationQueries.deleteFeeds(sourceId).then((response) => {
+                assert.isTrue(response);
+            });
+        });
+
+        it("should resolve false  if delete surf feeds fails", () => {
+            surfFeedDeleteMock.withArgs(sourceId).returns(Promise.reject("error"));
+            parkFeedDeleteMock.never();
+
+            return FeedApplicationQueries.deleteFeeds(sourceId).catch((response) => {
+                assert.strictEqual(response, "error");
+            });
+        });
+
+        it("should resolve false  if removal of park feed reference fails", () => {
+            surfFeedDeleteMock.withArgs(sourceId).returns(Promise.resolve([]));
+            parkFeedDeleteMock.withArgs(sourceId).returns(Promise.reject("error"));
+
+            return FeedApplicationQueries.deleteFeeds(sourceId).catch((response) => {
+                assert.strictEqual(response, "error");
+            });
+        });
+    });
 });

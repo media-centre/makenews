@@ -26,7 +26,7 @@ export const TWITTER_TYPE = "twitter";
 
 export function populateCategoryDetailsAsync(categoryId) {
     return dispatch => {
-        CategoriesApplicationQueries.fetchSourceUrlsObj(categoryId).then(sourceUrlsObj => {
+        CategoriesApplicationQueries.fetchSortedSourceUrlsObj(categoryId).then(sourceUrlsObj => {
             dispatch(populateCategoryDetails(sourceUrlsObj));
         }).catch((error) => {
             dispatch(populateCategoryDetails(null));
