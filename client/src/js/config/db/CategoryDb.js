@@ -6,6 +6,7 @@ import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
 import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
 import Source from "../Source";
+import SourceDb from "../db/SourceDb.js";
 
 export default class CategoryDb {
 
@@ -15,28 +16,6 @@ export default class CategoryDb {
 
     static fetchCategoryById(categoryId) {
         return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true, "key": categoryId });
-    }
-
-    static fetchSourceConfigurationsByCategoryId(categoryId) { // TODO: move
-        if(StringUtil.isEmptyString(categoryId)) {
-            return new Promise((resolve, reject) => {
-                reject("category id should not be empty");
-            });
-        }
-        return PouchClient.fetchDocuments("category/sourceConfigurations", { "include_docs": true, "key": categoryId });
-    }
-
-    static fetchSourceConfigurationByUrl(url) { // TODO: move
-        if(StringUtil.isEmptyString(url)) {
-            return new Promise((resolve, reject) => {
-                reject("url should not be empty");
-            });
-        }
-        return PouchClient.fetchDocuments("category/allSourcesByUrl", { "include_docs": true, "key": url });
-    }
-
-    static fetchSourceConfigurationBySourceType(type) { // TODO: move
-        return PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true, "key": type });
     }
 
     static isCategoryExists(categoryName, categoryId) {
@@ -118,7 +97,7 @@ export default class CategoryDb {
 
     static deleteCategory(categoryId) {
         return new Promise((resolve, reject) => {
-            CategoryDb.fetchSourceConfigurationsByCategoryId(categoryId).then(sourceUrlsObj => {
+            SourceDb.fetchSourceConfigurationsByCategoryId(categoryId).then(sourceUrlsObj => {
                 sourceUrlsObj.forEach((sourceUrlObj) => {
                     Source.instance(sourceUrlObj).delete(categoryId);
                 });

@@ -3,6 +3,7 @@
 "use strict";
 import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import SourceDb from "../../src/js/config/db/SourceDb.js";
 import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
 import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
@@ -55,7 +56,7 @@ describe("addRssUrlAsync", () => {
         let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }] };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
@@ -87,7 +88,7 @@ describe("addRssUrlAsync", () => {
         let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }] };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         sandbox.stub(RssDb, "addRssFeeds");
         let sourceDetails = { "latestFeedTimestamp": latestFeedTimestamp, "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID };
         let source = new Source(sourceDetails);
@@ -103,7 +104,7 @@ describe("addRssUrlAsync", () => {
     it("should create rss with invalid status if url is invalid", (done) => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.reject("error"));
 
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions);
@@ -119,7 +120,7 @@ describe("addRssUrlAsync", () => {
         let sourceId = "sourceId";
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
@@ -142,7 +143,7 @@ describe("addRssUrlAsync", () => {
         let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }] };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
@@ -203,7 +204,7 @@ describe("addTwitterUrlAsync", () => {
 
         let twitterFeed = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": "2016-01-06T02:15:53.000Z" }, { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": "2016-01-05T02:15:53.000Z" }] };
         ajaxGetMock.withArgs({ "url": url, "userName": userName }).returns(Promise.resolve(twitterFeed));
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": "2016-01-06T02:15:53+00:00" },
             source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
@@ -222,7 +223,7 @@ describe("addTwitterUrlAsync", () => {
     it("should create twitter document with invalid status if url is invalid", (done) => {
         let allSources = [{ "url": url, "docType": "sources" }];
         ajaxGetMock.withArgs({ "url": url, "userName": userName }).returns(Promise.reject("error"));
-        sandbox.stub(CategoriesApplicationQueries, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
+        sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions);
         return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, (response) => {

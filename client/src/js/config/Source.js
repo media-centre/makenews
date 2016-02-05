@@ -2,7 +2,7 @@
 
 "use strict";
 import PouchClient from "../db/PouchClient";
-import CategoryDb from "../config/db/CategoryDb";
+import SourceDb from "../config/db/SourceDb.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries";
 
@@ -47,7 +47,7 @@ export default class Source {
 
     save() {
         return new Promise((resolve, reject) => {
-            CategoryDb.fetchSourceConfigurationByUrl(this.url).then(docs => {
+            SourceDb.fetchSourceConfigurationByUrl(this.url).then(docs => {
                 let existingDocument = docs[0], NEGATIVE_INDEX = -1;
                 if(existingDocument) {
                     if(existingDocument.categoryIds.indexOf(this.categoryIds[0]) === NEGATIVE_INDEX) {

@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
+import SourceDb from "../../../src/js/config/db/SourceDb.js";
 import Source from "../../../src/js/config/Source.js";
 import CategoriesApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
@@ -18,51 +19,6 @@ describe("CategoryDb", () => {
                 PouchClient.fetchDocuments.restore();
                 done();
             });
-        });
-    });
-
-    describe("fetchSourceConfigurationsByCategoryId", () => {
-        it("should fetch all the source configurations for a category id", (done) => {
-            let categoryId = "categoryId";
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/sourceConfigurations", { "include_docs": true, "key": categoryId }).returns(Promise.resolve("resolved"));
-            CategoryDb.fetchSourceConfigurationsByCategoryId(categoryId).then((result) => {
-                pouchClientMock.verify();
-                PouchClient.fetchDocuments.restore();
-                done();
-            });
-        });
-
-        it("should reject if the category id is empty", (done) => {
-            CategoryDb.fetchSourceConfigurationsByCategoryId("").catch(error => {
-                expect("category id should not be empty").to.equal(error);
-                done();
-            });
-        });
-    });
-
-    describe("fetchSourceConfigurationByUrl", () => {
-        it("should fetch all the source configurations for a url", () => {
-            let url = "hindu.com/rss";
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allSourcesByUrl", { "include_docs": true, "key": url });
-            CategoryDb.fetchSourceConfigurationByUrl(url);
-            pouchClientMock.verify();
-            PouchClient.fetchDocuments.restore();
-        });
-
-        it("should reject if the category id is empty", (done) => {
-            CategoryDb.fetchSourceConfigurationByUrl("").catch(error => {
-                expect("url should not be empty").to.equal(error);
-                done();
-            });
-        });
-    });
-
-    describe("fetchSourceConfigurationBySourceType", () => {
-        it("should fetch all the source configurations for a sourceType", () => {
-            let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments").withArgs("category/allSourcesBySourceType", { "include_docs": true, "key": "rss" });
-            CategoryDb.fetchSourceConfigurationBySourceType("rss");
-            pouchClientMock.verify();
-            PouchClient.fetchDocuments.restore();
         });
     });
 
@@ -251,7 +207,7 @@ describe("CategoryDb", () => {
             sandbox.restore();
         });
         it("should fetch all urls and call delete of all urls", (done)=> {
-            let categoryId = 123, noOfTimes = 4;
+            let categoryId = 123, fourTimes = 4;
             let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
                 { "_id": "103", "url": "http://facebook.com/test1" },
                 { "_id": "104", "url": "http://test.com/rss" }];
@@ -265,11 +221,11 @@ describe("CategoryDb", () => {
             let pouchClientMock = sandbox.mock(PouchClient);
             pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
             pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
-            let fetchUrlsMock = sandbox.mock(CategoryDb);
+            let fetchUrlsMock = sandbox.mock(SourceDb);
             fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
             let source = new Source({});
             sandbox.stub(Source, "instance").returns(source);
-            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(noOfTimes).returns(Promise.resolve("response"));
+            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(fourTimes).returns(Promise.resolve("response"));
             CategoryDb.deleteCategory(categoryId).then((message)=> {
                 fetchUrlsMock.verify();
                 deleteSourceUrlMock.verify();

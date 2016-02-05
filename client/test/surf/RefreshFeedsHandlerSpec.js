@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks:0, callback-return:0, no-undefined:0 */
 "use strict";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
+import SourceDb from "../../src/js/config/db/SourceDb.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler.js";
@@ -26,7 +27,7 @@ describe("RefreshFeedsHandler", () => {
     });
     it("should fetchSourcesByType", () =>{
         let sandbox = sinon.sandbox.create();
-        let categoryDbMock = sandbox.stub(CategoryDb, "fetchSourceConfigurationBySourceType");
+        let categoryDbMock = sandbox.stub(SourceDb, "fetchSourceConfigurationBySourceType");
         let twitterUrls = [
             {
                 "sourceType": "rss",
@@ -76,11 +77,11 @@ describe("RefreshFeedsHandler", () => {
             FacebookRequestHandler.getBatchPosts.restore();
             TwitterRequestHandler.fetchBatchTweets.restore();
 
-            CategoryDb.fetchSourceConfigurationBySourceType.restore();
+            SourceDb.fetchSourceConfigurationBySourceType.restore();
         });
 
         it("should send batch request based on the sourceUrlsMap", () =>{
-            let categoryDbStub = sinon.stub(CategoryDb, "fetchSourceConfigurationBySourceType");
+            let categoryDbStub = sinon.stub(SourceDb, "fetchSourceConfigurationBySourceType");
 
             let rssUrls = [
                 { "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" },

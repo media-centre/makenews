@@ -2,7 +2,7 @@
 
 "use strict";
 import AjaxClient from "../utils/AjaxClient.js";
-import CategoryDb from "../config/db/CategoryDb.js";
+import SourceDb from "../config/db/SourceDb.js";
 import RssResponseParser from "../rss/RssResponseParser.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
@@ -130,7 +130,7 @@ export default class RefreshFeedsHandler {
                 let sourceTypes = ["rss", "facebook", "twitter"];
                 let counter = 0;
                 sourceTypes.forEach((sourceType) => {
-                    CategoryDb.fetchSourceConfigurationBySourceType(sourceType).then(sources => {
+                    SourceDb.fetchSourceConfigurationBySourceType(sourceType).then(sources => {
                         this.sourceUrlsMap[sourceType] = sources;
                         if(sourceTypes.length - 1 === counter) {
                             resolve();

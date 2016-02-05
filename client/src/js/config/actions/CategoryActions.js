@@ -1,7 +1,7 @@
 /* eslint no-unused-vars:0, max-params:0 */
 
 "use strict";
-import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
+import SourceDb from "../db/SourceDb.js";
 import Source, { STATUS_INVALID, STATUS_VALID } from "../Source.js";
 import CategoryDb from "../db/CategoryDb.js";
 import { CategoryDocument } from "./CategoryDocuments.js";
@@ -26,7 +26,7 @@ export const TWITTER_TYPE = "twitter";
 
 export function populateCategoryDetailsAsync(categoryId) {
     return dispatch => {
-        CategoriesApplicationQueries.fetchSortedSourceUrlsObj(categoryId).then(sourceUrlsObj => {
+        SourceDb.fetchSortedSourceUrlsObj(categoryId).then(sourceUrlsObj => {
             dispatch(populateCategoryDetails(sourceUrlsObj));
         }).catch((error) => {
             dispatch(populateCategoryDetails(null));
