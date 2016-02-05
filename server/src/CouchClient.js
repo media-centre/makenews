@@ -7,7 +7,7 @@ import NodeErrorHandler from "./NodeErrorHandler.js";
 import request from "request";
 
 export default class CouchClient {
-    static instance(dbName, accessToken, dbUrl) {
+    static instance(dbName, accessToken, dbUrl = null) {
         return new CouchClient(dbName, accessToken, dbUrl);
     }
 

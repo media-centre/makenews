@@ -3,6 +3,7 @@
 
 import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
 import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
+import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
 import Migration from "../../src/migration/Migration.js";
 import MigrationFile from "../../src/migration/MigrationFile.js";
 import SchemaInfo from "../../src/migration/SchemaInfo.js";
@@ -42,6 +43,14 @@ describe("Migration", () => {
             let className = "CreateDefaultCategoryDocument";
             let object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof CreateDefaultCategoryDocument);
+        });
+
+        it("should give the function object to create the instance of add filter views to design document", () => {
+            let migrationInstance = new Migration(dbName, accessToken);
+            let className = "AddFilterViewsToDesignDocument";
+            let object = migrationInstance.getObject(className);
+            assert.isTrue(object instanceof AddFilterViewsToDesignDocument);
+
         });
 
         it("should throw an error if the class name does not found in case", ()=> {

@@ -2,6 +2,8 @@
 "use strict";
 import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
 import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
+import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
+
 import SchemaInfo from "./SchemaInfo.js";
 import MigrationFile from "./MigrationFile.js";
 import CouchSession from "../CouchSession.js";
@@ -94,6 +96,8 @@ export default class Migration {
             return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
         case "CreateDefaultCategoryDocument" :
             return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
+        case "AddFilterViewsToDesignDocument" :
+            return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
