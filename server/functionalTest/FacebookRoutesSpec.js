@@ -7,9 +7,9 @@ import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import CouchSession from "../src/CouchSession";
 
-describe("FacbookPosts", () => {
+describe("FacebookRoutesSpec", () => {
     let accessToken = null, applicationConfig = null, serverIp = null;
-    before("FacbookPosts", (done)=> {
+    before("FacebookRoutesSpec", (done)=> {
         applicationConfig = new ApplicationConfig();
         serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
         CouchSession.login("test", "test").then((token) => {

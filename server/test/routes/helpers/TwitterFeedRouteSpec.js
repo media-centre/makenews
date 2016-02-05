@@ -1,17 +1,16 @@
 /*eslint max-nested-callbacks:0*/
 "use strict";
 import { assert } from "chai";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import TwitterRouteHelper from "../../../src/routes/helpers/TwitterRouteHelper";
+import TwitterFeedsRoute from "../../../src/routes/helpers/TwitterFeedsRoute.js";
 import TwitterClient from "../../../src/twitter/TwitterClient";
-import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler.js";
 import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import Logger from "../../../src/logging/Logger.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import sinon from "sinon";
 
-describe("TwitterRouteHelper", () => {
+describe("TwitterFeedsRoute", () => {
 
     function mockResponse(done, expectedValues) {
         return {
@@ -27,7 +26,7 @@ describe("TwitterRouteHelper", () => {
 
     let applicationConfig = null;
 
-    before("TwitterRouteHelper", () => {
+    before("TwitterFeedsRoute", () => {
         applicationConfig = new ApplicationConfig();
         sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
         sinon.stub(TwitterClient, "logger").returns(LogTestHelper.instance());
@@ -41,14 +40,14 @@ describe("TwitterRouteHelper", () => {
         sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
-    after("TwitterRouteHelper", () => {
+    after("TwitterFeedsRoute", () => {
         ApplicationConfig.instance.restore();
         TwitterClient.logger.restore();
         applicationConfig.twitter.restore();
         Logger.instance.restore();
     });
 
-    describe("twitterRouter", () => {
+    describe("handle", () => {
         let sandbox = null;
         beforeEach("twitterRouter", () => {
             sandbox = sinon.sandbox.create();
@@ -57,17 +56,17 @@ describe("TwitterRouteHelper", () => {
         afterEach("twitterRouter", () => {
             sandbox.restore();
         });
-        it("should return empty response if the url is empty", (done) => {
+        it("should respond with bad request if the url is empty", (done) => {
             let request = {
                 "query": {
                     "url": "",
                     "userName": "testUser"
                 }
             };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            twitterRouteHelper.twitterRouter();
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            twitterFeedRoute.handle();
         });
 
         it("should return empty response if url is not present", (done) => {
@@ -76,9 +75,9 @@ describe("TwitterRouteHelper", () => {
                     "userName": "testUser"
                 }
             };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": {} });
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            twitterRouteHelper.twitterRouter();
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            twitterFeedRoute.handle();
         });
 
         it("should return data if the url is valid", (done) => {
@@ -95,8 +94,8 @@ describe("TwitterRouteHelper", () => {
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.resolve(expectedData));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
 
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.resolve(twitterRouteHelper.twitterRouter()).then((data) => {
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            return Promise.resolve(twitterFeedRoute.handle()).then((data) => {
                 assert.strictEqual(data, expectedData);
                 fetchTweetsRequestMock.verify();
             });
@@ -115,8 +114,8 @@ describe("TwitterRouteHelper", () => {
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
 
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.reject(twitterRouteHelper.twitterRouter()).catch(() => {
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
                 fetchTweetsRequestMock.verify();
             });
         });
@@ -134,8 +133,8 @@ describe("TwitterRouteHelper", () => {
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
 
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.reject(twitterRouteHelper.twitterRouter()).catch(() => {
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
                 fetchTweetsRequestMock.verify();
             });
         });
@@ -154,111 +153,11 @@ describe("TwitterRouteHelper", () => {
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "Request failed for twitter handler " + url }));
             let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "Request failed for twitter handler " + url } });
 
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.reject(twitterRouteHelper.twitterRouter()).catch(() => {
+            let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
                 fetchTweetsRequestMock.verify();
             });
         });
     });
-
-    describe("twitterBatchFetch", () => {
-        it("should return all feeds from all the tweet hashtags", (done)=> {
-            let Jan18Timestamp = "2016-01-18T06:12:19+00:00", sandbox = sinon.sandbox.create();
-            let Jan17Timestamp = "2016-01-17T06:12:19+00:00";
-
-            let hinduResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp },
-                { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": Jan17Timestamp }] };
-
-            let toiResponseWithTimestamp = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": Jan18Timestamp }] };
-
-            let request = {
-                "body": {
-                    "data": [
-                        { "url": "@the_hindu", "timestamp": Jan17Timestamp, "id": "tweet1_id" },
-                        { "url": "@toi", "timestamp": Jan18Timestamp, "id": "tweet2_id" }
-                    ],
-                    "userName": "testUser"
-                }
-            };
-
-            let urlResponse = { "@the_hindu": Promise.resolve(hinduResponseWithTimestamp), "@toi": Promise.resolve(toiResponseWithTimestamp) };
-            let twitterRequestHandler = {
-                "fetchTweetsRequest": (url) => {
-                    return urlResponse[url];
-                }
-            };
-            sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "tweet1_id": hinduResponseWithTimestamp, "tweet2_id": toiResponseWithTimestamp } });
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            twitterRouteHelper.twitterBatchFetch();
-        });
-    });
-
-    describe("requestToken", () => {
-        let sandbox = null;
-        beforeEach("beforeEach", () => {
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach("afterEach", () => {
-            sandbox.restore();
-        });
-
-        it("should redirect to authenticate with requestToken", () => {
-            let twitterLogin = new TwitterLogin();
-            let token = "token", expectedUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + token;
-            let clientCallbackUrl = "clientUrl", serverCallbackUrl = "serverUrl";
-            twitterLogin.oauthToken = token;
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "Maharjun" }).returns(Promise.resolve(twitterLogin));
-            let response = { "status": () => {}, "json": () => {} };
-            let request = {
-                "query": {
-                    "clientCallbackUrl": clientCallbackUrl,
-                    "serverCallbackUrl": serverCallbackUrl,
-                    "userName": "Maharjun"
-                }
-            };
-            let responseMock = sandbox.mock(response);
-            responseMock.expects("status").withArgs(HttpResponseHandler.codes.OK);
-            responseMock.expects("json").withArgs({ "authenticateUrl": expectedUrl });
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.resolve(twitterRouteHelper.requestToken()).then(() => {
-                twitterLoginMock.verify();
-                responseMock.verify();
-            });
-        });
-    });
-
-    describe("twitterAuthenticateCallback", () => {
-        let sandbox = null;
-        beforeEach("beforeEach", () => {
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach("afterEach", () => {
-            sandbox.restore();
-        });
-
-        it("should return the clientCallbackUrl on success", () => {
-            let twitterLogin = new TwitterLogin();
-            let oauthToken = "oauth_token", oauthVerifier = "oauth_verifier", clientRedirectUrl = "clientRedirectUrl";
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "previouslyFetchedOauthToken": oauthToken }).returns(Promise.resolve(twitterLogin));
-            let accessTokenFromTwitterMock = sandbox.mock(twitterLogin).expects("accessTokenFromTwitter").withArgs(oauthVerifier).returns(Promise.resolve(clientRedirectUrl));
-            let response = { "redirect": () => {} };
-            let request = {
-                "query": {
-                    "oauth_token": oauthToken,
-                    "oauth_verifier": oauthVerifier
-                }
-            };
-            let responseMock = sandbox.mock(response);
-            responseMock.expects("redirect").withArgs(clientRedirectUrl);
-            let twitterRouteHelper = new TwitterRouteHelper(request, response);
-            return Promise.resolve(twitterRouteHelper.twitterAuthenticateCallback()).then(() => {
-                twitterLoginMock.verify();
-                accessTokenFromTwitterMock.verify();
-                responseMock.verify();
-            });
-        });
-    });
+    
 });

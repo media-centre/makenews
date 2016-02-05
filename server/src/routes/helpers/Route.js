@@ -34,6 +34,11 @@ export default class Route {
         this.response.json(error);
     }
 
+    _handleFileNotFoundFailure(error) {
+        this.response.status(HttpResponseHandler.codes.NOT_FOUND);
+        this.response.json(error);
+    }
+
     _handleInvalidRoute() {
         this.response.status(HttpResponseHandler.codes.BAD_REQUEST);
         this.response.json({ "message": "bad request" });

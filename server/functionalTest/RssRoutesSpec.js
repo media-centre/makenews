@@ -7,10 +7,10 @@ import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import { assert, expect } from "chai";
 import CouchSession from "../src/CouchSession";
 
-describe("RssReaderSpec", () => {
-    describe("RssReaderSpec", () => {
+describe("RssRoutesSpec", () => {
+    describe("RssRoutesSpec", () => {
         let accessToken = null, applicationConfig = null, serverIp = null;
-        before("RssReaderSpec", (done)=> {
+        before("RssRoutesSpec", (done)=> {
             applicationConfig = new ApplicationConfig();
             serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
             CouchSession.login("test", "test").then((token) => {

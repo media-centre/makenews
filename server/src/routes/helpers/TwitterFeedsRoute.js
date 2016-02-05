@@ -9,10 +9,11 @@ export default class TwitterFeedsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.query.url;
+        this.userName = this.request.query.userName;
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.url)) {
+        if(StringUtil.isEmptyString(this.url) || StringUtil.isEmptyString(this.userName)) {
             return false;
         }
         return true;
@@ -24,10 +25,10 @@ export default class TwitterFeedsRoute extends Route {
         }
 
         let twitterRequestHandler = TwitterRequestHandler.instance();
-        twitterRequestHandler.fetchTweetsRequest(this.url).then(feeds => {
+        twitterRequestHandler.fetchTweetsRequest(this.url, this.userName).then(feeds => {
             this._handleSuccess(feeds);
         }).catch(error => {
-            this._handleFailure(error);
+            this._handleFileNotFoundFailure(error);
         });
     }
 }

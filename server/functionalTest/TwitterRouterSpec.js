@@ -7,9 +7,9 @@ import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import { assert } from "chai";
 import CouchSession from "../src/CouchSession";
 
-describe("TwitterReaderSpec", () => {
+describe("TwitterRouterSpec", () => {
     let accessToken = null, applicationConfig = null, serverIp = null;
-    before("TwitterReaderSpec", (done)=> {
+    before("TwitterRouterSpec", (done)=> {
         applicationConfig = new ApplicationConfig();
         serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
         CouchSession.login("test", "test").then((token) => {
@@ -30,7 +30,7 @@ describe("TwitterReaderSpec", () => {
         it("should return data if the url is valid", (done) => {
             let expectedValues = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, { "id": 2, "id_str": "124", "text": "Tweet 2" }] };
             request(serverIp)
-                .get("/twitter-feeds?url=@the_hindu&accessToken=" + accessToken)
+                .get("/twitter-feeds?url=@the_hindu&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
                     assert.strictEqual(HttpResponseHandler.codes.OK, res.statusCode);
@@ -40,24 +40,22 @@ describe("TwitterReaderSpec", () => {
                 });
         });
 
-        it("should return 500 error if url is invalid", (done) => {
+        it("should return 404 error if url is invalid", (done) => {
             request(serverIp)
-                .get("/twitter-feeds?url=myTest&accessToken=" + accessToken)
+                .get("/twitter-feeds?url=myTest&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(res.statusCode, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR);
-                    assert.strictEqual("myTest is not a valid twitter handler", res.body.message);
+                    assert.equal(res.statusCode, HttpResponseHandler.codes.NOT_FOUND);
                     done();
                 });
         });
 
-        it("should timeout if the response from twitter takes more time", (done) => {
+        xit("should timeout if the response from twitter takes more time", (done) => {
             request(serverIp)
-                .get("/twitter-feeds?url=timeout&accessToken=" + accessToken)
+                .get("/twitter-feeds?url=timeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
-                    assert.strictEqual("Request failed for twitter handler timeout", res.body.message);
+                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
                     done();
                 });
         });
@@ -107,7 +105,8 @@ describe("TwitterReaderSpec", () => {
                             "url": "@icc",
                             "id": "9BBDA22F-66D5-7096-B82B-94B720845B2E"
                         }
-                    ]
+                    ],
+                    "userName": "test"
                 })
                 .set("Cookie", accessToken)
                 .end((err, res) => {

@@ -26,8 +26,9 @@ export default class TwitterClient {
                 oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                     if(error) {
                         reject(error);
+                    } else {
+                        resolve(JSON.parse(data));
                     }
-                    resolve(JSON.parse(data));
                 });
             }).catch(error => {
                 reject(error);
