@@ -71,16 +71,10 @@ describe("FacebookPostsRoute", () => {
             sinon.stub(facebookAccessToken, "getAccessToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
-            let error = {
-                "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
-                "type": "OAuthException",
-                "code": 190,
-                "error_subcode": 463,
-                "fbtrace_id": "AWpk5h2ceG6"
-            };
+            let error = { "message": "bad request" };
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, status);
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
                     return response;
                 },
                 "json": (json) => {
@@ -154,7 +148,7 @@ describe("FacebookPostsRoute", () => {
         it("should reject the request if access token is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, status);
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line

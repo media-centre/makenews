@@ -45,8 +45,8 @@ describe("FacebookRoutesSpec", () => {
                 .get("/facebook-posts?webUrl=https://www.facebook.com/doNotRespond&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
-                    assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/doNotRespond", res.body);
+                    assert.equal(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
+                    assert.deepEqual({ "message": "bad request" }, res.body);
                     done();
                 });
         });
@@ -56,8 +56,8 @@ describe("FacebookRoutesSpec", () => {
                 .get("/facebook-posts?webUrl=https://www.facebook.com/idtimeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
-                    assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/idtimeout", res.body);
+                    assert.equal(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
+                    assert.deepEqual({ "message": "bad request" }, res.body);
                     done();
                 });
         });
@@ -67,8 +67,8 @@ describe("FacebookRoutesSpec", () => {
                 .get("/facebook-posts?webUrl=https://www.facebook.com/feedtimeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, res.statusCode);
-                    assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/feedtimeout", res.body);
+                    assert.equal(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
+                    assert.deepEqual({ "message": "bad request" }, res.body);
                     done();
                 });
         });

@@ -70,7 +70,7 @@ describe("RssFeedsRoute", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": url + " is not a proper feed" } });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.handle();
     });
@@ -102,7 +102,7 @@ describe("RssFeedsRoute", () => {
         rssRouteHelper.handle();
     });
 
-    it("should return 500 error if url is invalid", (done) => {
+    it("should return 400 error if url is invalid", (done) => {
         nock("http://www.test1.com/cricket")
             .get("/", {
             })
@@ -114,7 +114,7 @@ describe("RssFeedsRoute", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json": { "message": "Request failed for " + url } });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.handle();
     });
@@ -131,8 +131,8 @@ describe("RssFeedsRoute", () => {
                 "url": url
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, "json":
-        { "message": "Request failed for " + url } });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json":
+        { "message": "bad request" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.handle();
     });

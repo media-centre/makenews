@@ -32,11 +32,11 @@ export default class FacebookPostsRoute extends Route {
         FacebookAccessToken.instance().getAccessToken(this.userName).then((token) => {
             FacebookRequestHandler.instance(token).pagePosts(this.webUrl, this.options).then(feeds => {
                 this._handleSuccess({ "posts": feeds });
-            }).catch(error => {
-                this._handleFailure(error);
+            }).catch(error => { //eslint-disable-line
+                this._handleBadRequest();
             });
-        }).catch(error => {
-            this._handleFailure(error);
+        }).catch(error => { //eslint-disable-line
+            this._handleBadRequest();
         });
     }
 }

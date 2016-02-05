@@ -44,6 +44,10 @@ export default class Route {
         this.response.json({ "message": "bad request" });
     }
 
+    _handleBadRequest() {
+        this._handleInvalidRoute();
+    }
+
     _handleSuccess(json) {
         this.response.status(HttpResponseHandler.codes.OK);
         this.response.json(json);

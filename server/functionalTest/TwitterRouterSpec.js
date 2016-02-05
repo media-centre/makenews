@@ -40,12 +40,12 @@ describe("TwitterRouterSpec", () => {
                 });
         });
 
-        it("should return 404 error if url is invalid", (done) => {
+        it("should return 400 error if url is invalid", (done) => {
             request(serverIp)
                 .get("/twitter-feeds?url=myTest&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.equal(res.statusCode, HttpResponseHandler.codes.NOT_FOUND);
+                    assert.equal(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
                     done();
                 });
         });
@@ -55,7 +55,7 @@ describe("TwitterRouterSpec", () => {
                 .get("/twitter-feeds?url=timeout&userName=test&accessToken=" + accessToken)
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.NOT_FOUND, res.statusCode);
+                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
                     done();
                 });
         });

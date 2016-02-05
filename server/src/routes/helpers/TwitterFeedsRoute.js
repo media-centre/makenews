@@ -27,8 +27,8 @@ export default class TwitterFeedsRoute extends Route {
         let twitterRequestHandler = TwitterRequestHandler.instance();
         twitterRequestHandler.fetchTweetsRequest(this.url, this.userName).then(feeds => {
             this._handleSuccess(feeds);
-        }).catch(error => {
-            this._handleFileNotFoundFailure(error);
+        }).catch(error => { //eslint-disable-line
+            this._handleBadRequest();
         });
     }
 }

@@ -26,8 +26,8 @@ export default class RssFeedsRoute extends Route {
         let rssRequestHandler = RssRequestHandler.instance();
         rssRequestHandler.fetchRssFeedRequest(this.url).then(feeds => {
             this._handleSuccess(feeds);
-        }).catch(error => {
-            this._handleFailure(error);
+        }).catch(error => { //eslint-disable-line
+            this._handleBadRequest();
         });
     }
 }

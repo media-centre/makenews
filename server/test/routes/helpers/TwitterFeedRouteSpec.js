@@ -101,7 +101,7 @@ describe("TwitterFeedsRoute", () => {
             });
         });
 
-        it("should return 404 error if url is invalid", (done) => {
+        it("should return 400 error if url is invalid", (done) => {
             let request = {
                 "query": {
                     "url": "@myTest",
@@ -112,7 +112,7 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
             return Promise.reject(twitterFeedRoute.handle()).catch(() => {
@@ -120,7 +120,7 @@ describe("TwitterFeedsRoute", () => {
             });
         });
 
-        it("should return 404 error if url is not valid twitter url", (done) => {
+        it("should return 400 error if url is not valid twitter url", (done) => {
             let request = {
                 "query": {
                     "url": "myTest",
@@ -131,7 +131,7 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "myTest is not a valid twitter handler" } });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
             return Promise.reject(twitterFeedRoute.handle()).catch(() => {
@@ -151,7 +151,7 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "Request failed for twitter handler " + url }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.NOT_FOUND, "json": { "message": "Request failed for twitter handler " + url } });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
             return Promise.reject(twitterFeedRoute.handle()).catch(() => {
