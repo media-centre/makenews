@@ -8,7 +8,7 @@ import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries";
 
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
 export default class Source {
-    constructor(paramsObj) {
+    constructor(paramsObj = {}) {
         if(paramsObj._id) {
             this._id = paramsObj._id;
         }

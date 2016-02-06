@@ -2,7 +2,6 @@
 
 "use strict";
 import CategoryDb from "./CategoryDb.js";
-import { CategoryDocument } from "../actions/CategoryDocuments.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import TwitterDb from "../../twitter/TwitterDb.js";
 

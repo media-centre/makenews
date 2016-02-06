@@ -20,7 +20,7 @@ export class AllCategories extends React.Component {
 
     _createNewCategory() {
         let history = this.context.history;
-        this.props.dispatch(createCategory("", (response)=>{
+        this.props.dispatch(createCategory((response)=>{
             history.push("/configure/category/" + response.id + "/" + response.name);
         }));
     }

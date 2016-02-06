@@ -3,8 +3,8 @@
 "use strict";
 import SourceDb from "../db/SourceDb.js";
 import Source, { STATUS_INVALID, STATUS_VALID } from "../Source.js";
+import Category from "../Category.js";
 import CategoryDb from "../db/CategoryDb.js";
-import { CategoryDocument } from "./CategoryDocuments.js";
 import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
 import RssDb from "../../rss/RssDb.js";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
@@ -92,41 +92,18 @@ export function addTwitterUrlAsync(categoryId, url, callback) {
     };
 }
 
-export function createDefaultCategory(categoryName = DEFAULT_CATEGORY) {
+export function createCategory(callback = ()=> {}) {
     return dispatch => {
-        let newCategoryDocument = CategoryDocument.getNewCategoryDocument(categoryName);
-        CategoryDb.createCategoryIfNotExists(newCategoryDocument).then(success => {
-            dispatch(displayAllCategoriesAsync());
-        }).catch(error => {
-            dispatch(displayAllCategoriesAsync());
-        });
-    };
-}
-
-export function createCategory(categoryName = "", callback = ()=> {}) {
-    return dispatch => {
-        if(categoryName) {
-            dispatchCreateCategory(categoryName);
-        } else {
-            generateCategoryName().then((name) => {
-                dispatchCreateCategory(name);
-            });
-        }
-    };
-
-    function dispatchCreateCategory(categoryName1) {
-        CategoryDb.createCategory(CategoryDocument.getNewCategoryDocument(categoryName1)).then(response => {
-            response.name = categoryName1;
+        Category.instance({}).save().then(response => {
             callback(response);
         }).catch(error => {
             callback(error);
         });
-    }
+    };
 }
 
 export function updateCategoryName(categoryName = "", categoryId = "", callback = ()=> {}) {
     return dispatch => {
-
         CategoryDb.isCategoryExists(categoryName, categoryId).then((response)=> {
             if(response.status) {
                 return callback({ "status": false });
@@ -160,24 +137,6 @@ function updateCategoryNameHelper(categoryName, categoryId) {
             }
         }).catch((error)=> {
             reject(error);
-        });
-    });
-}
-
-function generateCategoryName() {
-    return new Promise((resolve, reject) => {
-        let generatedName = "";
-        CategoryDb.fetchAllCategoryDocuments().then(categories => {
-            let existingNames = categories.map(category => category.name);
-            let existingNamesSize = existingNames.length + 1;
-            Array(existingNamesSize).fill().map((value, index) => index).some((index)=> {
-                generatedName = "Untitled Category " + (index + 1);
-                let NEGATIVE_INDEX = -1;
-                if(existingNames.indexOf(generatedName) === NEGATIVE_INDEX) {
-                    resolve(generatedName);
-                    return true;
-                }
-            });
         });
     });
 }

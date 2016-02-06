@@ -7,6 +7,7 @@ import SourceDb from "../../src/js/config/db/SourceDb.js";
 import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
 import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
+import Category from "../../src/js/config/Category.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import TwitterDb from "../../src/js/twitter/TwitterDb";
 import RssResponseParser from "../../src/js/rss/RssResponseParser";
@@ -239,84 +240,25 @@ describe("addTwitterUrlAsync", () => {
     });
 });
 
-describe("createDefaultCategory", () => {
-    xit("should dispatch displayAllCategoriesAsync after adding category", (done) => {
-        var categoryName = "default";
-
-        let categoryDbStub = sinon.stub(CategoryDb, "createCategoryIfNotExists").withArgs({
-            "docType": "category",
-            "name": categoryName
-        });
-        categoryDbStub.returns(Promise.resolve("document added"));
-        const store = mockStore({}, [], done);
-        store.dispatch(createDefaultCategory(categoryName), [displayAllCategoriesAsync()]);
-        CategoryDb.createCategoryIfNotExists.restore();
-    });
-
-    xit("should not dispatch displayAllCategoriesAsync if adding category fails", (done) => {
-        var categoryName = "default";
-
-        let categoryDbStub = sinon.stub(CategoryDb, "createCategoryIfNotExists").withArgs({
-            "docType": "category",
-            "name": categoryName
-        });
-        categoryDbStub.returns(Promise.reject("document added"));
-        const store = mockStore({}, [], done);
-        store.dispatch(createDefaultCategory(categoryName, (error) => {
-            done();
-        }));
-        CategoryDb.createCategoryIfNotExists.restore();
-    });
-});
-
 describe("createCategory", () => {
-    xit("should create category with given name", (done) => {
-        var categoryName = "sports category";
-
-        let categoryDbStub = sinon.stub(CategoryDb, "createCategory").withArgs({
-            "docType": "category",
-            "name": categoryName,
-            "createdTime": new Date().getTime()
-        });
-        categoryDbStub.returns(Promise.resolve("document added"));
-        const store = mockStore({
-
-        }, [], done);
-        store.dispatch(createCategory(categoryName, (success) => {
-            done();
-        }));
-        CategoryDb.createCategory.restore();
+    let sandbox = null, categorySaveMock = null;
+    beforeEach("", () => {
+        sandbox = sinon.sandbox.create();
+        let category = new Category({});
+        sandbox.stub(Category, "instance").withArgs({}).returns(category);
+        categorySaveMock = sandbox.mock(category).expects("save");
     });
 
-    xit("should auto-generate category name in order if name is empty", (done) => {
-        let categoryName = "";
-
-        let createCategoryMock = sinon.mock(CategoryDb).expects("createCategory");
-        createCategoryMock.returns(Promise.resolve("document added"));
-
-        let allCategoriesStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
-        allCategoriesStub.returns(Promise.resolve([{ "id": "1", "name": "Default Category" }, { "id": "2", "name": "Sports" }]));
-        const store = mockStore({}, [], done);
-        store.dispatch(createCategory(categoryName, (success) => {
-            done();
-        }));
-        createCategoryMock.verify();
-        CategoryDb.createCategory.restore();
+    afterEach("", () => {
+        categorySaveMock.verify();
+        sandbox.restore();
     });
 
-    xit("should auto-generate category name with the minimal missing number", (done) => {
-        let categoryName = "";
-
-        let createCategoryMock = sinon.mock(CategoryDb).expects("createCategory");
-        createCategoryMock.returns(Promise.resolve("document added"));
-
-        let allCategoriesStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
-        allCategoriesStub.returns(Promise.resolve([{ "id": "1", "name": "Untitled Category 1" }, { "id": "2", "name": "Untitled Category 3" }]));
-        const store = mockStore({}, [], done);
-        store.dispatch(createCategory(categoryName, (success) => {
+    it("should create category with auto generated name", (done) => {
+        categorySaveMock.returns(Promise.resolve({ "id": "id", "name": "Untitled Category 1" }));
+        createCategory((response) => {
+            assert.deepEqual(response, { "id": "id", "name": "Untitled Category 1" });
             done();
-        }));
-        createCategoryMock.verify();
-        CategoryDb.createCategory.restore();
+        })();
     });
 });

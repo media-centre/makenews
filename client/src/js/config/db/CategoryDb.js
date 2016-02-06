@@ -7,6 +7,7 @@ import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries"
 import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
 import Source from "../Source";
 import SourceDb from "../db/SourceDb.js";
+import Category from "../Category.js";
 
 export default class CategoryDb {
 
@@ -45,44 +46,6 @@ export default class CategoryDb {
             });
         }
         return PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": name });
-    }
-
-    static createCategoryIfNotExists(categoryDocument) {
-        return new Promise((resolve, reject) => {
-            if(!categoryDocument) {
-                reject({ "status": "document should not be empty" });
-            }
-            CategoryDb.isCategoryExists(categoryDocument.name).then(result => {
-                if(result.status === false) {
-                    PouchClient.createDocument(categoryDocument).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }
-                resolve({ "status": "category name already exists" });
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
-
-    static createCategory(categoryDocument) {
-        return new Promise((resolve, reject) => {
-            CategoryDb.fetchCategoryByName(categoryDocument.name).then(result => {
-                if(result.length === 0) {
-                    PouchClient.createDocument(categoryDocument).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                } else {
-                    reject("Category with name already exists");
-                }
-            }).catch(err => {
-                reject(err);
-            });
-        });
     }
 
     static updateCategory(categoryDocument) {
