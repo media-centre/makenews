@@ -2,8 +2,8 @@
 
 import ApplicationConfig from "./config/ApplicationConfig.js";
 import NodeErrorHandler from "./NodeErrorHandler.js";
-import CouchResponseHandler from "./CouchResponseHandler.js";
 import StringUtil from "../../common/src/util/StringUtil.js";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import request from "request";
 import querystring from "querystring";
 
@@ -42,15 +42,17 @@ export default class CouchSession {
                       } else {
                           resolve(authSessionToken);
                       }
+                  } else {
+                      reject("");
                   }
-                  reject("");
+              } else {
+                  reject(error);
               }
-              reject(error);
           });
       });
   }
 
   static requestSuccessful(error, response) {
-      return NodeErrorHandler.noError(error) && CouchResponseHandler.requestCompleted(response.statusCode);
+      return NodeErrorHandler.noError(error) && (response.statusCode === HttpResponseHandler.codes.OK);
   }
 }

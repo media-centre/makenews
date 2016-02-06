@@ -4,6 +4,7 @@
     <security>
       <passwordFile path="/var/lib/go-server/passwd-file" />
     </security>
+    <mailhost hostname="46.101.245.151" port="8153" username="admin" tls="false" from="pranathb@thoughtworks.com" admin="mediacenter@thoughtworks.com" />
   </server>
   <pipelines group="MediaCenter">
     <pipeline name="ServerTests" isLocked="false" template="build_template">
@@ -16,7 +17,7 @@
         <pipeline pipelineName="ServerTests" stageName="build" materialName="build" />
       </materials>
     </pipeline>
-    <pipeline name="QaDeployment">
+    <pipeline name="QaDeployment" isLocked="false">
       <environmentvariables>
         <variable name="NODE_ENV">
           <value>ci_qa</value>
@@ -26,6 +27,7 @@
         <pipeline pipelineName="DevelopmentDeployment" stageName="StartServer" materialName="Development" />
       </materials>
       <stage name="StartServer">
+        <approval type="manual" />
         <jobs>
           <job name="UntarAndStartServer">
             <environmentvariables>
@@ -87,19 +89,17 @@
     </pipeline>
   </pipelines>
   <pipelines group="CUCUMBER_TEST_GROUP">
-    <pipeline name="CUCUMBER_TESTS_DEV_ENV">
+    <pipeline name="CUCUMBER_TESTS_DEV_ENV" isLocked="false">
       <environmentvariables>
         <variable name="fileName">
           <value>dev_envfile</value>
         </variable>
-        <variable name="browser">
-          <value>chrome</value>
-        </variable>
       </environmentvariables>
       <materials>
-        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
+        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" materialName="CUCUMBER_TESTS" />
       </materials>
       <stage name="MAVEN_STAGE">
+        <approval type="manual" />
         <jobs>
           <job name="MAVEN_COMPILE">
             <tasks>
@@ -113,6 +113,11 @@
       <stage name="DEV_RUN_STAGE">
         <jobs>
           <job name="TEST_ON_CHROME_BROWSER">
+            <environmentvariables>
+              <variable name="browser">
+                <value>firefox</value>
+              </variable>
+            </environmentvariables>
             <tasks>
               <exec command="mvn" workingdir="trunk/">
                 <arg>test</arg>
@@ -364,6 +369,7 @@
     <environment name="CUCUMBER_TESTS">
       <agents>
         <physical uuid="3c203044-7013-48d1-ba47-ab6e7645cf3b" />
+        <physical uuid="4f3fc68c-8bbb-487b-b98d-7c0a3d34c8b0" />
       </agents>
       <pipelines>
         <pipeline name="CUCUMBER_TESTS_DEV_ENV" />
@@ -374,6 +380,7 @@
     <environment name="CUCUMBER_DEV_ENV">
       <agents>
         <physical uuid="3c203044-7013-48d1-ba47-ab6e7645cf3b" />
+        <physical uuid="4f3fc68c-8bbb-487b-b98d-7c0a3d34c8b0" />
       </agents>
     </environment>
     <environment name="ServerTests">
@@ -395,5 +402,11 @@
     <agent hostname="ServerTests" ipaddress="10.19.0.12" uuid="0f2f1c30-0220-4d72-bf45-976d0a65e92d" />
     <agent hostname="Test-Env" ipaddress="10.19.0.11" uuid="4b9908c8-79eb-458d-9156-aedfa687dcd3" />
     <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="d029afb8-6952-4776-9146-848dad530f73" />
+    <agent hostname="OSCI-CMS" ipaddress="10.136.0.201" uuid="4f3fc68c-8bbb-487b-b98d-7c0a3d34c8b0">
+      <resources>
+        <resource>Automation</resource>
+      </resources>
+    </agent>
   </agents>
 </cruise>
+
