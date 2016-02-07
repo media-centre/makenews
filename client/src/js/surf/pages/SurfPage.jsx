@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 import Toast from "../../utils/custom_templates/Toast.js";
-
+import TakeTour from "../../utils/custom_templates/TakeTour.js";
 
 export class SurfPage extends Component {
     constructor(props) {
@@ -84,7 +84,7 @@ export class SurfPage extends Component {
             if (this.state.fetchHintMessage === this.props.messages.fetchingFeeds) {
                 return <div className="t-center">{this.state.fetchHintMessage}</div>;
             }
-            return <div className="t-center">{this.props.messages.noFeeds}</div>;
+            return document.getElementById("take-tour") === null ? <div className="take-tour-text">{"Welcome to makenews for the first time."} <span className="tour-target" onClick={()=> { this.takeTour(); }}>{"Take tour"}</span> {" to learn how it works"}</div> : <div className="t-center">{this.props.messages.noFeeds}</div>;
         }
         return null;
     }
@@ -94,6 +94,10 @@ export class SurfPage extends Component {
         this.props.dispatch(fetchFeedsByFilter(latestFilterDocument, (result)=> {
             this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds, "showFilterSpinner": false });
         }));
+    }
+
+    takeTour() {
+        TakeTour.show();
     }
 
     render() {

@@ -2,6 +2,17 @@
 .surf-page-container {
   padding: 0 !important;
 
+  .take-tour-text {
+    text-align: center;
+    color: $dark-gray-color;
+    font-size: $small-font-size;
+
+    span.tour-target {
+      color: $app-header-bg-color;
+      cursor: pointer;
+    }
+  }
+
   .surf-filter {
     position: fixed;
     left: 0px;
