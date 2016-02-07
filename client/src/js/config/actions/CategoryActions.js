@@ -102,43 +102,18 @@ export function createCategory(callback = ()=> {}) {
     };
 }
 
-export function updateCategoryName(categoryName = "", categoryId = "", callback = ()=> {}) {
+export function updateCategoryName(categoryName, categoryId, callback = ()=> {}) {
     return dispatch => {
-        CategoryDb.isCategoryExists(categoryName, categoryId).then((response)=> {
-            if(response.status) {
-                return callback({ "status": false });
-            }
-            updateCategoryNameHelper(categoryName, categoryId).then((updateResponse)=> {
-                callback(updateResponse);
-            }).catch((error)=> {
-                callback(error);
+        CategoryDb.findById(categoryId).then(category => {
+            category.update({ "name": categoryName }).then(updateResponse => {
+                callback({ "status": true });
+            }).catch(error => {
+                callback({ "status": false });
             });
-        }).catch((error)=> {
-            callback(error);
+        }).catch(error => {
+            callback({ "status": false });
         });
     };
-}
-
-function updateCategoryNameHelper(categoryName, categoryId) {
-    return new Promise((resolve, reject) => {
-        CategoryDb.getCategoryById(categoryId).then((response)=> {
-            if (response.status) {
-
-                let categoryDoc = response.category;
-                categoryDoc.name = categoryName;
-
-                CategoryDb.updateCategory(categoryDoc).then(()=> {
-                    resolve({ "status": true });
-                }).catch((error)=> {
-                    reject(error);
-                });
-            } else {
-                resolve(response);
-            }
-        }).catch((error)=> {
-            reject(error);
-        });
-    });
 }
 
 function _addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTimestamp) { //eslint-disable-line max-params
@@ -151,4 +126,3 @@ function _addUrlDocument(dispatch, categoryId, title, url, status, latestFeedTim
         });
     });
 }
-

@@ -5,7 +5,6 @@ import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import SourceDb from "../../../src/js/config/db/SourceDb.js";
 import Source from "../../../src/js/config/Source.js";
-import CategoriesApplicationQueries from "../../../src/js/config/db/CategoriesApplicationQueries.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { expect, assert } from "chai";
@@ -22,43 +21,63 @@ describe("CategoryDb", () => {
         });
     });
 
-    describe("isCategoryExists", () => {
-        let resultDocs = null;
-        before("isCategoryExists", () => {
-            resultDocs = [
-                {
-                    "_id": "8bc3db40aa04d6c65fd10d833f001be8",
-                    "_rev": "1-0078fe2a374458f856d8678a50f78d3e",
-                    "docType": "category",
-                    "name": "Politics"
-                },
-                {
-                    "_id": "8bc3db40aa04d6c65fd10d833f00163e",
-                    "_rev": "2-7f1d26cb8acdcb3dbfc135b74af7ad28",
-                    "docType": "category",
-                    "name": "Sports"
-                }
-            ];
-        });
-        it("should resolve true if the category already exists", (done) => {
-            let categoryName = "Sports";
-            sinon.stub(CategoryDb, "fetchAllCategoryDocuments").returns(Promise.resolve(resultDocs));
-            CategoryDb.isCategoryExists(categoryName).then((result)=> {
-                expect(result.status).to.be.true;
-                CategoryDb.fetchAllCategoryDocuments.restore();
-                done();
-            });
-        });
-        it("should resolve with false if the category not already exists", (done) => {
-            let categoryName = "test_category";
-            sinon.stub(CategoryDb, "fetchAllCategoryDocuments").returns(Promise.resolve(resultDocs));
-            CategoryDb.isCategoryExists(categoryName).then((result)=> {
-                expect(result.status).to.be.false;
-                CategoryDb.fetchAllCategoryDocuments.restore();
+    describe("findById", () => {
+        it("should return category for the id", (done) => {
+            let categoryId = "categoryId";
+            let categoryDoc = { "_id": categoryId, "name": "name", "createdTime": "132323423", "docType": "category" };
+            let pouchClientMock = sinon.mock(PouchClient).expects("getDocument").withArgs().returns(Promise.resolve(categoryDoc));
+            CategoryDb.findById(categoryId).then((resultDoc) => {
+                assert.deepEqual(resultDoc.getDocument(), categoryDoc);
+                pouchClientMock.verify();
+                PouchClient.getDocument.restore();
                 done();
             });
         });
 
+        it("should reject with error if get fails", (done) => {
+            let categoryId = "categoryId";
+            let pouchClientMock = sinon.mock(PouchClient).expects("getDocument").withArgs().returns(Promise.reject("error"));
+            CategoryDb.findById(categoryId).catch((error) => {
+                assert.strictEqual(error, "error");
+                pouchClientMock.verify();
+                PouchClient.getDocument.restore();
+                done();
+            });
+        });
+    });
+    
+    describe("fetchAllCategories", () => {
+        it("should fetch and resolve id and name of category documents", () => {
+            let resultDocs = [
+                {
+                    "_id": "1",
+                    "docType": "category",
+                    "name": "Sports"
+                },
+                {
+                    "_id": "2",
+                    "docType": "category",
+                    "name": "Politics"
+                }
+            ];
+            let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
+            fetchAllCategoryDocumentsStub.returns(Promise.resolve(resultDocs));
+            return CategoryDb.fetchAllCategories().then(categories => {
+                let expectedCategories = [{ "_id": "1", "name": "Sports" }, { "_id": "2", "name": "Politics" }];
+                expect(expectedCategories).to.deep.equal(categories);
+                CategoryDb.fetchAllCategoryDocuments.restore();
+            });
+        });
+
+        it("should reject with error if fetching category document fails", (done) => {
+            let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
+            fetchAllCategoryDocumentsStub.returns(Promise.reject("error"));
+            CategoryDb.fetchAllCategories().catch(error => {
+                expect("error").to.eq(error);
+                CategoryDb.fetchAllCategoryDocuments.restore();
+                done();
+            });
+        });
     });
 
     describe("fetchCategoryByName", () => {
@@ -73,32 +92,6 @@ describe("CategoryDb", () => {
         it("should reject if the category name is empty", (done) => {
             CategoryDb.fetchCategoryByName("").catch(error => {
                 expect("name should not be empty").to.equal(error);
-                done();
-            });
-        });
-    });
-
-    describe("updateCategory", ()=> {
-        it("should update the category passed", (done)=> {
-            let document = { "docType": "category", "name": "test", "createdTime": 1448554080663, "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "_rev": "3-c8b00a32dc84b286d914816b51f7f52e" };
-            let response = { "_id": "FCE3D585-B11D-5A1E-BADC-BE1392F70905", "rev": "modified" };
-
-            let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(document).returns(Promise.resolve(response));
-            CategoryDb.updateCategory(document).then(()=> {
-                updateMock.verify();
-                PouchClient.updateDocument.restore();
-                done();
-            });
-        });
-
-        it("should not update the category without id", (done)=> {
-            let document = {};
-            let response = "Invalid category id";
-
-            let updateMock = sinon.mock(PouchClient).expects("updateDocument").withArgs(document).returns(Promise.reject(response));
-            CategoryDb.updateCategory(document).catch(()=> {
-                updateMock.verify();
-                PouchClient.updateDocument.restore();
                 done();
             });
         });

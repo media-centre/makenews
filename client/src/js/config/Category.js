@@ -68,6 +68,30 @@ export default class Category {
         });
     }
 
+    update(updateParams) {
+        return new Promise((resolve, reject) => {
+            if(updateParams.name) {
+                CategoryDb.fetchCategoryByName(updateParams.name).then(result => {
+                    if(result.length === 0) {
+                        updateDb.bind(this)();
+                    } else {
+                        reject({ "status": false, "error": "Category with name already exists" });
+                    }
+                });
+            } else {
+                updateDb.bind(this)();
+            }
+
+            function updateDb() {
+                PouchClient.updateDocument(Object.assign({}, this.getDocument(), updateParams)).then(response => {
+                    resolve(response);
+                }).catch(error => {
+                    reject({ "status": false, "error": error });
+                });
+            }
+        });
+    }
+
     _generateCategoryName() {
         return new Promise((resolve) => {
             let generatedName = "";

@@ -1,14 +1,13 @@
 "use strict";
-import CategoriesApplicationQueries from "../db/CategoriesApplicationQueries.js";
+import CategoryDb from "../db/CategoryDb.js";
 
 export const DISPLAY_ALL_CATEGORIES = "DISPLAY_ALL_CATEGORIES";
 
 export function displayAllCategoriesAsync() {
     return dispatch => {
-        CategoriesApplicationQueries.fetchAllCategories().then((categories) => {
+        CategoryDb.fetchAllCategories().then((categories) => {
             dispatch(displayAllCategories(categories));
         });
-
     };
 }
 

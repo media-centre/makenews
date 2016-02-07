@@ -1,10 +1,9 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] no-unused-vars:0*/
 
 "use strict";
-import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions.js";
+import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, updateCategoryName, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
 import SourceDb from "../../src/js/config/db/SourceDb.js";
-import CategoriesApplicationQueries from "../../src/js/config/db/CategoriesApplicationQueries";
 import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
 import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
 import Category from "../../src/js/config/Category.js";
@@ -126,14 +125,14 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
-        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
-        categoriesApplicationQueriesCreateFeedsMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
+        let rssFeedMock = sandbox.mock(RssDb).expects("addRssFeeds");
+        rssFeedMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
             sourceSaveMock.verify();
-            categoriesApplicationQueriesCreateFeedsMock.verify();
+            rssFeedMock.verify();
         });
     });
 
@@ -150,15 +149,15 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
-        let categoriesApplicationQueriesCreateFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
-        categoriesApplicationQueriesCreateFeedsMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
+        let rssDbFeedMock = sandbox.mock(RssDb).expects("addRssFeeds");
+        rssDbFeedMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
 
         let responseParserMock = sandbox.mock(RssResponseParser).expects("parseFeeds");
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
-            categoriesApplicationQueriesCreateFeedsMock.verify();
+            rssDbFeedMock.verify();
             sourceSaveMock.verify();
             responseParserMock.verify();
             RssDb.addRssFeeds.restore();
@@ -258,6 +257,56 @@ describe("createCategory", () => {
         categorySaveMock.returns(Promise.resolve({ "id": "id", "name": "Untitled Category 1" }));
         createCategory((response) => {
             assert.deepEqual(response, { "id": "id", "name": "Untitled Category 1" });
+            done();
+        })();
+    });
+});
+
+describe("updateCategoryName", () => {
+    let sandbox = null, categoryUpdateMock = null, categoryId = "categoryId", categoryDoc = null, categoryGetMock = null;
+    let categoryName = null, category = null;
+    beforeEach("before", () => {
+        categoryDoc = { "_id": "id", "name": "Untitled Category 1" };
+        sandbox = sinon.sandbox.create();
+        categoryGetMock = sandbox.mock(CategoryDb).expects("findById");
+        category = new Category(categoryDoc);
+        sandbox.stub(Category, "instance").withArgs(categoryDoc).returns(category);
+        categoryUpdateMock = sandbox.mock(category).expects("update");
+    });
+
+    afterEach("after", () => {
+        sandbox.restore();
+    });
+
+    it("should update category with name", (done) => {
+        categoryGetMock.withArgs(categoryId).returns(Promise.resolve(category));
+        categoryUpdateMock.returns(Promise.resolve({ "id": "id", "name": "Untitled Category 1" }));
+        updateCategoryName(categoryName, categoryId, (response) => {
+            assert.deepEqual(response, { "status": true });
+            categoryGetMock.verify();
+            categoryUpdateMock.verify();
+            done();
+        })();
+    });
+
+    it("should return status false if category fetch fails", (done) => {
+        categoryGetMock.withArgs(categoryId).returns(Promise.reject("error"));
+        categoryUpdateMock.never();
+        updateCategoryName(categoryName, categoryId, (response) => {
+            assert.deepEqual(response, { "status": false });
+            categoryGetMock.verify();
+            categoryUpdateMock.verify();
+            done();
+        })();
+    });
+
+    it("should return status false if category update fails", (done) => {
+        categoryGetMock.withArgs(categoryId).returns(Promise.resolve(category));
+        categoryUpdateMock.returns(Promise.reject("error"));
+        updateCategoryName(categoryName, categoryId, (response) => {
+            assert.deepEqual(response, { "status": false });
+            categoryGetMock.verify();
+            categoryUpdateMock.verify();
             done();
         })();
     });

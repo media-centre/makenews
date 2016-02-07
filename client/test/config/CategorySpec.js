@@ -131,5 +131,76 @@ describe("Category", () => {
             });
         });
     });
+
+    describe("update", () => {
+        let pouchClientUpdateMock = null, updatedParams = null, category = null;
+        beforeEach("before", () => {
+            let categoryParams = {
+                "_id": "id",
+                "docType": "category",
+                "name": "sports",
+                "createdTime": "1234345"
+            };
+            category = new Category(categoryParams);
+            updatedParams = {
+                "_id": "id",
+                "docType": "category",
+                "name": "sports",
+                "createdTime": "1000000"
+            };
+
+            pouchClientUpdateMock = sandbox.mock(PouchClient).expects("updateDocument");
+        });
+
+        it("should update the document with new values", () => {
+            pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
+            return category.update({ "createdTime": "1000000" }).then(() => {
+                pouchClientUpdateMock.verify();
+            });
+        });
+
+        it("should reject if update fails", () => {
+            pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.reject("error"));
+            return category.update({ "createdTime": "1000000" }).catch(() => {
+                pouchClientUpdateMock.verify();
+            });
+        });
+
+        describe("name updation", () => {
+            let fetchCategoryByNameMock = null;
+            beforeEach("before", () => {
+                updatedParams = {
+                    "_id": "id",
+                    "docType": "category",
+                    "name": "sports new",
+                    "createdTime": "1234345"
+                };
+                fetchCategoryByNameMock = sandbox.mock(CategoryDb).expects("fetchCategoryByName");
+            });
+
+            afterEach("after", () => {
+                fetchCategoryByNameMock.verify();
+            });
+
+            it("should update if name is unique", () => {
+                let nameToBeUpdated = "sports new";
+                fetchCategoryByNameMock.withArgs(nameToBeUpdated).returns(Promise.resolve([]));
+                pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
+                return category.update({ "name": nameToBeUpdated }).then(() => {
+                    pouchClientUpdateMock.verify();
+                });
+            });
+
+            it("should not update if name is not unique", () => {
+                let nameToBeUpdated = "sports new";
+                fetchCategoryByNameMock.withArgs(nameToBeUpdated).returns(Promise.resolve([{ "_id": "id", "name": nameToBeUpdated }]));
+                pouchClientUpdateMock.withExactArgs(updatedParams).never();
+                return category.update({ "name": nameToBeUpdated }).catch((error) => {
+                    assert.deepEqual(error, { "status": false, "error": "Category with name already exists" });
+                    pouchClientUpdateMock.verify();
+                });
+            });
+        });
+    });
 });
 

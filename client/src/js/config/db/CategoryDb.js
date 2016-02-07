@@ -4,37 +4,36 @@
 import PouchClient from "../../db/PouchClient.js";
 import StringUtil from "../../../../../common/src/util/StringUtil.js";
 import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
-import CategoriesApplicationQueries from "./CategoriesApplicationQueries";
 import Source from "../Source";
 import SourceDb from "../db/SourceDb.js";
 import Category from "../Category.js";
 
 export default class CategoryDb {
+    static findById(id) {
+        return new Promise((resolve, reject) => {
+            PouchClient.getDocument(id).then(categoryDoc => {
+                resolve(Category.instance(categoryDoc));
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
 
     static fetchAllCategoryDocuments() {
         return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true });
     }
 
-    static fetchCategoryById(categoryId) {
-        return PouchClient.fetchDocuments("category/allCategories", { "include_docs": true, "key": categoryId });
-    }
-
-    static isCategoryExists(categoryName, categoryId) {
+    static fetchAllCategories() {
         return new Promise((resolve, reject) => {
-            CategoryDb.fetchAllCategoryDocuments().then(categories => {
-                let isAlreadyExists = false;
-                categories.some((category)=> {
-                    if(((categoryId && category._id !== categoryId) || !categoryId) && categoryName.toLowerCase() === category.name.toLowerCase()) {
-                        isAlreadyExists = true;
-                        resolve({ "status": isAlreadyExists, "error": "" });
-                        return;
-                    }
+            CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
+                let categories = categoryDocs.sort((first, second)=> {
+                    return first.createdTime - second.createdTime;
+                }).map((category) => {
+                    return { "_id": category._id, "name": category.name };
                 });
-                if(!isAlreadyExists) {
-                    resolve({ "status": isAlreadyExists });
-                }
-            }).catch(error => {
-                reject({ "error": error, "status": false });
+                resolve(categories);
+            }).catch((error) => {
+                reject(error);
             });
         });
     }
@@ -46,16 +45,6 @@ export default class CategoryDb {
             });
         }
         return PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": name });
-    }
-
-    static updateCategory(categoryDocument) {
-        return new Promise((resolve, reject) => {
-            PouchClient.updateDocument(categoryDocument).then(response => {
-                resolve(response);
-            }).catch(error => {
-                reject({ "status": false, "error": error });
-            });
-        });
     }
 
     static deleteCategory(categoryId) {
@@ -80,22 +69,6 @@ export default class CategoryDb {
             });
         }).catch((error) => {
             reject(error);
-        });
-    }
-
-    static getCategoryById(categoryId) {
-        return new Promise((resolve, reject) => {
-            CategoryDb.fetchAllCategoryDocuments().then(categories => {
-                categories.some((category)=> {
-                    if(category._id === categoryId) {
-                        resolve({ "status": true, "category": category });
-                        return true;
-                    }
-                });
-                resolve({ "status": false });
-            }).catch(error => {
-                reject({ "status": false, "error": error });
-            });
         });
     }
 }

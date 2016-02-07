@@ -36,8 +36,8 @@ export default class Category extends Component {
         this.props.dispatch(populateCategoryDetailsAsync(this.props.params.categoryId));
         const pageReload = "POP";
         if(this.props.location.action === pageReload) { //eslint-disable-line react/prop-types
-            CategoryDb.fetchCategoryById(this.props.params.categoryId).then((response) => {
-                this.setCategoryName(response[0].name);
+            CategoryDb.findById(this.props.params.categoryId).then((category) => {
+                this.setCategoryName(category.name);
             });
         }
         window.scrollTo(0, 0);
