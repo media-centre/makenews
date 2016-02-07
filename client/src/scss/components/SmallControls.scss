@@ -94,3 +94,42 @@
     display: block;
   }
 }
+
+.take-tour-mask.hide, .take-tour-mask .hide {
+  display: none;
+}
+.take-tour-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: $mask-layer-index;
+
+  .take-tour {
+    position: absolute;
+    background: $app-header-bg-color;
+    z-index: $popup-layer-index;
+    padding: 10px;
+    color: $primary-font-color;
+    width: 300px;
+
+    button:first-child {
+      margin-right: 10px;
+    }
+  }
+  .take-tour:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -21px;
+    margin: auto;
+    width: 1px;
+    height: 1px;
+    border: 10px solid transparent;
+    border-bottom-color: $app-header-bg-color;
+  }
+}

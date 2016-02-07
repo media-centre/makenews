@@ -12,10 +12,12 @@ describe("TakeTour", () => {
             "navigation": [
                 {
                     "selector": "#configure-element",
+                    "actionSelector": "#configure-element",
                     "content": "Click here to configure"
                 },
                 {
                     "selector": "#addURl-element",
+                    "actionSelector": "#addURl-element",
                     "content": "Click here to add url"
                 }
 
@@ -45,6 +47,8 @@ describe("TakeTour", () => {
         getJsonMock = sinon.mock(TakeTour).expects("getJson");
         getJsonMock.returns(json);
 
+        TakeTour.show();
+
     });
     afterEach("after", ()=> {
         json = null;
@@ -57,8 +61,11 @@ describe("TakeTour", () => {
 
     describe("TakeTour", () => {
         it("should have TakeTour template in the document", () => {
-            TakeTour.show();
             assert.isNotNull(document.getElementById("take-tour"), "Take Tour template is available");
+        });
+
+        it("should navigate to the first item with description", ()=> {
+            assert.strictEqual("Click here to configure", document.querySelector("#take-tour .description").textContent);
         });
 
         it("should get the json element with given index", ()=> {
@@ -66,46 +73,49 @@ describe("TakeTour", () => {
             let jsonElement = TakeTour.getCurrentJsonElement();
             assert.deepEqual({
                 "selector": "#configure-element",
-                "content": "Click here to configure"
+                "content": "Click here to configure",
+                "actionSelector": "#configure-element"
             }, jsonElement);
         });
 
+        xit("should point configure element", () => {
+            let sandbox = sinon.sandbox.create();
+            let clock = sandbox.useFakeTimers();
+            let time = 100;
+            let top = 220;
+
+            clock.tick(time);
+            assert.strictEqual(top, parseInt(document.querySelector("#take-tour").style.top));
+            clock.restore();
+        });
+
+        xit("should move to next hint on clicking continue button", () => {
+            let sandbox = sinon.sandbox.create();
+            let clock = sandbox.useFakeTimers();
+            let time = 100;
+            clock.tick(time);
+
+            document.querySelector("#tour-continue").click();
+            let top = 420;
+            assert.strictEqual(top, parseInt(document.querySelector("#take-tour").style.top));
+            clock.restore();
+        });
+
         it("should update the description on clicking continue button", ()=> {
-            TakeTour.show();
-            getJsonMock.verify();
-            TakeTour.getJson.restore();
-
-            getJsonMock = sinon.mock(TakeTour).expects("getJson");
-            getJsonMock.returns(json);
-            TakeTour.next();
-
+            document.querySelector("#tour-continue").click();
             assert.strictEqual("Click here to add url", document.querySelector("#take-tour .description").textContent);
         });
 
-        it("should navigate to the dom with next method", ()=> {
-            TakeTour.show();
-            getJsonMock.verify();
-            TakeTour.getJson.restore();
-
-            getJsonMock = sinon.mock(TakeTour).expects("getJson");
-            getJsonMock.returns(json);
-            TakeTour.next();
-
-            let top = 400;
-            assert.strictEqual(top, parseInt(document.querySelector("#take-tour").style.top));
-        });
-
-        it("should point configure element", () => {
-            TakeTour.show();
-            let top = 200;
-            assert.strictEqual(top, parseInt(document.querySelector("#take-tour").style.top));
-        });
-
-        it("should move to next hint on clicking continue button", () => {
-            TakeTour.show();
+        it("should hide continue button for the last hint", ()=> {
+            TakeTour.currentIndex = 1;
             document.querySelector("#tour-continue").click();
-            let top = 200;
-            assert.strictEqual(top, parseInt(document.querySelector("#take-tour").style.top));
+            assert.isTrue(document.querySelector("#tour-continue").classList.contains("hide"));
+        });
+
+        it("should hide the tour on clicking abort", ()=> {
+            TakeTour.currentIndex = 1;
+            document.querySelector("#tour-abort").click();
+            assert.isTrue(document.querySelector("#take-tour-mask").classList.contains("hide"));
         });
     });
 });
