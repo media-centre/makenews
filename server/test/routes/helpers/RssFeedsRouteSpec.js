@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
+/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0*/
 
 "use strict";
 import RssFeedsRoute from "../../../src/routes/helpers/RssFeedsRoute.js";
@@ -76,15 +76,15 @@ describe("RssFeedsRoute", () => {
     });
 
     it("should return feeds for the given url of a user", (done) => {
-        let data = `<rss version="2.0"><channel>
-        <title>hindu</title>
-        <link>http://hindu.com</link>
-        <description>from hindu</description>
-            <item>
-                <title>test</title>
-                <description>news cricket</description>
-            </item>
-        </channel></rss>`;
+        let data = `<?xml version="1.0" encoding="utf-8" ?>
+                    <rss version="2.0" xml:base="http://www.nasa.gov/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/"> <channel>
+                    <item>
+                     <title>NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell</title>
+                     <link>http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell</link>
+                     <description>The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:</description>
+                    </item>
+                    </channel>
+                    </rss>`;
         nock("http://www.thehindu.com/sport/cricket")
             .get("/?service=rss")
             .reply(HttpResponseHandler.codes.OK, data);
@@ -94,8 +94,16 @@ describe("RssFeedsRoute", () => {
             }
         };
         let feedsJson = {
-            "items": [{ "title": "test",
-                "description": "news cricket" }]
+            "items":
+                [{
+                    "guid": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
+                    "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+                    "pubDate": null,
+                    "enclosures": [],
+                    "image": {}
+                }]
         };
         let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);

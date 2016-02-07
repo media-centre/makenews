@@ -19,10 +19,18 @@ export default class RssParser {
             });
 
             this.feedParser.on("readable", function() {
-                let meta = this.meta, item = this.read();
-                while(item) {
-                    items.push(item);
-                    item = this.read();
+                let meta = this.meta, feed = this.read();
+                while(feed) {
+                    items.push({
+                        "guid": feed.guid,
+                        "title": feed.title,
+                        "link": feed.link,
+                        "description": feed.description,
+                        "pubDate": feed.pubDate,
+                        "enclosures": feed.enclosures,
+                        "image": feed.image
+                    });
+                    feed = this.read();
                 }
             });
 

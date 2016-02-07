@@ -8,8 +8,8 @@ export default class TwitterRequestHandler {
 
     fetchTweetsRequest(url, userName, timestamp) {
         return new Promise((resolve, reject) => {
-            this.twitterClient().fetchTweets(url, userName, timestamp).then(feeds => {
-                resolve(feeds);
+            this.twitterClient().fetchTweets(url, userName, timestamp).then(tweets => {
+                resolve(tweets);
             }).catch(error => { //eslint-disable-line no-unused-vars
                 reject(error);
             });

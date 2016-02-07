@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks: [2, 5] */
+/* eslint max-nested-callbacks: [2, 5] max-len:0*/
 "use strict";
 
 import RssParser from "../../src/rss/RssParser";
@@ -31,38 +31,53 @@ describe("RssParser", () => {
     });
 
     it("should resolve with parsed items for proper url", (done) => {
-        let data = `<rss version="2.0"><channel>
-        <title>hindu</title>
-        <link>http://hindu.com</link>
-        <description>from hindu</description>
-            <item>
-                <title>test</title>
-                <description>news cricket</description>
-            </item>
-        </channel></rss>`;
-        let url = "http://www.thehindu.com/sport/cricket/?service=rss";
+        let data = `<?xml version="1.0" encoding="utf-8" ?>
+                     <rss version="2.0" xml:base="http://www.nasa.gov/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/"> <channel>
+                    <item>
+                     <title>NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell</title>
+                     <link>http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell</link>
+                     <description>The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:</description>
+                    </item>
 
-        nock("http://www.thehindu.com/sport/cricket")
+                    <item>
+                     <title>NASA Television to Air Russian Spacewalk</title>
+                     <link>http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk</link>
+                     <description>NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.</description>
+                    </item>
+                    </channel>
+                    </rss>`;
+        let url = "http://www.nasa.com/images/?service=rss";
+
+        nock("http://www.nasa.com/images")
             .get("/?service=rss")
             .reply(HttpResponseHandler.codes.OK, data);
 
         let expectedFeeds = {
-            "items": [{ "title": "test",
-                "description": "news cricket" }]
+            "items":
+                [{
+                    "guid": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
+                    "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+                    "pubDate": null,
+                    "enclosures": [],
+                    "image": {}
+                },
+                    {
+                        "guid": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                        "title": "NASA Television to Air Russian Spacewalk",
+                        "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                        "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
+                        "pubDate": null,
+                        "enclosures": [],
+                        "image": {}
+                    }]
         };
 
         restRequest(url).on("response", function(res) {
             let rssParser = new RssParser(res);
             rssParser.parse().then((feedJson) => {
-                let items = feedJson.items;
-                if(items) {
-                    let expectedItems = expectedFeeds.items;
-                    expect(items.length).to.eq(expectedItems.length);
-                    for(let index = 0; index < items.length; index += 1) {
-                        expect(items[index].title).to.eq(expectedItems[index].title);
-                        expect(items[index].description).to.eq(expectedItems[index].description);
-                    }
-                }
+                expect(feedJson).deep.equal(expectedFeeds);
                 done();
             });
         });
