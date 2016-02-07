@@ -4,6 +4,7 @@ import TwitterLogin from "../../src/twitter/TwitterLogin.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
+import LogTestHelper from "../helpers/LogTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -11,6 +12,7 @@ describe("TwitterLogin", () => {
     let sandbox = null;
     beforeEach("TwitterLogin", () => {
         sandbox = sinon.sandbox.create();
+        sandbox.stub(TwitterLogin, "logger").returns(LogTestHelper.instance());
     });
     afterEach("TwitterLogin", () => {
         sandbox.restore();

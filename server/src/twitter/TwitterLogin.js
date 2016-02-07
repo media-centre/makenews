@@ -1,6 +1,7 @@
 "use strict";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import AdminDbClient from "../db/AdminDbClient";
+import Logger from "../logging/Logger";
 import OAuth from "oauth";
 
 let oauthTokenMap = {};
@@ -12,14 +13,21 @@ export default class TwitterLogin {
         this.clientCallbackUrl = clientCallbackUrl;
         this.oauth = TwitterLogin.createOAuthInstance();
     }
+
+    static logger() {
+        return Logger.instance();
+    }
+
     static instance(options = {}) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             if(options.previouslyFetchedOauthToken) {
+                TwitterLogin.logger().debug("TwitterLogin:: returning existing twitter login instance with auth token");
                 let tokenInfo = oauthTokenMap[options.previouslyFetchedOauthToken];
                 let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, tokenInfo.userName);
                 resolve(twitterInstance);
             } else {
                 new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl).then(instance => {
+                    TwitterLogin.logger().debug("TwitterLogin:: creating twitter login instance.");
                     oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl, "userName": options.userName };
                     resolve(instance);
                 });
@@ -43,10 +51,12 @@ export default class TwitterLogin {
         return new Promise((resolve, reject) => {
             this.oauth.getOAuthRequestToken({ "oauth_callback": serverCallbackUrl }, (error, oauthToken, oauthTokenSecret, results) => { //eslint-disable-line no-unused-vars
                 if (error) {
+                    TwitterLogin.logger().error("TwitterLogin:: getting request token from twitter failed. Error: %s", error);
                     reject(error);
                 }
                 this.oauthToken = oauthToken;
                 this.oauthTokenSecret = oauthTokenSecret;
+                TwitterLogin.logger().debug("TwitterLogin:: getting request token from twitter successful.");
                 resolve(this);
             });
         });
@@ -56,6 +66,7 @@ export default class TwitterLogin {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             this.oauth.getOAuthAccessToken(this.oauthToken, this.oauthTokenSecret, oauthVerifier, (error, oauthAccessToken, oauthAccessTokenSecret) => {
                 this.saveToken(oauthAccessToken, oauthAccessTokenSecret).then(() => {
+                    TwitterLogin.logger().debug("TwitterLogin:: getting access token from twitter successful.");
                     resolve(this.clientCallbackUrl);
                 });
             });
@@ -72,11 +83,15 @@ export default class TwitterLogin {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
                 dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => {
+                    TwitterLogin.logger().debug("TwitterLogin:: successfully fetched existing twitter token from db.");
                     dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => { //eslint-disable-line max-nested-callbacks
+                        TwitterLogin.logger().debug("TwitterLogin:: successfully saved twitter token.");
                         resolve();
                     });
                 }).catch(() => {
+                    TwitterLogin.logger().debug("TwitterLogin:: creating twitter token document.");
                     dbInstance.saveDocument(tokenDocumentId, document).then(() => { //eslint-disable-line max-nested-callbacks
+                        TwitterLogin.logger().debug("TwitterLogin:: successfully saved twitter token.");
                         resolve();
                     });
                 });

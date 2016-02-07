@@ -25,8 +25,10 @@ export default class TwitterClient {
                 let searchUrl = `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
                 oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                     if(error) {
+                        TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s. Error: %s", url, error);
                         reject(error);
                     } else {
+                        TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
                         resolve(JSON.parse(data));
                     }
                 });
@@ -42,8 +44,10 @@ export default class TwitterClient {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
                 dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => { //eslint-disable-line max-nested-callbacks
+                    TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter access token for user %s.", userName);
                     resolve([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
                 }).catch(() => { //eslint-disable-line max-nested-callbacks
+                    TwitterClient.logger().error("TwitterClient:: access token not found for user %s.", userName);
                     reject("Not authenticated with twitter");
                 });
             });

@@ -3,6 +3,8 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import FacebookSetAccessTokenRoute from "../../../src/routes/helpers/FacebookSetAccessTokenRoute.js";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
+import Logger from "../../../src/logging/Logger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -13,6 +15,7 @@ describe("FacebookSetAccessTokenRoute", () => {
         beforeEach("handle", () => {
             accessToken = "test_access_token";
             sandbox = sinon.sandbox.create();
+            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             facebookRequestHandlerInstanceMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             request1 = {

@@ -3,12 +3,24 @@ import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterBatchFeedsRoute from "../../../src/routes/helpers/TwitterBatchFeedsRoute";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler.js";
+import RouteLogger from "../../../src/routes/RouteLogger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 
 describe("TwitterBatchFeedsRoute", () => {
 
+    let sandbox = null;
+    before("TwitterBatchFeedsRoute", () => {
+        sandbox = sinon.sandbox.create();
+        sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
+    });
+
+    after("TwitterBatchFeedsRoute", () => {
+        sandbox.restore();
+    });
+
     it("should return all feeds from all the tweet hashtags", (done)=> {
-        let Jan18Timestamp = "2016-01-18T06:12:19+00:00", sandbox = sinon.sandbox.create();
+        let Jan18Timestamp = "2016-01-18T06:12:19+00:00";
         let Jan17Timestamp = "2016-01-17T06:12:19+00:00";
 
 

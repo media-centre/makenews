@@ -22,10 +22,12 @@ export default class RenewSessionRoute extends Route {
 
     handle() {
         if(!this.valid()) {
+            RouteLogger.instance().warn("RenewSessionRoute:: invalid authSession %s.", this.authSession);
             return this._handleInvalidRoute();
         }
 
         CouchSession.authenticate(this.authSession).then(newAuthSessionCookie => {
+            RouteLogger.instance().debug("RenewSessionRoute:: successfully renewed couch session.");
             this._handleSuccess(newAuthSessionCookie);
         }).catch(() => {
             this._handleError();
@@ -41,12 +43,12 @@ export default class RenewSessionRoute extends Route {
     _handleError() {
         this.response.status(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR)
             .json({ "message": "Unable to renew session" });
-        RouteLogger.instance().error("Renew session request failed");
+        RouteLogger.instance().error("RenewSessionRoute:: Renew session request failed");
     }
 
     _handleUnauthorisedError() {
         this.response.status(HttpResponseHandler.codes.UNAUTHORIZED)
             .json({ "message": "Set AuthSession cookie in request header" });
-        RouteLogger.instance().error("AuthSession cookie is not present in request header");
+        RouteLogger.instance().error("RenewSessionRoute:: AuthSession cookie is not present in request header");
     }
 }

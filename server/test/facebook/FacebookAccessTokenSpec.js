@@ -5,6 +5,7 @@ import FacebookAccessToken from "../../src/facebook/FacebookAccessToken";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
+import LogTestHelper from "../helpers/LogTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -12,6 +13,7 @@ describe("FacebookAccessToken", () => {
     let sandbox = null, token = "12345", userName = "test1", tokenDocId = userName + "_facebookToken";
     beforeEach("FacebookAccessToken", () => {
         sandbox = sinon.sandbox.create();
+        sandbox.stub(FacebookAccessToken, "logger").returns(LogTestHelper.instance());
         let applicationConfig = new ApplicationConfig();
         sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
         sandbox.stub(applicationConfig, "adminDetails").returns({

@@ -4,6 +4,7 @@ import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
 import StringUtil from "../../../common/src/util/StringUtil.js";
+import Logger from "../logging/Logger";
 
 export const RSS_TYPE = "rss";
 export const FACEBOOK_TYPE = "facebook";
@@ -15,15 +16,22 @@ export default class FetchFeedsFromAllSources {
         this.response = response;
     }
 
+    static logger() {
+        return Logger.instance();
+    }
+
     fetchFeeds() {
         return new Promise((resolve, reject)=> {
             if(this.isValidateRequestData()) {
                 this.fetchFeedsFromAllSources().then((feeds)=> {
+                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
                     resolve(feeds);
                 }).catch((err) => {
+                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
                     reject(err);
                 });
             } else {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
                 reject({ "error": "Invalid url data" });
             }
         });
@@ -36,9 +44,11 @@ export default class FetchFeedsFromAllSources {
                 this.fetchFeedsFromSource(item).then((feeds)=> {
                     allFeeds = allFeeds.concat(feeds);
                     if(this.request.body.data.length - 1 === index) {
+                        FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
                         resolve(allFeeds);
                     }
                 }).catch((err) => {
+                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
                     reject(err);
                 });
             });
@@ -50,24 +60,30 @@ export default class FetchFeedsFromAllSources {
             switch(item.source) {
             case RSS_TYPE:
                 RssRequestHandler.instance().fetchRssFeedRequest(item.url).then((feeds)=> {
+                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
                     resolve(feeds);
                 }).catch((err) => {
+                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching rss feeds. Error: %s", err);
                     reject(err);
                 });
                 break;
 
             case FACEBOOK_TYPE:
                 FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item.url).then((feeds)=> {
+                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                     resolve(feeds);
                 }).catch((err) => {
+                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
                     reject(err);
                 });
                 break;
 
             case TWITTER_TYPE:
                 TwitterRequestHandler.instance().fetchTweetsRequest(item.url).then((feeds)=> {
+                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
                     resolve(feeds);
                 }).catch((err) => {
+                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
                     reject(err);
                 });
                 break;

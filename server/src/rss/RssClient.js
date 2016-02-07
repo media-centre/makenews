@@ -22,20 +22,22 @@ export default class RssClient {
             });
 
             requestToUrl.on("error", (error) => {
-                RssClient.logger().warn("Request failed for %s", url, error);
+                RssClient.logger().error("RssClient:: Request failed for %s.", url, error);
                 reject({ "message": "Request failed for " + url });
             });
             requestToUrl.on("response", function(res) {
                 if(res.statusCode !== HttpResponseHandler.codes.OK) {
+                    RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
                     reject({ "message": "Bad status code" });
                 }
                 let rssParser = new RssParser(this);
                 rssParser.parse()
                     .then(feeds => {
+                        RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
                         resolve(feeds);
                     })
                     .catch(error => {
-                        RssClient.logger().warn("%s is not a proper feed", url, error);
+                        RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
                         reject({ "message": url + " is not a proper feed" });
                     });
             });

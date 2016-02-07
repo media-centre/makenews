@@ -28,7 +28,7 @@ export default class UserRequest {
                 resolve(token);
             })
             .catch((error) => { //eslint-disable-line
-                UserRequest.logger().error("UserRequest:getToken fatal error = " + error);
+                UserRequest.logger().error("UserRequest:getToken fatal error = %s", error);
                 reject("login failed");
             });
         });
@@ -41,7 +41,7 @@ export default class UserRequest {
                     resolve(authSessionCookieHeader);
                 })
                 .catch((error) => { //eslint-disable-line
-                    UserRequest.logger().error("UserRequest:getAuthSessionCookie fatal error = " + error);
+                    UserRequest.logger().error("UserRequest:getAuthSessionCookie fatal error %s", error);
                     reject("login failed");
                 });
         });
@@ -52,10 +52,10 @@ export default class UserRequest {
         return new Promise((resolve, reject) => {
             CouchSession.authenticate(token)
             .then((userName) => {
-                UserRequest.logger().info("UserRequest:getUserName userName = " + userName);
+                UserRequest.logger().info("UserRequest:getUserName userName = %s", userName);
                 resolve(userName);
             }).catch(error => { //eslint-disable-line
-                UserRequest.logger().error("UserRequest:getUserName fatal error = " + error);
+                UserRequest.logger().error("UserRequest:getUserName fatal error %s", error);
                 reject("can not get the user name");
             });
         });

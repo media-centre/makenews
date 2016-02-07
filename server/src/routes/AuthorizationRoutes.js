@@ -8,7 +8,7 @@ import RouteLogger from "./RouteLogger.js";
 
 export default (app) => {
     app.post("/login", (request, response, next) => {
-        RouteLogger.instance().info("AuthorizationRoutes: /login request received. url = ", request.url);
+        RouteLogger.instance().info("AuthorizationRoutes:: /login request received. url = %s", request.url);
         try {
             new LoginRoute(request, response, next).handle();
         } catch(error) {
@@ -17,11 +17,11 @@ export default (app) => {
     });
 
     app.get("/logout", (request, response, next) => {
-        RouteLogger.instance().info("AuthorizationRoutes: /logout request received");
+        RouteLogger.instance().info("AuthorizationRoutes:: /logout request received");
         try {
             new LogoutRoute(request, response, next).handle();
         } catch(error) {
-            RouteLogger.instance().error("AuthorizationRoutes: /logout error", error);
+            RouteLogger.instance().error("AuthorizationRoutes:: /logout error. Error: %s", error);
         }
     });
 
@@ -29,16 +29,16 @@ export default (app) => {
         try {
             new DefaultRoute(request, response, next).handle();
         } catch(error) {
-            RouteLogger.instance().error("AuthorizationRoutes: all url error", error);
+            RouteLogger.instance().error("AuthorizationRoutes: all url error. Error: %s", error);
         }
     });
 
     app.get("/renew_session", (request, response, next) => {
-        RouteLogger.instance().info("AuthorizationRoutes: /renew_session request received. url = ", request.url);
+        RouteLogger.instance().info("AuthorizationRoutes:: /renew_session request received. url = %s", request.url);
         try {
             new RenewSessionRoute(request, response, next).handle();
         } catch(error) {
-            RouteLogger.instance().error("/session error", error);
+            RouteLogger.instance().error("/session error. Error: %s", error);
         }
     });
 };

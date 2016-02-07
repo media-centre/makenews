@@ -2,9 +2,9 @@
 
 "use strict";
 import RssFeedsRoute from "../../../src/routes/helpers/RssFeedsRoute.js";
-import RssClient from "../../../src/rss/RssClient";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import LogTestHelper from "../../helpers/LogTestHelper";
+import Logger from "../../../src/logging/Logger";
 import { expect } from "chai";
 import nock from "nock";
 import sinon from "sinon";
@@ -46,11 +46,11 @@ describe("RssFeedsRoute", () => {
 
     let next = {};
     before("TwitterRouteHelper", () => {
-        sinon.stub(RssClient, "logger").returns(LogTestHelper.instance());
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     after("TwitterRouteHelper", () => {
-        RssClient.logger.restore();
+        Logger.instance.restore();
     });
 
     it("should return invalid if the url doesn't return feeds", (done) => {

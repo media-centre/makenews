@@ -3,6 +3,8 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import TwitterRequestTokenRoute from "../../../src/routes/helpers/TwitterRequestTokenRoute.js";
 import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
+import Logger from "../../../src/logging/Logger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 
 describe("TwitterRequestTokenRouteSpec", () => {
@@ -10,6 +12,7 @@ describe("TwitterRequestTokenRouteSpec", () => {
         let sandbox = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
+            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
         });
 
         afterEach("afterEach", () => {

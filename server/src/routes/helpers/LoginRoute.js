@@ -25,7 +25,7 @@ export default class LoginRoute extends Route {
             if(!this.valid()) {
                 return this._handleFailure({ "message": "unauthorized" });
             }
-            RouteLogger.instance().info("LoginRoute::handle Login request received for the user = " + this.request.body.username);
+            RouteLogger.instance().info("LoginRoute::handle Login request received for the user = %s", this.request.body.username);
 
             let userRequest = UserRequest.instance(this.userName, this.password);
             userRequest.getAuthSessionCookie().then(authSessionCookie => {
@@ -35,7 +35,7 @@ export default class LoginRoute extends Route {
                 this._handleFailure({ "message": "unauthorized" });
             });
         } catch(error) {
-            RouteLogger.instance().error("LoginRoute::handle Unexpected error = ", error);
+            RouteLogger.instance().error("LoginRoute::handle Unexpected error = %s", error);
             this._handleFailure({ "message": "unauthorized" });
         }
     }

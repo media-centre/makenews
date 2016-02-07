@@ -4,6 +4,7 @@
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchSession from "../../src/CouchSession";
 import CouchClient from "../../src/CouchClient";
+import LogTestHelper from "../helpers/LogTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -12,6 +13,7 @@ describe("AdminDbClient", () => {
 
     beforeEach("AdminDbClient", () => {
         sandbox = sinon.sandbox.create();
+        sandbox.stub(AdminDbClient, "logger").returns(LogTestHelper.instance());
     });
 
     afterEach("AdminDbClient", () => {

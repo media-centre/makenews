@@ -4,6 +4,7 @@
 import CouchSession from "../src/CouchSession.js";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../src/config/ApplicationConfig.js";
+import LogTestHelper from "./helpers/LogTestHelper";
 
 import nock from "nock";
 import { expect } from "chai";
@@ -16,11 +17,13 @@ describe("CouchSessionSpec", () => {
         applicationConfig = new ApplicationConfig();
         sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
         sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+        sinon.stub(CouchSession, "logger").returns(LogTestHelper.instance());
     });
 
     after("CouchClient", () => {
         ApplicationConfig.instance.restore();
         applicationConfig.dbUrl.restore();
+        CouchSession.logger.restore();
     });
 
 
@@ -115,7 +118,7 @@ describe("CouchSessionSpec", () => {
             });
 
             CouchSession.authenticate(token).catch((userName) => {
-                expect("").to.equal(userName);
+                expect("unauthenticated user").to.equal(userName);
                 done();
             });
         });

@@ -5,12 +5,18 @@ import request from "request";
 import NodeErrorHandler from "../NodeErrorHandler.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil.js";
+import Logger from "../logging/Logger";
 
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof, appId) {
         return new FacebookClient(accessToken, appSecretProof, appId);
     }
+
+    static logger() {
+        return Logger.instance();
+    }
+
     constructor(accessToken, appSecretProof, appId) {
         if(StringUtil.isEmptyString(accessToken) || StringUtil.isEmptyString(appSecretProof)) {
             throw new Error("access token or application secret proof can not be null");
@@ -21,6 +27,7 @@ export default class FacebookClient {
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
+    //didn't find any call stack for this
     pageNavigationFeeds(pageUrl) {
         return new Promise((resolve, reject) => {
             let parameters = {};
@@ -32,12 +39,15 @@ export default class FacebookClient {
                 if (NodeErrorHandler.noError(error)) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                         let feedResponse = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageUrl);
                         resolve(feedResponse);
                     } else {
                         let errorInfo = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %j.", pageUrl, errorInfo.error);
                         reject(errorInfo.error);
                     }
                 } else {
+                    FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %s.", pageUrl, error);
                     reject(error);
                 }
             });
@@ -61,12 +71,15 @@ export default class FacebookClient {
                     if (NodeErrorHandler.noError(error)) {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
+                            FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);
+                            FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %j", pageId, errorInfo.error);
                             reject(errorInfo.error);
                         }
                     } else {
+                        FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %s.", pageId, error);
                         reject(error);
                     }
                 });
@@ -82,12 +95,16 @@ export default class FacebookClient {
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        resolve(JSON.parse(response.body).id);
+                        const facebookId = JSON.parse(response.body).id;
+                        FacebookClient.logger().debug("FacebookClient:: successfully fetched facebook id '%s' for url %s.", facebookId, facebookPageUrl);
+                        resolve(facebookId);
                     } else {
                         let errorInfo = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: error fetching facebook id for url %s. Error: %j", facebookPageUrl, errorInfo.error);
                         reject(errorInfo.error);
                     }
                 } else {
+                    FacebookClient.logger().debug("FacebookClient:: error fetching facebook id for url %s. Error: %j", facebookPageUrl, error);
                     reject(error);
                 }
 
@@ -104,12 +121,15 @@ export default class FacebookClient {
                 if (NodeErrorHandler.noError(error)) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                         let feedResponse = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: getting long lived token successful.");
                         resolve(feedResponse);
                     } else {
                         let errorInfo = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: error getting long lived token failed. Error: %j", errorInfo.error);
                         reject(errorInfo.error);
                     }
                 } else {
+                    FacebookClient.logger().debug("FacebookClient:: error while getting long lived token. Error: %s.", error);
                     reject(error);
                 }
 

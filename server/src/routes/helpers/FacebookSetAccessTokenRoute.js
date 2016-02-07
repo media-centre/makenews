@@ -3,6 +3,7 @@
 import StringUtil from "../../../../common/src/util/StringUtil";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
 import Route from "./Route.js";
+import RouteLogger from "../RouteLogger.js";
 
 export default class FacebookSetAccessTokenRoute extends Route {
     constructor(request, response, next) {
@@ -25,8 +26,10 @@ export default class FacebookSetAccessTokenRoute extends Route {
 
         let facebookReqHan = FacebookRequestHandler.instance(this.accessToken);
         facebookReqHan.setToken(this.userName).then(expiresAfter => {
+            RouteLogger.instance().debug("FacebookSetAccessTokenRoute:: successfully fetched facebook long lived token.");
             this._handleSuccess({ "expires_after": expiresAfter });
         }).catch(error => {
+            RouteLogger.instance().error("FacebookSetAccessTokenRoute:: error fetching facebook long lived token. Error: %s", error);
             this._handleFailure(error);
         });
 

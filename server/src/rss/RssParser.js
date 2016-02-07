@@ -2,11 +2,15 @@
 "use strict";
 
 import FeedParser from "feedparser";
-//import Logger from "../logging/Logger";
+import Logger from "../logging/Logger";
 export default class RssParser {
     constructor(response) {
         this.response = response;
         this.feedParser = new FeedParser();
+    }
+
+    static logger() {
+        return Logger.instance();
     }
 
     parse() {
@@ -14,7 +18,7 @@ export default class RssParser {
             let items = [];
             this.response.pipe(this.feedParser);
             this.feedParser.on("error", (error) => {
-                //Logger.instance().warn("Parsing error %s", error);
+                RssParser.logger().error("RssParser:: Parsing error %s", error);
                 reject("Not a feed");
             });
 
@@ -35,6 +39,7 @@ export default class RssParser {
             });
 
             this.feedParser.on("end", function() {
+                RssParser.logger().debug("RssParser:: Done parsing feeds.");
                 resolve({ "items": items });
             });
         });

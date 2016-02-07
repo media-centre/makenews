@@ -15,6 +15,6 @@ export default class NodeErrorHandler {
     }
 
     static log(error) {
-        Logger.instance().error("fatal error = " + JSON.stringify(error));
+        Logger.instance().error("NodeErrorHandler:: fatal error = %j.", JSON.stringify(error));
     }
 }

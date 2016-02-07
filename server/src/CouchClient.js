@@ -3,12 +3,17 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "./config/ApplicationConfig.js";
 import NodeErrorHandler from "./NodeErrorHandler.js";
+import Logger, { logCategories } from "./logging/Logger";
 
 import request from "request";
 
 export default class CouchClient {
     static instance(dbName, accessToken, dbUrl = null) {
         return new CouchClient(dbName, accessToken, dbUrl);
+    }
+
+    static logger() {
+        return Logger.instance(logCategories.DATABASE);
     }
 
     constructor(dbName, accessToken, dbUrl) {
@@ -66,11 +71,14 @@ export default class CouchClient {
     handleResponse(error, response, resolve, reject) {
         if (NodeErrorHandler.noError(error)) {
             if (new HttpResponseHandler(response.statusCode).success()) {
+                CouchClient.logger().debug("successful response from database.");
                 resolve(response.body);
             } else {
+                CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
                 reject("unexpected response from the db");
             }
         } else {
+            CouchClient.logger().debug("Error from database. Error: %s", error);
             reject(error);
         }
     }
@@ -88,11 +96,14 @@ export default class CouchClient {
                                 return dbName;
                             }
                         });
+                        CouchClient.logger().debug("successful response from database.");
                         resolve(userDbs);
                     } else {
+                        CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
                         reject("unexpected response from the db");
                     }
                 } else {
+                    CouchClient.logger().debug("Error from database. Error: %s", error);
                     reject(error);
                 }
             });

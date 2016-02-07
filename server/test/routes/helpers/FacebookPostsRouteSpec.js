@@ -4,6 +4,8 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import FacebookPostsRoute from "../../../src/routes/helpers/FacebookPostsRoute.js";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
 import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken.js";
+import Logger from "../../../src/logging/Logger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -21,6 +23,11 @@ describe("FacebookPostsRoute", () => {
                 "userName": userName
             }
         };
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
+    });
+
+    after("FacebookPostsRoute", () => {
+        Logger.instance.restore();
     });
 
     describe("handle", () => {

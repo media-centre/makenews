@@ -2,6 +2,8 @@
 "use strict";
 import TwitterOauthCallbackRoute from "../../../src/routes/helpers/TwitterOauthCallbackRoute";
 import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
+import RouteLogger from "../../../src/routes/RouteLogger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 
 describe("TwitterOauthCallbackRoute", () => {
@@ -10,6 +12,7 @@ describe("TwitterOauthCallbackRoute", () => {
         let sandbox = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
+            sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
         });
 
         afterEach("afterEach", () => {

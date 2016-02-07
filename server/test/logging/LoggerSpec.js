@@ -99,14 +99,11 @@ describe("Logger", () => {
             JsonStub.returns(myJson);
             loggerStub.returns(false);
             let defaultLoggerStub = sandBox.stub(Logger, "_getDefaultLogger");
-            let msg = "";
-            defaultLoggerStub.returns({ "error": (message)=> {
-                msg = message;
+            defaultLoggerStub.returns({ "error": ()=> {
             } });
             let logger = Logger.instance("test3");
             assert(defaultLoggerStub.called);
             assertFileLogger(logger, "test3.log", path.join(__dirname, "../../../dist/logs"), logLevel.LOG_INFO);
-            assert.strictEqual(msg, "Unable to create directory %s. Error: ");
         });
     });
 

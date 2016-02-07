@@ -4,6 +4,8 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import FacebookBatchPosts from "../../../src/routes/helpers/FacebookBatchPosts.js";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
 import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken.js";
+import Logger from "../../../src/logging/Logger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -15,6 +17,7 @@ describe("FacebookBatchPosts", () => {
         let accessToken = null, userName = "test1";
         beforeEach("handle", () => {
             sandbox = sinon.sandbox.create();
+            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
             accessToken = "test_access_token";
         });
 

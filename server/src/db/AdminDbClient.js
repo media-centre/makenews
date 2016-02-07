@@ -3,21 +3,28 @@
 import CouchSession from "../CouchSession";
 import CouchClient from "../CouchClient";
 import DateUtil from "../util/DateUtil";
+import Logger, { logCategories } from "../logging/Logger";
 
 let dbInstanceMap = new Map();
 export default class AdminDbClient extends CouchClient {
-
 
     constructor(userName, token) {
         super(userName, token);
     }
 
+    static logger() {
+        return Logger.instance(logCategories.DATABASE);
+    }
+
     static instance(userName, password, db) {
         return new Promise((resolve, reject) => {
             if(AdminDbClient.isSessionExpired(userName)) {
+                AdminDbClient.logger().debug("AdminDbClient:: session expired for %s. Attempting to get token.", userName);
                 CouchSession.login(userName, password).then((token) => {
+                    AdminDbClient.logger().debug("AdminDbClient:: received token.");
                     resolve(AdminDbClient.createInstance(token, db, userName));
                 }).catch((error) => {
+                    AdminDbClient.logger().error("AdminDbClient:: login failed for %s", userName);
                     reject(error);
                 });
             } else {

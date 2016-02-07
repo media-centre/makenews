@@ -4,6 +4,7 @@ import EnvironmentConfig from "../config/EnvironmentConfig";
 import winston from "winston";
 import fs from "fs";
 import path from "path";
+import moment from "moment";
 
 export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR": "error", "LOG_WARN": "warn" },
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
@@ -25,7 +26,8 @@ export default class Logger {
                 "transports": [new (winston.transports.File)({
                     "dirname": LOG_DIR,
                     "filename": LOG_FILE,
-                    "level": logLevel.LOG_INFO
+                    "level": logLevel.LOG_INFO,
+                    "timestamp": Logger.timeStamp
                 })
                 ]
             });
@@ -80,14 +82,16 @@ export default class Logger {
                     let categoryConfig = loggingConfig[loggerName];
                     if (categoryConfig.file) {
                         categoryConfig.file.dirname = logDir;
+                        categoryConfig.file.timestamp = Logger.timeStamp;
                     }
                     try {
-                        winston.loggers.add(loggerName, categoryConfig);
+                        let categoryLogger = winston.loggers.add(loggerName, categoryConfig);
+                        categoryLogger.remove(winston.transports.Console);
                         if(loggerName === logCategories.DEFAULT) {
-                            defaultCategoryLogger = winston.loggers.get(loggerName);
+                            defaultCategoryLogger = categoryLogger;
                         }
                     } catch(error) {
-                        Logger._getDefaultLogger().log(logLevel.LOG_ERROR, "Creating logger for %s failed with error %s", loggerName, error);
+                        Logger._getDefaultLogger().error("Creating logger for %s failed with error %s", loggerName, error);
                     }
                 }
                 categoriesInitialized = true;
@@ -152,15 +156,17 @@ export default class Logger {
             "maxsize": 20000,
             "maxFiles": 10,
             "tailable": true,
-            "timestamp": function() {
-                return Date.now();
-            },
+            "timestamp": Logger.timeStamp,
             "rotationFormat": this.getFormattedDate
         });
     }
 
     static _createConsoleTransport(options) {
         return new (winston.transports.Console)({ "level": options.level, "colorize": true });
+    }
+
+    static timeStamp() {
+        return moment().format();
     }
 
     getFormattedDate() {

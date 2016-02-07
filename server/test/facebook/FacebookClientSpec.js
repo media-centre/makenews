@@ -5,6 +5,7 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
 import FacebookClient from "../../src/facebook/FacebookClient.js";
 import NodeErrorHandler from "../../src/NodeErrorHandler.js";
 import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import LogTestHelper from "../helpers/LogTestHelper";
 import nock from "nock";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -22,11 +23,13 @@ describe("FacebookClient", () => {
             "appSecretKey": "appSecretKey",
             "timeOut": 10
         });
+        sinon.stub(FacebookClient, "logger").returns(LogTestHelper.instance());
     });
 
     after("FacebookClient", () => {
         ApplicationConfig.instance.restore();
         applicationConfig.facebook.restore();
+        FacebookClient.logger.restore();
     });
 
     describe("pageFeeds", () => {

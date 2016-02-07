@@ -5,6 +5,7 @@ import FetchFeedsFromAllSources from "../../src/fetchAllFeeds/FetchFeedsFromAllS
 import RssRequestHandler from "../../src/rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
 import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler.js";
+import LogTestHelper from "../helpers/LogTestHelper";
 
 
 import { assert } from "chai";
@@ -29,6 +30,14 @@ describe("FetchFeedsFromAllSources", () => {
         ];
         return response;
     }
+
+    before("FetchFeedsFromAllSources", () => {
+        sinon.stub(FetchFeedsFromAllSources, "logger").returns(LogTestHelper.instance());
+    });
+
+    after("FetchFeedsFromAllSources", () => {
+        FetchFeedsFromAllSources.logger.restore();
+    });
 
     describe("FetchFeedsFromAllSources", () => {
 

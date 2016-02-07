@@ -5,6 +5,7 @@ import CouchClient from "../src/CouchClient.js";
 import NodeErrorHandler from "../src/NodeErrorHandler.js";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "../src/config/ApplicationConfig.js";
+import LogTestHelper from "./helpers/LogTestHelper";
 import sinon from "sinon";
 
 import { assert } from "chai";
@@ -16,11 +17,13 @@ describe("CouchClient", () => {
         applicationConfig = new ApplicationConfig();
         sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
         sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+        sinon.stub(CouchClient, "logger").returns(LogTestHelper.instance());
     });
 
     after("CouchClient", () => {
         ApplicationConfig.instance.restore();
         applicationConfig.dbUrl.restore();
+        CouchClient.logger.restore();
     });
 
 

@@ -2,6 +2,7 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import Route from "./Route.js";
+import RouteLogger from "../RouteLogger.js";
 import ApplicationConfig from "../../config/ApplicationConfig.js";
 import TwitterLogin from "../../twitter/TwitterLogin.js";
 
@@ -15,6 +16,7 @@ export default class TwitterRequestTokenRoute extends Route {
     }
 
     valid() {
+        RouteLogger.instance().error("TwitterRequestTokenRoute:: user name is empty");
         return !StringUtil.isEmptyString(this.userName);
     }
     handle() {
@@ -22,6 +24,7 @@ export default class TwitterRequestTokenRoute extends Route {
             return this._handleInvalidRoute();
         }
         TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl, "userName": this.userName }).then((instance) => {
+            RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user '%s'.", this.userName);
             this._handleSuccess({ "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
         });
     }

@@ -2,13 +2,16 @@
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import RenewSessionRoute from "../../../src/routes/helpers/RenewSessionRoute.js";
+import Logger from "../../../src/logging/Logger";
 import CouchSession from "../../../src/CouchSession.js";
+import LogTestHelper from "../../helpers/LogTestHelper";
 import { expect } from "chai";
 import sinon from "sinon";
 
 describe("RenewSessionRoute", () => {
     let token = null, couchSessionAuthenticateMock = null, request = null, next = null;
     beforeEach("getUserName", () => {
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
         token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
         request = {
             "cookies": {
@@ -20,6 +23,7 @@ describe("RenewSessionRoute", () => {
     });
     afterEach("getUserName", () => {
         CouchSession.authenticate.restore();
+        Logger.instance.restore();
     });
 
     it("should return error incase of failure", (done) => {

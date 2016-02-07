@@ -2,7 +2,7 @@
 
 "use strict";
 import RssBatchFeedsRoute from "../../../src/routes/helpers/RssBatchFeedsRoute.js";
-import RssClient from "../../../src/rss/RssClient";
+import Logger from "../../../src/logging/Logger";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import LogTestHelper from "../../helpers/LogTestHelper";
@@ -24,11 +24,11 @@ describe("RssBatchFeedsRoute", () => {
     }
 
     before("TwitterRouteHelper", () => {
-        sinon.stub(RssClient, "logger").returns(LogTestHelper.instance());
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     after("TwitterRouteHelper", () => {
-        RssClient.logger.restore();
+        Logger.instance.restore();
     });
 
     describe("feedsForAllUrls", () => {
