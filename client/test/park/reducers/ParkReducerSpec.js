@@ -4,11 +4,26 @@
 import { parkedFeeds } from "../../../src/js/park/reducers/ParkReducer.js";
 import { DISPLAY_PARKED_FEEDS } from "../../../src/js/park/actions/ParkActions.js";
 import { assert } from "chai";
+import sinon from "sinon";
+import Locale from "../../../src/js/utils/Locale";
 
 describe("Park Reducer", () => {
     describe("parkedFeeds", () => {
+        let sandbox = null;
+        beforeEach("", () => {
+            sandbox = sinon.sandbox.create();
+            let locale = sandbox.stub(Locale, "applicationStrings");
+            locale.returns({ "messages": {
+                "parkPage": { }
+            } });
+        });
+
+        afterEach("", () => {
+            sandbox.restore();
+        });
+
         it("default state should return empty list", () => {
-            assert.deepEqual({ "parkedItems": [] }, parkedFeeds());
+            assert.deepEqual({ "messages": {}, "parkedItems": [] }, parkedFeeds());
         });
 
         it("should return given feeds", () => {
@@ -36,7 +51,7 @@ describe("Park Reducer", () => {
             ];
             let action = { "type": DISPLAY_PARKED_FEEDS, "parkedItems": feeds };
 
-            assert.deepEqual({ "parkedItems": feeds }, parkedFeeds(undefined, action));
+            assert.deepEqual({ "messages": { }, "parkedItems": feeds }, parkedFeeds(undefined, action));
         });
     });
 });

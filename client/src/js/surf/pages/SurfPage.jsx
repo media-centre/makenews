@@ -66,6 +66,10 @@ export class SurfPage extends Component {
                 this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
             }));
         }
+
+        if(!this.state.hasMoreFeeds) {
+            Toast.show(this.props.messages.noMoreFeeds);
+        }
     }
 
     getLatestFeeds() {

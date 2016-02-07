@@ -35,17 +35,15 @@ export default class ImageGallery extends Component {
             this._showConfirmPopup();
         } else {
             this.props.clickHandler(feedDoc);
-            Toast.show(feedDoc.status === "park" ? "News is unparked" : "News is parked");
+            Toast.show(feedDoc.status === "park" ? this.props.appEnMessages.parkPage.feeds.unParkedSuccess : this.props.appEnMessages.surfPage.feeds.parkedSuccess);
         }
     }
 
     handleDeleteClick(event) {
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
-            this.setState({ "showCustomPopup": false });
-        } else {
-            this.setState({ "showCustomPopup": false });
         }
+        this.setState({ "showCustomPopup": false });
     }
 
     render() {
@@ -56,7 +54,7 @@ export default class ImageGallery extends Component {
                 <Spinner/>
             </li>
         );
-        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This feed item will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.appEnMessages.parkPage.feeds.deletedFeedConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         let description = this.props.category.content ? <p className="surf-description">{getHtmlContent(this.props.category.content)}</p> : null;
         return (
@@ -69,10 +67,8 @@ export default class ImageGallery extends Component {
                         {description}
                    </a>
                     {header}
-
                 </div>
             </div>
-
         );
     }
 }
@@ -82,5 +78,6 @@ ImageGallery.propTypes = {
     "category": PropTypes.object,
     "dispatch": PropTypes.func.isRequired,
     "clickHandler": PropTypes.func,
-    "actionComponent": PropTypes.func
+    "actionComponent": PropTypes.func,
+    "appEnMessages": PropTypes.object
 };

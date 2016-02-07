@@ -8,16 +8,16 @@ import Toast from "../../utils/custom_templates/Toast.js";
 export default class RSSComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": "Example: http://www.thehindu.com/opinion/?service=rss" };
+        this.state = { "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.RSSExampleURL };
     }
 
     _validateUrl(url, callback, props) {
         props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
-            let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+            let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
             if(response !== "invalid") {
-                Toast.show(errorMsg);
+                Toast.show(`RSS ${urlStatus}`);
             }
-            return callback({ "error": errorMsg, "urlAdded": response === "valid" });
+            return callback({ "error": urlStatus, "urlAdded": response === "valid" });
         }));
     }
 

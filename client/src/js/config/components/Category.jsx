@@ -71,7 +71,7 @@ export default class Category extends Component {
         if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
                 if(response.status) {
-                    Toast.show(categoryName + " is updated");
+                    Toast.show(`${categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated}`);
                     this.setState({ "titleErrorMessage": "Category name is updated", "isValidName": true, "categoryName": categoryName });
                 } else {
                     this.setState({ "titleErrorMessage": "Category name already exists", "isValidName": false, "categoryName": this.state.categoryName });

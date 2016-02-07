@@ -39,7 +39,6 @@ export function unparkFeedAsync(feedDoc) {
                 FeedApplicationQueries.updateFeed(feedDoc, status).then(() => {
                     dispatch(unparkFeed(feedDoc));
                     dispatch(unparkFeedCounter());
-
                 });
             }
 

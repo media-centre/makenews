@@ -8,8 +8,23 @@ import "../../helper/TestHelper.js";
 import { ParkPage } from "../../../src/js/park/pages/ParkPage.jsx";
 import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent.jsx";
 import AllFeeds from "../../../src/js/surf/components/AllFeeds.jsx";
+import sinon from "sinon";
+import Locale from "../../../src/js/utils/Locale";
 
 describe("park Page", () => {
+
+    let sandbox = null;
+    beforeEach("", () => {
+        sandbox = sinon.sandbox.create();
+        let locale = sandbox.stub(Locale, "applicationStrings");
+        locale.returns({ "messages": {
+            "parkPage": { }
+        } });
+    });
+
+    afterEach("", () => {
+        sandbox.restore();
+    });
 
     it("should have default text ", () => {
         let feeds = [];

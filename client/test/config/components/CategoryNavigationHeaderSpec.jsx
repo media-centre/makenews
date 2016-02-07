@@ -15,7 +15,9 @@ describe("CategoryNavigationHeader", ()=> {
         categoryDetailsPageStrings = {
             "allCategoriesLinkLabel": "All Categories Test",
             "deleteCategoryLinkLabel": "Delete Category Test",
-            "addUrlLinkLabel": "Add Url Test"
+            "addUrlLinkLabel": "Add Url Test",
+            "categoryDeletionConfirm": "This category will be deleted  and you will no longer receive feeds from its URLs." +
+            " Parked items will remain unaffected. Are you sure you want to continue?"
         };
         categoryNavigationHeaderComponent = TestUtils.renderIntoDocument(
             <CategoryNavigationHeader updateCategoryName={()=> {}} categoryName="Test Category Name" categoryId="Test Category id" categoryDetailsPageStrings={categoryDetailsPageStrings}/>

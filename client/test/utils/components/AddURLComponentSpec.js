@@ -17,8 +17,8 @@ describe("AddURLComponent", () => {
     let categoryDetailsPageStrings = { "allCategoriesLinkLabel": "All Categories",
             "deleteCategoryLinkLabel": "Delete Category",
             "addUrlLinkLabel": "Add Url",
-            "errorMessages": { "urlSuccess": "Url is successfully added",
-                "invalidUrlFormat": "Invalid URL format",
+            "successMessages": { "urlSuccess": "Url is successfully added" },
+            "errorMessages": { "invalidUrlFormat": "Invalid URL format",
                 "emptyUrl": "URL should not be empty",
                 "alreadyAdded": "URL is already added" }
     };

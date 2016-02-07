@@ -39,10 +39,10 @@ export default class AddURLComponent extends Component {
             let source = new Source(this.state.sourceObject);
             source.delete(this.props.categoryId).then(()=> {
                 this.props.dispatch(populateCategoryDetailsAsync(this.props.categoryId));
-                this.setState({ "showCustomPopup": false, "successResponse": true, "errorMessage": "Url successfully deleted" });
-                Toast.show("Url successfully deleted");
+                this.setState({ "showCustomPopup": false, "successResponse": true, "errorMessage": this.props.categoryDetailsPageStrings.successMessages.urlDeleteSuccess });
+                Toast.show(this.props.categoryDetailsPageStrings.successMessages.urlDeleteSuccess);
             }).catch(()=> {
-                this.setState({ "showCustomPopup": false, "successResponse": false, "errorMessage": "Url deletion failed" });
+                this.setState({ "showCustomPopup": false, "successResponse": false, "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.urlDeleteFailed });
             });
         } else {
             this.setState({ "showCustomPopup": false });
@@ -63,7 +63,7 @@ export default class AddURLComponent extends Component {
         if(errorMessage.length === 0) {
             this.setState({ "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl, "successResponse": false });
             this.props.sourceDomainValidation(url, (response)=> {
-                let isSuccessResponse = response.error === this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+                let isSuccessResponse = response.error === this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
                 this.setState({ "showUrlInput": !response.urlAdded, "errorMessage": response.error, "successResponse": isSuccessResponse });
             });
         }
@@ -95,7 +95,7 @@ export default class AddURLComponent extends Component {
             );
         }
 
-        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.categoryDetailsPageStrings.deleteURLConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>

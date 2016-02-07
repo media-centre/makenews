@@ -15,7 +15,7 @@ export default class FacebookComponent extends Component {
         super(props);
         this.fbLogin = FacebookLogin.instance();
         this.facebookLoginHandler = this.facebookLoginHandler.bind(this);
-        this.state = { "errorMessage": "", "hintMessage": "Example: https://www.facebook.com/barackobama" };
+        this.state = { "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.FacebookExampleURL };
     }
 
     _validateUrl(url, callback, props) {
@@ -24,11 +24,11 @@ export default class FacebookComponent extends Component {
         }
         if(url.match(fbRegex)) {
             props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
-                let errorMsg = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.errorMessages.urlSuccess;
+                let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
                 if(response !== "invalid") {
-                    Toast.show(errorMsg);
+                    Toast.show(`Facebook ${urlStatus}`);
                 }
-                return callback({ "error": errorMsg, "urlAdded": response === "valid" });
+                return callback({ "error": urlStatus, "urlAdded": response === "valid" });
             }));
         } else {
             return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidFacebookUrl });

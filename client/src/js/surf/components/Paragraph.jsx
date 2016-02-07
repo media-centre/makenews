@@ -23,22 +23,20 @@ export default class Paragraph extends Component {
             this._showConfirmPopup();
         } else {
             this.props.clickHandler(feedDoc);
-            Toast.show(feedDoc.status === "park" ? "News is unparked" : "News is parked");
+            Toast.show(feedDoc.status === "park" ? this.props.appEnMessages.parkPage.feeds.unParkedSuccess : this.props.appEnMessages.surfPage.feeds.parkedSuccess);
         }
     }
 
     handleDeleteClick(event) {
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
-            this.setState({ "showCustomPopup": false });
-        } else {
-            this.setState({ "showCustomPopup": false });
         }
+        this.setState({ "showCustomPopup": false });
     }
 
     render() {
         let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
-        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={"This feed item will be deleted from the surf. Do you want to continue?"} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.appEnMessages.parkPage.feeds.deletedFeedConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>
@@ -60,5 +58,6 @@ Paragraph.propTypes = {
     "dispatch": PropTypes.func,
     "clickHandler": PropTypes.func,
     "category": PropTypes.object,
-    "actionComponent": PropTypes.func
+    "actionComponent": PropTypes.func,
+    "appEnMessages": PropTypes.object
 };

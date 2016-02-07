@@ -45,7 +45,7 @@ export default class CategoryNavigationHeader extends Component {
     handleDelete(event, categoryId) {
         if(event.OK) {
             CategoryDb.deleteCategory(categoryId).then((result) => {
-                Toast.show("Category is deleted");
+                Toast.show(`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryDeleteSuccess}`);
                 this.context.history.push("/configure/categories");
             });
         }
@@ -73,7 +73,7 @@ export default class CategoryNavigationHeader extends Component {
                 </Link>
                 <button className={this.props.isDefault ? "delete-category right disable" : "delete-category right"} id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.deleteCategory()}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
                 {titleElement}
-                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {"This category will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?"} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
+                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {this.props.categoryDetailsPageStrings.categoryDeletionConfirm} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
             </div>
         );
     }
@@ -106,4 +106,3 @@ CategoryNavigationHeader.contextTypes = {
         return History.prototype;
     }
 };
-

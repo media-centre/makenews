@@ -49,8 +49,20 @@ window.mediaCenter.appEn = {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
                 "addUrlLinkLabel": "Add URL",
+                "categoryDeletionConfirm": "This category will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
+                "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
+                "hintMessages": {
+                    "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
+                    "TwitterExampleURL": "Example: @martinfowler, #savetheinternet",
+                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama"
+                },
+                "successMessages": {
+                    "categoryDeleteSuccess": "is successfully deleted",
+                    "categoryUpdated": "is updated",
+                    "urlDeleteSuccess": "Feed URL successfully deleted",
+                    "urlSuccess": "URL is successfully added"
+                },
                 "errorMessages": {
-                    "urlSuccess": "Url is successfully added",
                     "invalidUrlFormat": " Invalid URL format",
                     "emptyUrl": "URL should not be empty",
                     "validatingUrl": "validating Url...",
@@ -59,14 +71,26 @@ window.mediaCenter.appEn = {
                     "invalidRssUrl": "Invalid feed url",
                     "invalidTwitterUrl": "Invalid twitter url",
                     "invalidFacebookUrl": "Invalid facebook url",
-                    "noFbAccess": "No such link or no access to the profile"
+                    "noFbAccess": "No such link or no access to the profile",
+                    "urlDeleteFailed": "Url deletion failed"
                 }
             },
             "configureTabName": "Configure"
         },
         "surfPage": {
             "noFeeds": "No feeds available",
-            "fetchingFeeds": "Fetching feeds..."
+            "fetchingFeeds": "Fetching feeds...",
+            "noMoreFeeds": "No more feeds to display",
+            "feeds": {
+                "parkedSuccess": "Successfully parked the news item"
+            }
+        },
+        "parkPage": {
+            "noFeeds": "No feeds available",
+            "feeds": {
+                "unParkedSuccess": "Successfully unparked the news item",
+                "deletedFeedConfirm": "This feed item will be deleted from the surf. Do you want to continue?"
+            }
         },
         "headerStrings": {
             "surfTab": {
