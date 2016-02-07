@@ -7,7 +7,7 @@ export default class TakeTour {
             takeTourMaskElement = document.createElement("div");
             takeTourMaskElement.id = "take-tour-mask";
             takeTourMaskElement.className = "take-tour-mask mask";
-            takeTourMaskElement.innerHTML = "<div class='take-tour bottom-box-shadow' id='take-tour'>" +
+            takeTourMaskElement.innerHTML = "<div class='take-tour bottom-box-shadow anim' id='take-tour'>" +
                                             "<div class='tour-popup'>" +
                                                 "<p class='description'></p>" +
                                                 "<div class='t-right'>" +
@@ -79,8 +79,11 @@ export default class TakeTour {
             let currentJsonElement = TakeTour.getCurrentJsonElement();
             let takeTourElement = document.getElementById("take-tour");
             let targetElement = document.querySelector(currentJsonElement.selector);
-            takeTourElement.style.top = (targetElement.offsetTop + targetElement.offsetHeight + padding) + "px";
-            takeTourElement.style.left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2)) + "px";
+            let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
+            let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
+            left = left < 0 ? padding : left;
+            takeTourElement.style.top = top + "px";
+            takeTourElement.style.left = left + "px";
         }, time);
     }
 
