@@ -8,12 +8,12 @@ export default class TwitterRequestHandler {
     }
 
     static logger() {
-        Logger.instance();
+        return Logger.instance();
     }
 
     fetchTweetsRequest(url, userName, timestamp) {
         return new Promise((resolve, reject) => {
-                this.twitterClient().fetchTweets(url, userName, timestamp).then(tweets => {
+            this.twitterClient().fetchTweets(url, userName, timestamp).then(tweets => {
                 TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched feeds for url: %s.", url);
                 resolve(tweets);
             }).catch(error => {
