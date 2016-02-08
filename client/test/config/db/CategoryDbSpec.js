@@ -5,6 +5,7 @@ import PouchClient from "../../../src/js/db/PouchClient.js";
 import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
 import SourceDb from "../../../src/js/config/db/SourceDb.js";
 import Source from "../../../src/js/config/Source.js";
+import Category from "../../../src/js/config/Category.js";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { expect, assert } from "chai";
@@ -98,35 +99,43 @@ describe("CategoryDb", () => {
     });
 
     describe("deleteCategory", ()=> {
-        let sandbox = sinon.sandbox.create();
+        let sandbox = null, categoryGetMock = null, category = null, categoryDeleteMock = null, categoryDoc = null, categoryId = "categoryId";
+        beforeEach("beforeEach", () => {
+            categoryDoc = { "_id": "id", "name": "category name" };
+            sandbox = sinon.sandbox.create();
+            categoryGetMock = sandbox.mock(CategoryDb).expects("findById");
+            category = new Category(categoryDoc);
+            sandbox.stub(Category, "instance").withArgs(categoryDoc).returns(category);
+            categoryDeleteMock = sandbox.mock(category).expects("delete");
+        });
+
         afterEach("afterEach", () => {
+            categoryGetMock.verify();
+            categoryDeleteMock.verify();
             sandbox.restore();
         });
-        it("should fetch all urls and call delete of all urls", (done)=> {
-            let categoryId = 123, fourTimes = 4;
-            let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
-                { "_id": "103", "url": "http://facebook.com/test1" },
-                { "_id": "104", "url": "http://test.com/rss" }];
-            let categoryDoc = {
-                "_id": "06E26F38-1145-B850-AFE0-072537EDBC98",
-                "_rev": "24-4f80c047d21a5cd55bdae898eaa7f912",
-                "docType": "category",
-                "name": "Ull",
-                "createdTime": 1451373861028
-            };
-            let pouchClientMock = sandbox.mock(PouchClient);
-            pouchClientMock.expects("getDocument").withArgs(categoryId).returns(Promise.resolve(categoryDoc));
-            pouchClientMock.expects("deleteDocument").withArgs(categoryDoc).returns(Promise.resolve(true));
-            let fetchUrlsMock = sandbox.mock(SourceDb);
-            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
-            let source = new Source({});
-            sandbox.stub(Source, "instance").returns(source);
-            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(fourTimes).returns(Promise.resolve("response"));
-            CategoryDb.deleteCategory(categoryId).then((message)=> {
-                fetchUrlsMock.verify();
-                deleteSourceUrlMock.verify();
-                pouchClientMock.verify();
-                done();
+
+        it("should fetch category and delete", () => {
+            categoryGetMock.withArgs(categoryId).returns(Promise.resolve(category));
+            categoryDeleteMock.returns(Promise.resolve(true));
+            return CategoryDb.deleteCategory(categoryId).then((response) => {
+                assert.deepEqual(response, true);
+            });
+        });
+
+        it("should reject with error if category fetch fails", () => {
+            categoryGetMock.withArgs(categoryId).returns(Promise.reject("error"));
+            categoryDeleteMock.never();
+            return CategoryDb.deleteCategory(categoryId).catch((response) => {
+                assert.strictEqual(response, "error");
+            });
+        });
+
+        it("should reject with error if category delete fails", () => {
+            categoryGetMock.withArgs(categoryId).returns(Promise.resolve(category));
+            categoryDeleteMock.returns(Promise.reject("error"));
+            return CategoryDb.deleteCategory(categoryId).catch((response) => {
+                assert.strictEqual(response, "error");
             });
         });
     });

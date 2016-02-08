@@ -3,6 +3,8 @@
 "use strict";
 import PouchClient from "../db/PouchClient";
 import CategoryDb from "./db/CategoryDb.js";
+import SourceDb from "./db/SourceDb.js";
+import Source from "./Source.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 
@@ -89,6 +91,23 @@ export default class Category {
                     reject({ "status": false, "error": error });
                 });
             }
+        });
+    }
+
+    delete() {
+        return new Promise((resolve, reject) => {
+            SourceDb.fetchSourceConfigurationsByCategoryId(this._id).then(sourceUrlsObj => {
+                sourceUrlsObj.forEach((sourceUrlObj) => {
+                    Source.instance(sourceUrlObj).delete(this._id);
+                });
+                PouchClient.deleteDocument(this.getDocument()).then(() => {
+                    resolve(true);
+                }).catch((error) => {
+                    reject(error);
+                });
+            }).catch((error) => {
+                reject(error);
+            });
         });
     }
 
