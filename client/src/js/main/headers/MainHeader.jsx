@@ -2,9 +2,11 @@
 "use strict";
 import Logo from "../../utils/components/Logo.jsx";
 import MainHeaderTab from "../../utils/components/TabComponent/MainHeaderTab.jsx";
-import Logout from "../../login/components/Logout.jsx";
+//import Logout from "../../login/components/Logout.jsx";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
+import UserProfile from "../components/UserProfile.jsx";
+
 
 export default class MainHeader extends Component {
     render() {
@@ -14,8 +16,9 @@ export default class MainHeader extends Component {
                     <Logo ref="logo"/>
 
                     <div className="user-info right" id="logout">
-                        <Logout ref="logout" logoutButton={this.props.headerStrings.logoutButton}/>
+                        <UserProfile />
                     </div>
+
 
                     <div className="flexible t-center">
                         <ul className="menu-list">
@@ -29,6 +32,7 @@ export default class MainHeader extends Component {
         );
     }
 }
+//<UserProfile ref="logout" logoutButton={this.props.headerStrings.logoutButton}/>
 
 MainHeader.displayName = "Main Header";
 MainHeader.propTypes = {
