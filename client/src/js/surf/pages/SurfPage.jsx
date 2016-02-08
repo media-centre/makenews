@@ -37,11 +37,11 @@ export class SurfPage extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener("scroll", this.getFeedsCallBack);
+        document.removeEventListener("scroll", () => this.getFeedsCallBack());
     }
 
     paginateFeeds() {
-        document.addEventListener("scroll", this.getFeedsCallBack);
+        document.addEventListener("scroll", () => this.getFeedsCallBack());
     }
 
     getFeedsCallBack() {
