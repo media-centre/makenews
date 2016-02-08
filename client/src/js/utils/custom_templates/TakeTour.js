@@ -7,15 +7,16 @@ export default class TakeTour {
             takeTourMaskElement = document.createElement("div");
             takeTourMaskElement.id = "take-tour-mask";
             takeTourMaskElement.className = "take-tour-mask mask";
-            takeTourMaskElement.innerHTML = "<div class='take-tour bottom-box-shadow anim' id='take-tour'>" +
-                                            "<div class='tour-popup'>" +
-                                                "<p class='description'></p>" +
-                                                "<div class='t-right'>" +
-                                                    "<button id='tour-continue'>Continue</button>" +
-                                                    "<button id='tour-abort'>Skip</button>" +
-                                                "</div>" +
-                                            "</div>" +
-                                        "</div>";
+            takeTourMaskElement.innerHTML = `<div class='take-tour bottom-box-shadow anim' id='take-tour'>
+                                            <div class='tour-top-arrow'></div>
+                                            <div class='tour-popup'>
+                                                <p class='description'></p>
+                                                <div class='t-right'>
+                                                    <button id='tour-continue'>Continue</button>
+                                                    <button id='tour-abort'>Skip</button>
+                                                </div>
+                                            </div>
+                                        </div>`;
             document.body.appendChild(takeTourMaskElement);
 
             document.getElementById("tour-continue").addEventListener("click", ()=> {
@@ -49,12 +50,7 @@ export default class TakeTour {
     static next() {
         if(TakeTour.schema.navigation.length > TakeTour.currentIndex) {
             TakeTour.clickTargetElement();
-            if(TakeTour.schema.navigation.length - 1 === TakeTour.currentIndex) {
-                document.getElementById("tour-continue").classList.add("hide");
-                document.getElementById("tour-abort").textContent = "Done";
-            } else {
-                TakeTour.currentIndex += 1;
-            }
+            TakeTour.currentIndex += 1;
             TakeTour.navigateToPosition();
             TakeTour.updateContent();
         }
@@ -73,6 +69,11 @@ export default class TakeTour {
         if(descriptionDom.textContent !== currentJsonElement.content) {
             descriptionDom.textContent = currentJsonElement.content;
         }
+
+        if(TakeTour.schema.navigation.length - 1 === TakeTour.currentIndex) {
+            document.getElementById("tour-continue").classList.add("hide");
+            document.getElementById("tour-abort").textContent = "Done";
+        }
     }
 
     static navigateToPosition() {
@@ -82,11 +83,21 @@ export default class TakeTour {
             let takeTourElement = document.getElementById("take-tour");
             let targetElement = document.querySelector(currentJsonElement.selector);
             if(takeTourElement && targetElement) {
+                let tourArrow = document.getElementsByClassName("tour-top-arrow")[0];
+                let maxMobileScreenSize = 600;
+                if(document.body.offsetWidth <= maxMobileScreenSize) {
+                    let divideFactor = 7;
+                    let arrowLeft = targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / divideFactor);
+                    tourArrow.style.left = `${arrowLeft}px`;
+                } else {
+                    tourArrow.style.left = 0;
+                }
+
                 let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
                 let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
                 left = left < 0 ? padding : left;
-                takeTourElement.style.top = top + "px";
-                takeTourElement.style.left = left + "px";
+                takeTourElement.style.top = `${top}px`;
+                takeTourElement.style.left = `${left}px`;
             }
         }, time);
     }
@@ -121,21 +132,21 @@ export default class TakeTour {
                     "content": "Enter your category name"
                 },
                 {
-                    "selector": "#deleteCategory",
-                    "actionSelector": ".category-page .tab-control > .tab-header > .tab:first-child",
-                    "content": "Click here to delete this category"
-                },
-                {
                     "selector": ".category-page .tab-control > .tab-header > .tab:first-child",
                     "actionSelector": "#addNewUrlButton",
-                    "content": "Click here to add news RSS, FACEBOOK and TWITTER"
+                    "content": "Click here to select the URL source"
                 },
                 {
                     "selector": ".url-panel .add-url-input",
                     "actionSelector": ".url-panel .add-url-input",
-                    "content": "Enter or paste your URL in the input",
+                    "content": "Enter your URL here",
                     "value": "http://www.thehindu.com/opinion/?service=rss",
                     "action": "ENTER"
+                },
+                {
+                    "selector": "#deleteCategory",
+                    "actionSelector": ".category-page .tab-control > .tab-header > .tab:first-child",
+                    "content": "Click here to delete this category"
                 },
                 {
                     "selector": "#allCategoriesButton",
@@ -145,7 +156,7 @@ export default class TakeTour {
                 {
                     "selector": ".menu-list > li:nth-child(2)",
                     "actionSelector": ".menu-list > li:nth-child(2) a",
-                    "content": "Click here to view the news from configured URLs"
+                    "content": "Click here to view the news feeds from the configured URLs"
                 },
                 {
                     "selector": ".main-page > header",
@@ -155,7 +166,7 @@ export default class TakeTour {
                 {
                     "selector": ".menu-list > li:nth-child(3)",
                     "actionSelector": ".menu-list > li:nth-child(3) a",
-                    "content": "Click here to view the news items that have been parked for later use"
+                    "content": "Click here to view the news items that have been parked for review"
                 }
             ]
         };

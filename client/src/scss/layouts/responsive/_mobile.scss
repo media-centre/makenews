@@ -69,7 +69,7 @@
   }
 
   .login.app-header .form-container .login-form-container form .input-container > div {
-    margin-right: 0px;
+    margin-right: 0;
   }
 
   .app-header {
@@ -108,7 +108,7 @@
       }
 
       .navigation-title {
-        margin: 0px auto;
+        margin: 0 auto;
       }
     }
 
@@ -142,7 +142,7 @@
           .img-container {
             width: 50%;
             margin: auto;
-            padding: 0px;
+            padding: 0;
           }
           p {
             width: auto;
@@ -189,4 +189,15 @@
     }
   }
 
+  .take-tour-mask {
+    .take-tour {
+      left: 0 !important;
+      width: 80% !important;
+      right: 0 !important;
+      margin: auto !important;
+    }
+    .tour-top-arrow {
+      right: auto !important;
+    }
+  }
 }

@@ -84,7 +84,7 @@
   left: 0;
   right: 0;
   bottom: 10%;
-  width: 80%;
+  width: 60%;
   background: $app-header-bg-color;
   margin: auto;
   padding: 10px;
@@ -119,7 +119,7 @@
       margin-right: 10px;
     }
   }
-  .take-tour:before {
+  .tour-top-arrow {
     content: " ";
     display: block;
     position: absolute;
