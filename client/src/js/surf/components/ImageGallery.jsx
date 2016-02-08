@@ -40,10 +40,10 @@ export default class ImageGallery extends Component {
     }
 
     handleDeleteClick(event) {
+        this.setState({ "showCustomPopup": false });
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
         }
-        this.setState({ "showCustomPopup": false });
     }
 
     render() {

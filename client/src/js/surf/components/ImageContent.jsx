@@ -39,10 +39,11 @@ export default class ImageContent extends Component {
         }
     }
     handleDeleteClick(event) {
+        this.setState({ "showCustomPopup": false });
         if(event.OK) {
             this.props.dispatch(this.props.clickHandler(this.props.category));
         }
-        this.setState({ "showCustomPopup": false });
+
     }
     render() {
         let header = this.props.category.feedType ? <FeedHeader actionComponent={this.props.actionComponent} feedAction={this._parkFeed.bind(this, this.props.category)} categoryNames={this.props.category.categoryNames} feedType={this.props.category.feedType} tags={this.props.category.tags} postedDate={this.props.category.postedDate} /> : null;
