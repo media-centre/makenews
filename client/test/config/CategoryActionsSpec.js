@@ -9,7 +9,7 @@ import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source
 import Category from "../../src/js/config/Category.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import TwitterDb from "../../src/js/twitter/TwitterDb";
-import RssResponseParser from "../../src/js/rss/RssResponseParser";
+import RssFeeds from "../../src/js/rss/RssFeeds";
 import mockStore from "../helper/ActionHelper.js";
 import RssDb from "../../src/js/rss/RssDb.js";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
@@ -62,14 +62,17 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
-        sandbox.stub(RssDb, "addRssFeeds");
-        let responseParserMock = sandbox.mock(RssResponseParser).expects("parseFeeds");
+        let rssFeeds = new RssFeeds(responseJson.items);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        let rssFeedsParseMock = sandbox.mock(rssFeeds).expects("parse");
+        let rssFeedsSaveMock = sandbox.mock(rssFeeds).expects("save").returns(Promise.resolve("success"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
             sourceSaveMock.verify();
-            responseParserMock.verify();
+            rssFeedsParseMock.verify();
+            rssFeedsSaveMock.verify();
         });
     });
 
@@ -89,7 +92,11 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        sandbox.stub(RssDb, "addRssFeeds");
+        let rssFeeds = new RssFeeds(responseJson.items);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        sandbox.stub(rssFeeds, "parse");
+        sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
+
         let sourceDetails = { "latestFeedTimestamp": latestFeedTimestamp, "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
@@ -152,15 +159,16 @@ describe("addRssUrlAsync", () => {
         let rssDbFeedMock = sandbox.mock(RssDb).expects("addRssFeeds");
         rssDbFeedMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
 
-        let responseParserMock = sandbox.mock(RssResponseParser).expects("parseFeeds");
+        let rssFeeds = new RssFeeds(responseJson.items);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        sandbox.stub(rssFeeds, "parse");
+        sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions, done);
         return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
             rssDbFeedMock.verify();
             sourceSaveMock.verify();
-            responseParserMock.verify();
-            RssDb.addRssFeeds.restore();
         });
     });
 

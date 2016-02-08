@@ -1,12 +1,24 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 "use strict";
-import RssResponseParser from "../../src/js/rss/RssResponseParser.js";
-import { assert, expect } from "chai";
+import RssFeeds from "../../src/js/rss/RssFeeds.js";
+import RssDb from "../../src/js/rss/RssDb.js";
+import { assert } from "chai";
+import sinon from "sinon";
 
-describe("RssResponseParser", () => {
-    describe("parseFeeds", ()=> {
-        it("should return feeds with the desired format of description type", ()=> {
-            let sourceId = "sourceId";
+describe("RssFeeds", () => {
+    let sandbox = null;
+    beforeEach("RssFeeds", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("RssFeeds", () => {
+        sandbox.restore();
+    });
+
+    describe("save", ()=> {
+        let sourceId = "sourceId";
+
+        it("should save feeds with the desired format of description type", (done)=> {
             let feeds = [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
@@ -83,12 +95,18 @@ describe("RssResponseParser", () => {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 }
             ];
-            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
-            assert.deepEqual(newFeeds, expectedFeeds);
+            let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+            RssDbAddRssFeedsMock.withArgs(expectedFeeds).returns(Promise.resolve("success"));
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.parse();
+            rssFeeds.save(sourceId).then(response => {
+                assert.strictEqual("success", response);
+                RssDbAddRssFeedsMock.verify();
+                done();
+            });
         });
 
-        it("should return feeds with the desired format of type imagecontent", ()=> {
-            let sourceId = "sourceId";
+        it("should return feeds with the desired format of type imagecontent", (done)=> {
             let feeds = [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
@@ -132,12 +150,18 @@ describe("RssResponseParser", () => {
                     "url": "http://www.abcd.com"
                 }
             ];
-            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
-            expect(newFeeds).to.deep.equal(expectedFeeds);
+            let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+            RssDbAddRssFeedsMock.withArgs(expectedFeeds).returns(Promise.resolve("success"));
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.parse();
+            rssFeeds.save(sourceId).then(response => {
+                assert.strictEqual("success", response);
+                RssDbAddRssFeedsMock.verify();
+                done();
+            });
         });
 
-        it("should return feeds with the desired format of type gallery", ()=> {
-            let sourceId = "sourceId";
+        it("should return feeds with the desired format of type gallery", (done)=> {
             let feeds = [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
@@ -195,29 +219,31 @@ describe("RssResponseParser", () => {
                     ]
                 }
             ];
-            let newFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
-            expect(newFeeds).to.deep.equal(expectedFeeds);
+            let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+            RssDbAddRssFeedsMock.withArgs(expectedFeeds).returns(Promise.resolve("success"));
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.parse();
+            rssFeeds.save(sourceId).then(response => {
+                assert.strictEqual("success", response);
+                RssDbAddRssFeedsMock.verify();
+                done();
+            });
         });
 
-        it("should throw an error if the sourceId is empty", () => {
-            let newFeedDocumentCallback = function() {
-                RssResponseParser.parseFeeds("", [{ "id": 1 }]);
-            };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
-        });
-
-        it("should throw an error if the feeds is empty", () => {
-            let newFeedDocumentCallback = function() {
-                RssResponseParser.parseFeeds("test", []);
-            };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+        it("should throw an error if the sourceId is empty while saving", (done) => {
+            let feeds = [];
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.save().catch(error => {
+                assert.strictEqual(error, "source id can not be empty");
+                done();
+            });
         });
 
         it("should throw an error if the feeds is undefined", () => {
-            let newFeedDocumentCallback = function() {
-                RssResponseParser.parseFeeds("test");
+            let rssFeeds = function() {
+                return new RssFeeds();
             };
-            assert.throw(newFeedDocumentCallback, "source id or feeds can not be empty");
+            assert.throw(rssFeeds, "feeds can not be null");
         });
     });
 });

@@ -11,6 +11,7 @@ import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler
 import FacebookDb from "../../src/js/facebook/FacebookDb.js";
 import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
 import TwitterDb from "../../src/js/twitter/TwitterDb.js";
+import RssFeeds from "../../src/js/rss/RssFeeds.js";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -181,19 +182,25 @@ describe("RefreshFeedsHandler", () => {
 
     describe("_handleRssBatch", ()=> {
         describe("creation of feeds", () => {
-            let rssRequestHandlerMock = null, rssDbSpy = null;
+            let rssRequestHandlerMock = null, rssFeedsSaveStub = null, rssFeedsParseStub = null, rssFeeds = null, sandbox = null;
             beforeEach("before", ()=> {
-                rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
-                rssDbSpy = sinon.spy(RssDb, "addRssFeeds");
+                sandbox = sinon.sandbox.create();
+                rssFeeds = new RssFeeds([]);
+
+                sandbox.stub(RssFeeds, "instance").returns(rssFeeds);
+                rssFeedsParseStub = sandbox.stub(rssFeeds, "parse");
+                rssFeedsSaveStub = sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
+                rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
             });
             afterEach("after", ()=> {
-                let maxCallCount = 3;
-                sinon.assert.callCount(rssDbSpy, maxCallCount);
+                assert(rssFeedsParseStub.calledThrice, "parse not called thrice");
+                assert(rssFeedsSaveStub.calledThrice, "save not called thrice");
                 rssRequestHandlerMock.verify();
-                RssRequestHandler.fetchBatchRssFeeds.restore();
-                RssDb.addRssFeeds.restore();
+                sandbox.restore();
             });
+
             it("should parse the rss feeds", ()=> {
+
                 let rssUrls = [
                     { "url": "rssUrl1", "latestFeedTimestamp": "1234", "_id": "1" },
                     { "url": "rssUrl2", "latestFeedTimestamp": "1234", "_id": "2" },

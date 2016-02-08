@@ -12,7 +12,7 @@ import FacebookResponseParser from "../../facebook/FacebookResponseParser.js";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler.js";
 import TwitterResponseParser from "../../twitter/TwitterResponseParser";
 import RssRequestHandler from "../../rss/RssRequestHandler.js";
-import RssResponseParser from "../../rss/RssResponseParser";
+import RssFeeds from "../../rss/RssFeeds.js";
 import TwitterDb from "../../twitter/TwitterDb";
 import FacebookDb from "../../facebook/FacebookDb.js";
 import DateTimeUtil from "../../utils/DateTimeUtil.js";
@@ -44,13 +44,17 @@ export function addRssUrlAsync(categoryId, url, callback) {
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
                 return feed.pubDate;
             }));
-            _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
-                let feeds = RssResponseParser.parseFeeds(documentId, responseFeed.items);
-                RssDb.addRssFeeds(feeds);
-                callback(STATUS_VALID);
-            }).catch(error => {
-                callback(STATUS_INVALID);
-            });
+            let feeds = new RssFeeds(responseFeed.items);
+            if(feeds.parse()) {
+                _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
+                    feeds.save(documentId);
+                    callback(STATUS_VALID);
+                }).catch(error => {
+                    callback(STATUS_INVALID);
+                });
+            } else {
+                return callback(STATUS_INVALID);
+            }
         }).catch(() => {
             callback(STATUS_INVALID);
         });

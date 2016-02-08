@@ -1,26 +1,48 @@
 "use strict";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
+import RssDb from "./RssDb.js";
 
 const NEGATIVE_INDEX = -1;
-export default class RssResponseParser {
-    static parseFeeds(sourceId, feeds) {
-        if(StringUtil.isEmptyString(sourceId) || (typeof feeds === "undefined" || feeds.length === 0)) {
-            throw new Error("source id or feeds can not be empty");
-        }
+export default class RssFeeds {
 
-        let resultFeeds = [];
-        feeds.forEach((feed)=> {
-            resultFeeds.push(RssResponseParser.parseFeed(sourceId, feed));
-        });
-        return resultFeeds;
+    static instance(feeds) {
+        return new RssFeeds(feeds);
+    }
+    constructor(feeds) {
+        if(!feeds) {
+            throw new Error("feeds can not be null");
+        }
+        this.feeds = feeds;
     }
 
-    static parseFeed(sourceId, feed) {
+    parse() {
+        if(this.feeds.length === 0) {
+            return true;
+        }
+        let parsedFeeds = [];
+        this.feeds.forEach((feed)=> {
+            parsedFeeds.push(this._parseFeed(feed));
+        });
+        this.feeds = parsedFeeds;
+
+        return this.feeds.length > 0;
+    }
+
+    save(sourceId) {
+        if(StringUtil.isEmptyString(sourceId)) {
+            return Promise.reject("source id can not be empty");
+        }
+        this.feeds.forEach((feed)=> {
+            feed.sourceId = sourceId;
+        });
+        return RssDb.addRssFeeds(this.feeds);
+    }
+
+    _parseFeed(feed) {
         let feedObj = {
             "_id": feed.guid,
             "docType": "feed",
-            "sourceId": sourceId,
             "type": "description",
             "title": feed.title,
             "link": feed.link,

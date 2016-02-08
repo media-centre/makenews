@@ -3,13 +3,12 @@
 "use strict";
 import AjaxClient from "../utils/AjaxClient.js";
 import SourceDb from "../config/db/SourceDb.js";
-import RssResponseParser from "../rss/RssResponseParser.js";
+import RssFeeds from "../rss/RssFeeds.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
 import FacebookResponseParser from "../facebook/FacebookResponseParser.js";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
 import TwitterResponseParser from "../twitter/TwitterResponseParser.js";
-import RssDb from "../rss/RssDb.js";
 import FacebookDb from "../facebook/FacebookDb.js";
 import TwitterDb from "../twitter/TwitterDb.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
@@ -52,8 +51,9 @@ export default class RefreshFeedsHandler {
                         let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
                             return feed.pubDate;
                         }));
-                        let parsedFeeds = RssResponseParser.parseFeeds(sourceId, feeds);
-                        RssDb.addRssFeeds(parsedFeeds).then(() => {
+                        let rssFeeds = RssFeeds.instance(feeds);
+                        rssFeeds.parse();
+                        rssFeeds.save(sourceId).then(() => {
                             if(sortedDates.length > 0) {
                                 this._updateSourceUrlWithLatestTimestamp(sourceId, sortedDates[0]);
                             }
