@@ -37,15 +37,17 @@ export class SurfPage extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener("scroll");
+        document.removeEventListener("scroll", this.getFeedsCallBack);
     }
 
     paginateFeeds() {
-        document.addEventListener("scroll", ()=> {
-            if (document.body.scrollHeight === document.body.scrollTop + window.innerHeight) {
-                this.getMoreFeeds();
-            }
-        });
+        document.addEventListener("scroll", this.getFeedsCallBack);
+    }
+
+    getFeedsCallBack() {
+        if (document.body.scrollHeight === document.body.scrollTop + window.innerHeight) {
+            this.getMoreFeeds();
+        }
     }
 
     getMoreFeeds() {
