@@ -131,7 +131,7 @@ describe("ParkActions", () => {
             let pouchClientDeleteDcMock = sinon.mock(PouchClient).expects("deleteDocument");
             pouchClientDeleteDcMock.withArgs(feedDocument).returns(Promise.resolve({ "ok": true }));
 
-            return Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument))).then(() => {
+            return Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument), () => { })).then(() => {
 
                 pouchClientDeleteDcMock.verify();
                 PouchClient.deleteDocument.restore();

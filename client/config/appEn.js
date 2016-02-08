@@ -89,7 +89,8 @@ window.mediaCenter.appEn = {
             "noFeeds": "No feeds available",
             "feeds": {
                 "unParkedSuccess": "Successfully unparked the news item",
-                "deletedFeedConfirm": "This feed item will be deleted from the surf. Do you want to continue?"
+                "deletedFeedConfirm": "This feed item will be deleted from the surf. Do you want to continue?",
+                "feedDeletionSuccess": "Successfully deleted the news item"
             }
         },
         "headerStrings": {

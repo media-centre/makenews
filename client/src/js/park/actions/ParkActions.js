@@ -25,7 +25,7 @@ export function displayParkedFeedsAsync() {
     };
 }
 
-export function unparkFeedAsync(feedDoc) {
+export function unparkFeedAsync(feedDoc, callback) {
     if (feedDoc && Object.keys(feedDoc).length !== 0) {
 
         return dispatch => {
@@ -33,6 +33,7 @@ export function unparkFeedAsync(feedDoc) {
                 PouchClient.deleteDocument(feedDoc).then(() => {
                     dispatch(unparkFeed(feedDoc));
                     dispatch(unparkFeedCounter());
+                    callback();
                 });
             } else {
                 let status = "surf";

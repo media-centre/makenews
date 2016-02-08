@@ -6,6 +6,7 @@ import { highLightTabAction } from "../../tabs/TabActions.js";
 import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 import { connect } from "react-redux";
+import Toast from "../../utils/custom_templates/Toast";
 
 export class ParkPage extends Component {
     componentWillMount() {
@@ -16,11 +17,13 @@ export class ParkPage extends Component {
     }
 
     parkClickHandler(feedDoc) {
-        this.props.dispatch(unparkFeedAsync(feedDoc));
+        this.props.dispatch(unparkFeedAsync(feedDoc, () => {
+            Toast.show(this.props.messages.feeds.feedDeletionSuccess);
+        }));
     }
 
     render() {
-        let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{"No feeds found"}</div> : null;
+        let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{this.props.messages.noFeeds}</div> : null;
 
         return (
             <div ref="parkItem" className="park-page feeds-container">
@@ -36,7 +39,8 @@ ParkPage.displayName = "ParkPage";
 
 ParkPage.propTypes = {
     "dispatch": PropTypes.func,
-    "parkedItems": PropTypes.array
+    "parkedItems": PropTypes.array,
+    "messages": PropTypes.object
 };
 
 ParkPage.defaultType = {
