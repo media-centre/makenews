@@ -22,10 +22,14 @@ export default class RssFeeds {
         }
         let parsedFeeds = [];
         this.feeds.forEach((feed)=> {
-            parsedFeeds.push(this._parseFeed(feed));
+            try {
+                parsedFeeds.push(this._parseFeed(feed));
+            } catch(error) {
+                //no need to handle
+            }
         });
-        this.feeds = parsedFeeds;
 
+        this.feeds = parsedFeeds;
         return this.feeds.length > 0;
     }
 
@@ -40,6 +44,11 @@ export default class RssFeeds {
     }
 
     _parseFeed(feed) {
+
+        if(!feed.guid || !feed.title || !feed.description) {
+            throw new Error("id, title and description are mandatory");
+        }
+
         let feedObj = {
             "_id": feed.guid,
             "docType": "feed",
@@ -54,7 +63,7 @@ export default class RssFeeds {
         if(feed.enclosures && feed.enclosures.length > 0) {
             if(feed.enclosures.length === 1) {
                 feedObj.type = "imagecontent";
-                if(feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
+                if(!feed.enclosures[0].type || feed.enclosures[0].type.indexOf("image") !== NEGATIVE_INDEX) {
                     feedObj.url = feed.enclosures[0].url;
                 } else if(feed.enclosures[0].type.indexOf("video") !== NEGATIVE_INDEX) {
                     feedObj.url = feed.image.url;
@@ -63,7 +72,7 @@ export default class RssFeeds {
                 feedObj.type = "gallery";
                 feedObj.images = [];
                 feed.enclosures.forEach((item, index) => {
-                    if(item.type.indexOf("image") !== NEGATIVE_INDEX) {
+                    if(!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
                         feedObj.images.push(feed.enclosures[index]);
                     } else if(item.type.indexOf("video") !== NEGATIVE_INDEX) {
                         feedObj.images.push({ "type": "video", "url": feed.image.url });

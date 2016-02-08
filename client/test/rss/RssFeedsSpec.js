@@ -245,6 +245,124 @@ describe("RssFeeds", () => {
             };
             assert.throw(rssFeeds, "feeds can not be null");
         });
+
+        it("should continue parsing feeds if there are any failures", (done)=> {
+            let feeds = [
+                {
+                    "title": "test1",
+                    "description": "description 1",
+                    "summary": "summary",
+                    "link": "test1"
+                }, {
+                    "guid": "http://www.theguardian.com/world/picture/guid2",
+                    "title": "test2",
+                    "description": "desc 2",
+                    "summary": "summary 2",
+                    "link": "test2"
+                }
+            ];
+
+            let expectedFeeds = [
+                {
+                    "_id": "http://www.theguardian.com/world/picture/guid2",
+                    "content": "desc 2",
+                    "docType": "feed",
+                    "feedType": "rss",
+                    "link": "test2",
+                    "postedDate": null,
+                    "tags": [""],
+                    "title": "test2",
+                    "type": "description",
+                    "sourceId": sourceId
+                }
+            ];
+            let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+            RssDbAddRssFeedsMock.withArgs(expectedFeeds).returns(Promise.resolve("success"));
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.parse();
+            rssFeeds.save(sourceId).then(response => {
+                assert.strictEqual("success", response);
+                RssDbAddRssFeedsMock.verify();
+                done();
+            });
+        });
+
+        it.only("should add default enclosures type as image", (done)=> {
+            let feeds = [
+                {
+                    "title": "Eyewitness: Vietnam in the CGAP photography contest",
+                    "description": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "summary": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "date": null,
+                    "pubdate": null,
+                    "pubDate": null,
+                    "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
+                    "guid": "http://www.theguardian.com/world/picture/guid1",
+                    "author": "Tran Van Tuy",
+                    "comments": null,
+                    "origlink": null,
+                    "image": {},
+                    "source": {},
+                    "categories": [
+                        "Vietnam",
+                        "World news",
+                        "Asia Pacific"
+                    ],
+                    "enclosures": [
+                        {
+                            "url": "http://www.abcd.com",
+                            "type": "image/jpeg"
+                        },
+                        {
+                            "url": "http://www.efgh.com",
+                            "type": null
+                        },
+                        {
+                            "url": "http://www.ijkl.com",
+                            "type": "image/jpeg"
+                        }],
+                    "permalink": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam"
+                }
+            ];
+
+            let expectedFeeds = [
+                {
+                    "_id": "http://www.theguardian.com/world/picture/guid1",
+                    "type": "gallery",
+                    "docType": "feed",
+                    "sourceId": sourceId,
+                    "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
+                    "feedType": "rss",
+                    "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
+                    "postedDate": null,
+                    "tags": [""],
+                    "title": "Eyewitness: Vietnam in the CGAP photography contest",
+                    "images": [
+                        {
+                            "type": "image/jpeg",
+                            "url": "http://www.abcd.com"
+                        },
+                        {
+                            "type": null,
+                            "url": "http://www.efgh.com"
+                        },
+                        {
+                            "type": "image/jpeg",
+                            "url": "http://www.ijkl.com"
+                        }
+                    ]
+                }
+            ];
+            let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+            RssDbAddRssFeedsMock.withArgs(expectedFeeds).returns(Promise.resolve("success"));
+            let rssFeeds = new RssFeeds(feeds);
+            rssFeeds.parse();
+            rssFeeds.save(sourceId).then(response => {
+                assert.strictEqual("success", response);
+                RssDbAddRssFeedsMock.verify();
+                done();
+            });
+        });
     });
 });
 
