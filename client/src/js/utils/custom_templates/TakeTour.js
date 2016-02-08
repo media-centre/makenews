@@ -12,7 +12,7 @@ export default class TakeTour {
                                                 "<p class='description'></p>" +
                                                 "<div class='t-right'>" +
                                                     "<button id='tour-continue'>Continue</button>" +
-                                                    "<button id='tour-abort'>Abort</button>" +
+                                                    "<button id='tour-abort'>Skip</button>" +
                                                 "</div>" +
                                             "</div>" +
                                         "</div>";
@@ -31,6 +31,7 @@ export default class TakeTour {
             });
         }
         document.body.style.overflow = "hidden";
+        document.getElementById("tour-abort").textContent = "Skip";
 
         TakeTour.currentIndex = -1;
         TakeTour.schema = TakeTour.getJson();
@@ -50,6 +51,7 @@ export default class TakeTour {
             TakeTour.clickTargetElement();
             if(TakeTour.schema.navigation.length - 1 === TakeTour.currentIndex) {
                 document.getElementById("tour-continue").classList.add("hide");
+                document.getElementById("tour-abort").textContent = "Done";
             } else {
                 TakeTour.currentIndex += 1;
             }
@@ -79,11 +81,13 @@ export default class TakeTour {
             let currentJsonElement = TakeTour.getCurrentJsonElement();
             let takeTourElement = document.getElementById("take-tour");
             let targetElement = document.querySelector(currentJsonElement.selector);
-            let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
-            let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
-            left = left < 0 ? padding : left;
-            takeTourElement.style.top = top + "px";
-            takeTourElement.style.left = left + "px";
+            if(takeTourElement && targetElement) {
+                let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
+                let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
+                left = left < 0 ? padding : left;
+                takeTourElement.style.top = top + "px";
+                takeTourElement.style.left = left + "px";
+            }
         }, time);
     }
 
@@ -126,11 +130,6 @@ export default class TakeTour {
                     "actionSelector": "#addNewUrlButton",
                     "content": "Click here to add news RSS, FACEBOOK and TWITTER"
                 },
-                //{
-                //    "selector": "#addNewUrlButton",
-                //    "actionSelector": "#addNewUrlButton",
-                //    "content": "Click here to add URL to get news"
-                //},
                 {
                     "selector": ".url-panel .add-url-input",
                     "actionSelector": ".url-panel .add-url-input",
@@ -138,11 +137,6 @@ export default class TakeTour {
                     "value": "http://www.thehindu.com/opinion/?service=rss",
                     "action": "ENTER"
                 },
-                //{
-                //    "selector": ".url-list li:first-child div i.close",
-                //    "actionSelector": ".url-list li:first-child div i.close",
-                //    "content": "Click here to delete this URL"
-                //},
                 {
                     "selector": "#allCategoriesButton",
                     "actionSelector": "#allCategoriesButton",
@@ -153,16 +147,6 @@ export default class TakeTour {
                     "actionSelector": ".menu-list > li:nth-child(2) a",
                     "content": "Click here to view the news from configured URLs"
                 },
-                //{
-                //    "selector": ".surf-refresh-button",
-                //    "actionSelector": ".surf-refresh-button",
-                //    "content": "Click here to get the latest feeds from the configured URLs"
-                //},
-                //{
-                //    "selector": ".surf-page-container .all-feeds > div:first-child .park-feed",
-                //    "actionSelector": ".surf-page-container .all-feeds > div:first-child .park-feed",
-                //    "content": "Click here to park the news item for later use"
-                //},
                 {
                     "selector": ".main-page > header",
                     "actionSelector": "#filterToggle",
@@ -173,16 +157,6 @@ export default class TakeTour {
                     "actionSelector": ".menu-list > li:nth-child(3) a",
                     "content": "Click here to view the news items that have been parked for later use"
                 }
-                //,{
-                //    "selector": ".park-page .all-feeds > div:first-child .park-feed",
-                //    "actionSelector": ".park-page .all-feeds > div:first-child .park-feed",
-                //    "content": "Click here to un-park or remove the news"
-                //},
-                //{
-                //    "selector": "header .user-info > a",
-                //    "actionSelector": "header .user-info > a",
-                //    "content": "Click here to logout from the application"
-                //}
             ]
         };
     }

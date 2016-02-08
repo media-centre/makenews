@@ -28,11 +28,12 @@ describe("park Page", () => {
 
     it("should have default text ", () => {
         let feeds = [];
+        let messages = { "noFeeds": "No feeds available" };
         let parkComponent = TestUtils.renderIntoDocument(
-            <ParkPage parkedItems={feeds} dispatch={()=>{}}/>
+            <ParkPage parkedItems={feeds} dispatch={()=>{}} messages={messages}/>
         );
         let parkDOM = ReactDOM.findDOMNode(parkComponent.refs.defaultText);
-        assert.strictEqual("No feeds found", parkDOM.innerHTML);
+        assert.strictEqual("No feeds available", parkDOM.innerHTML);
     });
 
     it("should not have default text if feeds are there", () => {
