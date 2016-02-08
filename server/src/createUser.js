@@ -34,13 +34,13 @@ let createDb = (dbInstance, userName, dbName) => {
     });
 };
 
-console.log("usage:: node dist/server/src/createUser.js --admin_user_name='username' --admin_password='password' --user_name='userName'");
+console.log("usage:: node dist/server/src/createUser.js --admin_user_name='username' --admin_password='password' --user_name='userName' --user_password='password'");
 if(!argv.admin_user_name || !argv.admin_password || !argv.user_name) {
     throw new Error("admin user name, password and user name can not be blank");
 }
 console.log("User creation started.");
 AdminDbClient.instance(argv.admin_user_name, argv.admin_password, argv.user_name).then(dbInstance => {
-    let userName = argv.user_name, password = Math.random().toString("36").slice("-8"), dbName = argv.user_name;
+    let userName = argv.user_name, password = argv.user_password || Math.random().toString("36").slice("-8"), dbName = argv.user_name;
     console.log("creating user...");
     dbInstance.createUser(userName, password).then(() => {
         console.log(`created user: ${userName} with password: ${password}`);
