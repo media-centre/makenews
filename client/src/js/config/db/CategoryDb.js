@@ -49,26 +49,15 @@ export default class CategoryDb {
 
     static deleteCategory(categoryId) {
         return new Promise((resolve, reject) => {
-            SourceDb.fetchSourceConfigurationsByCategoryId(categoryId).then(sourceUrlsObj => {
-                sourceUrlsObj.forEach((sourceUrlObj) => {
-                    Source.instance(sourceUrlObj).delete(categoryId);
+            CategoryDb.findById(categoryId).then(category => {
+                category.delete().then(response => {
+                    resolve(true);
+                }).catch(error => {
+                    reject(error);
                 });
-                CategoryDb.deleteCategoryDocument(categoryId, resolve, reject);
-            }).catch((error) => {
+            }).catch(error => {
                 reject(error);
             });
-        });
-    }
-
-    static deleteCategoryDocument(categoryId, resolve, reject) {
-        PouchClient.getDocument(categoryId).then((document) => {
-            PouchClient.deleteDocument(document).then(() => {
-                resolve(true);
-            }).catch((error) => {
-                reject(error);
-            });
-        }).catch((error) => {
-            reject(error);
         });
     }
 }

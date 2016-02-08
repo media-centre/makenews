@@ -2,7 +2,9 @@
 "use strict";
 import PouchClient from "../../src/js/db/PouchClient.js";
 import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import SourceDb from "../../src/js/config/db/SourceDb.js";
 import Category from "../../src/js/config/Category.js";
+import Source from "../../src/js/config/Source.js";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -199,6 +201,70 @@ describe("Category", () => {
                     assert.deepEqual(error, { "status": false, "error": "Category with name already exists" });
                     pouchClientUpdateMock.verify();
                 });
+            });
+        });
+    });
+
+    describe("delete", () => {
+        let sourceId = null, categoryId = "id", categoryParams = null;
+        let pouchClientDeleteDoucmentMock = null, pouchClientUpdateDoucmentMock = null;
+        beforeEach("delete", () => {
+            sandbox = sinon.sandbox.create();
+            categoryParams = {
+                "_id": "id",
+                "_rev": "rev",
+                "docType": "category",
+                "name": "sports",
+                "createdTime": "1234345"
+            };
+
+            pouchClientDeleteDoucmentMock = sandbox.mock(PouchClient).expects("deleteDocument");
+        });
+
+        it("delete category document along with the source references", () => {
+            let category = new Category(categoryParams), fourTimes = 4;
+            let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
+                { "_id": "103", "url": "http://facebook.com/test1" },
+                { "_id": "104", "url": "http://test.com/rss" }];
+            let fetchUrlsMock = sandbox.mock(SourceDb);
+            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let source = new Source({});
+            sandbox.stub(Source, "instance").returns(source);
+            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(fourTimes).returns(Promise.resolve("response"));
+            pouchClientDeleteDoucmentMock.withArgs(category.getDocument()).returns(Promise.resolve("response"));
+            return category.delete(categoryId).then((response) => {
+                assert.isTrue(response);
+                deleteSourceUrlMock.verify();
+                pouchClientDeleteDoucmentMock.verify();
+            });
+        });
+
+        it("should reject with false if category deletion fails", () => {
+            let category = new Category(categoryParams), fourTimes = 4;
+            let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
+                { "_id": "103", "url": "http://facebook.com/test1" },
+                { "_id": "104", "url": "http://test.com/rss" }];
+            let fetchUrlsMock = sandbox.mock(SourceDb);
+            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let source = new Source({});
+            sandbox.stub(Source, "instance").returns(source);
+            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(fourTimes).returns(Promise.resolve("response"));
+            pouchClientDeleteDoucmentMock.withArgs(category.getDocument()).returns(Promise.reject("error"));
+            return category.delete(categoryId).catch((response) => {
+                assert.strictEqual(response, "error");
+                deleteSourceUrlMock.verify();
+                pouchClientDeleteDoucmentMock.verify();
+            });
+        });
+
+        it("should reject with false if fetchSourceConfigurationsByCategoryId fails", () => {
+            let category = new Category(categoryParams);
+            let fetchUrlsMock = sandbox.mock(SourceDb);
+            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.reject("error"));
+            pouchClientDeleteDoucmentMock.withArgs(category.getDocument()).never();
+            return category.delete(categoryId).catch((response) => {
+                assert.strictEqual(response, "error");
+                pouchClientDeleteDoucmentMock.verify();
             });
         });
     });
