@@ -115,10 +115,8 @@ export default class AddURLComponent extends Component {
                             </li>
                         )}
                     </ul>
-
                     {inputBox}
-                    <div className={this.state.successResponse ? "add-url-status success-message" : "add-url-status error-message"}>{this.state.errorMessage}</div>
-
+                    {this.state.successResponse ? "" : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
 
                 {confirmPopup}
