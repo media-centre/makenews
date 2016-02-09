@@ -16,14 +16,14 @@ app.use(csp({
 	scriptSrc : ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
 	styleSrc : ["'self'", "'unsafe-inline'"]
  }));
-let ninetyDaysInMilliseconds = 7776000000;
-app.use(helmet.hsts({ maxAge: ninetyDaysInMilliseconds }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
 app.use(helmet.nosniff());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard("deny"));
+let ninetyDaysInMilliseconds = 7776000000;
+app.use(helmet.hsts({ "maxAge": ninetyDaysInMilliseconds, "force": true }));
 routers(app);
 
 const DEFAULT_PORT = 5000;
