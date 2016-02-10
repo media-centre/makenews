@@ -14,6 +14,10 @@ export class MainPage extends Component {
         });
     }
 
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.scrollToTop);
+    }
+
     _showScrollToTop() {
         let scrollToTop = document.getElementById("scrollToTop");
         if(scrollToTop === null) {
@@ -29,10 +33,6 @@ export class MainPage extends Component {
                 scrollToTop.classList.add("hide");
             }
         }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("scroll", this.scrollToTop);
     }
 
     render() {
