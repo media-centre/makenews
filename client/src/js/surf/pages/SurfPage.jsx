@@ -45,7 +45,7 @@ export class SurfPage extends Component {
     }
 
     getFeedsCallBack() {
-        if (document.body.scrollHeight === document.body.scrollTop + window.innerHeight) {
+        if (document.body.scrollHeight === pageYOffset + innerHeight) {
             this.getMoreFeeds();
         }
     }
