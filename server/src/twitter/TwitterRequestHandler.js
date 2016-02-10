@@ -17,7 +17,7 @@ export default class TwitterRequestHandler {
                 TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched feeds for url: %s.", url);
                 resolve(tweets);
             }).catch(error => {
-                TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching facebook feeds of web url = %s. Error: %s", url, error);
+                TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching facebook feeds of web url = %s.", url, error);
                 reject(error);
             });
         });

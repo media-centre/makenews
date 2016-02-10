@@ -4,7 +4,8 @@ import Logger from "../logging/Logger.js";
 import AdminDbClient from "../db/AdminDbClient";
 import TwitterLogin from "./TwitterLogin";
 
-export const searchApi = "/search/tweets.json", searchParams = "filter:retweets", FEEDS_COUNT = 100;
+export const searchApi = "/search/tweets.json", userApi = "/statuses/user_timeline.json", searchParams = "filter:retweets", FEEDS_COUNT = 100;
+const twitterTypes = { "TAG": "tag", "USER": "user" };
 export default class TwitterClient {
 
     static logger() {
@@ -16,20 +17,28 @@ export default class TwitterClient {
     }
 
     fetchTweets(url, userName, timestamp) {
+        let type = url.startsWith("#") || url.startsWith("%20") ? twitterTypes.TAG : twitterTypes.USER;
         let timestampQuery = timestamp ? encodeURIComponent(" since:") + this._getTwitterTimestampFormat(timestamp) : "";
 
         return new Promise((resolve, reject) => {
             this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
                 let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
                 let oauth = TwitterLogin.createOAuthInstance();
-                let searchUrl = `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
+                let searchUrl = type === twitterTypes.TAG ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`
+                    : `${this._baseUrl()}${userApi}?screen_name=${encodeURIComponent(url)}${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
                 oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                     if(error) {
-                        TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s. Error: %s", url, error);
-                        reject(error);
+                        const errorInfo = JSON.stringify(error);
+                        TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s.", url, errorInfo);
+                        reject(errorInfo);
                     } else {
+                        let tweetData = JSON.parse(data);
                         TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
-                        resolve(JSON.parse(data));
+                        if(type === twitterTypes.USER) {
+                            resolve({ "statuses": tweetData });
+                        } else {
+                            resolve(tweetData);
+                        }
                     }
                 });
             }).catch(error => {
