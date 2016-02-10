@@ -44,7 +44,7 @@ export default class CategoryDb {
                 reject("name should not be empty");
             });
         }
-        return PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": name });
+        return PouchClient.fetchDocuments("category/allCategoriesByName", { "include_docs": true, "key": name.toLowerCase() });
     }
 
     static deleteCategory(categoryId) {
