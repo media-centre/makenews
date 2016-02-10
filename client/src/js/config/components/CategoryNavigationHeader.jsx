@@ -19,6 +19,7 @@ export default class CategoryNavigationHeader extends Component {
     _updateCategoryName(event, props) {
         var categoryName = this.refs.categoryTitleElement.value;
         props.updateCategoryName(categoryName);
+        console.log(event);
     }
 
     _handleEnterKey(event, props) {
@@ -59,7 +60,7 @@ export default class CategoryNavigationHeader extends Component {
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
-            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)} onBlur={(event)=> this._updateCategoryName(event, this.props)}>
+            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)}  >
 
             </input>
             <div ref="errorMessage" className="title-status error-msg t-center">{this.props.isValidName ? "" : this.props.errorMessage}</div>
