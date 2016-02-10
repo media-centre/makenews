@@ -10,14 +10,30 @@ export default class TwitterLogin {
     }
 
     login() {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             this.isAuthenticated().then((authenticated) => {
                 if(authenticated) {
                     resolve();
                 } else {
                     this.requestToken().then((response) => {
-                        window.open(response.authenticateUrl, "twitterWindow", "location=0,status=0,width=800,height=600");
-                        resolve();
+                        let twitterWindow = window.open(response.authenticateUrl, "twitterWindow", "location=0,status=0,width=800,height=600");
+                        let waitTime = 2000, maxIterations = 150, iteration = 0;
+                        let timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
+                            if(iteration > maxIterations) {
+                                clearInterval(timer);
+                                reject(false);
+                            }
+                            if(twitterWindow.closed) {
+                                clearInterval(timer);
+                                if(window.twitterLoginSucess) {
+                                    window.twitterLoginSucess = false;
+                                    resolve(true);
+                                } else {
+                                    reject(false);
+                                }
+                            }
+                            iteration += 1;
+                        }, waitTime);
                     });
                 }
             });

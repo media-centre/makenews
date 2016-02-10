@@ -5,6 +5,7 @@ import FacebookTwitterDb from "../../socialAccounts/FacebookTwitterDb.js";
 export default class TwitterSuccess extends Component {
     componentWillMount() {
         FacebookTwitterDb.createOrUpdateTokenDocument({ "twitterAuthenticated": true }).then(() => {
+            window.opener.twitterLoginSucess = true;
             window.close();
         });
     }
