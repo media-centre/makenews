@@ -171,25 +171,6 @@
     }
   }
 
-  .surf-page-container .surf-filter .show-filter-container .surf-filter-item {
-    label {
-      width: 25%;
-      font-size: $extra-small-font-size;
-      margin-top: 7px;
-    }
-    ul {
-      width: 75%;
-
-      li {
-        margin: 8px;
-
-        .image {
-          font-size: $extra-large-font-size;
-        }
-      }
-    }
-  }
-
   .take-tour-mask {
     .take-tour {
       left: 0 !important;
@@ -230,5 +211,13 @@
   }
   .surf-page-container .refresh-status {
     top: 82px;
+  }
+  .main-page section .surf-page-container .surf-filter {
+    top: 83px;
+    width: 85%;
+    left: -85%;
+  }
+  .main-page section .surf-page-container .surf-filter.show {
+    left: 0%;
   }
 }

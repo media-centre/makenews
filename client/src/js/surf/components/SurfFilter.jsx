@@ -14,18 +14,19 @@ export default class SurfFilter extends Component {
                 "image": "file-text-o",
                 "_id": "description"
             }, {
-                "name": "Image Content",
+                "name": "Image",
                 "image": "file-picture-o",
                 "_id": "imagecontent"
             }, {
-                "name": "Pictures",
+                "name": "Gallery",
                 "image": "file-picture-o",
                 "_id": "gallery"
-            }, {
-                "name": "Videos",
-                "image": "play-circle-o",
-                "_id": "videos"
             }
+            //, {
+            //    "name": "Videos",
+            //    "image": "play-circle-o",
+            //    "_id": "videos"
+            //}
         ];
         this.state = { "mediaTypes": mediaTypes, "show": false };
     }
@@ -46,12 +47,14 @@ export default class SurfFilter extends Component {
 
     render() {
         return (
-            <div className="surf-filter show-filter">
-                <div className={this.state.show ? "anim show-filter-container bottom-box-shadow show" : "anim show-filter-container bottom-box-shadow"}>
-                    <SurfFilterItem type="content" displayItems={this.state.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content" dispatchFilterAction={this.updateFilter.bind(this)}/>
-                    <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
+            <div className={this.state.show ? "anim surf-filter show-filter show" : "anim surf-filter show-filter"}>
+                <div>
+                    <div className="anim show-filter-container">
+                        <SurfFilterItem type="content" displayItems={this.state.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                        <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                    </div>
+                    <button id="filterToggle" onClick={this.toggleFilter.bind(this)}>{"Filter"}</button>
                 </div>
-                <button id="filterToggle" onClick={this.toggleFilter.bind(this)}></button>
             </div>
         );
     }

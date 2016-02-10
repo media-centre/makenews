@@ -17,45 +17,69 @@
     margin-top: 50px;
   }
 
+  .surf-filter > div {
+    position: relative;
+  }
+  .surf-filter.show {
+    left: 0px;
+  }
   .surf-filter {
     position: fixed;
-    left: 0px;
-    right: 0px;
+    left: -300px;
+    bottom: 0px;
+    top: 87px;
+    width: 300px;
     z-index: $medium-index;
+    background-color: $app-header-bg-color;
+
+    -webkit-box-shadow: 1px 0px 5px $transparent-gray;
+    -moz-box-shadow: 1px 0px 5px $transparent-gray;
+    -ms-box-shadow: 1px 0px 5px $transparent-gray;
+    box-shadow: 1px 0px 5px $transparent-gray;
 
     button {
-      background-color: $app-header-bg-color;
-      display: block;
-      padding: 5px 25px;
-      margin: 6px auto auto auto;
+      position: absolute;
+      top: 48px;
+      right: -47px;
+      background: $app-header-bg-color;
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      transform: rotate(90deg);
+      border: none;
+      -webkit-box-shadow: 1px -2px 5px $transparent-gray;
+      -moz-box-shadow: 1px -2px 5px $transparent-gray;
+      -ms-box-shadow: 1px -2px 5px $transparent-gray;
+      box-shadow: 1px -2px 5px $transparent-gray;
     }
 
-    .show-filter-container.show {
-      height: 245px;
-      overflow: auto;
-    }
-
-    .show-filter-container {
-      height: 0px;
-      overflow: hidden;
-      background-color: $app-header-bg-color;
-    }
-
-    .surf-filter-item:first-child {
-      @extend .border-bottom;
-      border-bottom-color: #656565;
+    .surf-filter-item:last-child {
+      h4 {
+        margin-bottom: 15px;
+      }
+      li {
+        padding: 5px 10px;
+        width: auto;
+      }
     }
     .surf-filter-item {
-      padding: 20px;
-      min-height: 82px;
+      @extend .border-bottom;
+      min-height: 76px;
+      border-bottom-color: #5F9EA0;
+      padding: 10px;
 
-      label {
-        width: 30%;
+      h4 {
+        margin: 0px 0px 25px 0px;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: $small-font-size;
         color: $primary-font-color;
       }
 
       ul {
-        width: 70%;
+
+        text-align: center;
 
         li.content-type {
           font-size: $medium-font-size;
@@ -65,12 +89,12 @@
           padding: 0px;
           font-size: $extra-small-font-size;
           color: $primary-font-color;
-          margin: 0px 20px 20px 20px;
+          width: 75px;
           cursor: pointer;
           text-align: center;
 
           .image {
-            font-size: $max-font-size;
+            font-size: $extra-large-font-size;
           }
 
           &:hover {
@@ -103,7 +127,7 @@
     }
     .surf-refresh-button {
       position: fixed;
-      top: 115px;
+      top: 95px;
       left: 0;
       right: 0;
       margin: auto;

@@ -49,9 +49,9 @@ export default class SurfFilterItem extends Component {
             return li;
         });
         return (
-            <div className="surf-filter-item max-width clear-fix">
-                <label className="left box">{this.props.title}</label>
-                <ul className="left box h-center">{displayItems}</ul>
+            <div className="surf-filter-item">
+                <h4 className="box">{this.props.title}</h4>
+                <ul className="box h-center">{displayItems}</ul>
             </div>
         );
     }
