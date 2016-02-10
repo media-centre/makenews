@@ -5,7 +5,7 @@ import PouchClient from "../db/PouchClient.js";
 import FeedDb from "../feeds/db/FeedDb.js";
 import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries.js";
 
-let MAX_FEEDS_PER_PAGE = 20;
+export const MAX_FEEDS_PER_PAGE = 20;
 let MAX_FEEDS_PER_REQUEST = 200;
 
 

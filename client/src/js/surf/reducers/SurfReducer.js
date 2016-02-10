@@ -3,6 +3,7 @@
 import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/SurfActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
+import { MAX_FEEDS_PER_PAGE } from "../FilterFeedsHandler.js";
 
 
 export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Locale.applicationStrings().messages.surfPage }, action = {}) {
@@ -25,7 +26,11 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         }
         return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap, "sourceIds": action.sourceIds });
     case PAGINATION_FEEDS:
-        action.feeds = state.feeds.concat(action.feeds);
+        if(action.lastIndex <= MAX_FEEDS_PER_PAGE) {
+            action.feeds = action.feeds.length === 0 ? state.feeds : action.feeds;
+        } else {
+            action.feeds = state.feeds.concat(action.feeds);
+        }
         return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });
     default:
         return state;

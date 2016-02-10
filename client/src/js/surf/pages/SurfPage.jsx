@@ -82,15 +82,20 @@ export class SurfPage extends Component {
     }
 
     parkFeedItem(feedDoc) {
-        this.props.dispatch(parkFeed(feedDoc));
+        this.props.dispatch(parkFeed(feedDoc, ()=> {
+            if(this.props.feeds.length === 0) {
+                this.props.dispatch(fetchFeedsByPage(0, (filteredObj)=> {
+                    this.setState({ "fetchHintMessage": filteredObj.feeds.length > 0 ? "" : this.props.messages.noFeeds, "lastIndex": filteredObj.lastIndex });
+                }));
+            }
+        }));
     }
 
     getHintMessage() {
         if (this.props.feeds.length === 0) {
-            if (this.state.fetchHintMessage === this.props.messages.fetchingFeeds) {
-                return <div className="t-center">{this.state.fetchHintMessage}</div>;
-            }
-            return document.getElementById("take-tour") === null ? <div className="take-tour-text">{"Welcome to makenews for the first time."} <span className="tour-target" onClick={()=> { this.takeTour(); }}>{"Take tour"}</span> {" to learn how it works"}</div> : <div className="t-center">{this.props.messages.noFeeds}</div>;
+            let message = this.state.fetchHintMessage === this.props.messages.fetchingFeeds ? this.state.fetchHintMessage : this.props.messages.noFeeds;
+            return <div className="feed-hint t-center">{message}</div>;
+            //return document.getElementById("take-tour") === null ? <div className="take-tour-text">{"Welcome to makenews for the first time."} <span className="tour-target" onClick={()=> { this.takeTour(); }}>{"Take tour"}</span> {" to learn how it works"}</div> : <div className="t-center">{this.props.messages.noFeeds}</div>;
         }
         return null;
     }
@@ -107,19 +112,20 @@ export class SurfPage extends Component {
     }
 
     render() {
-        let refreshButton = this.props.feeds.length === 0 ? null : <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
-
-        let refreshStatus = this.props.feeds.length === 0 ? null : <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
+        let refreshButton = <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
+        let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         let paginationSpinner = this.state.showPaginationSpinner ? <div className="pagination-spinner">{"Fetching Feeds ..."}</div> : null;
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
+        let allFeeds = <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>;
+        let hint = this.getHintMessage();
         return (
             <div className="surf-page-container">
                 <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.state.categories} filter={this.state.filter}/>
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                     {refreshButton}
-                    {this.getHintMessage()}
-                    <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>
+                    {hint}
+                    {allFeeds}
                     {paginationSpinner}
                 </div>
                 {mask}

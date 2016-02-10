@@ -37,12 +37,13 @@ export function paginationFeeds(feeds, refreshState = false, progressPercentage 
     return { "type": PAGINATION_FEEDS, feeds, refreshState, progressPercentage, lastIndex, hasMoreFeeds };
 }
 
-export function parkFeed(feedDoc) {
+export function parkFeed(feedDoc, callback = ()=> {}) {
     if(feedDoc && Object.keys(feedDoc).length !== 0) {
         return dispatch => {
             FeedApplicationQueries.updateFeed(feedDoc, "park").then(() => {
                 dispatch(removeParkItem(feedDoc));
                 dispatch(parkFeedCounter());
+                callback();
             });
         };
     }
@@ -84,12 +85,10 @@ export function fetchAllCategories(callback) {
 
 export function updateLatestFeeds(completionPercentage) {
     return dispatch => {
+        dispatch(displayExistingFeeds([], isRefreshing, completionPercentage));
         if (completionPercentage === totalPercentage) {
             isRefreshing = false;
-            dispatch(displayAllFeeds([]));
             dispatch(fetchFeedsByPage(0));
-        } else {
-            dispatch(displayExistingFeeds([], isRefreshing, completionPercentage));
         }
     };
 }
@@ -120,7 +119,6 @@ export function fetchFeedsByPage(lastIndex, callback = ()=> {}) {
     return dispatch => {
         let filterFeedsHandler = new FilterFeedsHandler();
         if(lastIndex === 0) {
-            dispatch(displayAllFeeds([]));
             filterFeedsHandler.getFilterAndSourceHashMap().then(latestSourceMapAndFilter => {
                 let filterObj = dispatch(storeFilterSourceMap(latestSourceMapAndFilter.surfFilter, latestSourceMapAndFilter.sourceHashMap, latestSourceMapAndFilter.sourceIds));
                 fetchFeeds(lastIndex, filterObj, callback, dispatch);

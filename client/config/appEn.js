@@ -81,7 +81,7 @@ window.mediaCenter.appEn = {
             "configureTabName": "Configure"
         },
         "surfPage": {
-            "noFeeds": "No feeds available",
+            "noFeeds": "No feeds available or check news filter",
             "fetchingFeeds": "Fetching feeds...",
             "noMoreFeeds": "No more feeds to display",
             "feeds": {

@@ -19,6 +19,7 @@
     }
   }
 }
+
 @media (max-width: 600px) {
 
   .max-width {
@@ -199,5 +200,35 @@
     .tour-top-arrow {
       right: auto !important;
     }
+  }
+}
+
+@media (max-width: 400px) {
+  .main-page header .fixed-header {
+    .user-info a {
+      width: auto;
+      margin: 18px 0px 18px 0px;
+      span {
+        font-size: $extra-small-font-size;
+      }
+
+    }
+    ul li {
+      padding: 0px;
+      width: 20%;
+
+      a {
+        font-size: $extra-small-font-size;
+
+        .header-link-image {
+          width: 25px;
+          height: 25px;
+          background-size: 25px !important;
+        }
+      }
+    }
+  }
+  .surf-page-container .refresh-status {
+    top: 82px;
   }
 }
