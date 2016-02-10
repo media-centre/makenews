@@ -49,16 +49,17 @@ window.mediaCenter.appEn = {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
                 "addUrlLinkLabel": "Add URL",
-                "categoryDeletionConfirm": "will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
+                "categoryDeletionConfirm": "will be deleted and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
                 "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
                 "hintMessages": {
                     "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
                     "TwitterExampleURL": "Example: @martinfowler, #savetheinternet",
-                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama"
+                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama",
+                    "categoryTitle": "Invalid category name. Use only space or - or _"
                 },
                 "successMessages": {
                     "categoryDeleteSuccess": "is successfully deleted",
-                    "categoryUpdated": "is updated",
+                    "categoryUpdated": "Category name is updated to -",
                     "urlDeleteSuccess": "Feed URL successfully deleted",
                     "urlSuccess": "URL is successfully added"
                 },
@@ -72,7 +73,9 @@ window.mediaCenter.appEn = {
                     "invalidTwitterUrl": "Invalid twitter url",
                     "invalidFacebookUrl": "Invalid facebook url",
                     "noFbAccess": "No such link or no access to the profile",
-                    "urlDeleteFailed": "Url deletion failed"
+                    "urlDeleteFailed": "Url deletion failed",
+                    "categoryNameExists": "Category name already exists",
+                    "categoryNameCantBeEmpty": "Category name can not be empty"
                 }
             },
             "configureTabName": "Configure"
