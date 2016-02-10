@@ -17,7 +17,7 @@ export default class TwitterLogin {
                 } else {
                     this.requestToken().then((response) => {
                         let twitterWindow = window.open(response.authenticateUrl, "twitterWindow", "location=0,status=0,width=800,height=600");
-                        let waitTime = 2000, maxIterations = 150, iteration = 0;
+                        let maxIterations = 150, iteration = 0;
                         let timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
                             if(iteration > maxIterations) {
                                 clearInterval(timer);
@@ -25,19 +25,23 @@ export default class TwitterLogin {
                             }
                             if(twitterWindow.closed) {
                                 clearInterval(timer);
-                                if(window.twitterLoginSucess) {
-                                    window.twitterLoginSucess = false;
+                                let appWindow = AppWindow.instance();
+                                if(appWindow.get("twitterLoginSucess")) {
+                                    appWindow.set("twitterLoginSucess", false);
                                     resolve(true);
                                 } else {
                                     reject(false);
                                 }
                             }
                             iteration += 1;
-                        }, waitTime);
+                        }, TwitterLogin.getWaitTime());
                     });
                 }
             });
         });
+    }
+    static getWaitTime() {
+        return 2000;
     }
 
     requestToken() {

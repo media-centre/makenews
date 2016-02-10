@@ -52,16 +52,25 @@ describe("TwitterLogin", () => {
     });
 
     describe("login", () => {
-        it("should requestToken if not authenticated", () => {
+        it("should requestToken if not authenticated", (done) => {
             let sandbox = sinon.sandbox.create();
             let twitterLogin = new TwitterLogin();
             sandbox.stub(twitterLogin, "isAuthenticated").returns(Promise.resolve(false));
             let requestMock = sandbox.mock(twitterLogin).expects("requestToken").returns(Promise.resolve({ "authenticateUrl": "url" }));
-            let windowMock = sandbox.mock(window).expects("open").withArgs("url", "twitterWindow", "location=0,status=0,width=800,height=600");
+            let windowMock = sandbox.mock(window).expects("open").withArgs("url", "twitterWindow", "location=0,status=0,width=800,height=600").returns({"closed": true});
+            let appWindowMock = new AppWindow();
+            let appWindowInstanceMock = sandbox.mock(AppWindow).expects("instance");
+            appWindowInstanceMock.returns(appWindowMock);
+            let appWindowGetMock = sandbox.mock(appWindowMock);
+            sandbox.stub(TwitterLogin, "getWaitTime").returns(20);
+            appWindowGetMock.expects("get").withExactArgs("twitterLoginSucess").returns(true);
+            appWindowGetMock.expects("set").withExactArgs("twitterLoginSucess", false);
             return twitterLogin.login().then(() => {
                 windowMock.verify();
                 requestMock.verify();
+                appWindowGetMock.verify();
                 sandbox.restore();
+                done();
             });
         });
 
