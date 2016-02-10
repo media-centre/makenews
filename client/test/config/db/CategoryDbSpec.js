@@ -70,6 +70,39 @@ describe("CategoryDb", () => {
             });
         });
 
+
+        it("should fetch and resolve id and name of category documents in sorted order based on name", () => {
+            let resultDocs = [
+                {
+                    "_id": "1",
+                    "docType": "category",
+                    "name": "hindu page"
+                },
+                {
+                    "_id": "2",
+                    "docType": "category",
+                    "name": "hindu test page"
+                },
+                {
+                    "_id": "3",
+                    "docType": "category",
+                    "name": "ABcd"
+                },
+                {
+                    "_id": "4",
+                    "docType": "category",
+                    "name": "IJKL"
+                }
+            ];
+            let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
+            fetchAllCategoryDocumentsStub.returns(Promise.resolve(resultDocs));
+            return CategoryDb.fetchAllCategories().then(categories => {
+                let expectedCategories = [{ "_id": "3", "name": "ABcd" }, { "_id": "1", "name": "hindu page" }, { "_id": "2", "name": "hindu test page" }, { "_id": "4", "name": "IJKL" }];
+                expect(expectedCategories).to.deep.equal(categories);
+                CategoryDb.fetchAllCategoryDocuments.restore();
+            });
+        });
+
         it("should reject with error if fetching category document fails", (done) => {
             let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
             fetchAllCategoryDocumentsStub.returns(Promise.reject("error"));
