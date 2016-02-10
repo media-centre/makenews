@@ -62,7 +62,7 @@ export default class CategoryNavigationHeader extends Component {
             <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)} onBlur={(event)=> this._updateCategoryName(event, this.props)}>
 
             </input>
-            <div ref="errorMessage" className={this.props.isValidName ? "title-status t-center" : "title-status error-msg t-center"}>{this.props.errorMessage}</div>
+            <div ref="errorMessage" className="title-status error-msg t-center">{this.props.isValidName ? "" : this.props.errorMessage}</div>
         </div>;
 
         return (
@@ -73,7 +73,7 @@ export default class CategoryNavigationHeader extends Component {
                 </Link>
                 <button className={this.props.isDefault ? "delete-category right disable" : "delete-category right"} id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.deleteCategory()}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
                 {titleElement}
-                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {this.props.categoryDetailsPageStrings.categoryDeletionConfirm} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
+                {this.state.showDeleteConfirm ? <ConfirmPopup ref="confirmPopup" description= {`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.categoryDeletionConfirm}`} callback={(event) => this.handleDelete(event, this.props.categoryId)} /> : null}
             </div>
         );
     }

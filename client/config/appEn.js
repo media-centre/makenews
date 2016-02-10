@@ -49,7 +49,7 @@ window.mediaCenter.appEn = {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
                 "addUrlLinkLabel": "Add URL",
-                "categoryDeletionConfirm": "This category will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
+                "categoryDeletionConfirm": "will be deleted  and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
                 "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
                 "hintMessages": {
                     "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
