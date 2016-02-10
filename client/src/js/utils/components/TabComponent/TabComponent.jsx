@@ -29,16 +29,14 @@ export default class TabComponent extends Component {
     render() {
         let headers = this.props.children.map((header, index)=> {
             let li = null;
-            let tabDisplayName = header.props["tab-header"];
             let tabName = header.props.name;
-            if(header.props.icon) {
-                li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
-                <i className={"fa fa-" + header.props.icon.toLowerCase()}></i>
-                    <span>{tabDisplayName}</span>
-                </li>);
-            } else {
-                li = <li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>{tabDisplayName}</li>;
-            }
+            let urlsCount = header.props.content.length;
+
+            li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
+                {header.props.icon ? <i className={"fa fa-" + header.props.icon.toLowerCase()}></i> : ""}
+                <span className="hide-mobile-xs">{tabName}</span>
+                <span>{`(${urlsCount})`}</span>
+            </li>);
             return li;
         });
 

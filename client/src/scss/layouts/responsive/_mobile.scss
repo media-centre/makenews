@@ -186,17 +186,21 @@
 }
 
 @media (max-width: 400px) {
+  .hide-mobile-xs {
+    display: none;
+  }
+
   .main-page header .fixed-header {
     .user-info a {
       width: auto;
-      margin: 18px 0px 18px 0px;
+      margin: 18px 0 18px 0;
       span {
         font-size: $extra-small-font-size;
       }
 
     }
     ul li {
-      padding: 0px;
+      padding: 0;
       width: 20%;
 
       a {
@@ -214,11 +218,11 @@
     top: 82px;
   }
   .main-page section .surf-page-container .surf-filter {
-    top: 83px;
+    top: 82px;
     width: 85%;
     left: -85%;
   }
   .main-page section .surf-page-container .surf-filter.show {
-    left: 0%;
+    left: 0;
   }
 }
