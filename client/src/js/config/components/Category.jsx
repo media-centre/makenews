@@ -63,7 +63,7 @@ export default class Category extends Component {
         }
 
         if(!categoryName) {
-            this.setState({ "titleErrorMessage": "Category name can not be empty", "isValidName": false });
+            this.setState({ "titleErrorMessage": this.props.categoryDetailsPageStrings.errorMessages.categoryNameCantBeEmpty, "isValidName": false });
             return;
         }
 
@@ -71,14 +71,14 @@ export default class Category extends Component {
         if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
                 if(response.status) {
-                    Toast.show(`${categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated}`);
-                    this.setState({ "titleErrorMessage": "Category name is updated", "isValidName": true, "categoryName": categoryName });
+                    Toast.show(`${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated} ${categoryName}`);
+                    this.setState({ "titleErrorMessage": `${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated} ${categoryName}`, "isValidName": true, "categoryName": categoryName });
                 } else {
-                    this.setState({ "titleErrorMessage": "Category name already exists", "isValidName": false, "categoryName": this.state.categoryName });
+                    this.setState({ "titleErrorMessage": this.props.categoryDetailsPageStrings.errorMessages.categoryNameExists, "isValidName": false, "categoryName": this.state.categoryName });
                 }
             }));
         } else {
-            this.setState({ "titleErrorMessage": "Invalid category name. Use only - or _", "isValidName": false, "categoryName": this.state.categoryName });
+            this.setState({ "titleErrorMessage": this.props.categoryDetailsPageStrings.hintMessages.categoryTitle, "isValidName": false, "categoryName": this.state.categoryName });
         }
     }
 
