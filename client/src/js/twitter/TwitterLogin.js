@@ -41,7 +41,8 @@ export default class TwitterLogin {
         });
     }
     static getWaitTime() {
-        return 2000;
+        let twoSeconds = 2000;
+        return twoSeconds;
     }
 
     requestToken() {

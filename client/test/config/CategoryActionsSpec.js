@@ -81,7 +81,7 @@ describe("addRssUrlAsync", () => {
         };
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         //done should be called in callback instead of here. Passing dummy function not to call done.
-        const store = mockStore(categorySourceConfig, expectedActions, function(){});
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
         store.dispatch(addRssUrlAsync(categoryId, url, verify));
     });
 
