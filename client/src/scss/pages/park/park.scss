@@ -75,7 +75,13 @@
       max-height: 200px;
     }
     p.surf-description {
-      overflow: auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      line-height: 20px;
+      max-height: 100px;
     }
     div.title {
       font-weight: bold;
@@ -102,6 +108,13 @@
     }
     p.surf-description {
       margin: 0px 0px 5px 0px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      line-height: 20px;
+      max-height: 100px;
     }
   }
 
