@@ -64,7 +64,7 @@ describe("CategoryDb", () => {
             let fetchAllCategoryDocumentsStub = sinon.stub(CategoryDb, "fetchAllCategoryDocuments");
             fetchAllCategoryDocumentsStub.returns(Promise.resolve(resultDocs));
             return CategoryDb.fetchAllCategories().then(categories => {
-                let expectedCategories = [{ "_id": "1", "name": "Sports" }, { "_id": "2", "name": "Politics" }];
+                let expectedCategories = [{ "_id": "2", "name": "Politics" }, { "_id": "1", "name": "Sports" }];
                 expect(expectedCategories).to.deep.equal(categories);
                 CategoryDb.fetchAllCategoryDocuments.restore();
             });

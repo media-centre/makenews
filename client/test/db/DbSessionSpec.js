@@ -90,7 +90,10 @@ describe("DbSession", () => {
 
         it("should create pouch db of remote instance and initiate replication", (done) => {
             let remotePouchDbMock = sandbox.mock(DbSession).expects("newRemotePouchDb");
-            let replicationMock = sandbox.mock(dbInstance).expects("replicateRemoteDb");
+            let replicationMock = sandbox.mock(dbInstance).expects("replicateDb").withArgs(parametersFake.getRemoteDbUrl(), parametersFake.getLocalDbUrl(), {
+                "retry": true,
+                "live": false
+            }, true);
             remotePouchDbMock.returns(Promise.resolve("session"));
             dbInstance.remoteDbInstance().then(session => {
                 assert.strictEqual("session", session);
@@ -117,73 +120,66 @@ describe("DbSession", () => {
                 }
             };
             let cancelSpy = sinon.spy(cancelReturn, "cancel");
-            sinon.mock(PouchDB).expects("sync").withArgs("localDb", "remoteDb", {
-                "live": true,
-                "retry": true
-            }).twice().returns({
-                "on": () => {
-                    return {
-                        "on": () => {
-                            return {
-                                "on": () => {
-                                    return {
-                                        "on": () => {
-                                            return {
-                                                "on": () => {
-                                                    return {
-                                                        "on": () => {
-                                                            return cancelReturn;
-                                                        }
-                                                    };
-                                                }
-                                            };
-                                        }
-                                    };
-                                }
-                            };
-                        }
-                    };
-                }
-            });
+
+            let dbSessionReplicateDbMock = allSandbox.mock(dbSession).expects("replicateDb").withArgs(parametersFake.getLocalDbUrl(), parametersFake.getRemoteDbUrl(), {
+                "retry": true,
+                "live": true
+            }, false).returns(cancelReturn).twice();
+
+            let THREEMINUTE = 180000;
+            let replicateRemoteDbMock = allSandbox.mock(dbSession).expects("replicateRemoteDb");
+            replicateRemoteDbMock.withArgs(THREEMINUTE).twice();
 
             dbSession.sync();
             dbSession.sync();
+            dbSessionReplicateDbMock.verify();
+            replicateRemoteDbMock.verify();
+
             assert.isTrue(cancelSpy.calledOnce);
-
             cancelSpy.restore();
         });
     });
 
     describe("replicate", () => {
-        let dbSession = null, sandbox = null;
-        beforeEach("Sync", () => {
+        let dbSession = null, sandbox = null, dbSessionPouchDbMock = null, dbSessionLocalPouchDbMock = null, pouchDbReplicateMock = null;
+        beforeEach("replicate", () => {
             sandbox = sinon.sandbox.create();
             dbSession = new DbSession();
+            dbSessionPouchDbMock = sandbox.mock(DbSession).expects("newPouchDb");
+            dbSessionLocalPouchDbMock = sandbox.mock(DbSession).expects("newLocalPouchDb");
+            pouchDbReplicateMock = sandbox.mock(PouchDB).expects("replicate");
         });
 
-        afterEach("Sync", () => {
+        afterEach("replicate", () => {
             sandbox.restore();
         });
 
-        it("should start the pouchd db replicate with remote db. Replace db with local db once replication completed", (done) => {
-
-            let dbSessionLocalPouchDbMock = sandbox.mock(DbSession).expects("newLocalPouchDb");
+        it("should start the pouchd db replicate with remote db and start sync. Replace db with local db once replication completed", (done) => {
+            dbSessionPouchDbMock.withArgs("localDb").returns("localDb");
             dbSessionLocalPouchDbMock.returns(Promise.resolve("session"));
-            sandbox.stub(dbSession, "sync");
+            sandbox.mock(dbSession).expects("sync");
+
             let dbObj = { "on": (action, callback) => {
                 callback(); //eslint-disable-line callback-return
                 if(action === "complete") {
                     dbSessionLocalPouchDbMock.verify();
+                    dbSessionPouchDbMock.verify();
+                    pouchDbReplicateMock.verify();
                     done();
                 }
                 return dbObj;
             }
             };
 
-            sandbox.stub(PouchDB, "replicate").withArgs("remoteDb", "localDb", {
-                "retry": true
+            pouchDbReplicateMock.withArgs("localDb", "remoteDb", {
+                "retry": true,
+                "live": true
             }).returns(dbObj);
-            dbSession.replicateRemoteDb();
+
+            dbSession.replicateDb("localDb", "remoteDb", {
+                "retry": true,
+                "live": true
+            }, true);
         });
     });
 });

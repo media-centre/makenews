@@ -27,7 +27,10 @@ export default class DbSession {
     remoteDbInstance() {
         return new Promise((resolve, reject) => {
             DbSession.newRemotePouchDb().then(session => {
-                this.replicateRemoteDb();
+                this.replicateDb(this.dbParameters.getRemoteDbUrl(), this.dbParameters.getLocalDbUrl(), {
+                    "retry": true,
+                    "live": false
+                }, true);
                 resolve(session);
             });
         });
@@ -35,34 +38,35 @@ export default class DbSession {
 
 
     sync() {
-        if(DbSession.currentSyn) {
-            DbSession.currentSyn.cancel();
-            DbSession.currentSyn = null;
+        if(DbSession.localToRemoteReplication) {
+            DbSession.localToRemoteReplication.cancel();
+            DbSession.localToRemoteReplication = null;
         }
 
-        DbSession.currentSyn = PouchDB.sync(this.dbParameters.getLocalDbUrl(), this.dbParameters.getRemoteDbUrl(), {
-            "live": true,
-            "retry": true
-        }).on("change", (info) => {
-            // handle change
-        }).on("paused", () => {
-            // replication paused (e.g. user went offline)
-        }).on("active", () => {
-            // replicate resumed (e.g. user went back online)
-        }).on("denied", (info) => {
-            console.warn("replication denied", info);
-            // a document failed to replicate, e.g. due to permissions
-        }).on("complete", (info) => {
-            // handle complete
-        }).on("error", (err) => {
-            console.warn("replication errored", err);
-        });
+        DbSession.localToRemoteReplication = this.replicateDb(this.dbParameters.getLocalDbUrl(), this.dbParameters.getRemoteDbUrl(), {
+            "retry": true,
+            "live": true
+        }, false);
+
+        const THREEMINUTE = 180000;
+        this.replicateRemoteDb(THREEMINUTE);
     }
 
-    replicateRemoteDb() {
-        PouchDB.replicate(this.dbParameters.getRemoteDbUrl(), this.dbParameters.getLocalDbUrl(), {
-            "retry": true
-        }).on("change", (info) => {
+    replicateRemoteDb(intervalTime) {
+        setInterval(() => {
+            let dbParameters = DbParameters.instance();
+            this.replicateDb(dbParameters.getRemoteDbUrl(), dbParameters.getLocalDbUrl(), {
+                "retry": false,
+                "live": false
+            });
+        }, intervalTime);
+    }
+
+
+    replicateDb(fromDbUrl, toDbUrl, options, startSync = false) {
+        console.log(fromDbUrl, toDbUrl, options, startSync);
+        let fromDb = DbSession.newPouchDb(fromDbUrl);
+        PouchDB.replicate(fromDb, toDbUrl, options).on("change", (info) => {
             // handle change
         }).on("paused", () => {
             // replication paused (e.g. user went offline)
@@ -72,13 +76,16 @@ export default class DbSession {
             console.warn("replication denied", info);
             // a document failed to replicate, e.g. due to permissions
         }).on("complete", (info) => {
-            DbSession.newLocalPouchDb().then(session => {
-                DbSession.db = session;
-                this.sync();
-            }).catch(error => {
-                console.warn("error while creating db", error);
-            });
-            // handle complete
+            console.log("completed, startSync = ", startSync);
+            if(startSync) {
+                console.log("started sync");
+                DbSession.newLocalPouchDb().then(session => {
+                    DbSession.db = session;
+                    this.sync();
+                }).catch(error => {
+                    console.warn("error while creating db", error);
+                });
+            }
         }).on("error", (err) => {
             console.warn("replication errored", err);
             // handle error
@@ -87,6 +94,10 @@ export default class DbSession {
 
     static new() {
         return new DbSession();
+    }
+
+    static newPouchDb(url) {
+        return new PouchDB(url);
     }
 
     static newRemotePouchDb() {
@@ -99,9 +110,9 @@ export default class DbSession {
 
     static clearInstance() {
         DbSession.db = null;
-        if(DbSession.currentSyn) {
-            DbSession.currentSyn.cancel();
-            DbSession.currentSyn = null;
+        if(DbSession.localToRemoteReplication) {
+            DbSession.localToRemoteReplication.cancel();
+            DbSession.localToRemoteReplication = null;
         }
     }
 }
