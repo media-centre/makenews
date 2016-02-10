@@ -16,7 +16,7 @@ describe("CategoryNavigationHeader", ()=> {
             "allCategoriesLinkLabel": "All Categories Test",
             "deleteCategoryLinkLabel": "Delete Category Test",
             "addUrlLinkLabel": "Add Url Test",
-            "categoryDeletionConfirm": "This category will be deleted  and you will no longer receive feeds from its URLs." +
+            "categoryDeletionConfirm": "will be deleted and you will no longer receive feeds from its URLs." +
             " Parked items will remain unaffected. Are you sure you want to continue?"
         };
         categoryNavigationHeaderComponent = TestUtils.renderIntoDocument(
@@ -41,8 +41,8 @@ describe("CategoryNavigationHeader", ()=> {
         deleteCategoryMock.expects("deleteCategory").returns(Promise.resolve(true));
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
-        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "This category will be deleted  and you will no longer receive feeds from its URLs." +
-            " Parked items will remain unaffected. Are you sure you want to continue?");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name will be deleted and you will no longer receive feeds from its URLs." +
+        " Parked items will remain unaffected. Are you sure you want to continue?");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.confirmButton);
         deleteCategoryMock.verify();
         deleteCategoryMock.restore();
@@ -55,8 +55,8 @@ describe("CategoryNavigationHeader", ()=> {
         let deleteCategoryStub = sinon.stub(CategoryDb, "deleteCategory");
         TestUtils.Simulate.click(deleteCategoryLinkLabel);
         assert.isDefined(categoryNavigationHeaderComponent.refs.confirmPopup);
-        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "This category will be deleted  and you will no longer receive feeds from its URLs." +
-            " Parked items will remain unaffected. Are you sure you want to continue?");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.confirmPopup.props.description, "Test Category Name will be deleted and you will no longer receive feeds from its URLs." +
+        " Parked items will remain unaffected. Are you sure you want to continue?");
         TestUtils.Simulate.click(categoryNavigationHeaderComponent.refs.confirmPopup.refs.cancelButton);
         confirmMock.verify();
         assert.isFalse(deleteCategoryStub.called);

@@ -30,12 +30,18 @@ describe("addRssUrlAsync", () => {
     let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null, type = null;
     let url = null, categoryId = null, allSources = null, sourceSaveMock = null;
 
-    beforeEach("Before", () => {
+    beforeEach("addRssUrlAsync", () => {
         sandbox = sinon.sandbox.create();
         let ajaxMock = new AjaxClient("/rss-feeds");
         ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
         ajaxInstanceMock.withArgs("/rss-feeds").returns(ajaxMock);
         ajaxGetMock = sandbox.mock(ajaxMock).expects("get");
+    });
+
+    afterEach("addRssUrlAsync", () => {
+        ajaxInstanceMock.verify();
+        ajaxGetMock.verify();
+        sandbox.restore();
     });
 
     before("Before", () => {
@@ -61,19 +67,23 @@ describe("addRssUrlAsync", () => {
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
-        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
+        sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
         let rssFeeds = new RssFeeds(responseJson.items);
         sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
-        let rssFeedsParseMock = sandbox.mock(rssFeeds).expects("parse");
-        let rssFeedsSaveMock = sandbox.mock(rssFeeds).expects("save").returns(Promise.resolve("success"));
+        let rssFeedsParseMock = sandbox.mock(rssFeeds).expects("parse").returns(true);
+        let rssFeedsSaveMock = sandbox.mock(rssFeeds).expects("save").withArgs("testdocument1").returns(Promise.resolve("success"));
 
-        let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
-            sourceSaveMock.verify();
+        let verify = function(status) {
+            assert.strictEqual(status, "valid");
             rssFeedsParseMock.verify();
+            sourceSaveMock.verify();
             rssFeedsSaveMock.verify();
-        });
+            done();
+        };
+        let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
+        //done should be called in callback instead of here. Passing dummy function not to call done.
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
+        store.dispatch(addRssUrlAsync(categoryId, url, verify));
     });
 
     it("should not create rss if the url fetch returns invalid response", () => {
@@ -94,18 +104,22 @@ describe("addRssUrlAsync", () => {
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let rssFeeds = new RssFeeds(responseJson.items);
         sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
-        sandbox.stub(rssFeeds, "parse");
+        sandbox.stub(rssFeeds, "parse").returns(true);
         sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
         let sourceDetails = { "latestFeedTimestamp": latestFeedTimestamp, "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
-        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
+        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url))).then(() => {
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
+        let verify = function(status) {
+            assert.strictEqual(status, "valid");
             sourceSaveMock.verify();
-        });
+            done();
+        };
+
+        store.dispatch(addRssUrlAsync(categoryId, url, verify));
     });
 
     it("should create rss with invalid status if url is invalid", (done) => {
@@ -131,16 +145,20 @@ describe("addRssUrlAsync", () => {
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
-        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
-        let rssFeedMock = sandbox.mock(RssDb).expects("addRssFeeds");
-        rssFeedMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
+        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
+        let rssFeeds = new RssFeeds(responseJson.items);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        sandbox.stub(rssFeeds, "parse").returns(true);
+        sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
+        let verify = function(status) {
+            assert.strictEqual(status, "valid");
             sourceSaveMock.verify();
-            rssFeedMock.verify();
-        });
+            done();
+        };
+        store.dispatch(addRssUrlAsync(categoryId, url, verify));
     });
 
     it("should create rss source with latestFeedTimeStamp from the feed response", (done) => {
@@ -155,27 +173,20 @@ describe("addRssUrlAsync", () => {
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
-        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));
-        let rssDbFeedMock = sandbox.mock(RssDb).expects("addRssFeeds");
-        rssDbFeedMock.withArgs(sourceId, responseJson.items).returns(Promise.resolve("response"));
-
+        sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
         let rssFeeds = new RssFeeds(responseJson.items);
         sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
-        sandbox.stub(rssFeeds, "parse");
+        sandbox.stub(rssFeeds, "parse").returns(true);
         sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, () => {}))).then(() => {
-            rssDbFeedMock.verify();
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
+        let verify = function(status) {
+            assert.strictEqual(status, "valid");
             sourceSaveMock.verify();
-        });
-    });
-
-    afterEach("After", () => {
-        ajaxInstanceMock.verify();
-        ajaxGetMock.verify();
-        sandbox.restore();
+            done();
+        };
+        store.dispatch(addRssUrlAsync(categoryId, url, verify));
     });
 });
 

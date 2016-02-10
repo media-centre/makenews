@@ -188,8 +188,8 @@ describe("RefreshFeedsHandler", () => {
                 rssFeeds = new RssFeeds([]);
 
                 sandbox.stub(RssFeeds, "instance").returns(rssFeeds);
-                rssFeedsParseStub = sandbox.stub(rssFeeds, "parse");
-                rssFeedsSaveStub = sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
+                rssFeedsParseStub = sandbox.stub(rssFeeds, "parse").returns(true);
+                rssFeedsSaveStub = sandbox.stub(rssFeeds, "save").returns(Promise.resolve({ "id": "1" }));
                 rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
             });
             afterEach("after", ()=> {
@@ -278,19 +278,7 @@ describe("RefreshFeedsHandler", () => {
                     let postData = [
                         { "url": "rssUrl1", "timestamp": "2016-01-16T07:36:17+00:00", "id": "1" }
                     ];
-
-                    let feed = {
-                        "_id": undefined,
-                        "docType": "feed",
-                        "sourceId": "1",
-                        "type": "description",
-                        "title": "test name1",
-                        "link": undefined,
-                        "feedType": "rss",
-                        "content": undefined,
-                        "postedDate": null,
-                        "tags": [""]
-                    };
+                    
                     let feed1 = {
                         "_id": undefined,
                         "docType": "feed",
@@ -311,7 +299,7 @@ describe("RefreshFeedsHandler", () => {
                     };
 
                     rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
-                    addRssFeedsMock.withArgs([feed]).returns(Promise.resolve());
+                    addRssFeedsMock.withArgs([]).returns(Promise.resolve());
                     pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
                     pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
 

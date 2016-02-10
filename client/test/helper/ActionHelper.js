@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import { expect } from "chai";
 const middlewares = [thunk];
 
-export default function mockStore(getState, expectedActions, done) {
+export default function mockStore(getState, expectedActions, done, verify = function() {}) {
     if (!Array.isArray(expectedActions)) {
         throw new Error("expectedActions should be an array of expected actions.");
     }
@@ -20,9 +20,11 @@ export default function mockStore(getState, expectedActions, done) {
 
             dispatch(action) {
                 const expectedAction = expectedActions.shift();
+
                 try {
                     expect(action).to.deep.equal(expectedAction);
                     if (done && !expectedActions.length) {
+                        verify();
                         done();
                     }
                     return action;

@@ -44,7 +44,8 @@ export function addRssUrlAsync(categoryId, url, callback) {
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
                 return feed.pubDate;
             }));
-            let feeds = new RssFeeds(responseFeed.items);
+
+            let feeds = RssFeeds.instance(responseFeed.items);
             if(feeds.parse()) {
                 _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                     feeds.save(documentId);

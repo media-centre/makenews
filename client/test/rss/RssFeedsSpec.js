@@ -287,7 +287,7 @@ describe("RssFeeds", () => {
             });
         });
 
-        it.only("should add default enclosures type as image", (done)=> {
+        it("should add default enclosures type as image", (done)=> {
             let feeds = [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",

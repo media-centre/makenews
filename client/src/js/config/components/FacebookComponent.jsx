@@ -27,7 +27,8 @@ export default class FacebookComponent extends Component {
             return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.emptyUrl });
         }
         if(url.match(fbRegex)) {
-            props.dispatch(addFacebookUrlAsync(props.categoryId, url, (response)=> {
+            let facebookURL = url.split("?")[0];
+            props.dispatch(addFacebookUrlAsync(props.categoryId, facebookURL, (response)=> {
                 let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noFbAccess : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
                 if(response !== "invalid") {
                     Toast.show(`Facebook ${urlStatus}`);
