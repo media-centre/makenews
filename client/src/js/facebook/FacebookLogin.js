@@ -22,10 +22,6 @@ export default class FacebookLogin {
                 "xfbml": true,
                 "version": "v2.5"
             });
-
-            FB.getLoginStatus((response) => {
-                this.setLoginStatus(response);
-            });
         };
         this.loadSDK(document, "script", "facebook-jssdk");
     }
@@ -34,20 +30,15 @@ export default class FacebookLogin {
         let js = null, fjs = document.getElementsByTagName(source)[0];
         if (!document.getElementById(id)) {
             js = document.createElement(source); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }
     }
 
-    isLoggedIn() {
-        return this.status === "connected";
-    }
-
-    setLoginStatus(response) {
-        this.status = response.status;
-    }
-
     showLogin(callback) {
+        if(!FB) {
+            return callback(null, "");
+        }
         FB.login((response) => {
             if (response.authResponse) {
                 return (callback(response.authResponse));

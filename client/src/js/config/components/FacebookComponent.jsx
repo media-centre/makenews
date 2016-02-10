@@ -11,11 +11,15 @@ import Toast from "../../utils/custom_templates/Toast.js";
 export const fbRegex = /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
 export default class FacebookComponent extends Component {
 
+
     constructor(props) {
         super(props);
-        this.fbLogin = FacebookLogin.instance();
         this.facebookLoginHandler = this.facebookLoginHandler.bind(this);
         this.state = { "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.FacebookExampleURL };
+    }
+
+    componentWillMount() {
+        this.fbLogin = FacebookLogin.instance();
     }
 
     _validateUrl(url, callback, props) {
