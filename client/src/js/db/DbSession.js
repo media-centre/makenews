@@ -12,10 +12,27 @@ export default class DbSession {
             if(this.db) {
                 resolve(this.db);
             } else {
-                DbSession.new().remoteDbInstance().then(session => {
-                    this.db = session;
-                    resolve(session);
-                });
+                const TWOSECONDS = 2000;
+                if(this.initialized) {
+                    console.log("initialized....");
+                    let dbSessionCheckInterval = setInterval(() => {
+                        console.log("in db interval");
+                        if(this.db) {
+                            console.log("db interval to be cleared");
+                            clearInterval(dbSessionCheckInterval);
+                            resolve(this.db);
+                        }
+                    }, TWOSECONDS);
+                } else {
+                    console.log("initializing....");
+                    this.initialized = true;
+
+                    DbSession.new().remoteDbInstance().then(session => {
+                        console.log("Got the db session....");
+                        this.db = session;
+                        resolve(session);
+                    });
+                }
             }
         });
     }
@@ -53,9 +70,13 @@ export default class DbSession {
     }
 
     replicateRemoteDb(intervalTime) {
-        setInterval(() => {
+        DbSession.remoteToLocalTimeInterval = setInterval(() => {
             let dbParameters = DbParameters.instance();
-            this.replicateDb(dbParameters.getRemoteDbUrl(), dbParameters.getLocalDbUrl(), {
+            if(DbSession.remoteToLocalReplication) {
+                DbSession.remoteToLocalReplication.cancel();
+                DbSession.remoteToLocalReplication = null;
+            }
+            DbSession.remoteToLocalReplication = this.replicateDb(dbParameters.getRemoteDbUrl(), dbParameters.getLocalDbUrl(), {
                 "retry": false,
                 "live": false
             });
@@ -66,7 +87,8 @@ export default class DbSession {
     replicateDb(fromDbUrl, toDbUrl, options, startSync = false) {
         console.log(fromDbUrl, toDbUrl, options, startSync);
         let fromDb = DbSession.newPouchDb(fromDbUrl);
-        PouchDB.replicate(fromDb, toDbUrl, options).on("change", (info) => {
+        return fromDb.sync(toDbUrl, options).on("change", (info) => {
+        //PouchDB.replicate(fromDb, toDbUrl, options).on("change", (info) => {
             // handle change
         }).on("paused", () => {
             // replication paused (e.g. user went offline)
@@ -109,10 +131,18 @@ export default class DbSession {
     }
 
     static clearInstance() {
+        DbSession.initialized = false;
         DbSession.db = null;
         if(DbSession.localToRemoteReplication) {
             DbSession.localToRemoteReplication.cancel();
             DbSession.localToRemoteReplication = null;
+        }
+        if(DbSession.remoteToLocalReplication) {
+            DbSession.remoteToLocalReplication.cancel();
+            DbSession.remoteToLocalReplication = null;
+        }
+        if(DbSession.remoteToLocalTimeInterval) {
+            clearInterval(DbSession.remoteToLocalTimeInterval);
         }
     }
 }

@@ -6,7 +6,6 @@ import DbParameters from "../../src/js/db/DbParameters.js";
 import UserSession from "../../src/js/user/UserSession.js";
 import { assert } from "chai";
 import sinon from "sinon";
-import PouchDB from "pouchdb";
 
 describe("DbSession", () => {
     let parametersFake = null, allSandbox = null;
@@ -141,13 +140,19 @@ describe("DbSession", () => {
     });
 
     describe("replicate", () => {
-        let dbSession = null, sandbox = null, dbSessionPouchDbMock = null, dbSessionLocalPouchDbMock = null, pouchDbReplicateMock = null;
+        let dbSession = null, sandbox = null, dbSessionPouchDbMock = null, dbSessionLocalPouchDbMock = null, pouchDbSyncMock = null;
+        let pouchDbDummy = null;
         beforeEach("replicate", () => {
             sandbox = sinon.sandbox.create();
             dbSession = new DbSession();
+            pouchDbDummy = {
+                "sync": (toDb, options) => {
+
+                }
+            }
             dbSessionPouchDbMock = sandbox.mock(DbSession).expects("newPouchDb");
             dbSessionLocalPouchDbMock = sandbox.mock(DbSession).expects("newLocalPouchDb");
-            pouchDbReplicateMock = sandbox.mock(PouchDB).expects("replicate");
+            pouchDbSyncMock = sandbox.mock(pouchDbDummy).expects("sync");
         });
 
         afterEach("replicate", () => {
@@ -155,7 +160,7 @@ describe("DbSession", () => {
         });
 
         it("should start the pouchd db replicate with remote db and start sync. Replace db with local db once replication completed", (done) => {
-            dbSessionPouchDbMock.withArgs("localDb").returns("localDb");
+            dbSessionPouchDbMock.withArgs("localDb").returns(pouchDbDummy);
             dbSessionLocalPouchDbMock.returns(Promise.resolve("session"));
             sandbox.mock(dbSession).expects("sync");
 
@@ -164,14 +169,14 @@ describe("DbSession", () => {
                 if(action === "complete") {
                     dbSessionLocalPouchDbMock.verify();
                     dbSessionPouchDbMock.verify();
-                    pouchDbReplicateMock.verify();
+                    pouchDbSyncMock.verify();
                     done();
                 }
                 return dbObj;
             }
             };
 
-            pouchDbReplicateMock.withArgs("localDb", "remoteDb", {
+            pouchDbSyncMock.withArgs("remoteDb", {
                 "retry": true,
                 "live": true
             }).returns(dbObj);
