@@ -59,7 +59,7 @@ window.mediaCenter.appEn = {
                 },
                 "successMessages": {
                     "categoryDeleteSuccess": "is successfully deleted",
-                    "categoryUpdated": "Category name is updated to -",
+                    "categoryUpdated": "Category name is updated to",
                     "urlDeleteSuccess": "Feed URL successfully deleted",
                     "urlSuccess": "URL is successfully added"
                 },
@@ -81,7 +81,7 @@ window.mediaCenter.appEn = {
             "configureTabName": "Configure"
         },
         "surfPage": {
-            "noFeeds": "No feeds available or check news filter",
+            "noFeeds": "You don't have any feeds or no feeds for this filters",
             "fetchingFeeds": "Fetching feeds...",
             "noMoreFeeds": "No more feeds to display",
             "feeds": {

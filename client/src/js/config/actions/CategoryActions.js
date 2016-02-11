@@ -44,8 +44,7 @@ export function addRssUrlAsync(categoryId, url, callback) {
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
                 return feed.pubDate;
             }));
-
-            let feeds = RssFeeds.instance(responseFeed.items);
+            let feeds = RssFeeds.instance(responseFeed);
             if(feeds.parse()) {
                 _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
                     feeds.save(documentId);
@@ -56,7 +55,7 @@ export function addRssUrlAsync(categoryId, url, callback) {
             } else {
                 return callback(STATUS_INVALID);
             }
-        }).catch(() => {
+        }).catch((error) => {
             callback(STATUS_INVALID);
         });
     };

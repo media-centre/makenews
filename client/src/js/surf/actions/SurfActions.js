@@ -83,12 +83,13 @@ export function fetchAllCategories(callback) {
     };
 }
 
-export function updateLatestFeeds(completionPercentage) {
+export function updateLatestFeeds(completionPercentage, callback = ()=> {}) {
     return dispatch => {
         dispatch(displayExistingFeeds([], isRefreshing, completionPercentage));
         if (completionPercentage === totalPercentage) {
             isRefreshing = false;
             dispatch(fetchFeedsByPage(0));
+            callback();
         }
     };
 }

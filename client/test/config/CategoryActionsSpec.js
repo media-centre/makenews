@@ -59,7 +59,7 @@ describe("addRssUrlAsync", () => {
     });
 
     it("should create rss and dispatch populateCategoryDetailsAsync", (done) => {
-        let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }] };
+        let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }], "meta": { "title": "hindu" } };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
@@ -68,8 +68,8 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
-        let rssFeeds = new RssFeeds(responseJson.items);
-        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        let rssFeeds = new RssFeeds(responseJson);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson).returns(rssFeeds);
         let rssFeedsParseMock = sandbox.mock(rssFeeds).expects("parse").returns(true);
         let rssFeedsSaveMock = sandbox.mock(rssFeeds).expects("save").withArgs("testdocument1").returns(Promise.resolve("success"));
 
@@ -97,12 +97,12 @@ describe("addRssUrlAsync", () => {
 
     it("should create rss with valid status on successful fetch", (done) => {
         let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
-        let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }] };
+        let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }], "meta": { "title": "hindu" } };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        let rssFeeds = new RssFeeds(responseJson.items);
-        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        let rssFeeds = new RssFeeds(responseJson);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson).returns(rssFeeds);
         sandbox.stub(rssFeeds, "parse").returns(true);
         sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
@@ -136,7 +136,7 @@ describe("addRssUrlAsync", () => {
 
     it("should create rss source and then create the feeds", (done) => {
         let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
-        let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }, { "title": "cricket", "pubDate": latestFeedTimestamp }] };
+        let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }, { "title": "cricket", "pubDate": latestFeedTimestamp }], "meta": { "title": "hindu" } };
         let sourceId = "sourceId";
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
@@ -145,8 +145,8 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
-        let rssFeeds = new RssFeeds(responseJson.items);
-        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        let rssFeeds = new RssFeeds(responseJson);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson).returns(rssFeeds);
         sandbox.stub(rssFeeds, "parse").returns(true);
         sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 
@@ -164,7 +164,7 @@ describe("addRssUrlAsync", () => {
 
         let sourceId = "sourceId";
 
-        let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }] };
+        let responseJson = { "items": [{ "title": "hindu football", "pubDate": "2016-01-01T22:09:28+00:00" }, { "title": "cricket", "pubDate": "2016-01-01T22:09:28+00:00" }], "meta": { "title": "hindu" } };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
@@ -173,8 +173,8 @@ describe("addRssUrlAsync", () => {
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve({ "id": "testdocument1" }));
-        let rssFeeds = new RssFeeds(responseJson.items);
-        sandbox.stub(RssFeeds, "instance").withArgs(responseJson.items).returns(rssFeeds);
+        let rssFeeds = new RssFeeds(responseJson);
+        sandbox.stub(RssFeeds, "instance").withArgs(responseJson).returns(rssFeeds);
         sandbox.stub(rssFeeds, "parse").returns(true);
         sandbox.stub(rssFeeds, "save").returns(Promise.resolve("success"));
 

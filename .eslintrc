@@ -153,7 +153,7 @@
     "no-array-constructor": [2],                // disallow use of the Array constructor
     "no-continue": [2],                // disallow use of the continue statement
     "no-inline-comments": [2],                // disallow comments inline after code
-    "no-lonely-if": [2],                // disallow if as the only statement in an else block
+    "no-lonely-if": [0],                // disallow if as the only statement in an else block
     "no-mixed-spaces-and-tabs": [2],                // disallow mixed spaces and tabs for indentation (recommended)
     "no-multiple-empty-lines": [2],                // disallow multiple empty lines
     "no-negated-condition": [2],                // disallow negated conditions

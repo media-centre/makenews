@@ -40,7 +40,7 @@ export default class RssParser {
 
             this.feedParser.on("end", function() {
                 RssParser.logger().debug("RssParser:: Done parsing feeds.");
-                resolve({ "items": items });
+                resolve({ "items": items, "meta": this.meta });
             });
         });
     }

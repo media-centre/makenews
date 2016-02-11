@@ -77,7 +77,7 @@ describe("RssParser", () => {
         restRequest(url).on("response", function(res) {
             let rssParser = new RssParser(res);
             rssParser.parse().then((feedJson) => {
-                expect(feedJson).deep.equal(expectedFeeds);
+                expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();
             });
         });

@@ -48,6 +48,9 @@
 
   button {
     padding: 8px 16px;
+    &:hover {
+      color: $primary-font-color;
+    }
   }
 
   .m-none {
@@ -112,7 +115,6 @@
         margin: 0 auto;
       }
     }
-
   }
 
   .tab-control > ul.tab-header > li.tab {
@@ -121,43 +123,58 @@
 
   /* surf page */
   .surf-page-container {
-  .feeds-container {
+    .feeds-container {
 
-    .all-feeds {
-      .feed-header {
+      .all-feeds {
+        .feed-header {
 
-        .header-item, ul li {
-          margin-right: 10px;
-        }
-      }
-
-      .image-gallery ul.gallery-list li.image-container {
-        width: 50%;
-
-        img {
-          width: 100%;
-        }
-      }
-
-      .image-content {
-        .container {
-          .img-container {
-            width: 50%;
-            margin: auto;
-            padding: 0;
-          }
-          p {
-            width: auto;
-            margin-top: 20px;
+          .header-item, ul li {
+            margin-right: 10px;
           }
         }
-      }
 
+        .image-gallery ul.gallery-list li.image-container {
+          width: 50%;
+
+          img {
+            width: 100%;
+          }
+        }
+
+        .image-content {
+          .container {
+            .img-container {
+              width: 50%;
+              margin: auto;
+              padding: 0;
+            }
+            p {
+              width: auto;
+              margin-top: 20px;
+            }
+          }
+        }
+
+        .park-feed:hover {
+          background-image: url(images/main/park-blue.png);
+        }
+      }
     }
 
+    .surf-filter {
+      .surf-filter-item {
+        ul li {
+          &:hover {
+            color: $primary-font-color;
+          }
+          &.selected {
+            color: $secondary-font-color;
+          }
+        }
+      }
+    }
   }
-}
-  body .custom-toast {
+  .custom-toast {
     padding: 8px;
     width: 85%;
     font-size: $small-font-size;
@@ -172,31 +189,43 @@
     }
   }
 
+  #scrollToTop:hover {
+    color: $primary-font-color;
+  }
+
+  .park-page.feeds-container .feed-header .feed-actions i:hover {
+    color: $app-header-bg-color;
+  }
+
   .take-tour-mask {
     .take-tour {
-      left: 0 !important;
-      width: 80% !important;
-      right: 0 !important;
-      margin: auto !important;
+      left: 0;
+      width: 80%;
+      right: 0;
+      margin: auto;
     }
     .tour-top-arrow {
-      right: auto !important;
+      right: auto;
     }
   }
 }
 
 @media (max-width: 400px) {
+  .hide-mobile-xs {
+    display: none;
+  }
+
   .main-page header .fixed-header {
     .user-info a {
       width: auto;
-      margin: 18px 0px 18px 0px;
+      margin: 18px 0 18px 0;
       span {
         font-size: $extra-small-font-size;
       }
 
     }
     ul li {
-      padding: 0px;
+      padding: 0;
       width: 20%;
 
       a {
@@ -210,15 +239,30 @@
       }
     }
   }
-  .surf-page-container .refresh-status {
-    top: 82px;
-  }
-  .main-page section .surf-page-container .surf-filter {
-    top: 83px;
-    width: 85%;
-    left: -85%;
+
+  .surf-page-container {
+    .surf-filter {
+      top: 82px;
+      width: 85%;
+      left: -85%;
+
+      #filterToggle {
+        top: 200px;
+      }
+    }
+
+    .refresh-status {
+      top: 82px;
+    }
+
+    .feeds-container {
+      .all-feeds .park-feed {
+        height: 20px;
+        width: 26px;
+      }
+    }
   }
   .main-page section .surf-page-container .surf-filter.show {
-    left: 0%;
+    left: 0;
   }
 }
