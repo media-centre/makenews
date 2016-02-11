@@ -10,8 +10,10 @@ import SurfPage from "./surf/pages/SurfPage.jsx";
 import ParkPage from "./park/pages/ParkPage.jsx";
 import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import AppSessionStorage from "./utils/AppSessionStorage.js";
+import UserSession from "./user/UserSession";
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import DbSession from "./db/DbSession.js";
+import History from "./History";
 import React from "react";
 import "babel/polyfill";
 import { Route } from "react-router";
@@ -38,7 +40,6 @@ export function renderRoutes() {
 }
 
 function isLoggedIn(nextState, replaceState) {
-
     if(StringUtil.validNonEmptyString(AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME))) {
         dbSync();
     } else {
@@ -48,7 +49,9 @@ function isLoggedIn(nextState, replaceState) {
 }
 
 function showLoginPage(nextState, replaceState) {
-    if(StringUtil.validNonEmptyString(AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME))) {
+    let userSession = UserSession.instance(History.getHistory());
+    if(userSession.isActiveContinuously()) {
+        userSession.startSlidingSession();
         replaceState({ "nextPathname": nextState.location.pathname }, "/surf");
     }
 }

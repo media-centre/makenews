@@ -1,12 +1,13 @@
 /*eslint react/prefer-es6-class:0*/
 "use strict";
 import React, { PropTypes } from "react";
-import { History, Link } from "react-router";
+import { Link } from "react-router";
 import { connect } from "react-redux";
 import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { createCategory } from "../actions/CategoryActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import History from "../../History";
 
 export class AllCategories extends React.Component {
 
@@ -19,7 +20,7 @@ export class AllCategories extends React.Component {
     }
 
     _createNewCategory() {
-        let history = this.context.history;
+        let history = History.getHistory();
         this.props.dispatch(createCategory((response)=>{
             history.push("/configure/category/" + response.id + "/" + response.name);
         }));
@@ -65,12 +66,6 @@ export class AllCategories extends React.Component {
 }
 
 AllCategories.displayName = "All Categories";
-
-AllCategories.contextTypes = {
-    "history": function() {
-        return History.prototype;
-    }
-};
 
 AllCategories.propTypes = {
     "allCategories": PropTypes.object.isRequired,

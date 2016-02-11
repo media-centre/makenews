@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import "babel/polyfill";
 import Router from "react-router";
+import History from "./History";
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware
@@ -17,7 +18,7 @@ let store = createStoreWithMiddleware(contentDiscoveryApp);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>{renderRoutes()}</Router>
+    <Router history={History.getHistory()}>{renderRoutes()}</Router>
   </Provider>,
   document.getElementById("main")
 );

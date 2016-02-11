@@ -108,8 +108,26 @@ describe("UserSession", () => {
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
                 let clock = sandbox.useFakeTimers();
                 ajaxInstanceMock.withArgs("/renew_session").returns(ajaxInstance);
-                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").atLeast(1);
+                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.resolve(true));
                 sandbox.stub(userSession, "isActiveContinuously").returns(true);
+
+                let timer = userSession._continueSessionIfActive();
+                clock.tick(nineMinutes);
+                ajaxGetMock.verify();
+                clearInterval(timer);
+            });
+
+            it("should call logout if user active continuously within 9 minutes and not able to renew session", () => {
+                let userSession = new UserSession(history);
+                userSession.setLastAccessedTime();
+                let nineMinutes = 540000;
+                let ajaxInstance = new AjaxClient("/renew_session");
+                let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
+                let clock = sandbox.useFakeTimers();
+                ajaxInstanceMock.withArgs("/renew_session").returns(ajaxInstance);
+                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.reject());
+                sandbox.stub(userSession, "isActiveContinuously").returns(true);
+                sandbox.stub(userSession, "autoLogout");
 
                 let timer = userSession._continueSessionIfActive();
                 clock.tick(nineMinutes);

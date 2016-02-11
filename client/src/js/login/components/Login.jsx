@@ -1,7 +1,7 @@
 /*eslint react/prefer-es6-class:0*/
 "use strict";
 import React, { PropTypes } from "react";
-import { History } from "react-router";
+import History from "../../History";
 
 export default class Login extends React.Component {
 
@@ -9,7 +9,7 @@ export default class Login extends React.Component {
         event.preventDefault();
         let userName = this.refs.userName.value.trim();
         let password = this.refs.password.value.trim();
-        this.props.onLoginClick(this.context.history, userName, password);
+        this.props.onLoginClick(History.getHistory(), userName, password);
     }
 
     render() {
@@ -43,12 +43,6 @@ export default class Login extends React.Component {
 }
 
 Login.displayName = "Login";
-
-Login.contextTypes = {
-    "history": function() {
-        return History.prototype;
-    }
-};
 
 Login.propTypes = {
     "errorMessage": PropTypes.string.isRequired,

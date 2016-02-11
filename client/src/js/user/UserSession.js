@@ -30,7 +30,7 @@ export default class UserSession {
     }
 
     startSlidingSession() {
-        this.setLastAccessedTime();
+        this.setLastAccessedTime(this.getLastAccessedTime());
         this._continueSessionIfActive();
     }
 
@@ -40,17 +40,23 @@ export default class UserSession {
         }, nineMinutes);
 
         let _logoutAndClearInterval = () => {
-            logout();
-            clearInterval(timer);
-            this.linkTransition.push("/");
+            this.autoLogout(timer);
         };
 
         let _renewSession = () => {
-            AjaxClient.instance("/renew_session").get();
+            AjaxClient.instance("/renew_session", true).get().catch(() => {
+                this.autoLogout(timer);
+            });
         };
 
         return () => {
             return timer;
         };
+    }
+
+    autoLogout(timer) {
+        logout();
+        clearInterval(timer);
+        this.linkTransition.push("/");
     }
 }

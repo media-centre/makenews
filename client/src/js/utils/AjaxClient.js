@@ -5,11 +5,13 @@ import UserSession from "../user/UserSession.js";
 import AppWindow from "../utils/AppWindow.js";
 
 export default class AjaxClient {
-  static instance(url) {
-      return new AjaxClient(url);
+  static instance(url, skipTime) {
+      return new AjaxClient(url, skipTime);
   }
-  constructor(url) {
-      UserSession.instance().setLastAccessedTime();
+  constructor(url, skipTime) {
+      if(!skipTime) {
+          UserSession.instance().setLastAccessedTime();
+      }
       this.url = AppWindow.instance().get("serverUrl") + url;
   }
 

@@ -11,7 +11,8 @@
     "fs": "0.0.2",
     "helmet": "^0.15.0",
     "helmet-csp": "^0.3.0",
-    "history": "^1.13.0",
+    "history": "^1.17.0",
+    "hsts": "^1.0.0",
     "immutable": "^3.7.5",
     "moment": "^2.10.6",
     "oauth": "^0.9.14",
@@ -23,8 +24,7 @@
     "redux-thunk": "^1.0.0",
     "request": "^2.65.0",
     "winston": "^2.1.1",
-    "yargs": "^3.30.0",
-    "hsts": "^1.0.0"
+    "yargs": "^3.30.0"
   },
   "devDependencies": {
     "babel": "^5.8.29",
