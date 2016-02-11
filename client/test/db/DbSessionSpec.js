@@ -147,10 +147,10 @@ describe("DbSession", () => {
             sandbox = sinon.sandbox.create();
             dbSession = new DbSession();
             pouchDbDummy = {
-                "sync": (toDb, options) => {
+                "sync": (toDb, options) => { //eslint-disable-line
 
                 }
-            }
+            };
             dbSessionPouchDbMock = sandbox.mock(DbSession).expects("newPouchDb");
             dbSessionLocalPouchDbMock = sandbox.mock(DbSession).expects("newLocalPouchDb");
             pouchDbSyncMock = sandbox.mock(pouchDbDummy).expects("sync");
