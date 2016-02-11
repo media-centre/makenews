@@ -48,15 +48,13 @@ export default class SurfFilter extends Component {
     render() {
         return (
             <div className={this.state.show ? "anim surf-filter show-filter show" : "anim surf-filter show-filter"}>
-                <div>
+                <div className="wrapper">
                     <div className="anim show-filter-container">
                         <SurfFilterItem type="content" displayItems={this.state.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content" dispatchFilterAction={this.updateFilter.bind(this)}/>
                         <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
                     </div>
-                    <button id="filterToggle" onClick={this.toggleFilter.bind(this)} title="filters">
-                        <i className="fa fa-filter"></i>
-                    </button>
                 </div>
+                <button id="filterToggle" onClick={this.toggleFilter.bind(this)} title="filters"><i className="fa fa-filter"></i></button>
             </div>
         );
     }

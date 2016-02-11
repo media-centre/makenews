@@ -25,17 +25,26 @@
     position: fixed;
     left: -300px;
     bottom: 0;
-    top: 86px;
+    top: 87px;
     width: 300px;
     z-index: $medium-index;
-    background-color: $app-header-bg-color;
-    -webkit-box-shadow: 1px 0 5px $transparent-gray;
-    -moz-box-shadow: 1px 0 5px $transparent-gray;
-    -ms-box-shadow: 1px 0 5px $transparent-gray;
-    box-shadow: 1px 0 5px $transparent-gray;
 
     &.show {
       left: 0;
+    }
+
+    .wrapper {
+      position: absolute;
+      left: 0;
+      right: 0px;
+      top: 0;
+      bottom: 0;
+      background: $app-header-bg-color;
+      overflow: auto;
+      -webkit-box-shadow: 1px 0 5px $transparent-gray;
+      -moz-box-shadow: 1px 0 5px $transparent-gray;
+      -ms-box-shadow: 1px 0 5px $transparent-gray;
+      box-shadow: 1px 0 5px $transparent-gray;
     }
 
 
@@ -123,7 +132,6 @@
     .surf-refresh-button.disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      visibility: hidden;
     }
     .surf-refresh-button {
       position: fixed;

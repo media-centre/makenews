@@ -19,7 +19,7 @@ export class SurfPage extends Component {
             "mediaTypes": [],
             "categories": []
         };
-        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false };
+        this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false, "refreshState": this.props.refreshState };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
@@ -75,10 +75,13 @@ export class SurfPage extends Component {
     }
 
     getLatestFeeds() {
-        if(this.props.refreshState) {
+        if(this.state.refreshState) {
             return false;
         }
-        this.props.dispatch(getLatestFeedsFromAllSources());
+        this.setState({ "refreshState": true });
+        this.props.dispatch(getLatestFeedsFromAllSources(()=> {
+            this.setState({ "refreshState": false });
+        }));
     }
 
     parkFeedItem(feedDoc) {
@@ -112,7 +115,7 @@ export class SurfPage extends Component {
     }
 
     render() {
-        let refreshButton = <div ref="surfRefreshButton" className={this.props.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
+        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.state.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
         let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         let paginationSpinner = this.state.showPaginationSpinner ? <div className="pagination-spinner">{"Fetching Feeds ..."}</div> : null;
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
