@@ -46,21 +46,16 @@ export function addRssUrlAsync(categoryId, url, callback) {
             }));
             let feeds = RssFeeds.instance(responseFeed);
             if(feeds.parse()) {
-                console.log(2);
                 _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
-                    console.log(3);
                     feeds.save(documentId);
                     callback(STATUS_VALID);
                 }).catch(error => {
-                    console.log(4, error);
                     callback(STATUS_INVALID);
                 });
             } else {
-                console.log(5);
                 return callback(STATUS_INVALID);
             }
         }).catch((error) => {
-            console.log(6, error);
             callback(STATUS_INVALID);
         });
     };

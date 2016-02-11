@@ -19,7 +19,7 @@ describe("RssFeeds", () => {
         let sourceId = "sourceId";
 
         it("should save feeds with the desired format of description type", (done)=> {
-            let feeds = {"items":[
+            let feeds = { "items": [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "description": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
@@ -65,7 +65,7 @@ describe("RssFeeds", () => {
                     "enclosures": [],
                     "permalink": "http://www.hindu.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam"
                 }
-            ],"meta":{"title":"hindu"}};
+            ], "meta": { "title": "hindu" } };
 
             let expectedFeeds = [
 
@@ -107,7 +107,7 @@ describe("RssFeeds", () => {
         });
 
         it("should return feeds with the desired format of type imagecontent", (done)=> {
-            let feeds = {"items":[
+            let feeds = { "items": [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "description": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
@@ -133,7 +133,7 @@ describe("RssFeeds", () => {
                     }],
                     "permalink": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam"
                 }
-            ], "meta":{"title":"hindu"}};
+            ], "meta": { "title": "hindu" } };
 
             let expectedFeeds = [
                 {
@@ -162,7 +162,7 @@ describe("RssFeeds", () => {
         });
 
         it("should return feeds with the desired format of type gallery", (done)=> {
-            let feeds = {"items":[
+            let feeds = { "items": [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "description": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
@@ -193,7 +193,7 @@ describe("RssFeeds", () => {
                         }],
                     "permalink": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam"
                 }
-            ], "meta":{"title":"hindu"}};
+            ], "meta": { "title": "hindu" } };
 
             let expectedFeeds = [
                 {
@@ -231,7 +231,7 @@ describe("RssFeeds", () => {
         });
 
         it("should throw an error if the sourceId is empty while saving", (done) => {
-            let feeds = { "items":[], "meta":{"title":"hindu"}};
+            let feeds = { "items": [], "meta": { "title": "hindu" } };
             let rssFeeds = new RssFeeds(feeds);
             rssFeeds.save().catch(error => {
                 assert.strictEqual(error, "source id can not be empty");
@@ -247,7 +247,7 @@ describe("RssFeeds", () => {
         });
 
         it("should continue parsing feeds if there are any failures", (done)=> {
-            let feeds = {"items":[
+            let feeds = { "items": [
                 {
                     "title": "test1",
                     "description": "description 1",
@@ -260,7 +260,7 @@ describe("RssFeeds", () => {
                     "summary": "summary 2",
                     "link": "test2"
                 }
-            ], "meta":{"title":"hindu"}};
+            ], "meta": { "title": "hindu" } };
 
             let expectedFeeds = [
                 {
@@ -288,7 +288,7 @@ describe("RssFeeds", () => {
         });
 
         it("should add default enclosures type as image", (done)=> {
-            let feeds = {"items":[
+            let feeds = { "items": [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
                     "description": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
@@ -323,7 +323,7 @@ describe("RssFeeds", () => {
                         }],
                     "permalink": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam"
                 }
-            ], "meta":{"title":"hindu"}};
+            ], "meta": { "title": "hindu" } };
 
             let expectedFeeds = [
                 {
