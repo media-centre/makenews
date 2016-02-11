@@ -13,8 +13,11 @@ import FacebookDb from "../facebook/FacebookDb.js";
 import TwitterDb from "../twitter/TwitterDb.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 import PouchClient from "../db/PouchClient.js";
+import { displayAllFeeds } from "../surf/actions/SurfActions.js";
 
 const URLS_PER_BATCH = 5;
+const PERCENTAGE = 100;
+
 export default class RefreshFeedsHandler {
     constructor(dispatch, displayAllFeedsAsync, uiCallback) {
         this.dispatch = dispatch;
@@ -30,12 +33,17 @@ export default class RefreshFeedsHandler {
             this.totalNumberOfUrls = this._calculateTotalUrls();
             let totalBatches = Math.ceil(this._maxCountOfUrls() / URLS_PER_BATCH);
             let lastIndex = 0;
-            while(totalBatches > 0) {
-                this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));
-                this._handleFacebookBatch(this.sourceUrlsMap.facebook.slice(lastIndex, lastIndex + URLS_PER_BATCH));
-                this._handleTwitterBatch(this.sourceUrlsMap.twitter.slice(lastIndex, lastIndex + URLS_PER_BATCH));
-                lastIndex = lastIndex + URLS_PER_BATCH;
-                totalBatches = totalBatches - 1;
+            if(totalBatches === 0) {
+                this.dispatch(this.displayAllFeedsAsync(PERCENTAGE, this.uiCallback));
+                this.dispatch(displayAllFeeds([], false, 0, 0, false));
+            } else {
+                while(totalBatches > 0) {
+                    this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));
+                    this._handleFacebookBatch(this.sourceUrlsMap.facebook.slice(lastIndex, lastIndex + URLS_PER_BATCH));
+                    this._handleTwitterBatch(this.sourceUrlsMap.twitter.slice(lastIndex, lastIndex + URLS_PER_BATCH));
+                    lastIndex = lastIndex + URLS_PER_BATCH;
+                    totalBatches = totalBatches - 1;
+                }
             }
         });
     }
