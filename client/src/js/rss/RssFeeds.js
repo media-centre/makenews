@@ -14,7 +14,7 @@ export default class RssFeeds {
             throw new Error("feeds can not be null");
         }
         this.feeds = feeds.items;
-        this.meta=feeds.meta;
+        this.meta = feeds.meta;
     }
 
     parse() {
