@@ -14,7 +14,7 @@
   }
 
   .feed-hint {
-    margin-top: 50px;
+    margin-top: 20px;
   }
 
   .surf-filter > div {
@@ -179,7 +179,7 @@
         cursor: pointer;
         color: $app-header-bg-color;
         &:hover {
-          color: $light-blue-font;
+          color: $secondary-font-color;
         }
 
       }

@@ -3,7 +3,6 @@
 var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var concat = require("gulp-concat");
 var browserify = require("gulp-browserify");
 var babelify = require("babelify"); //eslint-disable-line
 var runSequence = require("run-sequence");
@@ -82,9 +81,8 @@ gulp.task("mobile:emulate", function(cb) {
 
 
 gulp.task("client:scss", function() {
-    return gulp.src([parameters.client.scssSrcPath + "/**/*.scss"])
+    return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
           .pipe(sass())
-          .pipe(concat(parameters.client.cssMainFile))
           .pipe(production(cssnano()))
           .pipe(gulp.dest(parameters.client.distFolder));
 });

@@ -142,4 +142,7 @@
   cursor: pointer;
   right: 10px;
   bottom: 10px;
+  &:hover {
+    color: $secondary-font-color;
+  }
 }

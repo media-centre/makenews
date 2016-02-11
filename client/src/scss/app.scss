@@ -1,19 +1,21 @@
 //@import "fonts";
-@import "base/_fonts";
+@import "base/fonts";
 @import "fonts/font-awesome/scss/font-awesome";
 
 //@import "variable";
-@import "base/_common";
-@import "layouts/_layout";
+@import "base/common";
+@import "layouts/layout";
 
 //@import pages
-@import "pages/_login";
-@import "pages/MainPage/_main";
-@import "pages/MainPage/_configure";
+@import "pages/login";
+@import "pages/MainPage/main";
+@import "pages/MainPage/configure";
+@import "pages/park/park";
 @import "pages/surf/surf";
 
 //@import components
-@import "pages/MainPage/CreateCategory/_createCategory";
+@import "components/CategoryNavigationHeader";
+@import "pages/MainPage/CreateCategory/createCategory";
 @import "components/TabControl";
 @import "components/SmallControls";
 @import "components/ConfirmPopup";
@@ -21,7 +23,7 @@
 
 
 //responsive css
-@import "layouts/responsive/_mobile";
+@import "layouts/responsive/mobile";
 
 //themes css
-@import "themes/_themes";
+@import "themes/themes";
