@@ -34,6 +34,8 @@ describe("DbSession", () => {
     describe("instance", () => {
         let userSession = null, userSessionMock = null, dbSession = null, sandbox = null;
         beforeEach("DbSession", () => {
+            DbSession.clearInstance();
+
             dbSession = new DbSession();
             userSession = new UserSession();
             sandbox = sinon.sandbox.create();
@@ -44,7 +46,6 @@ describe("DbSession", () => {
         });
 
         afterEach("DbSession", () => {
-            DbSession.clearInstance();
             sandbox.restore();
         });
 
