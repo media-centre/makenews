@@ -13,14 +13,15 @@ describe("TabComponent with dispatch", () => {
             "tabNames": ["Configure", "RSS"]
         };
         const expectedActions = [{ "type": "CHANGE_HIGHLIGHTED_TAB", "tabNames": ["Configure", "RSS"] }];
+        const content = [];
         const store = mockStore({ "tabNames": ["Surf"] }, expectedActions, done);
         let dispatch = store.dispatch;
         let tabComponentElement = TestUtils.renderIntoDocument(
             <TabComponent tabToHighlight={highlightedTab} dispatch={dispatch}>
-                <div tab-header="RSS" name="RSS">
+                <div tab-header="RSS" name="RSS" content={content}>
                     <div>{"this is tab 1 title"}</div>
                 </div>
-                <div tab-header="Facebook" name="Facebook">
+                <div tab-header="Facebook" name="Facebook" content="{content}">
                     <div>{"this is tab 2 title"}</div>
                 </div>
             </TabComponent>
@@ -37,12 +38,13 @@ describe("TabComponent", () => {
         highlightedTab = {
             "tabNames": ["Configure", "RSS"]
         };
+        const content = [];
         tabComponentElement = TestUtils.renderIntoDocument(
             <TabComponent tabToHighlight={highlightedTab} dispatch={()=>{}}>
-                <div tab-header="RSS" name="RSS">
+                <div tab-header="RSS" name="RSS" content={content}>
                     <div>{"this is tab 1 title"}</div>
                 </div>
-                <div tab-header="Facebook" name="Facebook">
+                <div tab-header="Facebook" name="Facebook" content={content}>
                     <div>{"this is tab 2 title"}</div>
                 </div>
             </TabComponent>
@@ -55,7 +57,7 @@ describe("TabComponent", () => {
 
     it("should have tab title as same as in the properties", () => {
         var tab = tabComponentElement.refs.tab0;
-        assert.equal("RSS", tab.textContent);
+        assert.equal("RSS(0)", tab.textContent);
     });
 
     xit("should select the first tab by default", ()=> {

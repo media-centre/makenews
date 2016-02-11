@@ -20,33 +20,33 @@
   .surf-filter > div {
     position: relative;
   }
-  .surf-filter.show {
-    left: 0px;
-  }
+
   .surf-filter {
     position: fixed;
     left: -300px;
-    bottom: 0px;
-    top: 87px;
+    bottom: 0;
+    top: 86px;
     width: 300px;
     z-index: $medium-index;
     background-color: $app-header-bg-color;
+    -webkit-box-shadow: 1px 0 5px $transparent-gray;
+    -moz-box-shadow: 1px 0 5px $transparent-gray;
+    -ms-box-shadow: 1px 0 5px $transparent-gray;
+    box-shadow: 1px 0 5px $transparent-gray;
 
-    -webkit-box-shadow: 1px 0px 5px $transparent-gray;
-    -moz-box-shadow: 1px 0px 5px $transparent-gray;
-    -ms-box-shadow: 1px 0px 5px $transparent-gray;
-    box-shadow: 1px 0px 5px $transparent-gray;
+    &.show {
+      left: 0;
+    }
 
-    button {
+
+
+    #filterToggle {
       position: absolute;
       top: 48px;
-      right: -47px;
+      right: -35px;
+      padding: 8px 10px;
+      font-size: $large-font-size;
       background: $app-header-bg-color;
-      -webkit-transform: rotate(90deg);
-      -moz-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      -o-transform: rotate(90deg);
-      transform: rotate(90deg);
       border: none;
       -webkit-box-shadow: 1px -2px 5px $transparent-gray;
       -moz-box-shadow: 1px -2px 5px $transparent-gray;
@@ -70,7 +70,7 @@
       padding: 10px;
 
       h4 {
-        margin: 0px 0px 25px 0px;
+        margin: 0 0 25px 0;
         text-align: center;
         text-transform: uppercase;
         font-size: $small-font-size;
@@ -86,7 +86,7 @@
         }
 
         li {
-          padding: 0px;
+          padding: 0;
           font-size: $extra-small-font-size;
           color: $primary-font-color;
           width: 75px;
@@ -222,13 +222,19 @@
 
       img {
         width: 100%;
-        margin: 0px;
+        margin: 0;
         max-width: 200px;
         height: 100%;
         max-height: 200px;
       }
       p.surf-description {
-        overflow: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        line-height: 20px;
+        max-height: 100px;
       }
       div.title {
         font-weight: bold;
@@ -255,6 +261,13 @@
       }
       p.surf-description {
         margin: 0 0 5px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        line-height: 20px;
+        max-height: 100px;
       }
     }
 

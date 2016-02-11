@@ -186,7 +186,7 @@ app.get("/gardian/timeout-feeds", (request, response, next) => {
     }, 3000);
 });
 
-app.get("/search/tweets.json", (request, response, next) => {
+app.get("/statuses/user_timeline.json", (request, response, next) => {
     var urlString = "" + request.url;//eslint-disable-line no-implicit-coercion
     console.log("/search/tweets.json request received for handler " + urlString);
 
@@ -194,40 +194,35 @@ app.get("/search/tweets.json", (request, response, next) => {
     if (urlString.indexOf("the_hindu") > 1) {
         console.log("/search/tweets.json received for the_hindu");
         response.status(200);
-        response.json({
-            "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, {
-                "id": 2,
-                "id_str": "124",
-                "text": "Tweet 2"
-            }]
-        });
+        response.json([{ "id": 1, "id_str": "123", "text": "Tweet 1" }, {
+            "id": 2,
+            "id_str": "124",
+            "text": "Tweet 2"
+        }]
+        );
         return next();
     } else if (urlString.indexOf("timeout") > 1) {
         console.log("/search/tweets.json received for timeout");
         setTimeout(function() {
             response.status(200);
-            response.json({
-                "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, {
-                    "id": 2,
-                    "id_str": "124",
-                    "text": "Tweet 2"
-                }]
-            });
+            response.json([{ "id": 1, "id_str": "123", "text": "Tweet 1" }, {
+                "id": 2,
+                "id_str": "124",
+                "text": "Tweet 2"
+            }]
+            );
             return next();
         }, 3000);
     } else if (urlString.indexOf("icc") > 1) {
         response.status(200);
-        response.json({
-            "statuses": [{ "id": "695148613308149800", "id_str": "695148613308149760", "text": "RT @ICC: WATCH: This is one way to keep the batsman guessing - The amazing ambidextrous Mendis!" },
-                         { "id": "695148540646027300", "id_str": "695148540646027264", "text": "RT @livingrichpe: @ICC are you keeping quiet while Buhari keep"
-            }]
-        });
+        response.json([{ "id": "695148613308149800", "id_str": "695148613308149760", "text": "RT @ICC: WATCH: This is one way to keep the batsman guessing - The amazing ambidextrous Mendis!" },
+                         { "id": "695148540646027300", "id_str": "695148540646027264", "text": "RT @livingrichpe: @ICC are you keeping quiet while Buhari keep" }]
+        );
     } else if (urlString.indexOf("martinfowler") > 1) {
         response.status(200);
-        response.json({
-            "statuses": [{ "id": "695147136451612700", "id_str": "695147136451612672", "text": "If you are considering adopting continuous delivery, pause any tool evalutation and assess your readiness" },
+        response.json([{ "id": "695147136451612700", "id_str": "695147136451612672", "text": "If you are considering adopting continuous delivery, pause any tool evalutation and assess your readiness" },
                          { "id": "695146308445741000", "id_str": "695146308445741056", "text": "In web security basics pt2 @cairnsc & @D_Somerfield foil a Supreme Court justice as an attack vector" }]
-        });
+        );
     } else {
         console.log("/search/tweets.json");
         response.status(404);

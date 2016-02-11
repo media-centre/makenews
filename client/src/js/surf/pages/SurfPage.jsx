@@ -56,7 +56,7 @@ export class SurfPage extends Component {
         }
 
         if(!this.state.hasMoreFeeds) {
-            Toast.show("No more feeds");
+            Toast.show(this.props.messages.noMoreFeeds);
             return;
         }
 
