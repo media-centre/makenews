@@ -13,7 +13,8 @@ export default class RssFeeds {
         if(!feeds) {
             throw new Error("feeds can not be null");
         }
-        this.feeds = feeds;
+        this.feeds = feeds.items;
+        this.meta=feeds.meta;
     }
 
     parse() {
@@ -58,7 +59,7 @@ export default class RssFeeds {
             "feedType": "rss",
             "content": feed.description,
             "postedDate": feed.pubDate ? DateTimeUtil.getUTCDateAndTime(feed.pubDate) : null,
-            "tags": [""]
+            "tags": [this.meta.title]
         };
         if(feed.enclosures && feed.enclosures.length > 0) {
             if(feed.enclosures.length === 1) {

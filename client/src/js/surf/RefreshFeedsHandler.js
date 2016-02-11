@@ -51,7 +51,7 @@ export default class RefreshFeedsHandler {
                         let sortedDates = DateTimeUtil.getSortedUTCDates(feeds.map(feed => {
                             return feed.pubDate;
                         }));
-                        let rssFeeds = RssFeeds.instance(feeds);
+                        let rssFeeds = RssFeeds.instance(feedMap[sourceId]);
                         rssFeeds.parse();
                         rssFeeds.save(sourceId).then(() => {
                             if(sortedDates.length > 0) {
