@@ -18,6 +18,10 @@ server {
     ssl_prefer_server_ciphers on;
 
     access_log            /var/log/nginx/mediacenter.access.log;
+    error_log             /var/log/nginx/mediacenter.error.log;
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
     location ~ ^/couchdb/(.*) {
         rewrite /couchdb/(.*) /$1 break;
