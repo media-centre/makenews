@@ -154,7 +154,8 @@ describe("displayFilteredFeeds", ()=> {
     it("should update filter document", (done)=> {
         let currentDocument = {
             "categories": [],
-            "mediaTypes": []
+            "mediaTypes": [],
+            "sourceTypes": []
         };
         let updatedDocument = {
             "categories": [
@@ -167,7 +168,8 @@ describe("displayFilteredFeeds", ()=> {
                     "name": "Category 2"
                 }
             ],
-            "mediaTypes": []
+            "mediaTypes": [],
+            "sourceTypes": []
         };
         let updateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
         updateDocumentMock.withArgs(updatedDocument).returns(Promise.resolve(currentDocument));
@@ -197,11 +199,13 @@ describe("displayFilteredFeeds", ()=> {
                     "_id": "123456",
                     "name": "Category 2"
                 }],
-            "mediaTypes": []
+            "mediaTypes": [],
+            "sourceTypes": []
         };
         let currentDocument = {
             "categories": [],
-            "mediaTypes": []
+            "mediaTypes": [],
+            "sourceTypes": []
         };
 
         let getDocumentMock = sinon.mock(PouchClient).expects("getDocument");

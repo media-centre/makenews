@@ -96,7 +96,8 @@ export default class FilterFeedsHandler {
             "_id": "surf-filter-id",
             "docType": "surf-filter",
             "categories": [],
-            "mediaTypes": []
+            "mediaTypes": [],
+            "sourceTypes": []
         };
     }
 
@@ -105,6 +106,7 @@ export default class FilterFeedsHandler {
             PouchClient.getDocument("surf-filter-id").then((currentFilterDocument)=> {
                 currentFilterDocument.categories = latestFilterDocument.categories;
                 currentFilterDocument.mediaTypes = latestFilterDocument.mediaTypes;
+                currentFilterDocument.sourceTypes = latestFilterDocument.sourceTypes;
                 PouchClient.updateDocument(currentFilterDocument).then((response)=> {
                     resolve(response);
                 }).catch((err)=> {

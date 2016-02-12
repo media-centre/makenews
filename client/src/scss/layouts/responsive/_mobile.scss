@@ -123,6 +123,10 @@
 
   /* surf page */
   .surf-page-container {
+    .surf-page .source-type-filter ul {
+      top: 82px;
+      padding-top: 30px;
+    }
     .feeds-container {
 
       .all-feeds {
@@ -171,6 +175,7 @@
             color: $secondary-font-color;
           }
         }
+
       }
     }
   }

@@ -11,13 +11,15 @@ import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 import Toast from "../../utils/custom_templates/Toast.js";
 import TakeTour from "../../utils/custom_templates/TakeTour.js";
+import SourceTypeFilter from "../components/SourceTypeFilter.jsx";
 
 export class SurfPage extends Component {
     constructor(props) {
         super(props);
         let filter = {
             "mediaTypes": [],
-            "categories": []
+            "categories": [],
+            "sourceTypes": []
         };
         this.state = { "fetchHintMessage": this.props.messages.fetchingFeeds, "categories": [], "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false, "refreshState": this.props.refreshState };
     }
@@ -114,6 +116,10 @@ export class SurfPage extends Component {
         TakeTour.show();
     }
 
+    updateSourceFilter(type) {
+
+    }
+
     render() {
         let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><span className="fa fa-refresh"></span>{this.state.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
         let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
@@ -121,12 +127,14 @@ export class SurfPage extends Component {
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
         let allFeeds = <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>;
         let hint = this.getHintMessage();
+        let sourceTypeFilter = <SourceTypeFilter filter={this.state.filter} dispatchFilterAction={this.updateFilter.bind(this)}/>;
         return (
             <div className="surf-page-container">
                 <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.state.categories} filter={this.state.filter}/>
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                     {refreshButton}
+                    {sourceTypeFilter}
                     {hint}
                     {allFeeds}
                     {paginationSpinner}

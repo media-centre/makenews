@@ -1,10 +1,9 @@
-/*eslint new-cap:0, no-unused-vars:0, max-len:0 */
+/*eslint new-cap:0, no-unused-vars:0, max-len:0, complexity:0 */
 "use strict";
 import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/SurfActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 import { MAX_FEEDS_PER_PAGE } from "../FilterFeedsHandler.js";
-
 
 export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Locale.applicationStrings().messages.surfPage }, action = {}) {
     let surfMessages = Locale.applicationStrings().messages.surfPage;
@@ -29,7 +28,7 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         if(action.lastIndex <= MAX_FEEDS_PER_PAGE) {
             action.feeds = action.feeds.length === 0 ? state.feeds : action.feeds;
         } else {
-            action.feeds = action.feeds.concat(state.feeds);
+            action.feeds = typeof action.lastIndex === "undefined" ? state.feeds : state.feeds.concat(action.feeds);
         }
         return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });
     default:

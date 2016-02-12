@@ -1,6 +1,6 @@
 @import "../../utils/variable";
 .surf-page-container {
-  padding: 0 !important;
+  padding: 25px 0px 0px 0px !important;
 
   .take-tour-text {
     text-align: center;
@@ -51,7 +51,7 @@
 
     #filterToggle {
       position: absolute;
-      top: 48px;
+      top: 80px;
       right: -35px;
       padding: 8px 10px;
       font-size: $large-font-size;
@@ -323,6 +323,37 @@
       margin: auto;
       text-align: center;
       color: $secondary-font-color;
+    }
+  }
+
+  .source-type-filter {
+    ul {
+      position: fixed;
+      left: 0px;
+      right: 0px;
+      top: 86px;
+      padding-top: 23px;
+      background: $primary-font-color;
+
+      li {
+        display: inline-block;
+        vertical-align: top;
+        padding: 1px 10px;
+        margin: 10px 10px;
+        text-transform: uppercase;
+        color: $app-header-bg-color;
+        font-size: $small-font-size;
+        cursor: pointer;
+
+        &:first-child {
+          margin-left: 18px;
+        }
+
+        &.selected {
+          color: $secondary-font-color;
+          background: $app-header-bg-color;
+        }
+      }
     }
   }
 }
