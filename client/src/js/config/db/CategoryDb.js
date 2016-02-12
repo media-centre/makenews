@@ -27,7 +27,7 @@ export default class CategoryDb {
         return new Promise((resolve, reject) => {
             CategoryDb.fetchAllCategoryDocuments().then((categoryDocs) => {
                 let categories = categoryDocs.sort((first, second)=> {
-                    return first.name.toLowerCase() > second.name.toLowerCase();
+                    return first.name.toLowerCase().localeCompare(second.name.toLowerCase());
                 }).map((category) => {
                     return { "_id": category._id, "name": category.name };
                 });

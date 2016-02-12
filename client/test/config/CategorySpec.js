@@ -180,13 +180,31 @@ describe("Category", () => {
                 fetchCategoryByNameMock = sandbox.mock(CategoryDb).expects("fetchCategoryByName");
             });
 
-            afterEach("after", () => {
-                fetchCategoryByNameMock.verify();
-            });
-
             it("should update if name is unique", () => {
                 let nameToBeUpdated = "sports new";
                 fetchCategoryByNameMock.withArgs(nameToBeUpdated).returns(Promise.resolve([]));
+                pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
+                return category.update({ "name": nameToBeUpdated }).then(() => {
+                    pouchClientUpdateMock.verify();
+                    fetchCategoryByNameMock.verify();
+                });
+            });
+
+            it("should update if name is case insensitive", () => {
+                let params = {
+                    "_id": "id",
+                    "docType": "category",
+                    "name": "sports new",
+                    "createdTime": "1234345"
+                };
+                category = new Category(params);
+                let nameToBeUpdated = "Sports new";
+                updatedParams = {
+                    "_id": "id",
+                    "docType": "category",
+                    "name": "Sports new",
+                    "createdTime": "1234345"
+                };
                 pouchClientUpdateMock.withExactArgs(updatedParams).returns(Promise.resolve("response"));
                 return category.update({ "name": nameToBeUpdated }).then(() => {
                     pouchClientUpdateMock.verify();
@@ -200,6 +218,7 @@ describe("Category", () => {
                 return category.update({ "name": nameToBeUpdated }).catch((error) => {
                     assert.deepEqual(error, { "status": false, "error": "Category with name already exists" });
                     pouchClientUpdateMock.verify();
+                    fetchCategoryByNameMock.verify();
                 });
             });
         });

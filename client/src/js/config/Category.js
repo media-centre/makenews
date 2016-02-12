@@ -73,13 +73,17 @@ export default class Category {
     update(updateParams) {
         return new Promise((resolve, reject) => {
             if(updateParams.name) {
-                CategoryDb.fetchCategoryByName(updateParams.name).then(result => {
-                    if(result.length === 0) {
-                        updateDb.bind(this)();
-                    } else {
-                        reject({ "status": false, "error": "Category with name already exists" });
-                    }
-                });
+                if(updateParams.name.toLowerCase() === this.name.toLowerCase()) {
+                    updateDb.bind(this)();
+                } else {
+                    CategoryDb.fetchCategoryByName(updateParams.name).then(result => {
+                        if(result.length === 0) {
+                            updateDb.bind(this)();
+                        } else {
+                            reject({ "status": false, "error": "Category with name already exists" });
+                        }
+                    });
+                }
             } else {
                 updateDb.bind(this)();
             }
