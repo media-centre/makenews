@@ -64,16 +64,16 @@ window.mediaCenter.appEn = {
                     "urlSuccess": "URL is successfully added"
                 },
                 "errorMessages": {
-                    "invalidUrlFormat": " Invalid URL format",
-                    "emptyUrl": "URL should not be empty",
-                    "validatingUrl": "validating Url...",
+                    "invalidUrlFormat": "Invalid URL. Please check the URL",
+                    "emptyUrl": "URL cannot be empty",
+                    "validatingUrl": "Validating the URL...",
                     "alreadyAdded": "URL is already added",
-                    "noSuchUrl": "No such link found",
-                    "invalidRssUrl": "Invalid feed url",
-                    "invalidTwitterUrl": "Invalid twitter url",
-                    "invalidFacebookUrl": "Invalid facebook url",
+                    "noSuchUrl": "No such link found. Please add a valid URL",
+                    "invalidRssUrl": "Invalid URL. Please check the URL",
+                    "invalidTwitterUrl": "Invalid twitter handler/hashtag",
+                    "invalidFacebookUrl": "Invalid facebook URL. Please check the URL",
                     "noFbAccess": "No such link or no access to the profile",
-                    "urlDeleteFailed": "Url deletion failed",
+                    "urlDeleteFailed": "URL deletion failed",
                     "categoryNameExists": "Category name already exists",
                     "categoryNameCantBeEmpty": "Category name can not be empty"
                 }
@@ -81,19 +81,19 @@ window.mediaCenter.appEn = {
             "configureTabName": "Configure"
         },
         "surfPage": {
-            "noFeeds": "You don't have any feeds or no feeds for this filters",
-            "fetchingFeeds": "Fetching feeds...",
-            "noMoreFeeds": "No more feeds to display",
+            "noFeeds": "You don't have any feeds or no feeds for this filter",
+            "fetchingFeeds": "Fetching more feeds for you...",
+            "noMoreFeeds": "You have reached the end!! That's all we have",
             "feeds": {
-                "parkedSuccess": "Successfully parked the news item"
+                "parkedSuccess": "You have successfully parked the news item"
             }
         },
         "parkPage": {
-            "noFeeds": "No feeds available",
+            "noFeeds": "You don't have any parked items",
             "feeds": {
-                "unParkedSuccess": "Successfully unparked the news item",
-                "deletedFeedConfirm": "This feed item will be deleted from the surf. Do you want to continue?",
-                "feedDeletionSuccess": "Successfully deleted the news item"
+                "unParkedSuccess": "You have successfully unparked the news item",
+                "deletedFeedConfirm": "This feed item will be permanently deleted. Do you want to continue?",
+                "feedDeletionSuccess": "You have successfully deleted the news item"
             }
         },
         "headerStrings": {
