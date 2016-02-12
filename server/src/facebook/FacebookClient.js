@@ -43,11 +43,11 @@ export default class FacebookClient {
                         resolve(feedResponse);
                     } else {
                         let errorInfo = JSON.parse(body);
-                        FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %j.", pageUrl, errorInfo.error);
+                        FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageUrl, JSON.stringify(errorInfo));
                         reject(errorInfo.error);
                     }
                 } else {
-                    FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %s.", pageUrl, error);
+                    FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s.", pageUrl, JSON.stringify(error));
                     reject(error);
                 }
             });
@@ -75,11 +75,11 @@ export default class FacebookClient {
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);
-                            FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %j", pageId, errorInfo.error);
+                            FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageId, JSON.stringify(errorInfo));
                             reject(errorInfo.error);
                         }
                     } else {
-                        FacebookClient.logger().debug("FacebookClient:: error fetching feeds for url %s. Error %s.", pageId, error);
+                        FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s.", pageId, JSON.stringify(error));
                         reject(error);
                     }
                 });
@@ -100,11 +100,11 @@ export default class FacebookClient {
                         resolve(facebookId);
                     } else {
                         let errorInfo = JSON.parse(body);
-                        FacebookClient.logger().debug("FacebookClient:: error fetching facebook id for url %s. Error: %j", facebookPageUrl, errorInfo.error);
+                        FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error %s", facebookPageUrl, JSON.stringify(errorInfo));
                         reject(errorInfo.error);
                     }
                 } else {
-                    FacebookClient.logger().debug("FacebookClient:: error fetching facebook id for url %s. Error: %j", facebookPageUrl, error);
+                    FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error: %s", facebookPageUrl, JSON.stringify(error));
                     reject(error);
                 }
 
@@ -129,7 +129,7 @@ export default class FacebookClient {
                         reject(errorInfo.error);
                     }
                 } else {
-                    FacebookClient.logger().debug("FacebookClient:: error while getting long lived token. Error: %s.", error);
+                    FacebookClient.logger().error("FacebookClient:: error while getting long lived token. Error: %s.", JSON.stringify(error));
                     reject(error);
                 }
 

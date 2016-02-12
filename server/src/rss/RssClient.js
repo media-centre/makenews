@@ -22,7 +22,7 @@ export default class RssClient {
             });
 
             requestToUrl.on("error", (error) => {
-                RssClient.logger().error("RssClient:: Request failed for %s.", url, error);
+                RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
                 reject({ "message": "Request failed for " + url });
             });
             requestToUrl.on("response", function(res) {

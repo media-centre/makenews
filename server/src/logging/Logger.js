@@ -185,20 +185,22 @@ export default class Logger {
         return this.logger || Logger._getDefaultCategoryLogger() || Logger._getDefaultLogger();
     }
 
-    debug(message, ...insertions) {
-        this.getLogger().log(logLevel.LOG_DEBUG, message, insertions);
+    debug() {
+        this.getLogger().debug.apply(null, this.getArguments(arguments));
     }
-    info(message, ...insertions) {
-        this.getLogger().log(logLevel.LOG_INFO, message, insertions);
+    info() {
+        this.getLogger().info.apply(null, this.getArguments(arguments));
     }
-    warn(message, ...insertions) {
-        this.getLogger().log(logLevel.LOG_WARN, message, insertions);
+    warn() {
+        this.getLogger().warn.apply(null, this.getArguments(arguments));
     }
-    error(message, ...insertions) {
-        this.getLogger().log(logLevel.LOG_ERROR, message, insertions);
+    error() {
+        this.getLogger().error.apply(null, this.getArguments(arguments));
     }
 
-    log(level, message, insertions) {
-        this.getLogger().log(level, message, insertions, {});
+    getArguments(message) {
+        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message));
+        args.push({});
+        return args;
     }
 }

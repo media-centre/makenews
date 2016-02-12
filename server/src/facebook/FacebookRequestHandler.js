@@ -33,7 +33,7 @@ export default class FacebookRequestHandler {
                     FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
                     resolve(feeds.data);
                 }).catch(error => {
-                    FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %s", webUrl, error);
+                    FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
                     reject("error fetching facebook feeds of web url = " + webUrl);
                 });
             }).catch(error => {
