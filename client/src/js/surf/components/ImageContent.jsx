@@ -41,7 +41,7 @@ export default class ImageContent extends Component {
     handleDeleteClick(event) {
         this.setState({ "showCustomPopup": false });
         if(event.OK) {
-            this.props.dispatch(this.props.clickHandler(this.props.category));
+            this.props.clickHandler(this.props.category);
         }
 
     }
