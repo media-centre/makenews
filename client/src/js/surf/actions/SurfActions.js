@@ -74,6 +74,9 @@ export function displayAllFeedsAsync(callback, progressPercentage) {
 export function fetchAllCategories(callback) {
     return dispatch => {
         PouchClient.fetchDocuments("category/allCategories", { "include_docs": true }).then((categories) => {
+            categories.sort((first, second) => {
+                return first.name.toLowerCase().localeCompare(second.name.toLowerCase());
+            });
             callback(categories);
             dispatch(fetchAllCatgories(categories));
         }).catch(error => { //eslint-disable-line no-unused-vars
