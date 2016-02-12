@@ -10,7 +10,7 @@
       background: $app-header-bg-color;
       overflow: hidden;
       padding: 12px;
-      z-index: 1;
+      z-index: $medium-index;
 
       .app-logo {
         margin-top: 8px;

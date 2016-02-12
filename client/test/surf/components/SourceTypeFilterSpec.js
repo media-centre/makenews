@@ -57,9 +57,7 @@ describe("SourceTypeFilter", ()=> {
             let filterDom = ReactDOM.findDOMNode(sourceTypeFilter);
             let items = filterDom.querySelectorAll("ul.source-type-list li");
             TestUtils.Simulate.click(items[0]);
-            TestUtils.Simulate.click(items[1]);
-            assert.isFalse(items[0].classList.contains("selected"));
-            assert.isTrue(items[1].classList.contains("selected"));
+            assert.isFalse(items[1].classList.contains("selected"));
         });
 
         it("should update the feeds on clicking the items", ()=> {
@@ -67,9 +65,7 @@ describe("SourceTypeFilter", ()=> {
             let result = {
                 "categories": [],
                 "mediaTypes": [],
-                "sourceTypes": [{ "name": "Rss", "_id": "rss" },
-                    { "name": "Twitter", "_id": "twitter" },
-                    { "name": "All", "_id": "all" }]
+                "sourceTypes": [{ "name": "Twitter", "_id": "twitter" }]
             };
 
             let dispatchFilterAction = (filterResponse)=> {

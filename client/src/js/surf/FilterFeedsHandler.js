@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks:0, no-lonely-if:0 */
+/* eslint max-nested-callbacks:0, no-lonely-if:0, complexity:0 */
 "use strict";
 
 import PouchClient from "../db/PouchClient.js";
@@ -146,7 +146,17 @@ export default class FilterFeedsHandler {
                         resolve(result);
                     }
 
+                    let sourceTypes = ["rss", "facebook", "twitter"], sourceFound = false;
+                    let filter = filterObj.surfFilter.sourceTypes.map((item)=> {
+                        return item._id;
+                    });
+                    sourceTypes = filter.length === 0 ? sourceTypes : filter;
+
                     feeds.forEach((feed, index)=> {
+                        sourceFound = sourceTypes.indexOf(feed.feedType) !== NOT_FOUND;
+                        if(!sourceFound) {
+                            return false;
+                        }
                         if(MAX_FEEDS_PER_PAGE === totalCollectedFeeds) {
                             if(lastFilteredFeed === NOT_FOUND) {
                                 lastFilteredFeed = feeds.length === 0 ? lastIndex : index;
@@ -157,7 +167,7 @@ export default class FilterFeedsHandler {
                                 result.feeds.push(feed);
                                 totalCollectedFeeds += 1;
                             } else if(filterObj.sourceIds.length > 0 && contentTypeFilter.length > 0) {
-                                if(filterObj.sourceIds.indexOf(feed.sourceId) !== NOT_FOUND && contentTypeFilter.indexOf(feed.type) !== NOT_FOUND) {
+                                if(filterObj.sourceIds.indexOf(feed.sourceId) !== NOT_FOUND && contentTypeFilter.indexOf(feed.type) !== NOT_FOUND && sourceFound) {
                                     feed.categoryNames = filterObj.sourceHashMap[feed.sourceId];
                                     result.feeds.push(feed);
                                     totalCollectedFeeds += 1;

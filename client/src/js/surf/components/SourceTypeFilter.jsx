@@ -9,10 +9,6 @@ export default class SourceTypeFilter extends Component {
 
         let displayItems = [
             {
-                "name": "All",
-                "_id": "all"
-            },
-            {
                 "name": "Rss",
                 "_id": "rss"
             },
