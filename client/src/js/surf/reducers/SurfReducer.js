@@ -29,7 +29,7 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         if(action.lastIndex <= MAX_FEEDS_PER_PAGE) {
             action.feeds = action.feeds.length === 0 ? state.feeds : action.feeds;
         } else {
-            action.feeds = state.feeds.concat(action.feeds);
+            action.feeds = action.feeds.concat(state.feeds);
         }
         return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });
     default:

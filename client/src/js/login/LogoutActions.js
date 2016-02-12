@@ -8,4 +8,5 @@ export function logout() {
     AjaxClient.instance("/logout").get();
     AppSessionStorage.instance().clear();
     DbSession.clearInstance();
+    window.location.reload();
 }
