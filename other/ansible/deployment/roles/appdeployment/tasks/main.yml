@@ -29,7 +29,7 @@
   shell: cp "{{ConfigFilesPath}}/client_config.js" "{{project_directory}}/dist/client/config/config.js"
 
 - name: migrate all the dbs
-  shell: node {{project_directory}}/dist/server/src/migration.js
+  shell: NODE_ENV="{{project_environment}}" node {{project_directory}}/dist/server/src/migration.js
 
 - name: create the server options json file.
   template: src=start-server dest="{{project_directory}}/run_pm_options.json" mode=0644
