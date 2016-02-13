@@ -14,21 +14,16 @@ export default class DbSession {
             } else {
                 const TWOSECONDS = 2000;
                 if(this.initialized) {
-                    console.log("initialized....");
                     let dbSessionCheckInterval = setInterval(() => {
-                        console.log("in db interval");
                         if(this.db) {
-                            console.log("db interval to be cleared");
                             clearInterval(dbSessionCheckInterval);
                             resolve(this.db);
                         }
                     }, TWOSECONDS);
                 } else {
-                    console.log("initializing....");
                     this.initialized = true;
 
                     DbSession.new().remoteDbInstance().then(session => {
-                        console.log("Got the db session....");
                         this.db = session;
                         resolve(session);
                     });
@@ -85,7 +80,6 @@ export default class DbSession {
 
 
     replicateDb(fromDbUrl, toDbUrl, options, startSync = false) {
-        console.log(fromDbUrl, toDbUrl, options, startSync);
         let fromDb = DbSession.newPouchDb(fromDbUrl);
         return fromDb.sync(toDbUrl, options).on("change", (info) => {
         //PouchDB.replicate(fromDb, toDbUrl, options).on("change", (info) => {
@@ -98,9 +92,7 @@ export default class DbSession {
             console.warn("replication denied", info);
             // a document failed to replicate, e.g. due to permissions
         }).on("complete", (info) => {
-            console.log("completed, startSync = ", startSync);
             if(startSync) {
-                console.log("started sync");
                 DbSession.newLocalPouchDb().then(session => {
                     DbSession.db = session;
                     this.sync();
@@ -127,7 +119,7 @@ export default class DbSession {
     }
 
     static newLocalPouchDb() {
-        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": "true" });
+        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": "true", "revs_limit": 1 });
     }
 
     static clearInstance() {

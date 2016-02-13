@@ -22,3 +22,6 @@
 
 - name: ensure NODE_ENV is set in .bashrc
   lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"
+
+- name: copy the os limits
+  copy: src=./files/limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644

@@ -58,7 +58,11 @@ export default class Migration {
                             resolveStatus(finishedCount, failedCount, dbNames.length);
                         });
                     });
+                }).catch(error => {
+                    reject(error);
                 });
+            }).catch(error => {
+                reject(error);
             });
             function resolveStatus(finishedCount, failedCount, totalCount) {
                 if (finishedCount + failedCount === totalCount) {
