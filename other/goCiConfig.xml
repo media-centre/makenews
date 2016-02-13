@@ -46,7 +46,7 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/qa-deployment.yml -u go -i ./dist/ansible/deployment/inventories/qa -c local</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/qa -c local</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -76,7 +76,37 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/preprod-deployment.yml -u go -i ./dist/ansible/deployment/inventories/pre-prod -c local</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/pre-prod -c local</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="trunk/dist.tar.gz" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="ProductionDeployment">
+      <materials>
+        <pipeline pipelineName="PreprodDeployment" stageName="StartServer" />
+      </materials>
+      <stage name="StartServer" cleanWorkingDir="true">
+        <approval type="manual" />
+        <jobs>
+          <job name="AnsibleDeploymentTask">
+            <tasks>
+              <fetchartifact pipeline="PreprodDeployment" stage="StartServer" job="AnsibleDeploymentTask" srcfile="dist.tar.gz" dest="trunk">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>tar -xzf dist.tar.gz</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash" workingdir="trunk">
+                <arg>-c</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/production -c local</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -93,6 +123,12 @@
       <environmentvariables>
         <variable name="fileName">
           <value>dev_envfile</value>
+        </variable>
+        <variable name="browser">
+          <value>firefox</value>
+        </variable>
+        <variable name="admin" secure="true">
+          <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
         </variable>
       </environmentvariables>
       <materials>
@@ -117,10 +153,15 @@
               <variable name="browser">
                 <value>firefox</value>
               </variable>
+              <variable name="admin" secure="true">
+                <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
+              </variable>
             </environmentvariables>
             <tasks>
               <exec command="mvn" workingdir="trunk/">
                 <arg>test</arg>
+                <arg>-Dbrowser=chrome</arg>
+                <runif status="passed" />
               </exec>
             </tasks>
           </job>
@@ -132,11 +173,8 @@
         <variable name="fileName">
           <value>qa_envfile</value>
         </variable>
-        <variable name="browser">
-          <value>chrome</value>
-        </variable>
-        <variable name="DISPLAY">
-          <value>0</value>
+        <variable name="admin" secure="true">
+          <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
         </variable>
       </environmentvariables>
       <materials>
@@ -163,8 +201,8 @@
               <variable name="browser">
                 <value>chrome</value>
               </variable>
-              <variable name="DISPLAY">
-                <value>:0.0</value>
+              <variable name="admin" secure="true">
+                <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
               </variable>
             </environmentvariables>
             <tasks>
@@ -272,7 +310,7 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/server-tests-deployment.yml -u go -i ./dist/ansible/deployment/inventories/server-tests -c local</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/server-tests -c local</arg>
                 <runif status="passed" />
               </exec>
               <exec command="bash" workingdir="trunk">
@@ -311,7 +349,7 @@
               </exec>
               <exec command="bash" workingdir="trunk">
                 <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/dev-deployment.yml -u go -i ./dist/ansible/deployment/inventories/dev -c local</arg>
+                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/dev -c local</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -391,6 +429,14 @@
         <pipeline name="ServerTests" />
       </pipelines>
     </environment>
+    <environment name="ProductionEnvironment">
+      <agents>
+        <physical uuid="dabe3c91-d4fc-438a-8a94-b4aff5bda4ae" />
+      </agents>
+      <pipelines>
+        <pipeline name="ProductionDeployment" />
+      </pipelines>
+    </environment>
   </environments>
   <agents>
     <agent hostname="Dev-Env" ipaddress="10.19.0.6" uuid="fd03899d-7788-47b9-afee-e8036b0060e1" />
@@ -402,11 +448,11 @@
     <agent hostname="ServerTests" ipaddress="10.19.0.12" uuid="0f2f1c30-0220-4d72-bf45-976d0a65e92d" />
     <agent hostname="Test-Env" ipaddress="10.19.0.11" uuid="4b9908c8-79eb-458d-9156-aedfa687dcd3" />
     <agent hostname="preprodenv" ipaddress="10.19.0.8" uuid="d029afb8-6952-4776-9146-848dad530f73" />
-    <agent hostname="OSCI-CMS" ipaddress="10.136.0.201" uuid="4f3fc68c-8bbb-487b-b98d-7c0a3d34c8b0">
+    <agent hostname="OSCI-CMS" ipaddress="10.136.0.53" uuid="4f3fc68c-8bbb-487b-b98d-7c0a3d34c8b0" isDisabled="true">
       <resources>
         <resource>Automation</resource>
       </resources>
     </agent>
+    <agent hostname="production-env" ipaddress="10.19.0.14" uuid="dabe3c91-d4fc-438a-8a94-b4aff5bda4ae" />
   </agents>
 </cruise>
-
