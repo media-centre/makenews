@@ -21,7 +21,7 @@ export default class AddSourceTypeFilter {
                 });
             }).catch(error => {
                 Migration.logger(this.dbName).error("AddSourceTypeFilter::up - error %j", error);
-                reject(error);
+                resolve("document with surf-filter-id is not available.");
             });
         });
     }

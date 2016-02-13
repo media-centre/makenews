@@ -1,2 +1,2 @@
 [web]
-46.101.245.151
+46.101.245.151 project_environment=ci-server-tests

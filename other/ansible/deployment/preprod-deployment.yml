@@ -1,7 +1,0 @@
-- hosts: web
-  remote_user: go
-  roles:
-    - appdeployment
-  vars:
-    package_source_path: /var/lib/go-agent/pipelines/PreprodDeployment/trunk
-    project_environment: pre-prod

@@ -1,5 +1,6 @@
 [web]
-46.101.252.58
-46.101.195.133
-46.101.185.145
-
+46.101.252.58 project_environment=ci_dev
+46.101.134.206  project_environment=ci_qa
+46.101.245.151 project_environment=ci-server-tests
+46.101.185.145 project_environment=pre-prod
+46.101.164.127 project_environment=production

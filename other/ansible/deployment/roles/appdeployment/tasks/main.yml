@@ -32,7 +32,7 @@
   shell: node {{project_directory}}/dist/server/src/migration.js
 
 - name: create the server options json file.
-  copy: src="../files/{{project_environment}}.json" dest="{{project_directory}}/run_pm_options.json"
+  copy: src="../templates/start-server" dest="{{project_directory}}/run_pm_options.json"
 
 - name: start the application server
   shell: pm2 start {{project_directory}}/run_pm_options.json

@@ -3,6 +3,6 @@
   "script" : "/home/go/ContentDiscovery/dist/server.js",
   "watch": true,
   "env": {
-    "NODE_ENV": "ci-server-tests"
+    "NODE_ENV": {{project_environment}}
   }
 }
