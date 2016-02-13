@@ -1,2 +1,2 @@
 [web]
-46.101.185.145 project_environment=pre-prod
+46.101.185.145 project_environment=pre-prod pipeline_deployment_folder_name=PreprodDeployment

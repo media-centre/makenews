@@ -1,2 +1,2 @@
 [web]
-46.101.164.127 project_environment=production
+46.101.164.127 project_environment=production pipeline_deployment_folder_name=ProductionDeployment

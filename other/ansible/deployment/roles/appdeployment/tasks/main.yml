@@ -14,7 +14,7 @@
   file: path={{project_directory}} state=directory group={{groupname}} owner={{owner}} mode=0744 recurse=yes
 
 - name: copy the dist.tar.gz to the project directory
-  shell: cp "{{package_source_path}}/{{artifact}}" {{project_directory}}
+  shell: cp "/var/lib/go-agent/pipelines/{{pipeline_deployment_folder_name}}/trunk/{{artifact}}" {{project_directory}}
 
 - name: untar the project directory
   shell: tar -xvzf "{{project_directory}}/{{artifact}}" --directory {{project_directory}}
@@ -32,7 +32,7 @@
   shell: node {{project_directory}}/dist/server/src/migration.js
 
 - name: create the server options json file.
-  copy: src="../templates/start-server" dest="{{project_directory}}/run_pm_options.json"
+  template: src=start-server dest="{{project_directory}}/run_pm_options.json" mode=0644
 
 - name: start the application server
   shell: pm2 start {{project_directory}}/run_pm_options.json
