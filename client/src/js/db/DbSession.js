@@ -119,7 +119,7 @@ export default class DbSession {
     }
 
     static newLocalPouchDb() {
-        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": "true", "revs_limit": 1 });
+        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": "true" });
     }
 
     static clearInstance() {
