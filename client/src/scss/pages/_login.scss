@@ -16,6 +16,10 @@
     margin-bottom: 15px;
   }
 
+  .description {
+    line-height: 22px;
+  }
+
   form {
     .input-container > div {
       margin-right: 10px;
@@ -26,7 +30,7 @@
     }
 
     p {
-      margin: 8px 0px;
+      margin: 8px 0;
       min-height: 17px;
     }
   }

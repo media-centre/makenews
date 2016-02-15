@@ -27,7 +27,7 @@ export class LoginPage extends Component {
         const { dispatch } = this.props;
         return (
             <div>
-                <header className="app-header login app-">
+                <header className="app-header login">
                     <div className="clear-fix form-container">
                         <Logo ref="logo"/>
                         <div id="login-form-container" className="login-form-container right m-block">

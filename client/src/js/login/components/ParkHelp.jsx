@@ -11,7 +11,7 @@ export default class ParkHelp extends Component {
 
                 <div className="content-block bottom-box-shadow">
                     <h4 ref="name">{this.props.parkHelp.name}</h4>
-                    <p className="t-justify" ref="text">{this.props.parkHelp.text}</p>
+                    <p className="t-left" ref="text">{this.props.parkHelp.text}</p>
                 </div>
             </div>
         );

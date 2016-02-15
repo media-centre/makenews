@@ -5,9 +5,7 @@ export default class Branding extends Component {
     render() {
         return (
             <p className="description small-text" ref="branding">
-                {
-                    this.props.branding.text
-                }
+                {this.props.branding.text}
             </p>
         );
     }

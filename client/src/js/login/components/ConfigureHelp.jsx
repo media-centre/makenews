@@ -11,7 +11,7 @@ export default class ConfigureHelp extends Component {
 
                 <div className="content-block bottom-box-shadow">
                     <h4 ref="name">{this.props.configureHelp.name}</h4>
-                    <p className="t-justify" ref="text">{this.props.configureHelp.text}</p>
+                    <p className="t-left" ref="text">{this.props.configureHelp.text}</p>
                 </div>
             </div>
         );
