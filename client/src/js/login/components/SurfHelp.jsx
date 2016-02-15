@@ -11,7 +11,7 @@ export default class SurfHelp extends Component {
 
                 <div className="content-block bottom-box-shadow">
                     <h4 ref="name">{this.props.surfHelp.name}</h4>
-                    <p className="t-left" ref="text">{this.props.surfHelp.text}</p>
+                    <p className="t-justify" ref="text">{this.props.surfHelp.text}</p>
                 </div>
             </div>
         );

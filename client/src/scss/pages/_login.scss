@@ -33,12 +33,14 @@
 }
 
 .login.app-section {
-    padding: 3% 0px;
+    padding: 3% 0;
 
     .static-block {
       width: 240px;
       margin: 20px 50px 20px 50px;
       color: $body-font-color;
+      vertical-align: top;
+      display: inline-block;
 
       .image-block {
         width: 50px;

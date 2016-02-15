@@ -38,7 +38,7 @@ export class LoginPage extends Component {
                 </header>
 
                 <section className="login app-section container">
-                    <div className="container h-center t-center">
+                    <div className="container t-center">
                         <FeaturesHelp ref="featuresHelp" featuresHelp={this.props.loginPageStrings.featuresHelp} />
                     </div>
                 </section>

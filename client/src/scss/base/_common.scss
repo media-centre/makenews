@@ -151,6 +151,9 @@ button {
 .t-left {
   text-align: left;
 }
+.t-justify {
+  text-align: justify;
+}
 .t-bold {
   font-weight: bold;
   font-family: sans-serif;
@@ -175,7 +178,7 @@ button {
   left: 0;
   top: 0;
   bottom: 0;
-  right: 0px;
+  right: 0;
   margin: auto;
 }
 

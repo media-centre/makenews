@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from "react";
 export default class FeaturesHelp extends Component {
     render() {
         return (
-            <div className="container h-center t-center">
+            <div className="container">
                 <ConfigureHelp ref="configureFeatureHelp" configureHelp={this.props.featuresHelp.configureHelp} />
                 <SurfHelp ref="surfFeatureHelp" surfHelp={this.props.featuresHelp.surfHelp} />
                 <ParkHelp ref="parkFeatureHelp" parkHelp={this.props.featuresHelp.parkHelp} />
