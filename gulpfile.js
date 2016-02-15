@@ -245,6 +245,9 @@ gulp.task("server:copy-js", function() {
     .pipe(babel())
     .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
+    gulp.src("./create_user.sh")
+        .pipe(gulp.dest(parameters.server.distServerJsFolder));
+
     gulp.src("./" + parameters.server.packageJsonFile)
     .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
