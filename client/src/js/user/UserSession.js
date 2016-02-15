@@ -20,8 +20,8 @@ export default class UserSession {
         return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME);
     }
 
-    setLastAccessedTime(time = moment().valueOf()) {
-        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time);
+    setLastAccessedTime(time) {
+        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time || moment().valueOf());
     }
 
     isActiveContinuously() {

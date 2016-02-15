@@ -9,7 +9,7 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 
 export function userLogin(history, userName, password) {
     return dispatch => {
-        let ajax = AjaxClient.instance("/login");
+        let ajax = AjaxClient.instance("/login", true);
         const headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
