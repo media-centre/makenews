@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from "react";
 import { Route, Link, History } from "react-router";
 import { connect } from "react-redux";
 import Toast from "../../utils/custom_templates/Toast.js";
+import FilterFeedsHandler from "../../surf/FilterFeedsHandler.js";
 
 export default class CategoryNavigationHeader extends Component {
 
@@ -52,9 +53,26 @@ export default class CategoryNavigationHeader extends Component {
         this.setDeleteConfirmState(false);
     }
     deleteCategory() {
-        if(!this.props.isDefault) {
-            this.showConfirmPopup(this.props.categoryName);
+        if(this.props.isDefault) {
+            return;
         }
+
+        new FilterFeedsHandler().fetchFilterDocument().then(filterDocs => {
+            let found = false;
+            if(filterDocs.length !== 0) {
+                let filters = filterDocs[0].categories.filter((category) => {
+                    if(category.name === this.props.categoryName) {
+                        return category;
+                    }
+                });
+                found = filters.length > 0;
+            }
+            if(found) {
+                Toast.show("Selected category in filter cannot be deleted.");
+            } else {
+                this.showConfirmPopup(this.props.categoryName);
+            }
+        });
     }
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>

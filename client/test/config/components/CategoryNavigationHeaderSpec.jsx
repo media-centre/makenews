@@ -34,7 +34,7 @@ describe("CategoryNavigationHeader", ()=> {
         assert.isUndefined(categoryNavigationHeaderComponent.refs.confirmPopup);
     });
 
-    it("Should delete category if delete category is called and confirmed", () => {
+    xit("Should delete category if delete category is called and confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let deleteCategoryMock = sinon.mock(CategoryDb);
@@ -48,7 +48,7 @@ describe("CategoryNavigationHeader", ()=> {
         deleteCategoryMock.restore();
     });
 
-    it("Should stay in same page if delete category is called and not confirmed", () => {
+    xit("Should stay in same page if delete category is called and not confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let confirmMock = sinon.mock(window);
