@@ -80,9 +80,9 @@ export default class DbSession {
 
 
     replicateDb(fromDbUrl, toDbUrl, options, startSync = false) {
-        let fromDb = DbSession.newPouchDb(fromDbUrl);
-        return fromDb.sync(toDbUrl, options).on("change", (info) => {
-        //PouchDB.replicate(fromDb, toDbUrl, options).on("change", (info) => {
+        //let fromDb = DbSession.newPouchDb(fromDbUrl);
+        //return fromDb.sync(toDbUrl, options).on("change", (info) => {
+        PouchDB.replicate(fromDbUrl, toDbUrl, options).on("change", (info) => {
             // handle change
         }).on("paused", () => {
             // replication paused (e.g. user went offline)
