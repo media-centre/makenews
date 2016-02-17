@@ -1,4 +1,4 @@
-/* eslint max-len:0  react/no-set-state:0 */
+/* eslint max-len:0  react/no-set-state:0, callback-return:0 */
 
 "use strict";
 import React, { Component, PropTypes } from "react";
@@ -56,7 +56,7 @@ export default class Category extends Component {
         return categoryName.match(/^[ A-Za-z0-9_-]*$/) !== null;
     }
 
-    _updateCategoryName(categoryName) {
+    _updateCategoryName(categoryName, callback = ()=> {}) {
         if(categoryName === this.state.categoryName) {
             this.setState({ "titleErrorMessage": "", "isValidName": true, "categoryName": this.state.categoryName });
             return;
@@ -71,6 +71,7 @@ export default class Category extends Component {
         if(this._isValidName(categoryName)) {
             this.props.dispatch(updateCategoryName(categoryName, this.props.params.categoryId, (response)=> {
                 if(response.status) {
+                    callback();
                     Toast.show(`${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated} ${categoryName}`);
                     this.setState({ "titleErrorMessage": `${this.props.categoryDetailsPageStrings.successMessages.categoryUpdated} ${categoryName}`, "isValidName": true, "categoryName": categoryName });
                 } else {
@@ -106,7 +107,7 @@ export default class Category extends Component {
         let categoryName = this.state.categoryName;
         return (
           <div className="category-page max-width">
-              <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={categoryName} categoryId={this.props.params.categoryId} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>
+              <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={categoryName} categoryId={this.props.params.categoryId} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} dispatch={this.props.dispatch}/>
               <TabComponent tabToHighlight={this.props.highlightedTab} dispatch={this.props.dispatch}>{tabContent}</TabComponent>
           </div>
       );

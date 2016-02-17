@@ -26,9 +26,11 @@ export class ParkPage extends Component {
         let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{this.props.messages.noFeeds}</div> : null;
 
         return (
-            <div ref="parkItem" className="park-page feeds-container">
-                {defaultText}
-                <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={(feedDoc) => this.parkClickHandler(feedDoc)}/>
+            <div ref="parkItem" className="park-page">
+                <div className="feeds-container">
+                    {defaultText}
+                    <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={(feedDoc) => this.parkClickHandler(feedDoc)}/>
+                </div>
             </div>
         );
     }

@@ -26,22 +26,6 @@
     max-width: 100%;
   }
 
-  .extra-small-text {
-    font-size: $small-font-size;
-  }
-
-  .small-text {
-    font-size: $medium-font-size;
-  }
-
-  .medium-text {
-    font-size: $large-font-size;
-  }
-
-  .extra-large-text {
-    font-size: $max-font-size;
-  }
-
   input[type='text'], input[type='password'], button {
     padding: 8px;
   }
@@ -89,52 +73,128 @@
     }
   }
 
-  .main-page {
-    header {
-      .fixed-header .user-info {
+
+  .main-page header {
+    height: 53px;
+
+    .fixed-header {
+      padding: 3px 2px 2px 2px;
+
+      .user-info {
         position: absolute;
         right: 15px;
-      }
-      .app-logo-container {
-        display: none;
-      }
-    }
 
-    section > div {
-      padding: 15px;
-    }
+        a.link {
+          width: auto;
+          margin: 11px 0px 0px 0px;
+          span {
+            font-size: $extra-small-font-size;
+          }
 
-    section {
-      .configure-page {
-        .cat-list li {
-          margin: 10px;
         }
       }
 
-      .navigation-title {
-        margin: 0 auto;
+      .app-logo-container {
+        display: none;
+      }
+
+
+      ul.menu-list {
+        li {
+          padding: 0;
+          width: 55px;
+
+          a {
+            font-size: $extra-small-font-size;
+
+            div.header-link-image {
+              width: 25px;
+              height: 25px;
+              background-size: 25px !important;
+            }
+          }
+        }
       }
     }
   }
 
-  .tab-control > ul.tab-header > li.tab {
-    margin-right: 3%;
-  }
+  .main-page section {
 
-  /* surf page */
-  .surf-page-container {
-    .surf-page .source-type-filter ul {
-      top: 82px;
-      padding-top: 30px;
+    .refresh-status {
+      top: 53px;
     }
-    .feeds-container {
+
+    .surf-page-container, .park-page {
+
+      .surf-filter {
+        top: 54px;
+        width: 270px;
+        left: -270px;
+
+        #filterToggle {
+          right: -26px;
+          padding: 0px 5px;
+        }
+
+        &.show {
+          left: 0px;
+        }
+
+
+
+        .surf-filter-item {
+          ul li {
+            &:hover {
+              color: $primary-font-color;
+            }
+            &.selected {
+              color: $secondary-font-color;
+            }
+          }
+
+        }
+      }
+
+      .surf-refresh-button {
+        top: 56px;
+      }
+
+      .source-type-filter {
+        height: 15px;
+
+        ul {
+          top: 53px;
+          padding-top: 6px;
+          padding-bottom: 4px;
+
+          li {
+            width: 70px;
+            margin: 3px 4px 3px 4px;
+            padding: 0px;
+            text-align: center;
+            font-size: $extra-small-font-size;
+
+            &:first-child {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
 
       .all-feeds {
         .feed-header {
 
           .header-item, ul li {
             margin-right: 10px;
+
           }
+        }
+
+        p.surf-description {
+          font-size: $extra-small-font-size;
+        }
+        .title {
+          font-size: $small-font-size;
         }
 
         .image-gallery ul.gallery-list li.image-container {
@@ -163,22 +223,14 @@
           background-image: url(images/main/park-blue.png);
         }
       }
+
+
     }
 
-    .surf-filter {
-      .surf-filter-item {
-        ul li {
-          &:hover {
-            color: $primary-font-color;
-          }
-          &.selected {
-            color: $secondary-font-color;
-          }
-        }
-
-      }
-    }
   }
+
+
+
   body .custom-toast {
     padding: 8px;
     width: 85%;
@@ -212,62 +264,5 @@
     .tour-top-arrow {
       right: auto;
     }
-  }
-}
-
-@media (max-width: 400px) {
-  .hide-mobile-xs {
-    display: none;
-  }
-
-  .main-page header .fixed-header {
-    .user-info a {
-      width: auto;
-      margin: 18px 0 18px 0;
-      span {
-        font-size: $extra-small-font-size;
-      }
-
-    }
-    ul li {
-      padding: 0;
-      width: 20%;
-
-      a {
-        font-size: $extra-small-font-size;
-
-        .header-link-image {
-          width: 25px;
-          height: 25px;
-          background-size: 25px !important;
-        }
-      }
-    }
-  }
-
-  .surf-page-container {
-    .surf-filter {
-      top: 82px;
-      width: 85%;
-      left: -85%;
-
-      #filterToggle {
-        top: 200px;
-      }
-    }
-
-    .refresh-status {
-      top: 82px;
-    }
-
-    .feeds-container {
-      .all-feeds .park-feed {
-        height: 20px;
-        width: 26px;
-      }
-    }
-  }
-  .main-page section .surf-page-container .surf-filter.show {
-    left: 0;
   }
 }

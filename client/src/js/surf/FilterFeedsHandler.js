@@ -207,4 +207,28 @@ export default class FilterFeedsHandler {
             }
         });
     }
+
+    deleteCategory(categoryId) {
+        return new Promise((resolve, reject)=> {
+            this.fetchFilterDocument().then((filterDocument)=> {
+                let updatedDocument = filterDocument[0];
+                if(!updatedDocument) {
+                    resolve();
+                }
+                updatedDocument.categories = filterDocument[0].categories.filter((category)=> {
+                    if(categoryId !== category._id) {
+                        return category;
+                    }
+                });
+                PouchClient.updateDocument(updatedDocument).then((response)=> {
+                    resolve(response);
+                }).catch((err)=> {
+                    reject(err);
+                });
+            }).catch((err)=> {
+                reject(err);
+            });
+        });
+    }
+
 }

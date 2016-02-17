@@ -1,6 +1,7 @@
 @import "../../utils/variable";
-.surf-page-container {
-  padding: 25px 0px 0px 0px !important;
+
+.surf-page-container, .park-page {
+  padding: 10px;
 
   .take-tour-text {
     text-align: center;
@@ -14,7 +15,7 @@
   }
 
   .feed-hint {
-    margin-top: 20px;
+    margin-top: 30px;
   }
 
   .surf-filter > div {
@@ -82,7 +83,7 @@
         margin: 0 0 25px 0;
         text-align: center;
         text-transform: uppercase;
-        font-size: $small-font-size;
+        font-size: $extra-small-font-size;
         color: $primary-font-color;
       }
 
@@ -128,7 +129,6 @@
 
   .feeds-container {
     color: $dark-gray-color;
-    padding: 20px;
 
     .surf-refresh-button.disabled {
       opacity: 0.4;
@@ -137,16 +137,12 @@
     .surf-refresh-button {
       position: fixed;
       top: 95px;
-      left: 0;
-      right: 0;
-      margin: auto;
-      max-width: 120px;
+      right: 10px;
       text-align: center;
-      color: $primary-font-color;
       z-index: $medium-index;
       cursor: pointer;
-      font-size: $small-font-size;
-      background-color: $app-header-bg-color;
+      font-size: $large-font-size;
+      color: $app-header-bg-color;
       border-radius: 2px;
 
       span {
@@ -205,7 +201,7 @@
 
     /* feed styles */
     .all-feeds {
-      a {
+      div a {
         font-size: $medium-font-size;
         color: #545454;
         p {
@@ -218,14 +214,14 @@
         @extend .h-v-center;
       }
 
-      .park-feed{
-        height: 25px;
-        width: 32px;
-        cursor: pointer;
-        background-image: url(images/main/park-blue.png);
-        background-size: cover;
+      .park-feed {
+          height: 22px;
+          width: 22px;
+          cursor: pointer;
+          background: url(images/main/park-blue.png) no-repeat;
+          background-size: 22px;
         &:hover {
-          background-image: url(images/main/park.png);
+          background: url(images/main/park.png) no-repeat;
         }
       }
 
@@ -251,49 +247,51 @@
         padding-top: 15px;
         color: #545454;
       }
+
+      .image-gallery {
+        ul.gallery-list {
+          margin-left: -10px;
+          margin-right: -10px;
+          padding: 10px 0;
+
+          li.image-container {
+            width: 200px;
+            padding: 10px;
+            vertical-align: top;
+            position: relative;
+          }
+        }
+        p.surf-description {
+          margin: 0 0 5px 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
+          line-height: 20px;
+          max-height: 100px;
+        }
+      }
+
+      .image-content {
+        .container {
+          padding: 10px 0;
+
+          .img-container {
+            width: 200px;
+            padding: 10px 15px 10px 10px;
+            position: relative;
+          }
+          p {
+            margin: 5px;
+          }
+        }
+      }
     }
 
     /* ended */
 
-    .image-gallery {
-      ul.gallery-list {
-        margin-left: -10px;
-        margin-right: -10px;
-        padding: 10px 0;
 
-        li.image-container {
-          width: 200px;
-          padding: 10px;
-          vertical-align: top;
-          position: relative;
-        }
-      }
-      p.surf-description {
-        margin: 0 0 5px 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 5;
-        line-height: 20px;
-        max-height: 100px;
-      }
-    }
-
-    .image-content {
-      .container {
-        padding: 10px 0;
-
-        .img-container {
-          width: 200px;
-          padding: 10px 15px 10px 10px;
-          position: relative;
-        }
-        p {
-          margin: 5px;
-        }
-      }
-    }
   }
 
   .pagination-spinner {
@@ -328,24 +326,29 @@
   }
 
   .source-type-filter {
+    height: 32px;
+
     ul {
       position: fixed;
       left: 0px;
       right: 0px;
       top: 86px;
-      padding-top: 23px;
       background: $primary-font-color;
       z-index: $min-index;
+      border-color: $dark-border-color;
 
       li {
         display: inline-block;
         vertical-align: top;
         padding: 1px 10px;
         margin: 10px 10px;
-        text-transform: uppercase;
         color: $app-header-bg-color;
         font-size: $small-font-size;
         cursor: pointer;
+
+        &:first-child {
+          text-transform: uppercase;
+        }
 
         &:first-child {
           margin-left: 18px;

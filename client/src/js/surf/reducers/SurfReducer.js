@@ -25,9 +25,7 @@ export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Loca
         }
         return Object.assign({}, state, { "surfFilter": action.surfFilter, "sourceHashMap": action.sourceHashMap, "sourceIds": action.sourceIds });
     case PAGINATION_FEEDS:
-        if(action.lastIndex <= MAX_FEEDS_PER_PAGE) {
-            action.feeds = action.feeds.length === 0 ? state.feeds : action.feeds;
-        } else {
+        if(action.lastIndex > MAX_FEEDS_PER_PAGE) {
             action.feeds = typeof action.lastIndex === "undefined" ? state.feeds : state.feeds.concat(action.feeds);
         }
         return Object.assign({}, state, { "feeds": action.feeds, "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage, "hasMoreFeeds": action.hasMoreFeeds, "lastIndex": action.lastIndex });

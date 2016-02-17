@@ -37,6 +37,17 @@ export function paginationFeeds(feeds, refreshState = false, progressPercentage 
     return { "type": PAGINATION_FEEDS, feeds, refreshState, progressPercentage, lastIndex, hasMoreFeeds };
 }
 
+export function initiateSurf(callback) {
+    return dispatch => {
+        dispatch(storeFilterAndSourceHashMap(()=> {
+            dispatch(fetchAllCategories(()=> {
+                dispatch(fetchFeedsByPage(0, ()=> {}));
+                callback();
+            }));
+        }));
+    };
+}
+
 export function parkFeed(feedDoc, callback = ()=> {}) {
     if(feedDoc && Object.keys(feedDoc).length !== 0) {
         return dispatch => {
@@ -103,7 +114,7 @@ export function getLatestFeedsFromAllSources(callback = ()=> {}) {
         new RefreshFeedsHandler(dispatch, updateLatestFeeds, callback).handleBatchRequests();
     };
 }
-export function storeFilterAndSourceHashMap(callback) {
+export function storeFilterAndSourceHashMap(callback = ()=> {}) {
     return dispatch => {
         let currentStore = dispatch(storeFilterSourceMap());
         if(!currentStore.surfFilter || !currentStore.sourceHashMap) {
@@ -119,31 +130,43 @@ export function storeFilterAndSourceHashMap(callback) {
     };
 }
 
-export function fetchFeedsByPage(lastIndex, callback = ()=> {}) {
+export function updateFilterAndSourceHashMap() {
     return dispatch => {
         let filterFeedsHandler = new FilterFeedsHandler();
-        if(lastIndex === 0) {
+        filterFeedsHandler.getFilterAndSourceHashMap().then((result)=> {
+            dispatch(storeFilterSourceMap(result.surfFilter, result.sourceHashMap, result.sourceIds));
+        });
+    };
+}
+
+export function fetchFeedsByPage(pageIndex, callback = ()=> {}) {
+    return dispatch => {
+        let filterFeedsHandler = new FilterFeedsHandler();
+        if(pageIndex === 0) {
             filterFeedsHandler.getFilterAndSourceHashMap().then(latestSourceMapAndFilter => {
                 let filterObj = dispatch(storeFilterSourceMap(latestSourceMapAndFilter.surfFilter, latestSourceMapAndFilter.sourceHashMap, latestSourceMapAndFilter.sourceIds));
-                fetchFeeds(lastIndex, filterObj, callback, dispatch);
+                fetchFeeds(pageIndex, filterObj, callback, dispatch);
             });
         } else {
-            fetchFeeds(lastIndex, dispatch(storeFilterSourceMap()), callback, dispatch);
+            fetchFeeds(pageIndex, dispatch(storeFilterSourceMap()), callback, dispatch);
         }
     };
 }
 
-function fetchFeeds(lastIndex, filterObj, callback, dispatch) {
+function fetchFeeds(pageIndex, filterObj, callback, dispatch) {
     if(filterObj.surfFilter) {
         let filterFeedsHandler = new FilterFeedsHandler();
-        filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, lastIndex).then((result)=> {
+        filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, pageIndex).then((result)=> {
+            if(pageIndex === 0) {
+                dispatch(paginationFeeds([], false, 0, 0, true));
+            }
             dispatch(paginationFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds));
             callback(result);
         }).catch(()=> {
-            callback({ "lastIndex": lastIndex });
+            callback({ "lastIndex": pageIndex });
         });
     } else {
-        callback({ "lastIndex": lastIndex });
+        callback({ "lastIndex": pageIndex });
     }
 }
 

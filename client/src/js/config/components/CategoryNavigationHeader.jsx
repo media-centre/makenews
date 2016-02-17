@@ -7,6 +7,7 @@ import { Route, Link, History } from "react-router";
 import { connect } from "react-redux";
 import Toast from "../../utils/custom_templates/Toast.js";
 import FilterFeedsHandler from "../../surf/FilterFeedsHandler.js";
+import { updateFilterAndSourceHashMap } from "../../surf/actions/SurfActions.js";
 
 export default class CategoryNavigationHeader extends Component {
 
@@ -19,7 +20,9 @@ export default class CategoryNavigationHeader extends Component {
 
     _updateCategoryName(event, props) {
         var categoryName = this.refs.categoryTitleElement.value;
-        props.updateCategoryName(categoryName);
+        props.updateCategoryName(categoryName, ()=> {
+            this.props.dispatch(updateFilterAndSourceHashMap());
+        });
     }
 
     _handleEnterKey(event, props) {
@@ -48,6 +51,11 @@ export default class CategoryNavigationHeader extends Component {
             CategoryDb.deleteCategory(categoryId).then((result) => {
                 Toast.show(`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryDeleteSuccess}`);
                 this.context.history.push("/configure/categories");
+
+                new FilterFeedsHandler().deleteCategory(categoryId).then(()=> {
+                    this.props.dispatch(updateFilterAndSourceHashMap());
+                });
+
             });
         }
         this.setDeleteConfirmState(false);
@@ -107,7 +115,8 @@ CategoryNavigationHeader.propTypes = {
     "isDefault": PropTypes.bool,
     "errorMessage": PropTypes.string,
     "categoryDetailsPageStrings": PropTypes.object.isRequired,
-    "isValidName": PropTypes.bool
+    "isValidName": PropTypes.bool,
+    "dispatch": PropTypes.func
 };
 
 CategoryNavigationHeader.defaultProps = {

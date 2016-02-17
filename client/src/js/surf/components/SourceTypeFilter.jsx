@@ -25,7 +25,7 @@ export default class SourceTypeFilter extends Component {
     }
 
     _highlightFilter(item) {
-        let className = "item";
+        let className = "item box";
         if(this.props.filter.sourceTypes) {
             this.props.filter.sourceTypes.forEach((filterItem)=> {
                 if(filterItem._id === item._id) {
@@ -64,7 +64,7 @@ export default class SourceTypeFilter extends Component {
         });
         return (
             <div className="source-type-filter">
-                <ul className="source-type-list max-width">
+                <ul className="source-type-list max-width border-bottom">
                     {displayItems}
                 </ul>
             </div>
