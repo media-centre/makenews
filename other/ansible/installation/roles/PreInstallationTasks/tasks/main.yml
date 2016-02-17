@@ -12,7 +12,7 @@
   user: name={{deploy_username}} comment="media center user" group=medcen
 
 - name: Placing key
-  authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
+  authorized_key: user={{deploy_username}} key="{{ lookup('file', playbook_dir+'/roles/PreInstallationTasks/files/authorized_keys.mediacenter.pub') }}"
 
 - name: ensure ansible is installed
   apt: pkg=ansible state=installed
@@ -24,4 +24,4 @@
   lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"
 
 - name: copy the os limits
-  copy: src=./files/limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
+  copy: src=limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
