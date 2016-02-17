@@ -151,7 +151,8 @@ SurfPage.propTypes = {
 };
 
 SurfPage.defaultProps = {
-    "feeds": []
+    "feeds": [],
+    "categories": []
 };
 
 function select(store) {
