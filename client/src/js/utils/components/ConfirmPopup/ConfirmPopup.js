@@ -5,6 +5,8 @@ import React, { Component, PropTypes } from "react";
 export default class ConfirmPopup extends Component {
 
     handleClick(event, isConfirm) {
+        this.refs.confirmButton.disabled = true;
+        this.refs.cancelButton.disabled = true;
         event.OK = isConfirm || false;
         this.props.callback(event);
     }

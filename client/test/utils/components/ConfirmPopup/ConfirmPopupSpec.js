@@ -44,6 +44,8 @@ describe("ConfirmPopup", ()=> {
             <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.cancelButton);
+        assert.isTrue(confirmPopTest.refs.cancelButton.disabled);
+        assert.isTrue(confirmPopTest.refs.confirmButton.disabled);
         assert.isFalse(cancelCalled);
     });
 
@@ -52,6 +54,8 @@ describe("ConfirmPopup", ()=> {
             <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.confirmButton);
+        assert.isTrue(confirmPopTest.refs.cancelButton.disabled);
+        assert.isTrue(confirmPopTest.refs.confirmButton.disabled);
         assert.isTrue(cancelCalled);
     });
 

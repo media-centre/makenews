@@ -434,6 +434,48 @@ describe("PouchClient", () => {
             });
         });
 
+        it("should resolve with latest document deletion if conflict occurs", (done) => {
+            DbSession.instance().then(session => {
+                let doc = {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.facebookpolitics.com",
+                    "categoryIds": ["politicsCategoryId2"]
+                };
+                session.put(doc, "deleteId1").then(putResponse => {
+                    session.get("deleteId1").then(document => {
+                        document._rev = "3-47f9b2cf6d863ef51cba7153064bbb87";
+                        PouchClient.deleteDocument(document).then((response) => {
+                            assert.isTrue(response.ok);
+                            assert.strictEqual("deleteId1", response.id);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+
+        it("should reject with error if document deletion encountered conflict and get document failed", sinon.test(function(done) {
+            let getMock = this.mock(PouchClient).expects("getDocument").withArgs("deleteId1").returns(Promise.reject("error"));
+            DbSession.instance().then(session => {
+                let doc = {
+                    "docType": "source",
+                    "sourceType": "rss",
+                    "url": "www.facebookpolitics.com",
+                    "categoryIds": ["politicsCategoryId2"]
+                };
+                session.put(doc, "deleteId1").then(putResponse => {
+                    session.get("deleteId1").then(document => {
+                        document._rev = "3-abc";
+                        PouchClient.deleteDocument(document).catch(error => {
+                            assert.strictEqual(error, "error");
+                            done();
+                        });
+                    });
+                });
+            });
+        }));
+
         it("should reject with an error while deleting the document", (done) => {
             let invalidDocument = { "_id": "invalidId", "title": "INVALID" };
             PouchClient.deleteDocument(invalidDocument).catch((error) => {
