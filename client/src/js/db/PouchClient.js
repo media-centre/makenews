@@ -99,7 +99,16 @@ export default class PouchClient {
                     session.remove(jsonDocument).then(response => {
                         resolve(response);
                     }).catch(error => {
-                        reject(error);
+                        let conflictStatus = 409;
+                        if(error.status === conflictStatus) {
+                            PouchClient.getDocument(jsonDocument._id).then(document => { //eslint-disable-line max-nested-callbacks
+                                resolve(PouchClient.deleteDocument(document));
+                            }).catch(docError => { //eslint-disable-line max-nested-callbacks
+                                reject(docError);
+                            });
+                        } else {
+                            reject(error);
+                        }
                     });
                 });
             } else {
