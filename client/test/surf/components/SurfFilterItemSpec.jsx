@@ -12,7 +12,6 @@ import "../../helper/TestHelper.js";
 describe("SurfFilterItem Component", ()=> {
     describe("Category Filter", ()=> {
         it("should be present", ()=> {
-
             let surfFilterItem = TestUtils.renderIntoDocument(
                 <SurfFilterItem type="text" displayItems={[]} filterItems={[]} title="Content"/>
             );

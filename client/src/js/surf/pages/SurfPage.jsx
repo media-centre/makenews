@@ -27,7 +27,8 @@ export class SurfPage extends Component {
     componentWillMount() {
         window.scrollTo(0, 0);
         this.props.dispatch(initiateSurf(()=> {
-            this.setState({ "filter": this.props.surfFilter });
+            let msg = this.props.feeds.length === 0 ? this.props.messages.noFeeds : "";
+            this.setState({ "filter": this.props.surfFilter, "fetchHintMessage": msg });
         }));
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
@@ -118,14 +119,27 @@ export class SurfPage extends Component {
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
         let allFeeds = <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>;
         let hint = this.getHintMessage();
-        let sourceTypeFilter = <SourceTypeFilter filter={this.state.filter} dispatchFilterAction={this.updateFilter.bind(this)}/>;
+        //let sourceTypeFilterDom = <SourceTypeFilter filter={this.state.filter} dispatchFilterAction={this.updateFilter.bind(this)}/>;
+        let sourceTypeFilter = [
+            {
+                "name": "RSS",
+                "_id": "rss"
+            },
+            {
+                "name": "Facebook",
+                "_id": "facebook"
+            },
+            {
+                "name": "Twitter",
+                "_id": "twitter"
+            }
+        ];
         return (
             <div className="surf-page-container">
-                <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.props.categories} filter={this.state.filter}/>
+                <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.props.categories} filter={this.state.filter} sourceTypeFilter={sourceTypeFilter}/>
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                     {refreshButton}
-                    {sourceTypeFilter}
                     {hint}
                     {allFeeds}
                     {paginationSpinner}

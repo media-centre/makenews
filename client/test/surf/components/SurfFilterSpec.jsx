@@ -38,16 +38,15 @@ describe("SurfFilter Component", ()=> {
 
     describe("Category Filter", ()=> {
         it("should be present", ()=> {
-
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter} categories={categories}/>
+                <SurfFilter filter={filter} categories={categories} sourceTypeFilter={[]}/>
             );
             assert.isDefined(surfFilter, "defined");
         });
 
         it("should toggle button and which should show and hide the filter component", ()=> {
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter} categories={categories}/>
+                <SurfFilter filter={filter} categories={categories} sourceTypeFilter={[]}/>
             );
             let surfFilterDom = ReactDom.findDOMNode(surfFilter);
             TestUtils.Simulate.click(surfFilterDom.querySelector("#filterToggle"));
@@ -56,7 +55,7 @@ describe("SurfFilter Component", ()=> {
 
         it("should toggle button and which should show and hide the filter component", ()=> {
             let surfFilter = TestUtils.renderIntoDocument(
-                <SurfFilter filter={filter} categories={categories}/>
+                <SurfFilter filter={filter} categories={categories} sourceTypeFilter={[]}/>
             );
             surfFilter.state.show = true;
             let surfFilterDom = ReactDom.findDOMNode(surfFilter);
