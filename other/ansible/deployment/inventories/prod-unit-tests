@@ -1,0 +1,2 @@
+[web]
+46.101.115.186 project_environment=ci-server-tests pipeline_deployment_folder_name=UnitTests
