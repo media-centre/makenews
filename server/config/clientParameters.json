@@ -13,6 +13,8 @@
   },
   "pre-prod": {
   },
+  "ci_prod_dev_box": {
+  },
   "production": {
 
   }
