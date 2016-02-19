@@ -7,7 +7,7 @@ const clientConfig = {
     "templatesFile": "app.tags.js",
     "scssSrcPath": "./client/src/scss",
     "imgSrcPath": "./client/src/images",
-    "fontsPath": "./client/src/scss/fonts",
+    "fontsPath": "./client/src/fonts",
     "srcPath": "./client/src/js",
     "testPath": "./client/test",
     "distFolder": "./dist/client"

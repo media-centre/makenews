@@ -26,7 +26,7 @@
     position: fixed;
     left: -300px;
     bottom: 0;
-    top: 87px;
+    top: 86px;
     width: 300px;
     z-index: $mask-layer-index;
 
@@ -37,7 +37,7 @@
     .wrapper {
       position: absolute;
       left: 0;
-      right: 0px;
+      right: 0;
       top: 0;
       bottom: 0;
       background: $app-header-bg-color;

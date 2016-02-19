@@ -8,27 +8,7 @@ export default class SurfFilter extends Component {
     constructor(props) {
         super(props);
 
-        let mediaTypes = [
-            {
-                "name": "Text",
-                "image": "file-text-o",
-                "_id": "description"
-            }, {
-                "name": "Image",
-                "image": "file-picture-o",
-                "_id": "imagecontent"
-            }, {
-                "name": "Gallery",
-                "image": "file-picture-o",
-                "_id": "gallery"
-            }
-            //, {
-            //    "name": "Videos",
-            //    "image": "play-circle-o",
-            //    "_id": "videos"
-            //}
-        ];
-        this.state = { "mediaTypes": mediaTypes, "show": false };
+        this.state = { "show": false };
     }
 
     updateFilter(type, filterItems) {
@@ -53,7 +33,7 @@ export default class SurfFilter extends Component {
                 <div className="wrapper">
                     <div className="anim show-filter-container">
                         <SurfFilterItem type="source" displayItems={this.props.sourceTypeFilter} filterItems={this.props.filter.sourceTypes} title="Source" dispatchFilterAction={this.updateFilter.bind(this)}/>
-                        <SurfFilterItem type="content" displayItems={this.state.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                        <SurfFilterItem type="content" displayItems={this.props.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content" dispatchFilterAction={this.updateFilter.bind(this)}/>
                         <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
                     </div>
                 </div>
@@ -69,8 +49,8 @@ SurfFilter.propTypes = {
     "filter": PropTypes.object.isRequired,
     "updateFilter": PropTypes.func.isRequired,
     "categories": PropTypes.array.isRequired,
-    "sourceTypeFilter": PropTypes.array.isRequired
-
+    "sourceTypeFilter": PropTypes.array.isRequired,
+    "mediaTypes": PropTypes.array.isRequired
 };
 
 SurfFilter.defaultProps = {

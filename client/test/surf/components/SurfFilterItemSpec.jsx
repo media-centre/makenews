@@ -13,7 +13,7 @@ describe("SurfFilterItem Component", ()=> {
     describe("Category Filter", ()=> {
         it("should be present", ()=> {
             let surfFilterItem = TestUtils.renderIntoDocument(
-                <SurfFilterItem type="text" displayItems={[]} filterItems={[]} title="Content"/>
+                <SurfFilterItem type="text" displayItems={[]} filterItems={[]} title="Content" dispatchFilterAction={()=> {}}/>
             );
             assert.isDefined(surfFilterItem, "defined");
         });
@@ -28,7 +28,7 @@ describe("SurfFilterItem Component", ()=> {
                 }
             ];
             let surfFilterItem = TestUtils.renderIntoDocument(
-                <SurfFilterItem type="text" displayItems={categories} filterItems={[]} title="category"/>
+                <SurfFilterItem type="text" displayItems={categories} filterItems={[]} title="category" dispatchFilterAction={()=> {}}/>
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             assert.strictEqual(2, surfFilterItemDom.querySelectorAll("li").length);
@@ -44,7 +44,7 @@ describe("SurfFilterItem Component", ()=> {
                 }
             ];
             let surfFilterItem = TestUtils.renderIntoDocument(
-                <SurfFilterItem type="text" displayItems={categories} filterItems={[]} title="image"/>
+                <SurfFilterItem type="text" displayItems={categories} filterItems={[]} title="image" dispatchFilterAction={()=> {}}/>
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             assert.strictEqual("Category 1", surfFilterItemDom.querySelector("li").innerHTML);
@@ -64,7 +64,7 @@ describe("SurfFilterItem Component", ()=> {
                 }
             ];
             let surfFilterItem = TestUtils.renderIntoDocument(
-                <SurfFilterItem type="content" displayItems={categories} filterItems={[]} title="image"/>
+                <SurfFilterItem type="content" displayItems={categories} filterItems={[]} title="image" dispatchFilterAction={()=> {}}/>
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             assert.strictEqual("image fa fa-text", surfFilterItemDom.querySelector(".image").className);

@@ -119,24 +119,41 @@ export class SurfPage extends Component {
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;
         let allFeeds = <AllFeeds feeds={this.props.feeds} dispatch={this.props.dispatch} actionComponent={SurfFeedActionComponent} clickHandler={(feedDoc) => this.parkFeedItem(feedDoc)}/>;
         let hint = this.getHintMessage();
-        //let sourceTypeFilterDom = <SourceTypeFilter filter={this.state.filter} dispatchFilterAction={this.updateFilter.bind(this)}/>;
         let sourceTypeFilter = [
             {
                 "name": "RSS",
+                "image": "rss",
                 "_id": "rss"
             },
             {
                 "name": "Facebook",
+                "image": "facebook",
                 "_id": "facebook"
             },
             {
                 "name": "Twitter",
+                "image": "twitter",
                 "_id": "twitter"
+            }
+        ];
+        let mediaTypes = [
+            {
+                "name": "Text",
+                "image": "file-text-o",
+                "_id": "description"
+            }, {
+                "name": "Image",
+                "image": "file-picture-o",
+                "_id": "imagecontent"
+            }, {
+                "name": "Gallery",
+                "image": "file-picture-o",
+                "_id": "gallery"
             }
         ];
         return (
             <div className="surf-page-container">
-                <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.props.categories} filter={this.state.filter} sourceTypeFilter={sourceTypeFilter}/>
+                <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.props.categories} filter={this.state.filter} sourceTypeFilter={sourceTypeFilter} mediaTypes={mediaTypes}/>
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                     {refreshButton}
