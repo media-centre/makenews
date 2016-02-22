@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "debian/jessie64"
+  config.vm.box = "oar-team/debian8"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -43,13 +43,12 @@ Vagrant.configure(2) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    # Customize the amount of memory on the VM:
+    # vb.gui = true
+   vb.memory = "1024"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -70,15 +69,33 @@ Vagrant.configure(2) do |config|
   # SHELL
   config.vm.network "forwarded_port", guest: 5000, host: 5000
   config.vm.network "forwarded_port", guest: 5984, host: 5984
-
   config.vm.define "127.0.0.1"
+
+$script = <<SCRIPT
+echo creating ContentDiscovery Directory...
+mkdir -p /etc/ContentDiscovery
+sudo chown vagrant /etc/ContentDiscovery
+cp ./couchdb_tasks.sh /etc/ContentDiscovery/couchdb_tasks.sh
+chmod +x /etc/ContentDiscovery/couchdb_tasks.sh
+sudo chown -R vagrant /etc/ContentDiscovery
+SCRIPT
+
+  config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+
+  config.vm.provision "shell", inline: $script
+
   config.vm.provision :ansible do |ansible|
      ansible.playbook = "other/ansible/installation/installation.yml"
      ansible.verbose  = true
      ansible.host_key_checking = false
      ansible.groups = {
           "web" => ["127.0.0.1"],
-          "web:vars" => {"nginx_domain" => "127.0.0.1"}
+          "web:vars" => {
+            "nginx_domain" => "127.0.0.1",
+            "project_directory" => "~/ContentDiscovery"
+          }
         }
   end
+
+  config.vm.provision "shell", inline: "npm rebuild node-sass"
 end
