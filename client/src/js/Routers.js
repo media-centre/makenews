@@ -10,6 +10,7 @@ import SurfPage from "./surf/pages/SurfPage.jsx";
 import ParkPage from "./park/pages/ParkPage.jsx";
 import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import UserSession from "./user/UserSession";
+import UserProfile from "./user/UserProfile.jsx";
 import DbSession from "./db/DbSession.js";
 import History from "./History";
 import React from "react";
@@ -32,6 +33,7 @@ export function renderRoutes() {
                 <Route path="/surf" component={SurfPage} />
                 <Route path="/park" component={ParkPage} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
+                <Route path="/profile" component={UserProfile} />
             </Route>
         </Route>
     );
