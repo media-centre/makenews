@@ -3,7 +3,6 @@
 import "../../helper/TestHelper.js";
 import CategoryNavigationHeader from "../../../src/js/config/components/CategoryNavigationHeader.jsx";
 import CategoryDb from "../../../src/js/config/db/CategoryDb";
-import Category from "../../../src/js/config/components/Category.jsx";
 import { assert } from "chai";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
@@ -34,7 +33,7 @@ describe("CategoryNavigationHeader", ()=> {
         assert.isUndefined(categoryNavigationHeaderComponent.refs.confirmPopup);
     });
 
-    xit("Should delete category if delete category is called and confirmed", () => {
+    it("Should delete category if delete category is called and confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let deleteCategoryMock = sinon.mock(CategoryDb);
@@ -48,7 +47,7 @@ describe("CategoryNavigationHeader", ()=> {
         deleteCategoryMock.restore();
     });
 
-    xit("Should stay in same page if delete category is called and not confirmed", () => {
+    it("Should stay in same page if delete category is called and not confirmed", () => {
         const deleteCategoryLinkLabel = categoryNavigationHeaderComponent.refs.deleteCategoryLinkLabel;
         assert.strictEqual(categoryDetailsPageStrings.deleteCategoryLinkLabel, deleteCategoryLinkLabel.innerHTML);
         let confirmMock = sinon.mock(window);
