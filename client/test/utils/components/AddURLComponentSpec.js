@@ -3,7 +3,6 @@
 "use strict";
 
 import AddURLComponent from "../../../src/js/utils/components/AddURLComponent";
-import RSSComponent from "../../../src/js/config/components/RSSComponent.jsx";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 import TestUtils from "react-addons-test-utils";

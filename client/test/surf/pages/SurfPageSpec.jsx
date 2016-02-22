@@ -7,7 +7,7 @@ import sinon from "sinon";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../../helper/TestHelper.js";
-import Locale from "../../../src/js/utils/Locale"
+import Locale from "../../../src/js/utils/Locale";
 
 
 let surfPageComponent = null;
@@ -21,7 +21,7 @@ let props = {
 
 describe("SurfPage", ()=> {
     describe("Refresh button", ()=> {
-        let localeMock = null, localeWithArgsMock = null, sandbox = null;
+        let localeMock = null, sandbox = null;
         beforeEach("Refresh button", () => {
             sandbox = sinon.sandbox.create();
         });
@@ -31,7 +31,7 @@ describe("SurfPage", ()=> {
         });
         it("should be present", ()=> {
             localeMock = sandbox.mock(Locale).expects("applicationStrings");
-            localeMock.returns({"messages":"test messages"});
+            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
             );
@@ -40,7 +40,7 @@ describe("SurfPage", ()=> {
 
         it("should be enabled by default", ()=> {
             localeMock = sandbox.mock(Locale).expects("applicationStrings");
-            localeMock.returns({"messages":"test messages"});
+            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
@@ -50,7 +50,7 @@ describe("SurfPage", ()=> {
 
         it("should be disabled once clicked to fetch updated feeds", ()=> {
             localeMock = sandbox.stub(Locale, "applicationStrings");
-            localeMock.returns({"messages": "test messages" });
+            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
