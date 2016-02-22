@@ -10,6 +10,7 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
 import "../../helper/TestHelper.js";
+import RssRequestHandler from "../../../src/js/rss/RssRequestHandler";
 
 describe("AddURLComponent", () => {
 
@@ -95,7 +96,7 @@ describe("AddURLComponent", () => {
         expect(addUrlDom.querySelector("input")).to.be.null;
     });
 
-    xit("should show the url input with red outline if there is an invalid url", ()=> {
+    it("should show the url input with red outline if there is an invalid url", ()=> {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
         let input = AddURLComponentElement.refs.addUrlTextBox;
@@ -105,18 +106,19 @@ describe("AddURLComponent", () => {
         expect("Url is successfully added").to.eq(AddURLComponentElement.state.errorMessage);
     });
 
-    xit("should call the validateUrl function if the give url is valid", () => {
+    it("should call the validateUrl function if the give url is valid", () => {
+        let sandbox = sinon.sandbox.create();
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement), url = "http://www.test1.com";
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
         let input = AddURLComponentElement.refs.addUrlTextBox;
         input.value = url;
-        let validateUrl = sinon.mock(RSSComponent).expects("_validateUrl");
-        validateUrl.withArgs(url).returns("test");
+        let rssRquestHandlerMock = sandbox.stub(RssRequestHandler, "fetchRssFeeds");
+        rssRquestHandlerMock.withArgs(url).returns({ "feeds": "test" });
 
         TestUtils.Simulate.blur(input);
 
-
-        validateUrl.verify();
+        sandbox.verify();
+        sandbox.restore();
     });
 
     it("should remove the url input box when we click on the deleteUrl button", () => {
