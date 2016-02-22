@@ -60,7 +60,7 @@ describe("TabComponent", () => {
         assert.equal("RSS(0)", tab.textContent);
     });
 
-    xit("should select the first tab by default", ()=> {
+    it("should select the first tab by default", ()=> {
         var tab = tabComponentElement.refs.tab0;
         assert.equal(true, tab.classList.contains("selected"));
     });

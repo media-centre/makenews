@@ -62,12 +62,10 @@ describe("CategoryNavigationHeader", ()=> {
         assert.isFalse(deleteCategoryStub.called);
         CategoryDb.deleteCategory.restore();
     });
-    xit("Should  display empty message when category name is not updated", () => {
+    it("Should  display empty message when category name is not updated", () => {
         const categoryTitleElement = categoryNavigationHeaderComponent.refs.categoryTitleElement;
         TestUtils.Simulate.keyPress(categoryTitleElement, { "key": "Enter", "keyCode": 13, "which": 13 });
-        let deleteCategoryMock = sinon.mock(Category);
-        deleteCategoryMock.expects("updateCategoryName").returns("hjh");
-        assert.strictEqual(categoryNavigationHeaderComponent.refs.errorMessage.innerHTML, "hgjh");
+        assert.strictEqual(categoryNavigationHeaderComponent.refs.errorMessage.innerHTML, "");
     });
 
 });

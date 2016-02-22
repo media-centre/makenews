@@ -3,9 +3,11 @@
 import { SurfPage } from "../../../src/js/surf/pages/SurfPage.jsx"; //eslint-disable-line no-unused-vars
 
 import { assert } from "chai";
+import sinon from "sinon";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../../helper/TestHelper.js";
+import Locale from "../../../src/js/utils/Locale"
 
 
 let surfPageComponent = null;
@@ -13,29 +15,44 @@ let props = {
     "messages": {
         "fetchingFeeds": "fetching feeds"
     },
+    "refreshState": false,
     "allFeeds": []
 };
 
 describe("SurfPage", ()=> {
     describe("Refresh button", ()=> {
-        xit("should be present", ()=> {
+        let localeMock = null, localeWithArgsMock = null, sandbox = null;
+        beforeEach("Refresh button", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("Refresh button", () => {
+            sandbox.restore();
+        });
+        it("should be present", ()=> {
+            localeMock = sandbox.mock(Locale).expects("applicationStrings");
+            localeMock.returns({"messages":"test messages"});
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
             );
             assert.isDefined(surfPageComponent.refs.surfRefreshButton, "defined");
         });
 
-        xit("should be enabled by default", ()=> {
+        it("should be enabled by default", ()=> {
+            localeMock = sandbox.mock(Locale).expects("applicationStrings");
+            localeMock.returns({"messages":"test messages"});
             surfPageComponent = TestUtils.renderIntoDocument(
-               <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
+               <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
             assert.isFalse(surfPageComponent.state.refreshState);
             assert.isFalse(surfPageComponent.refs.surfRefreshButton.classList.contains("disabled"));
         });
 
-        xit("should be disabled once clicked to fetch updated feeds", ()=> {
+        it("should be disabled once clicked to fetch updated feeds", ()=> {
+            localeMock = sandbox.stub(Locale, "applicationStrings");
+            localeMock.returns({"messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
-               <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
+               <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
             TestUtils.Simulate.click(surfPageComponent.refs.surfRefreshButton);
             assert.isTrue(surfPageComponent.state.refreshState);

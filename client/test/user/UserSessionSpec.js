@@ -63,7 +63,7 @@ describe("UserSession", () => {
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
 
-            xit("should return the false if not active for 9 minutes", () => {
+            it("should return the false if not active for 9 minutes", () => {
                 let nineMinute = 9;
                 let lastAccessedTime = moment().subtract(nineMinute, "m").valueOf();
                 let userSession = new UserSession(history);

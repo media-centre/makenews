@@ -628,13 +628,14 @@ describe("RefreshFeedsHandler", () => {
             });
         });
         describe("UICallback", ()=> {
-            let twitterRequestHandlerStub = null, twitterDbStub = null;
+            let twitterRequestHandlerStub = null, twitterDbStub = null, sandbox = null;
             beforeEach("before", ()=> {
-                twitterRequestHandlerStub = sinon.stub(TwitterRequestHandler, "fetchBatchTweets");
-                twitterDbStub = sinon.stub(TwitterDb, "addTweets");
+                sandbox = sinon.sandbox.create();
+                twitterRequestHandlerStub = sandbox.stub(TwitterRequestHandler, "fetchBatchTweets");
+                twitterDbStub = sandbox.stub(TwitterDb, "addTweets");
             });
             afterEach("after", ()=> {
-                TwitterRequestHandler.fetchBatchTweets.restore();
+                sandbox.restore();
             });
             it("should parse and add twitter feed", (done) => {
                 uiCallback = () => {
@@ -662,19 +663,20 @@ describe("RefreshFeedsHandler", () => {
         });
     });
 
-    xit("should handle fetching of urls failure", () => {
+    it("should handle fetching of urls failure", () => {
         let sandbox = sinon.sandbox.create();
-        let categoryDbMock = sandbox.mock(CategoryDb).expects("fetchAllSources");
-        categoryDbMock.returns(Promise.reject("fetch failure"));
+        let pouchClientMock = sandbox.mock(PouchClient).expects("fetchDocuments");
+        pouchClientMock.returns(Promise.reject("fetch failure"));
 
 
-        return Promise.resolve(RefreshFeedsHandler.fetchSourceConfigurationBySourceType()).catch((error) => {
+        new RefreshFeedsHandler().fetchAllSourceUrls().catch((error) => {
             expect(error).to.eq("fetch failure");
-            sandbox.restore();
         });
+        sandbox.restore();
     });
 
     xit("should handle ajax request failure", () => {
+        let sandbox = sinon.sandbox.create();
         let urls = [{
             "sourceType": "twitter",
             "url": "",
@@ -684,8 +686,7 @@ describe("RefreshFeedsHandler", () => {
         let postData = {
             "data": [{ "source": "twitter", "url": "" }]
         };
-        let sandbox = sinon.sandbox.create();
-        let categoryDbMock = sandbox.mock(CategoryDb).expects("fetchAllSources");
+        let categoryDbMock = sandbox.stub(SourceDb, "fetchSourceConfigurationBySourceType");
         categoryDbMock.returns(Promise.resolve(urls));
         let ajaxMock = new AjaxClient("/fetch-all-feeds-from-all-sources");
         let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
@@ -693,9 +694,10 @@ describe("RefreshFeedsHandler", () => {
         let ajaxPostMock = sandbox.mock(ajaxMock).expects("post");
         ajaxPostMock.withExactArgs({}, postData).returns(Promise.reject("request error"));
 
-        return Promise.resolve(RefreshFeedsHandler.fetchLatestFeeds()).catch((error) => {
+        return Promise.resolve(new RefreshFeedsHandler().fetchAllSourceUrls()).catch((error) => {
             expect(error).to.eq("request error");
-            sandbox.restore();
         });
+
+        sandbox.restore();
     });
 });
