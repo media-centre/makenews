@@ -1,7 +1,29 @@
 @import "../utils/_variable";
 
 .user-profile {
-  .mask {
+  padding: 20px;
+
+  form {
+    display: block;
+    padding: 10px;
+    max-width: 500px;
+    margin: auto;
+
+    .row {
+      margin: 10px;
+
+      input {
+        padding: 10px;
+        width: 100%;
+      }
+
+      button {
+        margin: auto;
+        display: block;
+        color: $primary-font-color;
+        background: $app-header-bg-color;
+      }
+    }
 
   }
 }

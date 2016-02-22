@@ -1,51 +1,35 @@
 "use strict";
 
-import UserProfileSettings from "../../src/js/user/UserProfileSettings.jsx";
-import { logout } from "../../src/js/login/LogoutActions";
+import UserProfile from "../../src/js/user/UserProfile.jsx";
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
 import "../helper/TestHelper.js";
-import sinon from "sinon";
+//import sinon from "sinon";
 
-describe("UserProfileSettings", ()=> {
-    it("should toggle the dropdown", ()=> {
+describe("UserProfile", ()=> {
+    it("should validate the new password and confirm password", ()=> {
         let userProfile = TestUtils.renderIntoDocument(
-            <UserProfileSettings />
+            <UserProfile />
         );
 
         let userProfileDom = ReactDOM.findDOMNode(userProfile);
-        TestUtils.Simulate.click(userProfileDom.querySelector(".user-info-label"));
-        assert.isTrue(userProfile.state.show);
-        TestUtils.Simulate.click(userProfileDom.querySelector(".user-info-label"));
-        assert.isFalse(userProfile.state.show);
+        userProfile.refs.currentPassword.value = "newPassword";
+        userProfile.refs.confirmPassword.value = "newPassword1";
+        TestUtils.Simulate.submit(userProfileDom.querySelector("button"));
+        let errorMessage = userProfileDom.querySelector(".error-msg").textContent;
+        assert.strictEqual("New password and ConfirmPassword does not match", errorMessage);
     });
 
-    it("should close the dropdown on clicking the menu items", ()=> {
+    xit("should send the change password request for valid input", ()=> {
         let userProfile = TestUtils.renderIntoDocument(
-            <UserProfileSettings />
+            <UserProfile/>
         );
-        userProfile.state.show = true;
-        let userProfileDom = ReactDOM.findDOMNode(userProfile);
-        TestUtils.Simulate.click(userProfileDom.querySelector("ul li"));
-        assert.isFalse(userProfile.state.show);
-    });
-
-    xit("should logout the user on clicking logout option", ()=> {
-        let userProfile = TestUtils.renderIntoDocument(
-            <UserProfileSettings />
-        );
-        userProfile.state.show = true;
-
-
-        let logoutMock = sinon.mock(logout);
 
         let userProfileDom = ReactDOM.findDOMNode(userProfile);
-        TestUtils.Simulate.click(userProfileDom.querySelector("ul li"));
-        assert.isFalse(userProfile.state.show);
-
-        logoutMock.verify();
-        logoutMock.restore();
+        userProfile.refs.currentPassword.value = "newPassword";
+        userProfile.refs.confirmPassword.value = "newPassword";
+        TestUtils.Simulate.submit(userProfileDom.querySelector("button"));
     });
 });

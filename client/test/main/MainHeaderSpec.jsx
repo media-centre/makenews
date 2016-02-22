@@ -45,14 +45,4 @@ describe("main header component", () => {
         let logoElement = mainHeader.refs.logo;
         assert.isDefined(logoElement);
     });
-
-    it("should have logout component", () => {
-        let logOutElement = mainHeader.refs.logout;
-        assert.isDefined(logOutElement);
-    });
-
-    it("should have logout name for the logout component", () => {
-        let menuElement = mainHeader.refs.logout;
-        assert.strictEqual("Logout", menuElement.props.logoutButton.Name);
-    });
 });
