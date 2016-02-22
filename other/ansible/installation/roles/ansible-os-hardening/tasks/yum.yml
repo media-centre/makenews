@@ -1,0 +1,33 @@
+---
+- name: remove unused repositories
+  file: name='/etc/yum.repos.d/{{item}}.repo' state=absent
+  with_items:
+    - 'CentOS-Debuginfo'
+    - 'CentOS-Media'
+    - 'CentOS-Vault'
+  when: os_security_packages_clean
+
+- name: get yum-repository-files
+  shell: 'find /etc/yum.repos.d/ -type f -name *.repo'
+  changed_when: False
+  register: yum_repos
+
+- name: check if rhnplugin.conf exists
+  stat: path='/etc/yum/pluginconf.d/rhnplugin.conf'
+  register: rhnplugin_file
+
+- name: activate gpg-check for yum-repos
+  replace: dest='{{item}}' regexp='^\s*gpgcheck=0' replace='gpgcheck=1'
+  with_items:
+    - '{{ yum_repos.stdout_lines }}'
+    - '/etc/yum.conf'
+
+- name: activate gpg-check for yum rhn if it exists
+  replace: dest='/etc/yum/pluginconf.d/rhnplugin.conf' regexp='^\s*gpgcheck=0' replace='gpgcheck=1'
+  when: rhnplugin_file.stat.exists
+
+- name: remove packages
+  yum: name='{{item}}' state=removed
+  with_items:
+    - "{{os_security_packages_list}}"
+  when: os_security_packages_clean

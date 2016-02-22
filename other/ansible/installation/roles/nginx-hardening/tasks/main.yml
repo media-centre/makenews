@@ -1,0 +1,6 @@
+---
+# tasks file for nginx-hardening
+- name: copy hardening.conf to conf.d
+  template: src=hardening.conf dest=/etc/nginx/conf.d/hardening.conf mode=0644
+  notify:
+   - restart nginx
