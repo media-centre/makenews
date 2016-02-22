@@ -5,7 +5,7 @@ import MainHeaderTab from "../../utils/components/TabComponent/MainHeaderTab.jsx
 //import Logout from "../../login/components/Logout.jsx";
 import React, { Component, PropTypes } from "react";
 import { Route, Link } from "react-router";
-import UserProfile from "../components/UserProfile.jsx";
+import UserProfileSettings from "../../user/UserProfileSettings.jsx";
 
 
 export default class MainHeader extends Component {
@@ -16,7 +16,7 @@ export default class MainHeader extends Component {
                     <Logo ref="logo"/>
 
                     <div className="user-info right" id="logout">
-                        <UserProfile />
+                        <UserProfileSettings />
                     </div>
 
 
