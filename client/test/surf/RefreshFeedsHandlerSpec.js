@@ -695,7 +695,8 @@ describe("RefreshFeedsHandler", () => {
 
         return Promise.resolve(new RefreshFeedsHandler().fetchAllSourceUrls()).catch((error) => {
             expect(error).to.eq("request error");
-            sandbox.restore();
         });
+
+        sandbox.restore();
     });
 });

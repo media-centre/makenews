@@ -21,7 +21,7 @@ let props = {
 
 describe("SurfPage", ()=> {
     describe("Refresh button", ()=> {
-        let localeMock = null, sandbox = null;
+        let localeMock = null, localeWithArgsMock = null, sandbox = null;
         beforeEach("Refresh button", () => {
             sandbox = sinon.sandbox.create();
         });

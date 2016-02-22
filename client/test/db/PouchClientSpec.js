@@ -369,7 +369,7 @@ describe("PouchClient", () => {
                 "docType": "category",
                 "name": "Renamed",
                 "createdTime": 1448540914840,
-                "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A"
+                "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5"
             };
             PouchClient.updateDocument(documentInput).then(document => {
                 expect(document.id).to.eq(documentInput._id);
