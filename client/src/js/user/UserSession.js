@@ -2,7 +2,7 @@
 
 "use strict";
 import moment from "moment";
-import { logout } from "../login/LogoutActions.js";
+import LogoutActions from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import AjaxClient from "../utils/AjaxClient.js";
 import History from "../History";
@@ -42,7 +42,7 @@ export default class UserSession {
     }
 
     autoLogout() {
-        logout();
+        LogoutActions.instance().logout();
         History.getHistory().push("/");
     }
 }

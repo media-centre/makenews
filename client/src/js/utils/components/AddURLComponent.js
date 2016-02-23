@@ -100,7 +100,7 @@ export default class AddURLComponent extends Component {
             </li>));
         return urlsList;
     }
-    
+
     render() {
         let inputBox = null, confirmPopup = null, exampleMessage = null;
         if(this.state.showUrlInput) {

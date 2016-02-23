@@ -13,7 +13,7 @@ import sinon from "sinon";
 import "../../helper/TestHelper.js";
 import ReactDOM from "react-dom";
 
-describe("Logout", () => {
+xdescribe("Logout", () => {
     let logoutComponent = null, logoutButton = null;
 
     before("Logout", () => {
