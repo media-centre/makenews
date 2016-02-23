@@ -29,7 +29,7 @@ export default class UserSession {
         }
         if(currentTime - this.getLastAccessedTime() > fiveMinutes) {
             this.renewSession();
-            AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, currentTime);
+            this.setLastAccessedTime(currentTime);
         }
     }
 
@@ -38,7 +38,7 @@ export default class UserSession {
     }
 
     isActiveContinuously(time = moment().valueOf()) {
-        return time - this.getLastAccessedTime() > nineMinutes;
+        return time - this.getLastAccessedTime() < nineMinutes;
     }
 
     autoLogout() {

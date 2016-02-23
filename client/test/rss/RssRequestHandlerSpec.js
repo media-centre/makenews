@@ -25,7 +25,7 @@ describe("RssRequestHandler", () => {
             let requestHeader = { "Accept": "application/json", "Content-type": "application/json" };
 
             let sandbox = sinon.sandbox.create();
-            let ajaxMock = new AjaxClient("/fetch-all-rss");
+            let ajaxMock = new AjaxClient("/fetch-all-rss", true);
             let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
             ajaxInstanceMock.withArgs("/fetch-all-rss").returns(ajaxMock);
             let ajaxPostMock = sandbox.mock(ajaxMock).expects("post");

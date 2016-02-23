@@ -35,7 +35,7 @@ describe("userLogin", () => {
         };
         data = { "username": userName, "password": password };
         sandbox = sinon.sandbox.create();
-        let ajaxInstance = new AjaxClient("/login");
+        let ajaxInstance = new AjaxClient("/login", true);
         let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
         ajaxInstanceMock.withArgs("/login").returns(ajaxInstance);
         ajaxPostMock = sandbox.mock(ajaxInstance).expects("post");
@@ -55,7 +55,7 @@ describe("userLogin", () => {
 
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
-            userSessionMock = sandbox.mock(userSession).expects("startSlidingSession");
+            userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
             dbSessionInstanceMock = sandbox.mock(DbSession).expects("instance");
             historyMock = sandbox.mock(history).expects("push");
         });

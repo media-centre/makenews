@@ -4,6 +4,7 @@
 import FacebookClient from "../../src/js/facebook/FacebookClient.js";
 import FacebookLogin from "../../src/js/facebook/FacebookLogin.js";
 import LoginPage from "../../src/js/login/pages/LoginPage.jsx";
+import UserSession from "../../src/js/user/UserSession.js";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 
 import sinon from "sinon";
@@ -11,10 +12,21 @@ import { assert } from "chai";
 import "../helper/TestHelper.js";
 
 describe("FacebookClient", () => {
+    let sandbox = null;
+    beforeEach(() => {
+        sandbox = sinon.sandbox.create();
+        let userSession = new UserSession();
+        sandbox.stub(UserSession, "instance").returns(userSession);
+        sandbox.stub(userSession, "continueSessionIfActive");
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+    });
 
     let serverUrl = null;
     describe("fetchPosts", () => {
-        let webUrl = null, response = null, sandbox = null, userName = "test1";
+        let webUrl = null, response = null, userName = "test1";
         before("FacebookClient", () => {
             webUrl = "https://www.facebook.com/thehindu";
             serverUrl = "/facebook-posts";
@@ -53,15 +65,10 @@ describe("FacebookClient", () => {
         });
 
         beforeEach(() => {
-            sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
             sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
                 return Promise.resolve(true);
             } });
-        });
-
-        afterEach(() => {
-            sandbox.restore();
         });
 
         it("should fetch facebook posts from the given node(page/user/..etc)", (done) => {
@@ -108,18 +115,13 @@ describe("FacebookClient", () => {
     });
 
     describe("setLongLivedToken", () => {
-        let url = "/facebook-set-token", sandbox = null, userName = "test2", accessToken = "123";
+        let url = "/facebook-set-token", userName = "test2", accessToken = "123";
 
         beforeEach(() => {
-            sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(userName);
             sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
                 return Promise.resolve(true);
             } });
-        });
-
-        afterEach(() => {
-            sandbox.restore();
         });
 
         it("should call ajax post for long lived token", () => {
@@ -140,17 +142,12 @@ describe("FacebookClient", () => {
     });
 
     describe("getBatchPosts", ()=> {
-        let sandbox = null, user = "test2";
+        let user = "test2";
         beforeEach("getPosts", () => {
-            sandbox = sinon.sandbox.create();
             sandbox.stub(LoginPage, "getUserName").returns(user);
             sandbox.stub(FacebookLogin, "instance").returns({ "login": () => {
                 return Promise.resolve(true);
             } });
-        });
-
-        afterEach("getPosts", () => {
-            sandbox.restore();
         });
 
         it("should get all posts from the batch of urls", (done)=> {

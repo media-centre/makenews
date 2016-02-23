@@ -365,15 +365,14 @@ describe("PouchClient", () => {
 
     describe("updateDocument", () => {
         it("should update the document", (done) => {
-            let documentInput = {
-                "docType": "category",
-                "name": "Renamed",
-                "createdTime": 1448540914840,
-                "_id": "E9D29C23-1CAA-BDCE-BBCD-9E84611351A"
-            };
-            PouchClient.updateDocument(documentInput).then(document => {
-                expect(document.id).to.eq(documentInput._id);
-                done();
+            let id = "E9D29C23-1CAA-BDCE-BBCD-9E84611351A5";
+            PouchClient.getDocument(id).then(fetchedDoc => {
+                fetchedDoc.name = "Renamed";
+                PouchClient.updateDocument(fetchedDoc).then(document => {
+                    expect(document.id).to.eq(id);
+                    expect(document.ok).to.eq(true);
+                    done();
+                });
             });
         });
     });

@@ -10,12 +10,12 @@ import nock from "nock";
 import sinon from "sinon";
 
 describe("AjaxClient", function() {
-    let userSessionMock = null, sandbox = null;
+    let userSessionMock = null, sandbox = null, userSession = null;
     beforeEach("beforeEach", () => {
         sandbox = sinon.sandbox.create();
-        let userSession = new UserSession();
+        userSession = new UserSession();
         sandbox.stub(UserSession, "instance").returns(userSession);
-        userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
+        userSessionMock = sandbox.mock(userSession).expects("continueSessionIfActive");
         let appWindow = new AppWindow();
         sinon.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost:5000");
         sinon.stub(AppWindow, "instance").returns(appWindow);
@@ -52,9 +52,10 @@ describe("AjaxClient", function() {
                 .post(url, JSON.stringify(data))
                 .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "data": "error" }, {});
             let ajax = new AjaxClient(url);
+            let userSessionLogOutMock = sandbox.mock(userSession).expects("autoLogout");
             ajax.post(headers, data)
-                .catch(errorData => {
-                    expect(errorData.data).to.eq("error");
+                .catch(() => {
+                    userSessionLogOutMock.verify();
                     done();
                 });
         });

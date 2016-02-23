@@ -42,7 +42,7 @@ describe("DbSession", () => {
             sandbox.stub(DbSession, "new").returns(dbSession);
 
             sandbox.stub(UserSession, "instance").returns(userSession);
-            userSessionMock = sinon.mock(userSession).expects("setLastAccessedTime");
+            userSessionMock = sinon.mock(userSession).expects("continueSessionIfActive");
         });
 
         afterEach("DbSession", () => {
