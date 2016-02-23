@@ -23,7 +23,7 @@ export default class UserSession {
 
     continueSessionIfActive() {
         let currentTime = moment().valueOf(), fiveMinutes = 300000;
-        if(!this.isActiveContinuously(currentTime)) {
+        if(!this.isActiveConti2nuously(currentTime)) {
             this.autoLogout();
             return;
         }
