@@ -28,6 +28,10 @@ export default class RefreshFeedsHandler {
         this.totalSuccessfullUrls = 0;
     }
 
+    static instance(dispatch, displayAllFeedAsync, uiCallback) {
+        return new RefreshFeedsHandler(dispatch, displayAllFeedAsync, uiCallback);
+    }
+
     handleBatchRequests() {
         this.fetchAllSourceUrls().then(() => {
             this.totalNumberOfUrls = this._calculateTotalUrls();

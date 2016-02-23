@@ -35,7 +35,7 @@ describe("SurfActions", () => {
         expect(SurfActions.displayExistingFeeds([], false)).to.deep.equal(displayExistingFeedsAction);
     });
 
-    xit("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
+    it("dispatch displayAllFeedsAsync action with new feeds on successfull fetch", (done) => {
         let feeds = [
             {
                 "url": "www.hindu.com",
@@ -50,7 +50,7 @@ describe("SurfActions", () => {
         let fetchAllFeedsWithCategoryNameMock = sinon.mock(FeedApplicationQueries).expects("fetchAllFeedsWithCategoryName");
         fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(feeds));
 
-        let store = mockStore({ "feeds": [], "messages": messages }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds }], done);
+        let store = mockStore({ "feeds": [], "messages": messages }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
         return Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync())).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
