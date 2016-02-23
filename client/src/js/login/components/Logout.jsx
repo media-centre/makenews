@@ -11,7 +11,7 @@ export default class Logout extends Component {
 
     render() {
         return (
-            <Link to="/" onClick={this._logout} className="link highlight-on-hover">
+            <Link to="/" ref="logoutLink" onClick={this._logout} className="link highlight-on-hover">
                 <span ref="logoutLabel">{this.props.logoutButton.Name}</span>
             </Link>
         );

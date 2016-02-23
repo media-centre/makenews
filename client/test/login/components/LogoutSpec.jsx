@@ -2,6 +2,8 @@
 "use strict";
 import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
 import Logout from "../../../src/js/login/components/Logout.jsx";
+import DbSession from "../../../src/js/db/DbSession";
+import AjaxClient from "../../../src/js/utils/AjaxClient";
 import { expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
@@ -9,6 +11,7 @@ import { Link } from "react-router";
 import { assert } from "chai";
 import sinon from "sinon";
 import "../../helper/TestHelper.js";
+import ReactDOM from "react-dom";
 
 describe("Logout", () => {
     let logoutComponent = null, logoutButton = null;
@@ -38,15 +41,24 @@ describe("Logout", () => {
         assert.strictEqual("Logout Test", logoutComponent.refs.logoutLabel.innerHTML);
     });
 
-    xit("should clear the authsession cookie and localstorage on logout", () => {
+    it("should clear the authsession cookie and localstorage on logout", () => {
+        let sandbox = sinon.sandbox.create();
+        let logoutComponent = TestUtils.renderIntoDocument(
+            <Logout logoutButton={logoutButton}/>
+        );
         let appSessionStorage = new AppSessionStorage();
-        sinon.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-        let appSessionStorageClearMock = sinon.mock(appSessionStorage).expects("clear");
-        let listComponents = TestUtils.scryRenderedComponentsWithType(logoutComponent, "span");
-        TestUtils.Simulate.click(listComponents[0]);
+        let ajaxClient = new AjaxClient();
+        sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+        let appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("clear");
+        sandbox.stub(AjaxClient, "instance").returns(ajaxClient);
+        let ajaxClientMock = sandbox.mock(ajaxClient).expects("get");
+        sandbox.stub(DbSession, "clearInstance").returns(ajaxClient);
+        let linkElementDOM = ReactDOM.findDOMNode(logoutComponent.refs.logoutLink);
+        TestUtils.Simulate.click(linkElementDOM);
+
         appSessionStorageClearMock.verify();
-        appSessionStorage.clear.restore();
-        AppSessionStorage.instance.restore();
+        ajaxClientMock.verify();
+        sandbox.restore();
 
     });
 });
