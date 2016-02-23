@@ -166,4 +166,12 @@ describe("AddURLComponent", () => {
         }, 0);
     });
 
+    it("should display example message on clicking addUrlButton", () => {
+        let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
+        TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
+        assert.isDefined(AddURLComponentElement.refs.exampleText);
+        expect("Please enter RSS URL here").to.eq(AddURLComponentElement.props.hintMessage);
+        expect("Example: thehindu.com/opinion/?service=rss").to.eq(AddURLComponentElement.props.exampleMessage);
+    });
+
 });
