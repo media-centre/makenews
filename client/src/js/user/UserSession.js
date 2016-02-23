@@ -5,58 +5,44 @@ import moment from "moment";
 import { logout } from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import AjaxClient from "../utils/AjaxClient.js";
+import History from "../History";
 const nineMinutes = 540000;
 
 export default class UserSession {
-    static instance(history) {
-        return new UserSession(history);
-    }
-
-    constructor(history) {
-        this.linkTransition = history;
+    static instance() {
+        return new UserSession();
     }
 
     getLastAccessedTime() {
         return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME);
     }
 
-    setLastAccessedTime(time) {
-        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time || moment().valueOf());
+    setLastAccessedTime(time = moment().valueOf()) {
+        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time);
     }
 
-    isActiveContinuously() {
-        let currentTime = moment().valueOf();
-        return currentTime - this.getLastAccessedTime() < nineMinutes;
+    continueSessionIfActive() {
+        let currentTime = moment().valueOf(), fiveMinutes = 300000;
+        if(!this.isActiveContinuously(currentTime)) {
+            this.autoLogout();
+            return;
+        }
+        if(currentTime - this.getLastAccessedTime() > fiveMinutes) {
+            this.renewSession();
+            AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, currentTime);
+        }
     }
 
-    startSlidingSession() {
-        this.setLastAccessedTime(this.getLastAccessedTime());
-        this._continueSessionIfActive();
+    renewSession() {
+        AjaxClient.instance("/renew_session", true).get();
     }
 
-    _continueSessionIfActive() {
-        let timer = setInterval(() => {
-            this.isActiveContinuously() ? _renewSession() : _logoutAndClearInterval();
-        }, nineMinutes);
-
-        let _logoutAndClearInterval = () => {
-            this.autoLogout(timer);
-        };
-
-        let _renewSession = () => {
-            AjaxClient.instance("/renew_session", true).get().catch(() => {
-                this.autoLogout(timer);
-            });
-        };
-
-        return () => {
-            return timer;
-        };
+    isActiveContinuously(time = moment().valueOf()) {
+        return time - this.getLastAccessedTime() > nineMinutes;
     }
 
-    autoLogout(timer) {
+    autoLogout() {
         logout();
-        clearInterval(timer);
-        this.linkTransition.push("/");
+        History.getHistory().push("/");
     }
 }

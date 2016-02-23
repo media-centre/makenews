@@ -7,7 +7,7 @@ import PouchDB from "pouchdb";
 
 export default class DbSession {
     static instance() {
-        UserSession.instance().setLastAccessedTime();
+        UserSession.instance().continueSessionIfActive();
         return new Promise((resolve, reject) => {
             if(this.db) {
                 resolve(this.db);

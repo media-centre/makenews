@@ -10,7 +10,7 @@ export default class AjaxClient {
   }
   constructor(url, skipTime) {
       if(!skipTime) {
-          UserSession.instance().setLastAccessedTime();
+          UserSession.instance().continueSessionIfActive();
       }
       this.url = AppWindow.instance().get("serverUrl") + url;
   }
@@ -56,13 +56,8 @@ export default class AjaxClient {
                       let jsonResponse = JSON.parse(event.target.response);
                       resolve(jsonResponse);
                   } else if(xhttp.status === response.UNAUTHORIZED) {
-                      let jsonResponse = event.target.response;
-                      try {
-                          jsonResponse = JSON.parse(event.target.response);
-                      } catch(error) {
-                          reject(jsonResponse);
-                      }
-                      reject(jsonResponse);
+                      UserSession.instance().autoLogout();
+                      reject("session expired");
                   } else if(xhttp.status === response.BAD_GATEWAY) {
                       reject("connection refused");
                   }
