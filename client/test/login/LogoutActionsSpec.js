@@ -9,6 +9,7 @@ import sinon from "sinon";
 describe("userLogout", () => {
     it("should send the request to logout", () => {
         let sandbox = sinon.sandbox.create();
+        let logoutActions = LogoutActions.instance();
         let ajaxGetMock = sandbox.mock(AjaxClient.prototype).expects("get");
         let appSessionStorage = new AppSessionStorage();
         let appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("clear");
@@ -16,7 +17,6 @@ describe("userLogout", () => {
         let dbSessionClearInstanceMock = sandbox.mock(DbSession).expects("clearInstance");
         ajaxGetMock.returns(Promise.resolve({ "message": "logout successful" }));
         LogoutActions.instance().logout();
-
         appSessionStorageClearMock.verify();
         ajaxGetMock.verify();
         dbSessionClearInstanceMock.verify();
