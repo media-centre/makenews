@@ -41,9 +41,8 @@ export default class UserSession {
         return time - this.getLastAccessedTime() < nineMinutes;
     }
 
-    autoLogout(timer) {
+    autoLogout() {
         LogoutActions.instance().logout();
-        clearInterval(timer);
-        this.linkTransition.push("/");
+        History.getHistory().push("/");
     }
 }
