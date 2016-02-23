@@ -8,9 +8,26 @@
 - name: restart couchdb
   service: name=couchdb state=restarted
 
+- name: Creates ContentDiscovery directory in etc
+  file: path=/etc/ContentDiscovery state=directory
+
+- name: copy couchdb_tasks.sh script to the server
+  template: src=couchdb_tasks.sh dest=/etc/ContentDiscovery/couchdb_tasks.sh mode=0755
+
 - name: perform the couchdb admin related tasks
   shell: /etc/ContentDiscovery/couchdb_tasks.sh
 
 - name: restart couchdb
   service: name=couchdb state=restarted
 
+- name: install sudo
+  action: apt name=sudo
+
+- name: copy system_sudo_user_creation.sh script to the server
+  template: src=system_sudo_user_creation.sh dest=/etc/ContentDiscovery/system_sudo_user_creation.sh mode=0755
+
+- name: add user with sudo permission to the system and add ssh public key
+  shell: /etc/ContentDiscovery/system_sudo_user_creation.sh
+
+- name: delete system_sudo_user_creation.sh script
+  command: rm /etc/ContentDiscovery/system_sudo_user_creation.sh
