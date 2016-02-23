@@ -87,13 +87,16 @@ export default class AddURLComponent extends Component {
 
     render() {
 
-        let inputBox = null, confirmPopup = null;
+        let inputBox = null, confirmPopup = null, exampleMessage = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
                     <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
+            );
+            exampleMessage = (
+                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
             );
         }
 
@@ -117,10 +120,10 @@ export default class AddURLComponent extends Component {
                             </li>
                         )}
                     </ul>
+                    {exampleMessage}
                     {inputBox}
                     {this.state.successResponse ? "" : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
-
                 {confirmPopup}
 
             </div>
@@ -142,7 +145,8 @@ AddURLComponent.propTypes = {
     "categoryId": PropTypes.string.isRequired,
     "dispatch": PropTypes.func,
     "addURLHandler": PropTypes.func,
-    "hintMessage": PropTypes.string.isRequired
+    "hintMessage": PropTypes.string.isRequired,
+    "exampleMessage": PropTypes.string.isRequired
 };
 AddURLComponent.defaultProps = {
     "noValidation": false,

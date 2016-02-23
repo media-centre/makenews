@@ -8,7 +8,7 @@ import Toast from "../../utils/custom_templates/Toast.js";
 export default class RSSComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.RSSExampleURL };
+        this.state = { "hintMessage": "Please enter RSS URL here", "exampleMessage": this.props.categoryDetailsPageStrings.hintMessages.RSSExampleURL, "errorMessage": "" };
     }
 
     _validateUrl(url, callback, props) {
@@ -23,7 +23,7 @@ export default class RSSComponent extends Component {
 
     render() {
         return (
-            <AddURLComponent hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
+            <AddURLComponent exampleMessage = {this.state.exampleMessage} hintMessage = {this.state.hintMessage} dispatch = {this.props.dispatch} categoryId = {this.props.categoryId} content={this.props.content} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} addUrlLinkLabel={this.props.categoryDetailsPageStrings.addUrlLinkLabel} errorMessage={this.state.errorMessage} sourceDomainValidation={(url, callback) => this._validateUrl(url, callback, this.props)}/>
         );
     }
 }
