@@ -6,10 +6,19 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
 import "../helper/TestHelper.js";
-//import sinon from "sinon";
+import sinon from "sinon";
+import Locale from "../../src/js/utils/Locale";
 
 describe("UserProfile", ()=> {
     it("should validate the new password and confirm password", ()=> {
+        let sandbox = sinon.sandbox.create();
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "userProfile": {
+                    "passwordMisMatch": "New password and ConfirmPassword does not match"
+                }
+            }
+        });
         let userProfile = TestUtils.renderIntoDocument(
             <UserProfile />
         );
@@ -20,6 +29,7 @@ describe("UserProfile", ()=> {
         TestUtils.Simulate.submit(userProfileDom.querySelector("button"));
         let errorMessage = userProfileDom.querySelector(".error-msg").textContent;
         assert.strictEqual("New password and ConfirmPassword does not match", errorMessage);
+        sandbox.restore();
     });
 
     xit("should send the change password request for valid input", ()=> {

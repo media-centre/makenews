@@ -2,7 +2,7 @@
 
 "use strict";
 import moment from "moment";
-import { logout } from "../login/LogoutActions.js";
+import LogoutActions from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import AjaxClient from "../utils/AjaxClient.js";
 import History from "../History";
@@ -41,8 +41,9 @@ export default class UserSession {
         return time - this.getLastAccessedTime() < nineMinutes;
     }
 
-    autoLogout() {
-        logout();
-        History.getHistory().push("/");
+    autoLogout(timer) {
+        LogoutActions.instance().logout();
+        clearInterval(timer);
+        this.linkTransition.push("/");
     }
 }

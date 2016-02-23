@@ -139,7 +139,6 @@
       top: 95px;
       right: 10px;
       text-align: center;
-      z-index: $medium-index;
       cursor: pointer;
       font-size: $large-font-size;
       color: $app-header-bg-color;
@@ -203,7 +202,7 @@
     .all-feeds {
       div a {
         font-size: $medium-font-size;
-        color: #545454;
+        color: $dark-gray-color;
         p {
           font-size: $small-font-size;
         }
@@ -245,7 +244,7 @@
         font-weight: bold;
         font-size: $medium-font-size;
         padding-top: 15px;
-        color: #545454;
+        color: $dark-gray-color;
       }
 
       .image-gallery {

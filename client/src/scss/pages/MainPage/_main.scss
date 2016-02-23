@@ -15,15 +15,6 @@
         margin-top: 8px;
       }
 
-      .user-info {
-        a {
-          width: 200px;
-          margin: 20px 0 0 0;
-          text-align: right;
-          display: block;
-        }
-      }
-
       .flexible {
         overflow: hidden;
       }
@@ -85,55 +76,70 @@
       }
     }
 
-
-  .user-settings.drop-down {
-    position: relative;
-    margin-top: 17px;
-
-    .user-info-label {
-      margin: 0px;
-      padding-right: 20px;
-      cursor: pointer;
-
-      &:before {
-        content: " ";
-        display: block;
-        position: absolute;
-        right: 0px;
-        top: 9px;
-        border: 7px solid transparent;
-        border-top-color: $primary-font-color;
-      }
-    }
-
-    .drop-down-wrapper {
-      position: absolute;
-      top: 23px;
-      right: 0px;
-      width: 150px;
-      background: $body-font-color;
+  .user-settings {
+    .user-icon {
+      text-transform: uppercase;
+      border: 2px solid $secondary-font-color;
+      height: 23px;
+      width: 23px;
       text-align: center;
+      display: inline-block;
+      border-radius: 100%;
+      font-weight: bolder;
+      color: $secondary-font-color;
+      margin-right: 6px;
+    }
+    &.drop-down {
+      position: relative;
+      margin-top: 17px;
 
-      &.hide {
-        height: 0px;
-      }
-
-      ul li {
-        display: block;
-        padding: 3px;
-        margin: 0px;
-        width: auto;
+      .user-info-label {
+        margin: 0;
+        padding-right: 20px;
         cursor: pointer;
 
-        a {
-          display: inline;
+        &:before {
+          content: " ";
+          display: block;
+          position: absolute;
+          right: 0;
+          top: 12px;
+          border: 7px solid transparent;
+          border-top-color: $primary-font-color;
+        }
+      }
+
+      .drop-down-wrapper {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        width: 150px;
+        background: $app-header-bg-color;
+        text-align: center;
+
+        &.hide {
+          height: 0;
+          overflow: hidden;
+        }
+
+        ul li {
+          display: block;
+          padding: 3px;
+          margin: 0;
+          width: auto;
+          cursor: pointer;
+
+          a {
+            display: block;
+          }
+
+          .fa {
+            padding-right: 5px;
+          }
         }
       }
     }
-
-
   }
-
 }
 
 .main-page section {

@@ -202,6 +202,10 @@ button {
   border: 1px solid $error-border-color;
 }
 
+.error-msg {
+  color: $error-border-color;
+}
+
 .highlight-on-hover:hover {
   color: $secondary-font-color;
 }

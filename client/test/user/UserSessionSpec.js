@@ -8,6 +8,7 @@ import History from "../../src/js/History";
 import { assert } from "chai";
 import moment from "moment";
 import sinon from "sinon";
+import LogoutActions from "../../src/js/login/LogoutActions";
 
 describe("UserSession", () => {
     describe("setLastAccessedTime", () => {
@@ -54,7 +55,7 @@ describe("UserSession", () => {
             it("should return the true if active within 9 minutes", () => {
                 let fiveMinute = 5;
                 let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
-                let userSession = new UserSession();
+                let userSession = new UserSessioAn();
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
@@ -91,6 +92,10 @@ describe("UserSession", () => {
                 let historyMock = sandbox.mock(historyPush).expects("push");
                 historyMock.withArgs("/");
                 let userSession = new UserSession();
+                let clock = sandbox.useFakeTimers();
+                let logoutActions = new LogoutActions();
+                sandbox.stub(LogoutActions, "instance").returns(logoutActions);
+                sandbox.mock(logoutActions).expects("logout");
                 sandbox.stub(userSession, "isActiveContinuously").returns(false);
                 userSession.continueSessionIfActive();
                 historyMock.verify();

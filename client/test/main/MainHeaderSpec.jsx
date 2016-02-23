@@ -6,10 +6,12 @@ import { assert, expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
+import sinon from "sinon";
+import Locale from "../../src/js/utils/Locale";
 
 describe("main header component", () => {
-    let mainHeader = null, headerStrings = null, highlightedTab = null;
-    before("Main page component", () => {
+    let mainHeader = null, headerStrings = null, highlightedTab = null, sandbox = null;
+    beforeEach("Main page component", () => {
         highlightedTab = {
             "tabNames": ["Surf"]
         };
@@ -28,7 +30,19 @@ describe("main header component", () => {
             }
         };
         let parkCounter = 0;
+        sandbox = sinon.sandbox.create();
+
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "userProfileSettings": {}
+            }
+        });
+        sandbox.stub(localStorage, "getItem").withArgs("UserName").returns("test");
         mainHeader = TestUtils.renderIntoDocument(<MainHeader headerStrings={headerStrings} highlightedTab={highlightedTab} parkCounter={parkCounter}/>);
+    });
+
+    afterEach("Main page component", () => {
+        sandbox.restore();
     });
 
     it("should have header element", () => {

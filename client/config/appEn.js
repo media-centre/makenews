@@ -101,6 +101,17 @@ window.mediaCenter.appEn = {
                 "feedDeletionSuccess": "You have successfully deleted the news item"
             }
         },
+        "userProfile": {
+            "passwordMisMatch": "New password and Confirm Password does not match",
+            "currentPassword": "current password",
+            "newPassword": "new password",
+            "confirmPassword": "confirm password"
+        },
+        "userProfileSettings": {
+            "settings": "Settings",
+            "profile": "Profile",
+            "logout": "Logout"
+        },
         "headerStrings": {
             "surfTab": {
                 "Name": "Surf"
