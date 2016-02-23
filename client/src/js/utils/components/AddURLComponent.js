@@ -100,15 +100,18 @@ export default class AddURLComponent extends Component {
             </li>));
         return urlsList;
     }
-
+    
     render() {
-        let inputBox = null, confirmPopup = null;
+        let inputBox = null, confirmPopup = null, exampleMessage = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
                     <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
+            );
+            exampleMessage = (
+                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
             );
         }
 
@@ -125,6 +128,7 @@ export default class AddURLComponent extends Component {
                     <ul className="url-list">
                         {this.getUrlList()}
                     </ul>
+                    {exampleMessage}
                     {inputBox}
                     {this.state.successResponse ? "" : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
