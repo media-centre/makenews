@@ -17,11 +17,11 @@ export function userLogin(history, userName, password) {
         const data = { "username": userName, "password": password };
         ajax.post(headers, data)
             .then(successData => {
+                let userSession = UserSession.instance();
+                userSession.setLastAccessedTime();
                 let appSessionStorage = AppSessionStorage.instance();
                 appSessionStorage.setValue(AppSessionStorage.KEYS.USERNAME, successData.userName);
                 appSessionStorage.setValue(AppSessionStorage.KEYS.REMOTEDBURL, successData.dbParameters.remoteDbUrl);
-                let userSession = UserSession.instance(history);
-                userSession.startSlidingSession();
                 DbSession.instance().then(session => { //eslint-disable-line no-unused-vars
                     dispatch(loginSuccess(successData.userName));
                     history.push("/surf");

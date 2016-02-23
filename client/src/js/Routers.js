@@ -12,7 +12,6 @@ import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import UserSession from "./user/UserSession";
 import UserProfile from "./user/UserProfile.jsx";
 import DbSession from "./db/DbSession.js";
-import History from "./History";
 import React from "react";
 import "babel/polyfill";
 import { Route } from "react-router";
@@ -40,7 +39,7 @@ export function renderRoutes() {
 }
 
 function isLoggedIn(nextState, replaceState) {
-    let userSession = UserSession.instance(History.getHistory());
+    let userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
         dbSync();
     } else {
@@ -50,9 +49,9 @@ function isLoggedIn(nextState, replaceState) {
 }
 
 function showLoginPage(nextState, replaceState) {
-    let userSession = UserSession.instance(History.getHistory());
+    let userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
-        userSession.startSlidingSession();
+        userSession.setLastAccessedTime();
         replaceState({ "nextPathname": nextState.location.pathname }, "/surf");
     }
 }
