@@ -92,9 +92,6 @@ describe("UserSession", () => {
                 let historyMock = sandbox.mock(historyPush).expects("push");
                 historyMock.withArgs("/");
                 let userSession = new UserSession();
-                let logoutActions = new LogoutActions();
-                sandbox.stub(LogoutActions, "instance").returns(logoutActions);
-                sandbox.mock(logoutActions).expects("logout");
                 sandbox.stub(userSession, "isActiveContinuously").returns(false);
                 userSession.continueSessionIfActive();
                 historyMock.verify();
