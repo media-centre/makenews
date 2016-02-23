@@ -44,7 +44,7 @@ describe("Logout", () => {
     it("should clear the authsession cookie and localstorage on logout", () => {
         let sandbox = sinon.sandbox.create();
         let appSessionStorage = new AppSessionStorage();
-        let ajaxClient = new AjaxClient();
+        let ajaxClient = new AjaxClient("", true);
         sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
         let appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("clear");
         sandbox.stub(AjaxClient, "instance").returns(ajaxClient);

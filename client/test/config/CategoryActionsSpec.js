@@ -8,6 +8,7 @@ import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCatego
 import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
 import Category from "../../src/js/config/Category.js";
 import AjaxClient from "../../src/js/utils/AjaxClient";
+import UserSession from "../../src/js/user/UserSession.js";
 import TwitterDb from "../../src/js/twitter/TwitterDb";
 import RssFeeds from "../../src/js/rss/RssFeeds";
 import mockStore from "../helper/ActionHelper.js";
@@ -27,11 +28,14 @@ describe("CategoryActions", () => {
 });
 
 describe("addRssUrlAsync", () => {
-    let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null, type = null;
+    let sandbox = null, categorySourceConfig = null, ajaxGetMock = null, ajaxInstanceMock = null, type = null, userSession = null;
     let url = null, categoryId = null, allSources = null, sourceSaveMock = null;
 
     beforeEach("addRssUrlAsync", () => {
         sandbox = sinon.sandbox.create();
+        userSession = new UserSession();
+        sandbox.stub(UserSession, "instance").returns(userSession);
+        sandbox.stub(userSession, "continueSessionIfActive");
         let ajaxMock = new AjaxClient("/rss-feeds");
         ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
         ajaxInstanceMock.withArgs("/rss-feeds").returns(ajaxMock);
@@ -194,6 +198,9 @@ describe("addTwitterUrlAsync", () => {
 
     beforeEach("Before", () => {
         sandbox = sinon.sandbox.create();
+        let userSession = new UserSession();
+        sandbox.stub(UserSession, "instance").returns(userSession);
+        sandbox.stub(userSession, "continueSessionIfActive");
         let ajaxMock = new AjaxClient("/twitter-feeds");
         userName = "Maharjun";
         ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");

@@ -12,7 +12,7 @@ describe("TwitterClient", () => {
             let clientCallbackUrl = "clientCallbackUrl", serverCallbackUrl = "serverCallbackUrl", userName = "username";
             let query = { "clientCallbackUrl": clientCallbackUrl, "serverCallbackUrl": serverCallbackUrl, "userName": userName };
             let sandbox = sinon.sandbox.create();
-            let ajaxMock = new AjaxClient("/twitter-request-token");
+            let ajaxMock = new AjaxClient("/twitter-request-token", true);
             let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
             ajaxInstanceMock.withArgs("/twitter-request-token").returns(ajaxMock);
             let ajaxGetMock = sandbox.mock(ajaxMock).expects("get");

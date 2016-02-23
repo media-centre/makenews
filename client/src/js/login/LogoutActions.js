@@ -5,7 +5,7 @@ import DbSession from "../db/DbSession.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 
 export function logout() {
-    AjaxClient.instance("/logout").get();
+    AjaxClient.instance("/logout", true).get();
     AppSessionStorage.instance().clear();
     DbSession.clearInstance();
     window.location.reload();

@@ -25,7 +25,6 @@ export default class AppSessionStorage {
     }
 
     remove(key) {
-
         this.getLocalStorage().removeItem(key);
     }
 
