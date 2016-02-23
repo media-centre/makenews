@@ -43,9 +43,6 @@ describe("Logout", () => {
 
     it("should clear the authsession cookie and localstorage on logout", () => {
         let sandbox = sinon.sandbox.create();
-        let logoutComponent = TestUtils.renderIntoDocument(
-            <Logout logoutButton={logoutButton}/>
-        );
         let appSessionStorage = new AppSessionStorage();
         let ajaxClient = new AjaxClient();
         sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
