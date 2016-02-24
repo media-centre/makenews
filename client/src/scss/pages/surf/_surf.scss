@@ -1,7 +1,7 @@
 @import "../../utils/variable";
 
 .surf-page-container, .park-page {
-  padding: 10px;
+  padding: 10px 0;
 
   .take-tour-text {
     text-align: center;
@@ -26,7 +26,7 @@
     position: fixed;
     left: -300px;
     bottom: 0;
-    top: 86px;
+    top: 74px;
     width: 300px;
     z-index: $mask-layer-index;
 
@@ -214,13 +214,14 @@
       }
 
       .park-feed {
-          height: 22px;
-          width: 22px;
-          cursor: pointer;
-          background: url(images/main/park-blue.png) no-repeat;
-          background-size: 22px;
+        height: 22px;
+        width: 22px;
+        cursor: pointer;
+        background: url(images/main/park-blue.png) no-repeat;
+        background-size: 22px;
         &:hover {
           background: url(images/main/park.png) no-repeat;
+          background-size: 22px;
         }
       }
 
