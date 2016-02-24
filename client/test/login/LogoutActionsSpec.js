@@ -6,7 +6,7 @@ import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
 import DbSession from "../../src/js/db/DbSession.js";
 import sinon from "sinon";
 
-xdescribe("userLogout", () => {
+describe("userLogout", () => {
     it("should send the request to logout", () => {
         let sandbox = sinon.sandbox.create();
         let ajaxGetMock = sandbox.mock(AjaxClient.prototype).expects("get");

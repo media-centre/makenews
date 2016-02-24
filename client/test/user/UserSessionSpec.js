@@ -8,7 +8,6 @@ import History from "../../src/js/History";
 import { assert } from "chai";
 import moment from "moment";
 import sinon from "sinon";
-import LogoutActions from "../../src/js/login/LogoutActions";
 
 describe("UserSession", () => {
     describe("setLastAccessedTime", () => {

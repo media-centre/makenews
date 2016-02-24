@@ -24,9 +24,10 @@ export default class CouchSession {
                 if(CouchSession.requestSuccessful(error, response)) {
                     CouchSession.logger().debug("CouchSession:: login successful for user '%s'.", username);
                     resolve(response.headers["set-cookie"][0]);
+                } else {
+                    CouchSession.logger().error("CouchSession:: login unsuccessful for user '%s'. Error: %s", username, error);
+                    reject(error);
                 }
-                CouchSession.logger().error("CouchSession:: login unsuccessful for user '%s'. Error: %s", username, error);
-                reject(error);
             });
         });
     }
@@ -54,6 +55,49 @@ export default class CouchSession {
                     reject("unauthenticated user");
                 }
                 CouchSession.logger().error("CouchSession:: authentication failed. Error: %s", error);
+                reject(error);
+            });
+        });
+    }
+
+    static getUserDocument(username, token) {
+        let authSessionToken = "AuthSession=" + token;
+        return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
+            request.get({
+                "url": ApplicationConfig.instance().dbUrl() + "/_users/org.couchdb.user:" + username,
+                "headers": {
+                    "Cookie": authSessionToken
+                },
+                "json": true
+            }, (error, response) => {
+                resolve(response.body);
+            });
+        });
+    }
+
+    static updatePassword(username, newPassword, token) {
+        let authSessionToken = "AuthSession=" + token;
+        return new Promise((resolve, reject) => {
+            CouchSession.getUserDocument(username, token).then((userDocument) => {
+                if(userDocument.error) {
+                    reject("Not able to change the password");
+                } else {
+                    request.put({
+                        "url": ApplicationConfig.instance().dbUrl() + "/_users/org.couchdb.user:" + username,
+                        "headers": {
+                            "Cookie": authSessionToken,
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "If-Match": userDocument._rev
+                        },
+                        "body": { "name": username, "roles": [], "type": "user", "password": newPassword },
+                        "json": true
+                    },
+                        (error, response) => {
+                            resolve(response);
+                        });
+                }
+            }).catch(error => {
                 reject(error);
             });
         });
