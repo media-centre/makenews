@@ -4,6 +4,7 @@
 import DbSession from "../../src/js/db/DbSession.js";
 import DbParameters from "../../src/js/db/DbParameters.js";
 import UserSession from "../../src/js/user/UserSession.js";
+import FeedDb from "../../src/js/feeds/db/FeedDb.js";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -129,12 +130,13 @@ describe("DbSession", () => {
             let THREEMINUTE = 180000;
             let replicateRemoteDbMock = allSandbox.mock(dbSession).expects("replicateRemoteDb");
             replicateRemoteDbMock.withArgs(THREEMINUTE).twice();
+            let oldFeedsDeleteMock = allSandbox.mock(FeedDb).expects("deletePastFeeds").twice();
 
             dbSession.sync();
             dbSession.sync();
             dbSessionReplicateDbMock.verify();
             replicateRemoteDbMock.verify();
-
+            oldFeedsDeleteMock.verify();
             assert.isTrue(cancelSpy.calledOnce);
             cancelSpy.restore();
         });

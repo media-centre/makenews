@@ -24,4 +24,7 @@ export default class DateTimeUtil {
             return DateTimeUtil.getUTCDateAndTime(sortedDate);
         });
     }
+    static getCurrentTimeStamp() {
+        return moment();
+    }
 }
