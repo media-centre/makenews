@@ -104,5 +104,26 @@ describe("UserRequest", () => {
             });
         });
     });
+
+    describe("updatePassword", () => {
+        let sandbox = null, couchSessionUpdatePasswordStub = null, sessionCookie = null;
+        beforeEach("updatePassword", () => {
+            sessionCookie = "AuthSession=test_token; Version=1; Path=/; HttpOnly";
+            sandbox = sinon.sandbox.create();
+        });
+        xit("should update the password if old passwords is correct", (done) => {
+            let username = "test";
+            let oldPassword = "new_password", newPassword = "new_password", cofirmPassword = "new_password";
+
+            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
+            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.resolve(sessionCookie));
+            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
+
+            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).then((response) => {
+                assert.deepEqual(response.ok, true);
+                done();
+            });
+        });
+    });
 });
 

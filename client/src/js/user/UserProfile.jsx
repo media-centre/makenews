@@ -22,6 +22,7 @@ export default class UserProfile extends Component {
             this.setState({ "errorMsg": this.messages.passwordMisMatch });
             return false;
         }
+
     }
 
     render() {

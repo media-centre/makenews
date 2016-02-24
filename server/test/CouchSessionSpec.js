@@ -7,7 +7,7 @@ import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import LogTestHelper from "./helpers/LogTestHelper";
 
 import nock from "nock";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import sinon from "sinon";
 
 
@@ -147,4 +147,117 @@ describe("CouchSessionSpec", () => {
         });
     });
 
+    describe("getUserDocument", () => {
+        it("should get the user document", (done) => {
+            let username = "test_user";
+            let token = "12345678";
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + token
+                }
+            }).get("/_users/org.couchdb.user:" + username)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "_id": "org.couchdb.user:" + username,
+                    "_rev": "12345",
+                    "derived_key": "test derived key",
+                    "iterations": 10,
+                    "name": "test_user",
+                    "password_scheme": "scheme",
+                    "roles": [],
+                    "salt": "123324124124",
+                    "type": "user"
+                });
+
+            CouchSession.getUserDocument(username, token).then((response) => {
+                assert.deepEqual(response.name, username);
+                done();
+            });
+        });
+        it("should get the error document", (done) => {
+            let username = null;
+            let token = "123456";
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + token }
+            }).get("/_users/org.couchdb.user:" + username).reply(HttpResponseHandler.codes.OK, { "error": "not_found", "reason": "missing" });
+            CouchSession.getUserDocument(username, token).then(response => {
+                assert.deepEqual(response.error, "not_found");
+                done();
+            });
+        });
+        it("should get the error document when token is not valid", (done) => {
+            let username = null;
+            let token = "bad_token";
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + token }
+            }).get("/_users/org.couchdb.user:" + username).reply(HttpResponseHandler.codes.OK, { "error": "bad_request", "reason": "Malformed AuthSession cookie. Please clear your cookies." });
+            CouchSession.getUserDocument(username, token).then(response => {
+                assert.deepEqual(response.error, "bad_request");
+                done();
+            });
+        });
+    });
+
+    describe("updatePassword", () => {
+        let sandbox = null;
+        before("updatePassword", () => {
+            sandbox = sinon.sandbox.create();
+        });
+        afterEach("getUserDocument", () => {
+            sandbox.restore();
+        });
+        it("should update the password for the given user", (done) => {
+            let username = "test";
+            let newPassword = "new_password";
+            let token = "12345678";
+
+            sandbox.stub(CouchSession, "getUserDocument").returns(Promise.resolve({
+                "_id": "org.couchdb.user:" + username,
+                "_rev": "12345",
+                "derived_key": "test derived key",
+                "iterations": 10,
+                "name": "test_user",
+                "password_scheme": "scheme",
+                "roles": [],
+                "salt": "123324124124",
+                "type": "user"
+            }));
+            let newUserObject = { "name": username, "roles": [], "type": "user", "password": newPassword };
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + token,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "If-Match": "12345"
+                }
+            }).put("/_users/org.couchdb.user:test", newUserObject)
+                .reply(HttpResponseHandler.codes.OK, { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" });
+
+            CouchSession.updatePassword(username, newPassword, token).then((response) => {
+                assert.equal(response.body.ok, true);
+                done();
+            });
+        });
+
+        it("should not update the password for the given user", (done) => {
+            let username = "maharjun";
+            let newPassword = "new_password";
+            let token = "test_token";
+
+            sandbox.stub(CouchSession, "getUserDocument").returns(Promise.resolve({ "error": "not_found", "reason": "missing" }));
+            let newUserObject = { "name": username, "roles": [], "type": "user", "password": newPassword };
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + token,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "If-Match": "12345"
+                }
+            }).put("/_users/org.couchdb.user:test", newUserObject)
+                .reply(HttpResponseHandler.codes.OK, { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" });
+            CouchSession.updatePassword(username, newPassword, token).catch((error) => {
+                assert.equal(error, "Not able to change the password");
+                done();
+            });
+        });
+    });
 });
