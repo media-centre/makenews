@@ -113,7 +113,7 @@ describe("DefaultRoute", () => {
             };
             new DefaultRoute(request, response, nextSpy).handle();
             expect(nextSpy.called).to.be.ok;
-            expect("unthorized").to.equal(nextSpy.getCall(0).args[0].message);
+            expect("session expired").to.equal(nextSpy.getCall(0).args[0].message);
             expect(HttpResponseHandler.codes.UNAUTHORIZED).to.equal(nextSpy.getCall(0).args[0].status);
         });
 

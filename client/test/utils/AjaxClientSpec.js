@@ -52,6 +52,21 @@ describe("AjaxClient", function() {
                 .post(url, JSON.stringify(data))
                 .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "data": "error" }, {});
             let ajax = new AjaxClient(url);
+            ajax.post(headers, data)
+                .catch((errorData) => {
+                    expect(errorData.data).to.eq("error");
+                    done();
+                });
+        });
+
+        it("should logout if session expired", function(done) {
+            let url = "/login";
+            let headers = {};
+            let data = { "username": "ssds", "password": "sds" };
+            nock("http://localhost:5000")
+                .post(url, JSON.stringify(data))
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "message": "session expired" }, {});
+            let ajax = new AjaxClient(url);
             let userSessionLogOutMock = sandbox.mock(userSession).expects("autoLogout");
             ajax.post(headers, data)
                 .catch(() => {

@@ -7,7 +7,7 @@ export default function(app) {
             return next();
         }
         res.status(HttpResponseHandler.codes.UNAUTHORIZED);
-        res.send("Unauthorised");
+        res.send(err);
     });
 
 }

@@ -35,8 +35,9 @@ export default class DefaultRoute extends Route {
     }
 
     _handleFailure() {
-        let error = new Error("unthorized");
+        let error = {};
         error.status = HttpResponseHandler.codes.UNAUTHORIZED;
+        error.message = "session expired";
         this.next(error);
     }
 
