@@ -258,6 +258,36 @@ describe("Category", () => {
             });
         });
 
+        it("delete category document should fail if url deletion failed", () => {
+            let category = new Category(categoryParams), fourTimes = 4;
+            let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
+                { "_id": "103", "url": "http://facebook.com/test1" },
+                { "_id": "104", "url": "http://test.com/rss" }];
+            let fetchUrlsMock = sandbox.mock(SourceDb);
+            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let source = new Source({});
+            sandbox.stub(Source, "instance").returns(source);
+            let deleteSourceUrlMock = sandbox.mock(source).expects("delete").withArgs(categoryId).atMost(fourTimes).returns(Promise.reject("error"));
+            return category.delete(categoryId).catch((error) => {
+                assert.strictEqual(error, "error");
+                deleteSourceUrlMock.verify();
+            });
+        });
+
+        it("delete category document should be successful if no source urls present", () => {
+            let category = new Category(categoryParams), fourTimes = 4;
+            let urlDocs = [];
+            let fetchUrlsMock = sandbox.mock(SourceDb);
+            fetchUrlsMock.expects("fetchSourceConfigurationsByCategoryId").withArgs(categoryId).returns(Promise.resolve(urlDocs));
+            let source = new Source({});
+            sandbox.stub(Source, "instance").returns(source);
+            pouchClientDeleteDoucmentMock.withArgs(category.getDocument()).returns(Promise.resolve("response"));
+            return category.delete(categoryId).then((response) => {
+                assert.isTrue(response);
+                pouchClientDeleteDoucmentMock.verify();
+            });
+        });
+
         it("should reject with false if category deletion fails", () => {
             let category = new Category(categoryParams), fourTimes = 4;
             let urlDocs = [{ "_id": "101", "url": "@icc" }, { "_id": "102", "url": "@xyz" },
