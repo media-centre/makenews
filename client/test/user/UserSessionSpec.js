@@ -19,8 +19,8 @@ describe("UserSession", () => {
             let userSession = UserSession.instance();
             let appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
             let appSessionStorageGetMock = sandbox.mock(appSessionStorage).expects("getValue");
-            appSessionStorageSetMock.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, lastAccessedTime);
-            appSessionStorageGetMock.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
+            appSessionStorageSetMock.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME, lastAccessedTime);
+            appSessionStorageGetMock.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
             userSession.setLastAccessedTime(lastAccessedTime);
             assert.strictEqual(userSession.getLastAccessedTime(), lastAccessedTime);
             appSessionStorageSetMock.verify();
@@ -55,7 +55,7 @@ describe("UserSession", () => {
                 let fiveMinute = 5;
                 let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
                 let userSession = new UserSession();
-                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
 
@@ -71,7 +71,7 @@ describe("UserSession", () => {
                 let tenMinute = 10;
                 let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
                 let userSession = new UserSession();
-                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_ACCESSED_TIME).returns(lastAccessedTime);
+                appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
         });
