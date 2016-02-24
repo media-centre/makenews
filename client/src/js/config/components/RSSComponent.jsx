@@ -8,7 +8,7 @@ import Toast from "../../utils/custom_templates/Toast.js";
 export default class RSSComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { "hintMessage": "Please enter RSS URL here", "exampleMessage": this.props.categoryDetailsPageStrings.hintMessages.RSSExampleURL, "errorMessage": "" };
+        this.state = { "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.RSSHintMessage, "exampleMessage": this.props.categoryDetailsPageStrings.exampleMessages.RSSExampleURL, "errorMessage": "" };
     }
 
     _validateUrl(url, callback, props) {

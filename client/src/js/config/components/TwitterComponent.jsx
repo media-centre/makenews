@@ -12,7 +12,7 @@ export default class TwitterComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { "exampleMessage": this.props.categoryDetailsPageStrings.hintMessages.TwitterExampleURL, "errorMessage": "", "hintMessage": "Please enter twitter handler here" };
+        this.state = { "exampleMessage": this.props.categoryDetailsPageStrings.exampleMessages.TwitterExampleURL, "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.TwitterHintMessage };
     }
 
     _validateUrl(url, callback, props) {

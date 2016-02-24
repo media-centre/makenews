@@ -15,7 +15,7 @@ export default class FacebookComponent extends Component {
     constructor(props) {
         super(props);
         this.facebookLoginHandler = this.facebookLoginHandler.bind(this);
-        this.state = { "exampleMessage": this.props.categoryDetailsPageStrings.hintMessages.FacebookExampleURL, "errorMessage": "", "hintMessage": "Please Enter Facebook url" };
+        this.state = { "exampleMessage": this.props.categoryDetailsPageStrings.exampleMessages.FacebookExampleURL, "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.FacebookHintMessage };
     }
 
     componentWillMount() {
