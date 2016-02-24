@@ -38,5 +38,5 @@ export default class AppSessionStorage {
 AppSessionStorage.KEYS = {
     "USERNAME": "UserName",
     "REMOTEDBURL": "RemoteUrl",
-    "LAST_ACCESSED_TIME": "LastAccessedTime"
+    "LAST_RENEWED_TIME": "LastRenewedTime"
 };

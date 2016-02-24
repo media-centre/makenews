@@ -14,11 +14,11 @@ export default class UserSession {
     }
 
     getLastAccessedTime() {
-        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME);
+        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.LAST_RENEWED_TIME);
     }
 
     setLastAccessedTime(time = moment().valueOf()) {
-        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_ACCESSED_TIME, time);
+        AppSessionStorage.instance().setValue(AppSessionStorage.KEYS.LAST_RENEWED_TIME, time);
     }
 
     continueSessionIfActive() {
