@@ -112,14 +112,25 @@
               height: 25px;
               background-size: 25px !important;
             }
+
+            .counter {
+              right: -8px;
+            }
           }
         }
       }
     }
   }
 
-  .main-page section {
+  .navigation-header .navigation-title {
+    margin: auto;
+  }
 
+  .main-page section > div {
+    padding: 15px;
+  }
+
+  .main-page section {
     .refresh-status {
       top: 53px;
     }
@@ -127,20 +138,13 @@
     .surf-page-container, .park-page {
 
       .surf-filter {
-        top: 54px;
+        top: 53px;
         width: 270px;
         left: -270px;
 
-        #filterToggle {
-          right: -26px;
-          padding: 0px 5px;
-        }
-
         &.show {
-          left: 0px;
+          left: 0;
         }
-
-
 
         .surf-filter-item {
           ul li {
@@ -170,7 +174,7 @@
           li {
             width: 70px;
             margin: 3px 4px 3px 4px;
-            padding: 0px;
+            padding: 0;
             text-align: center;
             font-size: $extra-small-font-size;
 
@@ -223,15 +227,10 @@
           background-image: url(images/main/park-blue.png);
         }
       }
-
-
     }
-
   }
 
-
-
-  body .custom-toast {
+  .custom-toast {
     padding: 8px;
     width: 85%;
     font-size: $small-font-size;
@@ -263,6 +262,18 @@
     }
     .tour-top-arrow {
       right: auto;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .hide-mobile-xs {
+    display: none;
+  }
+
+  .surf-page-container {
+    .surf-filter #filterToggle {
+        top: 200px;
     }
   }
 }

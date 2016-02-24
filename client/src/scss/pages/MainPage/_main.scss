@@ -9,7 +9,7 @@
       @extend .bottom-box-shadow;
       background: $app-header-bg-color;
       overflow: hidden;
-      padding: 12px;
+      padding: 6px 7.5%;
       z-index: $medium-index;
 
       .app-logo {
@@ -51,11 +51,10 @@
 
           }
           .header-link-image {
-            width: 35px;
-            height: 35px;
-            margin: auto;
-            margin-bottom: 5px;
-            background-size: 35px !important;
+            width: 25px;
+            height: 25px;
+            margin: auto auto 2px;
+            background-size: 25px !important;
           }
           .header-link-image.configure {
             background: url('images/main/configure-white.png') no-repeat center;
