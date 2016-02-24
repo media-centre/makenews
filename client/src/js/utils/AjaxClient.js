@@ -56,8 +56,16 @@ export default class AjaxClient {
                       let jsonResponse = JSON.parse(event.target.response);
                       resolve(jsonResponse);
                   } else if(xhttp.status === response.UNAUTHORIZED) {
-                      UserSession.instance().autoLogout();
-                      reject("session expired");
+                      let jsonResponse = event.target.response;
+                      try {
+                          jsonResponse = JSON.parse(event.target.response);
+                          if(jsonResponse.message === "session expired") { //eslint-disable-line max-depth
+                              UserSession.instance().autoLogout();
+                          }
+                      } catch(error) {
+                          reject(jsonResponse);
+                      }
+                      reject(jsonResponse);
                   } else if(xhttp.status === response.BAD_GATEWAY) {
                       reject("connection refused");
                   }
