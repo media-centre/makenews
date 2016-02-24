@@ -57,10 +57,15 @@ window.mediaCenter.appEn = {
                 "categoryDeletionConfirm": "will be deleted and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
                 "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
                 "hintMessages": {
+                    "RSSHintMessage": "Please Enter RSS URL Here",
+                    "FacebookHintMessage": "Please Enter Facebook URL Here",
+                    "TwitterHintMessage": "Please Enter Twitter Handler Here",
+                    "categoryTitle": "Invalid category name. Use only space or - or _"
+                },
+                "exampleMessages": {
                     "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
                     "TwitterExampleURL": "Example: @martinfowler, #savetheinternet",
-                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama",
-                    "categoryTitle": "Invalid category name. Use only space or - or _"
+                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama"
                 },
                 "successMessages": {
                     "categoryDeleteSuccess": "is successfully deleted",

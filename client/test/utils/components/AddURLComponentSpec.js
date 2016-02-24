@@ -54,7 +54,7 @@ describe("AddURLComponent", () => {
 
     it("should display all the urls if content props has values", ()=> {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
-        expect(1).to.eq(addUrlDom.querySelectorAll("ul.url-list li").length);
+        expect(2).to.eq(addUrlDom.querySelectorAll("ul.url-list li").length);
     });
 
     it("should call showAddUrlTextBox function on clicking addUrlButton", () => {

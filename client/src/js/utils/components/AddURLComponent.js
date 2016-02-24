@@ -85,18 +85,30 @@ export default class AddURLComponent extends Component {
         return result;
     }
 
-    render() {
+    getUrlList() {
+        //test
+        let urlsList = [];
+        urlsList.push(<li key={0}>
+            <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
+        </li>);
+        this.props.content.map((urlObj, index) =>
+        urlsList.push(<li key={index+1} className="feed-url">
+                <div className={urlObj.status + " feed"}>{urlObj.url}</div>
+                <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj)}>
+                    <i className="border-blue circle fa fa-close close circle"></i>
+                </div>
+            </li>));
+        return urlsList;
+    }
 
-        let inputBox = null, confirmPopup = null, exampleMessage = null;
+    render() {
+        let inputBox = null, confirmPopup = null;
         if(this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
                     <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
-            );
-            exampleMessage = (
-                <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
             );
         }
 
@@ -111,16 +123,8 @@ export default class AddURLComponent extends Component {
 
                 <div className="url-panel">
                     <ul className="url-list">
-                        {this.props.content.map((urlObj, index) =>
-                            <li key={index} className="feed-url">
-                                <div className={urlObj.status + " feed"}>{urlObj.url}</div>
-                                <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj)}>
-                                    <i className="border-blue circle fa fa-close close circle"></i>
-                                </div>
-                            </li>
-                        )}
+                        {this.getUrlList()}
                     </ul>
-                    {exampleMessage}
                     {inputBox}
                     {this.state.successResponse ? "" : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
