@@ -2,6 +2,7 @@
 
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
+import DateTimeUtil from "../../utils/DateTimeUtil.js";
 
 export default class FeedDb {
     static fetchSurfFeedsAndCategoriesWithSource(options = { "include_docs": true, "descending": true }) {
@@ -32,5 +33,27 @@ export default class FeedDb {
 
     static sourceParkFeeds(sourceId) {
         return PouchClient.fetchDocuments("category/sourceParkFeeds", { "include_docs": true, "key": sourceId });
+    }
+
+    static fetchPastFeeds(numberOfDays) {
+        let dateBeforeGivenDays = DateTimeUtil.getCurrentTimeStamp().subtract(numberOfDays, "days").toISOString();
+        return PouchClient.fetchDocuments("category/latestFeeds", { "include_docs": true, "descending": true, "startkey": dateBeforeGivenDays });
+    }
+
+    static deletePastFeeds() {
+        return new Promise((resolve, reject) => {
+            FeedDb.fetchPastFeeds(window.maxSurfFeedsLifeInDays).then(pastFeeds => {
+                pastFeeds.forEach(pastFeed => {
+                    pastFeed._deleted = true;
+                });
+                PouchClient.bulkDocuments(pastFeeds).then(() => {
+                    resolve();
+                }).catch(error => {
+                    reject(error);
+                });
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }

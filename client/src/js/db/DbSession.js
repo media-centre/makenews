@@ -3,6 +3,7 @@
 "use strict";
 import DbParameters from "./DbParameters.js";
 import UserSession from "../user/UserSession.js";
+import FeedDb from "../feeds/db/FeedDb.js";
 import PouchDB from "pouchdb";
 
 export default class DbSession {
@@ -62,6 +63,11 @@ export default class DbSession {
 
         const THREEMINUTE = 180000;
         this.replicateRemoteDb(THREEMINUTE);
+        this._deleteOldFeeds();
+    }
+
+    _deleteOldFeeds() {
+        FeedDb.deletePastFeeds();
     }
 
     replicateRemoteDb(intervalTime) {

@@ -3,10 +3,19 @@
 "use strict";
 import PouchClient from "../../../src/js/db/PouchClient.js";
 import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
+import DateTimeUtil from "../../../src/js/utils/DateTimeUtil.js";
 import sinon from "sinon";
+import moment from "moment";
 import { expect, assert } from "chai";
 
 describe("FeedDb", () => {
+    let sandbox = null;
+    beforeEach("FeedDb", () => {
+        sandbox = sinon.sandbox.create();
+    });
+    afterEach("FeedDb", () => {
+        sandbox.restore();
+    });
     describe("fetchAllFeedsAndCategoriesWithSource", () => {
         it("should fetch all feeds and category documents", (done) => {
             let pouchClientMock = sinon.mock(PouchClient);
@@ -181,7 +190,136 @@ describe("FeedDb", () => {
                 done();
             });
         });
+    });
 
+    describe("fetchPastFeeds", () => {
+        it("should fetch feeds before the given number of days", (done) => {
+            let expectedPastFeeds = [
+                {
+                    "docType": "feed",
+                    "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "content": "Chennai patient receives heart from brain-dead man in CMC",
+                    "status": "surf",
+                    "postedDate": "before 30 days"
+                }
+            ];
+
+            let numberOfDays = 30;
+            let fetchDocumentMock = sinon.mock(PouchClient);
+            let currentTimeStamp = DateTimeUtil.getCurrentTimeStamp();
+            sinon.stub(DateTimeUtil, "getCurrentTimeStamp").returns(currentTimeStamp);
+            fetchDocumentMock.expects("fetchDocuments").withArgs("category/latestFeeds", {
+                "include_docs": true,
+                "startkey": currentTimeStamp.clone().subtract(numberOfDays, "days").toISOString(),
+                "descending": true
+            }).returns(Promise.resolve(expectedPastFeeds));
+
+            FeedDb.fetchPastFeeds(numberOfDays).then(pastFeeds => {
+                assert.deepEqual(pastFeeds, expectedPastFeeds);
+                fetchDocumentMock.verify();
+                fetchDocumentMock.restore();
+                DateTimeUtil.getCurrentTimeStamp.restore();
+                done();
+            });
+        });
+    });
+
+    describe("deletePastFeeds", () => {
+        it("should delete the past feeds before the given number of days", (done) => {
+            let pastFeeds = [
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days"
+                },
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days"
+                }
+            ];
+            let expectedPastFeedsToBeDeleted = [
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days",
+                    "_deleted": true
+                },
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days",
+                    "_deleted": true
+                }
+            ];
+
+
+            let numDays = 30;
+            window.maxSurfFeedsLifeInDays = numDays;
+            let feedDbFetchPastFeedsMock = sandbox.mock(FeedDb).expects("fetchPastFeeds");
+            feedDbFetchPastFeedsMock.withArgs(numDays).returns(Promise.resolve(pastFeeds));
+            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDocuments");
+            bulkDeleteMock.withArgs(expectedPastFeedsToBeDeleted).returns(Promise.resolve());
+            FeedDb.deletePastFeeds().then(() => {
+                feedDbFetchPastFeedsMock.verify();
+                bulkDeleteMock.verify();
+                done();
+            });
+        });
+
+        it("should reject if delete fails", (done) => {
+            let pastFeeds = [
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days"
+                }
+            ];
+            let expectedPastFeedsToBeDeleted = [
+                {
+                    "docType": "feed",
+                    "title": "Chennai Connect at The Hindu",
+                    "feedType": "facebook",
+                    "status": "surf",
+                    "postedDate": "before 30 days",
+                    "_deleted": true
+                }
+            ];
+
+            sandbox.stub(FeedDb, "fetchPastFeeds").returns(Promise.resolve(pastFeeds));
+            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDocuments");
+            bulkDeleteMock.withArgs(expectedPastFeedsToBeDeleted).returns(Promise.reject("error"));
+            return FeedDb.deletePastFeeds().catch((error) => {
+                assert.strictEqual(error, "error");
+                bulkDeleteMock.verify();
+                done();
+            });
+        });
+
+        it("should reject if fetching past feeds fails", (done) => {
+            let numDays = 30;
+            window.maxSurfFeedsLifeInDays = numDays;
+            let feedDbFetchPastFeedsMock = sandbox.mock(FeedDb).expects("fetchPastFeeds");
+            feedDbFetchPastFeedsMock.withArgs(numDays).returns(Promise.reject("error"));
+            FeedDb.deletePastFeeds().catch((error) => {
+                assert.strictEqual(error, "error");
+                feedDbFetchPastFeedsMock.verify();
+                done();
+            });
+        });
     });
 });
 
