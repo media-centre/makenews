@@ -92,7 +92,7 @@ export default class AddURLComponent extends Component {
             <div className="example-url" ref="exampleText">{this.props.exampleMessage}</div>
         </li>);
         this.props.content.map((urlObj, index) =>
-        urlsList.push(<li key={index+1} className="feed-url">
+        urlsList.push(<li key={index + 1} className="feed-url">
                 <div className={urlObj.status + " feed"}>{urlObj.url}</div>
                 <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj)}>
                     <i className="border-blue circle fa fa-close close circle"></i>
