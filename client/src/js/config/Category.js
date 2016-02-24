@@ -101,17 +101,32 @@ export default class Category {
     delete() {
         return new Promise((resolve, reject) => {
             SourceDb.fetchSourceConfigurationsByCategoryId(this._id).then(sourceUrlsObj => {
-                sourceUrlsObj.forEach((sourceUrlObj) => {
-                    Source.instance(sourceUrlObj).delete(this._id);
-                });
-                PouchClient.deleteDocument(this.getDocument()).then(() => {
-                    resolve(true);
-                }).catch((error) => {
-                    reject(error);
-                });
+                let sourceUrlLength = sourceUrlsObj.length;
+                if(sourceUrlLength === 0) {
+                    this.deleteCategoryDocument(resolve, reject);
+                    return;
+                }
+                for(let index = 0; index < sourceUrlLength; index += 1) {
+                    let sourceUrlObj = sourceUrlsObj[index];
+                    Source.instance(sourceUrlObj).delete(this._id).then(success => { //eslint-disable-line no-loop-func
+                        if(index + 1 === sourceUrlLength) {
+                            this.deleteCategoryDocument(resolve, reject);
+                        }
+                    }).catch(error => { //eslint-disable-line no-loop-func
+                        reject(error);
+                    });
+                }
             }).catch((error) => {
                 reject(error);
             });
+        });
+    }
+
+    deleteCategoryDocument(resolve, reject) {
+        PouchClient.deleteDocument(this.getDocument()).then(() => { //eslint-disable-line max-nested-callbacks
+            resolve(true);
+        }).catch((error) => { //eslint-disable-line max-nested-callbacks
+            reject(error);
         });
     }
 
