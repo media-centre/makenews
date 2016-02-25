@@ -17,7 +17,7 @@ export default class MainHeaderTab extends Component {
                 <Link to={this.props.url} className={(this.props.tabToHighlight.tabNames.indexOf(this.props.name) === NOT_FOUND_INDEX) ? "" : "selected"} >
                     {counter}
                     <div className={this.props.className + " header-link-image"} id={this.props.id}> </div>
-                    <span>{this.props.name}</span>
+                    <span className="hide-mobile-xs">{this.props.name}</span>
                 </Link>
             </li>
         );
