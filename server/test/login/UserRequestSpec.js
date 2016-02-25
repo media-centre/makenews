@@ -138,8 +138,8 @@ describe("UserRequest", () => {
             new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).catch(error =>{
                 assert.strictEqual("login failed", error);
                 done();
+            });
         });
-    });
         it("should not update the password when couchdb password updation fails", (done) => {
             let username = "test";
             let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
@@ -153,6 +153,6 @@ describe("UserRequest", () => {
                 done();
             });
         });
-});
+    });
 });
 
