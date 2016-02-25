@@ -5,7 +5,6 @@
 import { assert } from "chai";
 import Logger, { logLevel, logType, LOG_DIR } from "../../src/logging/Logger";
 import sinon from "sinon";
-import path from "path";
 
 describe("Logger", () => {
     const defaultDirPath = LOG_DIR;
@@ -54,29 +53,7 @@ describe("Logger", () => {
 
         it("default category logger should be returned if logging.json is read", () => {
             loggerStub.returns(false);
-            assertFileLogger(Logger.instance(), "unitTest.log", "/var/mc/logs/server", logLevel.LOG_ERROR);
-        });
-
-        it("category logger creation with invalid directory should be handled with default folder", () => {
-            let dirname = "";
-            let myJson = {
-                "unit_testing": {
-                    "dir": dirname,
-                    "test4": {
-                        "file": {
-                            "filename": "test4.log",
-                            "level": logLevel.LOG_INFO
-                        }
-                    }
-                }
-            };
-            JsonStub = sandBox.stub(Logger, "_getJson");
-            JsonStub.returns(myJson);
-            loggerStub.returns(false);
-            defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
-            defaultCategoryLogger.returns(null);
-            let logger = Logger.instance("test4");
-            assertFileLogger(logger, "test4.log", path.join(__dirname, "../../../../../logs"), logLevel.LOG_INFO);
+            assertFileLogger(Logger.instance(), "unitTest.log", defaultDirPath, logLevel.LOG_ERROR);
         });
 
         it("category logger should be returned when instance is called with category name", () => {

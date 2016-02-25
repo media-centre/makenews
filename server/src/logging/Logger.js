@@ -11,7 +11,7 @@ export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR":
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-export let LOG_DIR = path.join(__dirname, "../../../../../logs");
+export let LOG_DIR = path.join(__dirname, "../../../../logs");
 let LOG_FILE = "defaultLog.log";
 
 export default class Logger {
@@ -75,14 +75,10 @@ export default class Logger {
             let loggingConfig = logConfigJson[environment.environment];
             if(loggingConfig) {
                 let logDir = LOG_DIR;
-                if(loggingConfig.dir) {
+                if(loggingConfig.dir || loggingConfig.dir !== "") {
                     logDir = loggingConfig.dir;
-                    Logger.createDir(logDir).catch(error => {
-                        Logger._getDefaultLogger().error("Unable to create directory %s. Error: ", logDir, error);
-                        logDir = LOG_DIR;
-                        Logger.createDir(logDir);
-                    });
                 }
+                Logger.createDir(logDir);
                 for (let loggerName of Object.keys(loggingConfig)) {
                     let categoryConfig = loggingConfig[loggerName];
                     if (categoryConfig.file) {
