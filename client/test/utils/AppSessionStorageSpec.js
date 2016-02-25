@@ -42,6 +42,14 @@ describe("AppSessionStorage", ()=> {
             };
             assert.throw(setValueFn, "Key or value cannot be empty");
         });
+
+        it("should throw an error if value is undefined", () => {
+            let appSessionStorage = new AppSessionStorage();
+            let setValueFn = () => {
+                appSessionStorage.setValue(key);
+            };
+            assert.throw(setValueFn, "Key or value cannot be empty");
+        });
     });
 
     describe("getItem", () => {
@@ -84,9 +92,9 @@ describe("AppSessionStorage", ()=> {
 
     describe("clear", () => {
         it("should clear all keys from local storage", () => {
-            let appSessionStorage = new AppSessionStorage();
+            let appSessionStorage = new AppSessionStorage(), four = 4;
             let appSessionStorageMock = sinon.mock(appSessionStorage).expects("remove");
-            appSessionStorageMock.thrice();
+            appSessionStorageMock.atLeast(four);
             appSessionStorage.clear();
             appSessionStorageMock.verify();
             appSessionStorage.remove.restore();

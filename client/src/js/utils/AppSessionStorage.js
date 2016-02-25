@@ -7,7 +7,7 @@ export default class AppSessionStorage {
     }
 
     setValue(key, value) {
-        if(StringUtil.isEmptyString(key) || !value) {
+        if(StringUtil.isEmptyString(key) || typeof value === "undefined" || value === "") {
             throw new Error("Key or value cannot be empty");
         }
         this.getLocalStorage().setItem(key, value);
@@ -38,5 +38,6 @@ export default class AppSessionStorage {
 AppSessionStorage.KEYS = {
     "USERNAME": "UserName",
     "REMOTEDBURL": "RemoteUrl",
-    "LAST_RENEWED_TIME": "LastRenewedTime"
+    "LAST_RENEWED_TIME": "LastRenewedTime",
+    "TAKEN_TOUR": "takenTour"
 };

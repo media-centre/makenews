@@ -51,7 +51,7 @@ describe("userLogin", () => {
         beforeEach("userLogin", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-            appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("setValue").twice();
+            appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("setValue").thrice();
 
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);

@@ -12,6 +12,9 @@ global.localStorage = {
     },
     "setItem": function(key, value) {
         this.item[key] = value;
+    },
+    "removeItem": function(key) {
+        this.item[key] = null;
     }
 };
 global.XMLHttpRequest = window.XMLHttpRequest;

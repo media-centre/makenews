@@ -2,6 +2,7 @@
 "use strict";
 
 import TakeTour from "../../../src/js/utils/custom_templates/TakeTour";
+import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -113,6 +114,28 @@ xdescribe("TakeTour", () => {
             TakeTour.currentIndex = 1;
             document.querySelector("#tour-abort").click();
             assert.isTrue(document.querySelector("#take-tour-mask").classList.contains("hide"));
+        });
+    });
+});
+
+describe("TakeTour", () => {
+    describe("hasUserTakenTour", () => {
+        it("should return true if TAKEN_TOUR is set as true in localstorage", () => {
+            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, true);
+            assert.isTrue(TakeTour.hasUserTakenTour());
+        });
+
+        it("should return false if TAKEN_TOUR is set as false in localstorage", () => {
+            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, false);
+            assert.isFalse(TakeTour.hasUserTakenTour());
+        });
+    });
+
+    describe("updateUserSeenTour", () => {
+        it("should remove TAKEN_TOUR from localStorage", () => {
+            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, true);
+            TakeTour.updateUserSeenTour();
+            assert.isNull(localStorage.getItem(AppSessionStorage.KEYS.TAKEN_TOUR));
         });
     });
 });
