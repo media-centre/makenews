@@ -33,7 +33,7 @@ export default class UserProfileSettings extends Component {
             <div className="user-settings drop-down">
                 <h4 className="user-info-label" onClick={this._toggleDropdown.bind(this)}>
                     <span className="user-icon">{userName.charAt(0)}</span>
-                    {userName}
+                    <span className="hide-mobile-xs">{userName}</span>
                 </h4>
                 <div className={this.state.show ? "drop-down-wrapper anim bottom-box-shadow" : "drop-down-wrapper anim bottom-box-shadow hide"}>
                     <ul>

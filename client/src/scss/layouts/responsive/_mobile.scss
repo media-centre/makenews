@@ -101,20 +101,18 @@
 
       ul.menu-list {
         li {
-          padding: 0;
-          width: 55px;
 
           a {
             font-size: $extra-small-font-size;
 
             div.header-link-image {
-              width: 25px;
-              height: 25px;
-              background-size: 25px !important;
+              width: 30px;
+              height: 30px;
+              background-size: 30px !important;
             }
 
             .counter {
-              right: -8px;
+              right: 5px;
             }
           }
         }
@@ -132,13 +130,13 @@
 
   .main-page section {
     .refresh-status {
-      top: 53px;
+      top: 55px;
     }
 
     .surf-page-container, .park-page {
 
       .surf-filter {
-        top: 53px;
+        top: 55px;
         width: 270px;
         left: -270px;
 
@@ -160,7 +158,7 @@
       }
 
       .surf-refresh-button {
-        top: 56px;
+        top: 62px;
       }
 
       .source-type-filter {
@@ -268,12 +266,43 @@
 
 @media (max-width: 400px) {
   .hide-mobile-xs {
-    display: none;
+    display: none !important;
   }
 
   .surf-page-container {
-    .surf-filter #filterToggle {
+    .surf-filter {
+      top: 42px !important;
+      #filterToggle {
         top: 200px;
+      }
+    }
+  }
+
+  .main-page section .surf-page-container .surf-refresh-button {
+    top: 54px;
+  }
+
+  .main-page section .refresh-status {
+    top: 43px;
+  }
+
+  .main-page header {
+    .fixed-header {
+      ul.menu-list li {
+        width: 55px;
+      }
+      .user-info {
+        right: 4px;
+        .user-settings {
+          margin-top: 4px;
+          .user-info-label {
+            padding-right: 6px;
+            &:before {
+              border-width: 5px;
+            }
+          }
+        }
+      }
     }
   }
 }
