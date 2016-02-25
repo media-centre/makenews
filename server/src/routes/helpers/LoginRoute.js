@@ -29,7 +29,12 @@ export default class LoginRoute extends Route {
 
             let userRequest = UserRequest.instance(this.userName, this.password);
             userRequest.getAuthSessionCookie().then(authSessionCookie => {
-                this._handleLoginSuccess(authSessionCookie);
+                userRequest.getUserDetails(userRequest.extractToken(authSessionCookie), this.userName).then(userDetails => {
+                    this._handleLoginSuccess(authSessionCookie, userDetails);
+                }).catch(error => {
+                    RouteLogger.instance().error("LoginRoute::handle Failed while fetching auth session cookie = %s", error);
+                    this._handleFailure({ "message": "unauthorized" });
+                });
             }).catch(error => { //eslint-disable-line
                 RouteLogger.instance().error("LoginRoute::handle Failed while fetching auth session cookie");
                 this._handleFailure({ "message": "unauthorized" });
@@ -40,11 +45,11 @@ export default class LoginRoute extends Route {
         }
     }
 
-    _handleLoginSuccess(authSessionCookie) {
+    _handleLoginSuccess(authSessionCookie, userDetails) {
         let dbJson = ClientConfig.instance().db();
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
-            .json({ "userName": this.userName, "dbParameters": dbJson });
+            .json({ "userName": this.userName, "dbParameters": dbJson, "takenTour": userDetails.takenTour });
 
         RouteLogger.instance().info("LoginRoute::_handleLoginSuccess: Login request successful");
         RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": this.userName, "dbParameters": dbJson }));

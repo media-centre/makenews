@@ -45,7 +45,7 @@ export default class AdminDbClient extends CouchClient {
 
     createUser(userName, password) {
         const path = "/_users/org.couchdb.user:" + userName;
-        const body = { "_id": "org.couchdb.user:" + userName, "name": userName, "roles": [], "type": "user", "password": password, "generated": true };
+        const body = { "_id": "org.couchdb.user:" + userName, "name": userName, "roles": [], "type": "user", "password": password, "generated": true, "takenTour": false };
         return this.put(path, body);
     }
 
