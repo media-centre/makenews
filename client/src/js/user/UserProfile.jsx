@@ -14,7 +14,7 @@ export default class UserProfile extends Component {
 
     submitProfile(event) {
         event.preventDefault();
-        //let currentPassword = this.refs.currentPassword.value.trim();
+        let currentPassword = this.refs.currentPassword.value.trim();
         let newPassword = this.refs.newPassword.value.trim();
         let confirmPassword = this.refs.confirmPassword.value.trim();
 
@@ -22,7 +22,10 @@ export default class UserProfile extends Component {
             this.setState({ "errorMsg": this.messages.passwordMisMatch });
             return false;
         }
-
+        if(currentPassword === newPassword) {
+            this.setState({ "errorMsg": this.messages.passwordUnchanged });
+            return false;
+        }
     }
 
     render() {

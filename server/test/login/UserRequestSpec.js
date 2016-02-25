@@ -111,19 +111,48 @@ describe("UserRequest", () => {
             sessionCookie = "AuthSession=test_token; Version=1; Path=/; HttpOnly";
             sandbox = sinon.sandbox.create();
         });
-        xit("should update the password if old passwords is correct", (done) => {
+        afterEach("updatePassword", () => {
+            sandbox.restore();
+        });
+        it("should update the password if old passwords is correct", (done) => {
             let username = "test";
-            let oldPassword = "new_password", newPassword = "new_password", cofirmPassword = "new_password";
+            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
 
             couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
             sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.resolve(sessionCookie));
             couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
 
             new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).then((response) => {
-                assert.deepEqual(response.ok, true);
+                assert.deepEqual(response.body.ok, true);
                 done();
             });
         });
+
+        it("should not update the password if old password is incorrect", (done) => {
+            let username = "test";
+            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
+
+            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
+            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.reject("Login failed"));
+
+            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).catch(error =>{
+                assert.strictEqual("login failed", error);
+                done();
+        });
     });
+        it("should not update the password when couchdb password updation fails", (done) => {
+            let username = "test";
+            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
+
+            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
+            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.resolve(sessionCookie));
+            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.reject("Updation failed"));
+
+            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).catch(error =>{
+                assert.strictEqual("Updation failed", error);
+                done();
+            });
+        });
+});
 });
 

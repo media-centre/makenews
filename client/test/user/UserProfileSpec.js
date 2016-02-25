@@ -9,7 +9,7 @@ import "../helper/TestHelper.js";
 import sinon from "sinon";
 import Locale from "../../src/js/utils/Locale";
 
-describe("UserProfile", ()=> {
+describe.only("UserProfile", ()=> {
     it("should validate the new password and confirm password", ()=> {
         let sandbox = sinon.sandbox.create();
         sandbox.stub(Locale, "applicationStrings").returns({

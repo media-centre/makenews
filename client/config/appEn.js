@@ -107,10 +107,11 @@ window.mediaCenter.appEn = {
             }
         },
         "userProfile": {
-            "passwordMisMatch": "New password and Confirm Password does not match",
+            "passwordMisMatch": "New Password and Confirm Password does not match",
             "currentPassword": "current password",
             "newPassword": "new password",
-            "confirmPassword": "confirm password"
+            "confirmPassword": "confirm password",
+            "passwordUnchanged": "New Password cannot be same as the old one"
         },
         "userProfileSettings": {
             "settings": "Settings",
