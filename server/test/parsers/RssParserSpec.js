@@ -3,11 +3,22 @@
 
 import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import LogTestHelper from "../helpers/LogTestHelper";
+import Logger from "../../src/logging/Logger";
 import { expect } from "chai";
 import nock from "nock";
 import restRequest from "request";
+import sinon from "sinon";
 
 describe("RssParser", () => {
+    before("RssFeedsRoute", () => {
+        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
+    });
+
+    after("RssFeedsRoute", () => {
+        Logger.instance.restore();
+    });
+
     it("should reject if the url is not a feed", (done) => {
         let data = `<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
         <TITLE>302 Moved</TITLE></HEAD><BODY>

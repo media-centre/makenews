@@ -1,6 +1,6 @@
 {
   "default": {
-    "dir": "../../logs",
+    "dir": "/var/mc/logs/server",
     "default": {
       "file": {
         "filename": "server.log",
@@ -27,7 +27,7 @@
     }
   },
   "development": {
-    "dir": "../../logs",
+    "dir": "/var/mc/logs/server",
     "default": {
       "file": {
         "filename": "server.log",
@@ -66,7 +66,7 @@
 
   },
   "unit_testing": {
-    "dir": "../../../dist/server/logs",
+    "dir": "/var/mc/logs/server",
     "default": {
       "file": {
         "filename": "unitTest.log",

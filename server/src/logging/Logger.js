@@ -5,12 +5,13 @@ import winston from "winston";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
+import mkdirp from "mkdirp";
 
 export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR": "error", "LOG_WARN": "warn" },
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-export let LOG_DIR = path.join(__dirname, "../../logs");
+export let LOG_DIR = path.join(__dirname, "../../../../../logs");
 let LOG_FILE = "defaultLog.log";
 
 export default class Logger {
@@ -20,20 +21,20 @@ export default class Logger {
     }
 
     static initialize() {
-        Logger.createDir(LOG_DIR);
-        if(!Logger._getDefaultLogger()) {
-            defaultLogger = new winston.Logger({
-                "transports": [new (winston.transports.File)({
-                    "dirname": LOG_DIR,
-                    "filename": LOG_FILE,
-                    "level": logLevel.LOG_INFO,
-                    "timestamp": Logger.timeStamp
-                })
-                ]
-            });
-        }
         if(!Logger._isCategoriesInitialized()) {
             Logger._readLogConfig(EnvironmentConfig.files.LOGGING);
+            if(!Logger._getDefaultCategoryLogger()) {
+                mkdirp(LOG_DIR);
+                defaultLogger = new winston.Logger({
+                    "transports": [new (winston.transports.File)({
+                        "dirname": LOG_DIR,
+                        "filename": LOG_FILE,
+                        "level": logLevel.LOG_INFO,
+                        "timestamp": Logger.timeStamp
+                    })
+                    ]
+                });
+            }
         }
     }
 
@@ -42,9 +43,14 @@ export default class Logger {
     }
 
     static createDir(dir) {
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
+        return new Promise((resolve, reject) => {
+            mkdirp(dir, (err) => {
+                if(err) {
+                    reject("failed");
+                }
+                resolve("success");
+            });
+        });
     }
 
     static _isCategoriesInitialized() {
@@ -70,13 +76,12 @@ export default class Logger {
             if(loggingConfig) {
                 let logDir = LOG_DIR;
                 if(loggingConfig.dir) {
-                    logDir = path.join(__dirname, loggingConfig.dir);
-                    try {
-                        Logger.createDir(logDir);
-                    } catch(error) {
+                    logDir = loggingConfig.dir;
+                    Logger.createDir(logDir).catch(error => {
                         Logger._getDefaultLogger().error("Unable to create directory %s. Error: ", logDir, error);
                         logDir = LOG_DIR;
-                    }
+                        Logger.createDir(logDir);
+                    });
                 }
                 for (let loggerName of Object.keys(loggingConfig)) {
                     let categoryConfig = loggingConfig[loggerName];

@@ -45,11 +45,11 @@ describe("RssFeedsRoute", () => {
     }
 
     let next = {};
-    before("TwitterRouteHelper", () => {
+    before("RssFeedsRoute", () => {
         sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
-    after("TwitterRouteHelper", () => {
+    after("RssFeedsRoute", () => {
         Logger.instance.restore();
     });
 

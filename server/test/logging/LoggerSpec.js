@@ -24,7 +24,8 @@ describe("Logger", () => {
         it("defaultLogger is called", () => {
             JsonStub = sandBox.stub(Logger, "_getJson");
             JsonStub.returns({});
-            loggerStub.returns(true);
+            loggerStub.returns(false);
+            sandBox.stub(Logger, "_readLogConfig");
             defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
             defaultCategoryLogger.returns(null);
             assertFileLogger(Logger.instance(), "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
@@ -53,13 +54,35 @@ describe("Logger", () => {
 
         it("default category logger should be returned if logging.json is read", () => {
             loggerStub.returns(false);
-            assertFileLogger(Logger.instance(), "unitTest.log", path.join(__dirname, "../../../dist/server/logs"), logLevel.LOG_ERROR);
+            assertFileLogger(Logger.instance(), "unitTest.log", "/var/mc/logs/server", logLevel.LOG_ERROR);
+        });
+
+        it("category logger creation with invalid directory should be handled with default folder", () => {
+            let dirname = "";
+            let myJson = {
+                "unit_testing": {
+                    "dir": dirname,
+                    "test4": {
+                        "file": {
+                            "filename": "test4.log",
+                            "level": logLevel.LOG_INFO
+                        }
+                    }
+                }
+            };
+            JsonStub = sandBox.stub(Logger, "_getJson");
+            JsonStub.returns(myJson);
+            loggerStub.returns(false);
+            defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
+            defaultCategoryLogger.returns(null);
+            let logger = Logger.instance("test4");
+            assertFileLogger(logger, "test4.log", path.join(__dirname, "../../../../../logs"), logLevel.LOG_INFO);
         });
 
         it("category logger should be returned when instance is called with category name", () => {
             let myJson = {
                 "unit_testing": {
-                    "dir": "../../../dist/logs",
+                    "dir": "/var/logs",
                     "default": {
                         "file": {
                             "filename": "def.log",
@@ -79,32 +102,9 @@ describe("Logger", () => {
             loggerStub.returns(false);
 
             let logger = Logger.instance("test3");
-            assertFileLogger(logger, "test3.log", path.join(__dirname, "../../../dist/logs"), logLevel.LOG_INFO);
+            assertFileLogger(logger, "test3.log", "/var/logs", logLevel.LOG_INFO);
         });
 
-        it("category logger creation with invalid directory should be handled with default folder", () => {
-            let dirname = "../../../xyz/logs";
-            let myJson = {
-                "unit_testing": {
-                    "dir": dirname,
-                    "test3": {
-                        "file": {
-                            "filename": "test3.log",
-                            "level": logLevel.LOG_INFO
-                        }
-                    }
-                }
-            };
-            JsonStub = sandBox.stub(Logger, "_getJson");
-            JsonStub.returns(myJson);
-            loggerStub.returns(false);
-            let defaultLoggerStub = sandBox.stub(Logger, "_getDefaultLogger");
-            defaultLoggerStub.returns({ "error": ()=> {
-            } });
-            let logger = Logger.instance("test3");
-            assert(defaultLoggerStub.called);
-            assertFileLogger(logger, "test3.log", path.join(__dirname, "../../../dist/logs"), logLevel.LOG_INFO);
-        });
     });
 
     describe("File instance", () => {
