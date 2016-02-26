@@ -1,10 +1,8 @@
 "use strict";
 import AppSessionStorage from "../../utils/AppSessionStorage.js";
-
 export default class TakeTour {
     static show() {
         let takeTourMaskElement = document.getElementById("take-tour-mask");
-        this.updateUserSeenTour();
         if(takeTourMaskElement === null) {
             takeTourMaskElement = document.createElement("div");
             takeTourMaskElement.id = "take-tour-mask";
@@ -14,16 +12,12 @@ export default class TakeTour {
                                             <div class='tour-popup'>
                                                 <p class='description'></p>
                                                 <div class='t-right'>
-                                                    <button id='tour-continue'>Continue</button>
-                                                    <button id='tour-abort'>Skip</button>
+                                                    <!--<button id='tour-continue'>Continue</button>-->
+                                                    <button id='tour-abort'>Got It</button>
                                                 </div>
                                             </div>
                                         </div>`;
             document.body.appendChild(takeTourMaskElement);
-
-            document.getElementById("tour-continue").addEventListener("click", ()=> {
-                TakeTour.next();
-            });
 
             document.getElementById("tour-abort").addEventListener("click", ()=> {
                 TakeTour.close();
@@ -34,33 +28,15 @@ export default class TakeTour {
             });
         }
         document.body.style.overflow = "hidden";
-        document.getElementById("tour-abort").textContent = "Skip";
+        document.getElementById("tour-abort").textContent = "Got it";
 
-        TakeTour.currentIndex = -1;
-        TakeTour.schema = TakeTour.getJson();
         TakeTour.startNavigation();
     }
 
     static startNavigation() {
         document.getElementById("take-tour-mask").classList.remove("hide");
-        document.getElementById("tour-continue").classList.remove("hide");
-        TakeTour.currentIndex += 1;
         TakeTour.navigateToPosition();
         TakeTour.updateContent();
-    }
-
-    static next() {
-        if(TakeTour.schema.navigation.length > TakeTour.currentIndex) {
-            TakeTour.clickTargetElement();
-            TakeTour.currentIndex += 1;
-            TakeTour.navigateToPosition();
-            TakeTour.updateContent();
-        }
-    }
-
-    static clickTargetElement() {
-        let currentJsonElement = TakeTour.getCurrentJsonElement();
-        document.querySelector(currentJsonElement.actionSelector).click();
     }
 
     static updateContent() {
@@ -70,11 +46,6 @@ export default class TakeTour {
         let currentJsonElement = TakeTour.getCurrentJsonElement();
         if(descriptionDom.textContent !== currentJsonElement.content) {
             descriptionDom.textContent = currentJsonElement.content;
-        }
-
-        if(TakeTour.schema.navigation.length - 1 === TakeTour.currentIndex) {
-            document.getElementById("tour-continue").classList.add("hide");
-            document.getElementById("tour-abort").textContent = "Done";
         }
     }
 
@@ -98,85 +69,30 @@ export default class TakeTour {
                 let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
                 let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
                 left = left < 0 ? padding : left;
-                takeTourElement.style.top = `${top}px`;
-                takeTourElement.style.left = `${left}px`;
+                //takeTourElement.style.top = `${top}px`;
+                //takeTourElement.style.left = `${left}px`;
+                takeTourElement.style.top = "60px";
+                takeTourElement.style.left = "1100px";
             }
         }, time);
     }
 
     static getCurrentJsonElement() {
-        return TakeTour.schema.navigation[TakeTour.currentIndex];
+        return {
+            "selector": ".user-settings.drop-down .user-info-label",
+            "actionSelector": ".user-settings.drop-down .user-info-label",
+            "content": '"HELP" on using the application is provided in the above settings.'
+        };
     }
 
     static close() {
-        TakeTour.currentIndex = -1;
-        TakeTour.schema = [];
         document.getElementById("take-tour-mask").classList.add("hide");
         document.body.style.overflow = "auto";
     }
 
-    static getJson() {
-        return {
-            "navigation": [
-                {
-                    "selector": ".menu-list > li:first-child",
-                    "actionSelector": ".menu-list > li:first-child a",
-                    "content": "Click here to configure"
-                },
-                {
-                    "selector": "#addNewCategoryButton",
-                    "actionSelector": "#addNewCategoryButton",
-                    "content": "Click here to create a new category"
-                },
-                {
-                    "selector": "#categoryTitle",
-                    "actionSelector": "#categoryTitle",
-                    "content": "Enter your category name"
-                },
-                {
-                    "selector": ".category-page .tab-control > .tab-header > .tab:first-child",
-                    "actionSelector": "#addNewUrlButton",
-                    "content": "Click here to select the URL source"
-                },
-                {
-                    "selector": ".url-panel .add-url-input",
-                    "actionSelector": ".url-panel .add-url-input",
-                    "content": "Enter your URL here",
-                    "value": "http://www.thehindu.com/opinion/?service=rss",
-                    "action": "ENTER"
-                },
-                {
-                    "selector": "#deleteCategory",
-                    "actionSelector": ".category-page .tab-control > .tab-header > .tab:first-child",
-                    "content": "Click here to delete this category"
-                },
-                {
-                    "selector": "#allCategoriesButton",
-                    "actionSelector": "#allCategoriesButton",
-                    "content": "Click here to move back to the Configure page"
-                },
-                {
-                    "selector": ".menu-list > li:nth-child(2)",
-                    "actionSelector": ".menu-list > li:nth-child(2) a",
-                    "content": "Click here to view the news feeds from the configured URLs"
-                },
-                {
-                    "selector": ".main-page > header",
-                    "actionSelector": "#filterToggle",
-                    "content": "Click here to set filters to the news items"
-                },
-                {
-                    "selector": ".menu-list > li:nth-child(3)",
-                    "actionSelector": ".menu-list > li:nth-child(3) a",
-                    "content": "Click here to view the news items that have been parked for review"
-                }
-            ]
-        };
-    }
-
-    static hasUserTakenTour() {
+    static userTakenTour() {
         let appSessionStorage = AppSessionStorage.instance();
-        return appSessionStorage.getValue(AppSessionStorage.KEYS.TAKEN_TOUR);
+        return appSessionStorage.getValue(AppSessionStorage.KEYS.TAKEN_TOUR) === "true";
     }
 
     static updateUserSeenTour() {

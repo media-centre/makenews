@@ -96,8 +96,7 @@ export class SurfPage extends Component {
     getHintMessage() {
         if (this.props.feeds.length === 0) {
             let message = this.state.fetchHintMessage === this.props.messages.fetchingFeeds ? this.state.fetchHintMessage : this.props.messages.noFeeds;
-            //return <div className="feed-hint t-center">{message}</div>;
-            return TakeTour.hasUserTakenTour() ? <div className="t-center">{this.props.messages.noFeeds}</div> : <div className="take-tour-text">{"Welcome to makenews for the first time."} <span className="tour-target" onClick={()=> { this.takeTour(); }}>{"Take tour"}</span> {" to learn how it works"}</div>;
+            return <div className="feed-hint t-center">{message}</div>;
         }
         return null;
     }
@@ -110,7 +109,9 @@ export class SurfPage extends Component {
     }
 
     takeTour() {
-        TakeTour.show();
+        if(!TakeTour.userTakenTour()) {
+            TakeTour.show();
+        }
     }
 
     render() {
@@ -158,6 +159,7 @@ export class SurfPage extends Component {
                 {refreshStatus}
                 <div className="surf-page feeds-container">
                     {refreshButton}
+                    {this.takeTour()}
                     {hint}
                     {allFeeds}
                     {paginationSpinner}

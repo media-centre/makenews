@@ -119,15 +119,15 @@ xdescribe("TakeTour", () => {
 });
 
 describe("TakeTour", () => {
-    describe("hasUserTakenTour", () => {
+    describe("userTakenTour", () => {
         it("should return true if TAKEN_TOUR is set as true in localstorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, true);
-            assert.isTrue(TakeTour.hasUserTakenTour());
+            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, "true");
+            assert.isTrue(TakeTour.userTakenTour());
         });
 
         it("should return false if TAKEN_TOUR is set as false in localstorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, false);
-            assert.isFalse(TakeTour.hasUserTakenTour());
+            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, "false");
+            assert.isFalse(TakeTour.userTakenTour());
         });
     });
 
