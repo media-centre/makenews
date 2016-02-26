@@ -35,7 +35,7 @@
           height: 25px;
           font-size: $extra-small-font-size;
           font-style: normal;
-
+          color: $secondary-font-color;
         }
         .header-link-image {
           width: 25px;
@@ -95,8 +95,8 @@
 
   .drop-down-wrapper {
     position: absolute;
-    top: 30px;
-    right: 0;
+    top: 38px;
+    right: -2px;
     width: 150px;
     background: $app-header-bg-color;
     text-align: center;

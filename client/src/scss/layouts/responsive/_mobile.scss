@@ -1,6 +1,11 @@
 @import "../../utils/variable";
 
 @media (max-width: 700px) {
+  .login-bg {
+    background: url("images/news-bg-tablet.jpg") fixed;
+    background-size: cover;
+  }
+
   .main-page {
     header {
       .fixed-header {
@@ -285,6 +290,11 @@
 @media (max-width: 400px) {
   .hide-mobile-xs {
     display: none !important;
+  }
+
+  .login-bg {
+    background: url("images/news-bg-mobile.jpg") fixed;
+    background-size: cover;
   }
 
   .surf-page-container {
