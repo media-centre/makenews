@@ -1,0 +1,10 @@
+---
+# tasks file for oneTimePreInstaller
+    - name: create sudo user
+      user: name={{sudo_username}} comment="media center sudo user"  password={{sudo_user_password}} shell=/bin/bash groups=sudo
+
+    - name: adding key to sudo user
+      authorized_key: user={{sudo_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
+
+    - name: install sudo
+      action: apt name=sudo

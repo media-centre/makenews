@@ -1,0 +1,6 @@
+- hosts: web
+  become: True
+  become_method: sudo
+  roles:
+    - oneTimePreInstaller
+

@@ -33,7 +33,7 @@ ssh_listen_to: ['0.0.0.0']    # sshd
 ssh_host_key_files: ['/etc/ssh/ssh_host_rsa_key', '/etc/ssh/ssh_host_dsa_key', '/etc/ssh/ssh_host_ecdsa_key']        # sshd
 
 # Specifies  the  maximum  number  of authentication attempts permitted per connection.  Once the number of failures reaches half this value, additional failures are logged.
-ssh_max_auth_retries: 2
+ssh_max_auth_retries: 5
 
 ssh_client_alive_interval: 600          # sshd
 ssh_client_alive_count: 3               # sshd
@@ -70,7 +70,7 @@ ssh_print_motd: false      # sshd
 ssh_print_last_log: false    # sshd
 
 # true to enable sftp configuration
-sftp_enabled: false
+sftp_enabled: true
 
 # change default sftp chroot location
 sftp_chroot_dir: /home/%u

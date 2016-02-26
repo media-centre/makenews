@@ -1,5 +1,6 @@
 - hosts: web
-  sudo: True
+  become: True
+  become_method: sudo
   vars:
     - go_server_ip: 46.101.245.151
   roles:

@@ -6,22 +6,37 @@
   apt: name=apt-transport-https state=present
 
 - name: create deployment group
-  group: name=medcen state=present
+  group: name={{deploy_groupname}} state=present
 
 - name: create deployment user
-  user: name={{deploy_username}} comment="media center user" group=medcen
+  user: name={{deploy_username}} comment="media center user"  shell=/bin/bash  password={{deploy_user_password}}
 
 - name: Placing key
-  authorized_key: user={{deploy_username}} key="{{ lookup('file', playbook_dir+'/roles/PreInstallationTasks/files/authorized_keys.mediacenter.pub') }}"
+  authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
 
 - name: ensure ansible is installed
   apt: pkg=ansible state=installed
-
-- name: ensure bash is added in .bashrc
-  lineinfile: dest=/home/go/.bashrc line="bash"
 
 - name: ensure NODE_ENV is set in .bashrc
   lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"
 
 - name: copy the os limits
-  copy: src=limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
+  copy: src=./files/limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
+
+- name: clear all old iptables
+  command: iptables -F
+
+- name: Accept internal packets
+  iptables: chain=INPUT protocol=tcp in_interface=lo destination_port=5000 jump=ACCEPT
+
+- name: drop external packets
+  iptables: chain=INPUT protocol=tcp  destination_port=5000 jump=DROP
+
+- name: save iptables
+  shell: iptables-save > /etc/firewall.conf
+
+- name: add bootup script
+  shell: echo  '#!/bin/sh\niptables-restore < /etc/firewall.conf' > /etc/network/if-up.d/iptables
+
+- name: add executable permissions
+  file: path=/etc/network/if-up.d/iptables state=file mode=0755

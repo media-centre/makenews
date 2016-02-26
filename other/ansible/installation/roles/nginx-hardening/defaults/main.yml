@@ -11,4 +11,4 @@ client_header_timeout: 10
 send_timeout: 10
 
 limit_conn_zone: $binary_remote_addr zone=default:10m
-limit_conn: default 5
+limit_conn: default 50

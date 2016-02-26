@@ -1,0 +1,4 @@
+---
+# defaults file for oneTimePreInstaller
+sudo_username: dummyuser
+sudo_user_password: oXRJcFHTGMZ9A
