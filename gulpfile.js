@@ -82,7 +82,9 @@ gulp.task("mobile:emulate", function(cb) {
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
-          .pipe(sass())
+          .pipe(sass({
+              sourceComments: true
+          }))
           .pipe(production(cssnano()))
           .pipe(gulp.dest(parameters.client.distFolder));
 });

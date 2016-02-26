@@ -1,7 +1,9 @@
 @import "../utils/_variable";
 
 .login-bg {
-  background: url("images/newspaper.jpg");
+  background: url("images/news-bg.jpg") fixed;
+  background-size: cover;
+  background-position-y: 100px;
 }
 
 .login.app-header {

@@ -1,6 +1,11 @@
 @import "../../utils/variable";
 
 @media (max-width: 700px) {
+  .login-bg {
+    background: url("images/news-bg-tablet.jpg") fixed;
+    background-size: cover;
+  }
+
   .main-page {
     header {
       .fixed-header {
@@ -78,15 +83,23 @@
     height: 53px;
 
     .fixed-header {
-      padding: 3px 2px 2px 2px;
+      padding: 3px 2px 0 2px;
 
       .user-info {
         position: absolute;
         right: 15px;
 
+        .user-settings .user-info-label {
+          &:before {
+            border-width: 5px;
+            top: 10px;
+            right: 6px;
+          }
+        }
+
         a.link {
           width: auto;
-          margin: 11px 0px 0px 0px;
+          margin: 11px 0 0 0;
           span {
             font-size: $extra-small-font-size;
           }
@@ -105,7 +118,7 @@
           a {
             font-size: $extra-small-font-size;
 
-            div.header-link-image {
+            .header-link-image {
               width: 30px;
               height: 30px;
               background-size: 30px !important;
@@ -136,7 +149,7 @@
     .surf-page-container, .park-page {
 
       .surf-filter {
-        top: 55px;
+        top: 53px;
         width: 270px;
         left: -270px;
 
@@ -185,7 +198,6 @@
 
       .all-feeds {
         .feed-header {
-
           .header-item, ul li {
             margin-right: 10px;
 
@@ -225,6 +237,17 @@
           background-image: url(images/main/park-blue.png);
         }
       }
+    }
+  }
+
+  .user-settings {
+    .user-info-label {
+      padding-right: 20px;
+    }
+    
+    .drop-down-wrapper {
+      top: 33px;
+      right: -15px;
     }
   }
 
@@ -269,13 +292,22 @@
     display: none !important;
   }
 
+  .login-bg {
+    background: url("images/news-bg-mobile.jpg") fixed;
+    background-size: cover;
+  }
+
   .surf-page-container {
     .surf-filter {
-      top: 42px !important;
+      top: 45px !important;
       #filterToggle {
         top: 200px;
       }
     }
+  }
+
+  .user-settings .drop-down-wrapper {
+    right: -4px;
   }
 
   .main-page section .surf-page-container .surf-refresh-button {
@@ -290,15 +322,25 @@
     .fixed-header {
       ul.menu-list li {
         width: 55px;
+
+        a .header-link-image {
+          $image-size: 35px;
+          width: $image-size;
+          height: $image-size;
+          background-size: $image-size !important;
+        }
       }
+
       .user-info {
         right: 4px;
         .user-settings {
-          margin-top: 4px;
+          margin-top: 9px;
           .user-info-label {
             padding-right: 6px;
             &:before {
               border-width: 5px;
+              top: 12px;
+              right: 0;
             }
           }
         }

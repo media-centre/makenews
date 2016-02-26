@@ -5,137 +5,136 @@
   height: 60px;
   position: relative;
 
-    .fixed-header {
-      @extend .bottom-box-shadow;
-      background: $app-header-bg-color;
-      padding: 6px 7.5%;
-      z-index: $medium-index;
+  .fixed-header {
+    @extend .bottom-box-shadow;
+    background: $app-header-bg-color;
+    padding: 6px 7.5%;
+    z-index: $medium-index;
 
-      .app-logo {
-        margin-top: 8px;
-      }
+    .app-logo {
+      margin-top: 8px;
+    }
 
-      .flexible {
-        overflow: hidden;
-      }
+    .flexible {
+      overflow: hidden;
+    }
 
-      .menu-list li {
-        position: relative;
-        display: inline-block;
-        padding: 0 10px;
-        width: 70px;
-        a {
-          i {
-            position: absolute;
-            right: 10px;
-            top: 0;
-            background: $counter-bg-color;
-            line-height: 25px;
-            width: 25px;
-            height: 25px;
-            font-size: $extra-small-font-size;
-            font-style: normal;
+    .menu-list li {
+      position: relative;
+      display: inline-block;
+      padding: 0 10px;
+      width: 70px;
+      a {
+        i {
+          position: absolute;
+          right: 10px;
+          top: 0;
+          background: $counter-bg-color;
+          line-height: 25px;
+          width: 25px;
+          height: 25px;
+          font-size: $extra-small-font-size;
+          font-style: normal;
+          color: $secondary-font-color;
+        }
+        .header-link-image {
+          width: 25px;
+          height: 25px;
+          margin: auto auto 2px;
+          background-size: 25px !important;
+        }
+        .header-link-image.configure {
+          background: url('images/main/configure-white.png') no-repeat center;
+        }
+        .header-link-image.surf {
+          background: url('images/main/surf-white.png') no-repeat center;
+        }
+        .header-link-image.park {
+          background: url('images/main/park-white.png') no-repeat center;
+        }
 
-          }
-          .header-link-image {
-            width: 25px;
-            height: 25px;
-            margin: auto auto 2px;
-            background-size: 25px !important;
-          }
+        &.selected {
           .header-link-image.configure {
-            background: url('images/main/configure-white.png') no-repeat center;
+            background: url('images/main/configure.png') no-repeat center;
           }
           .header-link-image.surf {
-            background: url('images/main/surf-white.png') no-repeat center;
+            background: url('images/main/surf.png') no-repeat center;
           }
           .header-link-image.park {
-            background: url('images/main/park-white.png') no-repeat center;
-          }
-
-          &.selected {
-            .header-link-image.configure {
-              background: url('images/main/configure.png') no-repeat center;
-            }
-            .header-link-image.surf {
-              background: url('images/main/surf.png') no-repeat center;
-            }
-            .header-link-image.park {
-              background: url('images/main/park.png') no-repeat center;
-            }
-          }
-        }
-
-        * {
-          display: block;
-        }
-      }
-    }
-
-  .user-settings {
-    .user-icon {
-      text-transform: uppercase;
-      border: 2px solid $secondary-font-color;
-      height: 20px;
-      width: 20px;
-      text-align: center;
-      display: inline-block;
-      border-radius: 100%;
-      font-weight: bolder;
-      color: $secondary-font-color;
-      margin-right: 6px;
-      font-size: $small-font-size;
-    }
-    &.drop-down {
-      position: relative;
-      margin-top: 17px;
-
-      .user-info-label {
-        margin: 0;
-        padding-right: 20px;
-        cursor: pointer;
-
-        &:before {
-          content: " ";
-          display: block;
-          position: absolute;
-          right: 0;
-          top: 12px;
-          border: 7px solid transparent;
-          border-top-color: $primary-font-color;
-        }
-      }
-
-      .drop-down-wrapper {
-        position: absolute;
-        top: 30px;
-        right: 0;
-        width: 150px;
-        background: $app-header-bg-color;
-        text-align: center;
-
-        &.hide {
-          height: 0;
-          overflow: hidden;
-        }
-
-        ul li {
-          display: block;
-          padding: 3px;
-          margin: 0;
-          width: auto;
-          cursor: pointer;
-
-          a {
-            display: block;
-          }
-
-          .fa {
-            padding-right: 5px;
+            background: url('images/main/park.png') no-repeat center;
           }
         }
       }
+
+      * {
+        display: block;
+      }
     }
+  }
+}
+
+.user-settings {
+  position: relative;
+  margin-top: 17px;
+
+  .user-info-label {
+    margin: 0;
+    padding-right: 15px;
+    cursor: pointer;
+
+    &:before {
+      content: " ";
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 10px;
+      border: 6px solid transparent;
+      border-top-color: $primary-font-color;
+    }
+  }
+
+  .drop-down-wrapper {
+    position: absolute;
+    top: 38px;
+    right: -2px;
+    width: 150px;
+    background: $app-header-bg-color;
+    text-align: center;
+    max-height: 100px;
+    &.hide {
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    ul li {
+      display: block;
+      padding: 3px;
+      margin: 0;
+      width: auto;
+      cursor: pointer;
+
+      a {
+        display: block;
+      }
+
+      .fa {
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .user-icon {
+    text-transform: uppercase;
+    border: 2px solid $secondary-font-color;
+    height: 20px;
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 100%;
+    font-weight: bolder;
+    color: $secondary-font-color;
+    margin-right: 6px;
+    font-size: $small-font-size;
   }
 }
 

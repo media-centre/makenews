@@ -79,7 +79,7 @@ window.mediaCenter.appEn = {
                     "validatingUrl": "Validating the URL...",
                     "alreadyAdded": "URL is already added",
                     "noSuchUrl": "No such link found. Please add a valid URL",
-                    "invalidRssUrl": "Invalid URL. Please check the URL",
+                    "invalidRssUrl": "Invalid RSS URL. Please check the URL",
                     "invalidTwitterUrl": "Invalid twitter handler/hashtag",
                     "invalidFacebookUrl": "Invalid facebook URL. Please check the URL",
                     "noFbAccess": "No such link or no access to the profile",
@@ -108,9 +108,9 @@ window.mediaCenter.appEn = {
         },
         "userProfile": {
             "passwordMisMatch": "New Password and Confirm Password does not match",
-            "currentPassword": "current password",
-            "newPassword": "new password",
-            "confirmPassword": "confirm password",
+            "currentPassword": "Current password",
+            "newPassword": "New password",
+            "confirmPassword": "Confirm new password",
             "passwordUnchanged": "New Password cannot be same as the old one"
         },
         "userProfileSettings": {

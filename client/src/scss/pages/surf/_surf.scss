@@ -76,7 +76,7 @@
     .surf-filter-item {
       @extend .border-bottom;
       min-height: 76px;
-      border-bottom-color: #5F9EA0;
+      border-bottom-color: $darker-border-color;
       padding: 10px;
 
       h4 {
@@ -166,7 +166,7 @@
       }
 
       .category-name {
-        color: $app-header-bg-color;
+        color: $secondary-font-color;
         font-size: $extra-small-font-size;
         margin-top: 4px;
       }
@@ -294,8 +294,10 @@
     }
 
     /* ended */
+  }
 
-
+  .feeds-container .feed-header > * {
+    display: inline;
   }
 
   .pagination-spinner {
