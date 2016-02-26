@@ -52,6 +52,26 @@ describe("CouchClient", () => {
             });
         });
 
+        it("should save the document with the given id and extra headers", (done) => {
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            let headers = { "If-Match": "12345" };
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json", "If-Match": "12345" } })
+                .put("/" + dbName + "/schema_info", documentObj)
+                .reply(HttpResponseHandler.codes.OK, response);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.saveDocument(documentId, documentObj, headers).then((actualResponse) => {
+                assert.deepEqual(response, actualResponse);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
         it("should reject with error if there is any error", (done) => {
             let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
@@ -112,6 +132,27 @@ describe("CouchClient", () => {
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(dbName, accessToken);
             couchClientInstance.getDocument(docId).then((actualResponse) => {
+                assert.deepEqual(actualResponse, documentObj);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
+        it("should get the document with custom headers", (done) => {
+            let docId = "123456";
+            let documentObj = { "_id": docId, "test": "abcd" };
+            let headers = { "If-Match": "12345" };
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json", "If-Match": "12345" } })
+                .get("/" + dbName + "/" + docId)
+                .reply(HttpResponseHandler.codes.OK, documentObj);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.getDocument(docId, headers).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();
