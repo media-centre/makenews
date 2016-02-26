@@ -25,10 +25,12 @@ describe("AddURLComponent", () => {
 
     before("TabComponent", () => {
         AddURLComponentElement = TestUtils.renderIntoDocument(
-            <AddURLComponent exampleMessage="Example: thehindu.com/opinion/?service=rss" hintMessage = "Please enter RSS URL here"
+            <AddURLComponent exampleMessage="Example: thehindu.com/opinion/?service=rss"
+                hintMessage = "Please enter RSS URL here"
                 addUrlLinkLabel="Add Url" content={[{ "url": "http://www.test.com" }]} errorMessage=""
                 sourceDomainValidation={(url, callback) => callback({ "error": "Url is successfully added", "urlAdded": true })}
-                categoryDetailsPageStrings={categoryDetailsPageStrings} categoryId="testCategory"/> //eslint-disable-line react/jsx-closing-bracket-location
+                categoryDetailsPageStrings={categoryDetailsPageStrings} categoryId="testCategory"
+            />
         );
     });
 
@@ -140,7 +142,8 @@ describe("AddURLComponent", () => {
                     return new Promise((resolve, reject) => {
                         reject("error");
                     });
-                }}/>); //eslint-disable-line react/jsx-closing-bracket-location
+                }}
+            />);
         let addUrlDom = ReactDOM.findDOMNode(addURLComponentTest);
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
         setTimeout(() => {
@@ -157,7 +160,8 @@ describe("AddURLComponent", () => {
                     return new Promise((resolve) => {
                         resolve("success");
                     });
-                }}/>); //eslint-disable-line react/jsx-closing-bracket-location
+                }}
+            />);
         let addUrlDom = ReactDOM.findDOMNode(addURLComponentTest);
         TestUtils.Simulate.click(addUrlDom.querySelector("#addNewUrlButton"));
         setTimeout(() => {

@@ -22,25 +22,21 @@ export default class CouchClient {
         this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
     }
 
-    saveDocument(documentId, documentObj) {
+    saveDocument(documentId, documentObj, customHeaders = {}) {
         const path = "/" + this.dbName + "/" + documentId;
-        return this.put(path, documentObj);
+        return this.put(path, documentObj, customHeaders);
     }
 
-    getDocument(documentId) {
+    getDocument(documentId, customHeaders = {}) {
         const path = "/" + this.dbName + "/" + documentId;
-        return this.get(path);
+        return this.get(path, {}, customHeaders);
     }
 
-    put(path, body) {
+    put(path, body, customHeaders = {}) {
         return new Promise((resolve, reject) => {
             request.put({
                 "uri": this.dbUrl + path,
-                "headers": {
-                    "Cookie": "AuthSession=" + this.accessToken,
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
+                "headers": this._headers(customHeaders),
                 "body": body || {},
                 "json": true
             },
@@ -50,16 +46,12 @@ export default class CouchClient {
         });
     }
 
-    get(path, data) {
+    get(path, data = {}, customHeaders = {}) {
         return new Promise((resolve, reject) => {
             request.get({
                 "uri": this.dbUrl + path,
-                "headers": {
-                    "Cookie": "AuthSession=" + this.accessToken,
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                "data": data || {},
+                "headers": this._headers(customHeaders),
+                "data": data,
                 "json": true
             },
             (error, response) => {
@@ -108,5 +100,30 @@ export default class CouchClient {
                 }
             });
         });
+    }
+    _headers(customHeaders) {
+        let headers = {};
+        let defaultHeaders = this._defaultHeaders();
+        for(let key in defaultHeaders) {
+            if(defaultHeaders.hasOwnProperty(key)) {
+                headers[key] = defaultHeaders[key];
+            }
+        }
+        for(let key in customHeaders) {
+            if(customHeaders.hasOwnProperty(key)) {
+                headers[key] = customHeaders[key];
+            }
+        }
+        return headers;
+
+    }
+
+    _defaultHeaders() {
+        return {
+            "Cookie": "AuthSession=" + this.accessToken,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        };
+
     }
 }

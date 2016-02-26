@@ -65,18 +65,18 @@ export default class UserRequest {
         return authSessionCookie.split("=")[1].split(";")[0];
     }
 
-    updatePassword(oldPassword, newPassword, confirmPassword) { //eslint-disable-line no-unused-vars
+    updatePassword(newPassword) {
         return new Promise((resolve, reject) => {
-            CouchSession.login(this.userName, oldPassword).then((authSessionCookieHeader) => {
-                let token = this.extractToken(authSessionCookieHeader);
+            this.getToken().then((token) => {
                 CouchSession.updatePassword(this.userName, newPassword, token).then(response => {
                     resolve(response);
                 }).catch((error) => {
+                    UserRequest.logger().error("UserRequest:password updation error = %s", error);
                     reject(error);
                 });
             }).catch((error) => {
                 UserRequest.logger().error("UserRequest:getToken fatal error = %s", error);
-                reject("login failed");
+                reject(error);
             });
         });
     }

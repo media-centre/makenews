@@ -5,6 +5,7 @@ import NodeErrorHandler from "./NodeErrorHandler.js";
 import StringUtil from "../../common/src/util/StringUtil.js";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import Logger, { logCategories } from "./logging/Logger";
+import CouchClient from "./CouchClient.js";
 import request from "request";
 import querystring from "querystring";
 
@@ -60,43 +61,18 @@ export default class CouchSession {
         });
     }
 
-    static getUserDocument(username, token) {
-        let authSessionToken = "AuthSession=" + token;
-        return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
-            request.get({
-                "url": ApplicationConfig.instance().dbUrl() + "/_users/org.couchdb.user:" + username,
-                "headers": {
-                    "Cookie": authSessionToken
-                },
-                "json": true
-            }, (error, response) => {
-                resolve(response.body);
-            });
-        });
-    }
-
     static updatePassword(username, newPassword, token) {
         let authSessionToken = "AuthSession=" + token;
         return new Promise((resolve, reject) => {
-            CouchSession.getUserDocument(username, token).then((userDocument) => {
-                if(userDocument.error) {
-                    reject("Not able to change the password");
-                } else {
-                    request.put({
-                        "url": ApplicationConfig.instance().dbUrl() + "/_users/org.couchdb.user:" + username,
-                        "headers": {
-                            "Cookie": authSessionToken,
-                            "Content-Type": "application/json",
-                            "Accept": "application/json",
-                            "If-Match": userDocument._rev
-                        },
-                        "body": { "name": username, "roles": [], "type": "user", "password": newPassword },
-                        "json": true
-                    },
-                        (error, response) => {
-                            resolve(response);
-                        });
-                }
+            let couchClient = CouchClient.instance("_users", authSessionToken);
+            let documentId = "org.couchdb.user:" + username;
+            let documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
+            couchClient.getDocument(documentId).then((userDocument) => {
+                couchClient.saveDocument(documentId, documentBody, { "If-Match": userDocument._rev }).then(response =>{
+                    resolve(response);
+                }).catch(error =>{
+                    reject(error);
+                });
             }).catch(error => {
                 reject(error);
             });

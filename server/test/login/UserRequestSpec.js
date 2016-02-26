@@ -106,53 +106,52 @@ describe("UserRequest", () => {
     });
 
     describe("updatePassword", () => {
-        let sandbox = null, couchSessionUpdatePasswordStub = null, sessionCookie = null;
+        let sandbox = null, couchSessionUpdatePasswordStub = null, sessionCookie = null, username = null, oldPassword = null, newPassword = null;
         beforeEach("updatePassword", () => {
             sessionCookie = "AuthSession=test_token; Version=1; Path=/; HttpOnly";
             sandbox = sinon.sandbox.create();
+            username = "test";
+            oldPassword = "old_password";
+            newPassword = "new_password";
         });
         afterEach("updatePassword", () => {
             sandbox.restore();
         });
         it("should update the password if old passwords is correct", (done) => {
-            let username = "test";
-            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
 
             couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.resolve(sessionCookie));
             couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
-
-            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).then((response) => {
+            let userRequest = new UserRequest(username, oldPassword);
+            let getTokenMock = sandbox.mock(userRequest).expects("getToken").returns(Promise.resolve("test_token"));
+            userRequest.updatePassword(newPassword).then((response) => {
                 assert.deepEqual(response.body.ok, true);
+                getTokenMock.verify();
                 done();
             });
         });
 
         it("should not update the password if old password is incorrect", (done) => {
-            let username = "test";
-            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
-
             couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.reject("Login failed"));
-
-            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).catch(error =>{
-                assert.strictEqual("login failed", error);
-                done();
-        });
-    });
-        it("should not update the password when couchdb password updation fails", (done) => {
-            let username = "test";
-            let oldPassword = "old_password", newPassword = "new_password", cofirmPassword = "new_password";
-
-            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            sandbox.stub(CouchSession, "login").withArgs(username, oldPassword).returns(Promise.resolve(sessionCookie));
-            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.reject("Updation failed"));
-
-            new UserRequest(username, password).updatePassword(oldPassword, newPassword, cofirmPassword).catch(error =>{
-                assert.strictEqual("Updation failed", error);
+            let userRequest = new UserRequest(username, oldPassword);
+            let getTokenMock = sandbox.mock(userRequest).expects("getToken").returns(Promise.reject("error"));
+            userRequest.updatePassword(newPassword).catch(error =>{
+                assert.strictEqual("error", error);
+                getTokenMock.verify();
                 done();
             });
         });
-});
+
+        it("should not update the password when couchdb password updation fails", (done) => {
+            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
+            let userRequest = new UserRequest(username, oldPassword);
+            let getTokenMock = sandbox.mock(userRequest).expects("getToken").returns(Promise.resolve("test_token"));
+            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.reject("Updation failed"));
+            userRequest.updatePassword(newPassword).catch(error =>{
+                assert.strictEqual("Updation failed", error);
+                getTokenMock.verify();
+                done();
+            });
+        });
+    });
 });
 
