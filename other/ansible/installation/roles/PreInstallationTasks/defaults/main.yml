@@ -4,6 +4,5 @@ hosts: web
 sudo: yes
 deploy_username: go
 deploy_groupname: go
-deploy_user_password: oXRJcFHTGMZ9A
 go_server_ip: 46.101.148.22
 

@@ -1,8 +1,14 @@
 - hosts: web
   become: True
   become_method: sudo
+  vars_prompt:
+    - name: "go_password_hash"
+      prompt: "Enter hash for go user"
+      private: yes
+      confirm: yes
   vars:
     - go_server_ip: 46.101.245.151
+    - letsEncrypt: True
   roles:
     - PreInstallationTasks
     - Ansibles.build-essential

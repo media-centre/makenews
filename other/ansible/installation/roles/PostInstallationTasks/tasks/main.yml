@@ -8,12 +8,6 @@
 - name: restart couchdb
   service: name=couchdb state=restarted
 
-- name: Creates ContentDiscovery directory in etc
-  file: path=/etc/ContentDiscovery state=directory
-
-- name: copy couchdb_tasks.sh script to the server
-  template: src=couchdb_tasks.sh dest=/etc/ContentDiscovery/couchdb_tasks.sh mode=0755
-
 - name: perform the couchdb admin related tasks
   shell: /etc/ContentDiscovery/couchdb_tasks.sh
 

@@ -9,7 +9,7 @@
   group: name={{deploy_groupname}} state=present
 
 - name: create deployment user
-  user: name={{deploy_username}} comment="media center user"  shell=/bin/bash  password={{deploy_user_password}}
+  user: name={{deploy_username}} comment="media center user"  shell=/bin/bash  password={{go_password_hash}}
 
 - name: Placing key
   authorized_key: user={{deploy_username}} key="{{ lookup('file', './files/authorized_keys.mediacenter.pub') }}"
@@ -18,7 +18,7 @@
   apt: pkg=ansible state=installed
 
 - name: ensure NODE_ENV is set in .bashrc
-  lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{environment}}"
+  lineinfile: dest=/home/go/.bashrc line="export NODE_ENV={{project_environment}}"
 
 - name: copy the os limits
   copy: src=./files/limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644

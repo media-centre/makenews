@@ -20,8 +20,8 @@
   when: nginx_status.stat.exists
   shell: /etc/init.d/nginx start
 
-- name: copy shell script
-  template: src=letsEncrypt_renewal.sh dest=/opt/letsEncrypt_renewal.sh mode=0644
-
-- name: add a cron job
-  cron: name="update cert" minute="0" hour="2" job="sh /opt/letsEncrypt_renewal.sh"
+#- name: copy shell script
+#  template: src=letsEncrypt_renewal.sh dest=/opt/letsEncrypt_renewal.sh mode=0644
+#
+#- name: add a cron job
+#  cron: name="update cert" minute="0" hour="2" job="sh /opt/letsEncrypt_renewal.sh"

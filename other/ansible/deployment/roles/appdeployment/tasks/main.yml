@@ -28,6 +28,9 @@
 - name: copy the client config file
   shell: cp "{{ConfigFilesPath}}/client_config.js" "{{project_directory}}/dist/client/config/config.js"
 
+- name: add read,write and execute permissions to project folder
+  shell: chmod -R u+rwx {{project_directory}}
+
 - name: migrate all the dbs
   shell: NODE_ENV="{{project_environment}}" node {{project_directory}}/dist/server/src/migration.js
 

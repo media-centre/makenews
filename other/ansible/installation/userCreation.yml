@@ -1,6 +1,12 @@
 - hosts: web
   become: True
   become_method: sudo
+  vars_prompt:
+    - name: "sudo_password_hash"
+      prompt: "Enter hash for sudo user"
+      private: yes
+      confirm: yes
+
   roles:
     - oneTimePreInstaller
 
