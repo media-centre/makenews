@@ -1,0 +1,27 @@
+---
+- name: install git for lets encrypt
+  apt: name=git update_cache=yes
+
+- name: clone lets encrypt repo
+  git: repo=https://github.com/letsencrypt/letsencrypt dest=/opt/letsencrypt
+
+- name: Check if nginx Exists
+  stat: path=/etc/init.d/nginx
+  register: nginx_status
+
+- name: Stop nginx Service
+  when: nginx_status.stat.exists
+  shell: /etc/init.d/nginx stop
+
+- name: get lets encrypt certificate
+  shell: /opt/letsencrypt/letsencrypt-auto certonly --keep-until-expiring --standalone --agree-tos --email {{lets_encrypt_email}} -d {{nginx_domain}} -d www.{{nginx_domain}}
+
+- name: Start nginx  Service
+  when: nginx_status.stat.exists
+  shell: /etc/init.d/nginx start
+
+- name: copy shell script
+  template: src=letsEncrypt_renewal.sh dest=/opt/letsEncrypt_renewal.sh mode=0644
+
+- name: add a cron job
+  cron: name="update cert" minute="0" hour="2" job="sh /opt/letsEncrypt_renewal.sh"

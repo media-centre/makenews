@@ -2,14 +2,35 @@ server {
     listen 80 default_server;
     return 301 https://$host$request_uri;
 }
+{% if  letsEncrypt %}
+server {
+    listen 80;
+    server_name www.{{nginx_domain}};
+    return 301 https://{{nginx_domain}}$request_uri;
+}
+
+server {
+
+    listen 443;
+    server_name www.{{nginx_domain}};
+    return 301 https://{{nginx_domain}}$request_uri;
+}
+
+{% endif %}
 
 server {
 
     listen 443 default_server;
     server_name {{nginx_domain}};
-
+    {% if not letsEncrypt %}
     ssl_certificate           /etc/nginx/ssl/mediacenter.crt;
     ssl_certificate_key       /etc/nginx/ssl/mediacenter.key;
+    {% endif %}
+
+    {% if  letsEncrypt %}
+    ssl_certificate_key /etc/letsencrypt/live/{{nginx_domain}}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{nginx_domain}}/fullchain.pem;
+    {% endif %}
 
     ssl on;
     ssl_session_cache  builtin:1000  shared:SSL:10m;

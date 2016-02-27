@@ -1,0 +1,8 @@
+---
+# tasks file for ssl
+- include: tasks/openssl.yml
+  when: not letsEncrypt
+
+- include: tasks/letsEncrypt.yml
+  when: letsEncrypt
+

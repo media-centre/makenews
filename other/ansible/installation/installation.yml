@@ -13,6 +13,7 @@
     - PostInstallationTasks
     - goagent
     - nginx
+    - ssl
     - nginx-hardening
     - ansible-os-hardening
     - ansible-ssh-hardening

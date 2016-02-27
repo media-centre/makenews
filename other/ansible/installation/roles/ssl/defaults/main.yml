@@ -1,0 +1,7 @@
+---
+# defaults file for ssl
+ssl_country: IN
+ssl_state: DL
+ssl_locality: DL
+ssl_organization: mediacenter
+lets_encrypt_email: animeshc@thoughtworks.com
