@@ -107,11 +107,15 @@ window.mediaCenter.appEn = {
             }
         },
         "userProfile": {
-            "passwordMisMatch": "New Password and Confirm Password does not match",
-            "currentPassword": "Current password",
-            "newPassword": "New password",
-            "confirmPassword": "Confirm new password",
-            "passwordUnchanged": "New Password cannot be same as the old one"
+            "passwordUpdateFailure": "Could not update the password",
+            "invalidCredentials": "Invalid credentials",
+            "newPwdConfirmPwdMismatch": "New password and confirm Password does not match",
+            "currentPassword": "current password",
+            "newPassword": "new password",
+            "confirmPassword": "confirm password",
+            "newPwdShouldNotMatchCurrentPwd": "New password should not be same as the current password",
+            "pwdChangeSuccessful": "Password successfully changed",
+            "pwdShouldNotBeEmpty": "Passwords should not be left blank"
         },
         "userProfileSettings": {
             "settings": "Settings",

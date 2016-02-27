@@ -62,9 +62,8 @@ export default class CouchSession {
     }
 
     static updatePassword(username, newPassword, token) {
-        let authSessionToken = "AuthSession=" + token;
         return new Promise((resolve, reject) => {
-            let couchClient = CouchClient.instance("_users", authSessionToken);
+            let couchClient = CouchClient.instance("_users", token);
             let documentId = "org.couchdb.user:" + username;
             let documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
             couchClient.getDocument(documentId).then((userDocument) => {

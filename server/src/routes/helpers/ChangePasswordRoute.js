@@ -29,7 +29,6 @@ export default class ChangePasswordRoute extends Route {
         UserRequest.instance(this.userName, this.currentPassword).updatePassword(this.newPassword).then(response => { //eslint-disable-line
             RouteLogger.instance().debug("ChangePasswordRoute:: password updated succesfully for user %s.", this.userName);
             this._handleSuccess({ "message": "Password updation successful" });
-
         }).catch(error => {
             RouteLogger.instance().debug("ChangePasswordRoute:: password updation failed for user %s with error %s", this.userName, error);
             if(error === "login failed") {

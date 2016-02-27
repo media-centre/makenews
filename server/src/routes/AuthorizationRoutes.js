@@ -43,7 +43,7 @@ export default (app) => {
         }
     });
 
-    app.get("/change_password", (request, response, next) => {
+    app.post("/change_password", (request, response, next) => {
         RouteLogger.instance().info("AuthorizationRoutes:: /change_password request received. url = %s", request.url);
         try {
             new ChangePasswordRoute(request, response, next).handle();
