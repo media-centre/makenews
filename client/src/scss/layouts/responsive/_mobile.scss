@@ -119,9 +119,10 @@
             font-size: $extra-small-font-size;
 
             .header-link-image {
-              width: 30px;
-              height: 30px;
-              background-size: 30px !important;
+              $image-size: 30px;
+              width: $image-size;
+              height: $image-size;
+              background-size: ($image-size - 1px) !important;
             }
 
             .counter {
@@ -135,10 +136,6 @@
 
   .navigation-header .navigation-title {
     margin: auto;
-  }
-
-  .main-page section > div {
-    padding: 15px;
   }
 
   .main-page section {
@@ -327,7 +324,7 @@
           $image-size: 35px;
           width: $image-size;
           height: $image-size;
-          background-size: $image-size !important;
+          background-size: ($image-size - 1px) !important;
         }
       }
 

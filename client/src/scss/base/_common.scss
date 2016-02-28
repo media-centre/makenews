@@ -89,14 +89,31 @@ input[type='text'], input[type='password'], button {
 }
 
 button {
-  background: none;
-  color: $primary-font-color;
   padding: 6px 16px;
   cursor: pointer;
-
+  border: 1px solid transparent;
+  background: none;
   &:hover {
-    @extend .border-highlight;
     color: $secondary-font-color;
+  }
+  
+  &.btn-primary {
+    color: $app-header-bg-color;
+    background: $primary-font-color;
+    border-color: $app-header-bg-color;
+  }
+
+  &.btn-secondary {
+    color: $primary-font-color;
+    background: $app-header-bg-color;
+  }
+
+  &.btn-primary, &.btn-secondary {
+    &:hover {
+      @extend .border-highlight;
+      color: $secondary-font-color;
+      background: $app-header-bg-color;
+    }
   }
 }
 
@@ -135,8 +152,6 @@ button {
 .max-text {
   font-size: $max-font-size;
 }
-
-
 
 .error {
   color: $secondary-font-color;

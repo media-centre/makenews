@@ -47,7 +47,7 @@ export class UserProfile extends Component {
                         <input type="password" name="confirmPassword" placeholder={this.props.userProfileStrings.confirmPassword} className="box" required ref="confirmPassword"/>
                     </div>
                     <div className="row">
-                        <button>{"Submit"}</button>
+                        <button className="btn-secondary">{"Submit"}</button>
                     </div>
                 </form>
             </div>

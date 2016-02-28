@@ -92,6 +92,10 @@
 
   button {
     display: block;
+    color: $primary-font-color;
+    &:hover {
+      color: $secondary-font-color;
+    }
   }
 }
 

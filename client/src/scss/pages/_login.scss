@@ -36,6 +36,14 @@
       min-height: 17px;
     }
   }
+
+  .login-button {
+    background: transparent;
+    color: $primary-font-color;
+    &:hover {
+      color: $secondary-font-color;
+    }
+  }
 }
 
 .login.app-section {

@@ -10,7 +10,7 @@ export default class Toast {
             toastDOM = document.createElement("div");
             toastDOM.className = "custom-toast anim bottom-box-shadow hide clear-fix";
             toastDOM.id = "custom-toast";
-            toastDOM.innerHTML = "<span class='message'></span><button class='border right'>Got it</button>";
+            toastDOM.innerHTML = "<span class='message'></span><button class='btn-secondary border right'>Got it</button>";
             document.body.appendChild(toastDOM);
 
             toastDOM.getElementsByTagName("button")[0].addEventListener("click", ()=> {

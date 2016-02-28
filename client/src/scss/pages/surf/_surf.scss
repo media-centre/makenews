@@ -26,7 +26,7 @@
     position: fixed;
     left: -300px;
     bottom: 0;
-    top: 61px;
+    top: 62px;
     width: 300px;
     z-index: $mask-layer-index;
 
@@ -58,10 +58,15 @@
       font-size: $large-font-size;
       background: $app-header-bg-color;
       border: none;
+      color: $primary-font-color;
       -webkit-box-shadow: 1px -2px 5px $transparent-gray;
       -moz-box-shadow: 1px -2px 5px $transparent-gray;
       -ms-box-shadow: 1px -2px 5px $transparent-gray;
       box-shadow: 1px -2px 5px $transparent-gray;
+
+      &:hover {
+        color: $secondary-font-color;
+      }
     }
 
     .surf-filter-item:last-child {
@@ -147,6 +152,7 @@
       font-size: $small-font-size;
       background-color: $app-header-bg-color;
       border-radius: 2px;
+      z-index: $medium-index;
 
       span {
         $large-font-size: 20px;

@@ -38,10 +38,11 @@
           color: $secondary-font-color;
         }
         .header-link-image {
-          width: 25px;
-          height: 25px;
+          $image-size: 26px;
+          width: $image-size;
+          height: $image-size;
           margin: auto auto 2px;
-          background-size: 25px !important;
+          background-size: ($image-size - 1px) !important;
         }
         .header-link-image.configure {
           background: url('images/main/configure-white.png') no-repeat center;
@@ -95,7 +96,7 @@
 
   .drop-down-wrapper {
     position: absolute;
-    top: 38px;
+    top: 39px;
     right: -2px;
     width: 150px;
     background: $app-header-bg-color;
@@ -140,6 +141,10 @@
 
 .main-page section {
   background: $primary-font-color;
+}
+
+.main-page section > div {
+  padding: 15px;
 }
 
 .category-page, .configure-page {
