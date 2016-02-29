@@ -53,7 +53,9 @@ window.mediaCenter.appEn = {
             "categoryDetailsPage": {
                 "allCategoriesLinkLabel": "All Categories",
                 "deleteCategoryLinkLabel": "Delete Category",
-                "addUrlLinkLabel": "Add URL",
+                "addRSSUrlLinkLabel": "Add RSS feed URL",
+                "addFacebookUrlLinkLabel": "Add Facebook public page URL",
+                "addTwitterUrlLinkLabel": "Add Twitter Handle / Hash tag",
                 "categoryDeletionConfirm": "will be deleted and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
                 "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
                 "hintMessages": {

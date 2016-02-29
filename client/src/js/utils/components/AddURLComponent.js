@@ -73,7 +73,7 @@ export default class AddURLComponent extends Component {
 
     _isValidUrl(url) {
         if(!this.props.noValidation && !url.match(urlRegex)) {
-            return url ? this.props.categoryDetailsPageStrings.errorMessages.invalidUrlFormat : this.props.categoryDetailsPageStrings.errorMessages.emptyUrl;
+            return url ? this.props.categoryDetailsPageStrings.errorMessages.invalidRssUrl : this.props.categoryDetailsPageStrings.errorMessages.emptyUrl;
         }
 
         let result = "";
@@ -121,7 +121,8 @@ export default class AddURLComponent extends Component {
             <div>
 
                 <div className="nav-control h-center" id="addNewUrlButton" onClick={() => this._showAddUrlTextBox()}>
-                    <i className="fa fa-plus"></i><span ref="addUrlLinkText">{this.props.addUrlLinkLabel}</span>
+                    <i className="fa fa-plus"></i>
+                    <span ref="addUrlLinkText">{this.props.addUrlLinkLabel}</span>
                 </div>
 
                 <div className="url-panel">

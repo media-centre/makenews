@@ -37,7 +37,11 @@
 
   button {
     padding: 8px 16px;
-    &:hover {
+    &.btn-primary:hover {
+      color: $app-header-bg-color;
+      background: $primary-font-color;
+    }
+    &.btn-secondary:hover {
       color: $primary-font-color;
     }
   }
@@ -80,7 +84,7 @@
 
 
   .main-page header {
-    height: 53px;
+    height: 45px;
 
     .fixed-header {
       padding: 3px 2px 0 2px;
@@ -143,12 +147,20 @@
       top: 55px;
     }
 
+    .surf-page-container {
+      margin-top: 10px;
+    }
+
     .surf-page-container, .park-page {
 
       .surf-filter {
         top: 53px;
         width: 270px;
         left: -270px;
+
+        #filterToggle:hover {
+          color: $primary-font-color;
+        }
 
         &.show {
           left: 0;

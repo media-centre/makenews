@@ -31,8 +31,8 @@ export default class Login extends React.Component {
                     </div>
 
                     <div className="left m-block m-t-center">
-                        <button id="submit" className="login-button border" ref="submit">
-                    {this.props.loginStrings.loginButton}
+                        <button id="submit" className="btn-secondary border" ref="submit">
+                            {this.props.loginStrings.loginButton}
                         </button>
                     </div>
                 </div>

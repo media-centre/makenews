@@ -118,6 +118,10 @@
         display: block;
       }
 
+      &:hover, a:hover {
+        color: $secondary-font-color;
+      }
+
       .fa {
         padding-right: 5px;
       }

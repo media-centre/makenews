@@ -18,7 +18,7 @@ describe("AddURLComponent", () => {
             "deleteCategoryLinkLabel": "Delete Category",
             "addUrlLinkLabel": "Add Url",
             "successMessages": { "urlSuccess": "Url is successfully added" },
-            "errorMessages": { "invalidUrlFormat": "Invalid URL format",
+            "errorMessages": { "invalidRssUrl": "Invalid URL format",
                 "emptyUrl": "URL should not be empty",
                 "alreadyAdded": "URL is already added" }
     };
