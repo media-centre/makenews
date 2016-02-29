@@ -118,23 +118,30 @@
     padding: 10px;
     color: $primary-font-color;
     width: 300px;
+    right: 10px;
+    top: 71px;
 
     button:first-child {
       margin-right: 10px;
     }
-  }
-  .tour-top-arrow {
-    content: " ";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -21px;
-    margin: auto;
-    width: 1px;
-    height: 1px;
-    border: 10px solid transparent;
-    border-bottom-color: $app-header-bg-color;
+
+    .fa {
+      font-size: $large-font-size;
+    }
+
+    &:before {
+      content: " ";
+      display: block;
+      position: absolute;
+      left: 36%;
+      right: 0;
+      top: -21px;
+      margin: auto;
+      width: 1px;
+      height: 1px;
+      border: 10px solid transparent;
+      border-bottom-color: $app-header-bg-color;
+    }
   }
 }
 

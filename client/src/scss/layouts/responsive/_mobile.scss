@@ -289,6 +289,10 @@
       width: 80%;
       right: 0;
       margin: auto;
+      &:before {
+        left: auto;
+        right: 10px;
+      }
     }
     .tour-top-arrow {
       right: auto;
@@ -304,6 +308,10 @@
   .login-bg {
     background: url("images/news-bg-mobile.jpg") fixed;
     background-size: cover;
+  }
+  .take-tour-mask .take-tour {
+    top: 53px;
+    width: 90%;
   }
 
   .surf-page-container {

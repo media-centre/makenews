@@ -124,6 +124,10 @@ window.mediaCenter.appEn = {
             "profile": "Profile",
             "logout": "Logout"
         },
+        "applicationTour": {
+            "description": "Find the \"HELP\" in the above options",
+            "gotItText": "Got It"
+        },
         "headerStrings": {
             "surfTab": {
                 "Name": "Surf"
