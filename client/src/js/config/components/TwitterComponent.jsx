@@ -21,7 +21,7 @@ export default class TwitterComponent extends Component {
         }
         if(url.match(twRegexHandler) || url.match(twRegexHashtag)) {
             props.dispatch(addTwitterUrlAsync(props.categoryId, url, (response)=> {
-                let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
+                let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchTag : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
                 if(response !== "invalid") {
                     Toast.show(`Twitter ${urlStatus}`);
                 }

@@ -13,7 +13,7 @@ export default class RSSComponent extends Component {
 
     _validateUrl(url, callback, props) {
         props.dispatch(addRssUrlAsync(props.categoryId, url, (response)=> {
-            let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.noSuchUrl : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
+            let urlStatus = response === "invalid" ? this.props.categoryDetailsPageStrings.errorMessages.invalidRssUrl : this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
             if(response !== "invalid") {
                 Toast.show(`RSS ${urlStatus}`);
             }

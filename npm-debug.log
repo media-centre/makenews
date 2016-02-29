@@ -1,0 +1,2206 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@2.14.7
+3 info using node@v4.2.2
+4 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/package.json
+5 verbose install where, deps [ '/Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery',
+5 verbose install   [ 'body-parser',
+5 verbose install     'cookie-parser',
+5 verbose install     'express',
+5 verbose install     'feedparser',
+5 verbose install     'forever',
+5 verbose install     'fs',
+5 verbose install     'helmet',
+5 verbose install     'helmet-csp',
+5 verbose install     'history',
+5 verbose install     'immutable',
+5 verbose install     'mkdirp',
+5 verbose install     'moment',
+5 verbose install     'oauth',
+5 verbose install     'pouchdb',
+5 verbose install     'react',
+5 verbose install     'react-redux',
+5 verbose install     'react-router',
+5 verbose install     'redux',
+5 verbose install     'redux-thunk',
+5 verbose install     'request',
+5 verbose install     'winston',
+5 verbose install     'yargs',
+5 verbose install     'babel',
+5 verbose install     'babel-eslint',
+5 verbose install     'babel-plugin-espower',
+5 verbose install     'babelify',
+5 verbose install     'browserify',
+5 verbose install     'chai',
+5 verbose install     'cordova-lib',
+5 verbose install     'del',
+5 verbose install     'eslint',
+5 verbose install     'eslint-plugin-react',
+5 verbose install     'gulp',
+5 verbose install     'gulp-babel',
+5 verbose install     'gulp-browserify',
+5 verbose install     'gulp-cssnano',
+5 verbose install     'gulp-environments',
+5 verbose install     'gulp-eslint',
+5 verbose install     'gulp-exec',
+5 verbose install     'gulp-minify',
+5 verbose install     'gulp-mocha',
+5 verbose install     'gulp-rename',
+5 verbose install     'gulp-sass',
+5 verbose install     'isparta',
+5 verbose install     'istanbul',
+5 verbose install     'jsdom',
+5 verbose install     'memdown',
+5 verbose install     'mocha',
+5 verbose install     'nock',
+5 verbose install     'react-addons-test-utils',
+5 verbose install     'react-dom',
+5 verbose install     'run-sequence',
+5 verbose install     'sinon',
+5 verbose install     'supertest' ] ]
+6 verbose install where, peers [ '/Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery',
+6 verbose install   [] ]
+7 verbose installManyTop reading for lifecycle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/package.json
+8 info preinstall content_discovery@0.0.0
+9 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel/package.json
+10 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel-eslint/package.json
+11 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel-plugin-espower/package.json
+12 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babelify/package.json
+13 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/body-parser/package.json
+14 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browser-sync/package.json
+15 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browserify/package.json
+16 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/chai/package.json
+17 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/cookie-parser/package.json
+18 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/cordova-lib/package.json
+19 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/del/package.json
+20 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/eslint/package.json
+21 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/eslint-plugin-react/package.json
+22 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/express/package.json
+23 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/feedparser/package.json
+24 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/forever/package.json
+25 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/fs/package.json
+26 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp/package.json
+27 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-babel/package.json
+28 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-browserify/package.json
+29 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-clean/package.json
+30 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-concat/package.json
+31 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-cssnano/package.json
+32 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-environments/package.json
+33 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-eslint/package.json
+34 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-exec/package.json
+35 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-minify/package.json
+36 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-mocha/package.json
+37 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-rename/package.json
+38 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-replace/package.json
+39 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-sass/package.json
+40 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/helmet/package.json
+41 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/helmet-csp/package.json
+42 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/package.json
+43 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/hsts/package.json
+44 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/immutable/package.json
+45 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/isparta/package.json
+46 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/istanbul/package.json
+47 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/jsdom/package.json
+48 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/lodash/package.json
+49 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/memdown/package.json
+50 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mocha/package.json
+51 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/moment/package.json
+52 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/morgan/package.json
+53 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/nock/package.json
+54 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/oauth/package.json
+55 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/pouchdb/package.json
+56 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react/package.json
+57 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-addons-test-utils/package.json
+58 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-dom/package.json
+59 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-redux/package.json
+60 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-router/package.json
+61 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/redux/package.json
+62 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/redux-thunk/package.json
+63 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/request/package.json
+64 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/run-sequence/package.json
+65 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/sinon/package.json
+66 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/supertest/package.json
+67 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/winston/package.json
+68 verbose installManyTop reading scoped package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/yargs/package.json
+69 info package.json cordova-lib@5.4.1 No license field.
+70 info package.json fs@0.0.2 fs is also the name of a node core module.
+71 info package.json fs@0.0.2 No description
+72 info package.json fs@0.0.2 No repository field.
+73 info package.json gulp-clean@0.3.1 No license field.
+74 info package.json gulp-rename@1.2.2 No license field.
+75 info package.json pouchdb@5.1.0 No license field.
+76 info package.json oauth@0.9.14 No license field.
+77 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/package.json
+78 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel/package.json
+79 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel-eslint/package.json
+80 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babel-plugin-espower/package.json
+81 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/babelify/package.json
+82 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/body-parser/package.json
+83 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browser-sync/package.json
+84 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browserify/package.json
+85 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/chai/package.json
+86 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/cookie-parser/package.json
+87 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/cordova-lib/package.json
+88 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/del/package.json
+89 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/eslint/package.json
+90 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/eslint-plugin-react/package.json
+91 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/express/package.json
+92 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/feedparser/package.json
+93 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/forever/package.json
+94 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/fs/package.json
+95 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp/package.json
+96 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-babel/package.json
+97 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-browserify/package.json
+98 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-clean/package.json
+99 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-concat/package.json
+100 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-cssnano/package.json
+101 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-environments/package.json
+102 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-eslint/package.json
+103 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-exec/package.json
+104 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-minify/package.json
+105 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-mocha/package.json
+106 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-rename/package.json
+107 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-replace/package.json
+108 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-sass/package.json
+109 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/helmet/package.json
+110 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/helmet-csp/package.json
+111 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/package.json
+112 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/hsts/package.json
+113 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/immutable/package.json
+114 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/isparta/package.json
+115 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/istanbul/package.json
+116 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/jsdom/package.json
+117 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/lodash/package.json
+118 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/memdown/package.json
+119 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mocha/package.json
+120 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/moment/package.json
+121 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/morgan/package.json
+122 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/nock/package.json
+123 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/oauth/package.json
+124 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/pouchdb/package.json
+125 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react/package.json
+126 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-addons-test-utils/package.json
+127 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-dom/package.json
+128 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-redux/package.json
+129 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/react-router/package.json
+130 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/redux/package.json
+131 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/redux-thunk/package.json
+132 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/request/package.json
+133 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/run-sequence/package.json
+134 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/sinon/package.json
+135 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/supertest/package.json
+136 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/winston/package.json
+137 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/yargs/package.json
+138 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/babel/package.json
+139 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/babel-external-helpers/package.json
+140 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/babel-node/package.json
+141 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/babel-plugin/package.json
+142 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/browser-sync/package.json
+143 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/browserify/package.json
+144 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/eslint/package.json
+145 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/forever/package.json
+146 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/gulp/package.json
+147 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/isparta/package.json
+148 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/istanbul/package.json
+149 verbose targetResolver reading package data from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/mocha/package.json
+150 verbose already installed skipping helmet-csp@^0.3.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+151 silly cache add args [ 'history@^1.17.0', null ]
+152 verbose cache add spec history@^1.17.0
+153 silly cache add parsed spec Result {
+153 silly cache add   raw: 'history@^1.17.0',
+153 silly cache add   scope: null,
+153 silly cache add   name: 'history',
+153 silly cache add   rawSpec: '^1.17.0',
+153 silly cache add   spec: '>=1.17.0 <2.0.0',
+153 silly cache add   type: 'range' }
+154 silly addNamed history@>=1.17.0 <2.0.0
+155 verbose addNamed ">=1.17.0 <2.0.0" is a valid semver range for history
+156 silly addNameRange { name: 'history', range: '>=1.17.0 <2.0.0', hasData: false }
+157 silly mapToRegistry name history
+158 silly mapToRegistry using default registry
+159 silly mapToRegistry registry https://registry.npmjs.org/
+160 silly mapToRegistry uri https://registry.npmjs.org/history
+161 verbose addNameRange registry:https://registry.npmjs.org/history not in flight; fetching
+162 verbose already installed skipping immutable@^3.7.5 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+163 silly cache add args [ 'mkdirp@^0.5.1', null ]
+164 verbose cache add spec mkdirp@^0.5.1
+165 silly cache add parsed spec Result {
+165 silly cache add   raw: 'mkdirp@^0.5.1',
+165 silly cache add   scope: null,
+165 silly cache add   name: 'mkdirp',
+165 silly cache add   rawSpec: '^0.5.1',
+165 silly cache add   spec: '>=0.5.1 <0.6.0',
+165 silly cache add   type: 'range' }
+166 silly addNamed mkdirp@>=0.5.1 <0.6.0
+167 verbose addNamed ">=0.5.1 <0.6.0" is a valid semver range for mkdirp
+168 silly addNameRange { name: 'mkdirp', range: '>=0.5.1 <0.6.0', hasData: false }
+169 silly mapToRegistry name mkdirp
+170 silly mapToRegistry using default registry
+171 silly mapToRegistry registry https://registry.npmjs.org/
+172 silly mapToRegistry uri https://registry.npmjs.org/mkdirp
+173 verbose addNameRange registry:https://registry.npmjs.org/mkdirp not in flight; fetching
+174 verbose already installed skipping moment@^2.10.6 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+175 verbose already installed skipping oauth@^0.9.14 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+176 verbose already installed skipping pouchdb@^5.1.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+177 verbose already installed skipping react@^0.14.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+178 verbose already installed skipping react-redux@^4.0.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+179 verbose already installed skipping react-router@^1.0.0-rc3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+180 verbose already installed skipping redux@^3.0.4 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+181 verbose already installed skipping redux-thunk@^1.0.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+182 verbose already installed skipping request@^2.65.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+183 verbose already installed skipping winston@^2.1.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+184 verbose request uri https://registry.npmjs.org/mkdirp
+185 verbose request no auth needed
+186 info attempt registry request try #1 at 5:47:36 PM
+187 verbose request id 8cf19a41a8bfcd77
+188 verbose etag "CCM5TKBJWEGO4K3ODWJXQR5Q4"
+189 http request GET https://registry.npmjs.org/mkdirp
+190 verbose already installed skipping yargs@^3.30.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+191 verbose already installed skipping babel@^5.8.29 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+192 verbose already installed skipping babel-eslint@^4.1.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+193 verbose already installed skipping babel-plugin-espower@^1.0.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+194 verbose already installed skipping babelify@^6.3.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+195 verbose already installed skipping browserify@^11.2.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+196 verbose already installed skipping chai@^3.3.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+197 verbose already installed skipping cordova-lib@^5.4.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+198 verbose already installed skipping del@^2.2.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+199 verbose already installed skipping eslint@^1.8.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+200 verbose already installed skipping eslint-plugin-react@^3.6.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+201 verbose already installed skipping gulp@^3.9.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+202 verbose already installed skipping gulp-babel@^5.3.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+203 verbose already installed skipping gulp-browserify@^0.5.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+204 verbose already installed skipping gulp-cssnano@^2.1.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+205 verbose already installed skipping gulp-environments@^0.1.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+206 verbose already installed skipping gulp-eslint@^1.0.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+207 verbose already installed skipping gulp-exec@^2.1.2 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+208 verbose already installed skipping gulp-minify@0.0.5 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+209 verbose already installed skipping gulp-mocha@^2.1.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+210 verbose already installed skipping gulp-rename@^1.2.2 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+211 verbose already installed skipping gulp-sass@^2.1.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+212 verbose already installed skipping isparta@^4.0.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+213 verbose already installed skipping istanbul@^0.4.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+214 verbose already installed skipping jsdom@^7.0.2 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+215 verbose already installed skipping memdown@^1.1.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+216 verbose already installed skipping mocha@^2.3.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+217 verbose already installed skipping nock@^2.17.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+218 verbose already installed skipping react-addons-test-utils@^0.14.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+219 verbose already installed skipping react-dom@^0.14.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+220 verbose request uri https://registry.npmjs.org/history
+221 verbose request no auth needed
+222 info attempt registry request try #1 at 5:47:36 PM
+223 verbose etag "2IXX2BCZK8LZGK8FG9YP3I2UG"
+224 http request GET https://registry.npmjs.org/history
+225 verbose already installed skipping run-sequence@^1.1.4 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+226 verbose already installed skipping sinon@^1.17.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+227 verbose already installed skipping supertest@^1.1.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+228 verbose already installed skipping body-parser@^1.14.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+229 verbose already installed skipping cookie-parser@^1.4.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+230 verbose already installed skipping express@^4.13.3 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+231 verbose already installed skipping feedparser@^1.1.4 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+232 verbose already installed skipping forever@^0.15.1 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+233 verbose already installed skipping fs@0.0.2 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+234 verbose already installed skipping helmet@^0.15.0 /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+235 http 200 https://registry.npmjs.org/mkdirp
+236 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+236 verbose headers   etag: '"36RVME3EKKC0EE1DOW11LVKW3"',
+236 verbose headers   'content-type': 'application/json',
+236 verbose headers   'cache-control': 'max-age=300',
+236 verbose headers   'content-length': '23698',
+236 verbose headers   'accept-ranges': 'bytes',
+236 verbose headers   date: 'Fri, 26 Feb 2016 12:17:37 GMT',
+236 verbose headers   via: '1.1 varnish',
+236 verbose headers   age: '130',
+236 verbose headers   connection: 'keep-alive',
+236 verbose headers   'x-served-by': 'cache-sin6927-SIN',
+236 verbose headers   'x-cache': 'HIT',
+236 verbose headers   'x-cache-hits': '15',
+236 verbose headers   'x-timer': 'S1456489057.130355,VS0,VE0',
+236 verbose headers   vary: 'Accept' }
+237 silly get cb [ 200,
+237 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+237 silly get     etag: '"36RVME3EKKC0EE1DOW11LVKW3"',
+237 silly get     'content-type': 'application/json',
+237 silly get     'cache-control': 'max-age=300',
+237 silly get     'content-length': '23698',
+237 silly get     'accept-ranges': 'bytes',
+237 silly get     date: 'Fri, 26 Feb 2016 12:17:37 GMT',
+237 silly get     via: '1.1 varnish',
+237 silly get     age: '130',
+237 silly get     connection: 'keep-alive',
+237 silly get     'x-served-by': 'cache-sin6927-SIN',
+237 silly get     'x-cache': 'HIT',
+237 silly get     'x-cache-hits': '15',
+237 silly get     'x-timer': 'S1456489057.130355,VS0,VE0',
+237 silly get     vary: 'Accept' } ]
+238 verbose get saving mkdirp to /Users/saisree/.npm/registry.npmjs.org/mkdirp/.cache.json
+239 silly addNameRange number 2 { name: 'mkdirp', range: '>=0.5.1 <0.6.0', hasData: true }
+240 silly addNameRange versions [ 'mkdirp',
+240 silly addNameRange   [ '0.0.1',
+240 silly addNameRange     '0.0.2',
+240 silly addNameRange     '0.0.3',
+240 silly addNameRange     '0.0.4',
+240 silly addNameRange     '0.0.5',
+240 silly addNameRange     '0.0.6',
+240 silly addNameRange     '0.0.7',
+240 silly addNameRange     '0.1.0',
+240 silly addNameRange     '0.2.0',
+240 silly addNameRange     '0.2.1',
+240 silly addNameRange     '0.2.2',
+240 silly addNameRange     '0.3.0',
+240 silly addNameRange     '0.3.1',
+240 silly addNameRange     '0.3.2',
+240 silly addNameRange     '0.3.3',
+240 silly addNameRange     '0.3.4',
+240 silly addNameRange     '0.3.5',
+240 silly addNameRange     '0.4.0',
+240 silly addNameRange     '0.4.1',
+240 silly addNameRange     '0.4.2',
+240 silly addNameRange     '0.5.0',
+240 silly addNameRange     '0.5.1' ] ]
+241 silly addNamed mkdirp@0.5.1
+242 verbose addNamed "0.5.1" is a plain semver version for mkdirp
+243 silly cache afterAdd mkdirp@0.5.1
+244 verbose afterAdd /Users/saisree/.npm/mkdirp/0.5.1/package/package.json not in flight; writing
+245 verbose afterAdd /Users/saisree/.npm/mkdirp/0.5.1/package/package.json written
+246 http 200 https://registry.npmjs.org/history
+247 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+247 verbose headers   etag: '"C0Z7NNDN7LATRXF6WJIET6TMF"',
+247 verbose headers   'content-type': 'application/json',
+247 verbose headers   'cache-control': 'max-age=300',
+247 verbose headers   'content-length': '95446',
+247 verbose headers   'accept-ranges': 'bytes',
+247 verbose headers   date: 'Fri, 26 Feb 2016 12:17:37 GMT',
+247 verbose headers   via: '1.1 varnish',
+247 verbose headers   age: '154',
+247 verbose headers   connection: 'keep-alive',
+247 verbose headers   'x-served-by': 'cache-sin6926-SIN',
+247 verbose headers   'x-cache': 'HIT',
+247 verbose headers   'x-cache-hits': '1',
+247 verbose headers   'x-timer': 'S1456489057.125263,VS0,VE0',
+247 verbose headers   vary: 'Accept' }
+248 silly get cb [ 200,
+248 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+248 silly get     etag: '"C0Z7NNDN7LATRXF6WJIET6TMF"',
+248 silly get     'content-type': 'application/json',
+248 silly get     'cache-control': 'max-age=300',
+248 silly get     'content-length': '95446',
+248 silly get     'accept-ranges': 'bytes',
+248 silly get     date: 'Fri, 26 Feb 2016 12:17:37 GMT',
+248 silly get     via: '1.1 varnish',
+248 silly get     age: '154',
+248 silly get     connection: 'keep-alive',
+248 silly get     'x-served-by': 'cache-sin6926-SIN',
+248 silly get     'x-cache': 'HIT',
+248 silly get     'x-cache-hits': '1',
+248 silly get     'x-timer': 'S1456489057.125263,VS0,VE0',
+248 silly get     vary: 'Accept' } ]
+249 verbose get saving history to /Users/saisree/.npm/registry.npmjs.org/history/.cache.json
+250 silly addNameRange number 2 { name: 'history', range: '>=1.17.0 <2.0.0', hasData: true }
+251 silly addNameRange versions [ 'history',
+251 silly addNameRange   [ '0.1.0',
+251 silly addNameRange     '1.0.0',
+251 silly addNameRange     '1.1.0',
+251 silly addNameRange     '1.2.0',
+251 silly addNameRange     '1.2.1',
+251 silly addNameRange     '1.2.2',
+251 silly addNameRange     '1.3.0',
+251 silly addNameRange     '1.3.1',
+251 silly addNameRange     '1.3.2',
+251 silly addNameRange     '1.3.3',
+251 silly addNameRange     '1.4.0',
+251 silly addNameRange     '1.4.1',
+251 silly addNameRange     '1.5.0',
+251 silly addNameRange     '1.6.0',
+251 silly addNameRange     '1.7.0',
+251 silly addNameRange     '1.8.0',
+251 silly addNameRange     '1.8.1',
+251 silly addNameRange     '1.8.2',
+251 silly addNameRange     '1.8.3',
+251 silly addNameRange     '1.8.4',
+251 silly addNameRange     '1.8.5',
+251 silly addNameRange     '1.9.0',
+251 silly addNameRange     '1.9.1',
+251 silly addNameRange     '1.10.0',
+251 silly addNameRange     '1.10.1',
+251 silly addNameRange     '1.10.2',
+251 silly addNameRange     '1.11.0',
+251 silly addNameRange     '1.11.1',
+251 silly addNameRange     '1.12.0',
+251 silly addNameRange     '1.12.1',
+251 silly addNameRange     '1.12.2',
+251 silly addNameRange     '1.12.3',
+251 silly addNameRange     '1.12.4',
+251 silly addNameRange     '1.12.5',
+251 silly addNameRange     '1.12.6',
+251 silly addNameRange     '1.13.0',
+251 silly addNameRange     '1.13.1',
+251 silly addNameRange     '1.14.0',
+251 silly addNameRange     '1.15.0',
+251 silly addNameRange     '1.16.0',
+251 silly addNameRange     '1.17.0',
+251 silly addNameRange     '2.0.0-rc1',
+251 silly addNameRange     '2.0.0-rc2',
+251 silly addNameRange     '2.0.0-rc3',
+251 silly addNameRange     '2.0.0' ] ]
+252 silly addNamed history@1.17.0
+253 verbose addNamed "1.17.0" is a plain semver version for history
+254 silly mapToRegistry name history
+255 silly mapToRegistry using default registry
+256 silly mapToRegistry registry https://registry.npmjs.org/
+257 silly mapToRegistry uri https://registry.npmjs.org/history
+258 verbose addRemoteTarball https://registry.npmjs.org/history/-/history-1.17.0.tgz not in flight; adding
+259 verbose addRemoteTarball [ 'https://registry.npmjs.org/history/-/history-1.17.0.tgz',
+259 verbose addRemoteTarball   'c5483caa5a1d1fea00a1a7d8d19b874016711d29' ]
+260 info retry fetch attempt 1 at 5:47:37 PM
+261 info attempt registry request try #1 at 5:47:37 PM
+262 http fetch GET https://registry.npmjs.org/history/-/history-1.17.0.tgz
+263 http fetch 200 https://registry.npmjs.org/history/-/history-1.17.0.tgz
+264 silly fetchAndShaCheck shasum c5483caa5a1d1fea00a1a7d8d19b874016711d29
+265 verbose addTmpTarball /var/folders/qk/fc3cz5g532scbd972lr01vl00000gp/T/npm-2060-c762a138/registry.npmjs.org/history/-/history-1.17.0.tgz not in flight; adding
+266 verbose addTmpTarball already have metadata; skipping unpack for history@1.17.0
+267 silly cache afterAdd history@1.17.0
+268 verbose afterAdd /Users/saisree/.npm/history/1.17.0/package/package.json not in flight; writing
+269 verbose afterAdd /Users/saisree/.npm/history/1.17.0/package/package.json written
+270 silly install resolved [ { name: 'mkdirp',
+270 silly install resolved     description: 'Recursively mkdir, like `mkdir -p`',
+270 silly install resolved     version: '0.5.1',
+270 silly install resolved     author:
+270 silly install resolved      { name: 'James Halliday',
+270 silly install resolved        email: 'mail@substack.net',
+270 silly install resolved        url: 'http://substack.net' },
+270 silly install resolved     main: 'index.js',
+270 silly install resolved     keywords: [ 'mkdir', 'directory' ],
+270 silly install resolved     repository:
+270 silly install resolved      { type: 'git',
+270 silly install resolved        url: 'git+https://github.com/substack/node-mkdirp.git' },
+270 silly install resolved     scripts: { test: 'tap test/*.js' },
+270 silly install resolved     dependencies: { minimist: '0.0.8' },
+270 silly install resolved     devDependencies: { tap: '1', 'mock-fs': '2 >=2.7.0' },
+270 silly install resolved     bin: { mkdirp: 'bin/cmd.js' },
+270 silly install resolved     license: 'MIT',
+270 silly install resolved     gitHead: 'd4eff0f06093aed4f387e88e9fc301cb76beedc7',
+270 silly install resolved     bugs: { url: 'https://github.com/substack/node-mkdirp/issues' },
+270 silly install resolved     homepage: 'https://github.com/substack/node-mkdirp#readme',
+270 silly install resolved     _id: 'mkdirp@0.5.1',
+270 silly install resolved     _shasum: '30057438eac6cf7f8c4767f38648d6697d75c903',
+270 silly install resolved     _from: 'mkdirp@>=0.5.1 <0.6.0',
+270 silly install resolved     _npmVersion: '2.9.0',
+270 silly install resolved     _nodeVersion: '2.0.0',
+270 silly install resolved     _npmUser: { name: 'substack', email: 'substack@gmail.com' },
+270 silly install resolved     dist:
+270 silly install resolved      { shasum: '30057438eac6cf7f8c4767f38648d6697d75c903',
+270 silly install resolved        tarball: 'http://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz' },
+270 silly install resolved     maintainers: [ [Object] ],
+270 silly install resolved     directories: {},
+270 silly install resolved     _resolved: 'https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz',
+270 silly install resolved     readme: 'ERROR: No README data found!' },
+270 silly install resolved   { name: 'history',
+270 silly install resolved     version: '1.17.0',
+270 silly install resolved     description: 'A minimal, functional history implementation for JavaScript',
+270 silly install resolved     files: [ '*.md', 'docs', 'es6', 'lib', 'npm-scripts', 'umd' ],
+270 silly install resolved     main: 'lib/index',
+270 silly install resolved     repository: { type: 'git', url: 'git+https://github.com/rackt/history.git' },
+270 silly install resolved     bugs: { url: 'https://github.com/rackt/history/issues' },
+270 silly install resolved     scripts:
+270 silly install resolved      { build: 'npm run build-cjs && npm run build-es6',
+270 silly install resolved        'build-cjs': 'rimraf lib && babel ./modules --stage 0 --loose all --plugins dev-expression -d lib --ignore \'__tests__\'',
+270 silly install resolved        'build-es6': 'rimraf es6 && babel ./modules --stage 0 --loose all --plugins dev-expression -d es6 --blacklist=es6.modules --ignore \'__tests__\'',
+270 silly install resolved        'build-umd': 'NODE_ENV=production webpack modules/index.js umd/History.js',
+270 silly install resolved        'build-min': 'NODE_ENV=production webpack -p modules/index.js umd/History.min.js',
+270 silly install resolved        lint: 'eslint modules',
+270 silly install resolved        start: 'webpack-dev-server -d --content-base ./ --history-api-fallback --inline modules/index.js',
+270 silly install resolved        test: 'npm run lint && karma start',
+270 silly install resolved        postinstall: 'node ./npm-scripts/postinstall.js' },
+270 silly install resolved     authors: [ 'Michael Jackson' ],
+270 silly install resolved     license: 'MIT',
+270 silly install resolved     dependencies:
+270 silly install resolved      { 'deep-equal': '^1.0.0',
+270 silly install resolved        invariant: '^2.0.0',
+270 silly install resolved        'query-string': '^3.0.0',
+270 silly install resolved        warning: '^2.0.0' },
+270 silly install resolved     devDependencies:
+270 silly install resolved      { assert: '1.3.0',
+270 silly install resolved        babel: '^5.4.7',
+270 silly install resolved        'babel-core': '^5.4.7',
+270 silly install resolved        'babel-eslint': '^3.1.23',
+270 silly install resolved        'babel-loader': '^5.0.0',
+270 silly install resolved        'babel-plugin-dev-expression': '^0.1.0',
+270 silly install resolved        eslint: '1.4.1',
+270 silly install resolved        'eslint-config-rackt': '1.0.0',
+270 silly install resolved        'eslint-plugin-react': '3.3.2',
+270 silly install resolved        expect: '^1.12.0',
+270 silly install resolved        'gzip-size': '^3.0.0',
+270 silly install resolved        'isparta-loader': '^1.0.0',
+270 silly install resolved        karma: '^0.13.3',
+270 silly install resolved        'karma-browserstack-launcher': '^0.1.3',
+270 silly install resolved        'karma-chrome-launcher': '^0.2.0',
+270 silly install resolved        'karma-coverage': '^0.5.3',
+270 silly install resolved        'karma-coveralls': '^1.1.2',
+270 silly install resolved        'karma-mocha': '^0.2.0',
+270 silly install resolved        'karma-mocha-reporter': '^1.0.4',
+270 silly install resolved        'karma-sourcemap-loader': '^0.3.5',
+270 silly install resolved        'karma-webpack': '^1.7.0',
+270 silly install resolved        mocha: '^2.0.1',
+270 silly install resolved        'pretty-bytes': '^2.0.1',
+270 silly install resolved        rimraf: '^2.4.2',
+270 silly install resolved        webpack: '^1.4.13',
+270 silly install resolved        'webpack-dev-server': '^1.10.1' },
+270 silly install resolved     tags: [ 'history', 'location' ],
+270 silly install resolved     keywords: [ 'history', 'location' ],
+270 silly install resolved     gitHead: 'daf0bd52b8f3bc862c58faf4c7d5a40c86afed9e',
+270 silly install resolved     homepage: 'https://github.com/rackt/history#readme',
+270 silly install resolved     _id: 'history@1.17.0',
+270 silly install resolved     _shasum: 'c5483caa5a1d1fea00a1a7d8d19b874016711d29',
+270 silly install resolved     _from: 'history@>=1.17.0 <2.0.0',
+270 silly install resolved     _npmVersion: '3.4.1',
+270 silly install resolved     _nodeVersion: '5.0.0',
+270 silly install resolved     _npmUser: { name: 'mjackson', email: 'mjijackson@gmail.com' },
+270 silly install resolved     dist:
+270 silly install resolved      { shasum: 'c5483caa5a1d1fea00a1a7d8d19b874016711d29',
+270 silly install resolved        tarball: 'http://registry.npmjs.org/history/-/history-1.17.0.tgz' },
+270 silly install resolved     maintainers: [ [Object] ],
+270 silly install resolved     directories: {},
+270 silly install resolved     _resolved: 'https://registry.npmjs.org/history/-/history-1.17.0.tgz' } ]
+271 info install mkdirp@0.5.1 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+272 info install history@1.17.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+273 info installOne mkdirp@0.5.1
+274 verbose installOne of mkdirp to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery not in flight; installing
+275 info installOne history@1.17.0
+276 verbose installOne of history to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery not in flight; installing
+277 verbose lock using /Users/saisree/.npm/_locks/mkdirp-4e4f7d7808c9519c.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+278 silly install write writing mkdirp 0.5.1 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+279 verbose lock using /Users/saisree/.npm/_locks/history-ef46552182cbab57.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+280 silly install write writing history 1.17.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+281 verbose unbuild node_modules/mkdirp
+282 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+283 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+284 verbose unbuild node_modules/history
+285 verbose tar unpack /Users/saisree/.npm/mkdirp/0.5.1/package.tgz
+286 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+287 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp is being purged
+288 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+289 silly gunzTarPerm modes [ '755', '644' ]
+290 info preuninstall history@1.15.0
+291 silly gunzTarPerm extractEntry package.json
+292 info uninstall history@1.15.0
+293 verbose unbuild rmStuff history@1.15.0 from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules
+294 info postuninstall history@1.15.0
+295 silly gunzTarPerm extractEntry LICENSE
+296 silly gunzTarPerm extractEntry index.js
+297 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+298 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+299 silly vacuum-fs purging /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+300 silly gunzTarPerm extractEntry .travis.yml
+301 silly gunzTarPerm extractEntry bin/cmd.js
+302 silly gunzTarPerm extractEntry bin/usage.txt
+303 silly gunzTarPerm extractEntry examples/pow.js
+304 silly gunzTarPerm extractEntry readme.markdown
+305 silly gunzTarPerm extractEntry test/chmod.js
+306 silly vacuum-fs quitting because other entries in /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules
+307 verbose tar unpack /Users/saisree/.npm/history/1.17.0/package.tgz
+308 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+309 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history is being purged
+310 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+311 silly gunzTarPerm modes [ '755', '644' ]
+312 silly gunzTarPerm extractEntry test/opts_fs_sync.js
+313 silly gunzTarPerm extractEntry package.json
+314 silly gunzTarPerm extractEntry README.md
+315 silly gunzTarPerm extractEntry LICENSE.md
+316 silly gunzTarPerm extractEntry test/perm.js
+317 silly gunzTarPerm extractEntry test/perm_sync.js
+318 silly gunzTarPerm extractEntry test/opts_fs.js
+319 silly gunzTarPerm extractEntry test/rel.js
+320 silly gunzTarPerm extractEntry docs/README.md
+321 silly gunzTarPerm extractEntry docs/BasenameSupport.md
+322 silly gunzTarPerm extractEntry docs/ConfirmingNavigation.md
+323 silly gunzTarPerm extractEntry docs/GettingStarted.md
+324 silly gunzTarPerm extractEntry test/return.js
+325 silly gunzTarPerm extractEntry test/return_sync.js
+326 silly gunzTarPerm extractEntry test/root.js
+327 silly gunzTarPerm extractEntry test/sync.js
+328 silly gunzTarPerm extractEntry docs/Glossary.md
+329 silly gunzTarPerm extractEntry test/mkdirp.js
+330 silly gunzTarPerm extractEntry test/umask.js
+331 silly gunzTarPerm extractEntry docs/HashHistoryCaveats.md
+332 silly gunzTarPerm extractEntry docs/Location.md
+333 silly gunzTarPerm extractEntry test/clobber.js
+334 silly gunzTarPerm extractEntry test/umask_sync.js
+335 silly gunzTarPerm extractEntry docs/QuerySupport.md
+336 silly gunzTarPerm extractEntry es6/Actions.js
+337 silly gunzTarPerm extractEntry es6/createHashHistory.js
+338 silly gunzTarPerm extractEntry es6/createHistory.js
+339 silly gunzTarPerm extractEntry test/race.js
+340 silly gunzTarPerm extractEntry es6/createLocation.js
+341 silly gunzTarPerm extractEntry es6/createDOMHistory.js
+342 silly gunzTarPerm extractEntry es6/deprecate.js
+343 silly gunzTarPerm extractEntry es6/enableBeforeUnload.js
+344 silly gunzTarPerm extractEntry es6/enableQueries.js
+345 silly gunzTarPerm extractEntry es6/extractPath.js
+346 silly gunzTarPerm extractEntry es6/index.js
+347 silly gunzTarPerm extractEntry es6/createBrowserHistory.js
+348 silly gunzTarPerm extractEntry es6/parsePath.js
+349 silly gunzTarPerm extractEntry es6/ExecutionEnvironment.js
+350 silly gunzTarPerm extractEntry es6/runTransitionHook.js
+351 silly gunzTarPerm extractEntry es6/DOMUtils.js
+352 silly gunzTarPerm extractEntry es6/useBasename.js
+353 silly gunzTarPerm extractEntry es6/DOMStateStorage.js
+354 silly gunzTarPerm extractEntry es6/useBeforeUnload.js
+355 silly gunzTarPerm extractEntry es6/AsyncUtils.js
+356 silly gunzTarPerm extractEntry es6/useQueries.js
+357 silly gunzTarPerm extractEntry es6/createMemoryHistory.js
+358 silly gunzTarPerm extractEntry lib/Actions.js
+359 silly gunzTarPerm extractEntry lib/createHashHistory.js
+360 silly gunzTarPerm extractEntry lib/createHistory.js
+361 silly gunzTarPerm extractEntry lib/createLocation.js
+362 silly gunzTarPerm extractEntry lib/createDOMHistory.js
+363 silly gunzTarPerm extractEntry lib/deprecate.js
+364 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/package.json
+365 silly gunzTarPerm extractEntry lib/enableBeforeUnload.js
+366 silly gunzTarPerm extractEntry lib/enableQueries.js
+367 info preinstall mkdirp@0.5.1
+368 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/package.json
+369 silly gunzTarPerm extractEntry lib/extractPath.js
+370 silly gunzTarPerm extractEntry lib/index.js
+371 silly prepareForInstallMany adding minimist@0.0.8 from mkdirp dependencies
+372 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/package.json
+373 silly gunzTarPerm extractEntry lib/createBrowserHistory.js
+374 silly gunzTarPerm extractEntry lib/parsePath.js
+375 silly cache add args [ 'minimist@0.0.8', null ]
+376 verbose cache add spec minimist@0.0.8
+377 silly cache add parsed spec Result {
+377 silly cache add   raw: 'minimist@0.0.8',
+377 silly cache add   scope: null,
+377 silly cache add   name: 'minimist',
+377 silly cache add   rawSpec: '0.0.8',
+377 silly cache add   spec: '0.0.8',
+377 silly cache add   type: 'version' }
+378 silly addNamed minimist@0.0.8
+379 verbose addNamed "0.0.8" is a plain semver version for minimist
+380 silly mapToRegistry name minimist
+381 silly mapToRegistry using default registry
+382 silly mapToRegistry registry https://registry.npmjs.org/
+383 silly mapToRegistry uri https://registry.npmjs.org/minimist
+384 verbose addNameVersion registry:https://registry.npmjs.org/minimist not in flight; fetching
+385 silly gunzTarPerm extractEntry lib/ExecutionEnvironment.js
+386 silly gunzTarPerm extractEntry lib/runTransitionHook.js
+387 verbose request uri https://registry.npmjs.org/minimist
+388 verbose request no auth needed
+389 info attempt registry request try #1 at 5:47:38 PM
+390 verbose etag "1B32GV1UJ8VED03EFP3MRMSQC"
+391 http request GET https://registry.npmjs.org/minimist
+392 silly gunzTarPerm extractEntry lib/DOMUtils.js
+393 silly gunzTarPerm extractEntry lib/useBasename.js
+394 silly gunzTarPerm extractEntry lib/DOMStateStorage.js
+395 silly gunzTarPerm extractEntry lib/useBeforeUnload.js
+396 silly gunzTarPerm extractEntry lib/AsyncUtils.js
+397 silly gunzTarPerm extractEntry lib/useQueries.js
+398 silly gunzTarPerm extractEntry lib/createMemoryHistory.js
+399 silly gunzTarPerm extractEntry umd/History.js
+400 silly gunzTarPerm extractEntry umd/History.min.js
+401 silly gunzTarPerm extractEntry npm-scripts/postinstall.js
+402 silly gunzTarPerm extractEntry CHANGES.md
+403 silly gunzTarPerm extractEntry CONTRIBUTING.md
+404 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/package.json
+405 info preinstall history@1.17.0
+406 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/package.json
+407 silly prepareForInstallMany adding deep-equal@^1.0.0 from history dependencies
+408 silly prepareForInstallMany adding invariant@^2.0.0 from history dependencies
+409 silly prepareForInstallMany adding query-string@^3.0.0 from history dependencies
+410 silly prepareForInstallMany adding warning@^2.0.0 from history dependencies
+411 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/package.json
+412 silly cache add args [ 'deep-equal@^1.0.0', null ]
+413 verbose cache add spec deep-equal@^1.0.0
+414 silly cache add args [ 'invariant@^2.0.0', null ]
+415 verbose cache add spec invariant@^2.0.0
+416 silly cache add parsed spec Result {
+416 silly cache add   raw: 'deep-equal@^1.0.0',
+416 silly cache add   scope: null,
+416 silly cache add   name: 'deep-equal',
+416 silly cache add   rawSpec: '^1.0.0',
+416 silly cache add   spec: '>=1.0.0 <2.0.0',
+416 silly cache add   type: 'range' }
+417 silly addNamed deep-equal@>=1.0.0 <2.0.0
+418 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for deep-equal
+419 silly addNameRange { name: 'deep-equal', range: '>=1.0.0 <2.0.0', hasData: false }
+420 silly mapToRegistry name deep-equal
+421 silly mapToRegistry using default registry
+422 silly mapToRegistry registry https://registry.npmjs.org/
+423 silly mapToRegistry uri https://registry.npmjs.org/deep-equal
+424 verbose addNameRange registry:https://registry.npmjs.org/deep-equal not in flight; fetching
+425 silly cache add parsed spec Result {
+425 silly cache add   raw: 'invariant@^2.0.0',
+425 silly cache add   scope: null,
+425 silly cache add   name: 'invariant',
+425 silly cache add   rawSpec: '^2.0.0',
+425 silly cache add   spec: '>=2.0.0 <3.0.0',
+425 silly cache add   type: 'range' }
+426 silly addNamed invariant@>=2.0.0 <3.0.0
+427 verbose addNamed ">=2.0.0 <3.0.0" is a valid semver range for invariant
+428 silly addNameRange { name: 'invariant', range: '>=2.0.0 <3.0.0', hasData: false }
+429 silly mapToRegistry name invariant
+430 silly mapToRegistry using default registry
+431 silly mapToRegistry registry https://registry.npmjs.org/
+432 silly mapToRegistry uri https://registry.npmjs.org/invariant
+433 verbose addNameRange registry:https://registry.npmjs.org/invariant not in flight; fetching
+434 silly cache add args [ 'query-string@^3.0.0', null ]
+435 verbose cache add spec query-string@^3.0.0
+436 silly cache add parsed spec Result {
+436 silly cache add   raw: 'query-string@^3.0.0',
+436 silly cache add   scope: null,
+436 silly cache add   name: 'query-string',
+436 silly cache add   rawSpec: '^3.0.0',
+436 silly cache add   spec: '>=3.0.0 <4.0.0',
+436 silly cache add   type: 'range' }
+437 silly addNamed query-string@>=3.0.0 <4.0.0
+438 verbose addNamed ">=3.0.0 <4.0.0" is a valid semver range for query-string
+439 silly addNameRange { name: 'query-string', range: '>=3.0.0 <4.0.0', hasData: false }
+440 silly mapToRegistry name query-string
+441 silly mapToRegistry using default registry
+442 silly mapToRegistry registry https://registry.npmjs.org/
+443 silly mapToRegistry uri https://registry.npmjs.org/query-string
+444 verbose addNameRange registry:https://registry.npmjs.org/query-string not in flight; fetching
+445 silly cache add args [ 'warning@^2.0.0', null ]
+446 verbose cache add spec warning@^2.0.0
+447 silly cache add parsed spec Result {
+447 silly cache add   raw: 'warning@^2.0.0',
+447 silly cache add   scope: null,
+447 silly cache add   name: 'warning',
+447 silly cache add   rawSpec: '^2.0.0',
+447 silly cache add   spec: '>=2.0.0 <3.0.0',
+447 silly cache add   type: 'range' }
+448 silly addNamed warning@>=2.0.0 <3.0.0
+449 verbose addNamed ">=2.0.0 <3.0.0" is a valid semver range for warning
+450 silly addNameRange { name: 'warning', range: '>=2.0.0 <3.0.0', hasData: false }
+451 silly mapToRegistry name warning
+452 silly mapToRegistry using default registry
+453 silly mapToRegistry registry https://registry.npmjs.org/
+454 silly mapToRegistry uri https://registry.npmjs.org/warning
+455 verbose addNameRange registry:https://registry.npmjs.org/warning not in flight; fetching
+456 verbose request uri https://registry.npmjs.org/deep-equal
+457 verbose request no auth needed
+458 info attempt registry request try #1 at 5:47:38 PM
+459 verbose etag "BO8OCIWE509P5G035QKSR5VRH"
+460 http request GET https://registry.npmjs.org/deep-equal
+461 verbose request uri https://registry.npmjs.org/invariant
+462 verbose request no auth needed
+463 info attempt registry request try #1 at 5:47:38 PM
+464 verbose etag "EAEV491AYUM88PAMO3LNXG2J7"
+465 http request GET https://registry.npmjs.org/invariant
+466 verbose request uri https://registry.npmjs.org/query-string
+467 verbose request no auth needed
+468 info attempt registry request try #1 at 5:47:38 PM
+469 verbose etag "8ZE4GAWAOPTSGRQ7GNAS3LKOH"
+470 http request GET https://registry.npmjs.org/query-string
+471 verbose request uri https://registry.npmjs.org/warning
+472 verbose request no auth needed
+473 info attempt registry request try #1 at 5:47:38 PM
+474 verbose etag "1K3VVFDR0VAVK3YXHWHQEMTMR"
+475 http request GET https://registry.npmjs.org/warning
+476 http 200 https://registry.npmjs.org/deep-equal
+477 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+477 verbose headers   etag: '"EJP4KA86SP8AGUJW4KS6CPU24"',
+477 verbose headers   'content-type': 'application/json',
+477 verbose headers   'cache-control': 'max-age=300',
+477 verbose headers   'content-length': '12314',
+477 verbose headers   'accept-ranges': 'bytes',
+477 verbose headers   date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+477 verbose headers   via: '1.1 varnish',
+477 verbose headers   age: '172',
+477 verbose headers   connection: 'keep-alive',
+477 verbose headers   'x-served-by': 'cache-sin6925-SIN',
+477 verbose headers   'x-cache': 'HIT',
+477 verbose headers   'x-cache-hits': '3',
+477 verbose headers   'x-timer': 'S1456489058.276449,VS0,VE0',
+477 verbose headers   vary: 'Accept' }
+478 silly get cb [ 200,
+478 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+478 silly get     etag: '"EJP4KA86SP8AGUJW4KS6CPU24"',
+478 silly get     'content-type': 'application/json',
+478 silly get     'cache-control': 'max-age=300',
+478 silly get     'content-length': '12314',
+478 silly get     'accept-ranges': 'bytes',
+478 silly get     date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+478 silly get     via: '1.1 varnish',
+478 silly get     age: '172',
+478 silly get     connection: 'keep-alive',
+478 silly get     'x-served-by': 'cache-sin6925-SIN',
+478 silly get     'x-cache': 'HIT',
+478 silly get     'x-cache-hits': '3',
+478 silly get     'x-timer': 'S1456489058.276449,VS0,VE0',
+478 silly get     vary: 'Accept' } ]
+479 verbose get saving deep-equal to /Users/saisree/.npm/registry.npmjs.org/deep-equal/.cache.json
+480 http 304 https://registry.npmjs.org/invariant
+481 verbose headers { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+481 verbose headers   via: '1.1 varnish',
+481 verbose headers   'cache-control': 'max-age=300',
+481 verbose headers   etag: '"EAEV491AYUM88PAMO3LNXG2J7"',
+481 verbose headers   age: '181',
+481 verbose headers   connection: 'keep-alive',
+481 verbose headers   'x-served-by': 'cache-sin6926-SIN',
+481 verbose headers   'x-cache': 'HIT',
+481 verbose headers   'x-cache-hits': '2',
+481 verbose headers   'x-timer': 'S1456489058.281365,VS0,VE0',
+481 verbose headers   vary: 'Accept' }
+482 silly get cb [ 304,
+482 silly get   { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+482 silly get     via: '1.1 varnish',
+482 silly get     'cache-control': 'max-age=300',
+482 silly get     etag: '"EAEV491AYUM88PAMO3LNXG2J7"',
+482 silly get     age: '181',
+482 silly get     connection: 'keep-alive',
+482 silly get     'x-served-by': 'cache-sin6926-SIN',
+482 silly get     'x-cache': 'HIT',
+482 silly get     'x-cache-hits': '2',
+482 silly get     'x-timer': 'S1456489058.281365,VS0,VE0',
+482 silly get     vary: 'Accept' } ]
+483 verbose etag https://registry.npmjs.org/invariant from cache
+484 verbose get saving invariant to /Users/saisree/.npm/registry.npmjs.org/invariant/.cache.json
+485 http 200 https://registry.npmjs.org/warning
+486 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+486 verbose headers   etag: '"PNJG2V0HJEFMAWF1EJIOC3N4"',
+486 verbose headers   'content-type': 'application/json',
+486 verbose headers   'cache-control': 'max-age=300',
+486 verbose headers   'content-length': '7523',
+486 verbose headers   'accept-ranges': 'bytes',
+486 verbose headers   date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+486 verbose headers   via: '1.1 varnish',
+486 verbose headers   age: '223',
+486 verbose headers   connection: 'keep-alive',
+486 verbose headers   'x-served-by': 'cache-sin6924-SIN',
+486 verbose headers   'x-cache': 'HIT',
+486 verbose headers   'x-cache-hits': '1',
+486 verbose headers   'x-timer': 'S1456489058.284421,VS0,VE0',
+486 verbose headers   vary: 'Accept' }
+487 silly get cb [ 200,
+487 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+487 silly get     etag: '"PNJG2V0HJEFMAWF1EJIOC3N4"',
+487 silly get     'content-type': 'application/json',
+487 silly get     'cache-control': 'max-age=300',
+487 silly get     'content-length': '7523',
+487 silly get     'accept-ranges': 'bytes',
+487 silly get     date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+487 silly get     via: '1.1 varnish',
+487 silly get     age: '223',
+487 silly get     connection: 'keep-alive',
+487 silly get     'x-served-by': 'cache-sin6924-SIN',
+487 silly get     'x-cache': 'HIT',
+487 silly get     'x-cache-hits': '1',
+487 silly get     'x-timer': 'S1456489058.284421,VS0,VE0',
+487 silly get     vary: 'Accept' } ]
+488 verbose get saving warning to /Users/saisree/.npm/registry.npmjs.org/warning/.cache.json
+489 http 200 https://registry.npmjs.org/minimist
+490 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+490 verbose headers   etag: '"875B9WX1CL895NWFDPAV8E25J"',
+490 verbose headers   'content-type': 'application/json',
+490 verbose headers   'cache-control': 'max-age=300',
+490 verbose headers   'content-length': '27687',
+490 verbose headers   'accept-ranges': 'bytes',
+490 verbose headers   date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+490 verbose headers   via: '1.1 varnish',
+490 verbose headers   age: '298',
+490 verbose headers   connection: 'keep-alive',
+490 verbose headers   'x-served-by': 'cache-sin6921-SIN',
+490 verbose headers   'x-cache': 'HIT',
+490 verbose headers   'x-cache-hits': '30',
+490 verbose headers   'x-timer': 'S1456489058.234258,VS0,VE0',
+490 verbose headers   vary: 'Accept' }
+491 silly get cb [ 200,
+491 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+491 silly get     etag: '"875B9WX1CL895NWFDPAV8E25J"',
+491 silly get     'content-type': 'application/json',
+491 silly get     'cache-control': 'max-age=300',
+491 silly get     'content-length': '27687',
+491 silly get     'accept-ranges': 'bytes',
+491 silly get     date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+491 silly get     via: '1.1 varnish',
+491 silly get     age: '298',
+491 silly get     connection: 'keep-alive',
+491 silly get     'x-served-by': 'cache-sin6921-SIN',
+491 silly get     'x-cache': 'HIT',
+491 silly get     'x-cache-hits': '30',
+491 silly get     'x-timer': 'S1456489058.234258,VS0,VE0',
+491 silly get     vary: 'Accept' } ]
+492 verbose get saving minimist to /Users/saisree/.npm/registry.npmjs.org/minimist/.cache.json
+493 silly addNameRange number 2 { name: 'deep-equal', range: '>=1.0.0 <2.0.0', hasData: true }
+494 silly addNameRange versions [ 'deep-equal',
+494 silly addNameRange   [ '0.0.0',
+494 silly addNameRange     '0.1.0',
+494 silly addNameRange     '0.1.1',
+494 silly addNameRange     '0.1.2',
+494 silly addNameRange     '0.2.0',
+494 silly addNameRange     '0.2.1',
+494 silly addNameRange     '0.2.2',
+494 silly addNameRange     '1.0.0',
+494 silly addNameRange     '1.0.1' ] ]
+495 silly addNamed deep-equal@1.0.1
+496 verbose addNamed "1.0.1" is a plain semver version for deep-equal
+497 silly addNameRange number 2 { name: 'invariant', range: '>=2.0.0 <3.0.0', hasData: true }
+498 silly addNameRange versions [ 'invariant',
+498 silly addNameRange   [ '1.0.0',
+498 silly addNameRange     '1.0.1',
+498 silly addNameRange     '1.0.2',
+498 silly addNameRange     '2.0.0',
+498 silly addNameRange     '2.1.0',
+498 silly addNameRange     '2.1.1',
+498 silly addNameRange     '2.1.2',
+498 silly addNameRange     '2.1.3',
+498 silly addNameRange     '2.2.0' ] ]
+499 silly addNamed invariant@2.2.0
+500 verbose addNamed "2.2.0" is a plain semver version for invariant
+501 silly cache afterAdd deep-equal@1.0.1
+502 verbose afterAdd /Users/saisree/.npm/deep-equal/1.0.1/package/package.json not in flight; writing
+503 silly addNameRange number 2 { name: 'warning', range: '>=2.0.0 <3.0.0', hasData: true }
+504 silly addNameRange versions [ 'warning', [ '1.0.0', '1.0.1', '1.0.2', '2.0.0', '2.1.0' ] ]
+505 silly addNamed warning@2.1.0
+506 verbose addNamed "2.1.0" is a plain semver version for warning
+507 silly mapToRegistry name minimist
+508 silly mapToRegistry using default registry
+509 silly mapToRegistry registry https://registry.npmjs.org/
+510 silly mapToRegistry uri https://registry.npmjs.org/minimist
+511 verbose addRemoteTarball https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz not in flight; adding
+512 verbose addRemoteTarball [ 'https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz',
+512 verbose addRemoteTarball   '857fcabfc3397d2625b8228262e86aa7a011b05d' ]
+513 silly cache afterAdd invariant@2.2.0
+514 verbose afterAdd /Users/saisree/.npm/invariant/2.2.0/package/package.json not in flight; writing
+515 info retry fetch attempt 1 at 5:47:38 PM
+516 info attempt registry request try #1 at 5:47:38 PM
+517 http fetch GET https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz
+518 verbose afterAdd /Users/saisree/.npm/deep-equal/1.0.1/package/package.json written
+519 silly cache afterAdd warning@2.1.0
+520 verbose afterAdd /Users/saisree/.npm/warning/2.1.0/package/package.json not in flight; writing
+521 verbose afterAdd /Users/saisree/.npm/invariant/2.2.0/package/package.json written
+522 verbose afterAdd /Users/saisree/.npm/warning/2.1.0/package/package.json written
+523 http 200 https://registry.npmjs.org/query-string
+524 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+524 verbose headers   etag: '"55U972MZDXPWHYFELPS2NIZ2A"',
+524 verbose headers   'content-type': 'application/json',
+524 verbose headers   'cache-control': 'max-age=300',
+524 verbose headers   'content-length': '22637',
+524 verbose headers   'accept-ranges': 'bytes',
+524 verbose headers   date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+524 verbose headers   via: '1.1 varnish',
+524 verbose headers   age: '179',
+524 verbose headers   connection: 'keep-alive',
+524 verbose headers   'x-served-by': 'cache-sin6924-SIN',
+524 verbose headers   'x-cache': 'HIT',
+524 verbose headers   'x-cache-hits': '1',
+524 verbose headers   'x-timer': 'S1456489058.282055,VS0,VE0',
+524 verbose headers   vary: 'Accept' }
+525 silly get cb [ 200,
+525 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+525 silly get     etag: '"55U972MZDXPWHYFELPS2NIZ2A"',
+525 silly get     'content-type': 'application/json',
+525 silly get     'cache-control': 'max-age=300',
+525 silly get     'content-length': '22637',
+525 silly get     'accept-ranges': 'bytes',
+525 silly get     date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+525 silly get     via: '1.1 varnish',
+525 silly get     age: '179',
+525 silly get     connection: 'keep-alive',
+525 silly get     'x-served-by': 'cache-sin6924-SIN',
+525 silly get     'x-cache': 'HIT',
+525 silly get     'x-cache-hits': '1',
+525 silly get     'x-timer': 'S1456489058.282055,VS0,VE0',
+525 silly get     vary: 'Accept' } ]
+526 verbose get saving query-string to /Users/saisree/.npm/registry.npmjs.org/query-string/.cache.json
+527 silly addNameRange number 2 { name: 'query-string', range: '>=3.0.0 <4.0.0', hasData: true }
+528 silly addNameRange versions [ 'query-string',
+528 silly addNameRange   [ '0.1.0',
+528 silly addNameRange     '0.1.1',
+528 silly addNameRange     '0.2.0',
+528 silly addNameRange     '0.3.0',
+528 silly addNameRange     '0.3.1',
+528 silly addNameRange     '0.4.0',
+528 silly addNameRange     '0.4.1',
+528 silly addNameRange     '1.0.0',
+528 silly addNameRange     '1.0.1',
+528 silly addNameRange     '2.0.0',
+528 silly addNameRange     '2.1.0',
+528 silly addNameRange     '2.2.0',
+528 silly addNameRange     '2.3.0',
+528 silly addNameRange     '2.4.0',
+528 silly addNameRange     '2.4.1',
+528 silly addNameRange     '2.4.2',
+528 silly addNameRange     '3.0.0' ] ]
+529 silly addNamed query-string@3.0.0
+530 verbose addNamed "3.0.0" is a plain semver version for query-string
+531 silly cache afterAdd query-string@3.0.0
+532 verbose afterAdd /Users/saisree/.npm/query-string/3.0.0/package/package.json not in flight; writing
+533 verbose afterAdd /Users/saisree/.npm/query-string/3.0.0/package/package.json written
+534 silly install resolved [ { name: 'deep-equal',
+534 silly install resolved     version: '1.0.1',
+534 silly install resolved     description: 'node\'s assert.deepEqual algorithm',
+534 silly install resolved     main: 'index.js',
+534 silly install resolved     directories: { lib: '.', example: 'example', test: 'test' },
+534 silly install resolved     scripts: { test: 'tape test/*.js' },
+534 silly install resolved     devDependencies: { tape: '^3.5.0' },
+534 silly install resolved     repository:
+534 silly install resolved      { type: 'git',
+534 silly install resolved        url: 'git+ssh://git@github.com/substack/node-deep-equal.git' },
+534 silly install resolved     keywords: [ 'equality', 'equal', 'compare' ],
+534 silly install resolved     author:
+534 silly install resolved      { name: 'James Halliday',
+534 silly install resolved        email: 'mail@substack.net',
+534 silly install resolved        url: 'http://substack.net' },
+534 silly install resolved     license: 'MIT',
+534 silly install resolved     testling: { files: 'test/*.js', browsers: [Object] },
+534 silly install resolved     gitHead: '59c511f5aeae19e3dd1de054077a789d7302be34',
+534 silly install resolved     bugs: { url: 'https://github.com/substack/node-deep-equal/issues' },
+534 silly install resolved     homepage: 'https://github.com/substack/node-deep-equal#readme',
+534 silly install resolved     _id: 'deep-equal@1.0.1',
+534 silly install resolved     _shasum: 'f5d260292b660e084eff4cdbc9f08ad3247448b5',
+534 silly install resolved     _from: 'deep-equal@>=1.0.0 <2.0.0',
+534 silly install resolved     _npmVersion: '3.2.2',
+534 silly install resolved     _nodeVersion: '2.4.0',
+534 silly install resolved     _npmUser: { name: 'substack', email: 'substack@gmail.com' },
+534 silly install resolved     dist:
+534 silly install resolved      { shasum: 'f5d260292b660e084eff4cdbc9f08ad3247448b5',
+534 silly install resolved        tarball: 'http://registry.npmjs.org/deep-equal/-/deep-equal-1.0.1.tgz' },
+534 silly install resolved     maintainers: [ [Object] ],
+534 silly install resolved     _resolved: 'https://registry.npmjs.org/deep-equal/-/deep-equal-1.0.1.tgz',
+534 silly install resolved     readme: 'ERROR: No README data found!' },
+534 silly install resolved   { name: 'invariant',
+534 silly install resolved     version: '2.2.0',
+534 silly install resolved     description: 'invariant',
+534 silly install resolved     keywords: [ 'test' ],
+534 silly install resolved     license: 'BSD-3-Clause',
+534 silly install resolved     author: { name: 'Andres Suarez', email: 'zertosh@gmail.com' },
+534 silly install resolved     files: [ 'invariant.js', 'browser.js' ],
+534 silly install resolved     repository:
+534 silly install resolved      { type: 'git',
+534 silly install resolved        url: 'git+https://github.com/zertosh/invariant.git' },
+534 silly install resolved     scripts: { test: 'NODE_ENV=production tap test/*.js && NODE_ENV=development tap test/*.js' },
+534 silly install resolved     dependencies: { 'loose-envify': '^1.0.0' },
+534 silly install resolved     devDependencies: { browserify: '^11.0.1', tap: '^1.4.0' },
+534 silly install resolved     main: 'invariant.js',
+534 silly install resolved     browser: 'browser.js',
+534 silly install resolved     browserify: { transform: [Object] },
+534 silly install resolved     gitHead: '1660eab9f183183e71ef57a7765bb1121680fff9',
+534 silly install resolved     bugs: { url: 'https://github.com/zertosh/invariant/issues' },
+534 silly install resolved     homepage: 'https://github.com/zertosh/invariant#readme',
+534 silly install resolved     _id: 'invariant@2.2.0',
+534 silly install resolved     _shasum: 'c8d7e847366a49cc18b622f058a689d481e895f2',
+534 silly install resolved     _from: 'invariant@>=2.0.0 <3.0.0',
+534 silly install resolved     _npmVersion: '2.14.7',
+534 silly install resolved     _nodeVersion: '4.2.2',
+534 silly install resolved     _npmUser: { name: 'zertosh', email: 'zertosh@gmail.com' },
+534 silly install resolved     maintainers: [ [Object] ],
+534 silly install resolved     dist:
+534 silly install resolved      { shasum: 'c8d7e847366a49cc18b622f058a689d481e895f2',
+534 silly install resolved        tarball: 'http://registry.npmjs.org/invariant/-/invariant-2.2.0.tgz' },
+534 silly install resolved     directories: {},
+534 silly install resolved     _resolved: 'https://registry.npmjs.org/invariant/-/invariant-2.2.0.tgz',
+534 silly install resolved     readme: 'ERROR: No README data found!' },
+534 silly install resolved   { name: 'warning',
+534 silly install resolved     version: '2.1.0',
+534 silly install resolved     description: 'A mirror of Facebook\'s Warning',
+534 silly install resolved     main: 'warning.js',
+534 silly install resolved     browser: 'browser.js',
+534 silly install resolved     browserify: { transform: [Object] },
+534 silly install resolved     files: [ 'browser.js', 'warning.js' ],
+534 silly install resolved     scripts: { test: 'NODE_ENV=production tap test/*.js && NODE_ENV=development tap test/*.js' },
+534 silly install resolved     dependencies: { 'loose-envify': '^1.0.0' },
+534 silly install resolved     devDependencies: { browserify: '^11.0.1', tap: '^1.4.0' },
+534 silly install resolved     repository: { type: 'git', url: 'git+https://github.com/r3dm/warning.git' },
+534 silly install resolved     keywords: [ 'warning', 'facebook', 'react', 'invariant' ],
+534 silly install resolved     author:
+534 silly install resolved      { name: 'Berkeley Martinez',
+534 silly install resolved        email: 'berkeley@r3dm.com',
+534 silly install resolved        url: 'http://r3dm.com' },
+534 silly install resolved     license: 'BSD-2-Clause',
+534 silly install resolved     bugs: { url: 'https://github.com/r3dm/warning/issues' },
+534 silly install resolved     homepage: 'https://github.com/r3dm/warning',
+534 silly install resolved     gitHead: 'b7d56e3f6c21c3ee05af617222d16c7d80118443',
+534 silly install resolved     _id: 'warning@2.1.0',
+534 silly install resolved     _shasum: '21220d9c63afc77a8c92111e011af705ce0c6901',
+534 silly install resolved     _from: 'warning@>=2.0.0 <3.0.0',
+534 silly install resolved     _npmVersion: '2.11.1',
+534 silly install resolved     _nodeVersion: '1.6.4',
+534 silly install resolved     _npmUser: { name: 'berkeleytrue', email: 'berkeley@robotie.com' },
+534 silly install resolved     maintainers: [ [Object] ],
+534 silly install resolved     dist:
+534 silly install resolved      { shasum: '21220d9c63afc77a8c92111e011af705ce0c6901',
+534 silly install resolved        tarball: 'http://registry.npmjs.org/warning/-/warning-2.1.0.tgz' },
+534 silly install resolved     directories: {},
+534 silly install resolved     _resolved: 'https://registry.npmjs.org/warning/-/warning-2.1.0.tgz',
+534 silly install resolved     readme: 'ERROR: No README data found!' },
+534 silly install resolved   { name: 'query-string',
+534 silly install resolved     version: '3.0.0',
+534 silly install resolved     description: 'Parse and stringify URL query strings',
+534 silly install resolved     license: 'MIT',
+534 silly install resolved     repository:
+534 silly install resolved      { type: 'git',
+534 silly install resolved        url: 'git+https://github.com/sindresorhus/query-string.git' },
+534 silly install resolved     author:
+534 silly install resolved      { name: 'Sindre Sorhus',
+534 silly install resolved        email: 'sindresorhus@gmail.com',
+534 silly install resolved        url: 'sindresorhus.com' },
+534 silly install resolved     engines: { node: '>=0.10.0' },
+534 silly install resolved     scripts: { test: 'xo && ava' },
+534 silly install resolved     files: [ 'index.js' ],
+534 silly install resolved     keywords:
+534 silly install resolved      [ 'browser',
+534 silly install resolved        'querystring',
+534 silly install resolved        'query',
+534 silly install resolved        'string',
+534 silly install resolved        'qs',
+534 silly install resolved        'param',
+534 silly install resolved        'parameter',
+534 silly install resolved        'url',
+534 silly install resolved        'uri',
+534 silly install resolved        'parse',
+534 silly install resolved        'stringify',
+534 silly install resolved        'encode',
+534 silly install resolved        'decode' ],
+534 silly install resolved     dependencies: { 'strict-uri-encode': '^1.0.0' },
+534 silly install resolved     devDependencies: { ava: '*', xo: '*' },
+534 silly install resolved     gitHead: '265aee0b8bf185be8cc33bb38393b1156081a0f1',
+534 silly install resolved     bugs: { url: 'https://github.com/sindresorhus/query-string/issues' },
+534 silly install resolved     homepage: 'https://github.com/sindresorhus/query-string',
+534 silly install resolved     _id: 'query-string@3.0.0',
+534 silly install resolved     _shasum: '02fd306f0432040b91b11063f9404fe1bbd4ba7b',
+534 silly install resolved     _from: 'query-string@>=3.0.0 <4.0.0',
+534 silly install resolved     _npmVersion: '2.14.4',
+534 silly install resolved     _nodeVersion: '4.1.1',
+534 silly install resolved     _npmUser: { name: 'sindresorhus', email: 'sindresorhus@gmail.com' },
+534 silly install resolved     dist:
+534 silly install resolved      { shasum: '02fd306f0432040b91b11063f9404fe1bbd4ba7b',
+534 silly install resolved        tarball: 'http://registry.npmjs.org/query-string/-/query-string-3.0.0.tgz' },
+534 silly install resolved     maintainers: [ [Object] ],
+534 silly install resolved     directories: {},
+534 silly install resolved     _resolved: 'https://registry.npmjs.org/query-string/-/query-string-3.0.0.tgz',
+534 silly install resolved     readme: 'ERROR: No README data found!' } ]
+535 info install deep-equal@1.0.1 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+536 info install invariant@2.2.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+537 info install warning@2.1.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+538 info install query-string@3.0.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+539 info installOne deep-equal@1.0.1
+540 verbose installOne of deep-equal to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history not in flight; installing
+541 info installOne invariant@2.2.0
+542 verbose installOne of invariant to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history not in flight; installing
+543 info installOne warning@2.1.0
+544 verbose installOne of warning to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history not in flight; installing
+545 info installOne query-string@3.0.0
+546 verbose installOne of query-string to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history not in flight; installing
+547 verbose lock using /Users/saisree/.npm/_locks/deep-equal-75baed5e665f0d2c.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+548 silly install write writing deep-equal 1.0.1 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+549 verbose lock using /Users/saisree/.npm/_locks/invariant-ca79df06a5348b03.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+550 silly install write writing invariant 2.2.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+551 verbose lock using /Users/saisree/.npm/_locks/warning-d6b0254907307d2d.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+552 verbose lock using /Users/saisree/.npm/_locks/query-string-6704d3370540f617.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+553 silly install write writing warning 2.1.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+554 verbose unbuild node_modules/history/node_modules/deep-equal
+555 silly install write writing query-string 3.0.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+556 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+557 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+558 verbose tar unpack /Users/saisree/.npm/deep-equal/1.0.1/package.tgz
+559 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+560 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal is being purged
+561 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+562 verbose unbuild node_modules/history/node_modules/invariant
+563 silly gunzTarPerm modes [ '755', '644' ]
+564 verbose unbuild node_modules/history/node_modules/warning
+565 verbose unbuild node_modules/history/node_modules/query-string
+566 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+567 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+568 verbose tar unpack /Users/saisree/.npm/invariant/2.2.0/package.tgz
+569 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+570 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant is being purged
+571 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+572 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+573 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+574 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+575 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+576 silly gunzTarPerm modes [ '755', '644' ]
+577 verbose tar unpack /Users/saisree/.npm/warning/2.1.0/package.tgz
+578 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+579 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning is being purged
+580 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+581 verbose tar unpack /Users/saisree/.npm/query-string/3.0.0/package.tgz
+582 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+583 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string is being purged
+584 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+585 silly gunzTarPerm modes [ '755', '644' ]
+586 silly gunzTarPerm extractEntry package.json
+587 silly gunzTarPerm modes [ '755', '644' ]
+588 silly gunzTarPerm extractEntry package.json
+589 silly gunzTarPerm extractEntry LICENSE
+590 silly gunzTarPerm extractEntry index.js
+591 silly gunzTarPerm extractEntry package.json
+592 silly gunzTarPerm extractEntry package.json
+593 silly gunzTarPerm extractEntry README.md
+594 silly gunzTarPerm extractEntry browser.js
+595 silly gunzTarPerm extractEntry README.md
+596 silly gunzTarPerm extractEntry browser.js
+597 silly gunzTarPerm extractEntry index.js
+598 silly gunzTarPerm extractEntry license
+599 silly gunzTarPerm extractEntry .travis.yml
+600 silly gunzTarPerm extractEntry example/cmp.js
+601 silly gunzTarPerm extractEntry invariant.js
+602 silly gunzTarPerm extractEntry CHANGELOG.md
+603 silly gunzTarPerm extractEntry warning.js
+604 silly gunzTarPerm extractEntry CHANGELOG.md
+605 silly gunzTarPerm extractEntry readme.md
+606 silly gunzTarPerm extractEntry lib/is_arguments.js
+607 silly gunzTarPerm extractEntry lib/keys.js
+608 silly gunzTarPerm extractEntry LICENSE.md
+609 silly gunzTarPerm extractEntry readme.markdown
+610 silly gunzTarPerm extractEntry test/cmp.js
+611 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/package.json
+612 info preinstall query-string@3.0.0
+613 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/package.json
+614 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/package.json
+615 silly prepareForInstallMany adding strict-uri-encode@^1.0.0 from query-string dependencies
+616 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/package.json
+617 info preinstall invariant@2.2.0
+618 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/package.json
+619 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/package.json
+620 silly cache add args [ 'strict-uri-encode@^1.0.0', null ]
+621 verbose cache add spec strict-uri-encode@^1.0.0
+622 silly cache add parsed spec Result {
+622 silly cache add   raw: 'strict-uri-encode@^1.0.0',
+622 silly cache add   scope: null,
+622 silly cache add   name: 'strict-uri-encode',
+622 silly cache add   rawSpec: '^1.0.0',
+622 silly cache add   spec: '>=1.0.0 <2.0.0',
+622 silly cache add   type: 'range' }
+623 silly addNamed strict-uri-encode@>=1.0.0 <2.0.0
+624 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for strict-uri-encode
+625 silly addNameRange { name: 'strict-uri-encode',
+625 silly addNameRange   range: '>=1.0.0 <2.0.0',
+625 silly addNameRange   hasData: false }
+626 silly mapToRegistry name strict-uri-encode
+627 silly mapToRegistry using default registry
+628 silly mapToRegistry registry https://registry.npmjs.org/
+629 silly mapToRegistry uri https://registry.npmjs.org/strict-uri-encode
+630 verbose addNameRange registry:https://registry.npmjs.org/strict-uri-encode not in flight; fetching
+631 silly prepareForInstallMany adding loose-envify@^1.0.0 from invariant dependencies
+632 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/package.json
+633 info preinstall warning@2.1.0
+634 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/package.json
+635 silly cache add args [ 'loose-envify@^1.0.0', null ]
+636 verbose cache add spec loose-envify@^1.0.0
+637 silly cache add parsed spec Result {
+637 silly cache add   raw: 'loose-envify@^1.0.0',
+637 silly cache add   scope: null,
+637 silly cache add   name: 'loose-envify',
+637 silly cache add   rawSpec: '^1.0.0',
+637 silly cache add   spec: '>=1.0.0 <2.0.0',
+637 silly cache add   type: 'range' }
+638 silly addNamed loose-envify@>=1.0.0 <2.0.0
+639 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for loose-envify
+640 silly addNameRange { name: 'loose-envify', range: '>=1.0.0 <2.0.0', hasData: false }
+641 silly mapToRegistry name loose-envify
+642 silly mapToRegistry using default registry
+643 silly mapToRegistry registry https://registry.npmjs.org/
+644 silly mapToRegistry uri https://registry.npmjs.org/loose-envify
+645 verbose addNameRange registry:https://registry.npmjs.org/loose-envify not in flight; fetching
+646 verbose request uri https://registry.npmjs.org/strict-uri-encode
+647 verbose request no auth needed
+648 info attempt registry request try #1 at 5:47:38 PM
+649 verbose etag "C6VMNOWIKOIB7BAA09JAIKXK3"
+650 http request GET https://registry.npmjs.org/strict-uri-encode
+651 silly prepareForInstallMany adding loose-envify@^1.0.0 from warning dependencies
+652 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/package.json
+653 verbose request uri https://registry.npmjs.org/loose-envify
+654 verbose request no auth needed
+655 info attempt registry request try #1 at 5:47:38 PM
+656 verbose etag "2L56VY41TJJXRF6O0PIETR3YS"
+657 http request GET https://registry.npmjs.org/loose-envify
+658 silly cache add args [ 'loose-envify@^1.0.0', null ]
+659 verbose cache add spec loose-envify@^1.0.0
+660 silly cache add parsed spec Result {
+660 silly cache add   raw: 'loose-envify@^1.0.0',
+660 silly cache add   scope: null,
+660 silly cache add   name: 'loose-envify',
+660 silly cache add   rawSpec: '^1.0.0',
+660 silly cache add   spec: '>=1.0.0 <2.0.0',
+660 silly cache add   type: 'range' }
+661 silly addNamed loose-envify@>=1.0.0 <2.0.0
+662 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for loose-envify
+663 silly addNameRange { name: 'loose-envify', range: '>=1.0.0 <2.0.0', hasData: false }
+664 silly mapToRegistry name loose-envify
+665 silly mapToRegistry using default registry
+666 silly mapToRegistry registry https://registry.npmjs.org/
+667 silly mapToRegistry uri https://registry.npmjs.org/loose-envify
+668 verbose addNameRange registry:https://registry.npmjs.org/loose-envify already in flight; waiting
+669 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal/package.json
+670 info preinstall deep-equal@1.0.1
+671 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal/package.json
+672 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal/package.json
+673 silly install resolved []
+674 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+675 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+676 info linkStuff deep-equal@1.0.1
+677 silly linkStuff deep-equal@1.0.1 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules as its parent node_modules
+678 verbose linkBins deep-equal@1.0.1
+679 verbose linkMans deep-equal@1.0.1
+680 verbose rebuildBundles deep-equal@1.0.1
+681 info install deep-equal@1.0.1
+682 info postinstall deep-equal@1.0.1
+683 verbose unlock done using /Users/saisree/.npm/_locks/deep-equal-75baed5e665f0d2c.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/deep-equal
+684 http fetch 200 https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz
+685 silly fetchAndShaCheck shasum 857fcabfc3397d2625b8228262e86aa7a011b05d
+686 verbose addTmpTarball /var/folders/qk/fc3cz5g532scbd972lr01vl00000gp/T/npm-2060-c762a138/registry.npmjs.org/minimist/-/minimist-0.0.8.tgz not in flight; adding
+687 verbose addTmpTarball already have metadata; skipping unpack for minimist@0.0.8
+688 silly cache afterAdd minimist@0.0.8
+689 verbose afterAdd /Users/saisree/.npm/minimist/0.0.8/package/package.json not in flight; writing
+690 verbose afterAdd /Users/saisree/.npm/minimist/0.0.8/package/package.json written
+691 silly install resolved [ { name: 'minimist',
+691 silly install resolved     version: '0.0.8',
+691 silly install resolved     description: 'parse argument options',
+691 silly install resolved     main: 'index.js',
+691 silly install resolved     devDependencies: { tape: '~1.0.4', tap: '~0.4.0' },
+691 silly install resolved     scripts: { test: 'tap test/*.js' },
+691 silly install resolved     testling: { files: 'test/*.js', browsers: [Object] },
+691 silly install resolved     repository: { type: 'git', url: 'git://github.com/substack/minimist.git' },
+691 silly install resolved     homepage: 'https://github.com/substack/minimist',
+691 silly install resolved     keywords: [ 'argv', 'getopt', 'parser', 'optimist' ],
+691 silly install resolved     author:
+691 silly install resolved      { name: 'James Halliday',
+691 silly install resolved        email: 'mail@substack.net',
+691 silly install resolved        url: 'http://substack.net' },
+691 silly install resolved     license: 'MIT',
+691 silly install resolved     bugs: { url: 'https://github.com/substack/minimist/issues' },
+691 silly install resolved     _id: 'minimist@0.0.8',
+691 silly install resolved     dist:
+691 silly install resolved      { shasum: '857fcabfc3397d2625b8228262e86aa7a011b05d',
+691 silly install resolved        tarball: 'http://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz' },
+691 silly install resolved     _from: 'minimist@0.0.8',
+691 silly install resolved     _npmVersion: '1.4.3',
+691 silly install resolved     _npmUser: { name: 'substack', email: 'mail@substack.net' },
+691 silly install resolved     maintainers: [ [Object] ],
+691 silly install resolved     directories: {},
+691 silly install resolved     _shasum: '857fcabfc3397d2625b8228262e86aa7a011b05d',
+691 silly install resolved     _resolved: 'https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz' } ]
+692 info install minimist@0.0.8 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+693 info installOne minimist@0.0.8
+694 verbose installOne of minimist to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp not in flight; installing
+695 verbose lock using /Users/saisree/.npm/_locks/minimist-2617c918fab18c13.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+696 silly install write writing minimist 0.0.8 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+697 verbose unbuild node_modules/mkdirp/node_modules/minimist
+698 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+699 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+700 verbose tar unpack /Users/saisree/.npm/minimist/0.0.8/package.tgz
+701 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+702 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist is being purged
+703 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+704 silly gunzTarPerm modes [ '755', '644' ]
+705 silly gunzTarPerm extractEntry package.json
+706 silly gunzTarPerm extractEntry LICENSE
+707 silly gunzTarPerm extractEntry index.js
+708 silly gunzTarPerm extractEntry .travis.yml
+709 silly gunzTarPerm extractEntry example/parse.js
+710 silly gunzTarPerm extractEntry readme.markdown
+711 silly gunzTarPerm extractEntry test/dash.js
+712 silly gunzTarPerm extractEntry test/default_bool.js
+713 silly gunzTarPerm extractEntry test/dotted.js
+714 silly gunzTarPerm extractEntry test/long.js
+715 silly gunzTarPerm extractEntry test/parse.js
+716 silly gunzTarPerm extractEntry test/parse_modified.js
+717 silly gunzTarPerm extractEntry test/short.js
+718 silly gunzTarPerm extractEntry test/whitespace.js
+719 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist/package.json
+720 info preinstall minimist@0.0.8
+721 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist/package.json
+722 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist/package.json
+723 silly install resolved []
+724 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+725 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+726 info linkStuff minimist@0.0.8
+727 silly linkStuff minimist@0.0.8 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules as its parent node_modules
+728 verbose linkBins minimist@0.0.8
+729 verbose linkMans minimist@0.0.8
+730 verbose rebuildBundles minimist@0.0.8
+731 info install minimist@0.0.8
+732 info postinstall minimist@0.0.8
+733 verbose unlock done using /Users/saisree/.npm/_locks/minimist-2617c918fab18c13.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp/node_modules/minimist
+734 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+735 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+736 info linkStuff mkdirp@0.5.1
+737 silly linkStuff mkdirp@0.5.1 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+738 verbose linkBins mkdirp@0.5.1
+739 verbose link bins [ { mkdirp: 'bin/cmd.js' },
+739 verbose link bins   '/Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin',
+739 verbose link bins   false ]
+740 verbose linkMans mkdirp@0.5.1
+741 verbose rebuildBundles mkdirp@0.5.1
+742 verbose rebuildBundles [ 'minimist' ]
+743 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/mkdirp is being purged
+744 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/mkdirp
+745 info install mkdirp@0.5.1
+746 info postinstall mkdirp@0.5.1
+747 verbose unlock done using /Users/saisree/.npm/_locks/mkdirp-4e4f7d7808c9519c.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/mkdirp
+748 http 304 https://registry.npmjs.org/strict-uri-encode
+749 verbose headers { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+749 verbose headers   via: '1.1 varnish',
+749 verbose headers   'cache-control': 'max-age=300',
+749 verbose headers   etag: '"C6VMNOWIKOIB7BAA09JAIKXK3"',
+749 verbose headers   age: '211',
+749 verbose headers   connection: 'keep-alive',
+749 verbose headers   'x-served-by': 'cache-sin6921-SIN',
+749 verbose headers   'x-cache': 'HIT',
+749 verbose headers   'x-cache-hits': '1',
+749 verbose headers   'x-timer': 'S1456489058.748300,VS0,VE0',
+749 verbose headers   vary: 'Accept' }
+750 silly get cb [ 304,
+750 silly get   { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+750 silly get     via: '1.1 varnish',
+750 silly get     'cache-control': 'max-age=300',
+750 silly get     etag: '"C6VMNOWIKOIB7BAA09JAIKXK3"',
+750 silly get     age: '211',
+750 silly get     connection: 'keep-alive',
+750 silly get     'x-served-by': 'cache-sin6921-SIN',
+750 silly get     'x-cache': 'HIT',
+750 silly get     'x-cache-hits': '1',
+750 silly get     'x-timer': 'S1456489058.748300,VS0,VE0',
+750 silly get     vary: 'Accept' } ]
+751 verbose etag https://registry.npmjs.org/strict-uri-encode from cache
+752 verbose get saving strict-uri-encode to /Users/saisree/.npm/registry.npmjs.org/strict-uri-encode/.cache.json
+753 silly addNameRange number 2 { name: 'strict-uri-encode',
+753 silly addNameRange   range: '>=1.0.0 <2.0.0',
+753 silly addNameRange   hasData: true }
+754 silly addNameRange versions [ 'strict-uri-encode', [ '1.0.0', '1.0.1', '1.0.2', '1.1.0' ] ]
+755 silly addNamed strict-uri-encode@1.1.0
+756 verbose addNamed "1.1.0" is a plain semver version for strict-uri-encode
+757 silly cache afterAdd strict-uri-encode@1.1.0
+758 verbose afterAdd /Users/saisree/.npm/strict-uri-encode/1.1.0/package/package.json not in flight; writing
+759 verbose afterAdd /Users/saisree/.npm/strict-uri-encode/1.1.0/package/package.json written
+760 silly install resolved [ { name: 'strict-uri-encode',
+760 silly install resolved     version: '1.1.0',
+760 silly install resolved     description: 'A stricter URI encode adhering to RFC 3986',
+760 silly install resolved     license: 'MIT',
+760 silly install resolved     repository:
+760 silly install resolved      { type: 'git',
+760 silly install resolved        url: 'git+https://github.com/kevva/strict-uri-encode.git' },
+760 silly install resolved     author:
+760 silly install resolved      { name: 'Kevin Mårtensson',
+760 silly install resolved        email: 'kevinmartensson@gmail.com',
+760 silly install resolved        url: 'github.com/kevva' },
+760 silly install resolved     engines: { node: '>=0.10.0' },
+760 silly install resolved     scripts: { test: 'node test.js' },
+760 silly install resolved     files: [ 'index.js' ],
+760 silly install resolved     keywords: [ 'component', 'encode', 'RFC3986', 'uri' ],
+760 silly install resolved     devDependencies: { ava: '^0.0.4' },
+760 silly install resolved     gitHead: 'ce6681428485d30e29222c722f832df15e3c19ac',
+760 silly install resolved     bugs: { url: 'https://github.com/kevva/strict-uri-encode/issues' },
+760 silly install resolved     homepage: 'https://github.com/kevva/strict-uri-encode#readme',
+760 silly install resolved     _id: 'strict-uri-encode@1.1.0',
+760 silly install resolved     _shasum: '279b225df1d582b1f54e65addd4352e18faa0713',
+760 silly install resolved     _from: 'strict-uri-encode@>=1.0.0 <2.0.0',
+760 silly install resolved     _npmVersion: '3.5.3',
+760 silly install resolved     _nodeVersion: '5.3.0',
+760 silly install resolved     _npmUser: { name: 'kevva', email: 'kevinmartensson@gmail.com' },
+760 silly install resolved     dist:
+760 silly install resolved      { shasum: '279b225df1d582b1f54e65addd4352e18faa0713',
+760 silly install resolved        tarball: 'http://registry.npmjs.org/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz' },
+760 silly install resolved     maintainers: [ [Object] ],
+760 silly install resolved     directories: {},
+760 silly install resolved     _resolved: 'https://registry.npmjs.org/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz',
+760 silly install resolved     readme: 'ERROR: No README data found!' } ]
+761 info install strict-uri-encode@1.1.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+762 info installOne strict-uri-encode@1.1.0
+763 verbose installOne of strict-uri-encode to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string not in flight; installing
+764 http 304 https://registry.npmjs.org/loose-envify
+765 verbose headers { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+765 verbose headers   via: '1.1 varnish',
+765 verbose headers   'cache-control': 'max-age=300',
+765 verbose headers   etag: '"2L56VY41TJJXRF6O0PIETR3YS"',
+765 verbose headers   age: '250',
+765 verbose headers   connection: 'keep-alive',
+765 verbose headers   'x-served-by': 'cache-sin6927-SIN',
+765 verbose headers   'x-cache': 'HIT',
+765 verbose headers   'x-cache-hits': '1',
+765 verbose headers   'x-timer': 'S1456489058.756111,VS0,VE3',
+765 verbose headers   vary: 'Accept' }
+766 silly get cb [ 304,
+766 silly get   { date: 'Fri, 26 Feb 2016 12:17:38 GMT',
+766 silly get     via: '1.1 varnish',
+766 silly get     'cache-control': 'max-age=300',
+766 silly get     etag: '"2L56VY41TJJXRF6O0PIETR3YS"',
+766 silly get     age: '250',
+766 silly get     connection: 'keep-alive',
+766 silly get     'x-served-by': 'cache-sin6927-SIN',
+766 silly get     'x-cache': 'HIT',
+766 silly get     'x-cache-hits': '1',
+766 silly get     'x-timer': 'S1456489058.756111,VS0,VE3',
+766 silly get     vary: 'Accept' } ]
+767 verbose etag https://registry.npmjs.org/loose-envify from cache
+768 verbose get saving loose-envify to /Users/saisree/.npm/registry.npmjs.org/loose-envify/.cache.json
+769 verbose lock using /Users/saisree/.npm/_locks/strict-uri-encode-d8d1b8f5147d785d.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+770 silly install write writing strict-uri-encode 1.1.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+771 verbose unbuild node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+772 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+773 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+774 verbose tar unpack /Users/saisree/.npm/strict-uri-encode/1.1.0/package.tgz
+775 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+776 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode is being purged
+777 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+778 silly gunzTarPerm modes [ '755', '644' ]
+779 silly addNameRange number 2 { name: 'loose-envify', range: '>=1.0.0 <2.0.0', hasData: true }
+780 silly addNameRange versions [ 'loose-envify', [ '1.0.0', '1.1.0' ] ]
+781 silly addNamed loose-envify@1.1.0
+782 verbose addNamed "1.1.0" is a plain semver version for loose-envify
+783 silly addNameRange number 2 { name: 'loose-envify', range: '>=1.0.0 <2.0.0', hasData: true }
+784 silly addNameRange versions [ 'loose-envify', [ '1.0.0', '1.1.0' ] ]
+785 silly addNamed loose-envify@1.1.0
+786 verbose addNamed "1.1.0" is a plain semver version for loose-envify
+787 silly gunzTarPerm extractEntry package.json
+788 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
+789 silly gunzTarPerm extractEntry index.js
+790 silly gunzTarPerm modified mode [ 'index.js', 436, 420 ]
+791 silly gunzTarPerm extractEntry license
+792 silly gunzTarPerm modified mode [ 'license', 436, 420 ]
+793 silly cache afterAdd loose-envify@1.1.0
+794 verbose afterAdd /Users/saisree/.npm/loose-envify/1.1.0/package/package.json not in flight; writing
+795 silly cache afterAdd loose-envify@1.1.0
+796 verbose afterAdd /Users/saisree/.npm/loose-envify/1.1.0/package/package.json already in flight; not writing
+797 verbose afterAdd /Users/saisree/.npm/loose-envify/1.1.0/package/package.json written
+798 silly install resolved [ { name: 'loose-envify',
+798 silly install resolved     version: '1.1.0',
+798 silly install resolved     description: 'Fast (and loose) selective `process.env` replacer using js-tokens instead of an AST',
+798 silly install resolved     keywords:
+798 silly install resolved      [ 'environment',
+798 silly install resolved        'variables',
+798 silly install resolved        'browserify',
+798 silly install resolved        'browserify-transform',
+798 silly install resolved        'transform',
+798 silly install resolved        'source',
+798 silly install resolved        'configuration' ],
+798 silly install resolved     homepage: 'https://github.com/zertosh/loose-envify',
+798 silly install resolved     license: 'MIT',
+798 silly install resolved     author: { name: 'Andres Suarez', email: 'zertosh@gmail.com' },
+798 silly install resolved     repository:
+798 silly install resolved      { type: 'git',
+798 silly install resolved        url: 'git://github.com/zertosh/loose-envify.git' },
+798 silly install resolved     scripts: { test: 'tap test/*.js' },
+798 silly install resolved     dependencies: { 'js-tokens': '^1.0.1' },
+798 silly install resolved     devDependencies: { browserify: '^11.0.1', envify: '^3.4.0', tap: '^1.4.0' },
+798 silly install resolved     gitHead: 'f536f4fdbde317d77827ac8655c6c8473928b9e1',
+798 silly install resolved     bugs: { url: 'https://github.com/zertosh/loose-envify/issues' },
+798 silly install resolved     _id: 'loose-envify@1.1.0',
+798 silly install resolved     _shasum: '527582d62cff4e04da3f9976c7110d3392ec7e0c',
+798 silly install resolved     _from: 'loose-envify@>=1.0.0 <2.0.0',
+798 silly install resolved     _npmVersion: '2.14.4',
+798 silly install resolved     _nodeVersion: '4.1.2',
+798 silly install resolved     _npmUser: { name: 'zertosh', email: 'zertosh@gmail.com' },
+798 silly install resolved     maintainers: [ [Object] ],
+798 silly install resolved     dist:
+798 silly install resolved      { shasum: '527582d62cff4e04da3f9976c7110d3392ec7e0c',
+798 silly install resolved        tarball: 'http://registry.npmjs.org/loose-envify/-/loose-envify-1.1.0.tgz' },
+798 silly install resolved     directories: {},
+798 silly install resolved     _resolved: 'https://registry.npmjs.org/loose-envify/-/loose-envify-1.1.0.tgz',
+798 silly install resolved     readme: 'ERROR: No README data found!' } ]
+799 info install loose-envify@1.1.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+800 info installOne loose-envify@1.1.0
+801 verbose installOne of loose-envify to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant not in flight; installing
+802 silly install resolved [ { name: 'loose-envify',
+802 silly install resolved     version: '1.1.0',
+802 silly install resolved     description: 'Fast (and loose) selective `process.env` replacer using js-tokens instead of an AST',
+802 silly install resolved     keywords:
+802 silly install resolved      [ 'environment',
+802 silly install resolved        'variables',
+802 silly install resolved        'browserify',
+802 silly install resolved        'browserify-transform',
+802 silly install resolved        'transform',
+802 silly install resolved        'source',
+802 silly install resolved        'configuration' ],
+802 silly install resolved     homepage: 'https://github.com/zertosh/loose-envify',
+802 silly install resolved     license: 'MIT',
+802 silly install resolved     author: { name: 'Andres Suarez', email: 'zertosh@gmail.com' },
+802 silly install resolved     repository:
+802 silly install resolved      { type: 'git',
+802 silly install resolved        url: 'git://github.com/zertosh/loose-envify.git' },
+802 silly install resolved     scripts: { test: 'tap test/*.js' },
+802 silly install resolved     dependencies: { 'js-tokens': '^1.0.1' },
+802 silly install resolved     devDependencies: { browserify: '^11.0.1', envify: '^3.4.0', tap: '^1.4.0' },
+802 silly install resolved     gitHead: 'f536f4fdbde317d77827ac8655c6c8473928b9e1',
+802 silly install resolved     bugs: { url: 'https://github.com/zertosh/loose-envify/issues' },
+802 silly install resolved     _id: 'loose-envify@1.1.0',
+802 silly install resolved     _shasum: '527582d62cff4e04da3f9976c7110d3392ec7e0c',
+802 silly install resolved     _from: 'loose-envify@>=1.0.0 <2.0.0',
+802 silly install resolved     _npmVersion: '2.14.4',
+802 silly install resolved     _nodeVersion: '4.1.2',
+802 silly install resolved     _npmUser: { name: 'zertosh', email: 'zertosh@gmail.com' },
+802 silly install resolved     maintainers: [ [Object] ],
+802 silly install resolved     dist:
+802 silly install resolved      { shasum: '527582d62cff4e04da3f9976c7110d3392ec7e0c',
+802 silly install resolved        tarball: 'http://registry.npmjs.org/loose-envify/-/loose-envify-1.1.0.tgz' },
+802 silly install resolved     directories: {},
+802 silly install resolved     _resolved: 'https://registry.npmjs.org/loose-envify/-/loose-envify-1.1.0.tgz',
+802 silly install resolved     readme: 'ERROR: No README data found!' } ]
+803 info install loose-envify@1.1.0 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+804 info installOne loose-envify@1.1.0
+805 verbose installOne of loose-envify to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning not in flight; installing
+806 silly gunzTarPerm extractEntry readme.md
+807 silly gunzTarPerm modified mode [ 'readme.md', 436, 420 ]
+808 verbose lock using /Users/saisree/.npm/_locks/loose-envify-e9960cf4408054f1.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+809 verbose lock using /Users/saisree/.npm/_locks/loose-envify-663347f26c2207d2.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+810 silly install write writing loose-envify 1.1.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+811 silly install write writing loose-envify 1.1.0 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+812 verbose unbuild node_modules/history/node_modules/invariant/node_modules/loose-envify
+813 verbose unbuild node_modules/history/node_modules/warning/node_modules/loose-envify
+814 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+815 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+816 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+817 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+818 verbose tar unpack /Users/saisree/.npm/loose-envify/1.1.0/package.tgz
+819 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+820 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify is being purged
+821 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+822 verbose tar unpack /Users/saisree/.npm/loose-envify/1.1.0/package.tgz
+823 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+824 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify is being purged
+825 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+826 silly gunzTarPerm modes [ '755', '644' ]
+827 silly gunzTarPerm modes [ '755', '644' ]
+828 silly gunzTarPerm extractEntry package.json
+829 silly gunzTarPerm extractEntry package.json
+830 silly gunzTarPerm extractEntry .npmignore
+831 silly gunzTarPerm extractEntry README.md
+832 silly gunzTarPerm extractEntry .npmignore
+833 silly gunzTarPerm extractEntry README.md
+834 silly gunzTarPerm extractEntry index.js
+835 silly gunzTarPerm extractEntry custom.js
+836 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode/package.json
+837 silly gunzTarPerm extractEntry index.js
+838 silly gunzTarPerm extractEntry custom.js
+839 info preinstall strict-uri-encode@1.1.0
+840 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode/package.json
+841 silly gunzTarPerm extractEntry loose-envify.js
+842 silly gunzTarPerm extractEntry replace.js
+843 silly gunzTarPerm extractEntry loose-envify.js
+844 silly gunzTarPerm extractEntry replace.js
+845 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode/package.json
+846 silly install resolved []
+847 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+848 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+849 info linkStuff strict-uri-encode@1.1.0
+850 silly linkStuff strict-uri-encode@1.1.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules as its parent node_modules
+851 verbose linkBins strict-uri-encode@1.1.0
+852 verbose linkMans strict-uri-encode@1.1.0
+853 verbose rebuildBundles strict-uri-encode@1.1.0
+854 info install strict-uri-encode@1.1.0
+855 info postinstall strict-uri-encode@1.1.0
+856 verbose unlock done using /Users/saisree/.npm/_locks/strict-uri-encode-d8d1b8f5147d785d.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string/node_modules/strict-uri-encode
+857 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+858 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+859 info linkStuff query-string@3.0.0
+860 silly linkStuff query-string@3.0.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules as its parent node_modules
+861 verbose linkBins query-string@3.0.0
+862 verbose linkMans query-string@3.0.0
+863 verbose rebuildBundles query-string@3.0.0
+864 verbose rebuildBundles [ 'strict-uri-encode' ]
+865 info install query-string@3.0.0
+866 info postinstall query-string@3.0.0
+867 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/package.json
+868 verbose unlock done using /Users/saisree/.npm/_locks/query-string-6704d3370540f617.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/query-string
+869 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/package.json
+870 info preinstall loose-envify@1.1.0
+871 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/package.json
+872 info preinstall loose-envify@1.1.0
+873 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/package.json
+874 silly prepareForInstallMany adding js-tokens@^1.0.1 from loose-envify dependencies
+875 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/package.json
+876 silly prepareForInstallMany adding js-tokens@^1.0.1 from loose-envify dependencies
+877 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/package.json
+878 silly cache add args [ 'js-tokens@^1.0.1', null ]
+879 verbose cache add spec js-tokens@^1.0.1
+880 silly cache add parsed spec Result {
+880 silly cache add   raw: 'js-tokens@^1.0.1',
+880 silly cache add   scope: null,
+880 silly cache add   name: 'js-tokens',
+880 silly cache add   rawSpec: '^1.0.1',
+880 silly cache add   spec: '>=1.0.1 <2.0.0',
+880 silly cache add   type: 'range' }
+881 silly addNamed js-tokens@>=1.0.1 <2.0.0
+882 verbose addNamed ">=1.0.1 <2.0.0" is a valid semver range for js-tokens
+883 silly addNameRange { name: 'js-tokens', range: '>=1.0.1 <2.0.0', hasData: false }
+884 silly mapToRegistry name js-tokens
+885 silly mapToRegistry using default registry
+886 silly mapToRegistry registry https://registry.npmjs.org/
+887 silly mapToRegistry uri https://registry.npmjs.org/js-tokens
+888 verbose addNameRange registry:https://registry.npmjs.org/js-tokens not in flight; fetching
+889 silly cache add args [ 'js-tokens@^1.0.1', null ]
+890 verbose cache add spec js-tokens@^1.0.1
+891 silly cache add parsed spec Result {
+891 silly cache add   raw: 'js-tokens@^1.0.1',
+891 silly cache add   scope: null,
+891 silly cache add   name: 'js-tokens',
+891 silly cache add   rawSpec: '^1.0.1',
+891 silly cache add   spec: '>=1.0.1 <2.0.0',
+891 silly cache add   type: 'range' }
+892 silly addNamed js-tokens@>=1.0.1 <2.0.0
+893 verbose addNamed ">=1.0.1 <2.0.0" is a valid semver range for js-tokens
+894 silly addNameRange { name: 'js-tokens', range: '>=1.0.1 <2.0.0', hasData: false }
+895 silly mapToRegistry name js-tokens
+896 silly mapToRegistry using default registry
+897 silly mapToRegistry registry https://registry.npmjs.org/
+898 silly mapToRegistry uri https://registry.npmjs.org/js-tokens
+899 verbose addNameRange registry:https://registry.npmjs.org/js-tokens already in flight; waiting
+900 verbose request uri https://registry.npmjs.org/js-tokens
+901 verbose request no auth needed
+902 info attempt registry request try #1 at 5:47:38 PM
+903 verbose etag "F4N7TBLBJ8Z40VG7DPO546R7U"
+904 http request GET https://registry.npmjs.org/js-tokens
+905 http 304 https://registry.npmjs.org/js-tokens
+906 verbose headers { date: 'Fri, 26 Feb 2016 12:17:39 GMT',
+906 verbose headers   via: '1.1 varnish',
+906 verbose headers   'cache-control': 'max-age=300',
+906 verbose headers   etag: '"F4N7TBLBJ8Z40VG7DPO546R7U"',
+906 verbose headers   age: '251',
+906 verbose headers   connection: 'keep-alive',
+906 verbose headers   'x-served-by': 'cache-sin6921-SIN',
+906 verbose headers   'x-cache': 'HIT',
+906 verbose headers   'x-cache-hits': '4',
+906 verbose headers   'x-timer': 'S1456489059.154361,VS0,VE0',
+906 verbose headers   vary: 'Accept' }
+907 silly get cb [ 304,
+907 silly get   { date: 'Fri, 26 Feb 2016 12:17:39 GMT',
+907 silly get     via: '1.1 varnish',
+907 silly get     'cache-control': 'max-age=300',
+907 silly get     etag: '"F4N7TBLBJ8Z40VG7DPO546R7U"',
+907 silly get     age: '251',
+907 silly get     connection: 'keep-alive',
+907 silly get     'x-served-by': 'cache-sin6921-SIN',
+907 silly get     'x-cache': 'HIT',
+907 silly get     'x-cache-hits': '4',
+907 silly get     'x-timer': 'S1456489059.154361,VS0,VE0',
+907 silly get     vary: 'Accept' } ]
+908 verbose etag https://registry.npmjs.org/js-tokens from cache
+909 verbose get saving js-tokens to /Users/saisree/.npm/registry.npmjs.org/js-tokens/.cache.json
+910 silly addNameRange number 2 { name: 'js-tokens', range: '>=1.0.1 <2.0.0', hasData: true }
+911 silly addNameRange versions [ 'js-tokens',
+911 silly addNameRange   [ '0.1.0',
+911 silly addNameRange     '0.2.0',
+911 silly addNameRange     '0.3.0',
+911 silly addNameRange     '0.3.1',
+911 silly addNameRange     '0.4.0',
+911 silly addNameRange     '0.4.1',
+911 silly addNameRange     '1.0.0',
+911 silly addNameRange     '1.0.1',
+911 silly addNameRange     '1.0.2' ] ]
+912 silly addNamed js-tokens@1.0.2
+913 verbose addNamed "1.0.2" is a plain semver version for js-tokens
+914 silly addNameRange number 2 { name: 'js-tokens', range: '>=1.0.1 <2.0.0', hasData: true }
+915 silly addNameRange versions [ 'js-tokens',
+915 silly addNameRange   [ '0.1.0',
+915 silly addNameRange     '0.2.0',
+915 silly addNameRange     '0.3.0',
+915 silly addNameRange     '0.3.1',
+915 silly addNameRange     '0.4.0',
+915 silly addNameRange     '0.4.1',
+915 silly addNameRange     '1.0.0',
+915 silly addNameRange     '1.0.1',
+915 silly addNameRange     '1.0.2' ] ]
+916 silly addNamed js-tokens@1.0.2
+917 verbose addNamed "1.0.2" is a plain semver version for js-tokens
+918 silly cache afterAdd js-tokens@1.0.2
+919 verbose afterAdd /Users/saisree/.npm/js-tokens/1.0.2/package/package.json not in flight; writing
+920 silly cache afterAdd js-tokens@1.0.2
+921 verbose afterAdd /Users/saisree/.npm/js-tokens/1.0.2/package/package.json already in flight; not writing
+922 verbose afterAdd /Users/saisree/.npm/js-tokens/1.0.2/package/package.json written
+923 silly install resolved [ { name: 'js-tokens',
+923 silly install resolved     version: '1.0.2',
+923 silly install resolved     author: { name: 'Simon Lydell' },
+923 silly install resolved     license: 'MIT',
+923 silly install resolved     description: 'A regex that tokenizes JavaScript.',
+923 silly install resolved     keywords: [ 'JavaScript', 'js', 'token', 'tokenize', 'regex' ],
+923 silly install resolved     files: [ 'index.js' ],
+923 silly install resolved     repository:
+923 silly install resolved      { type: 'git',
+923 silly install resolved        url: 'git+https://github.com/lydell/js-tokens.git' },
+923 silly install resolved     scripts:
+923 silly install resolved      { test: 'mocha --ui tdd',
+923 silly install resolved        'esprima-compare': 'node esprima-compare ./index.js everything.js/es5.js',
+923 silly install resolved        build: 'node generate-index.js',
+923 silly install resolved        dev: 'npm run build && npm test' },
+923 silly install resolved     devDependencies:
+923 silly install resolved      { 'coffee-script': '~1.9.3',
+923 silly install resolved        esprima: '^2.3.0',
+923 silly install resolved        'everything.js': '^1.0.3',
+923 silly install resolved        mocha: '^2.2.5' },
+923 silly install resolved     gitHead: '90f0f0a217984625180414763234c923aeee4af5',
+923 silly install resolved     bugs: { url: 'https://github.com/lydell/js-tokens/issues' },
+923 silly install resolved     homepage: 'https://github.com/lydell/js-tokens#readme',
+923 silly install resolved     _id: 'js-tokens@1.0.2',
+923 silly install resolved     _shasum: '8647f7e13f64ac15d9357a59a346c804d53b3efe',
+923 silly install resolved     _from: 'js-tokens@>=1.0.1 <2.0.0',
+923 silly install resolved     _npmVersion: '2.14.7',
+923 silly install resolved     _nodeVersion: '4.2.1',
+923 silly install resolved     _npmUser: { name: 'lydell', email: 'simon.lydell@gmail.com' },
+923 silly install resolved     dist:
+923 silly install resolved      { shasum: '8647f7e13f64ac15d9357a59a346c804d53b3efe',
+923 silly install resolved        tarball: 'http://registry.npmjs.org/js-tokens/-/js-tokens-1.0.2.tgz' },
+923 silly install resolved     maintainers: [ [Object] ],
+923 silly install resolved     directories: {},
+923 silly install resolved     _resolved: 'https://registry.npmjs.org/js-tokens/-/js-tokens-1.0.2.tgz',
+923 silly install resolved     readme: 'ERROR: No README data found!' } ]
+924 info install js-tokens@1.0.2 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+925 info installOne js-tokens@1.0.2
+926 verbose installOne of js-tokens to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify not in flight; installing
+927 silly install resolved [ { name: 'js-tokens',
+927 silly install resolved     version: '1.0.2',
+927 silly install resolved     author: { name: 'Simon Lydell' },
+927 silly install resolved     license: 'MIT',
+927 silly install resolved     description: 'A regex that tokenizes JavaScript.',
+927 silly install resolved     keywords: [ 'JavaScript', 'js', 'token', 'tokenize', 'regex' ],
+927 silly install resolved     files: [ 'index.js' ],
+927 silly install resolved     repository:
+927 silly install resolved      { type: 'git',
+927 silly install resolved        url: 'git+https://github.com/lydell/js-tokens.git' },
+927 silly install resolved     scripts:
+927 silly install resolved      { test: 'mocha --ui tdd',
+927 silly install resolved        'esprima-compare': 'node esprima-compare ./index.js everything.js/es5.js',
+927 silly install resolved        build: 'node generate-index.js',
+927 silly install resolved        dev: 'npm run build && npm test' },
+927 silly install resolved     devDependencies:
+927 silly install resolved      { 'coffee-script': '~1.9.3',
+927 silly install resolved        esprima: '^2.3.0',
+927 silly install resolved        'everything.js': '^1.0.3',
+927 silly install resolved        mocha: '^2.2.5' },
+927 silly install resolved     gitHead: '90f0f0a217984625180414763234c923aeee4af5',
+927 silly install resolved     bugs: { url: 'https://github.com/lydell/js-tokens/issues' },
+927 silly install resolved     homepage: 'https://github.com/lydell/js-tokens#readme',
+927 silly install resolved     _id: 'js-tokens@1.0.2',
+927 silly install resolved     _shasum: '8647f7e13f64ac15d9357a59a346c804d53b3efe',
+927 silly install resolved     _from: 'js-tokens@>=1.0.1 <2.0.0',
+927 silly install resolved     _npmVersion: '2.14.7',
+927 silly install resolved     _nodeVersion: '4.2.1',
+927 silly install resolved     _npmUser: { name: 'lydell', email: 'simon.lydell@gmail.com' },
+927 silly install resolved     dist:
+927 silly install resolved      { shasum: '8647f7e13f64ac15d9357a59a346c804d53b3efe',
+927 silly install resolved        tarball: 'http://registry.npmjs.org/js-tokens/-/js-tokens-1.0.2.tgz' },
+927 silly install resolved     maintainers: [ [Object] ],
+927 silly install resolved     directories: {},
+927 silly install resolved     _resolved: 'https://registry.npmjs.org/js-tokens/-/js-tokens-1.0.2.tgz',
+927 silly install resolved     readme: 'ERROR: No README data found!' } ]
+928 info install js-tokens@1.0.2 into /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+929 info installOne js-tokens@1.0.2
+930 verbose installOne of js-tokens to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify not in flight; installing
+931 verbose lock using /Users/saisree/.npm/_locks/js-tokens-dfc63efdc927a478.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+932 silly install write writing js-tokens 1.0.2 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+933 verbose lock using /Users/saisree/.npm/_locks/js-tokens-55f68eee5f147b20.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+934 silly install write writing js-tokens 1.0.2 to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+935 verbose unbuild node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+936 verbose unbuild node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+937 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+938 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+939 verbose tar unpack /Users/saisree/.npm/js-tokens/1.0.2/package.tgz
+940 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+941 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens is being purged
+942 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+943 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens is being purged from base /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+944 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+945 silly gunzTarPerm modes [ '755', '644' ]
+946 verbose tar unpack /Users/saisree/.npm/js-tokens/1.0.2/package.tgz
+947 verbose tar unpacking to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+948 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens is being purged
+949 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+950 silly gunzTarPerm modes [ '755', '644' ]
+951 silly gunzTarPerm extractEntry package.json
+952 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
+953 silly gunzTarPerm extractEntry package.json
+954 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
+955 silly gunzTarPerm extractEntry LICENSE
+956 silly gunzTarPerm modified mode [ 'LICENSE', 436, 420 ]
+957 silly gunzTarPerm extractEntry index.js
+958 silly gunzTarPerm modified mode [ 'index.js', 436, 420 ]
+959 silly gunzTarPerm extractEntry LICENSE
+960 silly gunzTarPerm modified mode [ 'LICENSE', 436, 420 ]
+961 silly gunzTarPerm extractEntry index.js
+962 silly gunzTarPerm modified mode [ 'index.js', 436, 420 ]
+963 silly gunzTarPerm extractEntry changelog.md
+964 silly gunzTarPerm modified mode [ 'changelog.md', 436, 420 ]
+965 silly gunzTarPerm extractEntry readme.md
+966 silly gunzTarPerm modified mode [ 'readme.md', 436, 420 ]
+967 silly gunzTarPerm extractEntry changelog.md
+968 silly gunzTarPerm modified mode [ 'changelog.md', 436, 420 ]
+969 silly gunzTarPerm extractEntry readme.md
+970 silly gunzTarPerm modified mode [ 'readme.md', 436, 420 ]
+971 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens/package.json
+972 verbose write writing to /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens/package.json
+973 info preinstall js-tokens@1.0.2
+974 info preinstall js-tokens@1.0.2
+975 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens/package.json
+976 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens/package.json
+977 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens/package.json
+978 verbose readDependencies loading dependencies from /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens/package.json
+979 silly install resolved []
+980 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+981 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+982 silly install resolved []
+983 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+984 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+985 info linkStuff js-tokens@1.0.2
+986 silly linkStuff js-tokens@1.0.2 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules as its parent node_modules
+987 info linkStuff js-tokens@1.0.2
+988 silly linkStuff js-tokens@1.0.2 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules as its parent node_modules
+989 verbose linkBins js-tokens@1.0.2
+990 verbose linkMans js-tokens@1.0.2
+991 verbose rebuildBundles js-tokens@1.0.2
+992 verbose linkBins js-tokens@1.0.2
+993 verbose linkMans js-tokens@1.0.2
+994 verbose rebuildBundles js-tokens@1.0.2
+995 info install js-tokens@1.0.2
+996 info install js-tokens@1.0.2
+997 info postinstall js-tokens@1.0.2
+998 info postinstall js-tokens@1.0.2
+999 verbose unlock done using /Users/saisree/.npm/_locks/js-tokens-dfc63efdc927a478.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify/node_modules/js-tokens
+1000 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+1001 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+1002 verbose unlock done using /Users/saisree/.npm/_locks/js-tokens-55f68eee5f147b20.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify/node_modules/js-tokens
+1003 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+1004 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+1005 info linkStuff loose-envify@1.1.0
+1006 silly linkStuff loose-envify@1.1.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules as its parent node_modules
+1007 info linkStuff loose-envify@1.1.0
+1008 silly linkStuff loose-envify@1.1.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules as its parent node_modules
+1009 verbose linkBins loose-envify@1.1.0
+1010 verbose linkMans loose-envify@1.1.0
+1011 verbose rebuildBundles loose-envify@1.1.0
+1012 verbose rebuildBundles [ 'js-tokens' ]
+1013 info install loose-envify@1.1.0
+1014 verbose linkBins loose-envify@1.1.0
+1015 verbose linkMans loose-envify@1.1.0
+1016 verbose rebuildBundles loose-envify@1.1.0
+1017 verbose rebuildBundles [ 'js-tokens' ]
+1018 info install loose-envify@1.1.0
+1019 info postinstall loose-envify@1.1.0
+1020 info postinstall loose-envify@1.1.0
+1021 verbose unlock done using /Users/saisree/.npm/_locks/loose-envify-663347f26c2207d2.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning/node_modules/loose-envify
+1022 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+1023 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+1024 verbose unlock done using /Users/saisree/.npm/_locks/loose-envify-e9960cf4408054f1.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant/node_modules/loose-envify
+1025 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+1026 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+1027 info linkStuff warning@2.1.0
+1028 silly linkStuff warning@2.1.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules as its parent node_modules
+1029 info linkStuff invariant@2.2.0
+1030 silly linkStuff invariant@2.2.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules as its parent node_modules
+1031 verbose linkBins warning@2.1.0
+1032 verbose linkMans warning@2.1.0
+1033 verbose rebuildBundles warning@2.1.0
+1034 verbose rebuildBundles [ 'loose-envify' ]
+1035 info install warning@2.1.0
+1036 verbose linkBins invariant@2.2.0
+1037 verbose linkMans invariant@2.2.0
+1038 verbose rebuildBundles invariant@2.2.0
+1039 info postinstall warning@2.1.0
+1040 verbose rebuildBundles [ 'loose-envify' ]
+1041 info install invariant@2.2.0
+1042 info postinstall invariant@2.2.0
+1043 verbose unlock done using /Users/saisree/.npm/_locks/warning-d6b0254907307d2d.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/warning
+1044 verbose unlock done using /Users/saisree/.npm/_locks/invariant-ca79df06a5348b03.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history/node_modules/invariant
+1045 verbose about to build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+1046 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+1047 info linkStuff history@1.17.0
+1048 silly linkStuff history@1.17.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1049 verbose linkBins history@1.17.0
+1050 verbose linkMans history@1.17.0
+1051 verbose rebuildBundles history@1.17.0
+1052 verbose rebuildBundles [ 'deep-equal', 'invariant', 'query-string', 'warning' ]
+1053 info install history@1.17.0
+1054 info postinstall history@1.17.0
+1055 verbose unsafe-perm in lifecycle true
+1056 verbose unlock done using /Users/saisree/.npm/_locks/history-ef46552182cbab57.lock for /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/history
+1057 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+1058 info linkStuff content_discovery@0.0.0
+1059 silly linkStuff content_discovery@0.0.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery as its parent node_modules
+1060 verbose linkBins content_discovery@0.0.0
+1061 verbose linkMans content_discovery@0.0.0
+1062 verbose rebuildBundles content_discovery@0.0.0
+1063 verbose rebuildBundles [ '.bin',
+1063 verbose rebuildBundles   'babel',
+1063 verbose rebuildBundles   'babel-eslint',
+1063 verbose rebuildBundles   'babel-plugin-espower',
+1063 verbose rebuildBundles   'babelify',
+1063 verbose rebuildBundles   'body-parser',
+1063 verbose rebuildBundles   'browser-sync',
+1063 verbose rebuildBundles   'browserify',
+1063 verbose rebuildBundles   'chai',
+1063 verbose rebuildBundles   'cookie-parser',
+1063 verbose rebuildBundles   'cordova-lib',
+1063 verbose rebuildBundles   'del',
+1063 verbose rebuildBundles   'eslint',
+1063 verbose rebuildBundles   'eslint-plugin-react',
+1063 verbose rebuildBundles   'express',
+1063 verbose rebuildBundles   'feedparser',
+1063 verbose rebuildBundles   'forever',
+1063 verbose rebuildBundles   'fs',
+1063 verbose rebuildBundles   'gulp',
+1063 verbose rebuildBundles   'gulp-babel',
+1063 verbose rebuildBundles   'gulp-browserify',
+1063 verbose rebuildBundles   'gulp-clean',
+1063 verbose rebuildBundles   'gulp-concat',
+1063 verbose rebuildBundles   'gulp-cssnano',
+1063 verbose rebuildBundles   'gulp-environments',
+1063 verbose rebuildBundles   'gulp-eslint',
+1063 verbose rebuildBundles   'gulp-exec',
+1063 verbose rebuildBundles   'gulp-minify',
+1063 verbose rebuildBundles   'gulp-mocha',
+1063 verbose rebuildBundles   'gulp-rename',
+1063 verbose rebuildBundles   'gulp-replace',
+1063 verbose rebuildBundles   'gulp-sass',
+1063 verbose rebuildBundles   'helmet',
+1063 verbose rebuildBundles   'helmet-csp',
+1063 verbose rebuildBundles   'history',
+1063 verbose rebuildBundles   'hsts',
+1063 verbose rebuildBundles   'immutable',
+1063 verbose rebuildBundles   'isparta',
+1063 verbose rebuildBundles   'istanbul',
+1063 verbose rebuildBundles   'jsdom',
+1063 verbose rebuildBundles   'lodash',
+1063 verbose rebuildBundles   'memdown',
+1063 verbose rebuildBundles   'mkdirp',
+1063 verbose rebuildBundles   'mocha',
+1063 verbose rebuildBundles   'moment',
+1063 verbose rebuildBundles   'morgan',
+1063 verbose rebuildBundles   'nock',
+1063 verbose rebuildBundles   'oauth',
+1063 verbose rebuildBundles   'pouchdb',
+1063 verbose rebuildBundles   'react',
+1063 verbose rebuildBundles   'react-addons-test-utils',
+1063 verbose rebuildBundles   'react-dom',
+1063 verbose rebuildBundles   'react-redux',
+1063 verbose rebuildBundles   'react-router',
+1063 verbose rebuildBundles   'redux',
+1063 verbose rebuildBundles   'redux-thunk',
+1063 verbose rebuildBundles   'request',
+1063 verbose rebuildBundles   'run-sequence',
+1063 verbose rebuildBundles   'sinon',
+1063 verbose rebuildBundles   'supertest',
+1063 verbose rebuildBundles   'winston',
+1063 verbose rebuildBundles   'yargs' ]
+1064 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browser-sync
+1065 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/browser-sync
+1066 info preinstall browser-sync@2.10.0
+1067 info linkStuff browser-sync@2.10.0
+1068 silly linkStuff browser-sync@2.10.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1069 verbose linkBins browser-sync@2.10.0
+1070 verbose link bins [ { 'browser-sync': 'bin/browser-sync.js' },
+1070 verbose link bins   '/Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin',
+1070 verbose link bins   false ]
+1071 verbose linkMans browser-sync@2.10.0
+1072 verbose rebuildBundles browser-sync@2.10.0
+1073 silly gentlyRm /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/browser-sync is being purged
+1074 verbose gentlyRm don't care about contents; nuking /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/browser-sync
+1075 silly vacuum-fs purging /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin/browser-sync
+1076 verbose rebuildBundles [ '.bin',
+1076 verbose rebuildBundles   'anymatch',
+1076 verbose rebuildBundles   'async-each-series',
+1076 verbose rebuildBundles   'browser-sync-client',
+1076 verbose rebuildBundles   'browser-sync-ui',
+1076 verbose rebuildBundles   'bs-recipes',
+1076 verbose rebuildBundles   'chokidar',
+1076 verbose rebuildBundles   'connect',
+1076 verbose rebuildBundles   'dev-ip',
+1076 verbose rebuildBundles   'easy-extender',
+1076 verbose rebuildBundles   'eazy-logger',
+1076 verbose rebuildBundles   'emitter-steward',
+1076 verbose rebuildBundles   'foxy',
+1076 verbose rebuildBundles   'fs-extra',
+1076 verbose rebuildBundles   'localtunnel',
+1076 verbose rebuildBundles   'longest',
+1076 verbose rebuildBundles   'meow',
+1076 verbose rebuildBundles   'opn',
+1076 verbose rebuildBundles   'portscanner',
+1076 verbose rebuildBundles   'query-string',
+1076 verbose rebuildBundles   'resp-modifier',
+1076 verbose rebuildBundles   'serve-index',
+1076 verbose rebuildBundles   'serve-static',
+1076 verbose rebuildBundles   'socket.io',
+1076 verbose rebuildBundles   'ua-parser-js',
+1076 verbose rebuildBundles   'ucfirst' ]
+1077 silly vacuum-fs quitting because other entries in /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/.bin
+1078 info install browser-sync@2.10.0
+1079 info postinstall browser-sync@2.10.0
+1080 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-clean
+1081 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-clean
+1082 info preinstall gulp-clean@0.3.1
+1083 info linkStuff gulp-clean@0.3.1
+1084 silly linkStuff gulp-clean@0.3.1 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1085 verbose linkBins gulp-clean@0.3.1
+1086 verbose linkMans gulp-clean@0.3.1
+1087 verbose rebuildBundles gulp-clean@0.3.1
+1088 verbose rebuildBundles [ '.bin', 'gulp-util', 'rimraf', 'through2' ]
+1089 info install gulp-clean@0.3.1
+1090 info postinstall gulp-clean@0.3.1
+1091 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-concat
+1092 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-concat
+1093 info preinstall gulp-concat@2.6.0
+1094 info linkStuff gulp-concat@2.6.0
+1095 silly linkStuff gulp-concat@2.6.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1096 verbose linkBins gulp-concat@2.6.0
+1097 verbose linkMans gulp-concat@2.6.0
+1098 verbose rebuildBundles gulp-concat@2.6.0
+1099 verbose rebuildBundles [ 'concat-with-sourcemaps', 'gulp-util', 'through2' ]
+1100 info install gulp-concat@2.6.0
+1101 info postinstall gulp-concat@2.6.0
+1102 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-replace
+1103 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/gulp-replace
+1104 info preinstall gulp-replace@0.5.4
+1105 info linkStuff gulp-replace@0.5.4
+1106 silly linkStuff gulp-replace@0.5.4 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1107 verbose linkBins gulp-replace@0.5.4
+1108 verbose linkMans gulp-replace@0.5.4
+1109 verbose rebuildBundles gulp-replace@0.5.4
+1110 verbose rebuildBundles [ 'istextorbinary', 'readable-stream', 'replacestream' ]
+1111 info install gulp-replace@0.5.4
+1112 info postinstall gulp-replace@0.5.4
+1113 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/hsts
+1114 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/hsts
+1115 info preinstall hsts@1.0.0
+1116 info linkStuff hsts@1.0.0
+1117 silly linkStuff hsts@1.0.0 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1118 verbose linkBins hsts@1.0.0
+1119 verbose linkMans hsts@1.0.0
+1120 verbose rebuildBundles hsts@1.0.0
+1121 verbose rebuildBundles [ 'core-util-is' ]
+1122 info install hsts@1.0.0
+1123 info postinstall hsts@1.0.0
+1124 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/lodash
+1125 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/lodash
+1126 info preinstall lodash@3.10.1
+1127 info linkStuff lodash@3.10.1
+1128 silly linkStuff lodash@3.10.1 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1129 verbose linkBins lodash@3.10.1
+1130 verbose linkMans lodash@3.10.1
+1131 verbose rebuildBundles lodash@3.10.1
+1132 info install lodash@3.10.1
+1133 info postinstall lodash@3.10.1
+1134 verbose rebuild bundle /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/morgan
+1135 info build /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules/morgan
+1136 info preinstall morgan@1.6.1
+1137 info linkStuff morgan@1.6.1
+1138 silly linkStuff morgan@1.6.1 has /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/node_modules as its parent node_modules
+1139 verbose linkBins morgan@1.6.1
+1140 verbose linkMans morgan@1.6.1
+1141 verbose rebuildBundles morgan@1.6.1
+1142 verbose rebuildBundles [ 'basic-auth', 'debug', 'depd', 'on-finished', 'on-headers' ]
+1143 info install morgan@1.6.1
+1144 info postinstall morgan@1.6.1
+1145 info install content_discovery@0.0.0
+1146 info postinstall content_discovery@0.0.0
+1147 info prepublish content_discovery@0.0.0
+1148 verbose validateInstall loading /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery/package.json for validation
+1149 verbose stack Error: The package history@1.17.0 does not satisfy its siblings' peerDependencies requirements!
+1149 verbose stack     at /usr/local/lib/node_modules/npm/lib/install.js:125:32
+1149 verbose stack     at /usr/local/lib/node_modules/npm/lib/install.js:268:7
+1149 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-installed/read-installed.js:142:5
+1149 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+1149 verbose stack     at cb (/usr/local/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+1149 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+1149 verbose stack     at cb (/usr/local/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+1149 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+1149 verbose stack     at cb (/usr/local/lib/node_modules/npm/node_modules/slide/lib/async-map.js:47:24)
+1149 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-installed/read-installed.js:263:14
+1150 verbose cwd /Users/saisree/project/MediaCenter/MediaContentDiscovery/ContentDiscovery
+1151 error Darwin 14.5.0
+1152 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install"
+1153 error node v4.2.2
+1154 error npm  v2.14.7
+1155 error code EPEERINVALID
+1156 error peerinvalid The package history@1.17.0 does not satisfy its siblings' peerDependencies requirements!
+1156 error peerinvalid Peer react-router@1.0.2 wants history@1.13.x
+1157 verbose exit [ 1, true ]

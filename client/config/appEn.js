@@ -74,13 +74,12 @@ window.mediaCenter.appEn = {
                     "urlSuccess": "URL is successfully added"
                 },
                 "errorMessages": {
-                    "invalidUrlFormat": "Invalid URL. Please check the URL",
                     "emptyUrl": "URL cannot be empty",
                     "validatingUrl": "Validating the URL...",
                     "alreadyAdded": "URL is already added",
-                    "noSuchUrl": "No such link found. Please add a valid URL",
                     "invalidRssUrl": "Invalid RSS URL. Please check the URL",
-                    "invalidTwitterUrl": "Invalid twitter handler/hashtag",
+                    "invalidTwitterUrl": "Invalid twitter handle or hashtag",
+                    "noSuchTag": "No such hashtag or handle found",
                     "invalidFacebookUrl": "Invalid facebook URL. Please check the URL",
                     "noFbAccess": "No such link or no access to the profile",
                     "urlDeleteFailed": "URL deletion failed",
