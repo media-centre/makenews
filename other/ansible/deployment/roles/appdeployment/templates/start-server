@@ -2,6 +2,8 @@
   "name": "ContentDiscoveryWebServer",
   "script" : "/home/go/ContentDiscovery/dist/server.js",
   "watch": true,
+  "max_restarts": 20,
+  "watch":true,
   "env": {
     "NODE_ENV": "{{project_environment}}"
   }

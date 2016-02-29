@@ -1,4 +1,5 @@
 [web]
-46.101.134.206
+qa.contentdiscovery.in
 [web:vars]
-nginx_domain=46.101.134.206
+nginx_domain=qa.contentdiscovery.in
+project_environment=ci_qa
