@@ -29,7 +29,7 @@ export default class UserProfileSettings extends Component {
     }
 
     _showHelp() {
-        this.setState({ "show": !this.state.show });
+        this._toggleDropdown();
         History.getHistory().push("/help");
     }
 
@@ -49,13 +49,13 @@ export default class UserProfileSettings extends Component {
                                 {this.messages.profile}
                             </Link>
                         </li>
+                        <li ref="help" onClick={this._showHelp.bind(this)}>
+                            <i className="fa fa-info-circle"></i>
+                            {this.messages.help}
+                        </li>
                         <li ref="logout" onClick={this._logout.bind(this)}>
                             <i className="fa fa-sign-out"></i>
                             {this.messages.logout}
-                        </li>
-                        <li ref="help" onClick={this._showHelp.bind(this)}>
-                            <i className="fa fa-sign-out"></i>
-                            {this.messages.help}
                         </li>
                     </ul>
                 </div>

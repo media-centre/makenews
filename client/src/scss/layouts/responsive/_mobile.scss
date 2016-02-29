@@ -15,11 +15,6 @@
             margin-top: 14px;
           }
         }
-        .user-info {
-          a {
-            width: 150px;
-          }
-        }
       }
     }
   }
@@ -362,6 +357,23 @@
           }
         }
       }
+    }
+  }
+
+  .help .help-box {
+    display: block;
+    width: auto;
+    position: static;
+    padding-bottom: 10px;
+    height: auto;
+
+    iframe {
+      position: static;
+      height: 210px;
+    }
+
+    .help-text {
+      margin-top: auto;
     }
   }
 }

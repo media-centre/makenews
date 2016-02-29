@@ -13,7 +13,7 @@ export default class TakeTour {
             takeTourMaskElement.innerHTML = `<div class='take-tour bottom-box-shadow anim' id='take-tour'>
                                             <div class='tour-popup'>
                                                 <p class='description'>
-                                                    <i class="fa fa-info-circle"></i>
+                                                    <i class="help-icon"></i>
                                                     ${messages.description}
                                                 </p>
                                                 <div class='t-right'>

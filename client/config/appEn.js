@@ -121,7 +121,7 @@ window.mediaCenter.appEn = {
         },
         "userProfileSettings": {
             "settings": "Settings",
-            "profile": "Profile",
+            "profile": "Change Password",
             "logout": "Logout",
             "help": "Help"
         },

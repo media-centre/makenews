@@ -117,16 +117,23 @@
     z-index: $popup-layer-index;
     padding: 10px;
     color: $primary-font-color;
-    width: 300px;
+    width: 320px;
     right: 10px;
     top: 71px;
 
-    button:first-child {
-      margin-right: 10px;
+    .help-icon {
+      background: url(../images/main/help.png);
+      width: 35px;
+      height: 30px;
+      content: " ";
+      display: inline-block;
+      background-size: cover;
+      margin-right: 5px;
+      vertical-align: middle;
     }
 
-    .fa {
-      font-size: $large-font-size;
+    button:first-child {
+      margin-right: 10px;
     }
 
     &:before {
