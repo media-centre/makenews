@@ -2,6 +2,7 @@
 "use strict";
 
 import TakeTour from "../../../src/js/utils/custom_templates/TakeTour";
+import UserInfo from "../../../src/js/user/UserInfo.js";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -113,6 +114,63 @@ xdescribe("TakeTour", () => {
             TakeTour.currentIndex = 1;
             document.querySelector("#tour-abort").click();
             assert.isTrue(document.querySelector("#take-tour-mask").classList.contains("hide"));
+        });
+    });
+});
+
+describe("TakeTour", () => {
+    describe("isTourRequired", () => {
+        let userInfoMock = null;
+        beforeEach("TakeTour", () => {
+            sandbox = sinon.sandbox.create();
+            userInfoMock = sandbox.mock(UserInfo).expects("getUserDocument");
+        });
+        afterEach("TakeTour", () => {
+            sandbox.restore();
+        });
+
+        it("should return false if takenTour is true in userInfo", (done) => {
+            userInfoMock.returns(Promise.resolve({ "_id": "userInfo", "takenTour": true }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                userInfoMock.verify();
+                assert.isFalse(tourStatus);
+                done();
+            });
+        });
+
+        it("should return true if userInfo document is not present", (done) => {
+            userInfoMock.returns(Promise.reject({ "status": 404, "name": "not_found" }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                assert.isTrue(tourStatus);
+                done();
+            });
+        });
+
+        it("should return false if userInfo document fetch fails due to other reasons", (done) => {
+            userInfoMock.returns(Promise.reject({ "status": 404, "name": "conflict" }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                assert.isFalse(tourStatus);
+                done();
+            });
+        });
+    });
+
+    describe("updateUserSeenTour", () => {
+        let userInfoMock = null;
+        beforeEach("TakeTour", () => {
+            sandbox = sinon.sandbox.create();
+            userInfoMock = sandbox.mock(UserInfo).expects("createOrUpdateUserDocument");
+        });
+        afterEach("TakeTour", () => {
+            sandbox.restore();
+        });
+
+        it("should set takenTour in UserInfo document", (done) => {
+            userInfoMock.withArgs({ "takenTour": true }).returns(Promise.resolve("response"));
+            TakeTour.updateUserSeenTour().then(() => {
+                userInfoMock.verify();
+                done();
+            });
         });
     });
 });

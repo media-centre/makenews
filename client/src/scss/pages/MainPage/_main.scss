@@ -98,9 +98,8 @@
     position: absolute;
     top: 39px;
     right: -2px;
-    width: 150px;
+    width: 170px;
     background: $app-header-bg-color;
-    text-align: center;
     max-height: 100px;
     &.hide {
       max-height: 0;
@@ -109,7 +108,7 @@
 
     ul li {
       display: block;
-      padding: 3px;
+      padding: 3px 3px 3px 10px;
       margin: 0;
       width: auto;
       cursor: pointer;

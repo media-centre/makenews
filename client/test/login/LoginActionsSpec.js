@@ -5,7 +5,7 @@ import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } fro
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
 import UserSession from "../../src/js/user/UserSession.js";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import sinon from "sinon";
 import mockStore from "../helper/ActionHelper.js";
 import DbSession from "../../src/js/db/DbSession.js";
@@ -51,7 +51,7 @@ describe("userLogin", () => {
         beforeEach("userLogin", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-            appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("setValue").twice();
+            appSessionStorageClearMock = sandbox.stub(appSessionStorage, "setValue");
 
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
@@ -61,7 +61,7 @@ describe("userLogin", () => {
         });
 
         afterEach("userLogin", () => {
-            appSessionStorageClearMock.verify();
+            assert.strictEqual(appSessionStorageClearMock.callCount, 2);
             userSessionMock.verify();
             dbSessionInstanceMock.verify();
             historyMock.verify();
@@ -76,6 +76,22 @@ describe("userLogin", () => {
             ];
 
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+            appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.USERNAME, userName);
+            appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL, "http://localhost:5984");
+            store.dispatch(userLogin(history, userName, password));
+        });
+
+        it("should not set taken tour if user already taken tour", (done) => {
+            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
+            dbSessionInstanceMock.returns(Promise.resolve({}));
+            historyMock.withArgs("/surf");
+            const expectedActions = [
+                { "type": LOGIN_SUCCESS, "userName": userName }
+            ];
+
+            const store = mockStore({ "errorMessage": "" }, expectedActions, done);
+            appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.USERNAME, userName);
+            appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL, "http://localhost:5984");
             store.dispatch(userLogin(history, userName, password));
         });
     });

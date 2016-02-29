@@ -2,7 +2,7 @@
 import StringUtil from "../../../../common/src/util/StringUtil.js";
 import AjaxClient from "../utils/AjaxClient.js";
 import LoginPage from "../login/pages/LoginPage.jsx";
-import FacebookTwitterDb from "../socialAccounts/FacebookTwitterDb.js";
+import UserInfo from "../user/UserInfo.js";
 import FacebookLogin from "./FacebookLogin";
 
 export default class FacebookClient {
@@ -36,7 +36,7 @@ export default class FacebookClient {
         };
         let ajaxClient = AjaxClient.instance("/facebook-set-token");
         ajaxClient.post(headers, { "accessToken": this.accessToken, "userName": LoginPage.getUserName() }).then(response => {
-            FacebookTwitterDb.createOrUpdateTokenDocument({ "facebookExpiredAfter": response.expires_after });
+            UserInfo.createOrUpdateUserDocument({ "facebookExpiredAfter": response.expires_after });
         });
     }
 

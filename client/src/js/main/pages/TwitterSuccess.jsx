@@ -1,10 +1,10 @@
 "use strict";
 import React, { Component } from "react";
-import FacebookTwitterDb from "../../socialAccounts/FacebookTwitterDb.js";
+import UserInfo from "../../user/UserInfo.js";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {
-        FacebookTwitterDb.createOrUpdateTokenDocument({ "twitterAuthenticated": true }).then(() => {
+        UserInfo.createOrUpdateUserDocument({ "twitterAuthenticated": true }).then(() => {
             window.opener.mediaCenter.twitterLoginSucess = true;
             window.close();
         });

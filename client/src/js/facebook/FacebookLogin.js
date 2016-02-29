@@ -2,7 +2,7 @@
 
 "use strict";
 import FacebookRequestHandler from "./FacebookRequestHandler";
-import FacebookTwitterDb from "../socialAccounts/FacebookTwitterDb.js";
+import UserInfo from "../user/UserInfo.js";
 import AppWindow from "../../js/utils/AppWindow";
 
 export default class FacebookLogin {
@@ -72,7 +72,7 @@ export default class FacebookLogin {
 
     isTokenExpired() {
         return new Promise((resolve) => {
-            FacebookTwitterDb.getTokenDocument().then((document) => {
+            UserInfo.getUserDocument().then((document) => {
                 if(!document.facebookExpiredAfter) {
                     resolve(true);
                 }

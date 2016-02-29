@@ -117,24 +117,38 @@
     z-index: $popup-layer-index;
     padding: 10px;
     color: $primary-font-color;
-    width: 300px;
+    width: 320px;
+    right: 10px;
+    top: 71px;
+
+    .help-icon {
+      background: url(../images/main/help.png);
+      width: 35px;
+      height: 30px;
+      content: " ";
+      display: inline-block;
+      background-size: cover;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
 
     button:first-child {
       margin-right: 10px;
     }
-  }
-  .tour-top-arrow {
-    content: " ";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -21px;
-    margin: auto;
-    width: 1px;
-    height: 1px;
-    border: 10px solid transparent;
-    border-bottom-color: $app-header-bg-color;
+
+    &:before {
+      content: " ";
+      display: block;
+      position: absolute;
+      left: 36%;
+      right: 0;
+      top: -21px;
+      margin: auto;
+      width: 1px;
+      height: 1px;
+      border: 10px solid transparent;
+      border-bottom-color: $app-header-bg-color;
+    }
   }
 }
 

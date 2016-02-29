@@ -1,174 +1,58 @@
 "use strict";
 
+import UserInfo from "../../user/UserInfo.js";
+import Locale from "../Locale";
 export default class TakeTour {
     static show() {
         let takeTourMaskElement = document.getElementById("take-tour-mask");
+        let messages = Locale.applicationStrings().messages.applicationTour;
         if(takeTourMaskElement === null) {
             takeTourMaskElement = document.createElement("div");
             takeTourMaskElement.id = "take-tour-mask";
             takeTourMaskElement.className = "take-tour-mask mask";
             takeTourMaskElement.innerHTML = `<div class='take-tour bottom-box-shadow anim' id='take-tour'>
-                                            <div class='tour-top-arrow'></div>
                                             <div class='tour-popup'>
-                                                <p class='description'></p>
+                                                <p class='description'>
+                                                    <i class="help-icon"></i>
+                                                    ${messages.description}
+                                                </p>
                                                 <div class='t-right'>
-                                                    <button id='tour-continue'>Continue</button>
-                                                    <button id='tour-abort'>Skip</button>
+                                                    <button id='tour-abort' class="btn-secondary border">${messages.gotItText}</button>
                                                 </div>
                                             </div>
                                         </div>`;
             document.body.appendChild(takeTourMaskElement);
 
-            document.getElementById("tour-continue").addEventListener("click", ()=> {
-                TakeTour.next();
-            });
-
             document.getElementById("tour-abort").addEventListener("click", ()=> {
                 TakeTour.close();
             });
-
-            window.addEventListener("resize", ()=> {
-                TakeTour.navigateToPosition();
-            });
         }
         document.body.style.overflow = "hidden";
-        document.getElementById("tour-abort").textContent = "Skip";
-
-        TakeTour.currentIndex = -1;
-        TakeTour.schema = TakeTour.getJson();
-        TakeTour.startNavigation();
-    }
-
-    static startNavigation() {
-        document.getElementById("take-tour-mask").classList.remove("hide");
-        document.getElementById("tour-continue").classList.remove("hide");
-        TakeTour.currentIndex += 1;
-        TakeTour.navigateToPosition();
-        TakeTour.updateContent();
-    }
-
-    static next() {
-        if(TakeTour.schema.navigation.length > TakeTour.currentIndex) {
-            TakeTour.clickTargetElement();
-            TakeTour.currentIndex += 1;
-            TakeTour.navigateToPosition();
-            TakeTour.updateContent();
-        }
-    }
-
-    static clickTargetElement() {
-        let currentJsonElement = TakeTour.getCurrentJsonElement();
-        document.querySelector(currentJsonElement.actionSelector).click();
-    }
-
-    static updateContent() {
-        let takeTourElement = document.getElementById("take-tour");
-        let descriptionDom = takeTourElement.getElementsByClassName("description")[0];
-
-        let currentJsonElement = TakeTour.getCurrentJsonElement();
-        if(descriptionDom.textContent !== currentJsonElement.content) {
-            descriptionDom.textContent = currentJsonElement.content;
-        }
-
-        if(TakeTour.schema.navigation.length - 1 === TakeTour.currentIndex) {
-            document.getElementById("tour-continue").classList.add("hide");
-            document.getElementById("tour-abort").textContent = "Done";
-        }
-    }
-
-    static navigateToPosition() {
-        let time = 100, padding = 20;
-        setTimeout(()=> {
-            let currentJsonElement = TakeTour.getCurrentJsonElement();
-            let takeTourElement = document.getElementById("take-tour");
-            let targetElement = document.querySelector(currentJsonElement.selector);
-            if(takeTourElement && targetElement) {
-                let tourArrow = document.getElementsByClassName("tour-top-arrow")[0];
-                let maxMobileScreenSize = 600;
-                if(document.body.offsetWidth <= maxMobileScreenSize) {
-                    let divideFactor = 7;
-                    let arrowLeft = targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / divideFactor);
-                    tourArrow.style.left = `${arrowLeft}px`;
-                } else {
-                    tourArrow.style.left = 0;
-                }
-
-                let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
-                let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
-                left = left < 0 ? padding : left;
-                takeTourElement.style.top = `${top}px`;
-                takeTourElement.style.left = `${left}px`;
-            }
-        }, time);
-    }
-
-    static getCurrentJsonElement() {
-        return TakeTour.schema.navigation[TakeTour.currentIndex];
+        document.getElementById("tour-abort").textContent = "Got it";
     }
 
     static close() {
-        TakeTour.currentIndex = -1;
-        TakeTour.schema = [];
         document.getElementById("take-tour-mask").classList.add("hide");
         document.body.style.overflow = "auto";
+        this.updateUserSeenTour();
     }
 
-    static getJson() {
-        return {
-            "navigation": [
-                {
-                    "selector": ".menu-list > li:first-child",
-                    "actionSelector": ".menu-list > li:first-child a",
-                    "content": "Click here to configure"
-                },
-                {
-                    "selector": "#addNewCategoryButton",
-                    "actionSelector": "#addNewCategoryButton",
-                    "content": "Click here to create a new category"
-                },
-                {
-                    "selector": "#categoryTitle",
-                    "actionSelector": "#categoryTitle",
-                    "content": "Enter your category name"
-                },
-                {
-                    "selector": ".category-page .tab-control > .tab-header > .tab:first-child",
-                    "actionSelector": "#addNewUrlButton",
-                    "content": "Click here to select the URL source"
-                },
-                {
-                    "selector": ".url-panel .add-url-input",
-                    "actionSelector": ".url-panel .add-url-input",
-                    "content": "Enter your URL here",
-                    "value": "http://www.thehindu.com/opinion/?service=rss",
-                    "action": "ENTER"
-                },
-                {
-                    "selector": "#deleteCategory",
-                    "actionSelector": ".category-page .tab-control > .tab-header > .tab:first-child",
-                    "content": "Click here to delete this category"
-                },
-                {
-                    "selector": "#allCategoriesButton",
-                    "actionSelector": "#allCategoriesButton",
-                    "content": "Click here to move back to the Configure page"
-                },
-                {
-                    "selector": ".menu-list > li:nth-child(2)",
-                    "actionSelector": ".menu-list > li:nth-child(2) a",
-                    "content": "Click here to view the news feeds from the configured URLs"
-                },
-                {
-                    "selector": ".main-page > header",
-                    "actionSelector": "#filterToggle",
-                    "content": "Click here to set filters to the news items"
-                },
-                {
-                    "selector": ".menu-list > li:nth-child(3)",
-                    "actionSelector": ".menu-list > li:nth-child(3) a",
-                    "content": "Click here to view the news items that have been parked for review"
+    static isTourRequired() {
+        return new Promise((resolve) => {
+            UserInfo.getUserDocument().then(userInfo => {
+                resolve(!userInfo.takenTour);
+            }).catch(error => {
+                let notFoundCode = 404;
+                if(error.status === notFoundCode && error.name === "not_found") {
+                    resolve(true);
+                } else {
+                    resolve(false);
                 }
-            ]
-        };
+            });
+        });
+    }
+
+    static updateUserSeenTour() {
+        return UserInfo.createOrUpdateUserDocument({ "takenTour": true });
     }
 }

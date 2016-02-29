@@ -121,8 +121,13 @@ window.mediaCenter.appEn = {
         },
         "userProfileSettings": {
             "settings": "Settings",
-            "profile": "Profile",
-            "logout": "Logout"
+            "profile": "Change Password",
+            "logout": "Logout",
+            "help": "Help"
+        },
+        "applicationTour": {
+            "description": "Find the \"HELP\" in the above options",
+            "gotItText": "Got It"
         },
         "headerStrings": {
             "surfTab": {

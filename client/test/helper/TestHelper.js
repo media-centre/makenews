@@ -8,10 +8,13 @@ global.navigator = global.window.navigator;
 global.localStorage = {
     "item": {},
     "getItem": function(key) {
-        return this.item[key];
+        return this.item[key] || null;
     },
     "setItem": function(key, value) {
         this.item[key] = value;
+    },
+    "removeItem": function(key) {
+        delete this.item[key];
     }
 };
 global.XMLHttpRequest = window.XMLHttpRequest;

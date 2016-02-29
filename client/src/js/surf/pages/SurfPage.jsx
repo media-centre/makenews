@@ -26,6 +26,7 @@ export class SurfPage extends Component {
     }
     componentWillMount() {
         window.scrollTo(0, 0);
+        this.takeTour();
         this.props.dispatch(initiateSurf(()=> {
             let msg = this.props.feeds.length === 0 ? this.props.messages.noFeeds : "";
             this.setState({ "filter": this.props.surfFilter, "fetchHintMessage": msg });
@@ -109,7 +110,11 @@ export class SurfPage extends Component {
     }
 
     takeTour() {
-        TakeTour.show();
+        TakeTour.isTourRequired().then(tourRequired => {
+            if(tourRequired) {
+                TakeTour.show();
+            }
+        });
     }
 
     render() {
