@@ -42,12 +42,6 @@ describe("LoginRoute", () => {
         });
 
         it("should respond with authsession cookie and json data if login is successful", (done) => {
-            let userDetailsMock = sinon.mock(userRequest).expects("getUserDetails");
-            userDetailsMock.returns(Promise.resolve({
-                "_id": "org.couchdb.user:karthik",
-                "takenTour": true,
-                "name": "karthik"
-            }));
             response = {
                 "status": (statusCode) => {
                     assert.equal(HttpResponseHandler.codes.OK, statusCode);
@@ -64,53 +58,9 @@ describe("LoginRoute", () => {
                           "dbParameters": {
                               "serverUrl": "http://localhost:5000",
                               "remoteDbUrl": "http://localhost:5984"
-                          },
-                          "takenTour": true
-                        }, data);
-                    userDetailsMock.verify();
-                    userReqGetAuthSessionCookieMock.verify();
-                    EnvironmentConfig.instance.restore();
-                    done();
-                }
-            };
-
-            let clientConfig = {
-                "get": (param) => {
-                    assert.strictEqual("db", param);
-                    return {
-                        "serverUrl": "http://localhost:5000",
-                        "remoteDbUrl": "http://localhost:5984"
-                    };
-                }
-            };
-            sinon.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
-
-            userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
-
-            let loginRoute = new LoginRoute(request, response, next);
-            loginRoute.handle();
-        });
-
-        it("should not set takenTour if its not present", (done) => {
-            sinon.stub(userRequest, "getUserDetails").returns(Promise.resolve({
-                "_id": "org.couchdb.user:karthik",
-                "name": "karthik"
-            }));
-            response = {
-                "status": () => {
-                    return response;
-                },
-                "append": () => {
-                    return response;
-                },
-                "json": (data) => {
-                    assert.deepEqual(
-                        { "userName": userName,
-                          "dbParameters": {
-                              "serverUrl": "http://localhost:5000",
-                              "remoteDbUrl": "http://localhost:5984"
                           }
                         }, data);
+                    userReqGetAuthSessionCookieMock.verify();
                     EnvironmentConfig.instance.restore();
                     done();
                 }
@@ -126,27 +76,6 @@ describe("LoginRoute", () => {
                 }
             };
             sinon.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
-
-            userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
-
-            let loginRoute = new LoginRoute(request, response, next);
-            loginRoute.handle();
-        });
-
-        it("should respond with unauthorized if fetching user details fails", (done) => {
-            let userDetailsMock = sinon.mock(userRequest).expects("getUserDetails");
-            userDetailsMock.returns(Promise.reject("error"));
-            response = {
-                "status": (statusCode) => {
-                    assert.equal(HttpResponseHandler.codes.UNAUTHORIZED, statusCode);
-                    return response;
-                },
-                "json": (data) => {
-                    assert.deepEqual({ "message": "unauthorized" }, data);
-                    userReqGetAuthSessionCookieMock.verify();
-                    done();
-                }
-            };
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
 

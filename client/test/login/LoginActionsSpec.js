@@ -47,7 +47,7 @@ describe("userLogin", () => {
     });
 
     describe("success", () => {
-        let dbSessionInstanceMock = null, historyMock = null, appSessionStorageClearMock = null, userSessionMock = null, callCount = 0;
+        let dbSessionInstanceMock = null, historyMock = null, appSessionStorageClearMock = null, userSessionMock = null;
         beforeEach("userLogin", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
@@ -61,7 +61,7 @@ describe("userLogin", () => {
         });
 
         afterEach("userLogin", () => {
-            assert.strictEqual(appSessionStorageClearMock.callCount, callCount);
+            assert.strictEqual(appSessionStorageClearMock.callCount, 2);
             userSessionMock.verify();
             dbSessionInstanceMock.verify();
             historyMock.verify();
@@ -78,13 +78,11 @@ describe("userLogin", () => {
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);
             appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.USERNAME, userName);
             appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL, "http://localhost:5984");
-            appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.TAKE_TOUR, false);
-            callCount = 3;
             store.dispatch(userLogin(history, userName, password));
         });
 
         it("should not set taken tour if user already taken tour", (done) => {
-            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" }, "takenTour": true }));
+            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
             dbSessionInstanceMock.returns(Promise.resolve({}));
             historyMock.withArgs("/surf");
             const expectedActions = [
@@ -94,7 +92,6 @@ describe("userLogin", () => {
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);
             appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.USERNAME, userName);
             appSessionStorageClearMock.withArgs(AppSessionStorage.KEYS.REMOTEDBURL, "http://localhost:5984");
-            callCount = 2;
             store.dispatch(userLogin(history, userName, password));
         });
     });

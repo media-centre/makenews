@@ -2,7 +2,6 @@
 import CouchSession from "../CouchSession.js";
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import Logger from "../../src/logging/Logger.js";
-import CouchClient from "../CouchClient.js";
 
 export default class UserRequest {
     static logger() {
@@ -58,19 +57,6 @@ export default class UserRequest {
             }).catch(error => { //eslint-disable-line
                 UserRequest.logger().error("UserRequest:getUserName fatal error %s", error);
                 reject("can not get the user name");
-            });
-        });
-    }
-
-    getUserDetails(token, userName) {
-        return new Promise((resolve, reject) => {
-            let dbInstance = CouchClient.instance("_users", token);
-            const path = "/_users/org.couchdb.user:" + userName;
-            dbInstance.get(path).then(userDetails => {
-                resolve(userDetails);
-            }).catch(error => {
-                UserRequest.logger().error("UserRequest:gtUserDetails fatal error %s", error);
-                reject(error);
             });
         });
     }

@@ -2,7 +2,7 @@
 "use strict";
 
 import TakeTour from "../../../src/js/utils/custom_templates/TakeTour";
-import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
+import UserInfo from "../../../src/js/user/UserInfo.js";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -120,22 +120,57 @@ xdescribe("TakeTour", () => {
 
 describe("TakeTour", () => {
     describe("isTourRequired", () => {
-        it("should return true if TAKE_TOUR is set in localstorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKE_TOUR, "true");
-            assert.isTrue(TakeTour.isTourRequired());
-            localStorage.removeItem(AppSessionStorage.KEYS.TAKE_TOUR);
+        let userInfoMock = null;
+        beforeEach("TakeTour", () => {
+            sandbox = sinon.sandbox.create();
+            userInfoMock = sandbox.mock(UserInfo).expects("getTokenDocument");
+        });
+        afterEach("TakeTour", () => {
+            sandbox.restore();
         });
 
-        it("should return false if TAKE_TOUR is not set in localstorage", () => {
-            assert.isFalse(TakeTour.isTourRequired());
+        it("should return false if takenTour is true in userInfo", (done) => {
+            userInfoMock.returns(Promise.resolve({ "_id": "userInfo", "takenTour": true }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                userInfoMock.verify();
+                assert.isFalse(tourStatus);
+                done();
+            });
+        });
+
+        it("should return true if userInfo document is not present", (done) => {
+            userInfoMock.returns(Promise.reject({ "status": 404, "name": "not_found" }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                assert.isTrue(tourStatus);
+                done();
+            });
+        });
+
+        it("should return false if userInfo document fetch fails due to other reasons", (done) => {
+            userInfoMock.returns(Promise.reject({ "status": 404, "name": "conflict" }));
+            TakeTour.isTourRequired().then(tourStatus => {
+                assert.isFalse(tourStatus);
+                done();
+            });
         });
     });
 
     describe("updateUserSeenTour", () => {
-        it("should remove TAKE_TOUR from localStorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKE_TOUR, true);
-            TakeTour.updateUserSeenTour();
-            assert.isNull(localStorage.getItem(AppSessionStorage.KEYS.TAKE_TOUR));
+        let userInfoMock = null;
+        beforeEach("TakeTour", () => {
+            sandbox = sinon.sandbox.create();
+            userInfoMock = sandbox.mock(UserInfo).expects("createOrUpdateTokenDocument");
+        });
+        afterEach("TakeTour", () => {
+            sandbox.restore();
+        });
+
+        it("should set takenTour in UserInfo document", (done) => {
+            userInfoMock.withArgs({ "takenTour": true }).returns(Promise.resolve("response"));
+            TakeTour.updateUserSeenTour().then(() => {
+                userInfoMock.verify();
+                done();
+            });
         });
     });
 });

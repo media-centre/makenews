@@ -22,9 +22,6 @@ export function userLogin(history, userName, password) {
                 let appSessionStorage = AppSessionStorage.instance();
                 appSessionStorage.setValue(AppSessionStorage.KEYS.USERNAME, successData.userName);
                 appSessionStorage.setValue(AppSessionStorage.KEYS.REMOTEDBURL, successData.dbParameters.remoteDbUrl);
-                if(!successData.takenTour) {
-                    appSessionStorage.setValue(AppSessionStorage.KEYS.TAKE_TOUR, true);
-                }
                 DbSession.instance().then(session => { //eslint-disable-line no-unused-vars
                     dispatch(loginSuccess(successData.userName));
                     history.push("/surf");

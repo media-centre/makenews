@@ -3,11 +3,11 @@
 "use strict";
 import PouchClient from "../db/PouchClient.js";
 
-const socialAccountId = "socialAccounts";
-export default class FacebookTwitterDb {
+const userInfoId = "userInfo";
+export default class UserInfo {
     static getTokenDocument() {
         return new Promise((resolve, reject) => {
-            PouchClient.getDocument(socialAccountId).then((document) => {
+            PouchClient.getDocument(userInfoId).then((document) => {
                 resolve(document);
             }).catch((error) => {
                 reject(error);
@@ -16,10 +16,10 @@ export default class FacebookTwitterDb {
     }
 
     static createOrUpdateTokenDocument(paramsObj) {
-        return PouchClient.getDocument(socialAccountId).then((document) => {
+        return PouchClient.getDocument(userInfoId).then((document) => {
             return PouchClient.updateDocument(Object.assign({}, document, paramsObj));
         }).catch(() => {
-            let document = { "_id": socialAccountId, "facebookExpiredAfter": paramsObj.facebookExpiredAfter, "twitterAuthenticated": paramsObj.twitterAuthenticated || false };
+            let document = { "_id": userInfoId, "facebookExpiredAfter": paramsObj.facebookExpiredAfter, "twitterAuthenticated": paramsObj.twitterAuthenticated || false, "takenTour": paramsObj.takenTour || false };
             return PouchClient.createDocument(document);
         });
     }

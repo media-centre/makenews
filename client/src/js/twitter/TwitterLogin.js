@@ -2,7 +2,7 @@
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
 import AppWindow from "../utils/AppWindow.js";
 import LoginPage from "../login/pages/LoginPage.jsx";
-import FacebookTwitterDb from "../socialAccounts/FacebookTwitterDb.js";
+import UserInfo from "../user/UserInfo.js";
 
 export default class TwitterLogin {
     static instance() {
@@ -54,7 +54,7 @@ export default class TwitterLogin {
 
     isAuthenticated() {
         return new Promise((resolve) => {
-            FacebookTwitterDb.getTokenDocument().then((document) => {
+            UserInfo.getTokenDocument().then((document) => {
                 resolve(document.twitterAuthenticated === true);
             }).catch(() => {
                 resolve(false);

@@ -57,7 +57,7 @@ describe("UserProfileSettings", ()=> {
         logoutMock.verify();
     });
 
-    it.only("should open help on clicking help option", ()=> {
+    it("should open help on clicking help option", ()=> {
         userProfile.state.show = true;
         let history = { "push": () => {} };
         sandbox.mock(History).expects("getHistory").returns(history);

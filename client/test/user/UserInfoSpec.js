@@ -2,14 +2,14 @@
 
 "use strict";
 import PouchClient from "../../src/js/db/PouchClient.js";
-import FacebookTwitterDb from "../../src/js/socialAccounts/FacebookTwitterDb.js";
+import UserInfo from "../../src/js/user/UserInfo.js";
 import sinon from "sinon";
 
-describe("FacebookTwitterDB", () => {
+describe("UserInfo", () => {
     describe("createOrUpdateTokenDocument", () => {
-        let getDocumentMock = null, sandbox = sinon.sandbox.create(), socialAccountId = "socialAccounts";
+        let getDocumentMock = null, sandbox = sinon.sandbox.create(), userInfoId = "userInfo";
         beforeEach("before", () => {
-            getDocumentMock = sandbox.mock(PouchClient).expects("getDocument").withArgs(socialAccountId);
+            getDocumentMock = sandbox.mock(PouchClient).expects("getDocument").withArgs(userInfoId);
         });
 
         afterEach("after", () => {
@@ -32,8 +32,18 @@ describe("FacebookTwitterDB", () => {
                 };
 
                 getDocumentMock.returns(Promise.reject("error"));
-                createDocumentMock.withArgs({ "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": false });
-                FacebookTwitterDb.createOrUpdateTokenDocument(jsonDocument);
+                createDocumentMock.withArgs({ "_id": userInfoId, "facebookExpiredAfter": 123456, "twitterAuthenticated": false, "takenTour": false });
+                UserInfo.createOrUpdateTokenDocument(jsonDocument);
+            });
+
+            it("should create new document with takenTour detail", () => {
+                let jsonDocument = {
+                    "takenTour": true
+                };
+
+                getDocumentMock.returns(Promise.reject("error"));
+                createDocumentMock.withArgs({ "_id": userInfoId, "facebookExpiredAfter": undefined, "twitterAuthenticated": false, "takenTour": true });
+                UserInfo.createOrUpdateTokenDocument(jsonDocument);
             });
 
             it("should create new document when document is not present in db for twitter", () => {
@@ -42,8 +52,8 @@ describe("FacebookTwitterDB", () => {
                 };
 
                 getDocumentMock.returns(Promise.reject("error"));
-                createDocumentMock.withArgs({ "_id": socialAccountId, "twitterAuthenticated": true, "facebookExpiredAfter": undefined });
-                FacebookTwitterDb.createOrUpdateTokenDocument(jsonDocument);
+                createDocumentMock.withArgs({ "_id": userInfoId, "twitterAuthenticated": true, "facebookExpiredAfter": undefined, "takenTour": false });
+                UserInfo.createOrUpdateTokenDocument(jsonDocument);
             });
         });
 
@@ -62,10 +72,10 @@ describe("FacebookTwitterDB", () => {
                     "twitterAuthenticated": true
                 };
 
-                let alreadyCreatedDocument = { "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": false };
+                let alreadyCreatedDocument = { "_id": userInfoId, "facebookExpiredAfter": 123456, "twitterAuthenticated": false };
                 getDocumentMock.returns(Promise.resolve(alreadyCreatedDocument));
-                updateDocumentMock.withArgs({ "_id": socialAccountId, "facebookExpiredAfter": 123456, "twitterAuthenticated": true }).returns(Promise.resolve());
-                FacebookTwitterDb.createOrUpdateTokenDocument(jsonDocument).then((value) => {
+                updateDocumentMock.withArgs({ "_id": userInfoId, "facebookExpiredAfter": 123456, "twitterAuthenticated": true }).returns(Promise.resolve());
+                UserInfo.createOrUpdateTokenDocument(jsonDocument).then((value) => {
                     done();
                 });
             });

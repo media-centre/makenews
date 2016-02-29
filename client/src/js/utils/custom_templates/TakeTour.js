@@ -1,6 +1,6 @@
 "use strict";
 
-import AppSessionStorage from "../../utils/AppSessionStorage.js";
+import UserInfo from "../../user/UserInfo.js";
 import Locale from "../Locale";
 export default class TakeTour {
     static show() {
@@ -38,12 +38,21 @@ export default class TakeTour {
     }
 
     static isTourRequired() {
-        let appSessionStorage = AppSessionStorage.instance();
-        return appSessionStorage.getValue(AppSessionStorage.KEYS.TAKE_TOUR) !== null;
+        return new Promise((resolve) => {
+            UserInfo.getTokenDocument().then(userInfo => {
+                resolve(!userInfo.takenTour);
+            }).catch(error => {
+                let notFoundCode = 404;
+                if(error.status === notFoundCode && error.name === "not_found") {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        });
     }
 
     static updateUserSeenTour() {
-        let appSessionStorage = AppSessionStorage.instance();
-        appSessionStorage.remove(AppSessionStorage.KEYS.TAKE_TOUR);
+        return UserInfo.createOrUpdateTokenDocument({ "takenTour": true });
     }
 }

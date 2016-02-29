@@ -3,7 +3,6 @@
 
 import UserRequest from "../../src/login/UserRequest.js";
 import CouchSession from "../../src/CouchSession.js";
-import CouchClient from "../../src/CouchClient.js";
 import LogTestHelper from "../../test/helpers/LogTestHelper";
 import sinon from "sinon";
 
@@ -149,39 +148,6 @@ describe("UserRequest", () => {
             userRequest.updatePassword(newPassword).catch(error =>{
                 assert.strictEqual("Updation failed", error);
                 getTokenMock.verify();
-                done();
-            });
-        });
-    });
-
-    describe("getUserDetails", () => {
-        it("should get the user details", (done) => {
-            let name = "test", token = "token";
-            let expectedUserDetails = { "takenTour": false };
-            let couchClient = new CouchClient("_users", token), sandbox = sinon.sandbox.create();
-            sandbox.stub(CouchClient, "instance").withArgs("_users", token).returns(couchClient);
-            let getMock = sandbox.mock(couchClient).expects("get");
-            getMock.withArgs(`/_users/org.couchdb.user:${name}`).returns(Promise.resolve(expectedUserDetails));
-            let userRequest = UserRequest.instance(name, password);
-            userRequest.getUserDetails(token, name).then(userDetails => {
-                assert.deepEqual(userDetails, expectedUserDetails);
-                getMock.verify();
-                sandbox.restore();
-                done();
-            });
-        });
-
-        it("should reject with error if fetch fails", (done) => {
-            let name = "test", token = "token";
-            let couchClient = new CouchClient("_users", token), sandbox = sinon.sandbox.create();
-            sandbox.stub(CouchClient, "instance").withArgs("_users", token).returns(couchClient);
-            let getMock = sandbox.mock(couchClient).expects("get");
-            getMock.withArgs(`/_users/org.couchdb.user:${name}`).returns(Promise.reject("error"));
-            let userRequest = UserRequest.instance(name, password);
-            userRequest.getUserDetails(token, name).catch(error => {
-                assert.deepEqual(error, "error");
-                getMock.verify();
-                sandbox.restore();
                 done();
             });
         });
