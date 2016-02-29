@@ -3,6 +3,7 @@
 
 import React, { Component } from "react";
 import LogoutActions from "../login/LogoutActions";
+import History from "../History";
 import { Link } from "react-router";
 import Locale from "../utils/Locale";
 
@@ -27,6 +28,11 @@ export default class UserProfileSettings extends Component {
         LogoutActions.instance().logout();
     }
 
+    _showHelp() {
+        this.setState({ "show": !this.state.show });
+        History.getHistory().push("/help");
+    }
+
     render() {
         let userName = localStorage.getItem("UserName");
         return (
@@ -46,6 +52,10 @@ export default class UserProfileSettings extends Component {
                         <li ref="logout" onClick={this._logout.bind(this)}>
                             <i className="fa fa-sign-out"></i>
                             {this.messages.logout}
+                        </li>
+                        <li ref="help" onClick={this._showHelp.bind(this)}>
+                            <i className="fa fa-sign-out"></i>
+                            {this.messages.help}
                         </li>
                     </ul>
                 </div>

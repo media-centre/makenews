@@ -11,6 +11,7 @@ import ParkPage from "./park/pages/ParkPage.jsx";
 import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import UserSession from "./user/UserSession";
 import UserProfile from "./user/UserProfile.jsx";
+import Help from "./help/Help.jsx";
 import DbSession from "./db/DbSession.js";
 import React from "react";
 import "babel/polyfill";
@@ -33,6 +34,7 @@ export function renderRoutes() {
                 <Route path="/park" component={ParkPage} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />
+                <Route path="/help" component={Help} />
             </Route>
         </Route>
     );

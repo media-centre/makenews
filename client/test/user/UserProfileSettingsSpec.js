@@ -2,6 +2,7 @@
 
 import UserProfileSettings from "../../src/js/user/UserProfileSettings.jsx";
 import LogoutActions from "../../src/js/login/LogoutActions";
+import History from "../../src/js/History";
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
@@ -54,5 +55,16 @@ describe("UserProfileSettings", ()=> {
 
         assert.isFalse(userProfile.state.show);
         logoutMock.verify();
+    });
+
+    it.only("should open help on clicking help option", ()=> {
+        userProfile.state.show = true;
+        let history = { "push": () => {} };
+        sandbox.mock(History).expects("getHistory").returns(history);
+        let pushMock = sandbox.mock(history).expects("push").withArgs("/help");
+        TestUtils.Simulate.click(userProfile.refs.help);
+
+        assert.isFalse(userProfile.state.show);
+        pushMock.verify();
     });
 });

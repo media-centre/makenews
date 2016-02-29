@@ -122,7 +122,8 @@ window.mediaCenter.appEn = {
         "userProfileSettings": {
             "settings": "Settings",
             "profile": "Profile",
-            "logout": "Logout"
+            "logout": "Logout",
+            "help": "Help"
         },
         "applicationTour": {
             "description": "Find the \"HELP\" in the above options",
