@@ -29,6 +29,10 @@ export default class UserProfileActions {
         };
     }
 
+    static instance() {
+        return new UserProfileActions();
+    }
+
     newPwdConfirmPwdMismatch() {
         return dispatch => {
             dispatch({ "type": NEW_PWD_CONFIRM_PWD_MISMATCH });

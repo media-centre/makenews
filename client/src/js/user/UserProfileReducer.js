@@ -1,9 +1,8 @@
 "use strict";
 import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "./UserProfileActions.js";
-import Toast from "../utils/custom_templates/Toast.js";
 import Local from "../utils/Locale.js";
 
-export function changePassword(state = { "errorMessage": "" }, action = {}) {
+export function changePassword(state = { "errorMessage": "", "isSuccess": false }, action = {}) {
     let appEn = Local.applicationStrings();
     switch(action.type) {
     case INCORRECT_USER_CREDENTIALS:
@@ -27,8 +26,7 @@ export function changePassword(state = { "errorMessage": "" }, action = {}) {
         };
 
     case CHANGE_PASSWORD_SUCCESSFUL:
-        Toast.show(appEn.messages.userProfile.pwdChangeSuccessful);
-        return { "errorMessage": "" };
+        return { "errorMessage": "", "isSuccess": true };
 
     default:
         return state;

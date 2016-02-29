@@ -5,6 +5,8 @@ import React, { PropTypes, Component } from "react";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import UserProfileActions from "./UserProfileActions.js";
 import { connect } from "react-redux";
+import ConfirmPopup from "../utils/components/ConfirmPopup/ConfirmPopup.js";
+import Logout from "../login/LogoutActions";
 
 export class UserProfile extends Component {
 
@@ -18,7 +20,7 @@ export class UserProfile extends Component {
         let newPassword = this.refs.newPassword.value.trim();
         let confirmPassword = this.refs.confirmPassword.value.trim();
 
-        let userProfileActions = new UserProfileActions();
+        let userProfileActions = UserProfileActions.instance();
         if(newPassword !== confirmPassword) {
             this.props.dispatch(userProfileActions.newPwdConfirmPwdMismatch());
             return false;
@@ -31,7 +33,13 @@ export class UserProfile extends Component {
         this.props.dispatch(userProfileActions.changePassword(AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME), currentPassword, newPassword));
     }
 
+    _logout() {
+        Logout.instance().logout();
+    }
+
     render() {
+        let popUp = this.props.changePasswordMessages.isSuccess
+            ? <ConfirmPopup ref="confirmPopup" description= {this.props.userProfileStrings.logoutConfirmMessage} hide = {this.props.changePasswordMessages.isSuccess} callback={() =>{ this._logout(); }}/> : null;
         return (
             <div className="user-profile">
                 <form className="border" onSubmit={(event) => this.submitProfile(event)}>
@@ -50,6 +58,7 @@ export class UserProfile extends Component {
                         <button className="btn-secondary">{"Submit"}</button>
                     </div>
                 </form>
+                {popUp}
             </div>
         );
     }

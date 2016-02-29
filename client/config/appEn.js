@@ -116,7 +116,8 @@ window.mediaCenter.appEn = {
             "confirmPassword": "confirm password",
             "newPwdShouldNotMatchCurrentPwd": "New password should not be same as the current password",
             "pwdChangeSuccessful": "Password successfully changed",
-            "pwdShouldNotBeEmpty": "Passwords should not be left blank"
+            "pwdShouldNotBeEmpty": "Passwords should not be left blank",
+            "logoutConfirmMessage": "Your password has been successfully changed. The application will now logout. Re-login with your new password"
         },
         "userProfileSettings": {
             "settings": "Settings",

@@ -18,8 +18,8 @@ export default class ConfirmPopup extends Component {
                     <div className="container">
                         <p className="description" ref="description">{this.props.description}</p>
                         <div className="button-container t-right">
-                            <button className="confirmButton btn-primary" ref="confirmButton" onClick={(event)=> this.handleClick(event, true)}>{"Confirm"}</button>
-                            <button className="cancelButton btn-primary" ref="cancelButton" onClick={(event)=> this.handleClick(event)}>{"Cancel"}</button>
+                            <button className={this.props.hide ? "confirmButton btn-primary hide" : "confirmButton btn-primary"} ref="confirmButton" onClick={(event)=> this.handleClick(event, true)} >{"Confirm"}</button>
+                            <button className="cancelButton btn-primary" ref="cancelButton" onClick={(event)=> this.handleClick(event)}>{this.props.hide ? "OK" : "Cancel"}</button>
                         </div>
                     </div>
                 </div>
@@ -31,5 +31,9 @@ export default class ConfirmPopup extends Component {
 ConfirmPopup.displayName = "ConfirmPopup";
 ConfirmPopup.propTypes = {
     "description": PropTypes.string,
-    "callback": PropTypes.func.isRequired
+    "callback": PropTypes.func.isRequired,
+    "hide": PropTypes.bool
+};
+ConfirmPopup.defaultProps = {
+    "hide": false
 };

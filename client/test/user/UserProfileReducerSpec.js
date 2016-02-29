@@ -5,7 +5,6 @@
 import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "../../src/js/user/UserProfileActions.js";
 import Locale from "../../src/js/utils/Locale.js";
 import { changePassword, userProfileStrings } from "../../src/js/user/UserProfileReducer.js";
-import Toast from "../../src/js/utils/custom_templates/Toast.js";
 import { assert } from "chai";
 import "../helper/TestHelper.js";
 import sinon from "sinon";
@@ -40,7 +39,7 @@ describe("UserProfileReducer", ()=> {
     describe("changePassword", () => {
         let defaultState = null;
         beforeEach("changePassword", () => {
-            defaultState = { "errorMessage": "" };
+            defaultState = { "errorMessage": "", "isSuccess": false };
         });
 
         it("should set the error message as empty by default", () => {
@@ -49,10 +48,7 @@ describe("UserProfileReducer", ()=> {
 
         it("should set the error message as empty if the change password is successful", () => {
             const action = { "type": CHANGE_PASSWORD_SUCCESSFUL };
-            let toastShowMock = sandbox.mock(Toast).expects("show");
-            toastShowMock.withArgs("Password successfully changed");
-            assert.deepEqual({ "errorMessage": "" }, changePassword(defaultState, action));
-            toastShowMock.verify();
+            assert.deepEqual({ "errorMessage": "", "isSuccess": true }, changePassword(defaultState, action));
         });
 
         it("should set the invalid credentials error message incase of authorization failure", () => {
