@@ -61,7 +61,7 @@ window.mediaCenter.appEn = {
                 "hintMessages": {
                     "RSSHintMessage": "Please Enter RSS URL Here",
                     "FacebookHintMessage": "Please Enter Facebook URL Here",
-                    "TwitterHintMessage": "Please Enter Twitter Handler Here",
+                    "TwitterHintMessage": "Please Enter Twitter Handle Here",
                     "categoryTitle": "Invalid category name. Use only space or - or _"
                 },
                 "exampleMessages": {

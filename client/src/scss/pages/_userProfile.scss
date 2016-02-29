@@ -24,4 +24,8 @@
       display: block;
     }
   }
+
+  .error-border {
+    border-color: $error-border-color;
+  }
 }

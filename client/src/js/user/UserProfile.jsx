@@ -38,21 +38,27 @@ export class UserProfile extends Component {
     }
 
     render() {
+        let errorMessage = this.props.changePasswordMessages.errorMessage;
         let popUp = this.props.changePasswordMessages.isSuccess
             ? <ConfirmPopup ref="confirmPopup" description= {this.props.userProfileStrings.logoutConfirmMessage} hide = {this.props.changePasswordMessages.isSuccess} callback={() =>{ this._logout(); }}/> : null;
+
+        let currentPasswordError = (errorMessage === this.props.userProfileStrings.invalidCredentials) ? "error-border box " : "box";
+        let newPasswordError = (errorMessage === this.props.userProfileStrings.newPwdShouldNotMatchCurrentPwd) ? " error-border box " : "box";
+        let confirmPasswordError = (errorMessage === this.props.userProfileStrings.newPwdConfirmPwdMismatch) ? "error-border box " : "box";
+
         return (
             <div className="user-profile">
                 <form className="border" onSubmit={(event) => this.submitProfile(event)}>
                     <h4 className="t-center">{"Change Password"}</h4>
                     <p className="error-msg small-text t-center">{this.props.changePasswordMessages.errorMessage}</p>
                     <div className="row">
-                        <input type="password" name="currentPassword" placeholder={this.props.userProfileStrings.currentPassword} className="box" required ref="currentPassword"/>
+                        <input type="password" name="currentPassword" placeholder={this.props.userProfileStrings.currentPassword} className={currentPasswordError} required ref="currentPassword"/>
                     </div>
                     <div className="row">
-                        <input type="password" name="newPassword" placeholder={this.props.userProfileStrings.newPassword} className="box" required ref="newPassword"/>
+                        <input type="password" name="newPassword" placeholder={this.props.userProfileStrings.newPassword} className={newPasswordError} required ref="newPassword"/>
                     </div>
                     <div className="row">
-                        <input type="password" name="confirmPassword" placeholder={this.props.userProfileStrings.confirmPassword} className="box" required ref="confirmPassword"/>
+                        <input type="password" name="confirmPassword" placeholder={this.props.userProfileStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
                     </div>
                     <div className="row">
                         <button className="btn-secondary">{"Submit"}</button>
