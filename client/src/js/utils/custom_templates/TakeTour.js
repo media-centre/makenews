@@ -1,4 +1,5 @@
 "use strict";
+
 import AppSessionStorage from "../../utils/AppSessionStorage.js";
 export default class TakeTour {
     static show() {
@@ -50,7 +51,7 @@ export default class TakeTour {
     }
 
     static navigateToPosition() {
-        let time = 100, padding = 20;
+        let time = 100;
         setTimeout(()=> {
             let currentJsonElement = TakeTour.getCurrentJsonElement();
             let takeTourElement = document.getElementById("take-tour");
@@ -66,9 +67,9 @@ export default class TakeTour {
                     tourArrow.style.left = 0;
                 }
 
-                let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
-                let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
-                left = left < 0 ? padding : left;
+                //let top = (targetElement.offsetTop + targetElement.offsetHeight + padding);
+                //let left = (targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (takeTourElement.offsetWidth / 2));
+                //left = left < 0 ? padding : left;
                 //takeTourElement.style.top = `${top}px`;
                 //takeTourElement.style.left = `${left}px`;
                 takeTourElement.style.top = "60px";
@@ -81,22 +82,23 @@ export default class TakeTour {
         return {
             "selector": ".user-settings.drop-down .user-info-label",
             "actionSelector": ".user-settings.drop-down .user-info-label",
-            "content": '"HELP" on using the application is provided in the above settings.'
+            "content": "\"HELP\" on using the application is provided in the above settings."
         };
     }
 
     static close() {
         document.getElementById("take-tour-mask").classList.add("hide");
         document.body.style.overflow = "auto";
+        this.updateUserSeenTour();
     }
 
-    static userTakenTour() {
+    static isTourRequired() {
         let appSessionStorage = AppSessionStorage.instance();
-        return appSessionStorage.getValue(AppSessionStorage.KEYS.TAKEN_TOUR) === "true";
+        return appSessionStorage.getValue(AppSessionStorage.KEYS.TAKE_TOUR) !== null;
     }
 
     static updateUserSeenTour() {
         let appSessionStorage = AppSessionStorage.instance();
-        appSessionStorage.remove(AppSessionStorage.KEYS.TAKEN_TOUR);
+        appSessionStorage.remove(AppSessionStorage.KEYS.TAKE_TOUR);
     }
 }

@@ -56,7 +56,7 @@ describe("AdminDbClient", () => {
         it("should call put with _users/user", () => {
             let adminDbClient = new AdminDbClient("admin", "token1");
             let putMock = sandbox.mock(adminDbClient).expects("put");
-            let body = { "_id": "org.couchdb.user:test", "name": "test", "roles": [], "type": "user", "password": "password", "generated": true, "takenTour": false };
+            let body = { "_id": "org.couchdb.user:test", "name": "test", "roles": [], "type": "user", "password": "password", "generated": true };
             putMock.withArgs("/_users/org.couchdb.user:test", body);
             adminDbClient.createUser("test", "password");
             putMock.verify();

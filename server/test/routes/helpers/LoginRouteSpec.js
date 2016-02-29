@@ -91,6 +91,48 @@ describe("LoginRoute", () => {
             loginRoute.handle();
         });
 
+        it("should not set takenTour if its not present", (done) => {
+            sinon.stub(userRequest, "getUserDetails").returns(Promise.resolve({
+                "_id": "org.couchdb.user:karthik",
+                "name": "karthik"
+            }));
+            response = {
+                "status": () => {
+                    return response;
+                },
+                "append": () => {
+                    return response;
+                },
+                "json": (data) => {
+                    assert.deepEqual(
+                        { "userName": userName,
+                          "dbParameters": {
+                              "serverUrl": "http://localhost:5000",
+                              "remoteDbUrl": "http://localhost:5984"
+                          }
+                        }, data);
+                    EnvironmentConfig.instance.restore();
+                    done();
+                }
+            };
+
+            let clientConfig = {
+                "get": (param) => {
+                    assert.strictEqual("db", param);
+                    return {
+                        "serverUrl": "http://localhost:5000",
+                        "remoteDbUrl": "http://localhost:5984"
+                    };
+                }
+            };
+            sinon.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
+
+            userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
+
+            let loginRoute = new LoginRoute(request, response, next);
+            loginRoute.handle();
+        });
+
         it("should respond with unauthorized if fetching user details fails", (done) => {
             let userDetailsMock = sinon.mock(userRequest).expects("getUserDetails");
             userDetailsMock.returns(Promise.reject("error"));

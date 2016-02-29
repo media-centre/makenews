@@ -119,23 +119,23 @@ xdescribe("TakeTour", () => {
 });
 
 describe("TakeTour", () => {
-    describe("userTakenTour", () => {
-        it("should return true if TAKEN_TOUR is set as true in localstorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, "true");
-            assert.isTrue(TakeTour.userTakenTour());
+    describe("isTourRequired", () => {
+        it("should return true if TAKE_TOUR is set in localstorage", () => {
+            localStorage.setItem(AppSessionStorage.KEYS.TAKE_TOUR, "true");
+            assert.isTrue(TakeTour.isTourRequired());
+            localStorage.removeItem(AppSessionStorage.KEYS.TAKE_TOUR);
         });
 
-        it("should return false if TAKEN_TOUR is set as false in localstorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, "false");
-            assert.isFalse(TakeTour.userTakenTour());
+        it("should return false if TAKE_TOUR is not set in localstorage", () => {
+            assert.isFalse(TakeTour.isTourRequired());
         });
     });
 
     describe("updateUserSeenTour", () => {
-        it("should remove TAKEN_TOUR from localStorage", () => {
-            localStorage.setItem(AppSessionStorage.KEYS.TAKEN_TOUR, true);
+        it("should remove TAKE_TOUR from localStorage", () => {
+            localStorage.setItem(AppSessionStorage.KEYS.TAKE_TOUR, true);
             TakeTour.updateUserSeenTour();
-            assert.isNull(localStorage.getItem(AppSessionStorage.KEYS.TAKEN_TOUR));
+            assert.isNull(localStorage.getItem(AppSessionStorage.KEYS.TAKE_TOUR));
         });
     });
 });

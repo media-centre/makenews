@@ -47,9 +47,13 @@ export default class LoginRoute extends Route {
 
     _handleLoginSuccess(authSessionCookie, userDetails) {
         let dbJson = ClientConfig.instance().db();
+        let jsonResponse = { "userName": this.userName, "dbParameters": dbJson };
+        if(userDetails.takenTour) {
+            jsonResponse.takenTour = userDetails.takenTour;
+        }
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
-            .json({ "userName": this.userName, "dbParameters": dbJson, "takenTour": userDetails.takenTour });
+            .json(jsonResponse);
 
         RouteLogger.instance().info("LoginRoute::_handleLoginSuccess: Login request successful");
         RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": this.userName, "dbParameters": dbJson }));

@@ -39,5 +39,5 @@ AppSessionStorage.KEYS = {
     "USERNAME": "UserName",
     "REMOTEDBURL": "RemoteUrl",
     "LAST_RENEWED_TIME": "LastRenewedTime",
-    "TAKEN_TOUR": "takenTour"
+    "TAKE_TOUR": "takeTour"
 };

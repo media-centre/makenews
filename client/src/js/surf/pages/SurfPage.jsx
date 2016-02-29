@@ -109,7 +109,7 @@ export class SurfPage extends Component {
     }
 
     takeTour() {
-        if(!TakeTour.userTakenTour()) {
+        if(TakeTour.isTourRequired()) {
             TakeTour.show();
         }
     }
