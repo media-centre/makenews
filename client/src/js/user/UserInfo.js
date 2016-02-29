@@ -5,7 +5,7 @@ import PouchClient from "../db/PouchClient.js";
 
 const userInfoId = "userInfo";
 export default class UserInfo {
-    static getTokenDocument() {
+    static getUserDocument() {
         return new Promise((resolve, reject) => {
             PouchClient.getDocument(userInfoId).then((document) => {
                 resolve(document);
@@ -15,7 +15,7 @@ export default class UserInfo {
         });
     }
 
-    static createOrUpdateTokenDocument(paramsObj) {
+    static createOrUpdateUserDocument(paramsObj) {
         return PouchClient.getDocument(userInfoId).then((document) => {
             return PouchClient.updateDocument(Object.assign({}, document, paramsObj));
         }).catch(() => {

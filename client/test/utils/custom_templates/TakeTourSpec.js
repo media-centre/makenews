@@ -123,7 +123,7 @@ describe("TakeTour", () => {
         let userInfoMock = null;
         beforeEach("TakeTour", () => {
             sandbox = sinon.sandbox.create();
-            userInfoMock = sandbox.mock(UserInfo).expects("getTokenDocument");
+            userInfoMock = sandbox.mock(UserInfo).expects("getUserDocument");
         });
         afterEach("TakeTour", () => {
             sandbox.restore();
@@ -159,7 +159,7 @@ describe("TakeTour", () => {
         let userInfoMock = null;
         beforeEach("TakeTour", () => {
             sandbox = sinon.sandbox.create();
-            userInfoMock = sandbox.mock(UserInfo).expects("createOrUpdateTokenDocument");
+            userInfoMock = sandbox.mock(UserInfo).expects("createOrUpdateUserDocument");
         });
         afterEach("TakeTour", () => {
             sandbox.restore();

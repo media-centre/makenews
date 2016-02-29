@@ -39,7 +39,7 @@ export default class TakeTour {
 
     static isTourRequired() {
         return new Promise((resolve) => {
-            UserInfo.getTokenDocument().then(userInfo => {
+            UserInfo.getUserDocument().then(userInfo => {
                 resolve(!userInfo.takenTour);
             }).catch(error => {
                 let notFoundCode = 404;
@@ -53,6 +53,6 @@ export default class TakeTour {
     }
 
     static updateUserSeenTour() {
-        return UserInfo.createOrUpdateTokenDocument({ "takenTour": true });
+        return UserInfo.createOrUpdateUserDocument({ "takenTour": true });
     }
 }

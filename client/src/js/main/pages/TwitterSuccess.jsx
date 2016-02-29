@@ -4,7 +4,7 @@ import UserInfo from "../../user/UserInfo.js";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {
-        UserInfo.createOrUpdateTokenDocument({ "twitterAuthenticated": true }).then(() => {
+        UserInfo.createOrUpdateUserDocument({ "twitterAuthenticated": true }).then(() => {
             window.opener.mediaCenter.twitterLoginSucess = true;
             window.close();
         });

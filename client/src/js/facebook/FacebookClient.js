@@ -36,7 +36,7 @@ export default class FacebookClient {
         };
         let ajaxClient = AjaxClient.instance("/facebook-set-token");
         ajaxClient.post(headers, { "accessToken": this.accessToken, "userName": LoginPage.getUserName() }).then(response => {
-            UserInfo.createOrUpdateTokenDocument({ "facebookExpiredAfter": response.expires_after });
+            UserInfo.createOrUpdateUserDocument({ "facebookExpiredAfter": response.expires_after });
         });
     }
 

@@ -72,7 +72,7 @@ export default class FacebookLogin {
 
     isTokenExpired() {
         return new Promise((resolve) => {
-            UserInfo.getTokenDocument().then((document) => {
+            UserInfo.getUserDocument().then((document) => {
                 if(!document.facebookExpiredAfter) {
                     resolve(true);
                 }

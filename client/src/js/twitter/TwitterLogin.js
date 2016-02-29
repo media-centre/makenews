@@ -54,7 +54,7 @@ export default class TwitterLogin {
 
     isAuthenticated() {
         return new Promise((resolve) => {
-            UserInfo.getTokenDocument().then((document) => {
+            UserInfo.getUserDocument().then((document) => {
                 resolve(document.twitterAuthenticated === true);
             }).catch(() => {
                 resolve(false);

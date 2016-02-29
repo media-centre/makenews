@@ -90,7 +90,7 @@ describe("TwitterLogin", () => {
         let facebookTwitterDbMock = null, sandbox = null;
         beforeEach("", () => {
             sandbox = sinon.sandbox.create();
-            facebookTwitterDbMock = sandbox.mock(UserInfo).expects("getTokenDocument");
+            facebookTwitterDbMock = sandbox.mock(UserInfo).expects("getUserDocument");
         });
 
         afterEach("", () => {
