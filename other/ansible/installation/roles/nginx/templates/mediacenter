@@ -22,6 +22,10 @@ server {
 
     listen 443 default_server;
     server_name {{nginx_domain}};
+
+    client_header_buffer_size 512k;
+    large_client_header_buffers 4 512k;
+        
     {% if not letsEncrypt %}
     ssl_certificate           /etc/nginx/ssl/mediacenter.crt;
     ssl_certificate_key       /etc/nginx/ssl/mediacenter.key;
