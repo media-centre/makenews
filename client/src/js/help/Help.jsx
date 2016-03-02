@@ -3,6 +3,10 @@
 import React, { Component } from "react";
 
 export default class Help extends Component {
+    componentWillMount() {
+        window.scrollTo(0, 0);
+    }
+
     render() {
         return (
             <div className="help-container">

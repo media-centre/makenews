@@ -14,6 +14,10 @@ export class UserProfile extends Component {
         super(props);
     }
 
+    componentWillMount() {
+        window.scrollTo(0, 0);
+    }
+
     submitProfile(event) {
         event.preventDefault();
         let currentPassword = this.refs.currentPassword.value.trim();
