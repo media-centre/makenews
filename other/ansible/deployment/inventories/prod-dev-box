@@ -1,2 +1,2 @@
 [web]
-release.dev.contentdiscovery.in project_environment=ci_prod_dev_box pipeline_deployment_folder_name=ProdDevBox
+release.dev.contentdiscovery.in project_environment=ci_prod_dev_box pipeline_deployment_folder_name=ReleaseDevBox
