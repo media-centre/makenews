@@ -51,7 +51,7 @@ export default class TwitterLogin {
         return new Promise((resolve, reject) => {
             this.oauth.getOAuthRequestToken({ "oauth_callback": serverCallbackUrl }, (error, oauthToken, oauthTokenSecret, results) => { //eslint-disable-line no-unused-vars
                 if (error) {
-                    TwitterLogin.logger().error("TwitterLogin:: getting request token from twitter failed. Error: %s", error);
+                    TwitterLogin.logger().error("TwitterLogin:: getting request token from twitter failed. Error: %j", error);
                     reject(error);
                 }
                 this.oauthToken = oauthToken;

@@ -34,7 +34,7 @@ export default class UserProfileSettings extends Component {
     }
 
     render() {
-        let userName = localStorage.getItem("UserName");
+        let userName = localStorage.getItem("UserName") || "";
         return (
             <div className="user-settings drop-down">
                 <h4 className="user-info-label" onClick={this._toggleDropdown.bind(this)}>

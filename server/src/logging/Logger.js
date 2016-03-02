@@ -11,7 +11,7 @@ export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR":
     logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
     logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
 let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-export let LOG_DIR = path.join(__dirname, "../../../../logs");
+export let LOG_DIR = path.join(__dirname, "../../../../../logs");
 let LOG_FILE = "defaultLog.log";
 
 export default class Logger {
