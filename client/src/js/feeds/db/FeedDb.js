@@ -3,6 +3,7 @@
 "use strict";
 import PouchClient from "../../db/PouchClient.js";
 import DateTimeUtil from "../../utils/DateTimeUtil.js";
+import AppWindow from "../../utils/AppWindow.js";
 
 export default class FeedDb {
     static fetchSurfFeedsAndCategoriesWithSource(options = { "include_docs": true, "descending": true }) {
@@ -42,11 +43,12 @@ export default class FeedDb {
 
     static deletePastFeeds() {
         return new Promise((resolve, reject) => {
-            FeedDb.fetchPastFeeds(window.maxSurfFeedsLifeInDays).then(pastFeeds => {
-                pastFeeds.forEach(pastFeed => {
-                    pastFeed._deleted = true;
-                });
-                PouchClient.bulkDocuments(pastFeeds).then(() => {
+            let maxSurfFeedsLifeInDays = AppWindow.instance().get("maxSurfFeedsLifeInDays");
+            if(!maxSurfFeedsLifeInDays) {
+                return resolve("maxSurfFeedsLifeInDays is null or empty. Ignoring the action.");
+            }
+            FeedDb.fetchPastFeeds(maxSurfFeedsLifeInDays).then(pastFeeds => {
+                PouchClient.bulkDelete(pastFeeds).then(() => {
                     resolve();
                 }).catch(error => {
                     reject(error);

@@ -245,31 +245,14 @@ describe("FeedDb", () => {
                     "postedDate": "before 30 days"
                 }
             ];
-            let expectedPastFeedsToBeDeleted = [
-                {
-                    "docType": "feed",
-                    "title": "Chennai Connect at The Hindu",
-                    "feedType": "facebook",
-                    "status": "surf",
-                    "postedDate": "before 30 days",
-                    "_deleted": true
-                },
-                {
-                    "docType": "feed",
-                    "title": "Chennai Connect at The Hindu",
-                    "feedType": "facebook",
-                    "status": "surf",
-                    "postedDate": "before 30 days",
-                    "_deleted": true
-                }
-            ];
+            let expectedPastFeedsToBeDeleted = pastFeeds;
 
 
             let numDays = 30;
-            window.maxSurfFeedsLifeInDays = numDays;
+            window.mediaCenter.maxSurfFeedsLifeInDays = numDays;
             let feedDbFetchPastFeedsMock = sandbox.mock(FeedDb).expects("fetchPastFeeds");
             feedDbFetchPastFeedsMock.withArgs(numDays).returns(Promise.resolve(pastFeeds));
-            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDocuments");
+            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDelete");
             bulkDeleteMock.withArgs(expectedPastFeedsToBeDeleted).returns(Promise.resolve());
             FeedDb.deletePastFeeds().then(() => {
                 feedDbFetchPastFeedsMock.verify();
@@ -288,19 +271,10 @@ describe("FeedDb", () => {
                     "postedDate": "before 30 days"
                 }
             ];
-            let expectedPastFeedsToBeDeleted = [
-                {
-                    "docType": "feed",
-                    "title": "Chennai Connect at The Hindu",
-                    "feedType": "facebook",
-                    "status": "surf",
-                    "postedDate": "before 30 days",
-                    "_deleted": true
-                }
-            ];
+            let expectedPastFeedsToBeDeleted = pastFeeds;
 
             sandbox.stub(FeedDb, "fetchPastFeeds").returns(Promise.resolve(pastFeeds));
-            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDocuments");
+            let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDelete");
             bulkDeleteMock.withArgs(expectedPastFeedsToBeDeleted).returns(Promise.reject("error"));
             return FeedDb.deletePastFeeds().catch((error) => {
                 assert.strictEqual(error, "error");
@@ -311,7 +285,7 @@ describe("FeedDb", () => {
 
         it("should reject if fetching past feeds fails", (done) => {
             let numDays = 30;
-            window.maxSurfFeedsLifeInDays = numDays;
+            window.mediaCenter.maxSurfFeedsLifeInDays = numDays;
             let feedDbFetchPastFeedsMock = sandbox.mock(FeedDb).expects("fetchPastFeeds");
             feedDbFetchPastFeedsMock.withArgs(numDays).returns(Promise.reject("error"));
             FeedDb.deletePastFeeds().catch((error) => {
@@ -320,6 +294,17 @@ describe("FeedDb", () => {
                 done();
             });
         });
+
+        it("should not do anything if the max surf feeds life in days is undefined or null", (done) => {
+            window.mediaCenter.maxSurfFeedsLifeInDays = undefined;
+            let feedDbFetchPastFeedsMock = sandbox.mock(FeedDb).expects("fetchPastFeeds");
+            feedDbFetchPastFeedsMock.never();
+            FeedDb.deletePastFeeds().then((response) => {
+                feedDbFetchPastFeedsMock.verify();
+                done();
+            });
+        });
+
     });
 });
 

@@ -80,39 +80,55 @@ export default class PouchClient {
         });
     }
 
-    static bulkDocuments(jsonDocument, options = {}) {
-        return new Promise((resolve, reject) => {
-            DbSession.instance().then(session => {
-                session.bulkDocs(jsonDocument, options).then(response => {
-                    resolve(response);
-                }).catch(error => {
-                    reject(error);
-                });
+    static bulkDelete(documents, options = {}) {
+        let deleteDocs = [];
+        documents.forEach(document => {
+            deleteDocs.push({
+                "_id": document._id,
+                "_rev": document._rev,
+                "_deleted": true
             });
+        });
+        return PouchClient.bulkDocuments(deleteDocs, options);
+    }
+
+    static bulkDocuments(documents, options = {}) {
+        return new Promise((resolve, reject) => {
+            if(!documents || documents.length === 0) {
+                resolve("no documents, ignoring the action.");
+            } else {
+                DbSession.instance().then(session => {
+                    session.bulkDocs(documents, options).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                });
+            }
         });
     }
 
-    static deleteDocument(jsonDocument) {
+    static deleteDocument(document) {
         return new Promise((resolve, reject) => {
-            if(jsonDocument) {
+            if(document) {
                 DbSession.instance().then(session => {
-                    session.remove(jsonDocument).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        let conflictStatus = 409;
-                        if(error.status === conflictStatus) {
-                            PouchClient.getDocument(jsonDocument._id).then(document => { //eslint-disable-line max-nested-callbacks
-                                resolve(PouchClient.deleteDocument(document));
-                            }).catch(docError => { //eslint-disable-line max-nested-callbacks
-                                reject(docError);
-                            });
-                        } else {
+                    PouchClient.getDocument(document._id).then(latestDocument => {
+                        let deletedDoc = {
+                            "_id": latestDocument._id,
+                            "_rev": latestDocument._rev,
+                            "_deleted": true
+                        };
+                        PouchClient.updateDocument(deletedDoc).then(response => { //eslint-disable-line max-nested-callbacks
+                            resolve(response);
+                        }).catch(error => { //eslint-disable-line max-nested-callbacks
                             reject(error);
-                        }
+                        });
+                    }).catch(docError => {
+                        reject(docError);
                     });
                 });
             } else {
-                reject("document can not be empty");
+                resolve("document is null. ignoring the deletion action.");
             }
         });
     }

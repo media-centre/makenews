@@ -9,7 +9,7 @@ import PouchDB from "pouchdb";
 import sinon from "sinon";
 
 describe("PouchClient", () => {
-    let parkFeed = null, surfFeed = null;
+    let parkFeed = null, surfFeed = null, sandbox = null;
     before("PouchClient", () => {
         let pouch = new PouchDB("myDB", { "db": require("memdown") });
         sinon.stub(DbSession, "instance").returns(Promise.resolve(pouch));
@@ -146,6 +146,14 @@ describe("PouchClient", () => {
 
     after("PouchClient", () => {
         DbSession.instance.restore();
+    });
+
+    beforeEach("PouchClient", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("PouchClient", () => {
+        sandbox.restore();
     });
 
     describe("fetchDocuments", () => {
@@ -411,6 +419,18 @@ describe("PouchClient", () => {
                 done();
             });
         });
+
+        it("should resolve with Promise if the documents are null", (done) => {
+            PouchClient.bulkDocuments(null).then(response => {
+                done();
+            });
+        });
+
+        it("should resolve with Promise if the documents is empty", (done) => {
+            PouchClient.bulkDocuments([]).then(response => {
+                done();
+            });
+        });
     });
 
     describe("deleteDocument", () => {
@@ -424,9 +444,19 @@ describe("PouchClient", () => {
                 }
                     , "deleteId1").then(putResponse => {
                         session.get("deleteId1").then(document => {
+
+                            sandbox.stub(PouchClient, "getDocument").withArgs(document._id).returns(Promise.resolve(document));
+                            let updateDocMock = sandbox.mock(PouchClient).expects("updateDocument");
+                            updateDocMock.withArgs({
+                                "_id": document._id,
+                                "_rev": document._rev,
+                                "_deleted": true
+                            }).returns(Promise.resolve({ "ok": true, "id": document._id }));
+
                             PouchClient.deleteDocument(document).then((response) => {
                                 assert.isTrue(response.ok);
                                 assert.strictEqual("deleteId1", response.id);
+                                updateDocMock.verify();
                                 done();
                             });
                         });
@@ -434,60 +464,20 @@ describe("PouchClient", () => {
             });
         });
 
-        it("should resolve with latest document deletion if conflict occurs", (done) => {
-            DbSession.instance().then(session => {
-                let doc = {
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.facebookpolitics.com",
-                    "categoryIds": ["politicsCategoryId2"]
-                };
-                session.put(doc, "deleteId1").then(putResponse => {
-                    session.get("deleteId1").then(document => {
-                        document._rev = "3-47f9b2cf6d863ef51cba7153064bbb87";
-                        PouchClient.deleteDocument(document).then((response) => {
-                            assert.isTrue(response.ok);
-                            assert.strictEqual("deleteId1", response.id);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
+        it("should reject with error if the document is not found", (done) => {
+            let document = {
+                "_id": "test"
+            };
+            sandbox.stub(PouchClient, "getDocument").withArgs(document._id).returns(Promise.reject("error"));
 
-        it("should reject with error if document deletion encountered conflict and get document failed", sinon.test(function(done) {
-            let getMock = this.mock(PouchClient).expects("getDocument").withArgs("deleteId1").returns(Promise.reject("error"));
-            DbSession.instance().then(session => {
-                let doc = {
-                    "docType": "source",
-                    "sourceType": "rss",
-                    "url": "www.facebookpolitics.com",
-                    "categoryIds": ["politicsCategoryId2"]
-                };
-                session.put(doc, "deleteId1").then(putResponse => {
-                    session.get("deleteId1").then(document => {
-                        document._rev = "3-abc";
-                        PouchClient.deleteDocument(document).catch(error => {
-                            assert.strictEqual(error, "error");
-                            done();
-                        });
-                    });
-                });
-            });
-        }));
-
-        it("should reject with an error while deleting the document", (done) => {
-            let invalidDocument = { "_id": "invalidId", "title": "INVALID" };
-            PouchClient.deleteDocument(invalidDocument).catch((error) => {
-                expect(error.error).to.be.true;
-                expect(error.status).to.eq(HttpResponseHandler.codes.NOT_FOUND);
+            PouchClient.deleteDocument(document).catch((error) => {
                 done();
             });
+
         });
 
-        it("should reject with an error if the document is null", (done) => {
-            PouchClient.deleteDocument(null).catch((error) => {
-                assert.strictEqual("document can not be empty", error);
+        it("should resolve if the document is null", (done) => {
+            PouchClient.deleteDocument(null).then((response) => {
                 done();
             });
         });
@@ -629,6 +619,64 @@ describe("PouchClient", () => {
             }).then((docs) => {
                 assert.deepEqual([{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }], docs[0].categoryIds);
                 assert.deepEqual(["image", "video", "text"], docs[0].content);
+                done();
+            });
+        });
+    });
+
+    describe("bulkDelete", () => {
+        let feeds = null, options = null;
+        before("bulkDelete", () => {
+            feeds = [
+                {
+                    "docType": "feed",
+                    "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Timeline Photos",
+                    "feedType": "facebook",
+                    "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                    "tags": [
+                        "Dec 29 2015    8:9:17"
+                    ],
+                    "url": "https://fbcdn-photos-h-a.akamaihd.net",
+                    "_id": "test1",
+                    "_rev": "7-8762920f2d09ee91f6bedbc268ea6c43"
+                },
+                {
+                    "docType": "feed",
+                    "sourceId": "0BD6EF4F-3DED-BA7D-9878-9A616E16DF48",
+                    "type": "imagecontent",
+                    "title": "Timeline Photos",
+                    "feedType": "facebook",
+                    "content": "Martina Hingis and I complement each other, says Sania Mirza in a candid chat.",
+                    "tags": [
+                        "Dec 29 2015    8:9:17"
+                    ],
+                    "url": "https://fbcdn-photos-h-a.akamaihd.net",
+                    "_id": "test2",
+                    "_rev": "8-8762920f2d09ee91f6bedbc268ea6c44"
+                }
+            ];
+            options = { "testOption": "test" };
+        });
+
+        it("should do bulk documents deletion", (done) => {
+            let deleteFeeds = [
+                {
+                    "_id": "test1",
+                    "_rev": "7-8762920f2d09ee91f6bedbc268ea6c43",
+                    "_deleted": true
+                },
+                {
+                    "_id": "test2",
+                    "_rev": "8-8762920f2d09ee91f6bedbc268ea6c44",
+                    "_deleted": true
+                }
+            ];
+            let bulkDocumentMock = sandbox.mock(PouchClient).expects("bulkDocuments");
+            bulkDocumentMock.withArgs(deleteFeeds, options).returns(Promise.resolve("deleted"));
+            PouchClient.bulkDelete(feeds, options).then(response => {
+                bulkDocumentMock.verify();
                 done();
             });
         });

@@ -83,10 +83,7 @@ export default class FeedApplicationQueries {
     static deleteSurfFeeds(sourceId) {
         return new Promise((resolve, reject) => {
             FeedDb.surfFeeds(sourceId).then((requiredSurfFeeds) => {
-                requiredSurfFeeds.forEach(feed => {
-                    feed._deleted = true;
-                });
-                PouchClient.bulkDocuments(requiredSurfFeeds).then((response)=> {
+                PouchClient.bulkDelete(requiredSurfFeeds).then((response)=> {
                     resolve(response);
                 }).catch(error => {
                     reject(error);
