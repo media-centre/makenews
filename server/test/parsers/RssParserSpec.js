@@ -104,8 +104,6 @@ describe("RssParser", () => {
             rssParser.parse().then((feedJson) => {
                 expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();
-            }).catch(error => {
-                console.log(error);
             });
         });
     });
