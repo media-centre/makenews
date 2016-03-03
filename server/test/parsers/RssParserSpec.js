@@ -3,6 +3,7 @@
 
 import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import CryptUtil from "../../src/util/CryptUtil.js";
 import LogTestHelper from "../helpers/LogTestHelper";
 import Logger from "../../src/logging/Logger";
 import { expect } from "chai";
@@ -11,12 +12,21 @@ import restRequest from "request";
 import sinon from "sinon";
 
 describe("RssParser", () => {
-    before("RssFeedsRoute", () => {
+    let sandbox = null;
+    before("RssParser", () => {
         sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
-    after("RssFeedsRoute", () => {
+    after("RssParser", () => {
         Logger.instance.restore();
+    });
+
+    beforeEach("RssParser", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("RssParser", () => {
+        sandbox.restore();
     });
 
     it("should reject if the url is not a feed", (done) => {
@@ -63,10 +73,14 @@ describe("RssParser", () => {
             .get("/?service=rss")
             .reply(HttpResponseHandler.codes.OK, data);
 
+        let hmacStub = sandbox.stub(CryptUtil, "hmac");
+        hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell").returns("test-guid-1");
+        hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk").returns("test-guid-2");
+
         let expectedFeeds = {
             "items":
                 [{
-                    "guid": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "guid": "test-guid-1",
                     "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
                     "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
                     "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
@@ -75,7 +89,7 @@ describe("RssParser", () => {
                     "image": {}
                 },
                     {
-                        "guid": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                        "guid": "test-guid-2",
                         "title": "NASA Television to Air Russian Spacewalk",
                         "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
                         "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
@@ -90,6 +104,8 @@ describe("RssParser", () => {
             rssParser.parse().then((feedJson) => {
                 expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();
+            }).catch(error => {
+                console.log(error);
             });
         });
     });

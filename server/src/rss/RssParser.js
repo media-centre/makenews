@@ -3,6 +3,8 @@
 
 import FeedParser from "feedparser";
 import Logger from "../logging/Logger";
+import CryptUtil from "../../src/util/CryptUtil.js";
+
 export default class RssParser {
     constructor(response) {
         this.response = response;
@@ -26,7 +28,7 @@ export default class RssParser {
                 let meta = this.meta, feed = this.read();
                 while(feed) {
                     items.push({
-                        "guid": feed.guid,
+                        "guid": CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid),
                         "title": feed.title,
                         "link": feed.link,
                         "description": feed.description,
