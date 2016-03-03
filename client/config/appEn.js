@@ -66,8 +66,8 @@ window.mediaCenter.appEn = {
                 },
                 "exampleMessages": {
                     "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
-                    "TwitterExampleURL": "Example: @martinfowler, #savetheinternet",
-                    "FacebookExampleURL": "Example: https://www.facebook.com/barackobama"
+                    "TwitterExampleURL": "Example: @the_hindu or #standwithjnu",
+                    "FacebookExampleURL": "Example: https://www.facebook.com/thehindu"
                 },
                 "successMessages": {
                     "categoryDeleteSuccess": "is successfully deleted",
