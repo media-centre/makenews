@@ -23,6 +23,7 @@ export default class SurfFilterItem extends Component {
         } else {
             filterItems.splice(index, 1);
         }
+        window.scrollTo(0, 0);
         this.props.dispatchFilterAction(this.props.type, filterItems);
     }
 
