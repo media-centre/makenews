@@ -80,6 +80,7 @@
 
   .main-page header {
     height: 45px;
+    z-index: $mask-layer-index;
 
     .fixed-header {
       padding: 3px 2px 0 2px;
