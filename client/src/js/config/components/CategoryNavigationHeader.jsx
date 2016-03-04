@@ -48,14 +48,12 @@ export default class CategoryNavigationHeader extends Component {
 
     handleDelete(event, categoryId) {
         if(event.OK) {
+            new FilterFeedsHandler().deleteCategory(categoryId).then(()=> {
+                this.props.dispatch(updateFilterAndSourceHashMap());
+            });
             CategoryDb.deleteCategory(categoryId).then((result) => {
                 Toast.show(`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryDeleteSuccess}`);
                 this.context.history.push("/configure/categories");
-
-                new FilterFeedsHandler().deleteCategory(categoryId).then(()=> {
-                    this.props.dispatch(updateFilterAndSourceHashMap());
-                });
-
             });
         }
         this.setDeleteConfirmState(false);
