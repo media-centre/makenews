@@ -22,14 +22,14 @@ export class SurfPage extends Component {
             "categories": [],
             "sourceTypes": []
         };
-        this.state = { "filter": filter, "fetchHintMessage": this.props.messages.fetchingFeeds, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false, "refreshState": this.props.refreshState };
+        this.state = { "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false, "refreshState": this.props.refreshState };
     }
     componentWillMount() {
         window.scrollTo(0, 0);
         this.takeTour();
         this.props.dispatch(initiateSurf(()=> {
-            let msg = this.props.feeds.length === 0 ? this.props.messages.noFeeds : "";
-            this.setState({ "filter": this.props.surfFilter, "fetchHintMessage": msg });
+            //let msg = this.props.feeds.length === 0 ? this.props.messages.noFeeds : "";
+            this.setState({ "filter": this.props.surfFilter });
         }));
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
@@ -88,16 +88,17 @@ export class SurfPage extends Component {
         this.props.dispatch(parkFeed(feedDoc, ()=> {
             if(this.props.feeds.length === 0) {
                 this.props.dispatch(fetchFeedsByPage(0, (filteredObj)=> {
-                    this.setState({ "fetchHintMessage": filteredObj.feeds.length > 0 ? "" : this.props.messages.noFeeds, "lastIndex": filteredObj.lastIndex });
+                    this.setState({ "lastIndex": filteredObj.lastIndex });
                 }));
             }
         }));
     }
 
     getHintMessage() {
-        if (this.props.feeds.length === 0) {
-            let message = this.state.fetchHintMessage === this.props.messages.fetchingFeeds ? this.state.fetchHintMessage : this.props.messages.noFeeds;
-            return <div className="feed-hint t-center">{message}</div>;
+        if(!this.props.feeds) {
+            return <div className="feed-hint t-center">{this.props.messages.fetchingFeeds}</div>;
+        } else if (this.props.feeds.length === 0) {
+            return <div className="feed-hint t-center">{this.props.messages.noFeeds}</div>;
         }
         return null;
     }
@@ -187,7 +188,6 @@ SurfPage.propTypes = {
 };
 
 SurfPage.defaultProps = {
-    "feeds": [],
     "categories": []
 };
 

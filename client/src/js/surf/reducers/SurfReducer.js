@@ -5,7 +5,7 @@ import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 import { MAX_FEEDS_PER_PAGE } from "../FilterFeedsHandler.js";
 
-export function allFeeds(state = { "feeds": List([]).toArray(), "messages": Locale.applicationStrings().messages.surfPage }, action = {}) {
+export function allFeeds(state = { "messages": Locale.applicationStrings().messages.surfPage }, action = {}) {
     let surfMessages = Locale.applicationStrings().messages.surfPage;
     switch(action.type) {
     case DISPLAY_ALL_FEEDS:

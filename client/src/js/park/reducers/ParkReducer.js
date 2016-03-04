@@ -4,7 +4,7 @@ import { DISPLAY_PARKED_FEEDS, UNPARK_FEED } from "../actions/ParkActions.js";
 import { List } from "immutable";
 import Locale from "../../utils/Locale.js";
 
-export function parkedFeeds(state = { "parkedItems": List([]).toArray(), "messages": Locale.applicationStrings().messages.parkPage }, action = {}) {
+export function parkedFeeds(state = { "messages": Locale.applicationStrings().messages.parkPage }, action = {}) {
     let parkMessages = Locale.applicationStrings().messages.parkPage;
     switch(action.type) {
     case DISPLAY_PARKED_FEEDS:

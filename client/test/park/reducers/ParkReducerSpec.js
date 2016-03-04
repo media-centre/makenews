@@ -23,7 +23,7 @@ describe("Park Reducer", () => {
         });
 
         it("default state should return empty list", () => {
-            assert.deepEqual({ "messages": {}, "parkedItems": [] }, parkedFeeds());
+            assert.deepEqual({ "messages": {} }, parkedFeeds());
         });
 
         it("should return given feeds", () => {

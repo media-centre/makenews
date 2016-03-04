@@ -101,6 +101,7 @@ window.mediaCenter.appEn = {
         },
         "parkPage": {
             "noFeeds": "You don't have any parked items",
+            "fetchingFeeds": "Fetching parked feeds for you...",
             "feeds": {
                 "unParkedSuccess": "You have successfully unparked the news item",
                 "deletedFeedConfirm": "This feed item will be permanently deleted. Do you want to continue?",

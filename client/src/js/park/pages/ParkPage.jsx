@@ -22,13 +22,20 @@ export class ParkPage extends Component {
         }));
     }
 
-    render() {
-        let defaultText = this.props.parkedItems.length === 0 ? <div ref="defaultText" className="t-center">{this.props.messages.noFeeds}</div> : null;
+    getHintMessage() {
+        if(!this.props.parkedItems) {
+            return <div ref="defaultText" className="t-center">{this.props.messages.fetchingFeeds}</div>;
+        } else if (this.props.parkedItems.length === 0) {
+            return <div ref="defaultText" className="t-center">{this.props.messages.noFeeds}</div>;
+        }
+        return null;
+    }
 
+    render() {
         return (
             <div ref="parkItem" className="park-page">
                 <div className="feeds-container">
-                    {defaultText}
+                    {this.getHintMessage()}
                     <AllFeeds feeds={this.props.parkedItems} dispatch={this.props.dispatch} actionComponent={ParkFeedActionComponent} clickHandler={(feedDoc) => this.parkClickHandler(feedDoc)}/>
                 </div>
             </div>
@@ -46,7 +53,6 @@ ParkPage.propTypes = {
 };
 
 ParkPage.defaultType = {
-    "parkedItems": []
 };
 
 function select(store) {

@@ -20,7 +20,7 @@ describe("Surf Reducer", () => {
 
     describe("allFeeds", () => {
         it("default state should return empty list", () => {
-            expect({ "feeds": [], "messages": messages }).to.deep.equal(allFeeds());
+            expect({ "messages": messages }).to.deep.equal(allFeeds());
         });
 
         it("should return given feeds", () => {

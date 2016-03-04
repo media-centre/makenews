@@ -16,14 +16,21 @@ export class AllCategories extends React.Component {
         this.props.dispatch(highLightTabAction(["Configure", "RSS"]));
         this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayAllCategoriesAsync());
-
     }
 
     _createNewCategory() {
-        let history = History.getHistory();
-        this.props.dispatch(createCategory((response)=>{
-            history.push("/configure/category/" + response.id + "/" + response.name);
-        }));
+        try {
+            if(!this.entered) {
+                this.entered = true;
+                let history = History.getHistory();
+                this.props.dispatch(createCategory((response)=>{
+                    history.push("/configure/category/" + response.id + "/" + response.name);
+                    this.entered = false;
+                }));
+            }
+        } catch(error) {
+            this.entered = false;
+        }
     }
 
     renderCategoryLists() {
