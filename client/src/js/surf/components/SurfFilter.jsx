@@ -32,9 +32,9 @@ export default class SurfFilter extends Component {
             <div className={this.state.show ? "anim surf-filter show-filter show" : "anim surf-filter show-filter"}>
                 <div className="wrapper">
                     <div className="anim show-filter-container">
-                        <SurfFilterItem type="source" displayItems={this.props.sourceTypeFilter} filterItems={this.props.filter.sourceTypes} title="Feed Type" dispatchFilterAction={this.updateFilter.bind(this)}/>
-                        <SurfFilterItem type="content" displayItems={this.props.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content Type" dispatchFilterAction={this.updateFilter.bind(this)}/>
-                        <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                        <SurfFilterItem type="source" displayItems={this.props.sourceTypeFilter} filterItems={this.props.filter.sourceTypes} title="Feed Type" className="filter-feed-type" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                        <SurfFilterItem type="content" displayItems={this.props.mediaTypes} filterItems={this.props.filter.mediaTypes} title="Content Type" className="filter-content-type" dispatchFilterAction={this.updateFilter.bind(this)}/>
+                        <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" className="filter-categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
                     </div>
                 </div>
                 <button id="filterToggle" onClick={this.toggleFilter.bind(this)} title="filters"><i className="fa fa-filter"></i></button>

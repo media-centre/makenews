@@ -40,10 +40,10 @@ export default class Paragraph extends Component {
 
         return (
             <div>
-            <a target="_blank" href={this.props.category.link}>
-                <div className="title">{this.props.category.title}</div>
-                <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>
-            </a>
+                <a target="_blank" href={this.props.category.link}>
+                    <div className="title">{this.props.category.title}</div>
+                    <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>
+                </a>
                 {header}
                 {confirmPopup}
             </div>

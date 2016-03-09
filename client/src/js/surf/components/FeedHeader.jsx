@@ -20,7 +20,7 @@ export default class FeedHeader extends Component {
                 <span className="icon-container header-item"><i className={"feed-icon fa fa-" + this.props.feedType.toLowerCase()}></i></span>
                 <ul className="h-center category-name header-item">{categoryNames}</ul>
                 <ul className="h-center header-item">
-                    <li className="tag">{localDateTime} </li>
+                    <li className="tag date">{localDateTime} </li>
                     {tags}
                 </ul>
                 {actionElement}

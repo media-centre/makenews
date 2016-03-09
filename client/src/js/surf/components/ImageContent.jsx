@@ -50,21 +50,19 @@ export default class ImageContent extends Component {
         let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.appEnMessages.parkPage.feeds.deletedFeedConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
-            <div>
-                {confirmPopup}
-                <div className="image-content" >
-                    <a target="_blank" href={this.props.category.link}>
-                        <div className="title">{this.props.category.title}</div>
-                        <div className="container clear-fix">
-                            <div className="img-container box m-block left" ref="imageContent">
-                                <img src={this.props.category.url} onLoad={() => this._onLoadImage()} onError={() => this._onLoadImage()} className="hide"/>
-                                <Spinner/>
-                            </div>
-                            <p className="box surf-description">{getHtmlContent(this.props.category.content)}</p>
+            <div className="image-content" >
+                <a target="_blank" href={this.props.category.link}>
+                    <div className="title">{this.props.category.title}</div>
+                    <div className="container clear-fix">
+                        <div className="img-container box m-block left" ref="imageContent">
+                            <img src={this.props.category.url} onLoad={() => this._onLoadImage()} onError={() => this._onLoadImage()} className="hide"/>
+                            <Spinner/>
                         </div>
-                   </a>
-                    {header}
-                </div>
+                        <p className="box surf-description">{getHtmlContent(this.props.category.content)}</p>
+                    </div>
+                </a>
+                {header}
+                {confirmPopup}
             </div>
         );
     }

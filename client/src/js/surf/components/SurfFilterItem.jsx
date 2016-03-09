@@ -50,7 +50,7 @@ export default class SurfFilterItem extends Component {
             return li;
         });
         return (
-            <div className="surf-filter-item">
+            <div className={"surf-filter-item " + this.props.className}>
                 <h4 className="box">{this.props.title}</h4>
                 <ul className="box h-center">{displayItems}</ul>
             </div>
@@ -65,6 +65,7 @@ SurfFilterItem.propTypes = {
     "displayItems": PropTypes.array.isRequired,
     "filterItems": PropTypes.array.isRequired,
     "title": PropTypes.string.isRequired,
+    "className": PropTypes.string.isRequired,
     "dispatchFilterAction": PropTypes.func.isRequired
 };
 

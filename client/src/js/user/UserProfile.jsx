@@ -52,7 +52,7 @@ export class UserProfile extends Component {
 
         return (
             <div className="user-profile">
-                <form className="border" onSubmit={(event) => this.submitProfile(event)}>
+                <form className="border" id="changePassword" onSubmit={(event) => this.submitProfile(event)}>
                     <h4 className="t-center">{"Change Password"}</h4>
                     <p className="error-msg small-text t-center">{this.props.changePasswordMessages.errorMessage}</p>
                     <div className="row">
@@ -65,7 +65,7 @@ export class UserProfile extends Component {
                         <input type="password" name="confirmPassword" placeholder={this.props.userProfileStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
                     </div>
                     <div className="row">
-                        <button className="btn-secondary">{"Submit"}</button>
+                        <button className="btn-secondary change-password-submit">{"Submit"}</button>
                     </div>
                 </form>
                 {popUp}
