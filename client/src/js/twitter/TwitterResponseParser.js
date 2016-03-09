@@ -31,16 +31,11 @@ export default class TwitterResponseParser {
         };
         let media = tweet.entities.media;
         if(media && media.length > 0) {
-            if(media.length === 1) {
-                feedObj.type = "imagecontent";
-                feedObj.url = media[0].media_url_https;
-            } else {
-                feedObj.type = "gallery";
-                feedObj.images = [];
-                media.forEach(item => {
-                    feedObj.images.push({ "url": item.media_url_https });
-                });
-            }
+            feedObj.type = "imagecontent";
+            feedObj.images = [];
+            media.forEach(item => {
+                feedObj.images.push({ "url": item.media_url_https });
+            });
         }
         return feedObj;
     }

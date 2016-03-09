@@ -147,7 +147,7 @@ describe("RssFeeds", () => {
                     "postedDate": null,
                     "tags": ["hindu"],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
-                    "url": "http://www.abcd.com"
+                    "images": [{ "type": "image/jpeg", "url": "http://www.abcd.com" }]
                 }
             ];
             let RssDbAddRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
@@ -161,7 +161,7 @@ describe("RssFeeds", () => {
             });
         });
 
-        it("should return feeds with the desired format of type gallery", (done)=> {
+        it("should return feeds with the desired format of type feeds with multiple images", (done)=> {
             let feeds = { "items": [
                 {
                     "title": "Eyewitness: Vietnam in the CGAP photography contest",
@@ -198,7 +198,7 @@ describe("RssFeeds", () => {
             let expectedFeeds = [
                 {
                     "_id": "http://www.theguardian.com/world/picture/guid1",
-                    "type": "gallery",
+                    "type": "imagecontent",
                     "docType": "feed",
                     "sourceId": sourceId,
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
@@ -328,7 +328,7 @@ describe("RssFeeds", () => {
             let expectedFeeds = [
                 {
                     "_id": "http://www.theguardian.com/world/picture/guid1",
-                    "type": "gallery",
+                    "type": "imagecontent",
                     "docType": "feed",
                     "sourceId": sourceId,
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",

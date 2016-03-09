@@ -151,10 +151,6 @@ export class SurfPage extends Component {
                 "name": "Image",
                 "image": "file-picture-o",
                 "_id": "imagecontent"
-            }, {
-                "name": "Gallery",
-                "image": "file-picture-o",
-                "_id": "gallery"
             }
         ];
         return (

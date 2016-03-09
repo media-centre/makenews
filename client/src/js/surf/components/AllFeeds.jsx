@@ -2,7 +2,6 @@
 "use strict";
 import React, { Component, PropTypes } from "react";
 import Paragraph from "./Paragraph.jsx";
-import ImageGallery from "./ImageGallery.jsx";
 import ImageContent from "./ImageContent.jsx";
 import Locale from "../../utils/Locale";
 
@@ -12,7 +11,6 @@ export default class AllFeeds extends Component {
         let appEnMessages = Locale.applicationStrings().messages;
         let categories = this.props.feeds.map((category, index)=>
             category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler} appEnMessages={appEnMessages}/>
-                : category.type === "gallery" ? <ImageGallery key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler} appEnMessages={appEnMessages}/>
                 : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler} appEnMessages={appEnMessages}/> : null
         );
 

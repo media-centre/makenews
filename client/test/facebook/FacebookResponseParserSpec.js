@@ -62,7 +62,7 @@ describe("FacebookResponseParser", () => {
             assert.strictEqual("test-name1", dbFormatDocument.title);
             assert.strictEqual("test-message1", dbFormatDocument.content);
             assert.strictEqual("facebook", dbFormatDocument.feedType);
-            assert.strictEqual("test-picture-url1", dbFormatDocument.url);
+            assert.strictEqual("test-picture-url1", dbFormatDocument.images[0].url);
         });
 
         it("post should not be empty object", () => {

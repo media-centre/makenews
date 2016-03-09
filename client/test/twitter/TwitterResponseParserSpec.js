@@ -61,7 +61,7 @@ describe("createTwitterFeed", ()=> {
             "link": "https://twitter.com/sourceId/status/123457",
             "postedDate": "2001-12-11T06:11:56+00:00",
             "tags": ["tag1", "tag2"],
-            "url": "https://www.test.com"
+            "images": [{ "url": "https://www.test.com" }]
         };
         let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
         expect(newTweets).to.deep.equal(expectedTweet);
@@ -87,7 +87,7 @@ describe("createTwitterFeed", ()=> {
 
         let expectedTweet = {
             "_id": "123457",
-            "type": "gallery",
+            "type": "imagecontent",
             "docType": "feed",
             "sourceId": sourceId,
             "feedType": "twitter",

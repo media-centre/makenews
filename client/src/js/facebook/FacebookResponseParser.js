@@ -39,7 +39,10 @@ export default class FacebookResponseParser {
 
         if(StringUtil.validString(post.picture)) {
             feedDocument.type = "imagecontent";
-            feedDocument.url = post.picture;
+            feedDocument.images = [];
+            post.url = post.picture;
+            feedDocument.images[0] = post;
+           // feedDocument.url = post.picture;
         }
 
         return feedDocument;
