@@ -39,7 +39,7 @@ export default class Paragraph extends Component {
         let confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.appEnMessages.parkPage.feeds.deletedFeedConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
-            <div>
+            <div className="text-content news-feed">
                 <a target="_blank" href={this.props.category.link}>
                     <div className="title">{this.props.category.title}</div>
                     <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>
