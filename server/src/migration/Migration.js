@@ -5,6 +5,7 @@ import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910
 import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
 import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645_ModifyAllCategoriesByNameView.js";
 import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter.js";
+import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed.js";
 
 import SchemaInfo from "./SchemaInfo.js";
 import MigrationFile from "./MigrationFile.js";
@@ -108,6 +109,8 @@ export default class Migration {
             return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
         case "AddSourceTypeFilter" :
             return new AddSourceTypeFilter(this.dbName, this.accessToken);
+        case "ChangeGalleryTypeFeed" :
+            return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }

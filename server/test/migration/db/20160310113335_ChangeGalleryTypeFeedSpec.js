@@ -1,18 +1,19 @@
 /* eslint max-nested-callbacks: [2, 7]*/
 
 "use strict";
-import AddFilterViewsToDesignDocument from "../../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
+import ChangeGalleryTypeFeed from "../../../src/migration/db/20160310113335_ChangeGalleryTypeFeed";
 import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration.js";
 import Migration from "../../../src/migration/Migration.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
 import { assert } from "chai";
 import sinon from "sinon";
+import nock from "nock";
 
-
-describe("AddFilterViewsToDesignDocument", ()=> {
+describe("ChangeGalleryTypeFeed", ()=> {
     const accessToken = "testToken", dbName = "testDb", designDocId = "_design/category";
     let sandbox = null, newViews = null, migrationLoggerStub = null;
 
-    before("AddFilterViewsToDesignDocument", () => {
+    before("ChangeGalleryTypeFeed", () => {
         sandbox = sinon.sandbox.create();
         migrationLoggerStub = sandbox.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
@@ -24,8 +25,7 @@ describe("AddFilterViewsToDesignDocument", ()=> {
             }
         });
     });
-
-    after("AddFilterViewsToDesignDocument", () => {
+    after("ChangeGalleryTypeFeed", () => {
         sandbox.restore();
     });
 
@@ -34,11 +34,8 @@ describe("AddFilterViewsToDesignDocument", ()=> {
         beforeEach("up", () => {
             designDocumentInstanceMock = sandbox.mock(DesignDocumentMigration).expects("instance");
             newViews = {
-                "surfFilter": {
-                    "map": "function(doc) { if(doc.docType == 'surf-filter') {emit(doc._id, doc)} }"
-                },
-                "latestFeeds": {
-                    "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) {emit(doc.postedDate, doc)} }"
+                "galleryFeeds": {
+                    "map": "function(doc) { if(doc.type == 'gallery') {emit(doc._id, doc)} }"
                 }
             };
             designDocObj = new DesignDocumentMigration(dbName, accessToken, designDocId);
@@ -48,13 +45,23 @@ describe("AddFilterViewsToDesignDocument", ()=> {
             sandbox.restore();
         });
 
-        it("should add the filter views to the design document", (done) => {
+        it("should update the gallery feeds to image content", (done) => {
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .get("/" + dbName + "/_design/category/_view/galleryFeeds")
+                .reply(HttpResponseHandler.codes.OK, { "rows": [{ "value": { "_id": "12345", "type": "imagecontent" } }] });
+
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .put("/" + dbName + "/12345", { "_id": "12345", "type": "imagecontent" })
+                .reply(HttpResponseHandler.codes.OK, { "ok": "true" });
+
             designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
             let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
             designDockAddNewViewsMock.withArgs(newViews).returns(Promise.resolve("success"));
 
-            let addFilterViewsToDesignDoc = new AddFilterViewsToDesignDocument(dbName, accessToken);
-            addFilterViewsToDesignDoc.up().then(response => { //eslint-disable-line
+            let changeGalleryTypeFeed = new ChangeGalleryTypeFeed(dbName, accessToken);
+            changeGalleryTypeFeed.up().then(response => { //eslint-disable-line
                 designDocumentInstanceMock.verify();
                 designDockAddNewViewsMock.verify();
                 done();
@@ -66,8 +73,8 @@ describe("AddFilterViewsToDesignDocument", ()=> {
             let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
             designDockAddNewViewsMock.withArgs(newViews).returns(Promise.reject("error"));
 
-            let addFilterViewsToDesignDoc = new AddFilterViewsToDesignDocument(dbName, accessToken);
-            addFilterViewsToDesignDoc.up().catch(error => { //eslint-disable-line
+            let changeGalleryTypeFeed = new ChangeGalleryTypeFeed(dbName, accessToken);
+            changeGalleryTypeFeed.up().catch(error => { //eslint-disable-line
                 assert.strictEqual("error", error);
                 designDocumentInstanceMock.verify();
                 designDockAddNewViewsMock.verify();
@@ -76,3 +83,4 @@ describe("AddFilterViewsToDesignDocument", ()=> {
         });
     });
 });
+
