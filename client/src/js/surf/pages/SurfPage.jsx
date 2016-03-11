@@ -28,7 +28,6 @@ export class SurfPage extends Component {
         window.scrollTo(0, 0);
         this.takeTour();
         this.props.dispatch(initiateSurf(()=> {
-            //let msg = this.props.feeds.length === 0 ? this.props.messages.noFeeds : "";
             this.setState({ "filter": this.props.surfFilter });
         }));
         this.props.dispatch(highLightTabAction(["Surf"]));

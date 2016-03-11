@@ -48,9 +48,6 @@ export default class CategoryNavigationHeader extends Component {
 
     handleDelete(event, categoryId) {
         if(event.OK) {
-            new FilterFeedsHandler().deleteCategory(categoryId).then(()=> {
-                this.props.dispatch(updateFilterAndSourceHashMap());
-            });
             CategoryDb.deleteCategory(categoryId).then((result) => {
                 Toast.show(`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryDeleteSuccess}`);
                 this.context.history.push("/configure/categories");
@@ -62,23 +59,6 @@ export default class CategoryNavigationHeader extends Component {
         if(!this.props.isDefault) {
             this.showConfirmPopup(this.props.categoryName);
         }
-
-        //new FilterFeedsHandler().fetchFilterDocument().then(filterDocs => {
-        //    let found = false;
-        //    if(filterDocs.length !== 0) {
-        //        let filters = filterDocs[0].categories.filter((category) => {
-        //            if(category.name === this.props.categoryName) {
-        //                return category;
-        //            }
-        //        });
-        //        found = filters.length > 0;
-        //    }
-        //    if(found) {
-        //        Toast.show("Selected category in filter cannot be deleted.");
-        //    } else {
-        //        this.showConfirmPopup(this.props.categoryName);
-        //    }
-        //});
     }
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>

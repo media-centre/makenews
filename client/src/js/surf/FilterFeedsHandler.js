@@ -3,6 +3,7 @@
 
 import PouchClient from "../db/PouchClient.js";
 import FeedDb from "../feeds/db/FeedDb.js";
+import CategoryDb from "../config/db/CategoryDb";
 import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries.js";
 
 export const MAX_FEEDS_PER_PAGE = 20;
@@ -50,7 +51,28 @@ export default class FilterFeedsHandler {
                     PouchClient.fetchDocuments("category/allSourcesBySourceType", { "include_docs": true }).then((sourceDocs)=> {
                         count += 1;
                         result.sourceIds = this.getSourceIdList(result.surfFilter.categories, sourceDocs);
-                        if(count === MAX_CHECK) {
+                        if(result.sourceIds.length === 0) {
+                            CategoryDb.fetchAllCategories().then(categoryDocs => {
+                                let categories = [], deletedCategoryExists = false;
+                                result.surfFilter.categories.forEach(categoryDoc => {
+                                    let categoryFind = (category) => {
+                                        return category._id === categoryDoc._id;
+                                    };
+                                    if(categoryDocs.find(categoryFind)) {
+                                        categories.push(categoryDoc);
+                                    } else {
+                                        deletedCategoryExists = true;
+                                    }
+                                });
+                                result.surfFilter.categories = categories;
+                                if(deletedCategoryExists) {
+                                    this.updateFilterDocument(result.surfFilter);
+                                }
+                                if(count === MAX_CHECK) {
+                                    resolve(result);
+                                }
+                            });
+                        } else if(count === MAX_CHECK) {
                             resolve(result);
                         }
                     });
@@ -207,28 +229,4 @@ export default class FilterFeedsHandler {
             }
         });
     }
-
-    deleteCategory(categoryId) {
-        return new Promise((resolve, reject)=> {
-            this.fetchFilterDocument().then((filterDocument)=> {
-                let updatedDocument = filterDocument[0];
-                if(!updatedDocument) {
-                    resolve();
-                }
-                updatedDocument.categories = filterDocument[0].categories.filter((category)=> {
-                    if(categoryId !== category._id) {
-                        return category;
-                    }
-                });
-                PouchClient.updateDocument(updatedDocument).then((response)=> {
-                    resolve(response);
-                }).catch((err)=> {
-                    reject(err);
-                });
-            }).catch((err)=> {
-                reject(err);
-            });
-        });
-    }
-
 }

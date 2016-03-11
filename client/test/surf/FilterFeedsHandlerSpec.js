@@ -267,38 +267,4 @@ describe("displayFilteredFeeds", ()=> {
             done();
         });
     });
-
-    it("should delete the category from the filter document", (done)=> {
-        let categoryId = "5B5AE0E9-2C36-0070-8569-AD5A68C0EFD7";
-        let filterDocument = [{
-            "_id": "surf-filter-id",
-            "categories": [{
-                "_id": "5B5AE0E9-2C36-0070-8569-AD5A68C0EFD7",
-                "name": "Untitled Category 1"
-            }],
-            "mediaTypes": []
-        }];
-
-        let updateDocument = {
-            "_id": "surf-filter-id",
-            "categories": [],
-            "mediaTypes": []
-        };
-
-        let pouchClientMock = sinon.mock(PouchClient).expects("fetchDocuments");
-        pouchClientMock.withArgs("category/surfFilter", { "include_docs": true }).returns(Promise.resolve(filterDocument));
-
-        let pouchClientUpdateMock = sinon.mock(PouchClient).expects("updateDocument");
-        pouchClientUpdateMock.withArgs(updateDocument).returns(Promise.resolve());
-
-
-        let filterFeedsHandler = new FilterFeedsHandler();
-        return filterFeedsHandler.deleteCategory(categoryId).then(()=> {
-            pouchClientMock.verify();
-            pouchClientUpdateMock.verify();
-            PouchClient.fetchDocuments.restore();
-            PouchClient.updateDocument.restore();
-            done();
-        });
-    });
 });
