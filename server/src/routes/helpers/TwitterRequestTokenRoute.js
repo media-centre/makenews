@@ -15,12 +15,12 @@ export default class TwitterRequestTokenRoute extends Route {
         this.userName = this.request.query.userName;
     }
 
-    valid() {
+    isValid() {
         RouteLogger.instance().error("TwitterRequestTokenRoute:: user name is empty");
-        return !StringUtil.isEmptyString(this.userName);
+        return StringUtil.validNonEmptyString(this.userName);
     }
     handle() {
-        if(!this.valid()) {
+        if(!this.isValid()) {
             return this._handleInvalidRoute();
         }
         TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl, "userName": this.userName }).then((instance) => {

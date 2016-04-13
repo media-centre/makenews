@@ -1,10 +1,8 @@
 "use strict";
 export default class StringUtil {
   static validNonEmptyString(value) {
-      if(StringUtil.validString(value) && value.trim()) {
-          return true;
-      }
-      return false;
+      return (StringUtil.validString(value) && value.trim());
+
   }
 
   static isEmptyString(value) {
@@ -12,10 +10,8 @@ export default class StringUtil {
   }
 
   static validString(value) {
-      if(value && typeof value === "string") {
-          return true;
-      }
-      return false;
+      return (value && typeof value === "string");
+
   }
 
   static trim(value) {

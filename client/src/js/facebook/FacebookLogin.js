@@ -16,6 +16,8 @@ export default class FacebookLogin {
     }
 
     initialize() {
+        this.loadSDK(document, "script", "facebook-jssdk");
+
         window.fbAsyncInit = () => {
             FB.init({ "appId": new AppWindow().get("facebookAppId"),
                 "cookie": true,
@@ -23,7 +25,10 @@ export default class FacebookLogin {
                 "version": "v2.5"
             });
         };
-        this.loadSDK(document, "script", "facebook-jssdk");
+
+        this.isTokenExpired().then(isExpired => {
+            this.tokenExpired = isExpired;
+        });
     }
 
     loadSDK(document, source, id) {
@@ -49,20 +54,18 @@ export default class FacebookLogin {
 
     login() {
         return new Promise((resolve, reject) => {
-            this.isTokenExpired().then((tokenExpired) => {
-                if(tokenExpired) {
-                    this.showLogin((response, error) => {
-                        if(response) {
-                            FacebookRequestHandler.setToken(response.accessToken);
-                            resolve(true);
-                        } else {
-                            reject(error);
-                        }
-                    });
-                } else {
-                    resolve(true);
-                }
-            });
+            if(this.tokenExpired) {
+                this.showLogin((response, error) => {
+                    if(response) {
+                        FacebookRequestHandler.setToken(response.accessToken);
+                        resolve(true);
+                    } else {
+                        reject(error);
+                    }
+                });
+            } else {
+                resolve(true);
+            }
         });
     }
 
