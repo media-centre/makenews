@@ -58,6 +58,7 @@ export default class FacebookLogin {
                 this.showLogin((response, error) => {
                     if(response) {
                         FacebookRequestHandler.setToken(response.accessToken);
+                        this.tokenExpired = false;
                         resolve(true);
                     } else {
                         reject(error);

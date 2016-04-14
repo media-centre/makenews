@@ -54,10 +54,8 @@ describe("TwitterLogin", () => {
     describe("login", () => {
         it("should requestToken if not authenticated", (done) => {
             let sandbox = sinon.sandbox.create();
-            let twitterLogin = new TwitterLogin();
-            sandbox.stub(twitterLogin, "isAuthenticated").returns(Promise.resolve(false));
-            let requestMock = sandbox.mock(twitterLogin).expects("requestToken").returns(Promise.resolve({ "authenticateUrl": "url" }));
-            let windowMock = sandbox.mock(window).expects("open").withArgs("url", "twitterWindow", "location=0,status=0,width=800,height=600").returns({ "closed": true });
+            sandbox.stub(TwitterLogin, "isAuthenticated").returns(Promise.resolve(false));
+            let windowMock = sandbox.mock(window).expects("open").withArgs("", "twitterWindow", "location=0,status=0,width=800,height=600").returns({ "closed": true });
             let appWindowMock = new AppWindow();
             let appWindowInstanceMock = sandbox.mock(AppWindow).expects("instance");
             appWindowInstanceMock.returns(appWindowMock);
@@ -65,23 +63,28 @@ describe("TwitterLogin", () => {
             sandbox.stub(TwitterLogin, "getWaitTime").returns(20); //eslint-disable-line no-magic-numbers
             appWindowGetMock.expects("get").withExactArgs("twitterLoginSucess").returns(true);
             appWindowGetMock.expects("set").withExactArgs("twitterLoginSucess", false);
-            return twitterLogin.login().then(() => {
-                windowMock.verify();
-                requestMock.verify();
-                appWindowGetMock.verify();
-                sandbox.restore();
-                done();
+            TwitterLogin.getInstance().then(twitterLogin => {
+                let requestMock = sandbox.mock(twitterLogin).expects("requestToken").returns(Promise.resolve({ "authenticateUrl": "url" }));
+                twitterLogin.login().then(() => {
+                    windowMock.verify();
+                    requestMock.verify();
+                    appWindowGetMock.verify();
+                    sandbox.restore();
+                    done();
+                });
             });
         });
 
-        it("should return successful promise if authenticated already", () => {
+        it("should return successful promise if authenticated already", (done) => {
             let sandbox = sinon.sandbox.create();
-            let twitterLogin = new TwitterLogin();
-            sandbox.stub(twitterLogin, "isAuthenticated").returns(Promise.resolve(true));
-            let requestMock = sandbox.mock(twitterLogin).expects("requestToken").never();
-            return twitterLogin.login().then(() => {
-                requestMock.verify();
-                sandbox.restore();
+            sandbox.stub(TwitterLogin, "isAuthenticated").returns(Promise.resolve(true));
+            TwitterLogin.getInstance().then(instance => {
+                let requestMock = sandbox.mock(instance).expects("requestToken").never();
+                instance.login().then(() => {
+                    requestMock.verify();
+                    sandbox.restore();
+                    done();
+                });
             });
         });
     });
@@ -100,21 +103,21 @@ describe("TwitterLogin", () => {
 
         it("should return false if user document is not present", () => {
             facebookTwitterDbMock.returns(Promise.reject());
-            return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
+            return TwitterLogin.isAuthenticated().then(authenticatedStatus => {
                 assert.strictEqual(authenticatedStatus, false);
             });
         });
 
         it("should return false if twitterAuthenticated is false", () => {
             facebookTwitterDbMock.returns(Promise.resolve({ "_id": "userInfoId", "facebookExpiredAfter": undefined, "twitterAuthenticated": false })); //eslint-disable-line no-undefined
-            return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
+            return TwitterLogin.isAuthenticated().then(authenticatedStatus => {
                 assert.strictEqual(authenticatedStatus, false);
             });
         });
 
         it("should return true if twitterAuthenticated", () => {
             facebookTwitterDbMock.returns(Promise.resolve({ "_id": "userInfoId", "facebookExpiredAfter": undefined, "twitterAuthenticated": true })); //eslint-disable-line no-undefined
-            return TwitterLogin.instance().isAuthenticated().then(authenticatedStatus => {
+            return TwitterLogin.isAuthenticated().then(authenticatedStatus => {
                 assert.strictEqual(authenticatedStatus, true);
             });
         });

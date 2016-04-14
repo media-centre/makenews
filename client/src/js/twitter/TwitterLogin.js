@@ -9,35 +9,47 @@ export default class TwitterLogin {
         return new TwitterLogin();
     }
 
+    constructor(authenticated) {
+        this.authenticated = authenticated;
+    }
+
+    static getInstance() {
+        return new Promise((resolve) => {
+            TwitterLogin.isAuthenticated().then(authenticated => {
+                resolve(new TwitterLogin(authenticated));
+            });
+        });
+    }
+
     login() {
         return new Promise((resolve, reject) => {
-            this.isAuthenticated().then((authenticated) => {
-                if(authenticated) {
-                    resolve();
-                } else {
-                    this.requestToken().then((response) => {
-                        let twitterWindow = window.open(response.authenticateUrl, "twitterWindow", "location=0,status=0,width=800,height=600");
-                        let maxIterations = 150, iteration = 0;
-                        let timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
-                            if(iteration > maxIterations) {
-                                clearInterval(timer);
+            if(this.authenticated) {
+                resolve();
+            } else {
+                let twitterWindow = window.open("", "twitterWindow", "location=0,status=0,width=800,height=600");
+                this.requestToken().then((response) => {
+                    twitterWindow.location = response.authenticateUrl;
+                    let maxIterations = 150, iteration = 0;
+                    let timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
+                        if(iteration > maxIterations) {
+                            clearInterval(timer);
+                            reject(false);
+                        }
+                        if(twitterWindow.closed) {
+                            clearInterval(timer);
+                            let appWindow = AppWindow.instance();
+                            if(appWindow.get("twitterLoginSucess")) {
+                                appWindow.set("twitterLoginSucess", false);
+                                this.authenticated = true;
+                                resolve(true);
+                            } else {
                                 reject(false);
                             }
-                            if(twitterWindow.closed) {
-                                clearInterval(timer);
-                                let appWindow = AppWindow.instance();
-                                if(appWindow.get("twitterLoginSucess")) {
-                                    appWindow.set("twitterLoginSucess", false);
-                                    resolve(true);
-                                } else {
-                                    reject(false);
-                                }
-                            }
-                            iteration += 1;
-                        }, TwitterLogin.getWaitTime());
-                    });
-                }
-            });
+                        }
+                        iteration += 1;
+                    }, TwitterLogin.getWaitTime());
+                });
+            }
         });
     }
     static getWaitTime() {
@@ -52,7 +64,7 @@ export default class TwitterLogin {
         return TwitterRequestHandler.requestToken(clientCallbackUrl, serverCallbackUrl, LoginPage.getUserName());
     }
 
-    isAuthenticated() {
+    static isAuthenticated() {
         return new Promise((resolve) => {
             UserInfo.getUserDocument().then((document) => {
                 resolve(document.twitterAuthenticated === true);

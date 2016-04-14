@@ -13,6 +13,10 @@ export default class TwitterComponent extends Component {
     constructor(props) {
         super(props);
         this.state = { "exampleMessage": this.props.categoryDetailsPageStrings.exampleMessages.TwitterExampleURL, "errorMessage": "", "hintMessage": this.props.categoryDetailsPageStrings.hintMessages.TwitterHintMessage };
+        this.twitterLoginHandler = this.twitterLoginHandler.bind(this);
+        TwitterLogin.getInstance().then(instance => {
+            this.twitterLogin = instance;
+        });
     }
 
     _validateUrl(url, callback, props) {
@@ -35,7 +39,7 @@ export default class TwitterComponent extends Component {
 
     twitterLoginHandler() {
         return new Promise((resolve) => {
-            TwitterLogin.instance().login().then(() => {
+            this.twitterLogin.login().then(() => {
                 resolve(true);
             });
         });
