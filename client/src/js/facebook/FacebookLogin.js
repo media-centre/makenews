@@ -11,7 +11,8 @@ export default class FacebookLogin {
         return new FacebookLogin();
     }
 
-    constructor() {
+    constructor(tokenExpired) {
+        this.tokenExpired = tokenExpired;
         this.initialize();
     }
 
@@ -25,9 +26,12 @@ export default class FacebookLogin {
                 "version": "v2.5"
             });
         };
-
-        this.isTokenExpired().then(isExpired => {
-            this.tokenExpired = isExpired;
+    }
+    static getInstance() {
+        return new Promise((resolve) => {
+            FacebookLogin.isTokenExpired().then(isExpired => {
+                resolve(new FacebookLogin(isExpired));
+            });
         });
     }
 
@@ -74,8 +78,8 @@ export default class FacebookLogin {
         return new Date().getTime();
     }
 
-    isTokenExpired() {
-        return new Promise((resolve) => {
+   static isTokenExpired() {
+       return new Promise((resolve) => {
             UserInfo.getUserDocument().then((document) => {
                 if(!document.facebookExpiredAfter) {
                     resolve(true);
@@ -85,5 +89,5 @@ export default class FacebookLogin {
                 resolve(true);
             });
         });
-    }
+   }
 }

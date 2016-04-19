@@ -19,7 +19,9 @@ export default class FacebookComponent extends Component {
     }
 
     componentWillMount() {
-        this.fbLogin = FacebookLogin.instance();
+        FacebookLogin.getInstance().then(facebookInstance => {
+            this.fbLogin = facebookInstance;
+        });
     }
 
     _validateUrl(url, callback, props) {
