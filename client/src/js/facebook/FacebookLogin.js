@@ -78,10 +78,10 @@ export default class FacebookLogin {
         return new Date().getTime();
     }
 
-   static isTokenExpired() {
-       return new Promise((resolve) => {
+    static isTokenExpired() {
+        return new Promise((resolve) => {
             UserInfo.getUserDocument().then((document) => {
-                if(!document.facebookExpiredAfter) {
+                if (!document.facebookExpiredAfter) {
                     resolve(true);
                 }
                 resolve(FacebookLogin.getCurrentTime() > document.facebookExpiredAfter);
@@ -89,5 +89,5 @@ export default class FacebookLogin {
                 resolve(true);
             });
         });
-   }
+    }
 }
