@@ -66,7 +66,7 @@ describe("DbParameters", () => {
         it("should return local db url", () => {
             appSessionStorageGetValueMock.withArgs(AppSessionStorage.KEYS.USERNAME).returns(localDbName);
             let localDbUrl = instance.getLocalDbUrl();
-            assert.strictEqual(localDbName, localDbUrl);
+            assert.strictEqual("db_0da7fa00f1d40002e108eb16f1d3690a9e096b009d610eff32ac973a11cb5671", localDbUrl);
         });
 
         it("should throw error if there is no local db url", () => {

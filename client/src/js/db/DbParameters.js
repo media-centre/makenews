@@ -1,6 +1,7 @@
 "use strict";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
+import CryptUtil from "../../../../server/src/util/CryptUtil";
 
 export default class DbParameters {
 
@@ -12,11 +13,14 @@ export default class DbParameters {
     }
 
     getLocalDbUrl() {
-        let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
-        if(StringUtil.isEmptyString(localDbUrl)) {
-            throw new Error("local db url can not be empty");
+        if(this.localDbUrl === undefined) {
+            let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
+            if (StringUtil.isEmptyString(localDbUrl)) {
+                throw new Error("local db url can not be empty");
+            }
+            this.localDbUrl = CryptUtil.dbNameHash(localDbUrl);
         }
-        return localDbUrl;
+        return this.localDbUrl;
     }
 
     getRemoteDbUrl() {

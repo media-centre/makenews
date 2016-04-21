@@ -35,4 +35,8 @@ export default class ApplicationConfig {
     serverPort() {
         return this.environmentConfig.get("serverPort");
     }
+
+    userDbPrefix() {
+        return this.environmentConfig.get("userDbPrefix");
+    }
 }

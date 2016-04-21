@@ -16,6 +16,7 @@ describe("ApplicationConfig", () => {
                     "serverIpAddress": "http://localhost",
                     "serverPort": 5000,
                     "couchDbUrl": "http://localhost:5984",
+                    "userDbPrefix": "test_prefix",
                     "adminDetails": {
                         "username": "admin",
                         "password": "admin",
@@ -50,6 +51,12 @@ describe("ApplicationConfig", () => {
 
             assert.strictEqual("http://localhost:5984", applicationConfig.dbUrl());
         });
+    });
+
+    describe("userDbPrefix", () => {
+       it("should return user db prefix", () => {
+           assert.strictEqual(applicationConfig.userDbPrefix(), "test_prefix");
+       });
     });
 
     describe("adminDetails", () => {

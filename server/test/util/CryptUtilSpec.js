@@ -46,4 +46,10 @@ describe("CryptUtil", () => {
         });
 
     });
+
+    describe("userDbHash", () => {
+        it("should return the hash for given user", () => {
+            assert.strictEqual(CryptUtil.dbNameHash("test"), "db_ad71148c79f21ab9eec51ea5c7dd2b668792f7c0d3534ae66b22f71c61523fb3");
+        });
+    });
 });

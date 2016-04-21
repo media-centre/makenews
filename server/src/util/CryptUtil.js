@@ -1,6 +1,7 @@
 "use strict";
 import StringUtil from "../../../common/src/util/StringUtil.js";
 import crypto from "crypto";
+import ApplicationConfig from "../../../server/src/config/ApplicationConfig";
 
 export default class CryptUtil {
     static hmac(algorithm, key, digest, data) {
@@ -16,5 +17,10 @@ export default class CryptUtil {
         appSecretProof.end();
         let hash = appSecretProof.read();
         return hash;
+    }
+    
+    static dbNameHash(dbName) {
+        return `db_${crypto.createHmac("sha256", dbName).digest("hex")}`;
+
     }
 }

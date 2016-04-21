@@ -5,6 +5,7 @@ import LogoutRoute from "./helpers/LogoutRoute.js";
 import RenewSessionRoute from "./helpers/RenewSessionRoute.js";
 import ChangePasswordRoute from "./helpers/ChangePasswordRoute.js";
 import RouteLogger from "./RouteLogger.js";
+import UserDbRoute from "./helpers/UserDbRoute";
 
 
 export default (app) => {
@@ -49,6 +50,15 @@ export default (app) => {
             new ChangePasswordRoute(request, response, next).handle();
         } catch(error) {
             RouteLogger.instance().error("/change_password error. Error: %s", error);
+        }
+    });
+
+    app.get("/user_db", (request, response, next) => {
+        RouteLogger.instance().info("AuthorizationRoutes:: /user_db request received. url = %s", request.url);
+        try {
+            new UserDbNameRoute(request, response, next).handle();
+        } catch(error) {
+            RouteLogger.instance().error(`/user_db error. Error: ${error}`);
         }
     });
 };

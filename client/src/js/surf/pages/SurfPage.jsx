@@ -118,7 +118,10 @@ export class SurfPage extends Component {
     }
 
     render() {
-        let refreshButton = <div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}><i className="fa fa-refresh"></i>{this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}</div>;
+        let refreshButton = (<div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}>
+                                <i className="fa fa-refresh"></i>
+                                {this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}
+                            </div>);
         let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;
         let paginationSpinner = this.state.showPaginationSpinner ? <div className="pagination-spinner">{"Fetching Feeds ..."}</div> : null;
         let mask = this.state.showFilterSpinner ? <div className="mask"><div className="spinner">{"Fetching filtered feeds ...."}</div></div> : null;

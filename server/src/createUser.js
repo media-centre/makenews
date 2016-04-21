@@ -3,6 +3,7 @@
 import AdminDbClient from "./db/AdminDbClient.js";
 import Migration from "./migration/Migration";
 import ApplicationConfig from "./config/ApplicationConfig.js";
+import CryptUtil from "util/CryptUtil";
 
 var argv = require("yargs").argv;
 
@@ -47,7 +48,8 @@ let adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminD
 
 console.log("User creation started.");
 AdminDbClient.instance(adminUserName, adminPassword, argv.user_name).then(dbInstance => {
-    let userName = argv.user_name, password = argv.user_password || Math.random().toString("36").slice("-8"), dbName = argv.user_name;
+    let userName = argv.user_name, password = argv.user_password || Math.random().toString("36").slice("-8"),
+        dbName = CryptUtil.dbNameHash(argv.user_name);
     console.log("creating user...");
     dbInstance.createUser(userName, password).then(() => {
         console.log(`created user: ${userName} with password: ${password}`);

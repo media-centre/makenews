@@ -3,8 +3,8 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
 import ApplicationConfig from "./config/ApplicationConfig.js";
 import NodeErrorHandler from "./NodeErrorHandler.js";
+import CryptUtil from "./util/CryptUtil";
 import Logger, { logCategories } from "./logging/Logger";
-
 import request from "request";
 
 export default class CouchClient {

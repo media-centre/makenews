@@ -3,6 +3,7 @@
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
+    "userDbPrefix": "db_",
     "adminDetails": {
       "username": "common",
       "password": "common",
