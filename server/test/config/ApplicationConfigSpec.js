@@ -54,9 +54,9 @@ describe("ApplicationConfig", () => {
     });
 
     describe("userDbPrefix", () => {
-       it("should return user db prefix", () => {
-           assert.strictEqual(applicationConfig.userDbPrefix(), "test_prefix");
-       });
+        it("should return user db prefix", () => {
+            assert.strictEqual(applicationConfig.userDbPrefix(), "test_prefix");
+        });
     });
 
     describe("adminDetails", () => {

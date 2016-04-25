@@ -3,7 +3,7 @@
 import AdminDbClient from "./db/AdminDbClient.js";
 import Migration from "./migration/Migration";
 import ApplicationConfig from "./config/ApplicationConfig.js";
-import CryptUtil from "util/CryptUtil";
+import CryptUtil from "./util/CryptUtil";
 
 var argv = require("yargs").argv;
 

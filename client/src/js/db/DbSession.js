@@ -24,9 +24,16 @@ export default class DbSession {
                 } else {
                     this.initialized = true;
 
-                    DbSession.new().remoteDbInstance().then(session => {
-                        this.db = session;
-                        resolve(session);
+                    var dbSession = DbSession.new(); //eslint-disable-line vars-on-top
+                    dbSession.dbParameters.getRemoteDbUrl().then(remoteDbUrl => {
+                        DbSession.remoteDbUrl = remoteDbUrl;
+                        dbSession.dbParameters.getLocalDbUrl().then(localDbUrl => {
+                            DbSession.localDbUrl = localDbUrl;
+                            dbSession.remoteDbInstance().then(session => { //eslint-disable-line max-nested-callbacks
+                                this.db = session;
+                                resolve(session);
+                            });
+                        });
                     });
                 }
             }
@@ -40,7 +47,7 @@ export default class DbSession {
     remoteDbInstance() {
         return new Promise((resolve, reject) => {
             DbSession.newRemotePouchDb().then(session => {
-                this.replicateDb(this.dbParameters.getRemoteDbUrl(), this.dbParameters.getLocalDbUrl(), {
+                this.replicateDb(DbSession.remoteDbUrl, DbSession.localDbUrl, {
                     "retry": true,
                     "live": false
                 }, true);
@@ -55,15 +62,13 @@ export default class DbSession {
             DbSession.localToRemoteReplication.cancel();
             DbSession.localToRemoteReplication = null;
         }
-
-        DbSession.localToRemoteReplication = this.replicateDb(this.dbParameters.getLocalDbUrl(), this.dbParameters.getRemoteDbUrl(), {
-            "retry": true,
-            "live": true
-        }, false);
-
         const THREEMINUTE = 180000;
         this.replicateRemoteDb(THREEMINUTE);
         this._deleteOldFeeds();
+        DbSession.localToRemoteReplication = this.replicateDb(DbSession.localDbUrl, DbSession.remoteDbUrl, {
+            "retry": true,
+            "live": true
+        }, false);
     }
 
     _deleteOldFeeds() {
@@ -72,12 +77,11 @@ export default class DbSession {
 
     replicateRemoteDb(intervalTime) {
         DbSession.remoteToLocalTimeInterval = setInterval(() => {
-            let dbParameters = DbParameters.instance();
-            if(DbSession.remoteToLocalReplication) {
+            if (DbSession.remoteToLocalReplication) {
                 DbSession.remoteToLocalReplication.cancel();
                 DbSession.remoteToLocalReplication = null;
             }
-            DbSession.remoteToLocalReplication = this.replicateDb(dbParameters.getRemoteDbUrl(), dbParameters.getLocalDbUrl(), {
+            DbSession.remoteToLocalReplication = this.replicateDb(DbSession.remoteDbUrl, DbSession.localDbUrl, {
                 "retry": false,
                 "live": false
             });
@@ -121,11 +125,15 @@ export default class DbSession {
     }
 
     static newRemotePouchDb() {
-        return new PouchDB(DbParameters.instance().getRemoteDbUrl());
+        return new Promise(resolve => {
+            resolve(new PouchDB(DbSession.remoteDbUrl));
+        });
     }
 
     static newLocalPouchDb() {
-        return new PouchDB(DbParameters.instance().getLocalDbUrl(), { "auto_compaction": true, "cache": false });
+        return new Promise(resolve => {
+            resolve(new PouchDB(DbSession.localDbUrl, { "auto_compaction": true, "cache": false }));
+        });
     }
 
     static clearInstance() {

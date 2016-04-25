@@ -46,7 +46,7 @@ export default class DefaultRoute extends Route {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
+        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/user_db/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
         return whitelistUrls.filter((item) => {
             return this.url.match(item);
         }).length > 0;

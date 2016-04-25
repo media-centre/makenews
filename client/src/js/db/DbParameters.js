@@ -1,7 +1,7 @@
 "use strict";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import StringUtil from "../../../../common/src/util/StringUtil.js";
-import CryptUtil from "../../../../server/src/util/CryptUtil";
+import AjaxClient from "../../js/utils/AjaxClient";
 
 export default class DbParameters {
 
@@ -13,21 +13,29 @@ export default class DbParameters {
     }
 
     getLocalDbUrl() {
-        if(this.localDbUrl === undefined) {
+        return new Promise((resolve, reject) => {
             let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
+            console.log(localDbUrl);
             if (StringUtil.isEmptyString(localDbUrl)) {
-                throw new Error("local db url can not be empty");
+                reject("local db url can not be empty");
             }
-            this.localDbUrl = CryptUtil.dbNameHash(localDbUrl);
-        }
-        return this.localDbUrl;
+            let ajaxClient = AjaxClient.instance("/user_db/" + localDbUrl);
+            ajaxClient.get().then(response => {
+                this.userDb = response.hash;
+                resolve(response.hash);
+            });
+        });
     }
 
     getRemoteDbUrl() {
-        let remoteDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.REMOTEDBURL);
-        if(StringUtil.isEmptyString(remoteDbUrl)) {
-            throw new Error("remote db url can not be empty");
-        }
-        return remoteDbUrl + "/" + this.getLocalDbUrl();
+        return new Promise((resolve, reject) => {
+            let remoteDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.REMOTEDBURL);
+            if(StringUtil.isEmptyString(remoteDbUrl)) {
+                reject("remote db url can not be empty");
+            }
+            this.getLocalDbUrl().then(response => {
+                resolve(remoteDbUrl + "/" + response);
+            });
+        });
     }
 }

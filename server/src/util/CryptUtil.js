@@ -15,12 +15,11 @@ export default class CryptUtil {
             appSecretProof.write(data);
         }
         appSecretProof.end();
-        let hash = appSecretProof.read();
-        return hash;
+        return appSecretProof.read();
     }
     
     static dbNameHash(dbName) {
-        return `db_${crypto.createHmac("sha256", dbName).digest("hex")}`;
+        return `${ApplicationConfig.instance().userDbPrefix()}${crypto.createHmac("sha256", dbName).digest("hex")}`;
 
     }
 }

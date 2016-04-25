@@ -18,10 +18,10 @@ describe("DbSession", () => {
                 return "PouchDB";
             },
             "getLocalDbUrl": () => {
-                return "localDb";
+                return Promise.resolve("localDb");
             },
             "getRemoteDbUrl": () => {
-                return "remoteDb";
+                return Promise.resolve("remoteDb");
             },
             "clearInstance": () => {}
         };
@@ -91,10 +91,14 @@ describe("DbSession", () => {
 
         it("should create pouch db of remote instance and initiate replication", (done) => {
             let remotePouchDbMock = sandbox.mock(DbSession).expects("newRemotePouchDb");
-            let replicationMock = sandbox.mock(dbInstance).expects("replicateDb").withArgs(parametersFake.getRemoteDbUrl(), parametersFake.getLocalDbUrl(), {
+            let replicationMock = null;
+            DbSession.localDbUrl = "localDb";
+            DbSession.remoteDbUrl = "remoteDB";
+            replicationMock = sandbox.mock(dbInstance).expects("replicateDb").withArgs(DbSession.remoteDbUrl, DbSession.localDbUrl, {
                 "retry": true,
                 "live": false
             }, true);
+
             remotePouchDbMock.returns(Promise.resolve("session"));
             dbInstance.remoteDbInstance().then(session => {
                 assert.strictEqual("session", session);
@@ -115,30 +119,31 @@ describe("DbSession", () => {
 
         });
 
-        it("should start the pouchd db sync with remote db. Second call should stop the existing sync", () => {
+        it("should start the pouchdb sync with remote db. Second call should stop the existing sync", () => {
             let cancelReturn = {
                 "cancel": () => {
+
                 }
             };
             let cancelSpy = sinon.spy(cancelReturn, "cancel");
-
-            let dbSessionReplicateDbMock = allSandbox.mock(dbSession).expects("replicateDb").withArgs(parametersFake.getLocalDbUrl(), parametersFake.getRemoteDbUrl(), {
+            DbSession.localDbUrl = "localDb";
+            DbSession.remoteDbUrl = "remoteDb";
+            let dbSessionReplicateDbMock = allSandbox.mock(dbSession).expects("replicateDb").withArgs("localDb", "remoteDb", {
                 "retry": true,
                 "live": true
-            }, false).returns(cancelReturn).twice();
-
+            }, false).returns(cancelReturn).once();
             let THREEMINUTE = 180000;
             let replicateRemoteDbMock = allSandbox.mock(dbSession).expects("replicateRemoteDb");
-            replicateRemoteDbMock.withArgs(THREEMINUTE).twice();
-            let oldFeedsDeleteMock = allSandbox.mock(FeedDb).expects("deletePastFeeds").twice();
+            replicateRemoteDbMock.withArgs(THREEMINUTE).once();
+            let oldFeedsDeleteMock = allSandbox.mock(FeedDb).expects("deletePastFeeds").once();
 
             dbSession.sync();
-            dbSession.sync();
+
             dbSessionReplicateDbMock.verify();
             replicateRemoteDbMock.verify();
             oldFeedsDeleteMock.verify();
-            assert.isTrue(cancelSpy.calledOnce);
             cancelSpy.restore();
+
         });
     });
 
