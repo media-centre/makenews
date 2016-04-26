@@ -14,7 +14,9 @@ export default class DbParameters {
 
     getLocalDbUrl() {
         return new Promise((resolve, reject) => {
-            if(!this.userDb) {
+            if(this.userDb) {
+                resolve(this.userDb);
+            } else {
                 let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
                 if (StringUtil.isEmptyString(localDbUrl)) {
                     reject("local db url can not be empty");
@@ -24,9 +26,6 @@ export default class DbParameters {
                     this.userDb = response.hash;
                     resolve(response.hash);
                 });
-            }
-            else {
-                resolve(this.userDb);
             }
         });
     }
