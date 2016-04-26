@@ -14,16 +14,20 @@ export default class DbParameters {
 
     getLocalDbUrl() {
         return new Promise((resolve, reject) => {
-            let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
-            console.log(localDbUrl);
-            if (StringUtil.isEmptyString(localDbUrl)) {
-                reject("local db url can not be empty");
+            if(!this.userDb) {
+                let localDbUrl = this.appSession.getValue(AppSessionStorage.KEYS.USERNAME);
+                if (StringUtil.isEmptyString(localDbUrl)) {
+                    reject("local db url can not be empty");
+                }
+                let ajaxClient = AjaxClient.instance("/user_db/" + localDbUrl);
+                ajaxClient.get().then(response => {
+                    this.userDb = response.hash;
+                    resolve(response.hash);
+                });
             }
-            let ajaxClient = AjaxClient.instance("/user_db/" + localDbUrl);
-            ajaxClient.get().then(response => {
-                this.userDb = response.hash;
-                resolve(response.hash);
-            });
+            else {
+                resolve(this.userDb);
+            }
         });
     }
 

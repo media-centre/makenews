@@ -24,7 +24,7 @@ export default class DbSession {
                 } else {
                     this.initialized = true;
 
-                    var dbSession = DbSession.new(); //eslint-disable-line vars-on-top
+                    let dbSession = DbSession.new();
                     dbSession.dbParameters.getRemoteDbUrl().then(remoteDbUrl => {
                         DbSession.remoteDbUrl = remoteDbUrl;
                         dbSession.dbParameters.getLocalDbUrl().then(localDbUrl => {
