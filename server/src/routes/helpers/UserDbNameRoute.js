@@ -21,7 +21,7 @@ export default class UserDbNameRoute extends Route {
             RouteLogger.instance().warn("UserDbNameRoute:: invalid user name %s.", this.userName);
             return this._handleInvalidRoute();
         }
-        this._handleSuccess({ "hash": CryptUtil.dbNameHash(this.userName) });
+        this._handleSuccess({ "dbName": CryptUtil.dbNameHash(this.userName) });
         RouteLogger.instance().debug("UserDbNameRoute:: db name for the user %s.", this.userName);
 
     }

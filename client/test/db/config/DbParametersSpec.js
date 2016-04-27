@@ -77,7 +77,7 @@ describe("DbParameters", () => {
 
         it("should return local db url", (done) => {
             appSessionStorageGetValueMock.returns(localDbName);
-            let responseJson = { "hash": "db_0da7fa00f1d40002e108eb16f1d3690a9e096b009d610eff32ac973a11cb5671" };
+            let responseJson = { "dbName": "db_0da7fa00f1d40002e108eb16f1d3690a9e096b009d610eff32ac973a11cb5671" };
             ajaxGetMock.returns(Promise.resolve(responseJson));
             instance.getLocalDbUrl().then(response => {
                 assert.strictEqual("db_0da7fa00f1d40002e108eb16f1d3690a9e096b009d610eff32ac973a11cb5671", response);

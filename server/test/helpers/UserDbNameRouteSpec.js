@@ -53,7 +53,7 @@ describe("UserDbNameRoute", () => {
                     return response;
                 },
                 "json": (json) => {
-                    assert.deepEqual({ "hash": "db_ad71148c79f21ab9eec51ea5c7dd2b668792f7c0d3534ae66b22f71c61523fb3" }, json);
+                    assert.deepEqual({ "dbName": "db_ad71148c79f21ab9eec51ea5c7dd2b668792f7c0d3534ae66b22f71c61523fb3" }, json);
                     done();
                 }
             };

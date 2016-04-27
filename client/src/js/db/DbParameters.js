@@ -23,8 +23,8 @@ export default class DbParameters {
                 }
                 let ajaxClient = AjaxClient.instance("/user_db/" + localDbUrl);
                 ajaxClient.get().then(response => {
-                    this.userDb = response.hash;
-                    resolve(response.hash);
+                    this.userDb = response.dbName;
+                    resolve(response.dbName);
                 });
             }
         });
