@@ -13,6 +13,7 @@ import FacebookDb from "../facebook/FacebookDb.js";
 import TwitterDb from "../twitter/TwitterDb.js";
 import DateTimeUtil from "../utils/DateTimeUtil.js";
 import PouchClient from "../db/PouchClient.js";
+import AppWindow from "../utils/AppWindow";
 import { displayAllFeeds } from "../surf/actions/SurfActions.js";
 
 const URLS_PER_BATCH = 5;
@@ -135,7 +136,7 @@ export default class RefreshFeedsHandler {
     }
 
     fetchAllSourceUrls() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if(Object.keys(this.sourceUrlsMap).length > 0) {
                 resolve();
             } else {
@@ -155,8 +156,11 @@ export default class RefreshFeedsHandler {
     }
 
     _constructRequestData(sources) {
+        let numberOfDaysToBackUp = DateTimeUtil.getCurrentTimeStamp().subtract(AppWindow.instance().get("numberOfDaysToBackUp"), "days").toISOString();
+        let numberOfDaysToBackUpTimestamp = Date.parse(numberOfDaysToBackUp);
         let urls = sources.map(source => {
-            return { "timestamp": source.latestFeedTimestamp, "url": source.url, "id": source._id };
+            let timestamp = (Date.parse(source.latestFeedTimestamp) < numberOfDaysToBackUpTimestamp) ? numberOfDaysToBackUp : source.latestFeedTimestamp;
+            return { "timestamp": timestamp, "url": source.url, "id": source._id };
         });
         return { "data": urls };
     }

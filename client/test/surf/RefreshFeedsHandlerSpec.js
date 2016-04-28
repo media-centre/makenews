@@ -11,6 +11,8 @@ import FacebookDb from "../../src/js/facebook/FacebookDb.js";
 import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
 import TwitterDb from "../../src/js/twitter/TwitterDb.js";
 import RssFeeds from "../../src/js/rss/RssFeeds.js";
+import DateTimeUtil from "../../src/js/utils/DateTimeUtil.js";
+import AppWindow from "../../src/js/utils/AppWindow";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -129,14 +131,14 @@ describe("RefreshFeedsHandler", () => {
     });
 
     describe("refreshCompletionPercentage", () => {
-        let fbRequestHandlerStub = null, fbDbStub = null;
+        let fbRequestHandlerStub = null, fbDbStub = null, constructDataMock = null, sandbox = null;
         beforeEach("before", ()=> {
-            fbRequestHandlerStub = sinon.stub(FacebookRequestHandler, "getBatchPosts");
-            fbDbStub = sinon.stub(FacebookDb, "addFacebookFeeds");
+            sandbox = sinon.sandbox.create();
+            fbRequestHandlerStub = sandbox.stub(FacebookRequestHandler, "getBatchPosts");
+            fbDbStub = sandbox.stub(FacebookDb, "addFacebookFeeds");
         });
         afterEach("after", ()=> {
-            FacebookRequestHandler.getBatchPosts.restore();
-            FacebookDb.addFacebookFeeds.restore();
+            sandbox.restore();
         });
 
         it("should update the progress percentage on success of updation", (done) => {
@@ -174,6 +176,9 @@ describe("RefreshFeedsHandler", () => {
             fbRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
             fbDbStub.returns(Promise.resolve());
             let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+
+            constructDataMock = sandbox.mock(refreshFeedsHandler).expects("_constructRequestData");
+            constructDataMock.returns({ "data": postData });
             refreshFeedsHandler.totalNumberOfUrls = 4;
             refreshFeedsHandler._handleFacebookBatch(fbUrls);
         });
@@ -181,7 +186,7 @@ describe("RefreshFeedsHandler", () => {
 
     describe("_handleRssBatch", ()=> {
         describe("creation of feeds", () => {
-            let rssRequestHandlerMock = null, rssFeedsSaveStub = null, rssFeedsParseStub = null, rssFeeds = null, sandbox = null;
+            let rssRequestHandlerMock = null, rssFeedsSaveStub = null, rssFeedsParseStub = null, rssFeeds = null, sandbox = null, refreshFeedHandler = null, constructDataMock = null;
             beforeEach("before", ()=> {
                 sandbox = sinon.sandbox.create();
                 rssFeeds = new RssFeeds([]);
@@ -190,6 +195,8 @@ describe("RefreshFeedsHandler", () => {
                 rssFeedsParseStub = sandbox.stub(rssFeeds, "parse").returns(true);
                 rssFeedsSaveStub = sandbox.stub(rssFeeds, "save").returns(Promise.resolve({ "id": "1" }));
                 rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
+                refreshFeedHandler = new RefreshFeedsHandler();
+                constructDataMock = sandbox.mock(refreshFeedHandler).expects("_constructRequestData");
             });
             afterEach("after", ()=> {
                 assert(rssFeedsParseStub.calledThrice, "parse not called thrice");
@@ -235,21 +242,24 @@ describe("RefreshFeedsHandler", () => {
                         ]
                     }
                 };
-
+                constructDataMock.withArgs(rssUrls).returns({ "data": postData });
                 rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
-                let refreshFeedsHandler = new RefreshFeedsHandler();
-                refreshFeedsHandler._handleRssBatch(rssUrls);
+                refreshFeedHandler._handleRssBatch(rssUrls);
             });
         });
 
         describe("_handleRssBatch", ()=> {
             describe("update timestamp", () => {
                 let rssRequestHandlerMock = null, addRssFeedsMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+                let refreshFeedsHandler = null, constructDataMock = null, sandbox = null;
                 beforeEach("before", ()=> {
-                    rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
-                    addRssFeedsMock = sinon.mock(RssDb).expects("addRssFeeds");
-                    pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
-                    pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+                    sandbox = sinon.sandbox.create();
+                    rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("fetchBatchRssFeeds");
+                    addRssFeedsMock = sandbox.mock(RssDb).expects("addRssFeeds");
+                    pouchClientGetDocumentMock = sandbox.mock(PouchClient).expects("getDocument");
+                    pouchClientUpdateDocumentMock = sandbox.mock(PouchClient).expects("updateDocument");
+                    refreshFeedsHandler = new RefreshFeedsHandler();
+                    constructDataMock = sandbox.mock(refreshFeedsHandler).expects("_constructRequestData");
                 });
                 afterEach("after", ()=> {
                     addRssFeedsMock.verify();
@@ -257,10 +267,7 @@ describe("RefreshFeedsHandler", () => {
                     rssRequestHandlerMock.verify();
                     pouchClientUpdateDocumentMock.verify();
 
-                    RssDb.addRssFeeds.restore();
-                    RssRequestHandler.fetchBatchRssFeeds.restore();
-                    PouchClient.getDocument.restore();
-                    PouchClient.updateDocument.restore();
+                    sandbox.restore();
                 });
                 it("should update latest timestamp post refresh", ()=> {
                     let urlDocument = {
@@ -296,27 +303,27 @@ describe("RefreshFeedsHandler", () => {
                             "items": [feed1]
                         }
                     };
+                    constructDataMock.returns({ "data": postData });
 
                     rssRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
                     addRssFeedsMock.withArgs([]).returns(Promise.resolve());
                     pouchClientGetDocumentMock.withArgs("1").returns(Promise.resolve(urlDocument));
                     pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
 
-                    let refreshFeedsHandler = new RefreshFeedsHandler();
                     refreshFeedsHandler._handleRssBatch(rssUrls);
                 });
             });
         });
 
         describe("Handler should update the completion percentage", ()=> {
-            let rssRequestHandlerStub = null, rssDbStub = null;
+            let rssRequestHandlerStub = null, rssDbStub = null, sandbox = null;
             beforeEach("before", ()=> {
-                rssRequestHandlerStub = sinon.stub(RssRequestHandler, "fetchBatchRssFeeds");
-                rssDbStub = sinon.stub(RssDb, "addRssFeeds");
+                sandbox = sinon.sandbox.create();
+                rssRequestHandlerStub = sandbox.stub(RssRequestHandler, "fetchBatchRssFeeds");
+                rssDbStub = sandbox.stub(RssDb, "addRssFeeds");
             });
             afterEach("after", ()=> {
-                RssRequestHandler.fetchBatchRssFeeds.restore();
-                RssDb.addRssFeeds.restore();
+                sandbox.restore();
             });
             it("should parse the rss feeds", (done)=> {
                 let hundredPercentage = 100;
@@ -338,6 +345,8 @@ describe("RefreshFeedsHandler", () => {
                 rssRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(rssFeedMap));
                 rssDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                let constructDataMock = sandbox.mock(refreshFeedsHandler).expects("_constructRequestData");
+                constructDataMock.returns({ "data": postData });
                 refreshFeedsHandler.totalNumberOfUrls = 1;
                 refreshFeedsHandler._handleRssBatch(rssUrls);
             });
@@ -346,17 +355,17 @@ describe("RefreshFeedsHandler", () => {
     
     describe("_handleFacebookBatch", ()=> {
         describe("creation of feeds", ()=> {
-            let fbRequestHandlerMock = null, fbDbSpy = null;
+            let fbRequestHandlerMock = null, fbDbSpy = null, sandbox = null;
             beforeEach("before", ()=> {
-                fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
-                fbDbSpy = sinon.spy(FacebookDb, "addFacebookFeeds");
+                sandbox = sinon.sandbox.create();
+                fbRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("getBatchPosts");
+                fbDbSpy = sandbox.spy(FacebookDb, "addFacebookFeeds");
             });
             afterEach("after", ()=> {
                 let maxCallCount = 2;
                 sinon.assert.callCount(fbDbSpy, maxCallCount);
                 fbRequestHandlerMock.verify();
-                FacebookRequestHandler.getBatchPosts.restore();
-                FacebookDb.addFacebookFeeds.restore();
+                sandbox.restore();
             });
             it("should parse and add facebook feeds", ()=> {
                 let fbUrls = [
@@ -377,18 +386,20 @@ describe("RefreshFeedsHandler", () => {
 
                 fbRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
                 let refreshFeedsHandler = new RefreshFeedsHandler();
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
             });
         });
 
         describe("update timestamp", ()=> {
-            let fbRequestHandlerMock = null, addFacebookFeedsMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+            let fbRequestHandlerMock = null, addFacebookFeedsMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null, sandbox = null;
 
             beforeEach("before", ()=> {
-                fbRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("getBatchPosts");
-                addFacebookFeedsMock = sinon.mock(FacebookDb).expects("addFacebookFeeds");
-                pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
-                pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+                sandbox = sinon.sandbox.create();
+                fbRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("getBatchPosts");
+                addFacebookFeedsMock = sandbox.mock(FacebookDb).expects("addFacebookFeeds");
+                pouchClientGetDocumentMock = sandbox.mock(PouchClient).expects("getDocument");
+                pouchClientUpdateDocumentMock = sandbox.mock(PouchClient).expects("updateDocument");
             });
             afterEach("after", ()=> {
                 fbRequestHandlerMock.verify();
@@ -396,10 +407,7 @@ describe("RefreshFeedsHandler", () => {
                 pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDocumentMock.verify();
 
-                FacebookRequestHandler.getBatchPosts.restore();
-                FacebookDb.addFacebookFeeds.restore();
-                PouchClient.getDocument.restore();
-                PouchClient.updateDocument.restore();
+                sandbox.restore();
             });
             it("should update latest timestamp post refresh", ()=> {
 
@@ -457,19 +465,20 @@ describe("RefreshFeedsHandler", () => {
                 pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
 
                 let refreshFeedsHandler = new RefreshFeedsHandler();
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
             });
         });
 
         describe("UICallback", ()=> {
-            let fbRequestHandlerStub = null, fbDbStub = null;
+            let fbRequestHandlerStub = null, fbDbStub = null, sandbox = null;
             beforeEach("before", ()=> {
-                fbRequestHandlerStub = sinon.stub(FacebookRequestHandler, "getBatchPosts");
-                fbDbStub = sinon.stub(FacebookDb, "addFacebookFeeds");
+                sandbox = sinon.sandbox.create();
+                fbRequestHandlerStub = sandbox.stub(FacebookRequestHandler, "getBatchPosts");
+                fbDbStub = sandbox.stub(FacebookDb, "addFacebookFeeds");
             });
             afterEach("after", ()=> {
-                FacebookRequestHandler.getBatchPosts.restore();
-                FacebookDb.addFacebookFeeds.restore();
+                sandbox.restore();
             });
             it("should parse and add facebook feeds", (done) => {
                 uiCallback = () => {
@@ -494,6 +503,7 @@ describe("RefreshFeedsHandler", () => {
                 fbRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(fbFeedMap));
                 fbDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleFacebookBatch(fbUrls);
             });
         });
@@ -501,17 +511,17 @@ describe("RefreshFeedsHandler", () => {
 
     describe("_handleTwitterBatch", ()=> {
         describe("creation of feeds", () => {
-            let twitterRequestHandlerMock = null, twitterDbSpy = null;
+            let twitterRequestHandlerMock = null, twitterDbSpy = null, sandbox = null;
             beforeEach("before", ()=> {
-                twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("fetchBatchTweets");
-                twitterDbSpy = sinon.spy(TwitterDb, "addTweets");
+                sandbox = sinon.sandbox.create();
+                twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("fetchBatchTweets");
+                twitterDbSpy = sandbox.spy(TwitterDb, "addTweets");
             });
             afterEach("after", ()=> {
                 let maxCallCount = 3;
                 sinon.assert.callCount(twitterDbSpy, maxCallCount);
                 twitterRequestHandlerMock.verify();
-                TwitterRequestHandler.fetchBatchTweets.restore();
-                TwitterDb.addTweets.restore();
+                sandbox.restore();
             });
             it("should parse the twitter feeds", ()=> {
                 let twitterUrls = [
@@ -548,17 +558,19 @@ describe("RefreshFeedsHandler", () => {
 
                 twitterRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
                 let refreshFeedsHandler = new RefreshFeedsHandler();
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleTwitterBatch(twitterUrls);
             });
         });
 
         describe("update the timestamp", () => {
-            let twitterRequestHandlerMock = null, twitterDbMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null;
+            let twitterRequestHandlerMock = null, twitterDbMock = null, pouchClientGetDocumentMock = null, pouchClientUpdateDocumentMock = null, sandbox = null;
             beforeEach("before", ()=> {
-                twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("fetchBatchTweets");
-                twitterDbMock = sinon.mock(TwitterDb).expects("addTweets");
-                pouchClientGetDocumentMock = sinon.mock(PouchClient).expects("getDocument");
-                pouchClientUpdateDocumentMock = sinon.mock(PouchClient).expects("updateDocument");
+                sandbox = sinon.sandbox.create();
+                twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("fetchBatchTweets");
+                twitterDbMock = sandbox.mock(TwitterDb).expects("addTweets");
+                pouchClientGetDocumentMock = sandbox.mock(PouchClient).expects("getDocument");
+                pouchClientUpdateDocumentMock = sandbox.mock(PouchClient).expects("updateDocument");
             });
             afterEach("after", ()=> {
                 twitterRequestHandlerMock.verify();
@@ -566,10 +578,7 @@ describe("RefreshFeedsHandler", () => {
                 pouchClientGetDocumentMock.verify();
                 pouchClientUpdateDocumentMock.verify();
 
-                TwitterRequestHandler.fetchBatchTweets.restore();
-                TwitterDb.addTweets.restore();
-                PouchClient.getDocument.restore();
-                PouchClient.updateDocument.restore();
+                sandbox.restore();
             });
             it("should update the latest timestamp post fetch", ()=> {
                 let urlDocument = {
@@ -623,6 +632,7 @@ describe("RefreshFeedsHandler", () => {
                 pouchClientUpdateDocumentMock.withArgs(urlDocument).returns(Promise.resolve());
 
                 let refreshFeedsHandler = new RefreshFeedsHandler();
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleTwitterBatch(twitterUrls);
             });
         });
@@ -657,6 +667,7 @@ describe("RefreshFeedsHandler", () => {
                 twitterRequestHandlerStub.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
                 twitterDbStub.returns(Promise.resolve());
                 let refreshFeedsHandler = new RefreshFeedsHandler(dispatch, displayAllFeedsAsync, uiCallback);
+                sandbox.mock(refreshFeedsHandler).expects("_constructRequestData").returns({ "data": postData });
                 refreshFeedsHandler._handleTwitterBatch(twitterUrls);
             });
         });
@@ -696,6 +707,57 @@ describe("RefreshFeedsHandler", () => {
         return Promise.resolve(new RefreshFeedsHandler().fetchAllSourceUrls()).catch((error) => {
             expect(error).to.eq("request error");
             sandbox.restore();
+        });
+    });
+
+    describe.only("_constructRequestData", () => {
+        let sandbox = null, dateMock = null;
+        beforeEach("_constructRequestData", () => {
+            sandbox = sinon.sandbox.create();
+            dateMock = sandbox.stub(Date, "parse");
+            let appwindow = new AppWindow();
+            sandbox.stub(AppWindow, "instance").returns(appwindow);
+            sandbox.stub(appwindow, "get").withArgs("numberOfDaysToBackUp").returns(2);
+        });
+
+        afterEach("_constructRequestData", () => {
+            sandbox.restore();
+        });
+
+        it("should return the same timestamp if it is newer than past two days", () => {
+
+            let sourceTime = 1461846720099, olderTimeToFetchData = 1461846720000;
+            dateMock.withArgs("Thu, Apr 28, 2016 12:32 PM").returns(sourceTime);
+            dateMock.returns(olderTimeToFetchData);
+
+            let sources = [{ "url": "twitterUrl", "latestFeedTimestamp": "Thu, Apr 28, 2016 12:32 PM", "_id": "1" }];
+            let expectedOutput = { "data": [{ "timestamp": "Thu, Apr 28, 2016 12:32 PM", "url": "twitterUrl", "id": "1" }] };
+
+            let constructedSources = new RefreshFeedsHandler()._constructRequestData(sources);
+            assert.deepEqual(constructedSources, expectedOutput);
+
+        });
+
+        it("should return the two days before timestamp if it is older than past two days", () => {
+            let dateTimeUtilStub = sandbox.stub(DateTimeUtil, "getCurrentTimeStamp");
+            dateTimeUtilStub.returns({
+                "subtract": () => {
+                    return {
+                        "toISOString": () => {
+                            return "2016-04-26T09:37:01.666Z";
+                        }
+                    };
+                }
+            });
+            let sourceTime = 1461846720000, olderTimeToFetchData = 1461846720099;
+            dateMock.withArgs("Thu, Apr 22, 2016 12:32 PM").returns(sourceTime);
+            dateMock.returns(olderTimeToFetchData);
+
+            let sources = [{ "url": "twitterUrl", "latestFeedTimestamp": "Thu, Apr 22, 2016 12:32 PM", "_id": "1" }];
+            let expectedOutput = { "data": [{ "timestamp": "2016-04-26T09:37:01.666Z", "url": "twitterUrl", "id": "1" }] };
+
+            let constructedSources = new RefreshFeedsHandler()._constructRequestData(sources);
+            assert.deepEqual(constructedSources, expectedOutput);
         });
     });
 });

@@ -5,13 +5,13 @@ import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds.jsx";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
 import SurfFilter from "../components/SurfFilter.jsx";
-import { initiateSurf, displayAllFeedsAsync, getLatestFeedsFromAllSources, storeFilterAndSourceHashMap, fetchFeedsByFilter, fetchAllCategories, fetchFeedsByPage, parkFeed } from "../actions/SurfActions.js";
+import { initiateSurf, getLatestFeedsFromAllSources, fetchFeedsByFilter, fetchFeedsByPage, parkFeed } from "../actions/SurfActions.js";
 import { connect } from "react-redux";
 import { highLightTabAction } from "../../tabs/TabActions.js";
 import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
 import Toast from "../../utils/custom_templates/Toast.js";
 import TakeTour from "../../utils/custom_templates/TakeTour.js";
-import SourceTypeFilter from "../components/SourceTypeFilter.jsx";
+import AppWindow from "../../utils/AppWindow.js";
 
 export class SurfPage extends Component {
     constructor(props) {
@@ -33,6 +33,7 @@ export class SurfPage extends Component {
         this.props.dispatch(highLightTabAction(["Surf"]));
         this.props.dispatch(initialiseParkedFeedsCount());
         this.paginateFeeds();
+        this.autoRefresh();
     }
 
     componentWillUnmount() {
@@ -41,6 +42,13 @@ export class SurfPage extends Component {
 
     paginateFeeds() {
         document.addEventListener("scroll", () => this.getFeedsCallBack());
+    }
+
+    autoRefresh() {
+        const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
+        setInterval(() => {
+            this.getLatestFeeds();
+        }, AUTO_REFRESH_INTERVAL);
     }
 
     getFeedsCallBack() {

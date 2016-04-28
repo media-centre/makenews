@@ -8,6 +8,7 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../../helper/TestHelper.js";
 import Locale from "../../../src/js/utils/Locale";
+import AppWindow from "../../../src/js/utils/AppWindow";
 
 
 let surfPageComponent = null;
@@ -24,14 +25,15 @@ describe("SurfPage", ()=> {
         let localeMock = null, sandbox = null;
         beforeEach("Refresh button", () => {
             sandbox = sinon.sandbox.create();
+            localeMock = sandbox.mock(Locale).expects("applicationStrings");
+            localeMock.returns({ "messages": "test messages" });
+            sandbox.useFakeTimers();
         });
 
         afterEach("Refresh button", () => {
             sandbox.restore();
         });
         it("should be present", ()=> {
-            localeMock = sandbox.mock(Locale).expects("applicationStrings");
-            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
             );
@@ -39,8 +41,6 @@ describe("SurfPage", ()=> {
         });
 
         it("should be enabled by default", ()=> {
-            localeMock = sandbox.mock(Locale).expects("applicationStrings");
-            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
@@ -49,14 +49,27 @@ describe("SurfPage", ()=> {
         });
 
         it("should be disabled once clicked to fetch updated feeds", ()=> {
-            localeMock = sandbox.stub(Locale, "applicationStrings");
-            localeMock.returns({ "messages": "test messages" });
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
             );
             TestUtils.Simulate.click(surfPageComponent.refs.surfRefreshButton);
             assert.isTrue(surfPageComponent.state.refreshState);
             assert.isTrue(surfPageComponent.refs.surfRefreshButton.classList.contains("disabled"));
+        });
+    });
+
+    describe("AutoRefresh", () => {
+        it("should refresh for the fixed time interval", () => {
+            let sandbox = sinon.sandbox.create();
+            let clock = sandbox.useFakeTimers();
+            let localeMock = sandbox.stub(Locale, "applicationStrings");
+            localeMock.returns({ "messages": "test messages" });
+            surfPageComponent = TestUtils.renderIntoDocument(
+                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds} refreshState={props.refreshState}/>
+            );
+            clock.tick(AppWindow.instance().get("autoRefreshSurfFeedsInterval"));
+            assert.isTrue(surfPageComponent.state.refreshState);
+            sandbox.restore();
         });
     });
 });
