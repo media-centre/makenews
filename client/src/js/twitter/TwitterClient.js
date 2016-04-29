@@ -21,9 +21,9 @@ export default class TwitterClient {
         });
     }
 
-    fetchBatchTweets(feedBatch) {
+    fetchBatchTweets(feedBatch, skipSessionTimer) {
         return new Promise((resolve, reject) => {
-            let ajaxClient = AjaxClient.instance("/twitter-batch-feeds");
+            let ajaxClient = AjaxClient.instance("/twitter-batch-feeds", skipSessionTimer);
             let userName = AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
             const headers = {
                 "Accept": "application/json",

@@ -14,7 +14,7 @@ export default class FacebookClient {
     }
 
     static logger() {
-        return Logger.instance();
+        return Logger.instance("Facebook");
     }
 
     constructor(accessToken, appSecretProof, appId) {

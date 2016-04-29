@@ -1,7 +1,6 @@
 /* eslint max-nested-callbacks:0, operator-assignment:0, no-unused-vars:0 */
 
 "use strict";
-import AjaxClient from "../utils/AjaxClient.js";
 import SourceDb from "../config/db/SourceDb.js";
 import RssFeeds from "../rss/RssFeeds.js";
 import RssRequestHandler from "../rss/RssRequestHandler.js";
@@ -33,7 +32,7 @@ export default class RefreshFeedsHandler {
         return new RefreshFeedsHandler(dispatch, displayAllFeedAsync, uiCallback);
     }
 
-    handleBatchRequests() {
+    handleBatchRequests(skipSessionTimer = false) {
         this.fetchAllSourceUrls().then(() => {
             this.totalNumberOfUrls = this._calculateTotalUrls();
             let totalBatches = Math.ceil(this._maxCountOfUrls() / URLS_PER_BATCH);
@@ -43,9 +42,9 @@ export default class RefreshFeedsHandler {
                 this.dispatch(displayAllFeeds([], false, 0, 0, false));
             } else {
                 while(totalBatches > 0) {
-                    this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH));
-                    this._handleFacebookBatch(this.sourceUrlsMap.facebook.slice(lastIndex, lastIndex + URLS_PER_BATCH));
-                    this._handleTwitterBatch(this.sourceUrlsMap.twitter.slice(lastIndex, lastIndex + URLS_PER_BATCH));
+                    this._handleRssBatch(this.sourceUrlsMap.rss.slice(lastIndex, lastIndex + URLS_PER_BATCH), skipSessionTimer);
+                    this._handleFacebookBatch(this.sourceUrlsMap.facebook.slice(lastIndex, lastIndex + URLS_PER_BATCH), skipSessionTimer);
+                    this._handleTwitterBatch(this.sourceUrlsMap.twitter.slice(lastIndex, lastIndex + URLS_PER_BATCH), skipSessionTimer);
                     lastIndex = lastIndex + URLS_PER_BATCH;
                     totalBatches = totalBatches - 1;
                 }
@@ -53,9 +52,9 @@ export default class RefreshFeedsHandler {
         });
     }
 
-    _handleRssBatch(rssBatch) {
+    _handleRssBatch(rssBatch, skipSessionTimer) {
         if(rssBatch.length > 0) {
-            RssRequestHandler.fetchBatchRssFeeds(this._constructRequestData(rssBatch)).then((feedMap)=> {
+            RssRequestHandler.fetchBatchRssFeeds(this._constructRequestData(rssBatch), skipSessionTimer).then((feedMap)=> {
                 Object.keys(feedMap).map((sourceId)=> {
                     if(feedMap[sourceId] === "failed") {
                         this._updateCompletionPercentage();
@@ -80,9 +79,9 @@ export default class RefreshFeedsHandler {
         }
     }
 
-    _handleFacebookBatch(facebookBatch) {
+    _handleFacebookBatch(facebookBatch, skipSessionTimer) {
         if(facebookBatch.length > 0) {
-            FacebookRequestHandler.getBatchPosts(this._constructRequestData(facebookBatch)).then((feedMap)=> {
+            FacebookRequestHandler.getBatchPosts(this._constructRequestData(facebookBatch), skipSessionTimer).then((feedMap)=> {
                 Object.keys(feedMap.posts).map((sourceId)=> {
                     if(feedMap.posts[sourceId] === "failed") {
                         this._updateCompletionPercentage();
@@ -107,9 +106,9 @@ export default class RefreshFeedsHandler {
         }
     }
 
-    _handleTwitterBatch(twitterBatch) {
+    _handleTwitterBatch(twitterBatch, skipSessionTimer) {
         if(twitterBatch.length > 0) {
-            TwitterRequestHandler.fetchBatchTweets(this._constructRequestData(twitterBatch)).then((feedMap)=> {
+            TwitterRequestHandler.fetchBatchTweets(this._constructRequestData(twitterBatch), skipSessionTimer).then((feedMap)=> {
                 Object.keys(feedMap).map((sourceId)=> {
 
                     if(feedMap[sourceId] === "failed") {

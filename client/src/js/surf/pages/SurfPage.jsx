@@ -46,8 +46,9 @@ export class SurfPage extends Component {
 
     autoRefresh() {
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
+        let skipSessionTimer = true;
         setInterval(() => {
-            this.getLatestFeeds();
+            this.getLatestFeeds(skipSessionTimer);
         }, AUTO_REFRESH_INTERVAL);
     }
 
@@ -81,14 +82,14 @@ export class SurfPage extends Component {
         }
     }
 
-    getLatestFeeds() {
+    getLatestFeeds(skipSessionTimer) {
         if(this.state.refreshState) {
             return false;
         }
         this.setState({ "refreshState": true });
         this.props.dispatch(getLatestFeedsFromAllSources(()=> {
             this.setState({ "refreshState": false });
-        }));
+        }), skipSessionTimer);
     }
 
     parkFeedItem(feedDoc) {
@@ -126,7 +127,7 @@ export class SurfPage extends Component {
     }
 
     render() {
-        let refreshButton = (<div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(); }}>
+        let refreshButton = (<div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(false); }}>
                                 <i className="fa fa-refresh"></i>
                                 {this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}
                             </div>);

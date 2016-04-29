@@ -21,10 +21,10 @@ export default class FacebookRequestHandler {
         facebookClient.setLongLivedToken();
     }
 
-    static getBatchPosts(postData) {
+    static getBatchPosts(postData, skipSessionTimer) {
         return new Promise((resolve, reject)=> {
             let facebookClient = FacebookClient.instance();
-            facebookClient.fetchBatchPosts(postData).then(fbPostMap => {
+            facebookClient.fetchBatchPosts(postData, skipSessionTimer).then(fbPostMap => {
                 resolve(fbPostMap);
             }).catch(error => { // eslint-disable-line
                 reject([]);

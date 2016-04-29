@@ -18,9 +18,9 @@ export default class RssClient {
         });
     }
 
-    fetchBatchRssFeeds(sourceUrlDetails) {
+    fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer) {
         return new Promise((resolve, reject) => {
-            let ajaxClient = AjaxClient.instance("/fetch-all-rss");
+            let ajaxClient = AjaxClient.instance("/fetch-all-rss", skipSessionTimer);
             const headers = {
                 "Accept": "application/json",
                 "Content-type": "application/json"

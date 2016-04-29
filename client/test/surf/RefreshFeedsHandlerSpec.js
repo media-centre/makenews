@@ -710,7 +710,7 @@ describe("RefreshFeedsHandler", () => {
         });
     });
 
-    describe.only("_constructRequestData", () => {
+    describe("_constructRequestData", () => {
         let sandbox = null, dateMock = null;
         beforeEach("_constructRequestData", () => {
             sandbox = sinon.sandbox.create();

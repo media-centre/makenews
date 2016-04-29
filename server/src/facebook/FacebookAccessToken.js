@@ -10,7 +10,7 @@ export default class FacebookAccessToken {
     }
 
     static logger() {
-        return Logger.instance();
+        return Logger.instance("Facebook");
     }
 
     getAccessToken(userName) {

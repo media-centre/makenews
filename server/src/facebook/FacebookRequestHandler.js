@@ -15,7 +15,7 @@ export default class FacebookRequestHandler {
     }
 
     static logger() {
-        return Logger.instance();
+        return Logger.instance("Facebook");
     }
 
     constructor(accessToken) {

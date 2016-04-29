@@ -13,10 +13,10 @@ export default class TwitterRequestHandler {
             });
         });
     }
-    static fetchBatchTweets(twitterBatch) {
+    static fetchBatchTweets(twitterBatch, skipSessionTimer) {
         return new Promise((resolve, reject) => {
             let twitterClient = TwitterClient.instance();
-            twitterClient.fetchBatchTweets(twitterBatch).then(feedMap => {
+            twitterClient.fetchBatchTweets(twitterBatch, skipSessionTimer).then(feedMap => {
                 resolve(feedMap);
             }).catch(error => { // eslint-disable-line
                 reject([]);

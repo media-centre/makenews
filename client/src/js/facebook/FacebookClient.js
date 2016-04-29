@@ -40,7 +40,7 @@ export default class FacebookClient {
         });
     }
 
-    fetchBatchPosts(postData) {
+    fetchBatchPosts(postData, skipSessionTimer) {
         return new Promise((resolve, reject)=> {
             this.facebookLogin.login().then(() => {
                 postData.userName = LoginPage.getUserName();
@@ -48,7 +48,7 @@ export default class FacebookClient {
                     "Accept": "application/json",
                     "Content-type": "application/json"
                 };
-                let ajaxClient = AjaxClient.instance("/facebook-batch-posts");
+                let ajaxClient = AjaxClient.instance("/facebook-batch-posts", skipSessionTimer);
                 ajaxClient.post(headers, postData).then(response => { // eslint-disable-line max-nested-callbacks
                     resolve(response);
                 }).catch(error => {

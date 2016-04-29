@@ -13,10 +13,10 @@ export default class RssRequestHandler {
         });
     }
 
-    static fetchBatchRssFeeds(sourceUrlDetails) {
+    static fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer) {
         return new Promise((resolve, reject) => {
             let rssClient = RssClient.instance();
-            rssClient.fetchBatchRssFeeds(sourceUrlDetails).then(feedMap => {
+            rssClient.fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer).then(feedMap => {
                 resolve(feedMap);
             }).catch(error => { // eslint-disable-line
                 reject(error);

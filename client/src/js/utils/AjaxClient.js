@@ -5,11 +5,11 @@ import UserSession from "../user/UserSession.js";
 import AppWindow from "../utils/AppWindow.js";
 
 export default class AjaxClient {
-  static instance(url, skipTime) {
-      return new AjaxClient(url, skipTime);
+  static instance(url, skipTimer) {
+      return new AjaxClient(url, skipTimer);
   }
-  constructor(url, skipTime) {
-      if(!skipTime) {
+  constructor(url, skipTimer) {
+      if(!skipTimer) {
           UserSession.instance().continueSessionIfActive();
       }
       this.url = AppWindow.instance().get("serverUrl") + url;
