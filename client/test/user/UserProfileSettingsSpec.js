@@ -10,6 +10,7 @@ import ReactDOM from "react-dom";
 import "../helper/TestHelper.js";
 import sinon from "sinon";
 import Locale from "../../src/js/utils/Locale";
+import UserSession from "../../src/js/user/UserSession";
 
 describe("UserProfileSettings", ()=> {
     let sandbox = null, userProfile = null;
@@ -40,6 +41,10 @@ describe("UserProfileSettings", ()=> {
     });
 
     it("should close the dropdown on clicking the menu items", ()=> {
+        sandbox.mock(UserSession).expects("instance").returns({
+            "continueSessionIfActive": () => {
+            }
+        });
         userProfile.state.show = true;
         TestUtils.Simulate.click(userProfile.refs.updateProfile);
         assert.isFalse(userProfile.state.show);

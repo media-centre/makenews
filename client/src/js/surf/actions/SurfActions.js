@@ -108,10 +108,10 @@ export function updateLatestFeeds(completionPercentage, callback = ()=> {}) {
     };
 }
 
-export function getLatestFeedsFromAllSources(callback = ()=> {}, renewSession) {
+export function getLatestFeedsFromAllSources(callback = ()=> {}, skipSessionTimer) {
     return dispatch => {
         isRefreshing = true;
-        new RefreshFeedsHandler(dispatch, updateLatestFeeds, callback).handleBatchRequests(renewSession);
+        new RefreshFeedsHandler(dispatch, updateLatestFeeds, callback).handleBatchRequests(skipSessionTimer);
     };
 }
 export function storeFilterAndSourceHashMap(callback = ()=> {}) {

@@ -18,7 +18,7 @@ export default class RssRequestHandler {
             let rssClient = RssClient.instance();
             rssClient.fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer).then(feedMap => {
                 resolve(feedMap);
-            }).catch(error => { // eslint-disable-line
+            }).catch(error => {
                 reject(error);
             });
         });

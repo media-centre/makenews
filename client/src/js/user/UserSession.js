@@ -5,7 +5,6 @@ import moment from "moment";
 import LogoutActions from "../login/LogoutActions.js";
 import AppSessionStorage from "../utils/AppSessionStorage.js";
 import AjaxClient from "../utils/AjaxClient.js";
-import History from "../History";
 const nineMinutes = 540000;
 
 export default class UserSession {
@@ -30,6 +29,8 @@ export default class UserSession {
         if(currentTime - this.getLastAccessedTime() > fiveMinutes) {
             this.renewSession();
             this.setLastAccessedTime(currentTime);
+        } else {
+            this.setLastAccessedTime(currentTime);
         }
     }
 
@@ -43,6 +44,5 @@ export default class UserSession {
 
     autoLogout() {
         LogoutActions.instance().logout();
-        History.getHistory().push("/");
     }
 }

@@ -29,10 +29,19 @@ describe("SurfPage", ()=> {
             localeMock.returns({ "messages": "test messages" });
             sandbox.useFakeTimers();
         });
-
         afterEach("Refresh button", () => {
             sandbox.restore();
         });
+
+        before("Refresh button", () => {
+            sinon.stub(AppWindow, "instance").returns({ "get": () => {
+                return true;
+            } });
+        });
+        after("Refresh button", () => {
+            AppWindow.instance.restore();
+        });
+
         it("should be present", ()=> {
             surfPageComponent = TestUtils.renderIntoDocument(
                <SurfPage dispatch={()=>{}} messages={props.messages} feeds={props.allFeeds}/>
@@ -59,6 +68,9 @@ describe("SurfPage", ()=> {
     });
 
     describe("AutoRefresh", () => {
+        afterEach("auto refresh", () => {
+            clearInterval(AppWindow.instance().get("autoRefreshTimer"));
+        });
         it("should refresh for the fixed time interval", () => {
             let sandbox = sinon.sandbox.create();
             let clock = sandbox.useFakeTimers();

@@ -47,9 +47,12 @@ export class SurfPage extends Component {
     autoRefresh() {
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
         let skipSessionTimer = true;
-        setInterval(() => {
-            this.getLatestFeeds(skipSessionTimer);
-        }, AUTO_REFRESH_INTERVAL);
+
+        if(!AppWindow.instance().get("autoRefreshTimer")) {
+            AppWindow.instance().set("autoRefreshTimer", setInterval(() => {
+                this.getLatestFeeds(skipSessionTimer);
+            }, AUTO_REFRESH_INTERVAL));
+        }
     }
 
     getFeedsCallBack() {
@@ -89,7 +92,7 @@ export class SurfPage extends Component {
         this.setState({ "refreshState": true });
         this.props.dispatch(getLatestFeedsFromAllSources(()=> {
             this.setState({ "refreshState": false });
-        }), skipSessionTimer);
+        }, skipSessionTimer));
     }
 
     parkFeedItem(feedDoc) {

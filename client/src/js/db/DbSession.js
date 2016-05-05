@@ -2,13 +2,11 @@
 
 "use strict";
 import DbParameters from "./DbParameters.js";
-import UserSession from "../user/UserSession.js";
 import FeedDb from "../feeds/db/FeedDb.js";
 import PouchDB from "pouchdb";
 
 export default class DbSession {
     static instance() {
-        UserSession.instance().continueSessionIfActive();
         return new Promise((resolve, reject) => {
             if(this.db) {
                 resolve(this.db);

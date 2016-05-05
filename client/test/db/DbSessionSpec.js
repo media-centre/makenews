@@ -3,7 +3,6 @@
 "use strict";
 import DbSession from "../../src/js/db/DbSession.js";
 import DbParameters from "../../src/js/db/DbParameters.js";
-import UserSession from "../../src/js/user/UserSession.js";
 import FeedDb from "../../src/js/feeds/db/FeedDb.js";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -33,17 +32,13 @@ describe("DbSession", () => {
     });
 
     describe("instance", () => {
-        let userSession = null, userSessionMock = null, dbSession = null, sandbox = null;
+        let dbSession = null, sandbox = null;
         beforeEach("DbSession", () => {
             DbSession.clearInstance();
 
             dbSession = new DbSession();
-            userSession = new UserSession();
             sandbox = sinon.sandbox.create();
             sandbox.stub(DbSession, "new").returns(dbSession);
-
-            sandbox.stub(UserSession, "instance").returns(userSession);
-            userSessionMock = sinon.mock(userSession).expects("continueSessionIfActive");
         });
 
         afterEach("DbSession", () => {
@@ -55,7 +50,6 @@ describe("DbSession", () => {
             DbSession.instance().then(session => {
                 assert.strictEqual("session", session);
                 assert.strictEqual("session", DbSession.db);
-                userSessionMock.verify();
                 dbSessionRemoteDbInstanceMock.verify();
                 done();
             });
@@ -63,13 +57,10 @@ describe("DbSession", () => {
 
         it("should return the previously created db instance", (done) => {
             let dbSessionRemoteDbInstanceMock = sandbox.mock(dbSession).expects("remoteDbInstance").returns(Promise.resolve("session"));
-            userSessionMock.twice();
-            DbSession.instance().then(session1 => { //eslint-disable-line
-
+            DbSession.instance().then(() => {
                 DbSession.instance().then(session2 => {
                     assert.strictEqual("session", session2);
                     assert.strictEqual("session", DbSession.db);
-                    userSessionMock.verify();
                     dbSessionRemoteDbInstanceMock.verify();
                     done();
                 });
