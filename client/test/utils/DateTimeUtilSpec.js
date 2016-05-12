@@ -13,7 +13,9 @@ describe("DateTimeUtil", ()=> {
 
     describe("getSortedUTCDates", () => {
         it("should return dates in the most recent order", () => { //eslint-disable-line max-nested-callbacks
-            assert.deepEqual(["2016-01-08T02:15:53+00:00", "2016-01-06T02:15:53+00:00", "2016-01-05T02:15:53+00:00"], DateTimeUtil.getSortedUTCDates(["2016-01-05T02:15:53.000Z", "2016-01-08T02:15:53.000Z", "2016-01-06T02:15:53.000Z"]));
+            let expectedSortedData = ["2016-01-08T02:15:53Z", "2016-01-06T02:15:53Z", "2016-01-05T02:15:53Z"];
+            assert.deepEqual(DateTimeUtil.getSortedUTCDates(["2016-01-05T02:15:53.000Z", "2016-01-08T02:15:53.000Z", "2016-01-06T02:15:53.000Z"]),
+                expectedSortedData);
         });
     });
 });

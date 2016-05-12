@@ -77,7 +77,7 @@ describe("RssFeeds", () => {
                     "link": "http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam",
                     "feedType": "rss",
                     "content": "<p>Photographs from the Eyewitness series</p> <a href=\"http://www.theguardian.com/world/picture/2015/nov/05/eyewitness-cgap-photography-contest-winners-vietnam\">Continue reading...</a>",
-                    "postedDate": "2015-11-05T11:21:20+00:00",
+                    "postedDate": "2015-11-05T11:21:20Z",
                     "tags": ["hindu"],
                     "title": "Eyewitness: Vietnam in the CGAP photography contest"
                 },

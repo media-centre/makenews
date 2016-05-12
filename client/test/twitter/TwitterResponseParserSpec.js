@@ -28,7 +28,7 @@ describe("createTwitterFeed", ()=> {
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
             "link": "https://twitter.com/sourceId/status/123457",
-            "postedDate": "2001-12-11T06:11:56+00:00",
+            "postedDate": "2001-12-11T06:11:56Z",
             "tags": ["tag1", "tag2"]
         };
         let newTweets = TwitterResponseParser.parseTweet(sourceId, actualTweet);
@@ -59,7 +59,7 @@ describe("createTwitterFeed", ()=> {
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
             "link": "https://twitter.com/sourceId/status/123457",
-            "postedDate": "2001-12-11T06:11:56+00:00",
+            "postedDate": "2001-12-11T06:11:56Z",
             "tags": ["tag1", "tag2"],
             "images": [{ "url": "https://www.test.com" }]
         };
@@ -93,7 +93,7 @@ describe("createTwitterFeed", ()=> {
             "feedType": "twitter",
             "content": "Hindu twitter text - 123457",
             "link": "https://twitter.com/sourceId/status/123457",
-            "postedDate": "2001-12-11T06:11:56+00:00",
+            "postedDate": "2001-12-11T06:11:56Z",
             "tags": ["tag1", "tag2"],
             "images": [
                 {

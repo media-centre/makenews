@@ -67,7 +67,7 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
+        let latestFeedTimestamp = "2016-01-01T22:09:28Z";
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
@@ -100,7 +100,7 @@ describe("addRssUrlAsync", () => {
     });
 
     it("should create rss with valid status on successful fetch", (done) => {
-        let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
+        let latestFeedTimestamp = "2016-01-01T22:09:28Z";
         let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }], "meta": { "title": "hindu" } };
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
@@ -139,7 +139,7 @@ describe("addRssUrlAsync", () => {
     });
 
     it("should create rss source and then create the feeds", (done) => {
-        let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
+        let latestFeedTimestamp = "2016-01-01T22:09:28Z";
         let responseJson = { "items": [{ "title": "hindu football", "pubDate": latestFeedTimestamp }, { "title": "cricket", "pubDate": latestFeedTimestamp }], "meta": { "title": "hindu" } };
         let sourceId = "sourceId";
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
@@ -172,7 +172,7 @@ describe("addRssUrlAsync", () => {
         ajaxGetMock.withArgs({ "url": url }).returns(Promise.resolve(responseJson));
 
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        let latestFeedTimestamp = "2016-01-01T22:09:28+00:00";
+        let latestFeedTimestamp = "2016-01-01T22:09:28Z";
         let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": latestFeedTimestamp };
         let source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
@@ -230,7 +230,7 @@ describe("addTwitterUrlAsync", () => {
         let twitterFeed = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1", "created_at": "2016-01-06T02:15:53.000Z" }, { "id": 2, "id_str": "124", "text": "Tweet 2", "created_at": "2016-01-05T02:15:53.000Z" }] };
         ajaxGetMock.withArgs({ "url": url, "userName": userName }).returns(Promise.resolve(twitterFeed));
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
-        let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": "2016-01-06T02:15:53+00:00" },
+        let sourceDetails = { "categoryIds": [categoryId], "sourceType": type, "url": url, "status": STATUS_VALID, "latestFeedTimestamp": "2016-01-06T02:15:53Z" },
             source = new Source(sourceDetails);
         sandbox.stub(Source, "instance").withArgs(sourceDetails).returns(source);
         let sourceSaveMock = sandbox.mock(source).expects("save").returns(Promise.resolve("response"));

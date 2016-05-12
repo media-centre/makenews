@@ -21,7 +21,7 @@ window.mediaCenter.appEn = {
             "featuresHelp": {
                 "configureHelp": {
                     "name": "Configure",
-                    "text": "You identify your favourite RSS feeds, Twitter handles, Twitter hashtags and Facebook pages as sources. Group your sources into Categories and get an structured view of news updates."
+                    "text": "You identify your favourite RSS feeds, Twitter handles, Twitter hashtags and Facebook pages as sources. Group your sources into Categories and get a structured view of news updates."
                 },
                 "surfHelp": {
                     "name": "Surf",
