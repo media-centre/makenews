@@ -19,7 +19,7 @@ export default class ModifyImageUrlToImagesArray {
                     let feeds = response.rows;
                     for(let feed of feeds) {
                         feed.value.images = [{ "url": feed.value.url }];
-                         this.couchClient.saveDocument(feed.value._id, feed.value);
+                        this.couchClient.saveDocument(feed.value._id, feed.value);
                     }
                 }).catch(error => {
                     Migration.logger(this.dbName).error("ModifyImageUrlToImagesArray::up - error %j", error);
