@@ -21,11 +21,13 @@ require("babel/register");
 var development = environments.development;
 var production = environments.production;
 
+function clean(path) {
+    return del(path);
+}
 
-gulp.task("mobile:remove-directory", function(cb) {
-    del(["." + parameters.mobile.mobilePath], function() {
-        cb();
-    });
+gulp.task("mobile:remove-directory", function() {
+    var files = "." + parameters.mobile.mobilePath;
+    return clean(files);
 });
 
 gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
@@ -48,10 +50,9 @@ gulp.task("mobile:create", ["mobile:init"], function(cb) {
 });
 
 
-gulp.task("mobile:clean-files", function(cb) {
-    del([parameters.mobile.cordovaPath + "/*"], function() {
-        cb();
-    });
+gulp.task("mobile:clean-files", function() {
+    var files = parameters.mobile.cordovaPath + "/*";
+    return clean(files);
 });
 
 gulp.task("mobile:copy-files", ["mobile:clean-files"], function() {
