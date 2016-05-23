@@ -2,6 +2,9 @@
 - name: install PM2 npm module
   npm: name=pm2 global=yes
 
+- name: install cordova npm module
+  npm: name=cordova global=yes
+
 - name: copy the default couchdb configurations
   copy: src=local.ini dest=/usr/local/etc/couchdb/local.ini owner=root group=root mode=0777
 
