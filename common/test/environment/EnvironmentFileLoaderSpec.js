@@ -41,7 +41,7 @@ describe("EnvironmentConfig", () => {
         it("should return the associated environment of the configuration file if it is already loaded ", () => {
             fsMock.expects("readFileSync").withArgs(fullPath, "utf8").once().returns(fileJson);
             EnvironmentFileLoader.instance(fullPath);
-            let envConfig = EnvironmentFileLoader.instance(fullPath, "development");
+            let envConfig = EnvironmentFileLoader.instance(fullPath);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
             expect("development").to.be.equal(envConfig.getEnvironment());
             fsMock.verify();
@@ -76,7 +76,7 @@ describe("EnvironmentConfig", () => {
             EnvironmentFileLoader.instance(filePath2);
             fsMock.verify();
 
-            let envConfig = EnvironmentFileLoader.instance(filePath1, "development");
+            let envConfig = EnvironmentFileLoader.instance(filePath1);
             expect("test_value1").to.be.equal(envConfig.get("test_key1"));
             expect("development").to.be.equal(envConfig.getEnvironment());
         });

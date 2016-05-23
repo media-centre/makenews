@@ -19,7 +19,7 @@ export default class Help extends Component {
                         </div>
                     </div>
                     <div className="help-box help-slide">
-                        <iframe src="https://www.slideshare.net/slideshow/embed_code/key/eviKUGwN09K1u7" frameBorder="0" allowFullScreen>{"PDF"}</iframe>
+                        <iframe src="//www.slideshare.net/slideshow/embed_code/key/eviKUGwN09K1u7" frameBorder="0" allowFullScreen>{"PDF"}</iframe>
                         <div className="t-center help-text">
                             <i className="fa fa-file-pdf-o fa-3x"></i>
                         </div>
