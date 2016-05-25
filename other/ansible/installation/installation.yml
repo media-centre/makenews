@@ -11,6 +11,7 @@
     - letsEncrypt: True
   roles:
     - PreInstallationTasks
+    - couchdb-dump
     - Ansibles.build-essential
     - ANXS.build-essential
     - Ansibles.erlang

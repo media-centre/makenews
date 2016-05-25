@@ -1,0 +1,6 @@
+---
+- name: copy dump shell script
+  template: src=couchdb-dump dest={{couch_dump_shellscript_path}}/couchdb-dump.sh mode=0755
+
+#- cron: name="couchdb backup" hour="23" weekday="0" job="sh {{couch_dump_shellscript_path}}/couchdb-dump.sh"
+- cron: name="couchdb backup" minute="00" hour="23" job="sh {{couch_dump_shellscript_path}}/couchdb-dump.sh"

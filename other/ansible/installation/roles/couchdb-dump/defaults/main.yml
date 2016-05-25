@@ -1,0 +1,4 @@
+---
+# defaults file for couchdb-dump
+couch_dump_shellscript_path: "/usr/local/lib"
+couchdb_backup_dir: "/usr/local/lib/couchdb-backup"
