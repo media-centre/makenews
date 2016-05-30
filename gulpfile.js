@@ -40,9 +40,18 @@ gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
     });
 });
 
-gulp.task("mobile:create", ["mobile:init"], function(cb) {
+gulp.task("mobile:create", ["mobile:sqllite"], function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
     exec("cordova platform add android ", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task("mobile:sqllite", ["mobile:init"], function(cb) {
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+    exec("cordova plugin add cordova-plugin-sqlite-2 ", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
