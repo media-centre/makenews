@@ -245,6 +245,17 @@
     }
   }
 
+  .news-feed {
+    margin-bottom: 10px;
+    padding: 10px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
+    -moz-box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
+    box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
+  }
+
   .user-settings {
     .user-info-label {
       padding-right: 20px;
