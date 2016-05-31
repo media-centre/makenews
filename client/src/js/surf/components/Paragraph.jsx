@@ -40,7 +40,7 @@ export default class Paragraph extends Component {
 
         return (
             <div className="text-content news-feed">
-                <a target="_blank" href={this.props.category.link}>
+                <a target="_blank" rel="noopener noreferrer" href={this.props.category.link}>
                     <div className="title">{this.props.category.title}</div>
                     <p className="surf-description">{getHtmlContent(this.props.category.content)}</p>
                 </a>

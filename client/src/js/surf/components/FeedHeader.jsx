@@ -16,7 +16,7 @@ export default class FeedHeader extends Component {
             } }) : null;
         let actionElement = this.props.actionComponent ? React.createElement(this.props.actionComponent, this.props) : null;
         return (
-            <div className="feed-header box h-center clear-fix">
+            <div className="feed-header border-bottom box h-center clear-fix">
                 <span className="icon-container header-item"><i className={"feed-icon fa fa-" + this.props.feedType.toLowerCase()}></i></span>
                 <ul className="h-center category-name header-item">{categoryNames}</ul>
                 <ul className="h-center header-item">

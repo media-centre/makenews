@@ -254,6 +254,9 @@
     -webkit-box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
     -moz-box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
     box-shadow: 0 0 3px rgba(119, 119, 119, 0.38);
+    .feed-header {
+      border-bottom: 0;
+    }
   }
 
   .user-settings {

@@ -59,7 +59,7 @@ export default class ImageContent extends Component {
         let description = this.props.category.content ? <p className="surf-description">{getHtmlContent(this.props.category.content)}</p> : null;
         return (
             <div className="image-gallery news-feed">
-                <a target="_blank" href={this.props.category.link}>
+                <a target="_blank" rel="noopener noreferrer" href={this.props.category.link}>
                     <div className="title">{this.props.category.title}</div>
                     <ul className="gallery-list h-center">{images}</ul>
                     {description}
