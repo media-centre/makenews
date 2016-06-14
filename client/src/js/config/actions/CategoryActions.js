@@ -46,7 +46,7 @@ export function addRssUrlAsync(categoryId, url, callback) {
             }));
             let feeds = RssFeeds.instance(responseFeed);
             if(feeds.parse()) {
-                _addUrlDocument(dispatch, categoryId, RSS_TYPE, url, STATUS_VALID, sortedDates[0]).then(documentId => {
+                _addUrlDocument(dispatch, categoryId, RSS_TYPE, responseFeed.url || url, STATUS_VALID, sortedDates[0]).then(documentId => {
                     feeds.save(documentId);
                     callback(STATUS_VALID);
                 }).catch(error => {

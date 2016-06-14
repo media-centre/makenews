@@ -62,7 +62,7 @@ describe("RssFeedsRoute", () => {
         </BODY></HTML>`;
         nock("http://www.google.com")
             .get("/users")
-            .reply(HttpResponseHandler.codes.OK, data);
+            .reply(HttpResponseHandler.codes.OK, data, { "content-type": "text/html" });
 
         let url = "http://www.google.com/users";
         let request = {
@@ -87,7 +87,9 @@ describe("RssFeedsRoute", () => {
                     </rss>`;
         nock("http://www.thehindu.com/sport/cricket")
             .get("/?service=rss")
-            .reply(HttpResponseHandler.codes.OK, data);
+            .reply(HttpResponseHandler.codes.OK, data, {
+                "content-type": "application/rss+xml"
+            });
         let request = {
             "query": {
                 "url": "http://www.thehindu.com/sport/cricket/?service=rss"
