@@ -137,8 +137,8 @@ app.get("/1235467890/posts", (request, response, next) => {
 
 app.get("/thehindu/rss-feeds/", (request, response, next) => {
     console.log("/thehindu/rss-feeds/ request received");
-
     response.status(200);
+    response.setHeader("content-type", "application/rss+xml;charset=UTF-8");
     response.json("<rss version=\"2.0\"><channel><item>" +
         "<title>sample1</title><description>news cricket</description></item><item>" +
         "<title>sample2</title><description>news politics</description></item>" +
@@ -148,8 +148,8 @@ app.get("/thehindu/rss-feeds/", (request, response, next) => {
 
 app.get("/news/cities/bangalore/", (request, response, next) => {
     console.log("/news/cities/bangalore/ request received");
-
     response.status(200);
+    response.setHeader("content-type", "application/rss+xml;charset=UTF-8");
     response.json("<rss version=\"2.0\"><channel><item>" +
         "<title>CNG stations ready, where are the buses?</title><description>Will any bus use the Compressed Natural Gas (CNG) that is expected to be supplied from March</description></item><item>" +
         "<title>Leaders fret over traffic congestion</title><description>It is not only common people who are cribbing about traffic congestion</description></item>" +
@@ -159,8 +159,8 @@ app.get("/news/cities/bangalore/", (request, response, next) => {
 
 app.get("/news/cities/chennai/", (request, response, next) => {
     console.log("/news/cities/chennai/ request received");
-
     response.status(200);
+    response.setHeader("content-type", "application/rss+xml;charset=UTF-8");
     response.json("<rss version=\"2.0\"><channel><item>" +
         "<title>Sewage woes plague road-users in Chennai</title><description>Incidents of sewage overflowing on arterial roads due to obstructions in the underground sewer network have been reported from different localities across the city</description></item><item>" +
         "<title>Not many takers for first class in Metro</title><description>As the majority of Metro users believe the fares for the first class have been priced too high, this coach has less takers, commuters say</description></item>" +

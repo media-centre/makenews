@@ -4,7 +4,6 @@ import request from "request";
 import Logger from "../logging/Logger.js";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
-const feedPattern = /(application\/(rss\+xml|rdf\+xml|atom\+xml|xml))|(text\/xml)/g;
 const FEEDS_NOT_FOUND = "feeds_not_found";
 
 export default class RssClient {
@@ -79,19 +78,19 @@ export default class RssClient {
                 "uri": url,
                 "timeout": 2000
             }, (error, response, body) => {
-                if(!isFeed && !error) {
+                if(error) {
+                    this.handleRequestError(url, error, reject);
+                } else if(!isFeed) {
                     reject({ "message": FEEDS_NOT_FOUND, "data": body });
                 }
             });
 
-            requestToUrl.on("error", (error) => {
-                this.handleRequestError(url, error, reject);
-            });
             requestToUrl.on("response", function(res) {
                 if (res.statusCode !== HttpResponseHandler.codes.OK) {
                     RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
                     reject({ "message": "Bad status code" });
                 }
+                let feedPattern = /(application\/(rss\+xml|rdf\+xml|atom\+xml|xml))|(text\/xml)/g;
                 isFeed = feedPattern.test(res.headers["content-type"]);
                 if (isFeed) {
                     let rssParser = new RssParser(this);
