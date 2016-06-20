@@ -4,7 +4,7 @@ import request from "request";
 import Logger from "../logging/Logger.js";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
-const FEEDS_NOT_FOUND = "feeds_not_found", httpOffset = 8;
+const FEEDS_NOT_FOUND = "feeds_not_found";
 
 export default class RssClient {
 
@@ -26,10 +26,11 @@ export default class RssClient {
                     let rssLink = root("link[type ^= 'application/rss+xml']");
                     if (rssLink && rssLink.length !== 0) {
                         let rssUrl = rssLink.attr("href");
+                        let httpIndex = url.indexOf("//");
                         if(rssUrl.startsWith("//")) {
-                            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
+                            rssUrl = url.substring(0, httpIndex) + rssUrl;
                         } else if(rssUrl.startsWith("/")) {
-                            rssUrl = url.substring(0, url.indexOf("/", httpOffset)) + rssUrl;
+                            rssUrl = url.substring(0, httpIndex + 2) + rssUrl;
                         }
                         this.getRssData(rssUrl).then(feeds => {
                             feeds.url = rssUrl;
@@ -54,17 +55,13 @@ export default class RssClient {
             links.add(url + root(this).attr("href"));
         });
 
-        relativeLinks = root("a[href^='" + url + "']");
-        relativeLinks.each(function() {
+        let absoluteUrl = url;
+        absoluteUrl = absoluteUrl.replace(/.*?:\/\//g, "");
+        absoluteUrl = absoluteUrl.replace("www.", "");
+        let absoluteLinks = root("a[href^='" + absoluteUrl + "']");
+        absoluteLinks.each(function() {
             links.add(root(this).attr("href"));
         });
-
-        // if(url.indexOf("www.") !== -1) {
-        //     relativeLinks = root("a[href^='" + url.replace("www.", "") + "']");
-        //     relativeLinks.each(function() {
-        //         links.add(root(this).attr("href"));
-        //     });
-        // }
 
         if(links.size === 0) {
             this.handleUrlError(url, "no rss links found", reject);
