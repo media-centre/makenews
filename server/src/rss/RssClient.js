@@ -26,11 +26,11 @@ export default class RssClient {
                     let rssLink = root("link[type ^= 'application/rss+xml']");
                     if (rssLink && rssLink.length !== 0) {
                         let rssUrl = rssLink.attr("href");
-                        let httpIndex = url.indexOf("//");
                         if(rssUrl.startsWith("//")) {
-                            rssUrl = url.substring(0, httpIndex) + rssUrl;
+                            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
                         } else if(rssUrl.startsWith("/")) {
-                            rssUrl = url.substring(0, httpIndex + 2) + rssUrl;
+                            let httpIndex = 8;
+                            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
                         }
                         this.getRssData(rssUrl).then(feeds => {
                             feeds.url = rssUrl;
@@ -58,7 +58,7 @@ export default class RssClient {
         let absoluteUrl = url;
         absoluteUrl = absoluteUrl.replace(/.*?:\/\//g, "");
         absoluteUrl = absoluteUrl.replace("www.", "");
-        let absoluteLinks = root("a[href^='" + absoluteUrl + "']");
+        let absoluteLinks = root("a[href*='" + absoluteUrl + "']");
         absoluteLinks.each(function() {
             links.add(root(this).attr("href"));
         });
@@ -83,34 +83,29 @@ export default class RssClient {
 
     getRssData(url) {
         return new Promise((resolve, reject) => {
-            let isFeed = false;
+            let data = null;
             let requestToUrl = request.get({
                 "uri": url,
                 "timeout": 2000
             }, (error, response, body) => {
                 if(error) {
                     this.handleRequestError(url, error, reject);
-                } else if(!isFeed) {
-                    reject({ "message": FEEDS_NOT_FOUND, "data": body });
                 }
+                data = body;
             });
-
             requestToUrl.on("response", function(res) {
                 if (res.statusCode !== HttpResponseHandler.codes.OK) {
                     RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
                     reject({ "message": "Bad status code" });
                 }
-                let feedPattern = /(application\/(rss\+xml|rdf\+xml|atom\+xml|xml))|(text\/xml)/g;
-                isFeed = feedPattern.test(res.headers["content-type"]);
-                if (isFeed) {
-                    let rssParser = new RssParser(this);
-                    rssParser.parse().then(feeds => {
-                        RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
-                        resolve(feeds);
-                    }).catch(error => {
-                        this.handleUrlError(url, error, reject);
-                    });
-                }
+                let rssParser = new RssParser(this);
+                rssParser.parse().then(feeds => {
+                    RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
+                    resolve(feeds);
+                }).catch(error => {
+                    RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
+                    reject({ "message": FEEDS_NOT_FOUND, "data": data });
+                });
             });
         });
     }
