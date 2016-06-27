@@ -183,7 +183,7 @@ app.get("/gardian/timeout-feeds", (request, response, next) => {
         response.status(200);
         response.json({});
         next();
-    }, 3000);
+    }, 7000);
 });
 
 app.get("/statuses/user_timeline.json", (request, response, next) => {
