@@ -7,6 +7,7 @@ import ApplicationConfig from "../src/config/ApplicationConfig.js";
 import { assert, expect } from "chai";
 import CouchSession from "../src/CouchSession";
 
+const requestTime = 7000;
 describe("RssRoutesSpec", () => {
     describe("RssRoutesSpec", () => {
         let accessToken = null, applicationConfig = null, serverIp = null;
@@ -76,7 +77,7 @@ describe("RssRoutesSpec", () => {
                     assert.strictEqual("bad request", res.body.message);
                     done();
                 });
-        });
+        }).timeout(requestTime);
 
         it("should fetch feeds for multiple rss urls", (done) => {
             let expectedResponse = {
