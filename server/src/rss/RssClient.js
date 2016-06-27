@@ -4,7 +4,7 @@ import request from "request";
 import Logger from "../logging/Logger.js";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
-const FEEDS_NOT_FOUND = "feeds_not_found";
+const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
 
 export default class RssClient {
 
@@ -29,7 +29,6 @@ export default class RssClient {
                         if(rssUrl.startsWith("//")) {
                             rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
                         } else if(rssUrl.startsWith("/")) {
-                            let httpIndex = 8;
                             rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
                         }
                         this.getRssData(rssUrl).then(feeds => {
@@ -50,15 +49,15 @@ export default class RssClient {
 
     crawlForRssUrl(root, url, resolve, reject) {
         let links = new Set();
+        let rssUrl = url.substring(0, url.indexOf("/", httpIndex));
         let relativeLinks = root("a[href^='/']");
         relativeLinks.each(function() {
-            links.add(url + root(this).attr("href"));
+            links.add(rssUrl + root(this).attr("href"));
         });
 
-        let absoluteUrl = url;
-        absoluteUrl = absoluteUrl.replace(/.*?:\/\//g, "");
-        absoluteUrl = absoluteUrl.replace("www.", "");
-        let absoluteLinks = root("a[href*='" + absoluteUrl + "']");
+        rssUrl = rssUrl.replace(/.*?:\/\//g, "");
+        rssUrl = rssUrl.replace("www.", "");
+        let absoluteLinks = root("a[href*='" + rssUrl + "']");
         absoluteLinks.each(function() {
             links.add(root(this).attr("href"));
         });
@@ -73,6 +72,7 @@ export default class RssClient {
                     resolve(feeds);
                 }).catch(error => {
                     count += 1;
+                    this.crawlRssList(link, error, url, resolve);
                     if (count === links.size) {
                         this.handleUrlError(link, error, reject);
                     }
@@ -81,12 +81,30 @@ export default class RssClient {
         }
     }
 
+    crawlRssList(link, error, url, resolve) {
+        let rssPath = link.substring(link.lastIndexOf("/"));
+        if ((rssPath.indexOf("rss")) !== NOT_FOUND_INDEX) {
+            let rssListRoot = cheerio.load(error.data);
+            let urlPath = url.substring(url.lastIndexOf("/"));
+            urlPath = urlPath.replace(/\.[\w]*$/g, "");
+            let rssListLink = rssListRoot("a[href$='" + urlPath + "']").attr("href") ||
+                rssListRoot("a[href$='" + urlPath + ".rss']").attr("href") ||
+                rssListRoot("a[href$='" + urlPath + ".xml']").attr("href");
+            if (rssListLink) {
+                this.getRssData(rssListLink, false).then(rssFeeds => {
+                    rssFeeds.url = rssListLink;
+                    resolve(rssFeeds);
+                });
+            }
+        }
+    }
+
     getRssData(url) {
         return new Promise((resolve, reject) => {
             let data = null;
             let requestToUrl = request.get({
                 "uri": url,
-                "timeout": 2000
+                "timeout": 6000
             }, (error, response, body) => {
                 if(error) {
                     this.handleRequestError(url, error, reject);
