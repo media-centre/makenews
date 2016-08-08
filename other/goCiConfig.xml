@@ -6,88 +6,6 @@
     </security>
     <mailhost hostname="46.101.245.151" port="8153" username="admin" tls="false" from="pranathb@thoughtworks.com" admin="mediacenter@thoughtworks.com" />
   </server>
-  <pipelines group="MediaCenter">
-    <pipeline name="ServerTests" isLocked="false" template="build_template">
-      <params>
-        <param name="branch">master</param>
-      </params>
-      <environmentvariables>
-        <variable name="branch">
-          <value>master</value>
-        </variable>
-      </environmentvariables>
-      <materials>
-        <git url="git@github.com:media-centre/ContentDiscovery.git" branch="#{branch}" dest="trunk" materialName="ContentDiscovery" />
-      </materials>
-    </pipeline>
-    <pipeline name="DevelopmentDeployment" template="DevelopmentDeployment">
-      <materials>
-        <pipeline pipelineName="ServerTests" stageName="build" materialName="build" />
-      </materials>
-    </pipeline>
-    <pipeline name="QaDeployment" isLocked="false">
-      <environmentvariables>
-        <variable name="NODE_ENV">
-          <value>ci_qa</value>
-        </variable>
-      </environmentvariables>
-      <materials>
-        <pipeline pipelineName="DevelopmentDeployment" stageName="StartServer" materialName="Development" />
-      </materials>
-      <stage name="StartServer">
-        <approval type="manual" />
-        <jobs>
-          <job name="UntarAndStartServer">
-            <environmentvariables>
-              <variable name="NODE_ENV">
-                <value>qa</value>
-              </variable>
-            </environmentvariables>
-            <tasks>
-              <fetchartifact pipeline="DevelopmentDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk">
-                <runif status="passed" />
-              </fetchartifact>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>tar -xzf dist.tar.gz</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/qa -c local</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <artifact src="trunk/dist.tar.gz" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-    <pipeline name="HardeningTests" isLocked="false">
-      <materials>
-        <pipeline pipelineName="QaDeployment" stageName="StartServer" />
-      </materials>
-      <stage name="fetchPackage">
-        <approval type="manual" />
-        <jobs>
-          <job name="getPackageFromQA">
-            <tasks>
-              <fetchartifact pipeline="QaDeployment" stage="StartServer" job="UntarAndStartServer" srcfile="dist.tar.gz" dest="trunk/">
-                <runif status="passed" />
-              </fetchartifact>
-              <exec command="bash" workingdir="trunk/">
-                <arg>-c</arg>
-                <arg>tar -xzf dist.tar.gz</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-  </pipelines>
   <pipelines group="newsClick">
     <pipeline name="newsClickQA">
       <materials>
@@ -246,147 +164,51 @@
       </stage>
     </pipeline>
   </pipelines>
-  <pipelines group="Production">
-    <pipeline name="ReleaseBuildTests">
+  <pipelines group="newInternationalist">
+    <pipeline name="QA">
+      <materials>
+        <git url="git@newInt:media-centre/newInt.git" />
+      </materials>
+      <stage name="defaultStage">
+        <jobs>
+          <job name="defaultJob">
+            <tasks>
+              <exec command="ls" />
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>drush features-update-all</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
+  <pipelines group="MakeNews">
+    <pipeline name="ServerTests" isLocked="false" template="build_template">
+      <params>
+        <param name="branch">master</param>
+      </params>
       <environmentvariables>
         <variable name="branch">
-          <value>Release-3.0</value>
+          <value>master</value>
         </variable>
       </environmentvariables>
       <materials>
-        <git url="git@github.com:media-centre/ContentDiscovery.git" branch="Release-3.0" dest="trunk" />
+        <git url="git@github.com:media-centre/ContentDiscovery.git" branch="Release-3.0" dest="trunk" materialName="ContentDiscovery" />
       </materials>
-      <stage name="StaticCodeAnalyser">
-        <jobs>
-          <job name="eslint">
-            <tasks>
-              <exec command="gulp" workingdir="trunk">
-                <arg>eslint</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="build">
-        <jobs>
-          <job name="build">
-            <tasks>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>./build.sh</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>tar czf ./dist.tar.gz ./dist</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <artifact src="trunk/dist.tar.gz" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="ServerTests">
-        <environmentvariables>
-          <variable name="NODE_ENV">
-            <value>ci-server-tests</value>
-          </variable>
-        </environmentvariables>
-        <jobs>
-          <job name="ServerTests">
-            <tasks>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>tar czf dist.tar.gz dist</arg>
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>/etc/ContentDiscovery/delete_fake_server_cleanly.sh</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/prod-unit-tests -c local</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>pm2 start --name ContentDiscoveryFakeServer ./testserver/server.js</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>gulp functional:test</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="UnitTest">
-        <jobs>
-          <job name="unit-test">
-            <tasks>
-              <exec command="gulp" workingdir="trunk">
-                <arg>test</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-    <pipeline name="ReleaseDevBox" isLocked="false">
-      <materials>
-        <pipeline pipelineName="ReleaseBuildTests" stageName="build" />
-      </materials>
-      <stage name="StartServer">
-        <approval type="manual" />
-        <environmentvariables>
-          <variable name="NODE_ENV">
-            <value>ci_prod_dev_box</value>
-          </variable>
-        </environmentvariables>
-        <jobs>
-          <job name="AnsibleDeploymentTask">
-            <environmentvariables>
-              <variable name="NODE_ENV">
-                <value>ci_prod_dev_box</value>
-              </variable>
-            </environmentvariables>
-            <tasks>
-              <fetchartifact pipeline="ReleaseBuildTests" stage="build" job="build" srcfile="dist.tar.gz" dest="trunk">
-                <runif status="passed" />
-              </fetchartifact>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>tar -xzf dist.tar.gz</arg>
-                <runif status="passed" />
-              </exec>
-              <exec command="bash" workingdir="trunk">
-                <arg>-c</arg>
-                <arg>ansible-playbook -vvvv ./dist/ansible/deployment/deployment.yml -u go -i ./dist/ansible/deployment/inventories/prod-dev-box -c local</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <artifact src="trunk/dist.tar.gz" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
     </pipeline>
     <pipeline name="PreprodDeployment">
       <materials>
-        <pipeline pipelineName="ReleaseDevBox" stageName="StartServer" />
+        <pipeline pipelineName="ServerTests" stageName="build" />
       </materials>
       <stage name="StartServer" cleanWorkingDir="true">
         <approval type="manual" />
         <jobs>
           <job name="AnsibleDeploymentTask">
             <tasks>
-              <fetchartifact pipeline="ReleaseDevBox" stage="StartServer" job="AnsibleDeploymentTask" srcfile="dist.tar.gz" dest="trunk">
+              <fetchartifact pipeline="ServerTests" stage="build" job="build" srcfile="dist.tar.gz" dest="trunk">
                 <runif status="passed" />
               </fetchartifact>
               <exec command="bash" workingdir="trunk">
@@ -432,175 +254,6 @@
             </tasks>
             <artifacts>
               <artifact src="trunk/dist.tar.gz" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-  </pipelines>
-  <pipelines group="newInternationalist">
-    <pipeline name="QA">
-      <materials>
-        <git url="git@newInt:media-centre/newInt.git" />
-      </materials>
-      <stage name="defaultStage">
-        <jobs>
-          <job name="defaultJob">
-            <tasks>
-              <exec command="ls" />
-              <exec command="bash">
-                <arg>-c</arg>
-                <arg>drush features-update-all</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-  </pipelines>
-  <pipelines group="CUCUMBER_TEST_GROUP">
-    <pipeline name="CUCUMBER_TESTS_DEV_ENV" isLocked="false">
-      <environmentvariables>
-        <variable name="envFile">
-          <value>dev_envfile</value>
-        </variable>
-        <variable name="admin" secure="true">
-          <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
-        </variable>
-      </environmentvariables>
-      <materials>
-        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" materialName="CUCUMBER_TESTS" />
-      </materials>
-      <stage name="MAVEN_STAGE">
-        <approval type="manual" />
-        <jobs>
-          <job name="MAVEN_COMPILE">
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>compile</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="DEV_RUN_STAGE">
-        <jobs>
-          <job name="TEST_ON_CHROME_BROWSER">
-            <environmentvariables>
-              <variable name="browser">
-                <value>chrome</value>
-              </variable>
-              <variable name="admin" secure="true">
-                <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
-              </variable>
-            </environmentvariables>
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>test</arg>
-                <runif status="passed" />
-              </exec>
-            </tasks>
-            <artifacts>
-              <test src="trunk/reports/cucumber-pretty" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-    <pipeline name="CUCUMBER_TESTS_QA_ENV" isLocked="false">
-      <environmentvariables>
-        <variable name="envFile">
-          <value>qa_envfile</value>
-        </variable>
-        <variable name="admin" secure="true">
-          <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
-        </variable>
-      </environmentvariables>
-      <materials>
-        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
-      </materials>
-      <stage name="MAVEN_TASKS">
-        <approval type="manual" />
-        <jobs>
-          <job name="MAVEN_COMPILE">
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>compile</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="QA_RUN_STAGE">
-        <approval type="manual" />
-        <jobs>
-          <job name="TEST_ON_CHROME_BROWSER">
-            <environmentvariables>
-              <variable name="fileName">
-                <value>qa_envfile</value>
-              </variable>
-              <variable name="browser">
-                <value>chrome</value>
-              </variable>
-              <variable name="admin" secure="true">
-                <encryptedValue>ZD2tpQViKMsENK8vB3OC6w==</encryptedValue>
-              </variable>
-            </environmentvariables>
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>test</arg>
-              </exec>
-            </tasks>
-            <tabs>
-              <tab name="Reports" path="reports" />
-            </tabs>
-            <artifacts>
-              <test src="reports/cucumber-pretty" />
-            </artifacts>
-          </job>
-        </jobs>
-      </stage>
-    </pipeline>
-    <pipeline name="CUCUMBER_TESTS_PREPROD_ENV" isLocked="false">
-      <environmentvariables>
-        <variable name="envFile">
-          <value>preprod_envfile</value>
-        </variable>
-      </environmentvariables>
-      <materials>
-        <svn url="https://github.com/media-centre/MCCucumberTests.git" username="PranathiB" encryptedPassword="bl3EoVprCReqkT263MzRUQ==" />
-      </materials>
-      <stage name="MAVEN_STAGE">
-        <approval type="manual" />
-        <jobs>
-          <job name="MAVEN_COMPILE">
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>compile</arg>
-              </exec>
-            </tasks>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="PREPROD_RUN_STAGE">
-        <jobs>
-          <job name="TEST_ON_CHROME_BROWSER">
-            <environmentvariables>
-              <variable name="fileName">
-                <value>preprod_envfile</value>
-              </variable>
-              <variable name="browser">
-                <value>chrome</value>
-              </variable>
-            </environmentvariables>
-            <tasks>
-              <exec command="mvn" workingdir="trunk/">
-                <arg>test</arg>
-              </exec>
-            </tasks>
-            <artifacts>
-              <test src="reports/cucumber-pretty" />
             </artifacts>
           </job>
         </jobs>
@@ -735,27 +388,6 @@
     </pipeline>
   </templates>
   <environments>
-    <environment name="DevDeployment">
-      <environmentvariables>
-        <variable name="NODE_ENV">
-          <value>development</value>
-        </variable>
-      </environmentvariables>
-      <agents>
-        <physical uuid="fd03899d-7788-47b9-afee-e8036b0060e1" />
-      </agents>
-      <pipelines>
-        <pipeline name="DevelopmentDeployment" />
-      </pipelines>
-    </environment>
-    <environment name="QaDeployment">
-      <agents>
-        <physical uuid="4b9908c8-79eb-458d-9156-aedfa687dcd3" />
-      </agents>
-      <pipelines>
-        <pipeline name="QaDeployment" />
-      </pipelines>
-    </environment>
     <environment name="PreprodEnvironment">
       <agents>
         <physical uuid="d029afb8-6952-4776-9146-848dad530f73" />
@@ -763,21 +395,6 @@
       <pipelines>
         <pipeline name="PreprodDeployment" />
       </pipelines>
-    </environment>
-    <environment name="CUCUMBER_TESTS">
-      <agents>
-        <physical uuid="eced3a06-ffe8-40f7-b82a-26a4055d3d99" />
-      </agents>
-      <pipelines>
-        <pipeline name="CUCUMBER_TESTS_DEV_ENV" />
-        <pipeline name="CUCUMBER_TESTS_PREPROD_ENV" />
-        <pipeline name="CUCUMBER_TESTS_QA_ENV" />
-      </pipelines>
-    </environment>
-    <environment name="CUCUMBER_DEV_ENV">
-      <agents>
-        <physical uuid="eced3a06-ffe8-40f7-b82a-26a4055d3d99" />
-      </agents>
     </environment>
     <environment name="ServerTests">
       <agents>
@@ -793,27 +410,6 @@
       </agents>
       <pipelines>
         <pipeline name="ProductionDeployment" />
-      </pipelines>
-    </environment>
-    <environment name="prod-unit-test">
-      <agents>
-        <physical uuid="252e4e5a-950f-4cea-91a3-e5c33b409dff" />
-      </agents>
-      <pipelines>
-        <pipeline name="ReleaseBuildTests" />
-      </pipelines>
-    </environment>
-    <environment name="prod-dev-box">
-      <agents>
-        <physical uuid="0f165179-28b8-4698-acc8-e628a253f1f3" />
-      </agents>
-      <pipelines>
-        <pipeline name="ReleaseDevBox" />
-      </pipelines>
-    </environment>
-    <environment name="hardening">
-      <pipelines>
-        <pipeline name="HardeningTests" />
       </pipelines>
     </environment>
     <environment name="newInternationalQA">
