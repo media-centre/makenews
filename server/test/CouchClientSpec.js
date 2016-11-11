@@ -60,7 +60,7 @@ describe("CouchClient", () => {
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(dbName, accessToken);
-            couchClientInstance.post(searchKey).then((actualResponse) => {
+            couchClientInstance.getUrls(searchKey).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
                 NodeErrorHandler.noError.restore();

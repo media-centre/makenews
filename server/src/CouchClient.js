@@ -31,25 +31,31 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
-    post(searchkey, customHeaders = {}) {
+    getUrls(searchkey){
         const path = "/" + this.dbName + "/_find";
+        let query={
+            "selector": {
+            "_id": {
+                "$gt": null
+            },
+            "name": {
+                "$regex": searchkey
+            },
+            "url": {
+                "$gt": null
+            }
+        }
+        };
+        return this.post(path,query);
+    }
+
+    post(path, body, customHeaders = {}) {
+
         return new Promise((resolve, reject) => {
             request.post({
                 "uri": this.dbUrl + path,
                 "headers": this._headers(customHeaders),
-                "body": {
-                    "selector": {
-                        "_id": {
-                            "$gt": null
-                        },
-                        "name": {
-                            "$regex": searchkey
-                        },
-                        "url": {
-                            "$gt": null
-                        }
-                    }
-                },
+                "body": body,
                 "json": true
             },
             (error, response) => {
