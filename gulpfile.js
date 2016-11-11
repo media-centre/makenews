@@ -55,9 +55,10 @@ gulp.task("client:build-sources", function() {
         // .pipe(production(minify()))
         // .pipe(gulp.dest(parameters.client.distFolder));
 
+
+
     gulp.src(parameters.client.clientAppPath + "/config/*.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
-
 
     return browserif({ "entries": parameters.client.srcPath + "/index.jsx", "extensions": [".jsx", ".js"], "debug": true})
         .transform(babelify, { "presets": ["es2015", "react"] })
