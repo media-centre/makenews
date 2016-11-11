@@ -2,9 +2,7 @@
 import { createHashHistory } from "history";
 import UserSession from "./user/UserSession";
 
-const history = createHashHistory({
-    "queryKey": false
-});
+const history = createHashHistory();
 
 export default class History {
     static getHistory() {

@@ -18,7 +18,7 @@ const RSS = "rss";
 const FACEBOOK = "facebook";
 const TWITTER = "twitter";
 
-export default class Category extends Component {
+class Category extends Component {
     constructor(props) {
         super(props);
 

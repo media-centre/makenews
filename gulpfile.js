@@ -12,11 +12,12 @@ var eslint = require("gulp-eslint");
 var exec = require("child_process").exec;
 var rename = require("gulp-rename");
 var del = require("del");
-var cordova = require("cordova-lib").cordova.raw;
 var minify = require("gulp-minify");
 var cssnano = require("gulp-cssnano");
 var environments = require("gulp-environments");
-require("babel/register");
+var browserif = require("browserify");
+var source = require('vinyl-source-stream');
+require("babel-register");
 
 var development = environments.development;
 var production = environments.production;
@@ -24,71 +25,6 @@ var production = environments.production;
 function clean(path) {
     return del(path);
 }
-
-gulp.task("mobile:remove-directory", function() {
-    var files = "." + parameters.mobile.mobilePath;
-    return clean(files);
-});
-
-gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
-    process.chdir(__dirname + "/dist/");
-    exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        process.chdir("../");
-        cb(err);
-    });
-});
-
-gulp.task("mobile:create", ["mobile:sqllite"], function(cb) {
-    process.chdir(__dirname + parameters.mobile.mobilePath);
-    exec("cordova platform add android ", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
-gulp.task("mobile:sqllite", ["mobile:init"], function(cb) {
-    process.chdir(__dirname + parameters.mobile.mobilePath);
-    exec("cordova plugin add cordova-plugin-sqlite-2 ", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
-
-gulp.task("mobile:clean-files", function() {
-    var files = parameters.mobile.cordovaPath + "/*";
-    return clean(files);
-});
-
-gulp.task("mobile:copy-files", ["mobile:clean-files"], function() {
-    return gulp.src([parameters.mobile.appPath + "/**/*"])
-    .pipe(gulp.dest(parameters.mobile.cordovaPath));
-});
-
-gulp.task("mobile:build", ["mobile:copy-files"], function(cb) {
-    process.chdir(__dirname + parameters.mobile.mobilePath);
-    cordova
-    .build()
-    .then(function() {
-        process.chdir("../");
-        cb();
-    });
-});
-
-gulp.task("mobile:emulate", function(cb) {
-    process.chdir(__dirname + parameters.mobile.mobilePath);
-    cordova
-    .run({ "platforms": ["android"] })
-    .then(function() {
-        process.chdir("../");
-        cb();
-    });
-});
-
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
@@ -107,17 +43,28 @@ gulp.task("client:images", function() {
 
 gulp.task("client:build-sources", function() {
     gulp.src(parameters.client.srcPath + "/index.jsx")
-        .pipe(browserify({
-            "debug": development(),
-            "transform": ["babelify"]
-        }))
-        .pipe(production(rename("app.js")))
-        .pipe(development(rename("app-min.js")))
-        .pipe(production(minify()))
+        // .pipe(browserify({
+        //     "transform": ["babelify"],
+        //     debug: true
+        // }))
+        // .pipe(plugins.filter(function (a) {
+        //     return a.sourceMap.mappings !== ''
+        // }))
+        // .pipe(production(rename("app.js")))
+        // .pipe(development(rename("app-min.js")))
+        // .pipe(production(minify()))
+        // .pipe(gulp.dest(parameters.client.distFolder));
+
+    return browserif({entries: parameters.client.srcPath + "/index.jsx", extensions: ['.jsx', '.js'], debug: true})
+        .transform(babelify, {presets: ["es2015", "react"]})
+        .bundle()
+        .on("error", function (err) { console.log("Error : " + err.message); })
+        .pipe(source('app-min.js'))
         .pipe(gulp.dest(parameters.client.distFolder));
 
-    gulp.src(parameters.client.clientAppPath + "/config/*.js")
-        .pipe(gulp.dest(parameters.client.distFolder + "/config"));
+
+    // gulp.src(parameters.client.clientAppPath + "/config/*.js")
+    //     .pipe(gulp.dest(parameters.client.distFolder + "/config"));
 });
 
 

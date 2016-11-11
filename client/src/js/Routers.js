@@ -14,7 +14,6 @@ import UserProfile from "./user/UserProfile.jsx";
 import Help from "./help/Help.jsx";
 import DbSession from "./db/DbSession.js";
 import React from "react";
-import "babel/polyfill";
 import { Route } from "react-router";
 
 

@@ -11,14 +11,14 @@ import helmet from "helmet";
 import csp from "helmet-csp";
 let app = express();
 app.use(helmet.hidePoweredBy());
-app.use(csp({
+app.use(csp( { directives: {
     "scriptSrc": ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
     "styleSrc": ["'self'", "'unsafe-inline'"]
-}));
+}}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
-app.use(helmet.nosniff());
+app.use(helmet.noSniff());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard("deny"));
 let ninetyDaysInMilliseconds = 7776000000;
