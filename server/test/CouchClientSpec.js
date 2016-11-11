@@ -26,6 +26,48 @@ describe("CouchClient", () => {
         CouchClient.logger.restore();
     });
 
+    describe("searchDatabase", () => {
+        before("searchDatabase", () => {
+            response ={
+                "docs": [
+                    {
+                        "_id": "15419e8f2569b9da4b1507dab0008d20",
+                        "_rev": "2-acd8f3948c6e42e6231da99d499d9fba",
+                        "docType": "source",
+                        "sourceType": "web",
+                        "name": "The Hindu - Home",
+                        "url": "http://www.thehindu.com/?service=rss"
+                    },
+                    {
+                        "_id": "15419e8f2569b9da4b1507dab00126fb",
+                        "_rev": "2-98b612c34a507c1d959fbab4de313ac6",
+                        "docType": "source",
+                        "sourceType": "web",
+                        "name": "The Hindu - Sci-Tech",
+                        "url": "http://www.thehindu.com/sci-tech/?service=rss"
+                    }
+                ]
+            }
+        });
+
+        it("should return all documents with name matching the search key", (done) => {
+            let searchKey = "Hindu";
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .post("/" + dbName + "/_find")
+                .reply(HttpResponseHandler.codes.OK, response);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.post(searchKey).then((actualResponse) => {
+                assert.deepEqual(response, actualResponse);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+    });
 
     describe("saveDocument", () => {
 
