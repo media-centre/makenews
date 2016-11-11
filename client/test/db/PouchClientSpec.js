@@ -26,18 +26,18 @@ describe("PouchClient", () => {
         DbSession.instance().then(session => {
             session.put({
                 "docType": "category",
-                "name": "Sports"
-            }
-                , "sportsCategoryId1");
+                "name": "Sports",
+                "_id": "sportsCategoryId1"
+            });
         });
 
         DbSession.instance().then(session => {
             session.put({
 
                 "docType": "category",
-                "name": "Politics"
-            }
-                , "politicsCategoryId2");
+                "name": "Politics",
+                "_id": "politicsCategoryId2"
+            });
         });
 
         DbSession.instance().then(session => {
@@ -45,9 +45,9 @@ describe("PouchClient", () => {
                 "docType": "source",
                 "sourceType": "rss",
                 "url": "www.hindu.com/rss",
-                "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"]
-            }
-                , "rssId1");
+                "categoryIds": ["sportsCategoryId1", "politicsCategoryId2"],
+                "_id": "rssId1"
+            });
         });
 
         DbSession.instance().then(session => {
@@ -56,9 +56,9 @@ describe("PouchClient", () => {
                 "docType": "source",
                 "sourceType": "facebook",
                 "url": "www.facebooksports.com",
-                "categoryIds": ["sportsCategoryId1"]
-            }
-                , "fbId1");
+                "categoryIds": ["sportsCategoryId1"],
+                "_id": "fbId1"
+            });
         });
 
         DbSession.instance().then(session => {
@@ -66,9 +66,9 @@ describe("PouchClient", () => {
                 "docType": "source",
                 "sourceType": "rss",
                 "url": "www.facebookpolitics.com",
-                "categoryIds": ["politicsCategoryId2"]
-            }
-                , "rssId2");
+                "categoryIds": ["politicsCategoryId2"],
+                "_id": "rssId2"
+            });
         });
 
         surfFeed = {
@@ -76,12 +76,12 @@ describe("PouchClient", () => {
             "title": "tn",
             "description": "www.facebookpolitics.com",
             "sourceId": "rssId1",
-            "postedDate": "2015-10-02T04:09:17+00:00"
+            "postedDate": "2015-10-02T04:09:17+00:00",
+            "_id": "feedId1"
         };
 
         DbSession.instance().then(session => {
-            session.put(surfFeed
-                , "feedId1");
+            session.put(surfFeed);
         });
 
         parkFeed = {
@@ -90,15 +90,17 @@ describe("PouchClient", () => {
             "description": "www.fbpolitics.com",
             "sourceId": "fbId1",
             "status": "park",
-            "postedDate": "2015-10-04T04:09:17+00:00"
+            "postedDate": "2015-10-04T04:09:17+00:00",
+            "_id": "feedId2"
         };
         DbSession.instance().then(session => {
-            session.put(parkFeed, "feedId2");
+            session.put(parkFeed);
         });
 
         DbSession.instance().then(session => {
             session.put({
                 "language": "javascript",
+                "_id": "_design/category",
                 "views": {
                     "allCategories": {
                         "map": "function(doc) { if(doc.docType == 'category') {emit(doc._id, doc)} }"
@@ -140,7 +142,7 @@ describe("PouchClient", () => {
                         "map": "function(doc) { if(doc.docType == 'feed' && (!doc.status || doc.status != 'park')) {emit(doc.postedDate, doc)} }"
                     }
                 }
-            }, "_design/category");
+            });
         });
     });
 
@@ -158,15 +160,14 @@ describe("PouchClient", () => {
 
     describe("fetchDocuments", () => {
         describe("allCategories", () => {
-            it("should list all documents for the given queryPath", (done) => {
-                PouchClient.fetchDocuments("category/allCategories", { "include_docs": true }).then((docs) => {
-                    let actualCategories = docs.map((doc) => {
-                        return doc.name;
-                    });
-                    expect(actualCategories).to.include("Sports");
-                    expect(actualCategories).to.include("Politics");
-                    done();
+            it("should list all documents for the given queryPath", async () => {
+
+                let docs = await PouchClient.fetchDocuments("category/allCategories", { "include_docs": true });
+                let actualCategories = docs.map((doc) => {
+                    return doc.name;
                 });
+                expect(actualCategories).to.include("Sports");
+                expect(actualCategories).to.include("Politics");
             });
         });
 
@@ -440,9 +441,9 @@ describe("PouchClient", () => {
                     "docType": "source",
                     "sourceType": "rss",
                     "url": "www.facebookpolitics.com",
-                    "categoryIds": ["politicsCategoryId2"]
-                }
-                    , "deleteId1").then(putResponse => {
+                    "categoryIds": ["politicsCategoryId2"],
+                    "_id": "deleteId1"
+                }).then(putResponse => {
                         session.get("deleteId1").then(document => {
 
                             sandbox.stub(PouchClient, "getDocument").withArgs(document._id).returns(Promise.resolve(document));
@@ -496,8 +497,9 @@ describe("PouchClient", () => {
                     "tags": [
                         "Dec 29 2015    7:47:59"
                     ],
-                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
-                }, "S163974433696568_968907333203270");
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net",
+                    "_id": "S163974433696568_968907333203270"
+                });
             });
 
             DbSession.instance().then(session => {
@@ -511,8 +513,9 @@ describe("PouchClient", () => {
                     "tags": [
                         "Dec 29 2015    8:9:17"
                     ],
-                    "url": "https://fbcdn-photos-h-a.akamaihd.net"
-                }, "S163974433696568_968914649869205");
+                    "url": "https://fbcdn-photos-h-a.akamaihd.net",
+                    "_id": "S163974433696568_968914649869205"
+                });
             });
 
             DbSession.instance().then(session => {
@@ -526,8 +529,9 @@ describe("PouchClient", () => {
                     "tags": [
                         "Dec 29 2015    14:32:13"
                     ],
+                    "_id": "S163974433696568_969041863189817",
                     "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
-                }, "S163974433696568_969041863189817");
+                });
             });
         });
 
@@ -557,8 +561,9 @@ describe("PouchClient", () => {
                     "tags": [
                         "Dec 29 2015    7:47:59"
                     ],
-                    "url": "https://fbcdn-photos-f-a.akamaihd.net"
-                }, "P163974433696568_968907333203270");
+                    "url": "https://fbcdn-photos-f-a.akamaihd.net",
+                    "_id": "P163974433696568_968907333203270"
+                });
             });
 
             DbSession.instance().then(session => {
@@ -572,8 +577,9 @@ describe("PouchClient", () => {
                     "tags": [
                         "Dec 29 2015    8:9:17"
                     ],
+                    "_id": "P163974433696568_968914649869205",
                     "url": "https://fbcdn-photos-h-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-0/s130x130/993834_968914649869205_4718370789719324851_n.jpg?oh=c00c3e984da0d49a65fb6342e5ffb272&oe=57191FE6&__gda__=1461844690_a1b41bffa7af2d1bd8f80072af88adff"
-                }, "P163974433696568_968914649869205");
+                });
             });
 
             DbSession.instance().then(session => {
@@ -588,8 +594,9 @@ describe("PouchClient", () => {
                         "Dec 29 2015    14:32:13"
                     ],
                     "status": "park",
+                    "_id": "P163974433696568_969041863189817",
                     "url": "https://fbcdn-photos-b-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-0/s130x130/946453_1071103756290828_7626184021542195939_n.jpg?oh=9abd049b24ea6a41dcc265a7783e1f33&oe=56D3C7D2&__gda__=1459863968_336e8f0d38b164c04c2c603da69fe91e"
-                }, "P163974433696568_969041863189817");
+                });
             });
         });
         it("should fetch all surf feeds ", (done) => {
@@ -609,8 +616,9 @@ describe("PouchClient", () => {
                 session.put({
                     "docType": "surf-filter",
                     "categoryIds": [{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }],
-                    "content": ["image", "video", "text"]
-                }, "surf-filter-id");
+                    "content": ["image", "video", "text"],
+                    "_id": "surf-filter-id"
+                });
             });
         });
         it("should fetch surf filter document", (done) => {

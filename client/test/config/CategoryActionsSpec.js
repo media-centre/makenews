@@ -132,10 +132,10 @@ describe("addRssUrlAsync", () => {
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions);
-        return Promise.resolve(store.dispatch(addRssUrlAsync(categoryId, url, (response)=> {
+        store.dispatch(addRssUrlAsync(categoryId, url, (response)=> {
             assert.strictEqual("invalid", response);
             done();
-        })));
+        }));
     });
 
     it("should create rss source and then create the feeds", (done) => {
@@ -238,11 +238,12 @@ describe("addTwitterUrlAsync", () => {
         twitterDbMock.withArgs(twitterFeed.statuses).returns(Promise.resolve("response"));
 
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
-        const store = mockStore(categorySourceConfig, expectedActions, done);
-        return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, () => { }))).then(() => {
+        const store = mockStore(categorySourceConfig, expectedActions, function() {});
+        store.dispatch(addTwitterUrlAsync(categoryId, url, (status) => {
+            assert.strictEqual(status, "valid");
             sourceSaveMock.verify();
-            twitterDbMock.verify();
-        });
+            done();
+        }));
     });
 
     it("should create twitter document with invalid status if url is invalid", (done) => {
@@ -251,10 +252,10 @@ describe("addTwitterUrlAsync", () => {
         sandbox.stub(SourceDb, "fetchSortedSourceUrlsObj").withArgs(categoryId).returns(Promise.resolve(allSources));
         let expectedActions = [{ "type": DISPLAY_CATEGORY, "sourceUrlsObj": allSources }];
         const store = mockStore(categorySourceConfig, expectedActions);
-        return Promise.resolve(store.dispatch(addTwitterUrlAsync(categoryId, url, (response) => {
+        store.dispatch(addTwitterUrlAsync(categoryId, url, (response) => {
             assert.strictEqual("invalid", response);
             done();
-        })));
+        }));
     });
 
     afterEach("After Each", () => {

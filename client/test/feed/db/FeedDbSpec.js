@@ -276,7 +276,7 @@ describe("FeedDb", () => {
             sandbox.stub(FeedDb, "fetchPastFeeds").returns(Promise.resolve(pastFeeds));
             let bulkDeleteMock = sandbox.mock(PouchClient).expects("bulkDelete");
             bulkDeleteMock.withArgs(expectedPastFeedsToBeDeleted).returns(Promise.reject("error"));
-            return FeedDb.deletePastFeeds().catch((error) => {
+            FeedDb.deletePastFeeds().catch((error) => {
                 assert.strictEqual(error, "error");
                 bulkDeleteMock.verify();
                 done();

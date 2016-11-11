@@ -90,7 +90,7 @@ describe("SourceDb", () => {
             };
             let fetchRssConfigurationsStub = sinon.stub(SourceDb, "fetchSourceConfigurationsByCategoryId");
             fetchRssConfigurationsStub.withArgs(categoryId).returns(Promise.resolve(result));
-            return SourceDb.fetchSortedSourceUrlsObj(categoryId).then(rssDetails => {
+            SourceDb.fetchSortedSourceUrlsObj(categoryId).then(rssDetails => {
                 expect(expectedRssDetails).to.deep.equal(rssDetails);
                 SourceDb.fetchSourceConfigurationsByCategoryId.restore();
                 done();

@@ -138,7 +138,7 @@ describe("displayFilteredFeeds", ()=> {
         feedDbMock.returns(Promise.resolve(feedsAndCategoriesDocs));
 
 
-        return filterFeedsHandler.getFilterAndSourceHashMap().then((filterAndSourceHashMap)=> {
+        filterFeedsHandler.getFilterAndSourceHashMap().then((filterAndSourceHashMap)=> {
             expect(result).to.deep.equal(filterAndSourceHashMap);
             pouchClientMock.verify();
             PouchClient.fetchDocuments.restore();
@@ -178,7 +178,7 @@ describe("displayFilteredFeeds", ()=> {
         getDocumentMock.withArgs("surf-filter-id").returns(Promise.resolve({}));
 
         let filterFeedsHandler = new FilterFeedsHandler();
-        return filterFeedsHandler.updateFilterDocument(updatedDocument).then(()=> {
+        filterFeedsHandler.updateFilterDocument(updatedDocument).then(()=> {
             getDocumentMock.verify();
             PouchClient.getDocument.restore();
 
@@ -215,7 +215,7 @@ describe("displayFilteredFeeds", ()=> {
         updateDocumentMock.withArgs(updatedDocument).returns(Promise.reject("error"));
 
         let filterFeedsHandler = new FilterFeedsHandler();
-        return filterFeedsHandler.updateFilterDocument(updatedDocument).catch(()=> {
+        filterFeedsHandler.updateFilterDocument(updatedDocument).catch(()=> {
             getDocumentMock.verify();
             PouchClient.getDocument.restore();
 
@@ -262,7 +262,7 @@ describe("displayFilteredFeeds", ()=> {
 
 
         let filterFeedsHandler = new FilterFeedsHandler();
-        return filterFeedsHandler.fetchFeedsByPageWithFilter(filterStore).then(()=> {
+        filterFeedsHandler.fetchFeedsByPageWithFilter(filterStore).then(()=> {
             sandbox.restore();
             done();
         });

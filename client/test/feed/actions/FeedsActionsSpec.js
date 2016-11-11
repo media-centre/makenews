@@ -14,7 +14,7 @@ describe("FeedActions", () => {
             let store = mockStore({ "parkFeedCount": 0 }, [{ "type": FeedActions.INITIALISE_PARK_COUNTER, "count": count }], done);
             let feedDbMock = sinon.mock(FeedDb).expects("parkedFeedsCount");
             feedDbMock.returns(Promise.resolve(count));
-            return Promise.resolve(store.dispatch(FeedActions.initialiseParkedFeedsCount())).then(() => {
+            Promise.resolve(store.dispatch(FeedActions.initialiseParkedFeedsCount())).then(() => {
                 feedDbMock.verify();
                 FeedDb.parkedFeedsCount.restore();
             });

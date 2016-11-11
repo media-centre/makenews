@@ -62,7 +62,7 @@ describe("ParkActions", () => {
             ];
             fetchAllParkedFeedsMock.expects("fetchAllParkedFeeds").returns(Promise.resolve(feeds));
             let store = mockStore({ "parkedItems": [] }, [{ "type": DISPLAY_PARKED_FEEDS, "parkedItems": feeds }], done);
-            return Promise.resolve(store.dispatch(displayParkedFeedsAsync())).then(() => {
+            Promise.resolve(store.dispatch(displayParkedFeedsAsync())).then(() => {
                 fetchAllParkedFeedsMock.verify();
             });
         });
@@ -70,7 +70,7 @@ describe("ParkActions", () => {
         it("dispatch displayParkedFeedsAsync action with empty feeds on fetch failure", (done) => {
             fetchAllParkedFeedsMock.expects("fetchAllParkedFeeds").returns(Promise.reject("error"));
             let store = mockStore({ "parkedItems": [] }, [{ "type": DISPLAY_PARKED_FEEDS, "parkedItems": [] }], done);
-            return Promise.resolve(store.dispatch(displayParkedFeedsAsync())).then(() => {
+            Promise.resolve(store.dispatch(displayParkedFeedsAsync())).then(() => {
                 fetchAllParkedFeedsMock.verify();
 
             });
@@ -92,7 +92,7 @@ describe("ParkActions", () => {
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.withExactArgs(feedDocument, feedStatus).returns(Promise.resolve({ "ok": true }));
 
-            return Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument))).then(() => {
+            Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument))).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
@@ -103,7 +103,7 @@ describe("ParkActions", () => {
             let store = mockStore({}, [], done);
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.withArgs(feedDocument).never();
-            return Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument))).then(() => {
+            Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument))).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
@@ -113,7 +113,7 @@ describe("ParkActions", () => {
             let store = mockStore({}, [], done);
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.never();
-            return Promise.resolve(store.dispatch(unparkFeedAsync())).then(() => {
+            Promise.resolve(store.dispatch(unparkFeedAsync())).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
@@ -131,7 +131,7 @@ describe("ParkActions", () => {
             let pouchClientDeleteDcMock = sinon.mock(PouchClient).expects("deleteDocument");
             pouchClientDeleteDcMock.withArgs(feedDocument).returns(Promise.resolve({ "ok": true }));
 
-            return Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument), () => { })).then(() => {
+            Promise.resolve(store.dispatch(unparkFeedAsync(feedDocument), () => { })).then(() => {
 
                 pouchClientDeleteDcMock.verify();
                 PouchClient.deleteDocument.restore();

@@ -51,7 +51,7 @@ describe("SurfActions", () => {
         fetchAllFeedsWithCategoryNameMock.returns(Promise.resolve(feeds));
 
         let store = mockStore({ "feeds": [], "messages": messages }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": feeds, "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
-        return Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync())).then(() => {
+        Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync())).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
@@ -62,7 +62,7 @@ describe("SurfActions", () => {
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
         let store = mockStore({ "feeds": [] }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
-        return Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync([], 0))).then(() => {
+        Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync([], 0))).then(() => {
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
@@ -257,7 +257,7 @@ describe("SurfActions", () => {
             let store = mockStore({ "parkFeedCount": 2 }, [{ "type": SurfActions.PARK_FEED, "feed": feedDocument }, { "type": FeedsActions.INCREMENT_PARK_COUNTER }], done);
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.withExactArgs(feedDocument, feedStatus).returns(Promise.resolve({ "ok": true }));
-            return Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
+            Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
@@ -268,7 +268,7 @@ describe("SurfActions", () => {
             let store = mockStore({}, [], done);
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.withArgs(feedDocument).never();
-            return Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
+            Promise.resolve(store.dispatch(SurfActions.parkFeed(feedDocument))).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
@@ -278,7 +278,7 @@ describe("SurfActions", () => {
             let store = mockStore({}, [], done);
             let feedApplicationQueriesMock = sinon.mock(FeedApplicationQueries).expects("updateFeed");
             feedApplicationQueriesMock.never();
-            return Promise.resolve(store.dispatch(SurfActions.parkFeed())).then(() => {
+            Promise.resolve(store.dispatch(SurfActions.parkFeed())).then(() => {
                 feedApplicationQueriesMock.verify();
                 FeedApplicationQueries.updateFeed.restore();
             });
