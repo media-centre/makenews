@@ -1,13 +1,12 @@
 /* eslint no-unused-vars:0, max-len:0  */
-"use strict";
 import CategoryDb from "../db/CategoryDb";
 import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 import React, { Component, PropTypes } from "react";
-import { Route, Link, History } from "react-router";
+import { Route, Link } from "react-router";
 import { connect } from "react-redux";
-import Toast from "../../utils/custom_templates/Toast.js";
-import FilterFeedsHandler from "../../surf/FilterFeedsHandler.js";
-import { updateFilterAndSourceHashMap } from "../../surf/actions/SurfActions.js";
+import Toast from "../../utils/custom_templates/Toast";
+import { updateFilterAndSourceHashMap } from "../../surf/actions/SurfActions";
+import History from "../../History";
 
 export default class CategoryNavigationHeader extends Component {
 
@@ -50,7 +49,7 @@ export default class CategoryNavigationHeader extends Component {
         if(event.OK) {
             CategoryDb.deleteCategory(categoryId).then((result) => {
                 Toast.show(`${this.props.categoryName} ${this.props.categoryDetailsPageStrings.successMessages.categoryDeleteSuccess}`);
-                this.context.history.push("/configure/categories");
+                History.getHistory().push("/configure/categories");
             });
         }
         this.setDeleteConfirmState(false);
@@ -63,15 +62,14 @@ export default class CategoryNavigationHeader extends Component {
     render() {
         let titleElement = this.props.isDefault ? <div className="navigation-title t-center m-block" id="categoryTitle">{this.props.categoryName}</div>
             : <div className="navigation-title t-center m-block custom-category-name">
-            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)}>
-            </input>
+            <input defaultValue={this.props.categoryName} type="text" className={this._highlightEditableTitle()} id="categoryTitle" ref="categoryTitleElement" onKeyPress ={(event)=> this._handleEnterKey(event, this.props)} onMouseOut={(event)=> this._updateCategoryName(event, this.props)}/>
             <div ref="errorMessage" className="title-status error-msg t-center">{this.props.isValidName ? "" : this.props.errorMessage}</div>
         </div>;
 
         return (
             <div className="navigation-header clear-fix" >
                 <Link to="/configure/categories" className="navigation nav-control h-center left" id="allCategoriesButton">
-                    <i className="fa fa-arrow-left"></i>
+                    <i className="fa fa-arrow-left" />
                     <span ref="allCategoriesLinkLabel">{this.props.categoryDetailsPageStrings.allCategoriesLinkLabel}</span>
                 </Link>
                 <button className={this.props.isDefault ? "delete-category right disable" : "delete-category right"} id="deleteCategory" ref="deleteCategoryLinkLabel" onClick = {(event) => this.deleteCategory()}>{this.props.categoryDetailsPageStrings.deleteCategoryLinkLabel}</button>
@@ -80,7 +78,6 @@ export default class CategoryNavigationHeader extends Component {
             </div>
         );
     }
-
 }
 
 
@@ -103,10 +100,4 @@ CategoryNavigationHeader.defaultProps = {
     "isDefault": false,
     "errorMessage": "",
     "isValidName": true
-};
-
-CategoryNavigationHeader.contextTypes = {
-    "history": function() {
-        return History.prototype;
-    }
 };
