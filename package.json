@@ -21,6 +21,7 @@
     "moment": "^2.15.2",
     "oauth": "^0.9.14",
     "pouchdb": "^6.0.7",
+    "ramda": "^0.22.1",
     "react": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",

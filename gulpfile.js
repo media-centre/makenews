@@ -59,11 +59,11 @@ gulp.task("client:build-sources", function() {
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
 
 
-    return browserif({entries: parameters.client.srcPath + "/index.jsx", extensions: ['.jsx', '.js'], debug: true})
-        .transform(babelify, {presets: ["es2015", "react"]})
+    return browserif({ "entries": parameters.client.srcPath + "/index.jsx", "extensions": [".jsx", ".js"], "debug": true})
+        .transform(babelify, { "presets": ["es2015", "react"] })
         .bundle()
-        .on("error", function (err) { console.log("Error : " + err.message); })
-        .pipe(source('app-min.js'))
+        .on("error", function(err) { console.log("Error : " + err.message); })
+        .pipe(source("app-min.js"))
         .pipe(gulp.dest(parameters.client.distFolder));
 });
 
