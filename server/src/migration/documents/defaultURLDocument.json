@@ -1,0 +1,8 @@
+{
+  "language": "javascript",
+  "views": {
+    "defaultURLDocuments": {
+      "map": "function(doc) { if(doc.sourceType == 'web') {emit(doc._id, doc)} }"
+    }
+  }
+}
