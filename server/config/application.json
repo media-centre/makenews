@@ -9,8 +9,8 @@
       "password": "common",
       "db": "common",
       "couchDbAdmin": {
-        "username": "test",
-        "password": "test"
+        "username": "admin",
+        "password": "admin"
       }
     },
     "facebook": {
