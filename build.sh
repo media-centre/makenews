@@ -36,23 +36,23 @@ then
 fi
 echo "--- gulp build completed"
 
-echo "--- mobile initial setup started" 
-gulp mobile:create
-if [ "$?" -ne 0 ]
-then
-  echo "*** gulp mobile:create failed."
-  exit
-fi
-echo "--- mobile initial setup completed" 
-
-echo "--- mobile build started"
-gulp mobile:build
-if [ "$?" -ne 0 ]
-then
-  echo "*** gulp mobile:build failed."
-  exit
-fi
-echo "--- mobile build completed"
+#echo "--- mobile initial setup started"
+#gulp mobile:create
+#if [ "$?" -ne 0 ]
+#then
+#  echo "*** gulp mobile:create failed."
+#  exit
+#fi
+#echo "--- mobile initial setup completed"
+#
+#echo "--- mobile build started"
+#gulp mobile:build
+#if [ "$?" -ne 0 ]
+#then
+#  echo "*** gulp mobile:build failed."
+#  exit
+#fi
+#echo "--- mobile build completed"
 
 echo "--- npm install only for dependencies started"
 cd ./dist

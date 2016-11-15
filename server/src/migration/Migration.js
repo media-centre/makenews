@@ -7,6 +7,7 @@ import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645
 import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter.js";
 import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed.js";
 import ModifyImageUrlToImagesArray from "../../src/migration/db/20160516122916_ModifyImageUrlToImagesArray";
+import URLDocuments from "../../src/migration/db/20161114174315_URLDocument";
 
 import SchemaInfo from "./SchemaInfo.js";
 import MigrationFile from "./MigrationFile.js";
@@ -17,7 +18,7 @@ import Logger from "../logging/Logger.js";
 export default class Migration {
 
     static logger(dbName) {
-        if(!this.logs) {
+        if (!this.logs) {
             this.logs = {};
         }
         this.logs[dbName] = this.logs[dbName] || Logger.fileInstance("migration-" + dbName);
@@ -40,7 +41,7 @@ export default class Migration {
             let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
                 let accessToken = null;
-                if(cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
+                if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
                     accessToken = cookieHeader.split("=")[1].split(";")[0];
                 }
 
@@ -79,7 +80,7 @@ export default class Migration {
         return new Promise((resolve, reject) => {
             SchemaInfo.instance(this.dbName, this.accessToken).getSchemaInfoDocument().then(schemaInfoDoc => {
                 let schemaVersion = "19700101000000";
-                if(schemaInfoDoc) {
+                if (schemaInfoDoc) {
                     schemaVersion = schemaInfoDoc.lastMigratedDocumentTimeStamp;
                 }
                 Migration.logger(this.dbName).info("schema version in db is %s ", schemaVersion);
@@ -92,7 +93,7 @@ export default class Migration {
                     Migration.logger(this.dbName).error("migration failed");
                     reject(false);
                 });
-            }).catch(error =>{
+            }).catch(error => {
                 reject(error);
             });
         });
@@ -100,28 +101,30 @@ export default class Migration {
 
     getObject(className) {
         switch (className) {
-        case "CreateCategoryDesignDocument" :
-            return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
-        case "CreateDefaultCategoryDocument" :
-            return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
-        case "AddFilterViewsToDesignDocument" :
-            return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
-        case "ModifyAllCategoriesByNameView" :
-            return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
-        case "AddSourceTypeFilter" :
-            return new AddSourceTypeFilter(this.dbName, this.accessToken);
-        case "ChangeGalleryTypeFeed" :
-            return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
-        case "ModifyImageUrlToImagesArray" :
-            return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
-        default :
-            throw new Error("class name : " + className + " not found");
+            case "CreateCategoryDesignDocument" :
+                return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
+            case "CreateDefaultCategoryDocument" :
+                return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
+            case "AddFilterViewsToDesignDocument" :
+                return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
+            case "ModifyAllCategoriesByNameView" :
+                return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
+            case "AddSourceTypeFilter" :
+                return new AddSourceTypeFilter(this.dbName, this.accessToken);
+            case "ChangeGalleryTypeFeed" :
+                return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
+            case "URLDocuments" :
+                return new URLDocuments(this.dbName, this.accessToken);
+            case "ModifyImageUrlToImagesArray" :
+                return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
+            default :
+                throw new Error("class name : " + className + " not found");
         }
     }
 
     _migrateFileSynchronously(migratableFileDetails, index = 0) {
         return new Promise((resolve, reject) => {
-            if(migratableFileDetails && migratableFileDetails.length > index) {
+            if (migratableFileDetails && migratableFileDetails.length > index) {
                 this._migrateFile(migratableFileDetails[index]).then(response => {
                     this._migrateFileSynchronously(migratableFileDetails, index + 1).then(status => {
                         resolve(true);
@@ -153,7 +156,7 @@ export default class Migration {
                     Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]);
                     reject(error);
                 });
-            } catch(error) {
+            } catch (error) {
                 Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);
                 reject(error);
             }
