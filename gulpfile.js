@@ -98,7 +98,7 @@ gulp.task("client:watch", function() {
     this.cssFilesPath = parameters.client.scssSrcPath + "/**/*.scss";
     this.copyFilesPath = [parameters.client.imgSrcPath + "/**/*.*", parameters.client.fontsPath + "/**/*.*"];
     this.jsFilesPath = parameters.client.srcPath + "/**/*.{js,jsx}";
-    this.testJsFilesPath = parameters.client.testPath + "/**/*.js";
+    this.testJsFilesPath = parameters.client.testPath + "/**/*.{js,jsx}";
     this.appPath = parameters.client.clientAppPath + "/index.html";
     gulp.watch(this.cssFilesPath, ["client:scss"]);
     gulp.watch(this.copyFilesPath, ["client:copy-resources"]);

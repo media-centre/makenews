@@ -1,53 +1,74 @@
-@import "../../utils/variable";
-
-.configure-page {
-  h3 {
-    color: $body-font-color;
-    margin: 0;
-    padding: 0 0 15px 0;
+.configure-container {
+  .configured-sources-container {
+    float: left;
+    width: 20%;
   }
 
-  ul.cat-list {
-    max-width: 932px;
-    margin: auto;
+  .configure-sources {
+    display: inline-block;
+    width: 80%;
+  }
 
-    li {
+  input.search-sources {
+    color: $primary-color;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+
+
+  .sources-suggestions {
+    background-color: $background-color;
+    padding: 20px;
+    margin-top: 50px;
+  }
+
+  .source-results {
+    .source {
+      background: $dark-background-color;
+      padding: 10px;
       margin: 10px;
-      background: $app-header-bg-color;
-      color: $primary-font-color;
+      width: 31.433333%;
+      height: 70px;
       display: inline-block;
-      vertical-align: top;
-      cursor: pointer;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
 
-      .text-container {
-        overflow: hidden;
-        max-height: 134px;
-        word-break: break-all;
+      &.active {
+        background-color: $primary-color;
+
+        .source-title {
+          color: #FFF;
+        }
       }
 
-      .navigation-link {
-        display: block;
-        padding: 8px;
-        width: 150px;
-        height: 150px;
+      &-icon {
+        float: left;
+        position: relative;
+        top: 50%;
+        margin-right: 10px;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      &-title {
+        color: $primary-color;
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
       }
     }
-
-    li:hover span {
-      color: $secondary-font-color;
-    }
-    li.add-new:hover {
-      background: $app-header-bg-color;
-    }
-
-    li.add-new {
-      @extend .border-blue;
-      background: $primary-font-color;
-
-      .navigation-link {
-        color: $app-header-bg-color;
-      }
-    }
-
   }
 }
