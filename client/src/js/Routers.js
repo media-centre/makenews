@@ -15,6 +15,7 @@ import Help from "./help/Help.jsx";
 import DbSession from "./db/DbSession.js";
 import React from "react";
 import { Route } from "react-router";
+import FacebookConfigure from "./config/components/FacebookConfigure";
 
 
 export function renderRoutes() {
@@ -26,6 +27,7 @@ export function renderRoutes() {
 
                 <Route path="/configure" component={ConfigurePage}>
                     <Route path="/configure/categories" component={AllCategories} />
+                    <Route path="/configure/facebook" component={FacebookConfigure}/>
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
 

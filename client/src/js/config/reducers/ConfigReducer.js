@@ -29,7 +29,7 @@ export function categoryDetails(state = getCategoryState(null), action = {}) {
 function getCategoryState(sourceUrlsObj = null) {
     let categorySourceConfig = {
         "sources": {
-            "rss": { "name": "RSS", "details": [] },
+            "rss": { "name": "Web", "details": [] },
             "facebook": { "name": "Facebook", "details": [] },
             "twitter": { "name": "Twitter", "details": [] }
         }
