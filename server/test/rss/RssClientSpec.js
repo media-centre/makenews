@@ -30,18 +30,32 @@ describe("fetchRssFeeds", () => {
 
     });
 
-    it.only("should call handleError when error message is other than FEEDS_NOT_FOUND ", () => {
+    it("should call handleError when error message is other than FEEDS_NOT_FOUND ", () => {
         let rssClientMock =new RssClient();
         let error =[{
             "message": "new error"
         }];
         let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
         getrssMock.returns(Promise.reject({ "message": "Bad status code" }));
-        let handleMock = sinon.mock(rssClientMock).expects("handleUrlError").withArgs("**");
+        let handleMock = sinon.mock(rssClientMock).expects("handleUrlError");
         rssClientMock.fetchRssFeeds("www.error.com").catch(error => {
             handleMock.verify();
             rssClientMock.getRssData.restore();
             rssClientMock.handleUrlError.restore();
+        })
+
+    });
+
+    it("should call crawlForRssUrl when error message is FEEDS_NOT_FOUND and rss link not present", () => {
+        let rssClientMock =new RssClient();
+        let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
+        getrssMock.returns(Promise.reject({ "message": "feeds_not_found", "data": [] }));
+        let crawlForRssUrlMock = sinon.stub(rssClientMock, "crawlForRssUrl");
+        crawlForRssUrlMock.returns(Promise.reject("error"));
+        rssClientMock.fetchRssFeeds("www.error.com").catch(error => {
+            assert.equal(error, "error");
+            rssClientMock.getRssData.restore();
+            rssClientMock.crawlForRssUrl.restore();
         })
 
     });
