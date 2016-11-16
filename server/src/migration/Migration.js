@@ -7,7 +7,7 @@ import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645
 import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter.js";
 import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed.js";
 import ModifyImageUrlToImagesArray from "../../src/migration/db/20160516122916_ModifyImageUrlToImagesArray";
-import URLDocuments from "../../src/migration/db/20161114174315_URLDocument";
+import URLDocument from "../../src/migration/db/20161114174315_URLDocument";
 
 import SchemaInfo from "./SchemaInfo.js";
 import MigrationFile from "./MigrationFile.js";
@@ -40,6 +40,7 @@ export default class Migration {
         return new Promise((resolve, reject) => {
             let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
+                console.log("*********************************");
                 let accessToken = null;
                 if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
                     accessToken = cookieHeader.split("=")[1].split(";")[0];
@@ -113,8 +114,8 @@ export default class Migration {
                 return new AddSourceTypeFilter(this.dbName, this.accessToken);
             case "ChangeGalleryTypeFeed" :
                 return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
-            case "URLDocuments" :
-                return new URLDocuments(this.dbName, this.accessToken);
+            case "URLDocument" :
+                return new URLDocument(this.dbName, this.accessToken);
             case "ModifyImageUrlToImagesArray" :
                 return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
             default :

@@ -1,98 +1,84 @@
-"use strict";
-import URLDocument from "../../../src/migration/db/20161114174315_URLDocument.js";
-import Migration from "../../../src/migration/Migration.js";
+/* eslint max-nested-callbacks: [2, 7]*/
+import URLDocument from "../../../src/migration/db/20161114174315_URLDocument";
+import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
+import Migration from "../../../src/migration/Migration";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
-import {assert} from "chai";
+import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
+describe.only("URLDocument", ()=> {
+    const accessToken = "testToken", dbName = "testDb", designDocId = "_design/category";
+    let sandbox = null, newViews = null, migrationLoggerStub = null;
 
-describe("URLDocument", () => {
-    let designDocument = null, response = null, accessToken = "YWRtaW46NTY3MzlGNDM6qVNIU4P7LcqONOyTkyVcTXVaAZ8", dbName = "test1";
-    let migrationLoggerStub = null, applicationConfig = null;
     before("URLDocument", () => {
-        migrationLoggerStub = sinon.stub(Migration, "logger");
+        sandbox = sinon.sandbox.create();
+        migrationLoggerStub = sandbox.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
-            "error": (message, ...insertions) =>{
+            "error": (message, ...insertions) =>{ //eslint-disable-line
             },
-            "info": (message, ...insertions)=> {
+            "info": (message, ...insertions)=> { //eslint-disable-line
             },
-            "debug": (message, ...insertions)=> {
+            "debug": (message, ...insertions)=> { //eslint-disable-line
             }
         });
-        applicationConfig = new ApplicationConfig();
-        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
-        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
     });
-
     after("URLDocument", () => {
-        Migration.logger.restore();
-        ApplicationConfig.instance.restore();
-        applicationConfig.dbUrl.restore();
+        sandbox.restore();
     });
 
     describe("up", () => {
-
-        before("up", () => {
-            designDocument = {
-                "language": "javascript",
-                "views": {
-                    "allCategories": {
-                        "map": "function(doc) { if(doc.docType === 'category') {emit(doc.docType, doc)} }"
-                    }
+        let designDocumentInstanceMock = null, designDocObj = null;
+        beforeEach("up", () => {
+            designDocumentInstanceMock = sandbox.mock(DesignDocumentMigration).expects("instance");
+            newViews = {
+                "defaultURLDocuments": {
+                    "map": "function(doc) { if(doc.sourceType == 'web') {emit(doc._id, doc)} }"
                 }
             };
-
-            response = { "ok": true, "id": "_design/category", "rev": "1-917fa2381192822767f010b95b45325b" };
+            designDocObj = new DesignDocumentMigration(dbName, accessToken, designDocId);
         });
 
-        it("should create URL documents", (done) => {
+        afterEach("up", () => {
+            sandbox.restore();
+        });
+
+        it("should update the gallery feeds to image content", (done) => {
+            nock("http://localhost:5984", {
+                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                .get("/" + dbName + "/_design/category/_view/defaultURLDocuments")
+                .reply(HttpResponseHandler.codes.OK, { "rows": [{ "value": { "_id": "12345", "type": "imagecontent" } }] });
 
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
-                .put("/" + dbName + "/_all_docs?include_docs=true", designDocument)
-                .reply(HttpResponseHandler.codes.OK, response);
+                .put("/" + dbName + "/12345", { "_id": "12345", "type": "imagecontent" })
+                .reply(HttpResponseHandler.codes.OK, { "ok": "true" });
+
+            designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
+            let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
+            designDockAddNewViewsMock.withArgs(newViews).returns(Promise.resolve("success"));
 
             let urlDocument = new URLDocument(dbName, accessToken);
-            let getDocumentStub = sinon.stub(urlDocument, "getDocument");
-            getDocumentStub.returns(designDocument);
-
-            urlDocument.up().then((actualResponse)=> {
-                assert.deepEqual(response, actualResponse);
-                urlDocument.getDocument.restore();
+            urlDocument.up().then(response => { //eslint-disable-line
+                designDocumentInstanceMock.verify();
+                designDockAddNewViewsMock.verify();
                 done();
             });
         });
 
-        it("should reject creating URL document if there is an error", (done) => {
-
-            nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=wrongToken", "Content-Type": "application/json", "Accept": "application/json" } })
-                .put("/" + dbName + "/_design/category", designDocument)
-                .reply(HttpResponseHandler.codes.OK, response);
+        it("should reject with error message if the adding views is failed", (done) => {
+            designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
+            let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
+            designDockAddNewViewsMock.withArgs(newViews).returns(Promise.reject("error"));
 
             let urlDocument = new URLDocument(dbName, accessToken);
-            let getDocumentStub = sinon.stub(urlDocument, "getDocument");
-            getDocumentStub.returns(designDocument);
-
-            urlDocument.up().catch(() => {
-                urlDocument.getDocument.restore();
+            urlDocument.up().catch(error => { //eslint-disable-line
+                assert.strictEqual("error", error);
+                designDocumentInstanceMock.verify();
+                designDockAddNewViewsMock.verify();
                 done();
             });
-
-        });
-
-    });
-
-    describe("getDocument", () => {
-        it("should fetch the URLDocument json and return", () => {
-            let designDocumentInstance = new URLDocument(dbName, accessToken);
-            let designDocJson = designDocumentInstance.getDocument();
-            assert.strictEqual("javascript", designDocJson.language);
-            assert.isTrue(Object.keys(designDocJson.views).length > 0);
         });
     });
 });
-
 
