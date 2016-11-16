@@ -1,8 +1,7 @@
 {
-  "language": "javascript",
-  "views": {
-    "defaultURLDocuments": {
-      "map": "function(doc) { if(doc.sourceType == 'web') {emit(doc._id, doc)} }"
-    }
-  }
+  "docs": [
+    {"name" : "akjsdkad", "url": "asdsad", "type": "test"},
+    {"name" : "asdsdsd", "url": "asdsda", "type": "test"},
+    {"name" : "asdasd", "url": "sad", "type": "test"}
+  ]
 }
