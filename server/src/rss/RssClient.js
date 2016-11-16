@@ -16,35 +16,68 @@ export default class RssClient {
         return new RssClient();
     }
 
-    fetchRssFeeds(url) {
-        return new Promise((resolve, reject) => {
-            this.getRssData(url).then(feeds => {
-                resolve(feeds);
-            }).catch(error => {
-                if(error.message === FEEDS_NOT_FOUND) {
-                    let root = cheerio.load(error.data);
-                    let rssLink = root("link[type ^= 'application/rss+xml']");
-                    if (rssLink && rssLink.length !== 0) {
-                        let rssUrl = rssLink.attr("href");
-                        if(rssUrl.startsWith("//")) {
-                            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
-                        } else if(rssUrl.startsWith("/")) {
-                            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
-                        }
-                        this.getRssData(rssUrl).then(feeds => {
-                            feeds.url = rssUrl;
-                            resolve(feeds);
-                        }).catch(rssError => {
-                            this.handleRequestError(url, rssError, reject);
-                        });
-                    } else {
-                        this.crawlForRssUrl(root, url.replace(/\/+$/g, ""), resolve, reject);
+    async fetchRssFeeds(url) {
+
+        try{
+            let feeds = await this.getRssData(url);
+            return feeds;
+        }
+        catch(error) {
+            console.log("***********1")
+            if(error.message === FEEDS_NOT_FOUND) {
+                let root = cheerio.load(error.data);
+                let rssLink = root("link[type ^= 'application/rss+xml']");
+                if (rssLink && rssLink.length !== 0) {
+                    let rssUrl = rssLink.attr("href");
+                    if(rssUrl.startsWith("//")) {
+                        rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
+                    } else if(rssUrl.startsWith("/")) {
+                        rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
                     }
+                    this.getRssData(rssUrl).then(feeds => {
+                        feeds.url = rssUrl;
+                        resolve(feeds);
+                    }).catch(rssError => {
+                        this.handleRequestError(url, rssError, reject);
+                    });
                 } else {
-                    this.handleUrlError(url, error, reject);
+                    this.crawlForRssUrl(root, url.replace(/\/+$/g, ""), resolve, reject);
                 }
-            });
-        });
+            } else {
+                console.log("***********2")
+
+                this.handleUrlError(url, error, reject);
+            }
+
+        }
+        //return new Promise((resolve, reject) => {
+        //    this.getRssData(url).then(feeds => {
+        //        resolve(feeds);
+        //    }).catch(error => {
+        //        if(error.message === FEEDS_NOT_FOUND) {
+        //            let root = cheerio.load(error.data);
+        //            let rssLink = root("link[type ^= 'application/rss+xml']");
+        //            if (rssLink && rssLink.length !== 0) {
+        //                let rssUrl = rssLink.attr("href");
+        //                if(rssUrl.startsWith("//")) {
+        //                    rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
+        //                } else if(rssUrl.startsWith("/")) {
+        //                    rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
+        //                }
+        //                this.getRssData(rssUrl).then(feeds => {
+        //                    feeds.url = rssUrl;
+        //                    resolve(feeds);
+        //                }).catch(rssError => {
+        //                    this.handleRequestError(url, rssError, reject);
+        //                });
+        //            } else {
+        //                this.crawlForRssUrl(root, url.replace(/\/+$/g, ""), resolve, reject);
+        //            }
+        //        } else {
+        //            this.handleUrlError(url, error, reject);
+        //        }
+        //    });
+        //});
     }
 
     crawlForRssUrl(root, url, resolve, reject) {

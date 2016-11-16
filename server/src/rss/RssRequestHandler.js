@@ -18,7 +18,7 @@ export default class RssRequestHandler {
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
             return feeds;
         }
-        catch(error) {
+        catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             return error;
         }
