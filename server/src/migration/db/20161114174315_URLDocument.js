@@ -20,8 +20,10 @@ export default class URLDocument {
         return new Promise((resolve, reject) => {
             Migration.logger(this.dbName).info("URLDocument::up - started");
             this.designDocumentMigObj.addOrUpdateViews(this._filterViews()).then(res => {
-                Migration.logger(this.dbName).info("CreateDefaultCategoryDocument::up - started");
+                Migration.logger(this.dbName).info("URLDocument::up - started");
+
                 let categoryDocument = this.getDocument();
+
                 request.post({
                         "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_bulk_docs",
                         "headers": { "Cookie": "AuthSession=" + this.accessToken, "Content-Type": "application/json", "Accept": "application/json" },
@@ -31,19 +33,17 @@ export default class URLDocument {
                     (error, response) => {
                         if(NodeErrorHandler.noError(error)) {
                             if(new HttpResponseHandler(response.statusCode).success()) {
-                                Migration.logger(this.dbName).debug("CreateDefaultCategoryDocument::up - response %j", response.body);
+                                Migration.logger(this.dbName).debug("URLDocument::up - response %j", response.body);
                                 resolve(response.body);
                             } else {
-                                Migration.logger(this.dbName).error("CreateDefaultCategoryDocument::up - error %j", response.body);
+                                Migration.logger(this.dbName).error("URLDocument::up - error %j", response.body);
                                 reject("unexpected response from the db");
                             }
                         } else {
-                            Migration.logger(this.dbName).error("CreateDefaultCategoryDocument::up - error %j", error);
+                            Migration.logger(this.dbName).error("URLDocument::up - error %j", error);
                             reject(error);
                         }
                     });
-                console.log("HEllo qorld");
-                console.log(res);
                 resolve(res);
             }).catch(error => {
                 Migration.logger(this.dbName).error("URLDocument::up - error %j", error);
