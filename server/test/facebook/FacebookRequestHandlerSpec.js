@@ -1,16 +1,14 @@
-
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import FacebookClient from "../../src/facebook/FacebookClient.js";
-import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
-import CryptUtil from "../../src/util/CryptUtil.js";
-import DateUtil from "../../src/util/DateUtil.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import FacebookClient from "../../src/facebook/FacebookClient";
+import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
+import CryptUtil from "../../src/util/CryptUtil";
+import DateUtil from "../../src/util/DateUtil";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
@@ -232,6 +230,58 @@ describe("FacebookRequestHandler", () => {
                 assert.strictEqual(error, "error getting long lived token with token " + accessToken);
                 facebookClientPagePostsMock.verify();
                 done();
+            });
+        });
+    });
+    
+    describe("fetchProfiles", () => {
+        let sandbox = null, facebookClient = null, facebookRequestHandler = null;
+        beforeEach("", () => {
+            sandbox = sinon.sandbox.create();
+            facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            facebookClient = new FacebookClient(accessToken, appSecretProof);
+            sandbox.mock(FacebookClient).expects("instance").returns(facebookClient);
+        });
+
+        afterEach("", () => {
+            sandbox.restore();
+        });
+
+        it("should get the facebook profiles", (done) => {
+            let profiles = { "data": [{
+                "id": "7dsEdsA8",
+                "name": "Maha Arjun",
+                "picture": {
+                    "data": {
+                        "is_silhouette": false,
+                        "url": "https://scontent.xx.fbcdn.net/v/t1.0-1/c0.19.50.50/p50x50/14595563172_n.jpg"
+                    }
+                }
+            }] };
+
+            sandbox.stub(facebookClient, "fetchProfiles").returns(Promise.resolve(profiles));
+
+            facebookRequestHandler.fetchProfiles().then(profilesData => {
+                try {
+                    expect(profilesData).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+                    assert.strictEqual(profilesData, profiles.data);
+                    done();
+                } catch(error) {
+                    done(error);
+                }
+            });
+        });
+
+        it("should reject when facebook client reject with an error", (done) => {
+            sandbox.stub(facebookClient, "fetchProfiles").returns(Promise.reject("Error fetching Profiles"));
+
+            facebookRequestHandler.fetchProfiles().catch(error => {
+                try {
+                    expect(error).to.equal("error fetching facebook profiles");
+                    done();
+                } catch(err) {
+                    done(err);
+                }
             });
         });
     });

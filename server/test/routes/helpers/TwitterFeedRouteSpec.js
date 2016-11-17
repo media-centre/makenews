@@ -1,13 +1,12 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
 import { assert } from "chai";
-import TwitterFeedsRoute from "../../../src/routes/helpers/TwitterFeedsRoute.js";
+import TwitterFeedsRoute from "../../../src/routes/helpers/TwitterFeedsRoute";
 import TwitterClient from "../../../src/twitter/TwitterClient";
-import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler.js";
-import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler";
+import ApplicationConfig from "../../../src/config/ApplicationConfig";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import Logger from "../../../src/logging/Logger.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import Logger from "../../../src/logging/Logger";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import sinon from "sinon";
 
 describe("TwitterFeedsRoute", () => {
@@ -18,8 +17,12 @@ describe("TwitterFeedsRoute", () => {
                 assert.strictEqual(status, expectedValues.status);
             },
             "json": (jsonData) => {
-                assert.deepEqual(jsonData, expectedValues.json);
-                done();
+                try {
+                    assert.deepEqual(jsonData, expectedValues.json);
+                    done();
+                } catch(err) {
+                    done(err);
+                }
             }
         };
     }
@@ -159,5 +162,4 @@ describe("TwitterFeedsRoute", () => {
             });
         });
     });
-    
 });

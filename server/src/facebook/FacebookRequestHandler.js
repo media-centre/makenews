@@ -1,10 +1,8 @@
-"use strict";
-
-import StringUtil from "../../../common/src/util/StringUtil.js";
-import FacebookClient from "./FacebookClient.js";
-import CryptUtil from "../../src/util/CryptUtil.js";
-import DateUtil from "../../src/util/DateUtil.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import StringUtil from "../../../common/src/util/StringUtil";
+import FacebookClient from "./FacebookClient";
+import CryptUtil from "../../src/util/CryptUtil";
+import DateUtil from "../../src/util/DateUtil";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 
@@ -79,6 +77,19 @@ export default class FacebookRequestHandler {
             }).catch(error => {
                 FacebookRequestHandler.logger().error("FacebookRequestHandler:: error getting long lived token. Error: %s", error);
                 reject("error getting long lived token with token " + this.accessToken);
+            });
+        });
+    }
+    
+    fetchProfiles() {
+        return new Promise((resolve, reject) => {
+            let facebookClientInstance = this.facebookClient();
+            facebookClientInstance.fetchProfiles().then(profiles => {
+                FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched Profiles.");
+                resolve(profiles.data);
+            }).catch(error => {
+                FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook profiles. Error: ${error}`);
+                reject("error fetching facebook profiles");
             });
         });
     }

@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import FacebookPostsRoute from "../../../src/routes/helpers/FacebookPostsRoute.js";
-import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
-import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import FacebookPostsRoute from "../../../src/routes/helpers/FacebookPostsRoute";
+import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
+import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
@@ -216,6 +215,4 @@ describe("FacebookPostsRoute", () => {
         });
 
     });
-
 });
-

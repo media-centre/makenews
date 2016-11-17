@@ -1,5 +1,4 @@
-"use strict";
-import NumberUtil from "./util/NumberUtil.js";
+import NumberUtil from "./util/NumberUtil";
 
 export default class HttpResponseHandler {
     constructor(code) {
@@ -9,53 +8,40 @@ export default class HttpResponseHandler {
     information() {
         const infoCodeStart = 100;
         const infoCodeEnd = 199;
-        if(this.statusCode >= infoCodeStart && this.statusCode <= infoCodeEnd) {
-            return true;
-        }
-        return false;
+        return (this.statusCode >= infoCodeStart && this.statusCode <= infoCodeEnd);
+        
     }
     success() {
         const successStart = 200;
         const successEnd = 299;
-        if(this.statusCode >= successStart && this.statusCode <= successEnd) {
-            return true;
-        }
-        return false;
+        return (this.statusCode >= successStart && this.statusCode <= successEnd);
+        
     }
 
     redirection() {
         const reDirectionStart = 300;
         const reDirectionEnd = 399;
-        if(this.statusCode >= reDirectionStart && this.statusCode <= reDirectionEnd) {
-            return true;
-        }
-        return false;
+        return (this.statusCode >= reDirectionStart && this.statusCode <= reDirectionEnd);
+        
     }
 
     clientError() {
         const clientErrorStart = 400;
         const clientErrorEnd = 499;
-        if(this.statusCode >= clientErrorStart && this.statusCode <= clientErrorEnd) {
-            return true;
-        }
-        return false;
+        return (this.statusCode >= clientErrorStart && this.statusCode <= clientErrorEnd);
+        
     }
 
     serverError() {
         const serverErrorStart = 500;
         const serverErrorEnd = 599;
 
-        if(this.statusCode >= serverErrorStart && this.statusCode <= serverErrorEnd) {
-            return true;
-        }
-        return false;
+        return (this.statusCode >= serverErrorStart && this.statusCode <= serverErrorEnd);
+        
     }
 
     is(httpStandardCode) {
-        if(this.statusCode === httpStandardCode) {
-            return true;
-        }
-        return false;
+        return this.statusCode === httpStandardCode;
     }
 
 }
