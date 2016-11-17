@@ -1,11 +1,10 @@
 /* eslint consistent-this:0*/
-"use strict";
 import moment from "moment";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
-import FacebookAccessToken from "../../facebook/FacebookAccessToken.js";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
+import FacebookAccessToken from "../../facebook/FacebookAccessToken";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class FacebookPostsRoute extends Route {
     constructor(request, response, next) {
@@ -28,20 +27,21 @@ export default class FacebookPostsRoute extends Route {
     }
 
     handle() {
-        if(!this.valid()) {
-            return this._handleInvalidRoute();
-        }
-        FacebookAccessToken.instance().getAccessToken(this.userName).then((token) => {
-            FacebookRequestHandler.instance(token).pagePosts(this.webUrl, this.options).then(feeds => {
-                RouteLogger.instance().debug("FacebookPostsRoute:: successfully fetched facebook feeds for url %s.", this.webUrl);
-                this._handleSuccess({ "posts": feeds });
+        if (this.valid()) {
+            FacebookAccessToken.instance().getAccessToken(this.userName).then((token) => {
+                FacebookRequestHandler.instance(token).pagePosts(this.webUrl, this.options).then(feeds => {
+                    RouteLogger.instance().debug("FacebookPostsRoute:: successfully fetched facebook feeds for url %s.", this.webUrl);
+                    this._handleSuccess({ "posts": feeds });
+                }).catch(error => { //eslint-disable-line
+                    RouteLogger.instance().error("FacebookPostsRoute:: fetching facebook feeds failed for url %s failed. Error: %s", this.url, error);
+                    this._handleBadRequest();
+                });
             }).catch(error => { //eslint-disable-line
                 RouteLogger.instance().error("FacebookPostsRoute:: fetching facebook feeds failed for url %s failed. Error: %s", this.url, error);
                 this._handleBadRequest();
             });
-        }).catch(error => { //eslint-disable-line
-            RouteLogger.instance().error("FacebookPostsRoute:: fetching facebook feeds failed for url %s failed. Error: %s", this.url, error);
-            this._handleBadRequest();
-        });
+        } else {
+            this._handleInvalidRoute();
+        }
     }
 }
