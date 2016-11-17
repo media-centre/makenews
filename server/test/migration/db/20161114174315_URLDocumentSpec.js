@@ -3,13 +3,14 @@ import URLDocument from "../../../src/migration/db/20161114174315_URLDocument";
 import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
 import Migration from "../../../src/migration/Migration";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
 import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
-describe("URLDocument", ()=> {
-    const accessToken = "testToken", dbName = "testDb", designDocId = "_design/category";
-    let sandbox = null, newViews = null, migrationLoggerStub = null;
+describe.only("URLDocument", ()=> {
+    let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
+    let sandbox = null, migrationLoggerStub = null, applicationConfig = null;
 
     before("URLDocument", () => {
         sandbox = sinon.sandbox.create();
@@ -22,52 +23,109 @@ describe("URLDocument", ()=> {
             "debug": (message, ...insertions)=> { //eslint-disable-line
             }
         });
+
+        applicationConfig = new ApplicationConfig();
+        sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sandbox.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+
     });
     after("URLDocument", () => {
         sandbox.restore();
     });
 
     describe("up", () => {
-        let designDocumentInstanceMock = null, designDocObj = null;
-        beforeEach("up", () => {
-            designDocumentInstanceMock = sandbox.mock(DesignDocumentMigration).expects("instance");
-            newViews = {
-                "defaultURLDocuments": {
-                    "map": "function(doc) { if(doc.sourceType == 'web') {emit(doc._id, doc)} }"
-                }
+
+        before("up", () => {
+
+            defaultDocument = {
+                "docs": [
+                    {
+                        "docType": "source",
+                        "sourceType": "web",
+                        "name": "NDTV-LatestNews",
+                        "url": "http://feeds.feedburner.com/NDTV-LatestNews"
+                    },
+                    {
+                        "docType": "source",
+                        "sourceType": "web",
+                        "name": "The Hindu - International",
+                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                    },
+                    {
+                        "docType": "source",
+                        "sourceType": "web",
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss"
+                    }]
             };
-            designDocObj = new DesignDocumentMigration(dbName, accessToken, designDocId);
+            response = {
+                "ok": true,
+                "id": "87cd474590eb6e509c56b7f40f003272",
+                "rev": "1-aeb207d8a0798b59973db0a86dc79a6a"
+            };
+
         });
 
-        afterEach("up", () => {
-            sandbox.restore();
-        });
+        it("should create  default URL document", (done) => {
 
-        it("should add the default URL Documents", (done) => {
-            designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
-            let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
-            designDockAddNewViewsMock.withArgs(newViews).returns(Promise.resolve("success"));
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .post("/" + dbName + "/_bulk_docs", defaultDocument)
+                .reply(HttpResponseHandler.codes.OK, response);
 
-            let urlDocument = new URLDocument(dbName, accessToken);
-            urlDocument.up().then(response => { //eslint-disable-line
-                designDocumentInstanceMock.verify();
-                designDockAddNewViewsMock.verify();
+            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
+            getDocumentStub.returns(defaultDocument);
+
+            defaultDocumentInstance.up().then((actualResponse)=> {
+                assert.deepEqual(response, actualResponse);
+                defaultDocumentInstance.getDocument.restore();
                 done();
             });
         });
 
-        it("should reject with error message if the adding views is failed", (done) => {
-            designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
-            let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
-            designDockAddNewViewsMock.withArgs(newViews).returns(Promise.reject("error"));
+        it("should reject creating default URL document if there is an error", (done) => {
+            let errorObj = {
+                "code": "ECONNREFUSED",
+                "errno": "ECONNREFUSED",
+                "syscall": "connect",
+                "address": "http://localhost:5984",
+                "port": 5984
+            };
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .post("/" + dbName + "/_bulk_docs", defaultDocument)
+                .replyWithError(errorObj);
 
-            let urlDocument = new URLDocument(dbName, accessToken);
-            urlDocument.up().catch(error => { //eslint-disable-line
-                assert.strictEqual("error", error);
-                designDocumentInstanceMock.verify();
-                designDockAddNewViewsMock.verify();
+            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
+            getDocumentStub.returns(defaultDocument);
+
+            defaultDocumentInstance.up().catch((error)=> {
+                assert.deepEqual(errorObj, error);
+                defaultDocumentInstance.getDocument.restore();
                 done();
             });
+
+        });
+
+    });
+    describe("getDocument", () => {
+        it("should fetch default URL document json and return", () => {
+            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let defaultURLJson = defaultDocumentInstance.getDocument();
+            assert.deepEqual("web",defaultURLJson.docs[0].sourceType);
+            assert.deepEqual("source",defaultURLJson.docs[0].docType);
         });
     });
 });
