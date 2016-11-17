@@ -7,7 +7,7 @@ import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
-describe.only("URLDocument", ()=> {
+describe("URLDocument", ()=> {
     const accessToken = "testToken", dbName = "testDb", designDocId = "_design/category";
     let sandbox = null, newViews = null, migrationLoggerStub = null;
 
@@ -15,7 +15,7 @@ describe.only("URLDocument", ()=> {
         sandbox = sinon.sandbox.create();
         migrationLoggerStub = sandbox.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
-            "error": (message, ...insertions) =>{ //eslint-disable-line
+            "error": (message, ...insertions) => { //eslint-disable-line
             },
             "info": (message, ...insertions)=> { //eslint-disable-line
             },
@@ -43,17 +43,7 @@ describe.only("URLDocument", ()=> {
             sandbox.restore();
         });
 
-        it("should update the gallery feeds to image content", (done) => {
-            nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
-                .get("/" + dbName + "/_design/category/_view/defaultURLDocuments")
-                .reply(HttpResponseHandler.codes.OK, { "rows": [{ "value": { "_id": "12345", "type": "imagecontent" } }] });
-
-            nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
-                .put("/" + dbName + "/12345", { "_id": "12345", "type": "imagecontent" })
-                .reply(HttpResponseHandler.codes.OK, { "ok": "true" });
-
+        it("should add the default URL Documents", (done) => {
             designDocumentInstanceMock.withArgs(dbName, accessToken, designDocId).returns(designDocObj);
             let designDockAddNewViewsMock = sandbox.mock(designDocObj).expects("addOrUpdateViews");
             designDockAddNewViewsMock.withArgs(newViews).returns(Promise.resolve("success"));
