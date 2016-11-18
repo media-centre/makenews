@@ -17,7 +17,6 @@ describe("ParkFeedActionComponent", () => {
     });
 
     it("should have feed action icon to move back to surf", () => {
-        let iconDOM = ReactDOM.findDOMNode(feedActionComponent.refs.reply);
-        assert.equal(iconDOM._classList[1], "fa-reply");
+        assert.equal(TestUtils.findRenderedDOMComponentWithClass(feedActionComponent, "fa-reply").className, "fa fa-reply");
     });
 });

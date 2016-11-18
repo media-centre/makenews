@@ -12,14 +12,21 @@ import sinon from "sinon";
 
 describe("TwitterFeedsRoute", () => {
 
-    function mockResponse(done, expectedValues) {
+    let responseStatus, responseJson;
+
+    function mockResponse() {
         return {
             "status": (status) => {
-                assert.strictEqual(status, expectedValues.status);
+                if(status) {
+                    responseStatus = status;
+                }
+                return responseStatus;
             },
             "json": (jsonData) => {
-                assert.deepEqual(jsonData, expectedValues.json);
-                done();
+                if(jsonData) {
+                    responseJson = jsonData;
+                }
+                return responseJson;
             }
         };
     }
@@ -56,31 +63,37 @@ describe("TwitterFeedsRoute", () => {
         afterEach("twitterRouter", () => {
             sandbox.restore();
         });
-        it("should respond with bad request if the url is empty", (done) => {
+        it("should respond with bad request if the url is empty", async () => {
             let request = {
                 "query": {
                     "url": "",
                     "userName": "testUser"
                 }
             };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let response = mockResponse();
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "bad request" });
             twitterFeedRoute.handle();
         });
 
-        it("should return empty response if url is not present", (done) => {
+        it("should return empty response if url is not present", async () => {
             let request = {
                 "query": {
                     "userName": "testUser"
                 }
             };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let response = mockResponse();
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "bad request" });
             twitterFeedRoute.handle();
         });
 
-        it("should return data if the url is valid", (done) => {
+        it("should return data if the url is valid", async () => {
             let expectedData = { "statuses": [{ "id": 1, "id_str": "123", "text": "Tweet 1" }, { "id": 2, "id_str": "124", "text": "Tweet 2" }] };
             let request = {
                 "query": {
@@ -92,16 +105,15 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.resolve(expectedData));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": expectedData });
+            let response = mockResponse();
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
-            return Promise.resolve(twitterFeedRoute.handle()).then((data) => {
-                assert.strictEqual(data, expectedData);
-                fetchTweetsRequestMock.verify();
-            });
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.deepEqual(response.json(), expectedData);
+            fetchTweetsRequestMock.verify();
         });
 
-        it("should return 400 error if url is invalid", (done) => {
+        it("should return 400 error if url is invalid", async () => {
             let request = {
                 "query": {
                     "url": "@myTest",
@@ -112,15 +124,16 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let response = mockResponse();
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
-            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
-                fetchTweetsRequestMock.verify();
-            });
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "bad request" });
+            fetchTweetsRequestMock.verify();
         });
 
-        it("should return 400 error if url is not valid twitter url", (done) => {
+        it("should return 400 error if url is not valid twitter url", async () => {
             let request = {
                 "query": {
                     "url": "myTest",
@@ -131,15 +144,16 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "myTest is not a valid twitter handler" }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let response = mockResponse();
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
-            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
-                fetchTweetsRequestMock.verify();
-            });
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "bad request" });
+            fetchTweetsRequestMock.verify();
         });
 
-        it("should return error if request to url returns error", (done) => {
+        it("should return error if request to url returns error", async () => {
             let request = {
                 "query": {
                     "url": "myTest1",
@@ -151,12 +165,13 @@ describe("TwitterFeedsRoute", () => {
             sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandler);
             let fetchTweetsRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest");
             fetchTweetsRequestMock.withArgs(request.query.url, request.query.userName).returns(Promise.reject({ "message": "Request failed for twitter handler " + url }));
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let response = mockResponse();
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
-            return Promise.reject(twitterFeedRoute.handle()).catch(() => {
-                fetchTweetsRequestMock.verify();
-            });
+            await Promise.resolve(twitterFeedRoute.handle());
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "bad request" });
+            fetchTweetsRequestMock.verify();
         });
     });
     
