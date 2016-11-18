@@ -31,22 +31,9 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
-    getUrls(searchkey){
+    getUrlDocument(body, customHeaders = {}){
         const path = "/" + this.dbName + "/_find";
-        let query={
-            "selector": {
-            "_id": {
-                "$gt": null
-            },
-            "name": {
-                "$regex": searchkey
-            },
-            "url": {
-                "$gt": null
-            }
-        }
-        };
-        return this.post(path,query);
+        return this.post(path, body, customHeaders);
     }
 
     post(path, body, customHeaders = {}) {
