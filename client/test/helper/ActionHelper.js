@@ -1,4 +1,3 @@
-"use strict";
 import { applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { expect } from "chai";

@@ -7,7 +7,7 @@ import { combineReducers } from "redux";
 import { mainHeaderLocale } from "./main/reducers/MainReducer";
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
-import { facebookConfiguredUrls, facebookUrls } from "./config/reducers/FacebookReducer";
+import { facebookConfiguredUrls, facebookProfiles } from "./config/reducers/FacebookReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -23,7 +23,7 @@ const contentDiscoveryApp = combineReducers({
     changePassword,
     userProfileStrings,
     facebookConfiguredUrls,
-    facebookUrls
+    facebookProfiles
 });
 
 export default contentDiscoveryApp;

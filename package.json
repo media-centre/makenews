@@ -70,6 +70,7 @@
     "nock": "^9.0.2",
     "react-addons-test-utils": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-shallow-testutils": "^2.0.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "supertest": "^2.0.1",

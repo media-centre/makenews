@@ -3,26 +3,29 @@ import React from "react";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
+import Source from "../../../src/js/config/components/Source";
+import { findAllWithType } from "react-shallow-testutils";
 
 describe("Source Results", () => {
     let sources = null, sourceResults = null, renderedDOM = null;
+    let result = null;
 
     beforeEach("Source Results", () => {
         sources = [
             { "name": "Profile 1" }
         ];
-        sourceResults = TestUtils.renderIntoDocument(<SourcesResults sources={sources} />);
-        renderedDOM = ReactDOM.findDOMNode(sourceResults);
+        let renderer = TestUtils.createRenderer();
+        sourceResults = renderer.render(<SourcesResults sources={sources} />);
+        result = renderer.getRenderOutput();
     });
 
     it("should have add all button", () => {
-        let button = renderedDOM.querySelectorAll("button");
-        expect(button.length).to.equal(1); //eslint-disable-line no-magic-numbers
-        expect(button[0].textContent).to.equal(" Add All "); //eslint-disable-line no-magic-numbers
+        let button = result.props.children[0];
+        expect(button.type).to.equal("button");
     });
 
     it("should render the source URLs", () => {
-        let renderedSources = renderedDOM.querySelectorAll(".source");
-        expect(renderedSources.length).to.equal(sources.length);
+        let renderedSources = findAllWithType(result, Source);
+        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers;
     });
 });
