@@ -1,12 +1,12 @@
 /* eslint max-len:0, react/no-set-state:0 */
 
 "use strict";
-import React, { Component, PropTypes } from "react";
+import React, {Component, PropTypes} from "react";
 import Source from "../../config/Source";
 import ConfirmPopup from "./ConfirmPopup/ConfirmPopup";
-import { populateCategoryDetailsAsync } from "../../config/actions/CategoryActions.js";
+import {populateCategoryDetailsAsync} from "../../config/actions/CategoryActions.js";
 import Toast from "../custom_templates/Toast.js";
-import { getLatestFeedsFromAllSources } from "../../surf/actions/SurfActions.js";
+import {getLatestFeedsFromAllSources} from "../../surf/actions/SurfActions.js";
 
 let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
@@ -14,46 +14,59 @@ export default class AddURLComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { "showUrlInput": false, "errorMessage": this.props.errorMessage, "successResponse": false, "showCustomPopup": false };
+        this.state = {
+            "showUrlInput": false,
+            "errorMessage": this.props.errorMessage,
+            "successResponse": false,
+            "showCustomPopup": false
+        };
     }
 
     _showAddUrlTextBox() {
-        if(this.props.addURLHandler) {
+        if (this.props.addURLHandler) {
             this.props.addURLHandler().then((response) => {
-                if(response) {
-                    this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
+                if (response) {
+                    this.setState({"showUrlInput": true, "errorMessage": "", "successResponse": true});
                 }
             }).catch(() => {
                 return;
             });
         } else {
-            this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
+            this.setState({"showUrlInput": true, "errorMessage": "", "successResponse": true});
         }
     }
 
     _showConfirmPopup(sourceObject) {
-        this.setState({ "showCustomPopup": true, "currentSourceId": sourceObject._id, "sourceObject": sourceObject });
+        this.setState({"showCustomPopup": true, "currentSourceId": sourceObject._id, "sourceObject": sourceObject});
     }
 
     handleDeleteClick(event) {
-        if(event.OK) {
+        if (event.OK) {
             let source = new Source(this.state.sourceObject);
             source.delete(this.props.categoryId).then(()=> {
                 this.props.dispatch(populateCategoryDetailsAsync(this.props.categoryId));
                 this.props.dispatch(getLatestFeedsFromAllSources());
-                this.setState({ "showCustomPopup": false, "successResponse": true, "errorMessage": this.props.categoryDetailsPageStrings.successMessages.urlDeleteSuccess });
+                this.setState({
+                    "showCustomPopup": false,
+                    "successResponse": true,
+                    "errorMessage": this.props.categoryDetailsPageStrings.successMessages.urlDeleteSuccess
+                });
                 Toast.show(this.props.categoryDetailsPageStrings.successMessages.urlDeleteSuccess);
             }).catch(()=> {
-                this.setState({ "showCustomPopup": false, "successResponse": false, "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.urlDeleteFailed });
+                this.setState({
+                    "showCustomPopup": false,
+                    "successResponse": false,
+                    "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.urlDeleteFailed
+                });
             });
         } else {
-            this.setState({ "showCustomPopup": false });
+            this.setState({"showCustomPopup": false});
         }
     }
 
     _onKeyDownTextBox(event) {
         const ENTERKEY = 13;
-        if(event.keyCode === ENTERKEY) {
+        if (event.keyCode === ENTERKEY) {
             this._validateUrl();
         }
     }
@@ -61,24 +74,31 @@ export default class AddURLComponent extends Component {
     _validateUrl() {
         let url = this.refs.addUrlTextBox.value.trim();
         let errorMessage = this._isValidUrl(url);
-        this.setState({ "errorMessage": errorMessage, "successResponse": false });
-        if(errorMessage.length === 0) {
-            this.setState({ "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl, "successResponse": false });
+        this.setState({"errorMessage": errorMessage, "successResponse": false});
+        if (errorMessage.length === 0) {
+            this.setState({
+                "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl,
+                "successResponse": false
+            });
             this.props.sourceDomainValidation(url, (response)=> {
                 let isSuccessResponse = response.error === this.props.categoryDetailsPageStrings.successMessages.urlSuccess;
-                this.setState({ "showUrlInput": !response.urlAdded, "errorMessage": response.error, "successResponse": isSuccessResponse });
+                this.setState({
+                    "showUrlInput": !response.urlAdded,
+                    "errorMessage": response.error,
+                    "successResponse": isSuccessResponse
+                });
             });
         }
     }
 
     _isValidUrl(url) {
-        if(!this.props.noValidation && !url.match(urlRegex)) {
+        if (!this.props.noValidation && !url.match(urlRegex)) {
             return url ? this.props.categoryDetailsPageStrings.errorMessages.invalidRssUrl : this.props.categoryDetailsPageStrings.errorMessages.emptyUrl;
         }
 
         let result = "";
         this.props.content.some((obj)=> {
-            if(obj.url.toLowerCase().trim() === url.toLowerCase().trim()) {
+            if (obj.url.toLowerCase().trim() === url.toLowerCase().trim()) {
                 result = this.props.categoryDetailsPageStrings.errorMessages.alreadyAdded;
             }
         });
@@ -104,18 +124,29 @@ export default class AddURLComponent extends Component {
         return urlsList;
     }
 
+    _handleSearch() {
+        let searchKey = this.refs.searchKey.value.trim();
+        if (searchKey.length > 0) {
+
+        }
+    }
+
     render() {
         let inputBox = null, confirmPopup = null;
-        if(this.state.showUrlInput) {
+        if (this.state.showUrlInput) {
             let addUrlClasses = this.state.errorMessage ? "add-url-input box error-border" : "add-url-input box";
             inputBox = (
                 <div>
-                    <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses} placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()} onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
+                    <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses}
+                           placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()}
+                           onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
                 </div>
             );
         }
 
-        confirmPopup = this.state.showCustomPopup ? <ConfirmPopup description={this.props.categoryDetailsPageStrings.deleteURLConfirm} callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        confirmPopup = this.state.showCustomPopup ?
+            <ConfirmPopup description={this.props.categoryDetailsPageStrings.deleteURLConfirm}
+                          callback={(event)=> this.handleDeleteClick(event)}/> : null;
 
         return (
             <div>
@@ -130,7 +161,10 @@ export default class AddURLComponent extends Component {
                         {this.getUrlList()}
                     </ul>
                     {inputBox}
-                    {this.state.successResponse ? "" : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
+                    <input type="text" ref="searchKey" placeholder="search"/>
+                    <button type="submit" onSubmit={this._handleSearch()}>Submit</button>
+                    {this.state.successResponse ? "" :
+                        <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
                 {confirmPopup}
 

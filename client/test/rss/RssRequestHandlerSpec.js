@@ -38,4 +38,8 @@ describe("RssRequestHandler", () => {
             });
         });
     });
+
+    describe("getURLDocuments", () => {
+        it("should request RSS URLs for the e")
+    })
 });

@@ -8,7 +8,7 @@ import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
-describe.only("URLDocument", ()=> {
+describe("URLDocument", ()=> {
     let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
     let sandbox = null, migrationLoggerStub = null, applicationConfig = null;
 

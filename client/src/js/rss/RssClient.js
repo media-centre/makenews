@@ -32,4 +32,10 @@ export default class RssClient {
             });
         });
     }
+
+    fetchURLDocument(searchKey) {
+        return new Promise((resolve, reject) => {
+            let ajaxClient = AjaxClient.instance("/fetch-all-urls", skipSessionTi)
+        })
+    }
 }
