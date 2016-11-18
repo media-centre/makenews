@@ -23,11 +23,11 @@ export default class RssClient {
             return feeds;
         }
         catch (error) {
+
             if (error.message === FEEDS_NOT_FOUND) {
                 let root = cheerio.load(error.data);
                 let rssLink = root("link[type ^= 'application/rss+xml']");
                 let rssUrl = rssLink.attr("href");
-                console.log(rssUrl + url)
                 if (rssLink && rssLink.length !== 0) {
                     return this.getFeedsFromRssUrl(rssUrl,url)
 
@@ -35,7 +35,7 @@ export default class RssClient {
                     return this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
                 }
             } else {
-                this.handleUrlError(url, error);
+                return this.handleUrlError(url, error);
             }
 
         }
@@ -148,12 +148,12 @@ export default class RssClient {
 
     handleUrlError(url, error) {
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
-        return ({"message": url + " is not a proper feed"});
+        throw {"message": url + " is not a proper feed"};
     }
 
     handleRequestError(url, error) {
         RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
-        return ({"message": "Request failed for " + url});
+        throw {"message": "Request failed for " + url};
     }
 }
 

@@ -9,7 +9,7 @@ import { assert } from "chai";
 
 
 describe("fetchRssFeeds", () => {
-    it("should fetch rss feed for valid url", () => {
+    it("should fetch rss feed for valid url", async () => {
         let rssClientMock =new RssClient();
         let feed =[{
             "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
@@ -23,48 +23,55 @@ describe("fetchRssFeeds", () => {
             "status": "valid"
         }];
         sinon.mock(rssClientMock).expects("getRssData").withArgs("www.example.com").returns(feed);
-        return Promise.resolve(rssClientMock.fetchRssFeeds("www.example.com")).then(result => {
+        try{
+            let result = await rssClientMock.fetchRssFeeds("www.example.com")
             assert.deepEqual(result, feed);
+        }
+        catch (e){
+            assert.equal(true,false);
+        }
+        finally{
             rssClientMock.getRssData.restore();
-        })
-
+        }
     });
 
-    it.only("should call handleError when error message is other than FEEDS_NOT_FOUND ", () => {
+    it("should call handleError when error message is other than FEEDS_NOT_FOUND ", async () => {
         let rssClientMock =new RssClient();
         let error =[{
             "message": "new error"
         }];
-        let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
+        var url = "www.error.com";
+        let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
         getrssMock.returns(Promise.reject({ "message": "Bad status code" }));
-        let handleMock = sinon.mock(rssClientMock).expects("handleUrlError");
-        rssClientMock.fetchRssFeeds("www.error.com").catch(error => {
-            console.log("test")
-
-            handleMock.verify();
-            rssClientMock.getRssData.restore();
-            rssClientMock.handleUrlError.restore();
-        })
+        try {
+            await rssClientMock.fetchRssFeeds(url);
+       } catch(e) {
+           assert.deepEqual(e, {"message": url + " is not a proper feed"});
+       } finally {
+           rssClientMock.getRssData.restore();
+       }
 
     });
 
-    it("should call crawlForRssUrl when error message is FEEDS_NOT_FOUND and rss link not present", () => {
+    it("should call crawlForRssUrl when error message is FEEDS_NOT_FOUND and rss link not present", async () => {
         let rssClientMock =new RssClient();
         let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
         getrssMock.returns(Promise.reject({ "message": "feeds_not_found", "data": [] }));
-        let crawlForRssUrlMock = sinon.stub(rssClientMock, "crawlForRssUrl");
+        let crawlForRssUrlMock = sinon.mock(rssClientMock).expects("crawlForRssUrl");
         crawlForRssUrlMock.returns(Promise.reject("error"));
-        rssClientMock.fetchRssFeeds("www.error.com").catch(error => {
-            assert.equal(error, "error");
+        try {
+            await rssClientMock.fetchRssFeeds("www.error.com");
+        } catch(e) {
+            assert.equal(e, "error");
+        } finally {
             rssClientMock.getRssData.restore();
             rssClientMock.crawlForRssUrl.restore();
-        })
-
+        }
     });
 
-    it("should call getFeedsFromRssUrl when feeds are  present", () => {
+    it("should call getFeedsFromRssUrl when feeds are  present", async () => {
             let rssClientMock =new RssClient();
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
+            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.example.com");
             getrssMock.returns(Promise.reject({ "message": "feeds_not_found", "data": '<link type="application/rss+xml" href="http://www.example.com"> <a href="http://www.example.com" ></a> ' }));
             let feed =[{
             "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
@@ -79,15 +86,20 @@ describe("fetchRssFeeds", () => {
              }];
         let getrssMockNew = sinon.mock(rssClientMock).expects("getFeedsFromRssUrl");
         getrssMockNew.returns(feed);
-        return Promise.resolve(rssClientMock.fetchRssFeeds("www.error.com")).then(result => {
+        try {
+            let result = await rssClientMock.fetchRssFeeds("www.example.com");
             assert.deepEqual(result, feed);
+        } catch(e) {
+            assert.equal(true,false);
+        } finally {
             rssClientMock.getRssData.restore();
             rssClientMock.getFeedsFromRssUrl.restore();
-        })
+        }
+
 
         });
 
-    it.only("should call handleRequestError when rss data is not present", () => {
+    it("should call handleRequestError when rss data is not present", async () => {
         let rssClientMock =new RssClient();
         let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("www.error.com");
         getrssMock.returns(Promise.reject({ "message": "feeds_not_found", "data": '<link type="application/rss+xml" href="http://www.error.com"> ' }));
@@ -102,16 +114,46 @@ describe("fetchRssFeeds", () => {
         ],
         "status": "valid"
          }];
-        let handleRequestMock = sinon.mock(rssClientMock).expects("handleRequestError");
 
-        return Promise.reject(rssClientMock.getFeedsFromRssUrl("http://www.example.com", "www.error.com")).catch(error => {
-            console.log("*************" );
-            handleRequestMock.verify();
-        assert.deepEqual(error.message, "feedot_found");
-        rssClientMock.getRssData.restore();
-        rssClientMock.handleRequestError.restore();
-    })
+        try {
+            await rssClientMock.getFeedsFromRssUrl("http://www.example.com", "www.error.com");
+        }
+        catch(e) {
+            assert.deepEqual(e, {"message": "Request failed for " + "www.error.com"});
+        }
+        finally {
+            rssClientMock.getRssData.restore();
+        }
 
+    });
+
+
+    it("should return feeds when rss data is  present", async () => {
+        let rssClientMock =new RssClient();
+        let feed =[{
+            "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+            "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+            "docType": "source",
+            "sourceType": "twitter",
+            "url": "@balaswecha",
+            "categoryIds": [
+                "95fa167311bf340b461ba414f1004074"
+            ],
+            "status": "valid"
+        }];
+        let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("http://www.example.com");
+        getrssMock.returns(Promise.resolve(feed));
+
+        try {
+            let result = await rssClientMock.getFeedsFromRssUrl("http://www.example.com", "www.rss.com");
+            assert.deepEqual(result, feed);
+        }
+        catch(e) {
+            assert.equal(true, false);
+        }
+        finally {
+            rssClientMock.getRssData.restore();
+        }
 
     });
 
