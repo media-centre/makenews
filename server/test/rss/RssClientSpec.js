@@ -6,6 +6,7 @@ import { expect } from "chai";
 import nock from "nock";
 import sinon from "sinon";
 import { assert } from "chai";
+import * as cheerio from "cheerio/lib/static";
 
 
 describe("fetchRssFeeds", () => {
@@ -157,4 +158,61 @@ describe("fetchRssFeeds", () => {
 
     });
 
+    it("should return error when rss links are not present", async () => {
+        let rssClientMock =new RssClient();
+        let error ={ "message": "feeds_not_found", "data": '<link type="application/rss+xml" href="http://www.error.com"> ' };
+        let root = cheerio.load(error.data)
+        let url = "www.error.com";
+        try {
+            await rssClientMock.crawlForRssUrl(root, url);
+        }
+        catch(e) {
+            assert.deepEqual(e, {"message": url + " is not a proper feed"});
+        }
+
+    });
+
+    it("should return error when rss links are present and no rss feeds ", async () => {
+        let rssClientMock =new RssClient();
+        let error ={ "message": "feeds_not_found", "data": '<a href="/abc"></a> ' };
+        let root = cheerio.load(error.data)
+        let url = "www.error.com";
+        let getrssMock = sinon.mock(rssClientMock).expects("getCrawledRssData");
+        getrssMock.returns(Promise.reject("error"));
+        try {
+            let a= await rssClientMock.crawlForRssUrl(root, url);
+        }
+        catch(e) {
+            assert.deepEqual(e, "error");
+        }
+        finally {
+            rssClientMock.getCrawledRssData.restore();
+        }
+
+    });
+
+
+    it.only("should return error when rss links are present and no rss feeds ", async () => {
+        let rssClientMock =new RssClient();
+        let error ={ "message": "feeds_not_found", "data": '<a href="/abc"></a> ' };
+        let root = cheerio.load(error.data)
+        let url = "www.error.com";
+        let getrssMock = sinon.mock(rssClientMock).expects("getRssData");
+        getrssMock.returns(Promise.reject("error"));
+        let links = new Set();
+        links.add('/abc');
+
+        try {
+            let a= await rssClientMock.getCrawledRssData(links, url);
+            console.log("a "+ a)
+        }
+        catch(e) {
+            console.log(e)
+            assert.deepEqual(e, {"message": url + " is not a proper feed"});
+        }
+        finally {
+            rssClientMock.getRssData.restore();
+        }
+
+    });
 });

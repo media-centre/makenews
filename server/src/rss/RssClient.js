@@ -66,7 +66,6 @@ export default class RssClient {
         relativeLinks.each(function() {
             links.add(rssUrl + root(this).attr("href"));
         });
-
         rssUrl = rssUrl.replace(/.*?:\/\//g, "");
         rssUrl = rssUrl.replace("www.", "");
         let absoluteLinks = root("a[href*='" + rssUrl + "']");
@@ -75,25 +74,37 @@ export default class RssClient {
         });
 
         if(links.size === 0) {
-            this.handleUrlError(url, "no rss links found", reject);
+            this.handleUrlError(url, "no rss links found");
         } else {
-            let count = 0;
-            links.forEach(async (link) => {
-                try {
-                    let feeds = await this.getRssData(link, false);
-                    feeds.url = link;
-                    resolve(feeds);
-                }
-                catch(error)  {
-                    count += 1;
-                    if (count === links.size) {
-                        return this.handleUrlError(link, error, reject);
-                    }
-                    return this.crawlRssList(link, error, url, resolve);
+            return this.getCrawledRssData(links, url);
 
-                }
-            });
         }
+    }
+
+     getCrawledRssData(links, url) {
+        let count = 0;
+         let feed;
+        return links.forEach(feed =async(link) => {
+            console.log("******1st")
+            try {
+                console.log("******2nd")
+                console.log("before rss" + await this.getRssData(link, false));
+                let feeds = await this.getRssData(link, false);
+                feeds.url = link;
+                console.log("************7")
+                return feeds;
+            }
+            catch (error) {
+                count += 1;
+                console.log("************8")
+                if (count === links.size) {
+                    console.log("************9" + error)
+                    return this.handleUrlError(link, error);
+                }
+                return this.crawlRssList(link, error, url);
+
+            }
+        });
     }
 
     async crawlRssList(link, error, url) {
@@ -147,6 +158,7 @@ export default class RssClient {
 
 
     handleUrlError(url, error) {
+        console.log("************10")
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
         throw {"message": url + " is not a proper feed"};
     }
