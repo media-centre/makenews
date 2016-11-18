@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import { displayAllCategories, displayAllCategoriesAsync, DISPLAY_ALL_CATEGORIES } from "../../src/js/config/actions/AllCategoriesActions.js";
-import CategoryDb from "../../src/js/config/db/CategoryDb.js";
-import mockStore from "../helper/ActionHelper.js";
+import { displayAllCategories, displayAllCategoriesAsync, DISPLAY_ALL_CATEGORIES } from "../../src/js/config/actions/AllCategoriesActions";
+import CategoryDb from "../../src/js/config/db/CategoryDb";
+import mockStore from "../helper/ActionHelper";
 import { expect } from "chai";
 import sinon from "sinon";
 import { List } from "immutable";
@@ -25,4 +24,3 @@ describe("AllCategoriesActions", () => {
         CategoryDb.fetchAllCategories.restore();
     });
 });
-

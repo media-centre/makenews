@@ -1,5 +1,4 @@
 /* eslint react/display-name:0 */
-"use strict";
 import App from "./App.jsx";
 import LoginPage from "./login/pages/LoginPage.jsx";
 import MainPage from "./main/pages/MainPage.jsx";
@@ -12,7 +11,7 @@ import TwitterSuccess from "./main/pages/TwitterSuccess.jsx";
 import UserSession from "./user/UserSession";
 import UserProfile from "./user/UserProfile.jsx";
 import Help from "./help/Help.jsx";
-import DbSession from "./db/DbSession.js";
+import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
 import FacebookConfigure from "./config/components/FacebookConfigure";

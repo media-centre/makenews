@@ -1,11 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 "use strict";
-import FacebookClient from "../../src/js/facebook/FacebookClient.js";
-import FacebookLogin from "../../src/js/facebook/FacebookLogin.js";
-import LoginPage from "../../src/js/login/pages/LoginPage.jsx";
-import UserSession from "../../src/js/user/UserSession.js";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
+import FacebookClient from "../../src/js/facebook/FacebookClient";
+import FacebookLogin from "../../src/js/facebook/FacebookLogin";
+import LoginPage from "../../src/js/login/pages/LoginPage";
+import UserSession from "../../src/js/user/UserSession";
+import AjaxClient from "../../src/js/utils/AjaxClient";
 
 import sinon from "sinon";
 import { assert } from "chai";

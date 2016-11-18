@@ -1,17 +1,15 @@
 /* eslint brace-style:0, max-len:0, no-set-state:0,no-unused-vars:0, max-nested-callbacks:0, no-did-mount-set-state:0 */
-"use strict";
-
 import React, { Component, PropTypes } from "react";
-import AllFeeds from "../components/AllFeeds.jsx";
-import SurfFeedActionComponent from "../components/SurfFeedActionComponent.jsx";
-import SurfFilter from "../components/SurfFilter.jsx";
-import { initiateSurf, getLatestFeedsFromAllSources, fetchFeedsByFilter, fetchFeedsByPage, parkFeed } from "../actions/SurfActions.js";
+import AllFeeds from "../components/AllFeeds";
+import SurfFeedActionComponent from "../components/SurfFeedActionComponent";
+import SurfFilter from "../components/SurfFilter";
+import { initiateSurf, getLatestFeedsFromAllSources, fetchFeedsByFilter, fetchFeedsByPage, parkFeed } from "../actions/SurfActions";
 import { connect } from "react-redux";
-import { highLightTabAction } from "../../tabs/TabActions.js";
-import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
-import Toast from "../../utils/custom_templates/Toast.js";
-import TakeTour from "../../utils/custom_templates/TakeTour.js";
-import AppWindow from "../../utils/AppWindow.js";
+import { highLightTabAction } from "../../tabs/TabActions";
+import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions";
+import Toast from "../../utils/custom_templates/Toast";
+import TakeTour from "../../utils/custom_templates/TakeTour";
+import AppWindow from "../../utils/AppWindow";
 
 export class SurfPage extends Component {
     constructor(props) {
@@ -131,7 +129,7 @@ export class SurfPage extends Component {
 
     render() {
         let refreshButton = (<div ref="surfRefreshButton" className={this.state.refreshState ? "surf-refresh-button disabled" : "surf-refresh-button"} onClick={()=> { this.getLatestFeeds(false); }}>
-                                <i className="fa fa-refresh"></i>
+                                <i className="fa fa-refresh" />
                                 {this.props.refreshState ? " Refreshing..." : " Refresh Feeds"}
                             </div>);
         let refreshStatus = <div className="refresh-status progress-indicator" style={{ "width": this.props.progressPercentage + "%" }}></div>;

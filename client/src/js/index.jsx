@@ -1,7 +1,6 @@
-"use strict";
-import { renderRoutes } from "./Routers.js";
+import { renderRoutes } from "./Routers";
 import { Provider } from "react-redux";
-import contentDiscoveryApp from "./Reducers.js";
+import contentDiscoveryApp from "./Reducers";
 import ReactDOM from "react-dom";
 import React from "react";
 import { createStore, applyMiddleware } from "redux";

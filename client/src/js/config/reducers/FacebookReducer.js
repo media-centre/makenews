@@ -1,4 +1,4 @@
-import { FACEBOOK_SEARCH_SOURCES } from "./../actions/FacebookConfigureActions";
+import { FACEBOOK_GOT_PROFILES } from "./../actions/FacebookConfigureActions";
 
 export function facebookConfiguredUrls() {
     
@@ -60,14 +60,10 @@ export function facebookConfiguredUrls() {
     };
 }
 
-export const facebookUrls = (state = [], action = {}) => {
+export const facebookProfiles = (state = [], action = {}) => {
     switch(action.type) {
-    case FACEBOOK_SEARCH_SOURCES: {
-        state.push({
-            "name": action.keyword
-        });
-
-        return Object.assign([], state);
+    case FACEBOOK_GOT_PROFILES: {
+        return action.profiles;
     }
     default: return state;
     }

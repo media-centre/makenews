@@ -1,22 +1,17 @@
 import React, { Component, PropTypes } from "react";
 import SourcesResults from "./SourcesResults";
 import { connect } from "react-redux";
-import { facebookSearchSources } from "./../actions/FacebookConfigureActions";
+import { facebookGetProfiles } from "./../actions/FacebookConfigureActions";
 
-class Configure extends Component {
-
-    _onKeyDown(event) {
-        const ENTERKEY = 13;
-        if(event.keyCode === ENTERKEY) {
-            this.props.dispatch(facebookSearchSources(this.refs.searchSources.value));
-        }
+export class ConfigurePane extends Component {
+    componentDidMount() {
+        this.props.dispatch(facebookGetProfiles());
     }
 
     render() {
         return (
-
           <div className="configure-sources">
-              <input type="text" ref="searchSources" className="search-sources" placeholder="Search...." onKeyDown={(event) => this._onKeyDown(event)} />
+              <input type="text" ref="searchSources" className="search-sources" placeholder="Search...." />
               <SourcesResults sources={this.props.sources}/>
           </div>
         );
@@ -25,13 +20,13 @@ class Configure extends Component {
 
 function mapToStore(state) {
     return {
-        "sources": state.facebookUrls
+        "sources": state.facebookProfiles
     };
 }
 
-Configure.propTypes = {
+ConfigurePane.propTypes = {
     "sources": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired
 };
 
-export default connect(mapToStore)(Configure);
+export default connect(mapToStore)(ConfigurePane);

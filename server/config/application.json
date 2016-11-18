@@ -15,8 +15,8 @@
     },
     "facebook": {
       "url": "https://graph.facebook.com/v2.8",
-      "appSecretKey": "462355c94ae7f4c141e51b255b1539f2",
-      "appId": "1860396707564088",
+      "appSecretKey": "a68752a9c23eb059a03e964c17b2b0d5",
+      "appId": "158896271244772",
       "timeOut": 2000,
       "limit": 500
     },

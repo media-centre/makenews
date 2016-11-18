@@ -1,12 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks:0 */
-"use strict";
-import { SurfPage } from "../../../src/js/surf/pages/SurfPage.jsx"; //eslint-disable-line no-unused-vars
+import { SurfPage } from "../../../src/js/surf/pages/SurfPage";
 
 import { assert } from "chai";
 import sinon from "sinon";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 import Locale from "../../../src/js/utils/Locale";
 import AppWindow from "../../../src/js/utils/AppWindow";
 
