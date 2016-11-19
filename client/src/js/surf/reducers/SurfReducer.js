@@ -1,9 +1,8 @@
 /*eslint new-cap:0, no-unused-vars:0, max-len:0, complexity:0 */
-"use strict";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/SurfActions.js";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS, PARK_FEED, STORE_FILTER_SOURCE_MAP, FETCH_ALL_CATEGORIES, PAGINATION_FEEDS } from "../actions/SurfActions";
 import { List } from "immutable";
-import Locale from "../../utils/Locale.js";
-import { MAX_FEEDS_PER_PAGE } from "../FilterFeedsHandler.js";
+import Locale from "../../utils/Locale";
+import { MAX_FEEDS_PER_PAGE } from "../FilterFeedsHandler";
 
 export function allFeeds(state = { "messages": Locale.applicationStrings().messages.surfPage }, action = {}) {
     let surfMessages = Locale.applicationStrings().messages.surfPage;

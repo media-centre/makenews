@@ -6,7 +6,7 @@ export default class SourcesResults extends Component {
 
     _renderResults() {
         let mappedIndex = R.addIndex(R.map);
-        return mappedIndex((source, index) => <Source key={index} source={source} />, this.props.sources);
+        return mappedIndex((source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} />, this.props.sources);
     }
 
     render() {
@@ -22,5 +22,6 @@ export default class SourcesResults extends Component {
 }
 
 SourcesResults.propTypes = {
-    "sources": PropTypes.array.isRequired
+    "sources": PropTypes.array.isRequired,
+    "dispatch": PropTypes.func.isRequired
 };

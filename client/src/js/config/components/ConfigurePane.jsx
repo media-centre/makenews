@@ -12,7 +12,7 @@ export class ConfigurePane extends Component {
         return (
           <div className="configure-sources">
               <input type="text" ref="searchSources" className="search-sources" placeholder="Search...." />
-              <SourcesResults sources={this.props.sources}/>
+              <SourcesResults sources={this.props.sources} dispatch={this.props.dispatch} />
           </div>
         );
     }

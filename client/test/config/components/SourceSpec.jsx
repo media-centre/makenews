@@ -4,8 +4,8 @@ import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 
-describe("Source URL component", () => {
-    let source = null;
+describe.only("Source URL component", () => {
+    let source = null, sourceRendered = null, sourceDOM = null;
 
     before("Source URL component", () => {
         source = {
@@ -16,18 +16,21 @@ describe("Source URL component", () => {
                 }
             }
         };
+        sourceRendered = TestUtils.renderIntoDocument(<Source source={source} />);
+        sourceDOM = ReactDOM.findDOMNode(sourceRendered);
     });
 
     it("should have url name", () => {
-        let sourceRendered = TestUtils.renderIntoDocument(<Source source={source} />);
-        let sourceDOM = ReactDOM.findDOMNode(sourceRendered);
         expect(sourceDOM.textContent).to.equal("Source Url");
     });
     
     it("should have user icon with the give source", () => {
-        let sourceRendered = TestUtils.renderIntoDocument(<Source source={source} />);
-        let renderedDOM = ReactDOM.findDOMNode(sourceRendered);
-        let imageSrc = renderedDOM.querySelectorAll("img")[0].src; //eslint-disable-line no-magic-numbers
+        let imageSrc = sourceDOM.querySelectorAll("img")[0].src; //eslint-disable-line no-magic-numbers
         expect(imageSrc).to.equal(source.picture.data.url);
+    });
+
+    it("should have add button in the source", () =>{
+        let imageSrc = sourceDOM.querySelectorAll(".source__add-icon img")[0].src; //eslint-disable-line no-magic-numbers
+        expect(imageSrc).to.equal("./images/add-btn.png");
     });
 });
