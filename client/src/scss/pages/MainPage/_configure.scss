@@ -1,7 +1,31 @@
 .configure-container {
-  .configured-sources-container {
-    float: left;
-    width: 20%;
+  .configured-sources {
+    &-container {
+      float: left;
+      width: 20%;
+      background-color: $background-color;
+      min-height: 100vh;
+      border-right: 1px solid $primary-color;
+      box-sizing: border-box;
+    }
+
+    &__group {
+      padding: 10px;
+
+      &.open {
+        background-color: #fff;
+      }
+      &__heading {
+        font-size: 1em;
+        color: $primary-color;
+      }
+    }
+
+    li {
+      font-size: 14px;
+      font-weight: 400;
+      padding: 5px 0;
+    }
   }
 
   .configure-sources {
@@ -43,31 +67,44 @@
         }
       }
 
-      &-icon {
+      &__icon {
         float: left;
         position: relative;
         top: 50%;
         margin-right: 10px;
-        -webkit-border-radius: 100%;
-        -moz-border-radius: 100%;
-        border-radius: 100%;
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
 
         img {
-          width: 30px;
-          height: 30px;
+          -webkit-border-radius: 100%;
+          -moz-border-radius: 100%;
+          border-radius: 100%;
+          width: 40px;
         }
       }
 
-      &-title {
+      &__title {
         color: $primary-color;
         position: relative;
         top: 50%;
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
+      }
+
+      &__add-icon {
+        float: right;
+        position: relative;
+        top: 10%;
+        cursor: pointer;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+
+        img {
+          width: 30px;
+        }
       }
     }
   }

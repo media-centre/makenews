@@ -15,18 +15,24 @@ export default class ConfiguredSources extends Component {
         return (
             <aside className="configured-sources-container">
                 <h1>{ "My Sources" }</h1>
-                <h3>{ "Facebook Friends" }</h3>
-                <ul className="configured-sources">
-                    { this._renderSources("friends") }
-                </ul>
-                <h3>{ "Facebook Pages" }</h3>
-                <ul className="configured-sources">
-                    { this._renderSources("pages") }
-                </ul>
-                <h3>{ "Facebook Groups" }</h3>
-                <ul className="configured-sources">
-                    { this._renderSources("groups") }
-                </ul>
+                <div className="configured-sources__group open">
+                    <h3 className="configured-sources__group__heading">{ "Facebook Friends" }</h3>
+                    <ul className="configured-sources">
+                        { this._renderSources("profiles") }
+                    </ul>
+                </div>
+                <div className="configured-sources__group">
+                    <h3 className="configured-sources__group__heading">{ "Facebook Pages" }</h3>
+                    <ul className="configured-sources">
+                        { this._renderSources("pages") }
+                    </ul>
+                </div>
+                <div className="configured-sources__group">
+                    <h3 className="configured-sources__group__heading">{ "Facebook Groups" }</h3>
+                    <ul className="configured-sources">
+                        { this._renderSources("groups") }
+                    </ul>
+                </div>
             </aside>
         );
     }
