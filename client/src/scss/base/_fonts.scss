@@ -1,5 +1,29 @@
 @font-face {
-  font-family: 'OpenSansRegular';
-  src: url('./fonts/OpenSans-Regular-webfont.woff') format('woff'),
-  url('./fonts/OpenSans-Regular-webfont.ttf')  format('truetype');
+  font-family: 'Lato';
+  src: url('./fonts/Lato-Regular.woff2') format('woff2'), /* Modern Browsers */
+  url('./fonts/Lato-Regular.woff') format('woff'), /* Modern Browsers */
+  url('./fonts/Lato-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('./fonts/Lato-Bold.woff2') format('woff2'), /* Modern Browsers */
+  url('./fonts/Lato-Bold.woff') format('woff'), /* Modern Browsers */
+  url('./fonts/Lato-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('./fonts/Lato-Semibold.woff2') format('woff2'), /* Modern Browsers */
+  url('./fonts/Lato-Semibold.woff') format('woff'), /* Modern Browsers */
+  url('./fonts/Lato-Semibold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
 }
