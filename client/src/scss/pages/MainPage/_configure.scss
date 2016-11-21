@@ -2,11 +2,14 @@
   .configured-sources {
     &-container {
       float: left;
+      position: fixed;
+      overflow: scroll;
       width: 20%;
       background-color: $background-color;
-      min-height: 100vh;
+      height: 100vh;
       border-right: 1px solid $primary-color;
       box-sizing: border-box;
+      padding-bottom: 80px;
     }
 
     &__group {
@@ -23,14 +26,16 @@
 
     li {
       font-size: 14px;
-      font-weight: 400;
-      padding: 5px 0;
+      font-weight: 100;
+      padding: 7px 0;
+      color: $primary-color-light;
     }
   }
 
   .configure-sources {
     display: inline-block;
     width: 80%;
+    margin-left: 20%;
   }
 
   input.search-sources {
@@ -59,11 +64,11 @@
       -moz-box-sizing: border-box;
       box-sizing: border-box;
 
-      &.active {
+      &.added {
         background-color: $primary-color;
 
-        .source-title {
-          color: #FFF;
+        .source__title {
+          color: #fff;
         }
       }
 
@@ -93,7 +98,7 @@
         transform: translateY(-50%);
       }
 
-      &__add-icon {
+      &__action-icon {
         float: right;
         position: relative;
         top: 10%;

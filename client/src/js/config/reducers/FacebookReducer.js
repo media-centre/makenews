@@ -15,6 +15,19 @@ export const facebookProfiles = (state = [], action = {}) => {
     case FACEBOOK_GOT_PROFILES: {
         return action.profiles;
     }
+    case FACEBOOK_ADD_PROFILE: {
+        return Object.assign([], addSource(state, action.profile.id));
+    }
     default: return state;
     }
 };
+
+function addSource(profiles, id) {
+    for (let index in profiles) {
+        if(profiles[index].id === id) {
+            profiles[index].added = true;
+            break;
+        }
+    }
+    return profiles;
+}
