@@ -1,10 +1,9 @@
-"use strict";
-import StringUtil from "../../../common/src/util/StringUtil.js";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import StringUtil from "../../../common/src/util/StringUtil";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import request from "request";
-import NodeErrorHandler from "../NodeErrorHandler.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
-import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil.js";
+import NodeErrorHandler from "../NodeErrorHandler";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
+import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 
 export default class FacebookClient {
@@ -87,6 +86,31 @@ export default class FacebookClient {
         });
     }
 
+    fetchProfiles(parameters = { "fields": "id,name,picture", "limit": 100 }) {
+        return new Promise((resolve, reject) => {
+            this._addDefaultParameters(parameters);
+            request.get({
+                "url": `${this.facebookParameters.url}/me/taggable_friends?${new HttpRequestUtil().queryString(parameters, false)}`
+            }, (error, response, body) => {
+                let err = NodeErrorHandler.noError(error);
+                if(err) {
+                    if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                        let profiles = JSON.parse(body);
+                        FacebookClient.logger().debug("FacebookClient:: successfully fetched the profiles");
+                        resolve(profiles);
+                    } else {
+                        let errorInfo = JSON.parse(body);
+                        FacebookClient.logger().error(`FacebookClient:: Error fetching profiles. Error: ${JSON.stringify(errorInfo)}`);
+                        reject(errorInfo.error);
+                    }
+                } else {
+                    FacebookClient.logger().error(`FacebookClient:: Error fetching profiles. Error ${JSON.stringify(error)}`);
+                    reject(error);
+                }
+            });
+        });
+    }
+    
     getFacebookId(facebookPageUrl) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
@@ -138,7 +162,7 @@ export default class FacebookClient {
     }
 
     _addDefaultParameters(receivedParameters) {
-        receivedParameters.access_token = this.accessToken; //eslint-disable-line
-        receivedParameters.appsecret_proof = this.appSecretProof; //eslint-disable-line
+        receivedParameters.access_token = this.accessToken; //eslint-disable-line camelcase
+        receivedParameters.appsecret_proof = this.appSecretProof; //eslint-disable-line camelcase
     }
 }

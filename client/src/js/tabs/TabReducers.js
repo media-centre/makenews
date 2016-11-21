@@ -1,6 +1,4 @@
-"use strict";
-
-import { CHANGE_HIGHLIGHTED_TAB } from "./TabActions.js";
+import { CHANGE_HIGHLIGHTED_TAB } from "./TabActions";
 import { List } from "immutable";
 
 export function highlightedTab(state = { "tabNames": new List(["Surf"]) }, action = {}) {

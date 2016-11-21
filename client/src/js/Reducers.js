@@ -1,14 +1,13 @@
-"use strict";
-
-import { allCategories, categoryDetails, configurePageLocale } from "./config/reducers/ConfigReducer.js";
-import { allFeeds } from "./surf/reducers/SurfReducer.js";
-import { parkedFeeds } from "./park/reducers/ParkReducer.js";
-import { login, loginPageLocale } from "./login/LoginReducers.js";
-import { highlightedTab } from "./tabs/TabReducers.js";
+import { allCategories, categoryDetails, configurePageLocale } from "./config/reducers/ConfigReducer";
+import { allFeeds } from "./surf/reducers/SurfReducer";
+import { parkedFeeds } from "./park/reducers/ParkReducer";
+import { login, loginPageLocale } from "./login/LoginReducers";
+import { highlightedTab } from "./tabs/TabReducers";
 import { combineReducers } from "redux";
-import { mainHeaderLocale } from "./main/reducers/MainReducer.js";
-import { parkCounter } from "./feeds/reducers/FeedReducer.js";
-import { changePassword, userProfileStrings } from "./user/UserProfileReducer.js";
+import { mainHeaderLocale } from "./main/reducers/MainReducer";
+import { parkCounter } from "./feeds/reducers/FeedReducer";
+import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
+import { facebookConfiguredUrls, facebookProfiles } from "./config/reducers/FacebookReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -22,7 +21,9 @@ const contentDiscoveryApp = combineReducers({
     highlightedTab,
     parkCounter,
     changePassword,
-    userProfileStrings
+    userProfileStrings,
+    facebookConfiguredUrls,
+    facebookProfiles
 });
 
 export default contentDiscoveryApp;

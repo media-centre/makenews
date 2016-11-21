@@ -1,4 +1,4 @@
-$font-family: 'OpenSansRegular', sans-serif;
+$font-family: 'Lato', sans-serif;
 
 $app-header-bg-color: #36464E;
 $app-bg-color: #ECF2F0;
@@ -46,3 +46,11 @@ $min-index: 1;
 $medium-index: 2;
 $mask-layer-index: 3;
 $popup-layer-index: 4;
+
+/* New Variable */
+
+$background-color: #FAF5F5;
+$dark-background-color: #E9E3E7;
+$primary-color: #63527A;
+$primary-color-light: lighten($primary-color, 18);
+$secondary-color: #FF6945;

@@ -1,9 +1,6 @@
 /* eslint max-nested-callbacks:0, no-magic-numbers:0 */
-
-"use strict";
-
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
+import EnvironmentConfig from "../../src/config/EnvironmentConfig";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -23,7 +20,7 @@ describe("ApplicationConfig", () => {
                         "db": "admin"
                     },
                     "facebook": {
-                        "url": "https://graph.facebook.com/v2.5",
+                        "url": "https://graph.facebook.com/v2.8",
                         "appSecretKey": "appSecretKey",
                         "timeOut": 10000
                     },
@@ -74,7 +71,7 @@ describe("ApplicationConfig", () => {
 
             let facebookConfig = applicationConfig.facebook();
 
-            assert.strictEqual("https://graph.facebook.com/v2.5", facebookConfig.url);
+            assert.strictEqual("https://graph.facebook.com/v2.8", facebookConfig.url);
             assert.strictEqual("appSecretKey", facebookConfig.appSecretKey);
             assert.equal(10000, facebookConfig.timeOut);
         });
@@ -103,5 +100,4 @@ describe("ApplicationConfig", () => {
             assert.strictEqual(5000, serverPort);
         });
     });
-
 });

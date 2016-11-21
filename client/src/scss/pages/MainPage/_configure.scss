@@ -1,53 +1,116 @@
-@import "../../utils/variable";
+.configure-container {
+  .configured-sources {
+    &-container {
+      float: left;
+      position: fixed;
+      overflow: scroll;
+      width: 20%;
+      background-color: $background-color;
+      height: 100vh;
+      border-right: 1px solid $primary-color;
+      box-sizing: border-box;
+      padding-bottom: 80px;
+    }
 
-.configure-page {
-  h3 {
-    color: $body-font-color;
-    margin: 0;
-    padding: 0 0 15px 0;
-  }
+    &__group {
+      padding: 10px;
 
-  ul.cat-list {
-    max-width: 932px;
-    margin: auto;
+      &.open {
+        background-color: #fff;
+      }
+      &__heading {
+        font-size: 1em;
+        color: $primary-color;
+      }
+    }
 
     li {
+      font-size: 14px;
+      font-weight: 100;
+      padding: 7px 0;
+      color: $primary-color-light;
+    }
+  }
+
+  .configure-sources {
+    display: inline-block;
+    width: 80%;
+    margin-left: 20%;
+  }
+
+  input.search-sources {
+    color: $primary-color;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+
+
+  .sources-suggestions {
+    background-color: $background-color;
+    padding: 20px;
+    margin-top: 50px;
+  }
+
+  .source-results {
+    .source {
+      background: $dark-background-color;
+      padding: 10px;
       margin: 10px;
-      background: $app-header-bg-color;
-      color: $primary-font-color;
+      width: 31.433333%;
+      height: 70px;
       display: inline-block;
-      vertical-align: top;
-      cursor: pointer;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
 
-      .text-container {
-        overflow: hidden;
-        max-height: 134px;
-        word-break: break-all;
+      &.added {
+        background-color: $primary-color;
+
+        .source__title {
+          color: #fff;
+        }
       }
 
-      .navigation-link {
-        display: block;
-        padding: 8px;
-        width: 150px;
-        height: 150px;
+      &__icon {
+        float: left;
+        position: relative;
+        top: 50%;
+        margin-right: 10px;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+
+        img {
+          -webkit-border-radius: 100%;
+          -moz-border-radius: 100%;
+          border-radius: 100%;
+          width: 40px;
+        }
+      }
+
+      &__title {
+        color: $primary-color;
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+
+      &__action-icon {
+        float: right;
+        position: relative;
+        top: 10%;
+        cursor: pointer;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+
+        img {
+          width: 30px;
+        }
       }
     }
-
-    li:hover span {
-      color: $secondary-font-color;
-    }
-    li.add-new:hover {
-      background: $app-header-bg-color;
-    }
-
-    li.add-new {
-      @extend .border-blue;
-      background: $primary-font-color;
-
-      .navigation-link {
-        color: $app-header-bg-color;
-      }
-    }
-
   }
 }
