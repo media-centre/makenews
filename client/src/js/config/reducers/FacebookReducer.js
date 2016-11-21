@@ -23,11 +23,6 @@ export const facebookProfiles = (state = [], action = {}) => {
 };
 
 function addSource(profiles, id) {
-    for (let index in profiles) {
-        if(profiles[index].id === id) {
-            profiles[index].added = true;
-            break;
-        }
-    }
+    profiles.find(profile => profile.id === id).added = true;
     return profiles;
 }
