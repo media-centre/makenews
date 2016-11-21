@@ -37,7 +37,6 @@ export default class CouchClient {
     }
 
     post(path, body, customHeaders = {}) {
-
         return new Promise((resolve, reject) => {
             request.post({
                 "uri": this.dbUrl + path,

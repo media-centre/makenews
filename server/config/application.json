@@ -10,11 +10,7 @@
       "db": "common",
       "couchDbAdmin": {
         "username": "admin",
-<<<<<<< faa305bb37c01a5ecd4c6179897b2f1e04bb3ca7
-        "password": "password"
-=======
         "password": "admin"
->>>>>>> [Swe/Dur] - added post method in couch client for search url
       }
     },
     "facebook": {
