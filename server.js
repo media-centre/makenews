@@ -20,7 +20,9 @@ app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
 app.use(helmet.noSniff());
 app.use(helmet.xssFilter());
-app.use(helmet.frameguard("deny"));
+app.use(helmet.frameguard( {
+    action: 'deny'
+}));
 let ninetyDaysInMilliseconds = 7776000000;
 app.use(helmet.hsts({ "maxAge": ninetyDaysInMilliseconds, "force": true }));
 routers(app);
