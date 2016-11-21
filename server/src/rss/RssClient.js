@@ -29,13 +29,13 @@ export default class RssClient {
                 let rssLink = root("link[type ^= 'application/rss+xml']");
                 let rssUrl = rssLink.attr("href");
                 if (rssLink && rssLink.length !== 0) {
-                    return this.getFeedsFromRssUrl(rssUrl,url)
+                    return await this.getFeedsFromRssUrl(rssUrl,url)
 
                 } else {
-                    return this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
+                    return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
                 }
             } else {
-                return this.handleUrlError(url, error);
+                this.handleUrlError(url, error);
             }
 
         }
@@ -76,35 +76,30 @@ export default class RssClient {
         if(links.size === 0) {
             this.handleUrlError(url, "no rss links found");
         } else {
-            return this.getCrawledRssData(links, url);
+            return await this.getCrawledRssData(links, url);
 
         }
     }
 
-     getCrawledRssData(links, url) {
-        let count = 0;
-         let feed;
-        return links.forEach(feed =async(link) => {
-            console.log("******1st")
+     async getCrawledRssData(links, url) {
+         let linksIterator = links.values();
+         let link = linksIterator.next().value;
+         while(link) {
             try {
-                console.log("******2nd")
-                console.log("before rss" + await this.getRssData(link, false));
                 let feeds = await this.getRssData(link, false);
                 feeds.url = link;
-                console.log("************7")
                 return feeds;
             }
             catch (error) {
-                count += 1;
-                console.log("************8")
-                if (count === links.size) {
-                    console.log("************9" + error)
-                    return this.handleUrlError(link, error);
+                try {
+                    let feed = await this.crawlRssList(link, error, url);
+                    return feed;
+                } catch (err) {
+                    link = linksIterator.next().value;
                 }
-                return this.crawlRssList(link, error, url);
-
             }
-        });
+         }
+         this.handleUrlError(url, "crawl failed");
     }
 
     async crawlRssList(link, error, url) {
@@ -117,11 +112,12 @@ export default class RssClient {
                 rssListRoot("a[href$='" + urlPath + ".rss']").attr("href") ||
                 rssListRoot("a[href$='" + urlPath + ".xml']").attr("href");
             if (rssListLink) {
-                let rssFeeds = await this.getRssData(rssListLink, false)
+                let rssFeeds = await this.getRssData(rssListLink, false);
                 rssFeeds.url = rssListLink;
                 return rssFeeds;
-            };
+            }
         }
+        throw "not found";
     }
 
 
@@ -135,7 +131,7 @@ export default class RssClient {
                 "timeout": 6000
             }, (error, response, body) => {
                 if(error) {
-                    this.handleRequestError(url, error, reject);
+                    this.handleRequestError(url, error);
                 }
                 data = body;
             });
@@ -143,22 +139,23 @@ export default class RssClient {
                 if (res.statusCode !== HttpResponseHandler.codes.OK) {
                     RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
                     reject({ "message": "Bad status code" });
+                } else {
+                    let rssParser = new RssParser(this);
+                    rssParser.parse().then(feeds => {
+                        RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
+                        resolve(feeds);
+                    }).catch(error => {
+                        RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
+                        reject({ "message": FEEDS_NOT_FOUND, "data": data });
+                    });
                 }
-                let rssParser = new RssParser(this);
-                rssParser.parse().then(feeds => {
-                    RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
-                    resolve(feeds);
-                }).catch(error => {
-                    RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
-                    reject({ "message": FEEDS_NOT_FOUND, "data": data });
-                });
+
             });
         });
     }
 
 
     handleUrlError(url, error) {
-        console.log("************10")
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
         throw {"message": url + " is not a proper feed"};
     }
