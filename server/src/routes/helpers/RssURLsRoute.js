@@ -1,10 +1,8 @@
-/* eslint consistent-this:0*/
-import StringUtil from "../../../../common/src/util/StringUtil";
 import RssRequestHandler from "../../rss/RssRequestHandler";
-import Route from "./Route";
-import RouteLogger from "../RouteLogger";
+import Route from "./Route.js";
+import RouteLogger from "../RouteLogger.js";
 
-export default class RssURLsRoute extends Route {
+export default class RssFeedsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.query.url;
