@@ -52,4 +52,5 @@ $popup-layer-index: 4;
 $background-color: #FAF5F5;
 $dark-background-color: #E9E3E7;
 $primary-color: #63527A;
+$primary-color-light: lighten($primary-color, 18);
 $secondary-color: #FF6945;
