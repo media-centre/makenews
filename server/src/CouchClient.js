@@ -1,8 +1,6 @@
-"use strict";
-
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "./config/ApplicationConfig.js";
-import NodeErrorHandler from "./NodeErrorHandler.js";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import ApplicationConfig from "./config/ApplicationConfig";
+import NodeErrorHandler from "./NodeErrorHandler";
 import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
 
@@ -39,9 +37,9 @@ export default class CouchClient {
                 "body": body || {},
                 "json": true
             },
-            (error, response) => {
-                this.handleResponse(error, response, resolve, reject);
-            });
+                (error, response) => {
+                    this.handleResponse(error, response, resolve, reject);
+                });
         });
     }
 
@@ -53,9 +51,9 @@ export default class CouchClient {
                 "data": data,
                 "json": true
             },
-            (error, response) => {
-                this.handleResponse(error, response, resolve, reject);
-            });
+                (error, response) => {
+                    this.handleResponse(error, response, resolve, reject);
+                });
         });
     }
 
@@ -79,37 +77,34 @@ export default class CouchClient {
             request.get({
                 "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
             },
-            (error, response) => {
-                if(NodeErrorHandler.noError(error)) {
-                    if(response.statusCode === HttpResponseHandler.codes.OK) {
-                        let userDbs = JSON.parse(response.body).filter(dbName => {
-                            if(dbName !== "_replicator" && dbName !== "_users") {
-                                return dbName;
-                            }
-                        });
-                        CouchClient.logger().debug("successful response from database.");
-                        resolve(userDbs);
+                (error, response) => {
+                    if (NodeErrorHandler.noError(error)) {
+                        if (response.statusCode === HttpResponseHandler.codes.OK) {
+                            let userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
+                            CouchClient.logger().debug("successful response from database.");
+                            resolve(userDbs);
+                        } else {
+                            CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
+                            reject("unexpected response from the db");
+                        }
                     } else {
-                        CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
-                        reject("unexpected response from the db");
+                        CouchClient.logger().debug("Error from database. Error: %s", error);
+                        reject(error);
                     }
-                } else {
-                    CouchClient.logger().debug("Error from database. Error: %s", error);
-                    reject(error);
-                }
-            });
+                });
         });
     }
+
     _headers(customHeaders) {
         let headers = {};
         let defaultHeaders = this._defaultHeaders();
-        for(let key in defaultHeaders) {
-            if(defaultHeaders.hasOwnProperty(key)) {
+        for (let key in defaultHeaders) {
+            if (defaultHeaders.hasOwnProperty(key)) {
                 headers[key] = defaultHeaders[key];
             }
         }
-        for(let key in customHeaders) {
-            if(customHeaders.hasOwnProperty(key)) {
+        for (let key in customHeaders) {
+            if (customHeaders.hasOwnProperty(key)) {
                 headers[key] = customHeaders[key];
             }
         }
@@ -123,6 +118,5 @@ export default class CouchClient {
             "Content-Type": "application/json",
             "Accept": "application/json"
         };
-
     }
 }

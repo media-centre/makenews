@@ -1,10 +1,9 @@
-"use strict";
-import DefaultRoute from "./helpers/DefaultRoute.js";
-import LoginRoute from "./helpers/LoginRoute.js";
-import LogoutRoute from "./helpers/LogoutRoute.js";
-import RenewSessionRoute from "./helpers/RenewSessionRoute.js";
-import ChangePasswordRoute from "./helpers/ChangePasswordRoute.js";
-import RouteLogger from "./RouteLogger.js";
+import DefaultRoute from "./helpers/DefaultRoute";
+import LoginRoute from "./helpers/LoginRoute";
+import LogoutRoute from "./helpers/LogoutRoute";
+import RenewSessionRoute from "./helpers/RenewSessionRoute";
+import ChangePasswordRoute from "./helpers/ChangePasswordRoute";
+import RouteLogger from "./RouteLogger";
 import UserDbNameRoute from "./helpers/UserDbNameRoute";
 
 

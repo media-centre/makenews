@@ -115,7 +115,7 @@ describe("FacebookProfilesRoutes", () => {
             facebookRouteHelper.handle();
         });
 
-        it("should through error if any problem from getting profiles from facebook", (done) => {
+        it("should throw error if any problem from getting profiles from facebook", (done) => {
             let response = {
                 "status": (status) => {
                     try {

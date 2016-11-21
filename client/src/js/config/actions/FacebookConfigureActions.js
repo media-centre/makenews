@@ -20,9 +20,8 @@ export function addFacebookProfile(profile) {
 
 export function facebookGetProfiles() {
     let ajaxClient = AjaxClient.instance("/facebook-profiles", false);
-    var userName = LoginPage.getUserName();
     return dispatch => {
-        ajaxClient.get({ "userName": userName })
+        ajaxClient.get({ "userName": LoginPage.getUserName() })
             .then((data) => {
                 dispatch(facebookProfilesReceived(data.profiles));
             });

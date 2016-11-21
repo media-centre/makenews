@@ -5,6 +5,7 @@ import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
+import CouchClient from "../CouchClient";
 
 export default class FacebookRequestHandler {
 
@@ -90,6 +91,26 @@ export default class FacebookRequestHandler {
             }).catch(error => {
                 FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook profiles. Error: ${error}`);
                 reject("error fetching facebook profiles");
+            });
+        });
+    }
+
+    fetchConfiguredSourcesOf(sourceType, dbName, authSession) {
+        let couchClient = CouchClient.instance(dbName, authSession);
+        return new Promise((resolve, reject) => {
+            couchClient.post(`/${dbName}/_find`, {
+                "selector": {
+                    "docType": {
+                        "$eq": "source"
+                    },
+                    "sourceType": {
+                        "$eq": `fb-${sourceType}`
+                    }
+                }
+            }).then(data => {
+                resolve(data.docs);
+            }).catch(error => {
+                reject(error);
             });
         });
     }
