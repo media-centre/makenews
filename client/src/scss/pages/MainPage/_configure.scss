@@ -3,7 +3,7 @@
     &-container {
       float: left;
       position: fixed;
-      overflow: scroll;
+      overflow: auto;
       width: 20%;
       background-color: $background-color;
       height: 100vh;
@@ -43,6 +43,7 @@
     width: 60%;
     margin-left: 20%;
     margin-right: 20%;
+    box-sizing: border-box;
   }
 
 

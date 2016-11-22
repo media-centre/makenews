@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from "react";
 import SourcesResults from "./SourcesResults";
 import { connect } from "react-redux";
-import { facebookGetProfiles } from "./../actions/FacebookConfigureActions";
+import { facebookGetProfiles, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
         this.props.dispatch(facebookGetProfiles());
+        this.props.dispatch(getConfiguredProfiles());
     }
 
     render() {
