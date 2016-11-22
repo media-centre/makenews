@@ -363,7 +363,7 @@ describe("RssClient", () => {
                 ],
                 "status": "valid"
             }];
-            sinon.stub(RssParser.prototype, 'parse', () => Promise.resolve(feed));
+            sandbox.stub(RssParser.prototype, 'parse', () => Promise.resolve(feed));
             let res = await rssClientMock.getRssData(url);
             assert.equal(res, feed);
         });
