@@ -56,7 +56,7 @@ describe("Migration", () => {
 
         it("should give the function object to create the instance of url document", () => {
             let migrationInstance = new Migration(dbName, accessToken);
-            let className ="URLDocuments";
+            let className ="URLDocument";
             let object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof URLDocuments);
         });

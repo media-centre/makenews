@@ -1,8 +1,8 @@
-import RssRequestHandler from "../../rss/RssRequestHandler";
+import WebRequestHandler from "../../web/WebRequestHandler";
 import Route from "./Route.js";
 import RouteLogger from "../RouteLogger.js";
 
-export default class RssFeedsRoute extends Route {
+export default class WebURLsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.query.url;
@@ -17,15 +17,15 @@ export default class RssFeedsRoute extends Route {
 
     handle() {
         if(!this.valid()) {
-            RouteLogger.instance().warn("RssFeedsRoute:: invalid rss feed url %s.", this.url);
+            RouteLogger.instance().warn("WebURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();
         }
-        let rssRequestHandler = RssRequestHandler.instance();
-        rssRequestHandler.searchUrl(this.url).then(feeds => {
-            RouteLogger.instance().debug("Rss URL's Route:: successfully searched for the url %s .", this.url);
+        let webRequestHandler = WebRequestHandler.instance();
+        webRequestHandler.searchUrl(this.url).then(feeds => {
+            RouteLogger.instance().debug("Web URL's Route:: successfully searched for the url %s .", this.url);
             this._handleSuccess(feeds);
         }).catch(error => { //eslint-disable-line
-            RouteLogger.instance().debug("RssFeedsRoute:: failed to search for url  %s. Error: %s", this.url, error);
+            RouteLogger.instance().debug("WebURLsRoute:: failed to search for url  %s. Error: %s", this.url, error);
             this._handleBadRequest();
         });
     }

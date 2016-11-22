@@ -1,5 +1,5 @@
 "use strict";
-import RssURLsRoute from "./helpers/RssURLsRoute.js";
+import WebURLsRoute from "./helpers/WebURLsRoute.js";
 import RssFeedsRoute from "./helpers/RssFeedsRoute.js";
 import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute.js";
 import RouteLogger from "./RouteLogger";
@@ -16,7 +16,12 @@ export default (app) => {
     });
     
     app.post("/search-all-urls", (request, response, next) => {
-        RouteLogger.instance().info("RssRoutes:: /search-all-urls request received. url = %s", request.url);
-        new RssURLsRoute(request, response, next).handle();
+        RouteLogger.instance().info("WebURLS:: /search-all-urls request received. url = %s", request.url);
+        new WebURLsRoute(request, response, next).handle();
     });
+    
+    // app.post("/saveDocument", (request, response, next) => {
+    //     RouteLogger.instance().info("RssRoutes:: /search-all-urls request received. url = %s", request.url);
+    //     new WebURLsRoute(request, response, next).handle();
+    // });
 };

@@ -1,10 +1,10 @@
-import RssURLsRoute from "../../../src/routes/helpers/RssURLsRoute";
+import WebURLsRoute from "../../../src/routes/helpers/WebURLsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import RssRequestHandler from "../../../src/rss/RssRequestHandler"
+import WebRequestHandler from "../../../src/web/WebRequestHandler"
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
-describe("Rss Urls Route", () => {
+describe("Web Urls Route", () => {
     function mockResponse(done, expectedValues) {
         let response = {
             "status": (status) => {
@@ -39,7 +39,7 @@ describe("Rss Urls Route", () => {
        };
        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
        
-       new RssURLsRoute(request, response, {}).handle()
+       new WebURLsRoute(request, response, {}).handle()
    });
 
    it("should return feeds for correct request", (done) => {
@@ -60,19 +60,19 @@ describe("Rss Urls Route", () => {
                docType: 'test',
                sourceType: 'web',
                name: 'url1 test',
-               url: 'http://www.thehindu.com/news/international/?service=rss' },
+               url: 'http://www.thehindu.com/news/international/?service' },
                { _id: '2',
                    docType: 'test',
                    sourceType: 'web',
                    name: 'url test',
-                   url: 'http://www.thehindu.com/sport/?service=rss' }]
+                   url: 'http://www.thehindu.com/sport/?service' }]
        };
-       let requestHandlerInstance = new RssRequestHandler();
-       sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
+       let requestHandlerInstance = new WebRequestHandler();
+       sandbox.stub(WebRequestHandler, "instance").returns(requestHandlerInstance);
        let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
        requestHandlerMock.withArgs(request.query.url).returns(Promise.resolve(feeds));
        let response = mockResponseSuccess(done, { "status": HttpResponseHandler.codes.OK, "json": { feeds } });
-       let rssURLsRoute = new RssURLsRoute(request, response, {});
-       rssURLsRoute.handle();
+       let webURLsRoute = new WebURLsRoute(request, response, {});
+       webURLsRoute.handle();
    });
 });

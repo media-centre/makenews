@@ -1,4 +1,4 @@
-import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
+import WebRequestHandler from "../../../server/src/web/WebRequestHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import CouchClient from "../../src/CouchClient";
@@ -6,11 +6,11 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe("Rss Request Handler", () => {
+describe("Web Request Handler", () => {
     let sandbox = null, couchClient = null ;
-    beforeEach("Rss Request Handler", () => {
+    beforeEach("Web Request Handler", () => {
         sandbox = sinon.sandbox.create();
-        sandbox.stub(RssRequestHandler, "logger").returns(LogTestHelper.instance());
+        sandbox.stub(WebRequestHandler, "logger").returns(LogTestHelper.instance());
         let applicationConfig = new ApplicationConfig();
         sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
         sandbox.stub(applicationConfig, "adminDetails").returns({
@@ -21,12 +21,12 @@ describe("Rss Request Handler", () => {
         couchClient = new CouchClient();
         sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
     });
-    
+
     afterEach("FacebookAccessToken", () => {
         sandbox.restore();
     });
-    
-    it("should return the default URL Document", (done) => {
+
+    it("should return the default URL Documents", (done) => {
         let body = {
             "selector": {
                 "url": {
@@ -34,7 +34,7 @@ describe("Rss Request Handler", () => {
                 }
             }
         };
-        let rssRequestHandler = RssRequestHandler.instance();
+        let webRequestHandler = WebRequestHandler.instance();
         let getDocStub = sinon.stub(couchClient, "getUrlDocument");
         getDocStub.withArgs(body).returns(Promise.resolve({ "docs":
             [ { _id: '1',
@@ -48,18 +48,18 @@ describe("Rss Request Handler", () => {
                     name: 'url test',
                     url: 'http://www.thehindu.com/sport/?service=rss' }]
         }));
-        rssRequestHandler.searchUrl(body).then(document => {
+        webRequestHandler.searchUrl(body).then(document => {
             assert.strictEqual("web",document.docs[0].sourceType);
             done();
         })
     });
-    
-    it("should reject with an error if the URL document rejects with an error", (done) => {
+
+    it("should reject with an error if the URL document rejects with an error when body is null", (done) => {
         let body = null;
-        let rssRequestHandler = RssRequestHandler.instance();
+        let webRequestHandler = WebRequestHandler.instance();
         let getDocStub = sinon.stub(couchClient, "getUrlDocument");
         getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
-        rssRequestHandler.searchUrl(body).catch((error) => {
+        webRequestHandler.searchUrl(body).catch((error) => {
             assert.strictEqual("No selector found", error);
             done();
         });

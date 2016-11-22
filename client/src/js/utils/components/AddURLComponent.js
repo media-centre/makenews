@@ -124,13 +124,6 @@ export default class AddURLComponent extends Component {
         return urlsList;
     }
 
-    _handleSearch() {
-        let searchKey = this.refs.searchKey.value.trim();
-        if (searchKey.length > 0) {
-
-        }
-    }
-
     render() {
         let inputBox = null, confirmPopup = null;
         if (this.state.showUrlInput) {
@@ -161,8 +154,6 @@ export default class AddURLComponent extends Component {
                         {this.getUrlList()}
                     </ul>
                     {inputBox}
-                    <input type="text" ref="searchKey" placeholder="search"/>
-                    <button type="submit" onSubmit={this._handleSearch()}>Submit</button>
                     {this.state.successResponse ? "" :
                         <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
