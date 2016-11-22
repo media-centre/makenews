@@ -10,7 +10,7 @@
       "db": "common",
       "couchDbAdmin": {
         "username": "admin",
-        "password": "password"
+        "password": "admin"
       }
     },
     "facebook": {

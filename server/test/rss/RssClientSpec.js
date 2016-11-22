@@ -330,8 +330,6 @@ describe("RssClient", () => {
     describe("handleUrlError", () => {
 
         it("should throw url is not a proper feed error when handle_url_error is called", async() => {
-            let url = "www.error.com";
-            let rssClientMock = new RssClient();
             try {
                 rssClientMock.handleUrlError(url);
             }
@@ -343,8 +341,6 @@ describe("RssClient", () => {
 
     describe("handleRequestError", () => {
         it("should throw request failed for url error when handle_request_error is called", async() => {
-            let url = "www.error.com";
-            let rssClientMock = new RssClient();
             try {
                 rssClientMock.handleRequestError(url);
             }
@@ -353,5 +349,6 @@ describe("RssClient", () => {
             }
         })
     });
+
 
 });
