@@ -22,15 +22,6 @@ export default class RssRequestHandler {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             return error;
         }
-        // return new Promise((resolve, reject) => {
-        //     this.rssClient().fetchRssFeeds(url).then(feeds => {
-        //         RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-        //         resolve(feeds);
-        //     }).catch(error => {
-        //         RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-        //         reject(error);
-        //     });
-        // });
     }
 
     rssClient() {
