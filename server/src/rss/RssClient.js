@@ -117,7 +117,7 @@ export default class RssClient {
                 return rssFeeds;
             }
         }
-        throw "not found";
+        throw "no rss found";
     }
 
 
