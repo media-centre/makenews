@@ -10,9 +10,27 @@ import nock from "nock";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 
 describe("RssClient", () => {
-    let sandbox = null;
+    let sandbox, rssClientMock,feed,error,url = null;
+
     beforeEach("RssClient", () => {
         sandbox = sinon.sandbox.create();
+        rssClientMock = new RssClient();
+        feed = [{
+            "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
+            "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
+            "docType": "source",
+            "sourceType": "twitter",
+            "url": "@balaswecha",
+            "categoryIds": [
+                "95fa167311bf340b461ba414f1004074"
+            ],
+            "status": "valid"
+        }];
+        url = "www.error.com";
+        error = {
+            "message": "feeds_not_found",
+            "data": '<link type="application/rss+xml" href="http://www.error.com"> '
+        };
     });
 
     afterEach("RssClient", () => {
@@ -20,27 +38,12 @@ describe("RssClient", () => {
     });
 
     describe("fetchRssFeeds", () => {
-        let rssClientMock, feed, error, url = null;
-
+        let error;
         beforeEach("fetchRssFeeds", () => {
-            rssClientMock = new RssClient();
-            feed = [{
-                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
-                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
-                "docType": "source",
-                "sourceType": "twitter",
-                "url": "@balaswecha",
-                "categoryIds": [
-                    "95fa167311bf340b461ba414f1004074"
-                ],
-                "status": "valid"
-            }];
             error = [{
                 "message": "new error"
             }];
-            url = "www.error.com";
-        });
-
+        })
         it("should fetch rss feed for valid url", async() => {
             let url = "www.example.com";
             sinon.mock(rssClientMock).expects("getRssData").withArgs(url).returns(feed);
@@ -110,27 +113,6 @@ describe("RssClient", () => {
     });
 
     describe("getFeedsFromUrl", () => {
-        let rssClientMock, feed, url, error;
-        beforeEach("getFeedsFromRssUrl", () => {
-            rssClientMock = new RssClient();
-            feed = [{
-                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
-                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
-                "docType": "source",
-                "sourceType": "twitter",
-                "url": "@balaswecha",
-                "categoryIds": [
-                    "95fa167311bf340b461ba414f1004074"
-                ],
-                "status": "valid"
-            }];
-            url = "www.error.com";
-            error = {
-                "message": "feeds_not_found",
-                "data": '<link type="application/rss+xml" href="http://www.error.com"> '
-            };
-        })
-
         it("should call handleRequestError when rss data is not present", async() => {
             let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
             getrssMock.returns(Promise.reject(error));
@@ -146,7 +128,6 @@ describe("RssClient", () => {
             }
 
         });
-
 
         it("should return feeds when rss data is  present", async() => {
             let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("http://www.example.com");
@@ -167,16 +148,6 @@ describe("RssClient", () => {
     });
 
     describe("crawlForRssUrl", () => {
-        let rssClientMock, error, url;
-        beforeEach("crawlForRssUrl", () => {
-            rssClientMock = new RssClient();
-            error = {
-                "message": "feeds_not_found",
-                "data": '<link type="application/rss+xml" href="http://www.error.com"> '
-            };
-            url = "www.error.com";
-
-        })
         it("should return error when rss links are not present", async() => {
             let root = cheerio.load(error.data);
 
@@ -209,11 +180,9 @@ describe("RssClient", () => {
     });
 
     describe("getCrawledRssData", () => {
-        let rssClientMock, error, url, root;
+        let error, root;
         beforeEach("getCrawledRssData", () => {
-            rssClientMock = new RssClient();
             error = {"message": "feeds_not_found", "data": '<a href="/abc"></a> '};
-            url = "www.error.com";
             root = cheerio.load(error.data);
         })
 
@@ -285,20 +254,8 @@ describe("RssClient", () => {
     });
 
     describe("crawlRssList", () => {
-        let rssClientMock, feed, error;
+        let error;
         beforeEach("crawlRssList", () => {
-             rssClientMock = new RssClient();
-            feed = [{
-                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
-                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
-                "docType": "source",
-                "sourceType": "twitter",
-                "url": "@balaswecha",
-                "categoryIds": [
-                    "95fa167311bf340b461ba414f1004074"
-                ],
-                "status": "valid"
-            }];
             error = {"message": "feeds_not_found", "data": '<a href="/abc-rss"></a> '};
         });
 
@@ -326,9 +283,8 @@ describe("RssClient", () => {
     });
 
     describe("getRssData", () => {
-        let rssClientMock, url;
+        let url;
         beforeEach("getRssData", () => {
-            rssClientMock = new RssClient();
             url = "http://www.example.com";
         });
 
@@ -352,17 +308,6 @@ describe("RssClient", () => {
         });
 
         it("it should return feeds when parser returns feeds", async() => {
-            let feed = [{
-                "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
-                "_rev": "1-a1fc119c81b2e042c1fe10721af7ac56",
-                "docType": "source",
-                "sourceType": "twitter",
-                "url": "@balaswecha",
-                "categoryIds": [
-                    "95fa167311bf340b461ba414f1004074"
-                ],
-                "status": "valid"
-            }];
             sandbox.stub(RssParser.prototype, 'parse', () => Promise.resolve(feed));
             let res = await rssClientMock.getRssData(url);
             assert.equal(res, feed);
