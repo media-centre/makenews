@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions.js";
-import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
-import mockStore from "../../helper/ActionHelper.js";
+import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions";
+import FeedDb from "../../../src/js/feeds/db/FeedDb";
+import mockStore from "../../helper/ActionHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 

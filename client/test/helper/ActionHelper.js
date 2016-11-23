@@ -17,7 +17,7 @@ export default function mockStore(getState, expectedActions, done, verify = func
                 return typeof getState === "function" ? getState() : getState;
             },
 
-            dispatch(action) {
+            dispatch(action) { //eslint-disable-line consistent-return
                 const expectedAction = expectedActions.shift();
 
                 try {

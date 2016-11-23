@@ -1,11 +1,9 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0, no-undefined:0*/
 
-"use strict";
-import PouchClient from "../../../src/js/db/PouchClient.js";
-import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
-import DateTimeUtil from "../../../src/js/utils/DateTimeUtil.js";
+import PouchClient from "../../../src/js/db/PouchClient";
+import FeedDb from "../../../src/js/feeds/db/FeedDb";
+import DateTimeUtil from "../../../src/js/utils/DateTimeUtil";
 import sinon from "sinon";
-import moment from "moment";
 import { expect, assert } from "chai";
 
 describe("FeedDb", () => {
@@ -136,7 +134,7 @@ describe("FeedDb", () => {
                 "key": sourceId
             }).returns(Promise.resolve(expectedSurfFeeds));
             FeedDb.surfFeeds(sourceId).then((surfFeedDocs) => {
-                assert.strictEqual("Chennai Connect at The Hindu", surfFeedDocs[0].title);
+                assert.strictEqual("Chennai Connect at The Hindu", surfFeedDocs[0].title); //eslint-disable-line no-magic-numbers
                 fetchDocumentMock.verify();
                 fetchDocumentMock.restore();
                 done();
@@ -184,7 +182,7 @@ describe("FeedDb", () => {
                 "key": sourceId
             }).returns(Promise.resolve(expectedParkFeeds));
             FeedDb.sourceParkFeeds(sourceId).then((parkFeedDocs) => {
-                assert.strictEqual("Chennai Connect at The Hindu", parkFeedDocs[0].title);
+                assert.strictEqual("Chennai Connect at The Hindu", parkFeedDocs[0].title); //eslint-disable-line no-magic-numbers
                 fetchDocumentMock.verify();
                 fetchDocumentMock.restore();
                 done();

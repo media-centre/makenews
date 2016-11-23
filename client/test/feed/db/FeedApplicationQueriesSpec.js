@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0*/
 
-"use strict";
-import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
+import FeedDb from "../../../src/js/feeds/db/FeedDb";
 import PouchClient from "../../../src/js/db/PouchClient";
-import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
+import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { expect, assert } from "chai";
 
