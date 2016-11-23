@@ -1,4 +1,3 @@
-import WebURLsRoute from "./helpers/WebURLsRoute";
 import RssFeedsRoute from "./helpers/RssFeedsRoute";
 import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute";
 import RouteLogger from "./RouteLogger";
@@ -18,10 +17,4 @@ export default (app) => {
         RouteLogger.instance().info("WebURLS:: /search-all-urls request received. url = %s", request.url);
         new WebURLsRoute(request, response, next).handle();
     });
-
-
-    // app.post("/saveDocument", (request, response, next) => {
-    //     RouteLogger.instance().info("RssRoutes:: /search-all-urls request received. url = %s", request.url);
-    //     new WebURLsRoute(request, response, next).handle();
-    // });
 };

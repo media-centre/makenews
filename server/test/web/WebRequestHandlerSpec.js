@@ -64,7 +64,7 @@ describe("Web Request Handler", () => {
         });
     });
 
-    describe("Save Document", () => {
+    describe("Add Document", () => {
         let sandbox = null, couchClient = null;
         beforeEach("Web Request Handler", () => {
             sandbox = sinon.sandbox.create();
@@ -101,7 +101,7 @@ describe("Web Request Handler", () => {
             }));
 
             let webRequestHandler = WebRequestHandler.instance();
-            webRequestHandler.saveDocument(document.name, document).then((response) => {
+            webRequestHandler.addDocument(document.name, document).then((response) => {
                 assert.strictEqual("NewsClick", response.id);
                 done();
             });
@@ -111,7 +111,7 @@ describe("Web Request Handler", () => {
             let webRequestHandler = WebRequestHandler.instance();
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
             getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
-            webRequestHandler.saveDocument("", {}).catch((error) => {
+            webRequestHandler.addDocument("", {}).catch((error) => {
                 assert.strictEqual("unexpected response from the db", error);
                 done();
             });

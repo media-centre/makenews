@@ -27,7 +27,7 @@ export default class WebRequestHandler {
         });
     }
     
-    saveDocument(documentId, document) {
+    addDocument(documentId, document) {
         return new Promise((resolve, reject) => {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
