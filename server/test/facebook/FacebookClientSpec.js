@@ -369,4 +369,53 @@ describe("FacebookClient", () => {
             });
         });
     });
+
+    describe("getPages", () => {
+        let facebookClient = null, pageName = "TheHindu";
+
+        beforeEach("getPages", () => {
+            facebookClient = FacebookClient.instance(accessToken, appSecretProof);
+        });
+
+        it("should give an error when facebook is rejected with some error", (done) => {
+            nock("https://graph.facebook.com")
+                .get(`/v2.8/search?q=${pageName}&type=page&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .reply(HttpResponseHandler.codes.BAD_REQUEST, {
+                    "error": { "message": "Invalid OAuth access token.",
+                        "type": "OAuthException",
+                        "code": 190
+                    } }
+                );
+
+            facebookClient.fetchPages(pageName).catch(error => {
+                try {
+                    assert.strictEqual("OAuthException", error.type);
+                    assert.strictEqual("Invalid OAuth access token.", error.message);
+                    done();
+                } catch(err) {
+                    done(err);
+                }
+            });
+        });
+
+        it("should fetch the facebook pages", (done) => {
+            let pages = { "data": [
+                    { "name": "The Hindu", "id": "163974433696568" },
+                    { "name": "The Hindu Business Line", "id": "60573550946" },
+                    { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
+
+            nock("https://graph.facebook.com")
+                .get(`/v2.8/search?q=${pageName}&type=page&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .reply(HttpResponseHandler.codes.OK, pages);
+
+            facebookClient.fetchPages(pageName).then(data => {
+                try {
+                    expect(data).to.deep.equal(pages);
+                    done();
+                } catch(err) {
+                    done(err);
+                }
+            });
+        });
+    });
 });
