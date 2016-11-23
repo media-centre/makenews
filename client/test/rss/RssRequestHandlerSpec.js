@@ -1,7 +1,6 @@
 /* eslint max-nested-callbacks:0 */
-"use strict";
-import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
+import RssRequestHandler from "../../src/js/rss/RssRequestHandler";
+import AjaxClient from "../../src/js/utils/AjaxClient";
 import { expect } from "chai";
 import sinon from "sinon";
 import RssClient from "../../src/js/rss/RssClient";

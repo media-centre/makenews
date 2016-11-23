@@ -1,7 +1,6 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import RssFeeds from "../../src/js/rss/RssFeeds.js";
-import RssDb from "../../src/js/rss/RssDb.js";
+import RssFeeds from "../../src/js/rss/RssFeeds";
+import RssDb from "../../src/js/rss/RssDb";
 import { assert } from "chai";
 import sinon from "sinon";
 

@@ -1,13 +1,12 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
 import { assert } from "chai";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../../helper/TestHelper.js";
-import { ParkPage } from "../../../src/js/park/pages/ParkPage.jsx";
-import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent.jsx";
-import AllFeeds from "../../../src/js/surf/components/AllFeeds.jsx";
+import "../../helper/TestHelper";
+import { ParkPage } from "../../../src/js/park/pages/ParkPage";
+import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent";
+import AllFeeds from "../../../src/js/surf/components/AllFeeds";
 import sinon from "sinon";
 import Locale from "../../../src/js/utils/Locale";
 

@@ -1,10 +1,7 @@
-"use strict";
-
 import { assert } from "chai";
-import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent.jsx";
+import ParkFeedActionComponent from "../../../src/js/park/components/ParkFeedActionComponent";
 
 
 describe("ParkFeedActionComponent", () => {

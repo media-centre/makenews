@@ -1,6 +1,5 @@
 /* eslint max-nested-callbacks:0*/
 
-"use strict";
 import { displayParkedFeeds, DISPLAY_PARKED_FEEDS, UNPARK_FEED, displayParkedFeedsAsync, unparkFeedAsync, unparkFeed } from "../../../src/js/park/actions/ParkActions";
 import * as FeedActions from "../../../src/js/feeds/actions/FeedsActions";
 import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";

@@ -1,8 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
-"use strict";
-import { parkedFeeds } from "../../../src/js/park/reducers/ParkReducer.js";
-import { DISPLAY_PARKED_FEEDS } from "../../../src/js/park/actions/ParkActions.js";
+import { parkedFeeds } from "../../../src/js/park/reducers/ParkReducer";
+import { DISPLAY_PARKED_FEEDS } from "../../../src/js/park/actions/ParkActions";
 import { assert } from "chai";
 import sinon from "sinon";
 import Locale from "../../../src/js/utils/Locale";
