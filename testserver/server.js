@@ -1,5 +1,5 @@
 /*eslint no-magic-numbers:0, no-console:0, max-len:0 */
-"use strict";
+/*eslint consistent-return:0 */
 var express = require("express");
 
 const PORT = 3000;
