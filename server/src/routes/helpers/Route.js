@@ -39,7 +39,6 @@ export default class Route {
     }
 
     _handleInvalidRoute() {
-        console.log("In invalid Condition");
         this.response.status(HttpResponseHandler.codes.BAD_REQUEST);
         this.response.json({ "message": "bad request" });
     }
