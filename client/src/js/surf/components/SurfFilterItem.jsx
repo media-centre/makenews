@@ -1,5 +1,4 @@
-/*eslint no-nested-ternary:0, max-len:0, brace-style:0 */
-"use strict";
+/*eslint no-nested-ternary:0, max-len:0, brace-style:0, react/self-closing-comp:0*/
 import React, { Component, PropTypes } from "react";
 
 export default class SurfFilterItem extends Component {
@@ -21,9 +20,9 @@ export default class SurfFilterItem extends Component {
         if(index === NOT_FOUND) {
             filterItems.push(item);
         } else {
-            filterItems.splice(index, 1);
+            filterItems.splice(index, 1);  //eslint-disable-line no-magic-numbers
         }
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0);  //eslint-disable-line no-magic-numbers
         this.props.dispatchFilterAction(this.props.type, filterItems);
     }
 

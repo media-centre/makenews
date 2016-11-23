@@ -1,4 +1,3 @@
-"use strict";
 import ConfigureHelp from "./ConfigureHelp.jsx";
 import SurfHelp from "./SurfHelp.jsx";
 import ParkHelp from "./ParkHelp.jsx";

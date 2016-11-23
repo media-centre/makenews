@@ -1,5 +1,4 @@
-/*eslint react/prefer-es6-class:0*/
-"use strict";
+/*eslint react/prefer-es6-class:0 no-magic-numbers:0*/
 import React, { PropTypes } from "react";
 import { Link } from "react-router";
 import { connect } from "react-redux";
@@ -12,7 +11,7 @@ import History from "../../History";
 export class AllCategories extends React.Component {
 
     componentWillMount() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.props.dispatch(highLightTabAction(["Configure", "RSS"]));
         this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayAllCategoriesAsync());

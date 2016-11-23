@@ -1,4 +1,4 @@
-/* eslint react/no-set-state:0 */
+/* eslint react/no-set-state:0, react/self-closing-comp:0 */
 
 import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";

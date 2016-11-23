@@ -1,6 +1,4 @@
 /* eslint react/no-danger:0 max-len:0, no-set-state:0 */
-"use strict";
-
 import React, { Component, PropTypes } from "react";
 import FeedHeader from "./FeedHeader.jsx";
 import Spinner from "../../utils/components/Spinner.jsx";

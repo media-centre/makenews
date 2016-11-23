@@ -1,4 +1,4 @@
-/* eslint brace-style:0, max-len:0, no-set-state:0,no-unused-vars:0, max-nested-callbacks:0, no-did-mount-set-state:0 */
+/* eslint brace-style:0, max-len:0, no-set-state:0,no-unused-vars:0, max-nested-callbacks:0, no-did-mount-set-state:0, react/self-closing-comp:0 */
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../components/AllFeeds";
 import SurfFeedActionComponent from "../components/SurfFeedActionComponent";
@@ -23,7 +23,7 @@ export class SurfPage extends Component {
         this.state = { "filter": filter, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true, "showFilterSpinner": false, "refreshState": this.props.refreshState };
     }
     componentWillMount() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.takeTour();
         this.props.dispatch(initiateSurf(()=> {
             this.setState({ "filter": this.props.surfFilter });
@@ -54,7 +54,7 @@ export class SurfPage extends Component {
     }
 
     getFeedsCallBack() {
-        if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) {
+        if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
             this.getMoreFeeds();
         }
     }
@@ -72,7 +72,7 @@ export class SurfPage extends Component {
         if(!this.state.showPaginationSpinner) {
             this.setState({ "showPaginationSpinner": true });
             this.props.dispatch(fetchFeedsByPage(this.state.lastIndex, (result)=> {
-                result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex;
+                result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex; //eslint-disable-line no-magic-numbers
                 result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
                 this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
             }));
@@ -83,7 +83,7 @@ export class SurfPage extends Component {
         }
     }
 
-    getLatestFeeds(skipSessionTimer) {
+    getLatestFeeds(skipSessionTimer) {  //eslint-disable-line consistent-return
         if(this.state.refreshState) {
             return false;
         }
@@ -95,8 +95,8 @@ export class SurfPage extends Component {
 
     parkFeedItem(feedDoc) {
         this.props.dispatch(parkFeed(feedDoc, ()=> {
-            if(this.props.feeds.length === 0) {
-                this.props.dispatch(fetchFeedsByPage(0, (filteredObj)=> {
+            if(this.props.feeds.length === 0) { //eslint-disable-line no-magic-numbers
+                this.props.dispatch(fetchFeedsByPage(0, (filteredObj)=> { //eslint-disable-line no-magic-numbers
                     this.setState({ "lastIndex": filteredObj.lastIndex });
                 }));
             }
@@ -106,7 +106,7 @@ export class SurfPage extends Component {
     getHintMessage() {
         if(!this.props.feeds) {
             return <div className="feed-hint t-center">{this.props.messages.fetchingFeeds}</div>;
-        } else if (this.props.feeds.length === 0) {
+        } else if (this.props.feeds.length === 0) { //eslint-disable-line no-magic-numbers
             return <div className="feed-hint t-center">{this.props.messages.noFeeds}</div>;
         }
         return null;

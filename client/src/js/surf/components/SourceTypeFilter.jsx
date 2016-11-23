@@ -1,5 +1,4 @@
 /*eslint no-nested-ternary:0, max-len:0, brace-style:0 */
-"use strict";
 import React, { Component, PropTypes } from "react";
 
 export default class SourceTypeFilter extends Component {
@@ -43,7 +42,7 @@ export default class SourceTypeFilter extends Component {
         if(index === NOT_FOUND) {
             filter.sourceTypes.push(item);
         } else {
-            filter.sourceTypes.splice(index, 1);
+            filter.sourceTypes.splice(index, 1);  //eslint-disable-line no-magic-numbers
         }
         this.props.dispatchFilterAction(filter);
     }

@@ -7,7 +7,7 @@ export default class TabComponent extends Component {
         super(props);
 
         this.state = {
-            "activeIndex": this.props.activeIndex || 0
+            "activeIndex": this.props.activeIndex || 0 //eslint-disable-line no-magic-numbers
         };
     }
 
@@ -31,7 +31,7 @@ export default class TabComponent extends Component {
             let urlsCount = header.props.content.length;
 
             li = (<li key={index} className={this._activeClassName(tabName)} ref={"tab" + index} onClick={this._selectTab.bind(this, index, tabName)}>
-                {header.props.icon ? <i className={"fa fa-" + header.props.icon.toLowerCase()}></i> : ""}
+                {header.props.icon ? <i className={"fa fa-" + header.props.icon.toLowerCase()} /> : ""}
                 <span className="hide-mobile-xs">{tabName}</span>
                 <span>{`(${urlsCount})`}</span>
             </li>);

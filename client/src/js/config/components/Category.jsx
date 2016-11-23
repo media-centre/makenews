@@ -1,6 +1,5 @@
 /* eslint max-len:0  react/no-set-state:0, callback-return:0 */
 
-"use strict";
 import React, { Component, PropTypes } from "react";
 import CategoryNavigationHeader from "./CategoryNavigationHeader";
 import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } from "../actions/CategoryActions";
@@ -40,7 +39,7 @@ class Category extends Component {
                 this.setCategoryName(category.name);
             });
         }
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
     }
 
     setCategoryName(categoryName) {
@@ -84,17 +83,13 @@ class Category extends Component {
     }
 
     _getValidURLCount(content) {
-        let items = content.filter((item) => {
-            if(item.status === "valid") {
-                return item;
-            }
-        });
+        let items = content.filter(item => item.status === "valid");
         return items.length;
     }
 
     render() {
 
-        let tabContent = Object.keys(this.props.categoryDetails.sources).map((key, index) => {
+        let tabContent = Object.keys(this.props.categoryDetails.sources).map((key, index) => { //eslint-disable-line consistent-return
             let item = this.props.categoryDetails.sources[key];
             if(key === RSS) {
                 return <RSSComponent key={index} name={item.name} tab-header={item.name + "(" + this._getValidURLCount(item.details) + ")"} icon={key} content={item.details} categoryId={this.props.params.categoryId} dispatch={this.props.dispatch} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings}/>;
@@ -110,7 +105,7 @@ class Category extends Component {
               <CategoryNavigationHeader isValidName={this.state.isValidName} categoryName={categoryName} categoryId={this.props.params.categoryId} isDefault={this.state.isDefaultCategory} updateCategoryName={this._updateCategoryName.bind(this)} errorMessage={this.state.titleErrorMessage} categoryDetailsPageStrings={this.props.categoryDetailsPageStrings} dispatch={this.props.dispatch}/>
               <TabComponent tabToHighlight={this.props.highlightedTab} dispatch={this.props.dispatch}>{tabContent}</TabComponent>
           </div>
-      );
+        );
     }
 }
 

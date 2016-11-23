@@ -75,7 +75,7 @@ export default class AddURLComponent extends Component {
         let url = this.refs.addUrlTextBox.value.trim();
         let errorMessage = this._isValidUrl(url);
         this.setState({ "errorMessage": errorMessage, "successResponse": false });
-        if (errorMessage.length === 0) {
+        if (errorMessage.length === 0) { //eslint-disable-line no-magic-numbers
             this.setState({
                 "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl,
                 "successResponse": false

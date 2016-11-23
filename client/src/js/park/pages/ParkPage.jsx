@@ -1,4 +1,3 @@
-"use strict";
 import React, { Component, PropTypes } from "react";
 import AllFeeds from "../../surf/components/AllFeeds.jsx";
 import { unparkFeedAsync, displayParkedFeedsAsync } from "../actions/ParkActions";
@@ -10,7 +9,7 @@ import Toast from "../../utils/custom_templates/Toast";
 
 export class ParkPage extends Component {
     componentWillMount() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.props.dispatch(highLightTabAction(["Park"]));
         this.props.dispatch(initialiseParkedFeedsCount());
         this.props.dispatch(displayParkedFeedsAsync());
@@ -25,7 +24,7 @@ export class ParkPage extends Component {
     getHintMessage() {
         if(!this.props.parkedItems) {
             return <div ref="defaultText" className="t-center">{this.props.messages.fetchingFeeds}</div>;
-        } else if (this.props.parkedItems.length === 0) {
+        } else if (this.props.parkedItems.length === 0) { //eslint-disable-line no-magic-numbers
             return <div ref="defaultText" className="t-center">{this.props.messages.noFeeds}</div>;
         }
         return null;

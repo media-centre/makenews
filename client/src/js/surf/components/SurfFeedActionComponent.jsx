@@ -1,4 +1,4 @@
-"use strict";
+/* eslint-disable react/self-closing-comp */
 import React, { Component, PropTypes } from "react";
 
 export default class SurfFeedActionComponent extends Component {

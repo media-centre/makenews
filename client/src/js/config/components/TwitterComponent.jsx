@@ -1,5 +1,4 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
-"use strict";
 import React, { Component, PropTypes } from "react";
 import { addTwitterUrlAsync } from "../actions/CategoryActions";
 import AddURLComponent from "../../utils/components/AddURLComponent";
@@ -31,10 +30,8 @@ export default class TwitterComponent extends Component {
                 }
                 return callback({ "error": urlStatus, "urlAdded": response === "valid" });
             }));
-        } else {
-            return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidTwitterUrl });
-
         }
+        return callback({ "error": this.props.categoryDetailsPageStrings.errorMessages.invalidTwitterUrl });
     }
 
     twitterLoginHandler() {

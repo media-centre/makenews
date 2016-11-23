@@ -1,5 +1,4 @@
 /* eslint no-unused-vars:0*/
-"use strict";
 import Logo from "../../utils/components/Logo.jsx";
 import MainHeaderTab from "../../utils/components/TabComponent/MainHeaderTab.jsx";
 //import Logout from "../../login/components/Logout.jsx";

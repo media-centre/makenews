@@ -1,5 +1,4 @@
 /*eslint no-nested-ternary:0, no-set-state:0 */
-"use strict";
 import React, { Component, PropTypes } from "react";
 import SurfFilterItem from "./SurfFilterItem.jsx";
 
@@ -37,7 +36,7 @@ export default class SurfFilter extends Component {
                         <SurfFilterItem type="text" displayItems={this.props.categories} filterItems={this.props.filter.categories} title="Categories" className="filter-categories" dispatchFilterAction={this.updateFilter.bind(this)}/>
                     </div>
                 </div>
-                <button id="filterToggle" onClick={this.toggleFilter.bind(this)} title="filters"><i className="fa fa-filter"></i></button>
+                <button id="filterToggle" onClick={this.toggleFilter.bind(this)} title="filters"><i className="fa fa-filter" /></button>
             </div>
         );
     }

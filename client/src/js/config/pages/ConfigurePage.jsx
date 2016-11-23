@@ -1,10 +1,9 @@
-"use strict";
 import React, { Component, PropTypes } from "react";
 
 export default class ConfigurePage extends Component {
 
     componentWillMount() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
     }
 
     render() {

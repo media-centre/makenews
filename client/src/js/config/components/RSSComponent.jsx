@@ -1,5 +1,4 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
-"use strict";
 import React, { Component, PropTypes } from "react";
 import { addRssUrlAsync } from "../actions/CategoryActions";
 import AddURLComponent from "../../utils/components/AddURLComponent";

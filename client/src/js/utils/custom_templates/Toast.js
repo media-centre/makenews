@@ -13,11 +13,11 @@ export default class Toast {
             toastDOM.innerHTML = "<span class='message'></span><button class='btn-secondary border right'>Got it</button>";
             document.body.appendChild(toastDOM);
 
-            toastDOM.getElementsByTagName("button")[0].addEventListener("click", ()=> {
+            toastDOM.getElementsByTagName("button")[0].addEventListener("click", ()=> { //eslint-disable-line no-magic-numbers
                 Toast.close();
             });
         }
-        toastDOM.getElementsByClassName("message")[0].textContent = toastMessage;
+        toastDOM.getElementsByClassName("message")[0].textContent = toastMessage; //eslint-disable-line no-magic-numbers
 
         if(toastDOM.classList.contains("hide")) {
             toastDOM.classList.remove("hide");

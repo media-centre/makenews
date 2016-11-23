@@ -1,26 +1,25 @@
 /*eslint max-len:[0,500] */
-"use strict";
-import Login from "../components/Login.jsx";
-import Branding from "../components/Branding.jsx";
-import FeaturesHelp from "../components/FeaturesHelp.jsx";
-import { userLogin } from "../LoginActions.js";
-import Logo from "../../utils/components/Logo.jsx";
+import Login from "../components/Login";
+import Branding from "../components/Branding";
+import FeaturesHelp from "../components/FeaturesHelp";
+import { userLogin } from "../LoginActions";
+import Logo from "../../utils/components/Logo";
 import AppSessionStorage from "../../../js/utils/AppSessionStorage";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
 export class LoginPage extends Component {
 
+    static getUserName() {
+        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
+    }
+
     componentWillMount() {
-        document.getElementsByTagName("html")[0].classList.add("login-bg");
+        document.getElementsByTagName("html")[0].classList.add("login-bg"); //eslint-disable-line no-magic-numbers
     }
 
     componentWillUnmount() {
-        document.getElementsByTagName("html")[0].classList.remove("login-bg");
-    }
-
-    static getUserName() {
-        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
+        document.getElementsByTagName("html")[0].classList.remove("login-bg"); //eslint-disable-line no-magic-numbers
     }
 
     render() {
