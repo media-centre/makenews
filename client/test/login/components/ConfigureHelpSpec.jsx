@@ -1,12 +1,12 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import ConfigureHelp from "../../../src/js/login/components/ConfigureHelp.jsx";
+
+import ConfigureHelp from "../../../src/js/login/components/ConfigureHelp";
 
 import { assert } from "chai";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 
 describe("ConfigureHelp", () => {
     let configureComponent = null;

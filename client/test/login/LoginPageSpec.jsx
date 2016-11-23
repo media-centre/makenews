@@ -1,8 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import "../helper/TestHelper.js";
-import { LoginPage } from "../../src/js/login/pages/LoginPage.jsx";
+import "../helper/TestHelper";
+import { LoginPage } from "../../src/js/login/pages/LoginPage";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
@@ -75,5 +74,4 @@ describe("login page component", () => {
         assert.strictEqual("Test Surf Name", loginPage.refs.featuresHelp.props.featuresHelp.surfHelp.name);
         assert.strictEqual("Test Park Name", loginPage.refs.featuresHelp.props.featuresHelp.parkHelp.name);
     });
-
 });

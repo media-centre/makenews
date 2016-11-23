@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
-"use strict";
-import "../helper/TestHelper.js";
-import { login, loginPageLocale } from "../../src/js/login/LoginReducers.js";
-import Locale from "../../src/js/utils/Locale.js";
+import "../helper/TestHelper";
+import { login, loginPageLocale } from "../../src/js/login/LoginReducers";
+import Locale from "../../src/js/utils/Locale";
 import { assert } from "chai";
 import sinon from "sinon";
 

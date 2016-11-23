@@ -1,14 +1,13 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } from "../../src/js/login/LoginActions.js";
+import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } from "../../src/js/login/LoginActions";
 import AjaxClient from "../../src/js/utils/AjaxClient";
-import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
-import UserSession from "../../src/js/user/UserSession.js";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
+import UserSession from "../../src/js/user/UserSession";
 import { expect, assert } from "chai";
 import sinon from "sinon";
-import mockStore from "../helper/ActionHelper.js";
-import DbSession from "../../src/js/db/DbSession.js";
+import mockStore from "../helper/ActionHelper";
+import DbSession from "../../src/js/db/DbSession";
 
 describe("actions", () => {
     it("return type LOGIN_SUCCESS action", function() {
@@ -61,7 +60,7 @@ describe("userLogin", () => {
         });
 
         afterEach("userLogin", () => {
-            assert.strictEqual(appSessionStorageClearMock.callCount, 2);
+            assert.strictEqual(appSessionStorageClearMock.callCount, 2); //eslint-disable-line no-magic-numbers
             userSessionMock.verify();
             dbSessionInstanceMock.verify();
             historyMock.verify();

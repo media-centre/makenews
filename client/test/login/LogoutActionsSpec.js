@@ -1,9 +1,7 @@
-"use strict";
-
 import LogoutActions from "../../src/js/login/LogoutActions";
 import AjaxClient from "../../src/js/utils/AjaxClient";
-import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
-import DbSession from "../../src/js/db/DbSession.js";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
+import DbSession from "../../src/js/db/DbSession";
 import sinon from "sinon";
 
 describe("userLogout", () => {

@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
 import Login from "../../src/js/login/components/Login.jsx";
 
 import sinon from "sinon";
@@ -8,7 +7,7 @@ import { assert } from "chai";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 
 describe("login component", () => {
     let onSubmitCallback = null, loginComponent = null, loginStrings = null;
