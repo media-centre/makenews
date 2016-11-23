@@ -15,10 +15,25 @@ export default class WebRequestHandler {
     searchUrl(selector) {
         return new Promise((resolve, reject) => {
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then(dbInstance => {
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
                 dbInstance.getUrlDocument(selector).then((document) => {
                     WebRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
                     resolve(document);
+                }).catch((error) => {
+                    WebRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
+                    reject(error);
+                });
+            });
+        });
+    }
+    
+    saveDocument(document_id, document) {
+        return new Promise((resolve, reject) => {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
+                dbInstance.saveDocument(document_id, document).then((response) => {
+                    WebRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
+                    resolve(response);
                 }).catch((error) => {
                     WebRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
                     reject(error);
