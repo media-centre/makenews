@@ -1,8 +1,7 @@
 /* eslint max-nested-callbacks:0 */
-"use strict";
-import TwitterClient from "../../src/js/twitter/TwitterClient.js";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
-import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
+import TwitterClient from "../../src/js/twitter/TwitterClient";
+import AjaxClient from "../../src/js/utils/AjaxClient";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import { assert, expect } from "chai";
 import sinon from "sinon";
 

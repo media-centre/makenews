@@ -1,8 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import { highLightTabAction, CHANGE_HIGHLIGHTED_TAB } from "../../src/js/tabs/TabActions.js";
-import mockStore from "../helper/ActionHelper.js";
+import { highLightTabAction, CHANGE_HIGHLIGHTED_TAB } from "../../src/js/tabs/TabActions";
+import mockStore from "../helper/ActionHelper";
 
 describe("Tab Action", () => {
     it("should call highlighted tab action successfully", (done) => {
@@ -15,4 +14,3 @@ describe("Tab Action", () => {
         store.dispatch(highLightTabAction([tabName1, tabName2]));
     });
 });
-

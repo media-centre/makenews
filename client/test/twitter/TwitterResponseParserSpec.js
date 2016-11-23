@@ -1,7 +1,6 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import TwitterResponseParser from "../../src/js/twitter/TwitterResponseParser.js";
+import TwitterResponseParser from "../../src/js/twitter/TwitterResponseParser";
 import { expect } from "chai";
 
 describe("createTwitterFeed", ()=> {

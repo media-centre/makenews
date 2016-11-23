@@ -1,8 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
-"use strict";
-import "../helper/TestHelper.js";
-import { highlightedTab } from "../../src/js/tabs/TabReducers.js";
+import "../helper/TestHelper";
+import { highlightedTab } from "../../src/js/tabs/TabReducers";
 import { assert } from "chai";
 import { List } from "immutable";
 

@@ -1,10 +1,10 @@
 /* eslint max-nested-callbacks:0 */
-"use strict";
-import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
-import TwitterLogin from "../../src/js/twitter/TwitterLogin.js";
-import AppWindow from "../../src/js/utils/AppWindow.js";
-import LoginPage from "../../src/js/login/pages/LoginPage.jsx";
-import UserInfo from "../../src/js/user/UserInfo.js";
+
+import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler";
+import TwitterLogin from "../../src/js/twitter/TwitterLogin";
+import AppWindow from "../../src/js/utils/AppWindow";
+import LoginPage from "../../src/js/login/pages/LoginPage";
+import UserInfo from "../../src/js/user/UserInfo";
 import sinon from "sinon";
 import { assert } from "chai";
 
