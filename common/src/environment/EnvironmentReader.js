@@ -1,5 +1,5 @@
-"use strict";
-import StringUtil from "../util/StringUtil.js";
+
+import StringUtil from "../util/StringUtil";
 
 export default class EnvironmentReader {
     constructor(envFile, environment) {

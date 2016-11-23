@@ -1,4 +1,4 @@
-import NumberUtil from '../../src/util/NumberUtil.js';
+import NumberUtil from '../../src/util/NumberUtil';
 import { assert, expect } from 'chai';
 
 describe("NumberUtil", () => {

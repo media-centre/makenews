@@ -1,7 +1,7 @@
 /* eslint no-sync:0 no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import EnvironmentFileLoader from "../../src/environment/EnvironmentFileLoader.js";
+
+import EnvironmentFileLoader from "../../src/environment/EnvironmentFileLoader";
 import fs from "fs";
 import path from "path";
 import sinon from "sinon";

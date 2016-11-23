@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import HttpResponseHandler from "../src/HttpResponseHandler.js";
+
+import HttpResponseHandler from "../src/HttpResponseHandler";
 import { expect } from "chai";
 
 describe("information", () => {

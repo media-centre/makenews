@@ -1,7 +1,7 @@
 /* eslint no-process-env:0, no-sync:0 */
-"use strict";
-import EnvironmentReader from "../../../common/src/environment/EnvironmentReader.js";
-import StringUtil from "../../../common/src/util/StringUtil.js";
+
+import EnvironmentReader from "../../../common/src/environment/EnvironmentReader";
+import StringUtil from "../../../common/src/util/StringUtil";
 import fs from "fs";
 
 export default class EnvironmentFileLoader {

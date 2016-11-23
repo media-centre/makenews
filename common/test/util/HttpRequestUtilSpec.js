@@ -1,6 +1,6 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
-import HttpRequestUtil from "../../src/util/HttpRequestUtil.js";
+
+import HttpRequestUtil from "../../src/util/HttpRequestUtil";
 import { assert } from "chai";
 
 describe("HttpRequestUtil", () => {

@@ -1,51 +1,51 @@
-import StringUtil from '../../src/util/StringUtil.js';
-import { assert, expect } from 'chai';
+import StringUtil from "../../src/util/StringUtil";
+import { expect } from "chai";
 
-describe('StringUtil', () => {
-  it('should return true for the string test', () => {
-    expect(StringUtil.validNonEmptyString('test')).to.be.ok;
-  });
+describe("StringUtil", () => {
+    it("should return true for the string test", () => {
+        expect(StringUtil.validNonEmptyString("test")).to.be.ok;
+    });
 
-  it('should return false if the arugment is undefined', () => {
-    expect(StringUtil.validNonEmptyString(undefined)).to.be.not.ok;
-  });
+    it("should return false if the arugment is undefined", () => {
+        expect(StringUtil.validNonEmptyString(undefined)).to.be.not.ok;
+    });
 
-  it('should return false if the arugment is null', () => {
-    expect(StringUtil.validNonEmptyString(null)).to.be.not.ok;
-  });
+    it("should return false if the arugment is null", () => {
+        expect(StringUtil.validNonEmptyString(null)).to.be.not.ok;
+    });
 
-  it('should return false if the arugment number', () => {
-    expect(StringUtil.validNonEmptyString(10)).to.be.not.ok;
-  });
+    it("should return false if the arugment number", () => {
+        expect(StringUtil.validNonEmptyString(10)).to.be.not.ok;
+    });
 
-  it('should return false if the arugment is empty string', () => {
-    expect(StringUtil.validNonEmptyString('')).to.be.not.ok;
-  });
+    it("should return false if the arugment is empty string", () => {
+        expect(StringUtil.validNonEmptyString("")).to.be.not.ok;
+    });
 
-  it('should return false if the arugment is white spaces, tabs, new lines', () => {
-    expect(StringUtil.validNonEmptyString(' \t \n')).to.be.not.ok;
-  });
+    it("should return false if the arugment is white spaces, tabs, new lines", () => {
+        expect(StringUtil.validNonEmptyString(" \t \n")).to.be.not.ok;
+    });
 
-  it('should return empty string if the input is null', () => {
-    expect("").to.equals(StringUtil.trim(null));
-  });
+    it("should return empty string if the input is null", () => {
+        expect("").to.equals(StringUtil.trim(null));
+    });
 
-  it('should return empty string if the input is undefined', () => {
-    expect("").to.equals(StringUtil.trim(undefined));
-  });
+    it("should return empty string if the input is undefined", () => {
+        expect("").to.equals(StringUtil.trim(undefined));
+    });
 
-  it('should return empty string if the input is whitespaces', () => {
-    expect("").to.equals(StringUtil.trim("     \t   "));
-  });
+    it("should return empty string if the input is whitespaces", () => {
+        expect("").to.equals(StringUtil.trim("     \t   "));
+    });
 
-  it('should return true if the string is empty', () => {
-    expect(StringUtil.isEmptyString("")).to.be.true;
+    it("should return true if the string is empty", () => {
+        expect(StringUtil.isEmptyString("")).to.be.true;
 
-  });
+    });
 
-  it('should return false if the string is not empty', () => {
-    expect(StringUtil.isEmptyString("test")).to.be.false;
+    it("should return false if the string is not empty", () => {
+        expect(StringUtil.isEmptyString("test")).to.be.false;
 
-  });
+    });
 
 });

@@ -1,4 +1,3 @@
-"use strict";
 
 export default class NumberUtil {
     static toNumber(number) {

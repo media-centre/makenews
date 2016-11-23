@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import EnvironmentReader from "../../src/environment/EnvironmentReader.js";
+
+import EnvironmentReader from "../../src/environment/EnvironmentReader";
 import chai from "chai";
 let assert = chai.assert;
 
