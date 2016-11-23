@@ -1,7 +1,11 @@
 "use strict";
 import RSSComponent from "../../../src/js/config/components/RSSComponent.jsx";
 import {assert} from "chai";
-import * as sinon from "sinon"; //eslint-disable-line no-unused-vars
+import sinon from "sinon";
+import ReactDOM from "react-dom";
+import TestUtils from "react-addons-test-utils";
+import React from "react";
+
 
 describe("Rss Component", () => {
 

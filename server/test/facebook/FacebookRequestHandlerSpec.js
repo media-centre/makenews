@@ -308,7 +308,7 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should get the facebook configured profiles", (done) => {
+        xit("should get the facebook configured profiles", (done) => {
             let result = { "docs":
             [{ "_id": "7535677770c76f0bf6045a0e1401ccf4",
                 "_rev": "1-23d11b676e21bca63e16d032a03b0826",
@@ -329,7 +329,7 @@ describe("FacebookRequestHandler", () => {
             });
         });
 
-        it("should reject with error when database gives an error", (done) => {
+        xit("should reject with error when database gives an error", (done) => {
             let errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "post").returns(Promise.reject(errorMessage));
             facebookRequestHandler.fetchConfiguredSourcesOf("profiles", dbName, accessToken).catch(error => {

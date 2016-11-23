@@ -6,7 +6,7 @@ import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
 
-describe.only("FacebookProfilesRoutes", () => {
+describe("FacebookProfilesRoutes", () => {
 
     let sandbox = sinon.sandbox.create();
 
