@@ -69,7 +69,7 @@ describe("Web Request Handler", () => {
        });
    });
 
-    describe.only("Save Document", () => {
+    describe("Save Document", () => {
         let sandbox = null, couchClient = null ;
         beforeEach("Web Request Handler", () => {
             sandbox = sinon.sandbox.create();

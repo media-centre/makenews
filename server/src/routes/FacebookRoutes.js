@@ -3,6 +3,7 @@ import FacebookBatchPosts from "./helpers/FacebookBatchPosts";
 import FacebookSetAccessTokenRoute from "./helpers/FacebookSetAccessTokenRoute";
 import RouteLogger from "./RouteLogger";
 import FacebookProfilesRoute from "./helpers/FacebookProfilesRoute";
+import FacebookConfigureRoute from "./helpers/FacebookConfigureRoute";
 
 export default (app) => {
     app.get("/facebook-posts", (request, response, next) => {
@@ -23,5 +24,10 @@ export default (app) => {
     app.get("/facebook-profiles", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-batch-posts request received. url = %s", request.url);
         new FacebookProfilesRoute(request, response, next).handle();
+    });
+
+    app.get("/facebook/configured/profiles", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook/configured/profiles request received. url = %s", request.url);
+        new FacebookConfigureRoute(request, response, next).fetchProfiles();
     });
 };

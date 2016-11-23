@@ -1,10 +1,9 @@
 /* eslint consistent-this:0*/
-"use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
-import UserRequest from "../../login/UserRequest.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
+import UserRequest from "../../login/UserRequest";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 export default class ChangePasswordRoute extends Route {
     constructor(request, response, next) {

@@ -1,9 +1,7 @@
-"use strict";
-
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "./config/ApplicationConfig.js";
-import NodeErrorHandler from "./NodeErrorHandler.js";
-import Logger, {logCategories} from "./logging/Logger";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import ApplicationConfig from "./config/ApplicationConfig";
+import NodeErrorHandler from "./NodeErrorHandler";
+import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
 
 export default class CouchClient {
@@ -44,9 +42,9 @@ export default class CouchClient {
                 "body": body,
                 "json": true
             },
-            (error, response) => {
-                this.handleResponse(error, response, resolve, reject);
-            });
+                (error, response) => {
+                    this.handleResponse(error, response, resolve, reject);
+                });
         });
     }
 
@@ -96,16 +94,12 @@ export default class CouchClient {
     static getAllDbs() {
         return new Promise((resolve, reject) => {
             request.get({
-                    "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
-                },
+                "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
+            },
                 (error, response) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (response.statusCode === HttpResponseHandler.codes.OK) {
-                            let userDbs = JSON.parse(response.body).filter(dbName => {
-                                if (dbName !== "_replicator" && dbName !== "_users") {
-                                    return dbName;
-                                }
-                            });
+                            let userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
                             CouchClient.logger().debug("successful response from database.");
                             resolve(userDbs);
                         } else {
@@ -143,6 +137,5 @@ export default class CouchClient {
             "Content-Type": "application/json",
             "Accept": "application/json"
         };
-
     }
 }

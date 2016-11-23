@@ -1,10 +1,8 @@
 /* eslint max-nested-callbacks: [2, 7] */
-"use strict";
-
-import CouchClient from "../src/CouchClient.js";
-import NodeErrorHandler from "../src/NodeErrorHandler.js";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../src/config/ApplicationConfig.js";
+import CouchClient from "../src/CouchClient";
+import NodeErrorHandler from "../src/NodeErrorHandler";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../src/config/ApplicationConfig";
 import LogTestHelper from "./helpers/LogTestHelper";
 import sinon from "sinon";
 
