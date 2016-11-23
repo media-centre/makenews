@@ -1,15 +1,16 @@
 import WebRequestHandler from "../../web/WebRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
+import StringUtils from "../../../../common/src/util/StringUtil";
 
-export default class WebURLSFeedRoute extends Route {
+export default class AddURLDocumentRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.query.url;
     }
 
     valid() {
-        if(Object.keys(this.url).length === 0) { //eslint-disable-line no-magic-numbers
+        if(Object.keys(this.url).length === 0 && StringUtils.isEmptyString(this.url.name)) { //eslint-disable-line no-magic-numbers
             return false;
         }
         return true;
@@ -17,15 +18,15 @@ export default class WebURLSFeedRoute extends Route {
 
     handle() {                                    //eslint-disable-line consistent-return
         if(!this.valid()) {
-            RouteLogger.instance().warn("WebURLsRoute:: invalid rss feed url %s.", this.url);
+            RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();
         }
         let webRequestHandler = WebRequestHandler.instance();
-        webRequestHandler.saveDocument(this.url.name, this.url).then(response => {
-            RouteLogger.instance().debug("WebURLsRoute:: successfully saved the document");
+        webRequestHandler.addDocument(this.url.name, this.url).then(response => {
+            RouteLogger.instance().debug("SearchURLsRoute:: successfully saved the document");
             this._handleSuccess(response);
         }).catch(error => { //eslint-disable-line
-            RouteLogger.instance().debug("WebURLsRoute:: failed to save the document Error: %s", error);
+            RouteLogger.instance().debug("SearchURLsRoute:: failed to save the document Error: %s", error);
             this._handleBadRequest();
         });
     }

@@ -1,10 +1,10 @@
-import WebURLsRoute from "../../../src/routes/helpers/WebURLsRoute";
+import SearchURLsRoute from "../../../src/routes/helpers/SearchURLsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import WebRequestHandler from "../../../src/web/WebRequestHandler";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
-describe("Web Urls Route", () => {
+describe("Search Urls Route", () => {
     function mockResponse(done, expectedValues) {
         let response = {
             "status": (status) => {
@@ -40,7 +40,7 @@ describe("Web Urls Route", () => {
         };
         let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
-        new WebURLsRoute(request, response, {}).handle();
+        new SearchURLsRoute(request, response, {}).handle();
     });
 
     it("should return feeds for correct request", (done) => {
@@ -73,7 +73,7 @@ describe("Web Urls Route", () => {
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
         requestHandlerMock.withArgs(request.query.url).returns(Promise.resolve(feeds));
         let response = mockResponseSuccess(done, { "status": HttpResponseHandler.codes.OK, "json": { feeds } });
-        let webURLsRoute = new WebURLsRoute(request, response, {});
-        webURLsRoute.handle();
+        let searchURLsRoute = new SearchURLsRoute(request, response, {});
+        searchURLsRoute.handle();
     });
 });
