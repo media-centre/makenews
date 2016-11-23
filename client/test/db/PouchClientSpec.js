@@ -1,8 +1,7 @@
 /* eslint global-require:0 no-unused-expressions:0, max-nested-callbacks: [2, 7], no-magic-numbers:0, no-unused-vars:0*/
 
-"use strict";
-import PouchClient from "../../src/js/db/PouchClient.js";
-import DbSession from "../../src/js/db/DbSession.js";
+import PouchClient from "../../src/js/db/PouchClient";
+import DbSession from "../../src/js/db/DbSession";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import { expect, assert } from "chai";
 import PouchDB from "pouchdb";
@@ -444,24 +443,24 @@ describe("PouchClient", () => {
                     "categoryIds": ["politicsCategoryId2"],
                     "_id": "deleteId1"
                 }).then(putResponse => {
-                        session.get("deleteId1").then(document => {
+                    session.get("deleteId1").then(document => {
 
-                            sandbox.stub(PouchClient, "getDocument").withArgs(document._id).returns(Promise.resolve(document));
-                            let updateDocMock = sandbox.mock(PouchClient).expects("updateDocument");
-                            updateDocMock.withArgs({
-                                "_id": document._id,
-                                "_rev": document._rev,
-                                "_deleted": true
-                            }).returns(Promise.resolve({ "ok": true, "id": document._id }));
+                        sandbox.stub(PouchClient, "getDocument").withArgs(document._id).returns(Promise.resolve(document));
+                        let updateDocMock = sandbox.mock(PouchClient).expects("updateDocument");
+                        updateDocMock.withArgs({
+                            "_id": document._id,
+                            "_rev": document._rev,
+                            "_deleted": true
+                        }).returns(Promise.resolve({ "ok": true, "id": document._id }));
 
-                            PouchClient.deleteDocument(document).then((response) => {
-                                assert.isTrue(response.ok);
-                                assert.strictEqual("deleteId1", response.id);
-                                updateDocMock.verify();
-                                done();
-                            });
+                        PouchClient.deleteDocument(document).then((response) => {
+                            assert.isTrue(response.ok);
+                            assert.strictEqual("deleteId1", response.id);
+                            updateDocMock.verify();
+                            done();
                         });
                     });
+                });
             });
         });
 

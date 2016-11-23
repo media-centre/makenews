@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
 import FacebookClient from "../../src/js/facebook/FacebookClient";
 import FacebookLogin from "../../src/js/facebook/FacebookLogin";
 import LoginPage from "../../src/js/login/pages/LoginPage";
@@ -9,7 +8,7 @@ import AjaxClient from "../../src/js/utils/AjaxClient";
 
 import sinon from "sinon";
 import { assert } from "chai";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 
 describe("FacebookClient", () => {
     let sandbox = null;
@@ -80,10 +79,10 @@ describe("FacebookClient", () => {
 
             let facebookClient = new FacebookClient();
             facebookClient.fetchPosts(webUrl).then(posts => {
-                assert.strictEqual("test-link1", posts.posts[0].link);
-                assert.strictEqual("test-link2", posts.posts[1].link);
-                assert.strictEqual("test-name1", posts.posts[0].name);
-                assert.strictEqual("test-name2", posts.posts[1].name);
+                assert.strictEqual("test-link1", posts.posts[0].link); //eslint-disable-line no-magic-numbers
+                assert.strictEqual("test-link2", posts.posts[1].link); //eslint-disable-line no-magic-numbers
+                assert.strictEqual("test-name1", posts.posts[0].name); //eslint-disable-line no-magic-numbers
+                assert.strictEqual("test-name2", posts.posts[1].name); //eslint-disable-line no-magic-numbers
                 ajaxGetMock.verify();
                 done();
             });

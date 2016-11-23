@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import DbSession from "../../src/js/db/DbSession.js";
-import DbParameters from "../../src/js/db/DbParameters.js";
-import FeedDb from "../../src/js/feeds/db/FeedDb.js";
+import DbSession from "../../src/js/db/DbSession";
+import DbParameters from "../../src/js/db/DbParameters";
+import FeedDb from "../../src/js/feeds/db/FeedDb";
 import { assert } from "chai";
 import sinon from "sinon";
 

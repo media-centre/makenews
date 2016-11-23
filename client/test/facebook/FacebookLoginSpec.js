@@ -1,6 +1,5 @@
 /* eslint max-nested-callbacks: [2, 5] */
 
-"use strict";
 import FacebookLogin from "../../src/js/facebook/FacebookLogin";
 import { assert } from "chai";
 import UserInfo from "../../src/js/user/UserInfo";

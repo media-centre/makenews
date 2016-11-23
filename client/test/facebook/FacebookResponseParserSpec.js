@@ -1,10 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] no-undefined:0*/
 
-"use strict";
-import FacebookResponseParser from "../../src/js/facebook/FacebookResponseParser.js";
-
+import FacebookResponseParser from "../../src/js/facebook/FacebookResponseParser";
 import { assert } from "chai";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 
 describe("FacebookResponseParser", () => {
     describe("parsePost", () => {
@@ -62,7 +60,7 @@ describe("FacebookResponseParser", () => {
             assert.strictEqual("test-name1", dbFormatDocument.title);
             assert.strictEqual("test-message1", dbFormatDocument.content);
             assert.strictEqual("facebook", dbFormatDocument.feedType);
-            assert.strictEqual("test-picture-url1", dbFormatDocument.images[0].url);
+            assert.strictEqual("test-picture-url1", dbFormatDocument.images[0].url); //eslint-disable-line no-magic-numbers
         });
 
         it("post should not be empty object", () => {
@@ -132,22 +130,22 @@ describe("FacebookResponseParser", () => {
         });
         it("should use the post link in the feed document if the link starts with https://www.facebook.com/ else use postid", () => {
             let feedDocuments = FacebookResponseParser.parsePosts(sourceId, posts);
-            assert.strictEqual("description", feedDocuments[0].type);
-            assert.strictEqual("imagecontent", feedDocuments[1].type);
-            assert.strictEqual("test-id1", feedDocuments[0]._id);
-            assert.strictEqual("test-id2", feedDocuments[1]._id);
-            assert.strictEqual("https://www.facebook.com/test-link1", feedDocuments[0].link);
-            assert.strictEqual("https://www.facebook.com/test-id3/posts/post", feedDocuments[2].link);
+            assert.strictEqual("description", feedDocuments[0].type); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("imagecontent", feedDocuments[1].type); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("test-id1", feedDocuments[0]._id); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("test-id2", feedDocuments[1]._id); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("https://www.facebook.com/test-link1", feedDocuments[0].link); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("https://www.facebook.com/test-id3/posts/post", feedDocuments[2].link); //eslint-disable-line no-magic-numbers
 
 
         });
 
         it("should covert facebook posts to db feed format", () => {
             let feedDocuments = FacebookResponseParser.parsePosts(sourceId, posts);
-            assert.strictEqual("description", feedDocuments[0].type);
-            assert.strictEqual("imagecontent", feedDocuments[1].type);
-            assert.strictEqual("test-id1", feedDocuments[0]._id);
-            assert.strictEqual("test-id2", feedDocuments[1]._id);
+            assert.strictEqual("description", feedDocuments[0].type); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("imagecontent", feedDocuments[1].type); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("test-id1", feedDocuments[0]._id); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("test-id2", feedDocuments[1]._id); //eslint-disable-line no-magic-numbers
         });
 
         it("should continue with other posts if there is issue with one of the post while parsing", () => {
@@ -171,9 +169,9 @@ describe("FacebookResponseParser", () => {
             ];
 
             let feedDocuments = FacebookResponseParser.parsePosts(sourceId, posts);
-            assert.strictEqual(1, feedDocuments.length);
-            assert.strictEqual("imagecontent", feedDocuments[0].type);
-            assert.strictEqual("test-id2", feedDocuments[0]._id);
+            assert.strictEqual(1, feedDocuments.length); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("imagecontent", feedDocuments[0].type); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("test-id2", feedDocuments[0]._id); //eslint-disable-line no-magic-numbers
 
         });
     });

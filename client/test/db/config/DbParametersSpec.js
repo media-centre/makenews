@@ -1,8 +1,6 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
-"use strict";
-import DbParameters from "../../../src/js/db/DbParameters.js";
-import AppSessionStorage from "../../../src/js/utils/AppSessionStorage.js";
+/* eslint max-nested-callbacks: [2, 5] */
+import DbParameters from "../../../src/js/db/DbParameters";
+import AppSessionStorage from "../../../src/js/utils/AppSessionStorage";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import sinon from "sinon";
 import { assert } from "chai";

@@ -1,2 +1,1 @@
-"use strict";
-import FacebookDb from "../../src/js/facebook/FacebookDb.js"; //eslint-disable-line no-unused-vars
+import FacebookDb from "../../src/js/facebook/FacebookDb"; //eslint-disable-line no-unused-vars

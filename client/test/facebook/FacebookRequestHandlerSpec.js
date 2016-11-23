@@ -1,13 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] no-undefined:0, no-magic-numbers:0*/
 
-"use strict";
-import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
-import FacebookClient from "../../src/js/facebook/FacebookClient.js";
-import FacebookLogin from "../../src/js/facebook/FacebookLogin.js";
-
+import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler";
+import FacebookClient from "../../src/js/facebook/FacebookClient";
+import FacebookLogin from "../../src/js/facebook/FacebookLogin";
 import sinon from "sinon";
 import { assert } from "chai";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 
 describe("FacebookRequestHandler", () => {
 
