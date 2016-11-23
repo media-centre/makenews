@@ -1,7 +1,5 @@
-"use strict";
-
-import AjaxClient from "../utils/AjaxClient.js";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+import AjaxClient from "../utils/AjaxClient";
+import StringUtil from "../../../../common/src/util/StringUtil";
 export const CHANGE_PASSWORD_SUCCESSFUL = "CHANGE_PASSWORD_SUCCESSFUL";
 export const INCORRECT_USER_CREDENTIALS = "INCORRECT_USER_CREDENTIALS";
 export const PASSWORD_UPDATION_FAILED = "PASSWORD_UPDATION_FAILED";

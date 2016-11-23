@@ -1,11 +1,10 @@
 /* eslint brace-style:0 */
-"use strict";
 
 import React, { PropTypes, Component } from "react";
-import AppSessionStorage from "../utils/AppSessionStorage.js";
-import UserProfileActions from "./UserProfileActions.js";
+import AppSessionStorage from "../utils/AppSessionStorage";
+import UserProfileActions from "./UserProfileActions";
 import { connect } from "react-redux";
-import ConfirmPopup from "../utils/components/ConfirmPopup/ConfirmPopup.js";
+import ConfirmPopup from "../utils/components/ConfirmPopup/ConfirmPopup";
 import Logout from "../login/LogoutActions";
 
 export class UserProfile extends Component {
@@ -15,10 +14,10 @@ export class UserProfile extends Component {
     }
 
     componentWillMount() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); // eslint-disable-line no-magic-numbers
     }
 
-    submitProfile(event) {
+    submitProfile(event) {  //eslint-disable-line consistent-return
         event.preventDefault();
         let currentPassword = this.refs.currentPassword.value.trim();
         let newPassword = this.refs.newPassword.value.trim();

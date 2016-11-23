@@ -1,6 +1,5 @@
-"use strict";
-import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "./UserProfileActions.js";
-import Local from "../utils/Locale.js";
+import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "./UserProfileActions";
+import Local from "../utils/Locale";
 
 export function changePassword(state = { "errorMessage": "", "isSuccess": false }, action = {}) {
     let appEn = Local.applicationStrings();

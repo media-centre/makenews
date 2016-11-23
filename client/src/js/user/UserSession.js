@@ -1,10 +1,9 @@
 /* eslint no-use-before-define:0, no-unused-expressions: 0 */
 
-"use strict";
 import moment from "moment";
-import LogoutActions from "../login/LogoutActions.js";
-import AppSessionStorage from "../utils/AppSessionStorage.js";
-import AjaxClient from "../utils/AjaxClient.js";
+import LogoutActions from "../login/LogoutActions";
+import AppSessionStorage from "../utils/AppSessionStorage";
+import AjaxClient from "../utils/AjaxClient";
 const nineMinutes = 540000;
 
 export default class UserSession {
