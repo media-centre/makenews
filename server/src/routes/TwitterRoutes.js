@@ -1,8 +1,7 @@
-"use strict";
-import TwitterFeedsRoute from "./helpers/TwitterFeedsRoute.js";
-import TwitterBatchFeedsRoute from "./helpers/TwitterBatchFeedsRoute.js";
-import TwitterRequestTokenRoute from "./helpers/TwitterRequestTokenRoute.js";
-import TwitterOauthCallbackRoute from "./helpers/TwitterOauthCallbackRoute.js";
+import TwitterFeedsRoute from "./helpers/TwitterFeedsRoute";
+import TwitterBatchFeedsRoute from "./helpers/TwitterBatchFeedsRoute";
+import TwitterRequestTokenRoute from "./helpers/TwitterRequestTokenRoute";
+import TwitterOauthCallbackRoute from "./helpers/TwitterOauthCallbackRoute";
 import RouteLogger from "./RouteLogger";
 
 export default (app) => {

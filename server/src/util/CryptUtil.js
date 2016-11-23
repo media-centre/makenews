@@ -1,5 +1,4 @@
-"use strict";
-import StringUtil from "../../../common/src/util/StringUtil.js";
+import StringUtil from "../../../common/src/util/StringUtil";
 import crypto from "crypto";
 import ApplicationConfig from "../../../server/src/config/ApplicationConfig";
 

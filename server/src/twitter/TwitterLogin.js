@@ -1,5 +1,4 @@
-"use strict";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
 import Logger from "../logging/Logger";
 import OAuth from "oauth";

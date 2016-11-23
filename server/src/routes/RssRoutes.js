@@ -1,7 +1,6 @@
-"use strict";
-import WebURLsRoute from "./helpers/WebURLsRoute.js";
-import RssFeedsRoute from "./helpers/RssFeedsRoute.js";
-import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute.js";
+import WebURLsRoute from "./helpers/WebURLsRoute";
+import RssFeedsRoute from "./helpers/RssFeedsRoute";
+import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute";
 import RouteLogger from "./RouteLogger";
 
 export default (app) => {

@@ -1,5 +1,4 @@
-"use strict";
-import Logger, { logCategories } from "../logging/Logger.js";
+import Logger, { logCategories } from "../logging/Logger";
 
 export default class RouteLogger {
     static instance() {

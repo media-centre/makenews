@@ -27,11 +27,11 @@ export default class WebRequestHandler {
         });
     }
     
-    saveDocument(document_id, document) {
+    saveDocument(documentId, document) {
         return new Promise((resolve, reject) => {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
-                dbInstance.saveDocument(document_id, document).then((response) => {
+                dbInstance.saveDocument(documentId, document).then((response) => {
                     WebRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
                     resolve(response);
                 }).catch((error) => {

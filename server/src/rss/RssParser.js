@@ -1,9 +1,7 @@
 /* eslint no-unused-vars:0 */
-"use strict";
-
 import FeedParser from "feedparser";
 import Logger from "../logging/Logger";
-import CryptUtil from "../../src/util/CryptUtil.js";
+import CryptUtil from "../../src/util/CryptUtil";
 
 export default class RssParser {
     constructor(response) {

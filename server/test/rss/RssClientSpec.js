@@ -260,10 +260,10 @@ describe("RssClient", () => {
         });
 
         it("should throw an error when there is no rss in url", async () => {
-            try {
+            try{
                 await rssClientMock.crawlRssList("/abc", error, "http://www.example.com/abc");
-            } catch(err) {
-                assert.deepEqual(err, "no rss found");
+            } catch (err) {
+                assert.deepEqual(err.message, "no rss found");
             }
         });
     });

@@ -1,10 +1,9 @@
-"use strict";
-import authorizationRoutes from "./AuthorizationRoutes.js";
+import authorizationRoutes from "./AuthorizationRoutes";
 import rssReaderRoutes from "./RssRoutes";
-import facebookReaderRoutes from "./FacebookRoutes.js";
+import facebookReaderRoutes from "./FacebookRoutes";
 import twitterReaderRoutes from "./TwitterRoutes";
-import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes.js";
-import webURLsRoutes from "./WebURLsRoutes.js";
+import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
+import webURLsRoutes from "./WebURLsRoutes";
 
 export default function(app) {
     authorizationRoutes(app);
@@ -12,5 +11,5 @@ export default function(app) {
     facebookReaderRoutes(app);
     twitterReaderRoutes(app);
     fetchAllFeedsRoutes(app);
-    webURLsRoutes(app)
+    webURLsRoutes(app);
 }

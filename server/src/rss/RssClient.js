@@ -1,7 +1,6 @@
-"use strict";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import request from "request";
-import Logger from "../logging/Logger.js";
+import Logger from "../logging/Logger";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
@@ -16,25 +15,23 @@ export default class RssClient {
         return new RssClient();
     }
 
-    async fetchRssFeeds(url) {
+    async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
 
         try {
             let feeds = await this.getRssData(url);
             return feeds;
-        }
-        catch (error) {
-
+        } catch (error) {
             if (error.message === FEEDS_NOT_FOUND) {
                 let root = cheerio.load(error.data);
                 let rssLink = root("link[type ^= 'application/rss+xml']");
                 let rssUrl = rssLink.attr("href");
-                if (rssLink && rssLink.length !== 0) {
-                    return await this.getFeedsFromRssUrl(rssUrl,url)
+                if (rssLink && rssLink.length !== 0) {  //eslint-disable-line no-magic-numbers
+                    return await this.getFeedsFromRssUrl(rssUrl, url);
 
-                } else {
+                } else {  //eslint-disable-line no-else-return
                     return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
                 }
-            } else {
+            } else {  //eslint-disable-line no-else-return
                 this.handleUrlError(url, error);
             }
 
@@ -42,26 +39,25 @@ export default class RssClient {
 
     }
 
-    async getFeedsFromRssUrl(rssUrl,url){
+    async getFeedsFromRssUrl(rssUrl, url) {
 
         if (rssUrl.startsWith("//")) {
-            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
+            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;  //eslint-disable-line no-param-reassign, no-magic-numbers
         } else if (rssUrl.startsWith("/")) {
-            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
+            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;  //eslint-disable-line no-param-reassign, no-magic-numbers
         }
         try {
             let feeds = await this.getRssData(rssUrl);
             feeds.url = rssUrl;
             return feeds;
-        }
-        catch (rssError) {
+        } catch (rssError) {
             return this.handleRequestError(url, rssError);
         }
     }
 
-    async crawlForRssUrl(root, url) {
+    async crawlForRssUrl(root, url) {  //eslint-disable-line consistent-return
         let links = new Set();
-        let rssUrl = url.substring(0, url.indexOf("/", httpIndex));
+        let rssUrl = url.substring(0, url.indexOf("/", httpIndex)); //eslint-disable-line no-magic-numbers
         let relativeLinks = root("a[href^='/']");
         relativeLinks.each(function() {
             links.add(rssUrl + root(this).attr("href"));
@@ -73,7 +69,7 @@ export default class RssClient {
             links.add(root(this).attr("href"));
         });
 
-        if(links.size === 0) {
+        if(links.size === 0) {   //eslint-disable-line no-magic-numbers
             this.handleUrlError(url, "no rss links found");
         } else {
             return await this.getCrawledRssData(links, url);
@@ -81,16 +77,15 @@ export default class RssClient {
         }
     }
 
-     async getCrawledRssData(links, url) {
-         let linksIterator = links.values();
-         let link = linksIterator.next().value;
-         while(link) {
+    async getCrawledRssData(links, url) {  //eslint-disable-line consistent-return
+        let linksIterator = links.values();
+        let link = linksIterator.next().value;
+        while(link) {
             try {
                 let feeds = await this.getRssData(link, false);
                 feeds.url = link;
                 return feeds;
-            }
-            catch (error) {
+            } catch (error) {
                 try {
                     let feed = await this.crawlRssList(link, error, url);
                     return feed;
@@ -98,12 +93,13 @@ export default class RssClient {
                     link = linksIterator.next().value;
                 }
             }
-         }
-         this.handleUrlError(url, "crawl failed");
+        }
+        this.handleUrlError(url, "crawl failed");
     }
 
     async crawlRssList(link, error, url) {
         let rssPath = link.substring(link.lastIndexOf("/"));
+        let errorMessage = { "message": "no rss found" };
         if ((rssPath.indexOf("rss")) !== NOT_FOUND_INDEX) {
             let rssListRoot = cheerio.load(error.data);
             let urlPath = url.substring(url.lastIndexOf("/"));
@@ -117,13 +113,10 @@ export default class RssClient {
                 return rssFeeds;
             }
         }
-        throw "no rss found";
+        throw errorMessage;
     }
 
-
-
-      getRssData(url) {
-
+    getRssData(url) {
         return new Promise((resolve, reject) => {
             let data = null;
             let requestToUrl = request.get({
@@ -137,10 +130,7 @@ export default class RssClient {
                 data = body;
             });
             requestToUrl.on("response", function(res) {
-                if (res.statusCode !== HttpResponseHandler.codes.OK) {
-                    RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
-                    reject({ "message": "Bad status code" });
-                } else {
+                if (res.statusCode === HttpResponseHandler.codes.OK) {
                     let rssParser = new RssParser(this);
                     rssParser.parse().then(feeds => {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
@@ -149,6 +139,9 @@ export default class RssClient {
                         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
                         reject({ "message": FEEDS_NOT_FOUND, "data": data });
                     });
+                } else {
+                    RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
+                    reject({ "message": "Bad status code" });
                 }
 
             });
@@ -157,13 +150,15 @@ export default class RssClient {
 
 
     handleUrlError(url, error) {
+        let errorMessage = { "message": url + " is not a proper feed" };
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
-        throw {"message": url + " is not a proper feed"};
+        throw errorMessage;
     }
 
     handleRequestError(url, error) {
+        let errorMessage = { "message": "Request failed for " + url };
         RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
-        throw {"message": "Request failed for " + url};
+        throw errorMessage;
     }
 }
 

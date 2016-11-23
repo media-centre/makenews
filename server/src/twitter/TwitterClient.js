@@ -1,5 +1,4 @@
-"use strict";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger.js";
 import AdminDbClient from "../db/AdminDbClient";
 import TwitterLogin from "./TwitterLogin";
@@ -69,6 +68,6 @@ export default class TwitterClient {
 
     _getTwitterTimestampFormat(timestamp) {
         let dateObj = new Date(timestamp);
-        return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
+        return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
     }
 }
