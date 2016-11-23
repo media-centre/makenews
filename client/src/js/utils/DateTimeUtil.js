@@ -1,4 +1,4 @@
-"use strict";
+/* eslint react/jsx-wrap-multilines:0*/
 import moment from "moment";
 
 export default class DateTimeUtil {

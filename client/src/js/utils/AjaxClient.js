@@ -1,3 +1,4 @@
+/* eslint react/jsx-wrap-multilines:0*/
 import StringUtil from "../../../../common/src/util/StringUtil";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import UserSession from "../user/UserSession";
@@ -50,7 +51,7 @@ export default class AjaxClient {
     responsePromise(xhttp) {
         return new Promise((resolve, reject) => {
             let response = this.responseCodes();
-            xhttp.onreadystatechange = function (event) {
+            xhttp.onreadystatechange = function(event) {
                 if (xhttp.readyState === response.REQUEST_FINISHED) {
                     if (xhttp.status === response.OK) {
                         let jsonResponse = JSON.parse(event.target.response);

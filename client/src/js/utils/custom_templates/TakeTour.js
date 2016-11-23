@@ -1,7 +1,7 @@
-"use strict";
-
-import UserInfo from "../../user/UserInfo.js";
+/* eslint react/jsx-wrap-multilines:0 */
+import UserInfo from "../../user/UserInfo";
 import Locale from "../Locale";
+
 export default class TakeTour {
     static show() {
         let takeTourMaskElement = document.getElementById("take-tour-mask");

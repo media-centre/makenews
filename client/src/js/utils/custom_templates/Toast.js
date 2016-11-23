@@ -1,4 +1,4 @@
-"use strict";
+/* eslint react/jsx-wrap-multilines:0 */
 
 export default class Toast {
     static show(toastMessage) {

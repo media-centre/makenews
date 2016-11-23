@@ -1,3 +1,4 @@
+/* eslint react/jsx-wrap-multilines:0*/
 import { allCategories, categoryDetails, configurePageLocale } from "./config/reducers/ConfigReducer";
 import { allFeeds } from "./surf/reducers/SurfReducer";
 import { parkedFeeds } from "./park/reducers/ParkReducer";

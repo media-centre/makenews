@@ -1,4 +1,4 @@
-"use strict";
+/* eslint react/jsx-wrap-multilines:0 */
 import React, { Component } from "react";
 
 export default class Logo extends Component {

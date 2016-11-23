@@ -1,8 +1,6 @@
 /* eslint react/no-set-state:0 */
-
-"use strict";
 import React, { Component, PropTypes } from "react";
-import { highLightTabAction } from "../../../tabs/TabActions.js";
+import { highLightTabAction } from "../../../tabs/TabActions";
 
 export default class TabComponent extends Component {
     constructor(props) {

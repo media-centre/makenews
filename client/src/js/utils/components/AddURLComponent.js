@@ -1,14 +1,14 @@
-/* eslint max-len:0, react/no-set-state:0 */
+/* eslint max-len:0, react/no-set-state:0 react/jsx-no-literals:0 */
+/* eslint react/no-set-state:0  react/jsx-wrap-multilines:0 */
 
-"use strict";
-import React, {Component, PropTypes} from "react";
+import React, { Component, PropTypes } from "react";
 import Source from "../../config/Source";
 import ConfirmPopup from "./ConfirmPopup/ConfirmPopup";
-import {populateCategoryDetailsAsync} from "../../config/actions/CategoryActions.js";
-import Toast from "../custom_templates/Toast.js";
-import {getLatestFeedsFromAllSources} from "../../surf/actions/SurfActions.js";
+import { populateCategoryDetailsAsync } from "../../config/actions/CategoryActions";
+import Toast from "../custom_templates/Toast";
+import { getLatestFeedsFromAllSources } from "../../surf/actions/SurfActions";
 
-let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
+let urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i; //eslint-disable-line max-len
 
 export default class AddURLComponent extends Component {
 
@@ -26,18 +26,18 @@ export default class AddURLComponent extends Component {
         if (this.props.addURLHandler) {
             this.props.addURLHandler().then((response) => {
                 if (response) {
-                    this.setState({"showUrlInput": true, "errorMessage": "", "successResponse": true});
+                    this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
                 }
             }).catch(() => {
                 return;
             });
         } else {
-            this.setState({"showUrlInput": true, "errorMessage": "", "successResponse": true});
+            this.setState({ "showUrlInput": true, "errorMessage": "", "successResponse": true });
         }
     }
 
     _showConfirmPopup(sourceObject) {
-        this.setState({"showCustomPopup": true, "currentSourceId": sourceObject._id, "sourceObject": sourceObject});
+        this.setState({ "showCustomPopup": true, "currentSourceId": sourceObject._id, "sourceObject": sourceObject });
     }
 
     handleDeleteClick(event) {
@@ -60,7 +60,7 @@ export default class AddURLComponent extends Component {
                 });
             });
         } else {
-            this.setState({"showCustomPopup": false});
+            this.setState({ "showCustomPopup": false });
         }
     }
 
@@ -74,7 +74,7 @@ export default class AddURLComponent extends Component {
     _validateUrl() {
         let url = this.refs.addUrlTextBox.value.trim();
         let errorMessage = this._isValidUrl(url);
-        this.setState({"errorMessage": errorMessage, "successResponse": false});
+        this.setState({ "errorMessage": errorMessage, "successResponse": false });
         if (errorMessage.length === 0) {
             this.setState({
                 "errorMessage": this.props.categoryDetailsPageStrings.errorMessages.validatingUrl,
@@ -107,6 +107,7 @@ export default class AddURLComponent extends Component {
 
     getUrlList() {
         //test
+        let increment = 1;
         let urlsList = [];
         urlsList.push(
             <li key={0}>
@@ -114,10 +115,10 @@ export default class AddURLComponent extends Component {
             </li>);
         this.props.content.map((urlObj, index) =>
             urlsList.push(
-                <li key={index + 1} className="feed-url">
+                <li key={index + increment} className="feed-url">
                     <div className={urlObj.status + " feed"}>{urlObj.url}</div>
                     <div id="deleteUrlButton" onClick={() => this._showConfirmPopup(urlObj)}>
-                        <i className="border-blue circle fa fa-close close circle"></i>
+                        <i className="border-blue circle fa fa-close close circle"/>
                     </div>
                 </li>)
         );
@@ -131,21 +132,23 @@ export default class AddURLComponent extends Component {
             inputBox = (
                 <div>
                     <input type="text" ref="addUrlTextBox" autoFocus className={addUrlClasses}
-                           placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()}
-                           onKeyDown={(event) => this._onKeyDownTextBox(event)}/>
+                        placeholder={this.props.hintMessage} onBlur={()=> this._validateUrl()}
+                        onKeyDown={(event) => this._onKeyDownTextBox(event)}
+                    />
                 </div>
             );
         }
 
-        confirmPopup = this.state.showCustomPopup ?
-            <ConfirmPopup description={this.props.categoryDetailsPageStrings.deleteURLConfirm}
-                          callback={(event)=> this.handleDeleteClick(event)}/> : null;
+        confirmPopup = this.state.showCustomPopup
+            ? (<ConfirmPopup description={this.props.categoryDetailsPageStrings.deleteURLConfirm}
+                callback={(event)=> this.handleDeleteClick(event)}
+               />) : null;
 
         return (
             <div>
 
                 <div className="nav-control h-center" id="addNewUrlButton" onClick={() => this._showAddUrlTextBox()}>
-                    <i className="fa fa-plus"></i>
+                    <i className="fa fa-plus"/>
                     <span ref="addUrlLinkText">{this.props.addUrlLinkLabel}</span>
                 </div>
 
@@ -154,8 +157,8 @@ export default class AddURLComponent extends Component {
                         {this.getUrlList()}
                     </ul>
                     {inputBox}
-                    {this.state.successResponse ? "" :
-                        <div className="add-url-status error-message">{this.state.errorMessage}</div>}
+                    {this.state.successResponse ? ""
+                        : <div className="add-url-status error-message">{this.state.errorMessage}</div>}
                 </div>
                 {confirmPopup}
 

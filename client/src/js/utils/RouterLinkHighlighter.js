@@ -1,5 +1,4 @@
-/*eslint no-plusplus: 2*/
-"use strict";
+/* eslint react/jsx-wrap-multilines:0*/
 
 export function highlightRouterLink() {
     let page = window.location.hash.split("/")[1];

@@ -1,4 +1,4 @@
-"use strict";
+/* eslint react/jsx-wrap-multilines:0 react/self-closing-comp:0 */
 import React, { Component } from "react";
 
 export default class Spinner extends Component {

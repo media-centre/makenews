@@ -1,5 +1,5 @@
-"use strict";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+/* eslint react/jsx-wrap-multilines:0*/
+import StringUtil from "../../../../common/src/util/StringUtil";
 
 export default class AppSessionStorage {
     static instance() {

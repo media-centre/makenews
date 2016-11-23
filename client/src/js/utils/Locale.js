@@ -1,5 +1,5 @@
-"use strict";
-import AppWindow from "./AppWindow.js";
+/* eslint react/jsx-wrap-multilines:0*/
+import AppWindow from "./AppWindow";
 
 export default class Locale {
     static applicationStrings(language = Locale.languages.ENGLISH) {

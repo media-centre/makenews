@@ -1,3 +1,4 @@
+/* eslint react/jsx-wrap-multilines:0*/
 export default class AppWindow {
 
     static instance() {
