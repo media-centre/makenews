@@ -1,9 +1,9 @@
 /* eslint max-nested-callbacks: [2, 5] max-len:0*/
-"use strict";
+
 
 import RssParser from "../../src/rss/RssParser";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
-import CryptUtil from "../../src/util/CryptUtil.js";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import CryptUtil from "../../src/util/CryptUtil";
 import LogTestHelper from "../helpers/LogTestHelper";
 import Logger from "../../src/logging/Logger";
 import { expect } from "chai";
@@ -79,24 +79,24 @@ describe("RssParser", () => {
 
         let expectedFeeds = {
             "items":
-                [{
-                    "guid": "test-guid-1",
-                    "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
-                    "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
-                    "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+            [{
+                "guid": "test-guid-1",
+                "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
+                "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+                "pubDate": null,
+                "enclosures": [],
+                "image": {}
+            },
+                {
+                    "guid": "test-guid-2",
+                    "title": "NASA Television to Air Russian Spacewalk",
+                    "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                    "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
                     "pubDate": null,
                     "enclosures": [],
                     "image": {}
-                },
-                    {
-                        "guid": "test-guid-2",
-                        "title": "NASA Television to Air Russian Spacewalk",
-                        "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
-                        "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
-                        "pubDate": null,
-                        "enclosures": [],
-                        "image": {}
-                    }]
+                }]
         };
 
         restRequest(url).on("response", function(res) {

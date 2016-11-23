@@ -1,7 +1,7 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
+
 import TwitterOauthCallbackRoute from "../../../src/routes/helpers/TwitterOauthCallbackRoute";
-import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
+import TwitterLogin from "../../../src/twitter/TwitterLogin";
 import RouteLogger from "../../../src/routes/RouteLogger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";

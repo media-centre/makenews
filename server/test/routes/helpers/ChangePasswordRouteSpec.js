@@ -1,10 +1,10 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import ChangePasswordRoute from "../../../src/routes/helpers/ChangePasswordRoute.js";
-import UserRequest from "../../../src/login/UserRequest.js";
+import ChangePasswordRoute from "../../../src/routes/helpers/ChangePasswordRoute";
+import UserRequest from "../../../src/login/UserRequest";
 import sinon from "sinon";
 import { assert } from "chai";
 

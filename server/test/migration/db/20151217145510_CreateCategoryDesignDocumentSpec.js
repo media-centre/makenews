@@ -1,11 +1,10 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0  */
 
-"use strict";
 
-import CreateCategoryDesignDocument from "../../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
-import Migration from "../../../src/migration/Migration.js";
+import CreateCategoryDesignDocument from "../../../src/migration/db/20151217145510_CreateCategoryDesignDocument";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../../../src/config/ApplicationConfig";
+import Migration from "../../../src/migration/Migration";
 
 import { assert } from "chai";
 import sinon from "sinon";
@@ -92,7 +91,8 @@ describe("CreateCategoryDesignDocument", ()=> {
             let designDocumentInstance = new CreateCategoryDesignDocument(dbName, accessToken);
             let designDocJson = designDocumentInstance.getDocument();
             assert.strictEqual("javascript", designDocJson.language);
-            assert.isTrue(Object.keys(designDocJson.views).length > 0);
+            const zeroIndex = 0;
+            assert.isTrue(Object.keys(designDocJson.views).length > zeroIndex);
         });
     });
 });

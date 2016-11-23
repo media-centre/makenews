@@ -1,5 +1,5 @@
 /* eslint no-unused-vars:0 */
-"use strict";
+
 
 export default class LogTestHelper {
 

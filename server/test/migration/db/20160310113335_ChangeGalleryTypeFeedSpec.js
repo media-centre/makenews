@@ -1,10 +1,10 @@
 /* eslint max-nested-callbacks: [2, 7]*/
 
-"use strict";
+
 import ChangeGalleryTypeFeed from "../../../src/migration/db/20160310113335_ChangeGalleryTypeFeed";
-import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration.js";
-import Migration from "../../../src/migration/Migration.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
+import Migration from "../../../src/migration/Migration";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";

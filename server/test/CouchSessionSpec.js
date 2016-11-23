@@ -1,11 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import CouchSession from "../src/CouchSession.js";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../src/config/ApplicationConfig.js";
+
+import CouchSession from "../src/CouchSession";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../src/config/ApplicationConfig";
 import LogTestHelper from "./helpers/LogTestHelper";
-import CouchClient from "../src/CouchClient.js";
+import CouchClient from "../src/CouchClient";
 
 import nock from "nock";
 import { expect, assert } from "chai";

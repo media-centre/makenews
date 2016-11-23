@@ -1,8 +1,8 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import TwitterRequestTokenRoute from "../../../src/routes/helpers/TwitterRequestTokenRoute.js";
-import TwitterLogin from "../../../src/twitter/TwitterLogin.js";
+
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import TwitterRequestTokenRoute from "../../../src/routes/helpers/TwitterRequestTokenRoute";
+import TwitterLogin from "../../../src/twitter/TwitterLogin";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";

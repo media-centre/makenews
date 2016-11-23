@@ -1,6 +1,6 @@
 /* eslint max-nested-callbacks: [2, 5]*/
 
-"use strict";
+
 import FacebookAccessToken from "../../src/facebook/FacebookAccessToken";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";

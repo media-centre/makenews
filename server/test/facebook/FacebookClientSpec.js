@@ -122,8 +122,8 @@ describe("FacebookClient", () => {
                 .socketDelay(2000)
                 .reply(HttpResponseHandler.codes.OK, {
                     "data":
-                        [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                    [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+                        { "message": "test news 2", "id": "163974433696568_957850670975603" }]
                 });
 
 
@@ -278,8 +278,8 @@ describe("FacebookClient", () => {
             .get("/v2.8/173565992684755/feed?fields=link,message,picture,name,caption,place,tags,privacy,created_time&limit=100&format=json&__paging_token=enc_AdCLZBz7YiUQuPwDZCD0BRu4XDvd5x8sQ7G1Qm5bpkv1j8ZCPnSxnqnAPwsxx7VH1jSyrGYxnuDZAwyuxePYhJeWZBr5cZCdCwF94GiCWpLeZCPv2jnKAZDZD&access_token=CAACEdEose0cBAKqvTZCVPHVHEOtvrt808MILI3d5dKVtB7eMvwQqUPnb9v0rto2bNjY3xL31fIdFkbEMQqc8zmKQMnjTxKp0ZAC2fylrnD4q8QfCEEfzM3OnXsAiV1zLYUohRg9vPDZAVCsZCZAJosVpvrSkjpG4XXVTZAshI8FQPH2iCDQQpBltbLUO1iYLIqFmXWaamadQZDZD&until=1445701972&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof) //eslint-disable-line
             .reply(HttpResponseHandler.codes.OK, {
                 "data":
-                    [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                        { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
+                    { "message": "test news 2", "id": "163974433696568_957850670975603" }]
             });
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.pageNavigationFeeds(navigationPageUrl).then(feeds => {

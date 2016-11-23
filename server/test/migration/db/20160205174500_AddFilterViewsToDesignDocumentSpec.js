@@ -1,9 +1,9 @@
 /* eslint max-nested-callbacks: [2, 7]*/
 
-"use strict";
-import AddFilterViewsToDesignDocument from "../../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
-import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration.js";
-import Migration from "../../../src/migration/Migration.js";
+
+import AddFilterViewsToDesignDocument from "../../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
+import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
+import Migration from "../../../src/migration/Migration";
 import { assert } from "chai";
 import sinon from "sinon";
 

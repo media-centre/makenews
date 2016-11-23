@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
 
-import CryptUtil from "../../src/util/CryptUtil.js";
+
+import CryptUtil from "../../src/util/CryptUtil";
 import { assert } from "chai";
 
 describe("CryptUtil", () => {

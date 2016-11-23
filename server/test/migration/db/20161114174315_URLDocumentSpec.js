@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks: [2, 7]*/
 import URLDocument from "../../../src/migration/db/20161114174315_URLDocument";
-import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
 import Migration from "../../../src/migration/Migration";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../../../src/config/ApplicationConfig";
 import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
@@ -124,8 +123,9 @@ describe("URLDocument", ()=> {
         it("should fetch default URL document json and return", () => {
             let defaultDocumentInstance = new URLDocument(dbName, accessToken);
             let defaultURLJson = defaultDocumentInstance.getDocument();
-            assert.deepEqual("web",defaultURLJson.docs[0].sourceType);
-            assert.deepEqual("source",defaultURLJson.docs[0].docType);
+            const zeroIndex = 0;
+            assert.deepEqual("web", defaultURLJson.docs[zeroIndex].sourceType);
+            assert.deepEqual("source", defaultURLJson.docs[zeroIndex].docType);
         });
     });
 });

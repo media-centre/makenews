@@ -1,3 +1,5 @@
+/* eslint init-declarations:0*/
+
 import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
@@ -39,24 +41,25 @@ describe("Rss Request Handler", () => {
         let getDocStub = sinon.stub(couchClient, "getUrlDocument");
         getDocStub.withArgs(body).returns(Promise.resolve({
             "docs": [{
-                _id: '1',
-                docType: 'test',
-                sourceType: 'web',
-                name: 'url1 test',
-                url: 'http://www.thehindu.com/news/international/?service=rss'
+                "_id": "1",
+                "docType": "test",
+                "sourceType": "web",
+                "name": "url1 test",
+                "url": "http://www.thehindu.com/news/international/?service=rss"
             },
-                {
-                    _id: '2',
-                    docType: 'test',
-                    sourceType: 'web',
-                    name: 'url test',
-                    url: 'http://www.thehindu.com/sport/?service=rss'
-                }]
+            {
+                "_id": "2",
+                "docType": "test",
+                "sourceType": "web",
+                "name": "url test",
+                "url": "http://www.thehindu.com/sport/?service=rss"
+            }]
         }));
         rssRequestHandler.searchUrl(body).then(document => {
-            assert.strictEqual("web", document.docs[0].sourceType);
+            const zero = 0;
+            assert.strictEqual("web", document.docs[zero].sourceType);
             done();
-        })
+        });
     });
 
     it("should reject with an error if the URL document rejects with an error", (done) => {
@@ -72,10 +75,9 @@ describe("Rss Request Handler", () => {
 
     describe("RssRequestHandler", () => {
         describe("fetchRssFeedRequest", ()=> {
-            let rssRequestHandler, feedsJson, rssMock, rssClientMock, sandbox;
+            let rssRequestHandler, feedsJson, rssMock, rssClientMock;
             beforeEach("fetchRssFeedsRequest", () => {
                 rssRequestHandler = new RssRequestHandler();
-                sandbox = sinon.sandbox.create();
                 feedsJson = {
                     "items": [{
                         "guid": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
@@ -93,7 +95,7 @@ describe("Rss Request Handler", () => {
 
             it("should fetch rss feed for given url", () => {
                 let url = "www.example.com";
-                let rssClientPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withArgs(url)
+                let rssClientPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withArgs(url);
                 rssClientPostMock.returns(feedsJson);
                 return Promise.resolve(rssRequestHandler.fetchRssFeedRequest(url)).then((feeds) => {
                     expect(feeds).to.eq(feedsJson);
@@ -105,7 +107,7 @@ describe("Rss Request Handler", () => {
 
             it("should return error rss feed for given url", () => {
                 let url = "www.error.com";
-                let rssClientPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withArgs(url)
+                let rssClientPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withArgs(url);
                 rssClientPostMock.returns(Promise.reject("error"));
                 return rssRequestHandler.fetchRssFeedRequest(url).catch((error) => {
                     assert.strictEqual("error", error);

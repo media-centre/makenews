@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
+
 import { expect } from "chai";
-import NodeErrorHandler from "../src/NodeErrorHandler.js";
+import NodeErrorHandler from "../src/NodeErrorHandler";
 
 describe("NodeErrorHandler", () => {
     let errorObject = null;

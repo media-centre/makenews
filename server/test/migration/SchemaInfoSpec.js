@@ -1,12 +1,12 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0 */
-"use strict";
 
-import SchemaInfo from "../../src/migration/SchemaInfo.js";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
-import CouchClient from "../../src/CouchClient.js";
-import Migration from "../../src/migration/Migration.js";
-import NodeErrorHandler from "../../src/NodeErrorHandler.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+
+import SchemaInfo from "../../src/migration/SchemaInfo";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import CouchClient from "../../src/CouchClient";
+import Migration from "../../src/migration/Migration";
+import NodeErrorHandler from "../../src/NodeErrorHandler";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 
 import { assert } from "chai";
 import sinon from "sinon";

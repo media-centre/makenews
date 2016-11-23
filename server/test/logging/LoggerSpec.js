@@ -1,7 +1,5 @@
 /* eslint max-nested-callbacks: [2, 5] */
 
-"use strict";
-
 import { assert } from "chai";
 import Logger, { logLevel, logType, LOG_DIR } from "../../src/logging/Logger";
 import sinon from "sinon";

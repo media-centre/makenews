@@ -1,8 +1,8 @@
-"use strict";
+
 import { assert } from "chai";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import TwitterBatchFeedsRoute from "../../../src/routes/helpers/TwitterBatchFeedsRoute";
-import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler.js";
+import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler";
 import RouteLogger from "../../../src/routes/RouteLogger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";

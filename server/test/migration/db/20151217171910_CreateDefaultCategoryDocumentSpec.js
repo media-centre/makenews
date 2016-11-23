@@ -1,11 +1,10 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0 */
 
-"use strict";
 
-import CreateDefaultCategoryDocument from "../../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../../../src/config/ApplicationConfig.js";
-import Migration from "../../../src/migration/Migration.js";
+import CreateDefaultCategoryDocument from "../../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../../../src/config/ApplicationConfig";
+import Migration from "../../../src/migration/Migration";
 
 import { assert } from "chai";
 import sinon from "sinon";

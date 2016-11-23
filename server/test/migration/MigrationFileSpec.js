@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks: [2, 7] */
-"use strict";
 
-import MigrationFile from "../../src/migration/MigrationFile.js";
+
+import MigrationFile from "../../src/migration/MigrationFile";
 import fs from "fs";
 import sinon from "sinon";
 

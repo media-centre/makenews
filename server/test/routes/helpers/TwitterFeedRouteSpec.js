@@ -11,7 +11,7 @@ import sinon from "sinon";
 
 describe("TwitterFeedsRoute", () => {
 
-    let responseStatus, responseJson;
+    let responseStatus = null, responseJson = null;
 
     function mockResponse() {
         return {

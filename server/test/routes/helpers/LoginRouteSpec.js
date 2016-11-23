@@ -1,12 +1,12 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import LoginRoute from "../../../src/routes/helpers/LoginRoute.js";
-import UserRequest from "../../../src/login/UserRequest.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import EnvironmentConfig from "../../../src/config/EnvironmentConfig.js";
-import LogTestHelper from "../../helpers/LogTestHelper.js";
-import Logger from "../../../src/logging/Logger.js";
+
+import LoginRoute from "../../../src/routes/helpers/LoginRoute";
+import UserRequest from "../../../src/login/UserRequest";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
+import LogTestHelper from "../../helpers/LogTestHelper";
+import Logger from "../../../src/logging/Logger";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -55,10 +55,10 @@ describe("LoginRoute", () => {
                 "json": (data) => {
                     assert.deepEqual(
                         { "userName": userName,
-                          "dbParameters": {
-                              "serverUrl": "http://localhost:5000",
-                              "remoteDbUrl": "http://localhost:5984"
-                          }
+                            "dbParameters": {
+                                "serverUrl": "http://localhost:5000",
+                                "remoteDbUrl": "http://localhost:5984"
+                            }
                         }, data);
                     userReqGetAuthSessionCookieMock.verify();
                     EnvironmentConfig.instance.restore();

@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: [2, 7]*/
 
-"use strict";
-import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration.js";
-import CouchClient from "../../../src/CouchClient.js";
+
+import DesignDocumentMigration from "../../../src/migration/helpers/DesignDocumentMigration";
+import CouchClient from "../../../src/CouchClient";
 import { assert } from "chai";
 import sinon from "sinon";
 

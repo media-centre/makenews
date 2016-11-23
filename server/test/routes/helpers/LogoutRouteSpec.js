@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
 
-import LogoutRoute from "../../../src/routes/helpers/LogoutRoute.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+
+import LogoutRoute from "../../../src/routes/helpers/LogoutRoute";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import { expect } from "chai";
 
 describe("LogoutRoute", () => {

@@ -6,7 +6,7 @@ import ApplicationConfig from "../src/config/ApplicationConfig";
 import LogTestHelper from "./helpers/LogTestHelper";
 import sinon from "sinon";
 
-import {assert} from "chai";
+import { assert } from "chai";
 import nock from "nock";
 
 describe("CouchClient", () => {
@@ -45,12 +45,12 @@ describe("CouchClient", () => {
                         "url": "http://www.thehindu.com/sci-tech/?service=rss"
                     }
                 ]
-            }
+            };
         });
 
         it("should return all documents with name matching the search key", (done) => {
             let searchKey = "Hindu";
-            let body = {"selector": {"_id": {"$gt": null}, "name": {"$regex": searchKey}, "url": {"$gt": null}}};
+            let body = { "selector": { "_id": { "$gt": null }, "name": { "$regex": searchKey }, "url": { "$gt": null } } };
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -76,11 +76,11 @@ describe("CouchClient", () => {
     describe("saveDocument", () => {
 
         before("saveDocument", () => {
-            response = {"ok": true, "id": "schema_info", "rev": "1-917fa2381192822767f010b95b45325b"};
+            response = { "ok": true, "id": "schema_info", "rev": "1-917fa2381192822767f010b95b45325b" };
         });
 
         it("should save the document with the given id", (done) => {
-            let documentObj = {"lastMigratedTimeStamp": "20151217145510"};
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -104,8 +104,8 @@ describe("CouchClient", () => {
         });
 
         it("should save the document with the given id and extra headers", (done) => {
-            let documentObj = {"lastMigratedTimeStamp": "20151217145510"};
-            let headers = {"If-Match": "12345"};
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            let headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -130,7 +130,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if there is any error", (done) => {
-            let documentObj = {"lastMigratedTimeStamp": "20151217145510"};
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -160,7 +160,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if the response code is not 200", (done) => {
-            let documentObj = {"lastMigratedTimeStamp": "20151217145510"};
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -188,7 +188,7 @@ describe("CouchClient", () => {
 
         it("should get the document with the success status code", (done) => {
             let docId = "123456";
-            let documentObj = {"_id": docId, "test": "abcd"};
+            let documentObj = { "_id": docId, "test": "abcd" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -213,8 +213,8 @@ describe("CouchClient", () => {
 
         it("should get the document with custom headers", (done) => {
             let docId = "123456";
-            let documentObj = {"_id": docId, "test": "abcd"};
-            let headers = {"If-Match": "12345"};
+            let documentObj = { "_id": docId, "test": "abcd" };
+            let headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {

@@ -1,9 +1,9 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import FacebookBatchPosts from "../../../src/routes/helpers/FacebookBatchPosts.js";
-import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
-import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken.js";
+
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import FacebookBatchPosts from "../../../src/routes/helpers/FacebookBatchPosts";
+import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
+import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
@@ -12,6 +12,7 @@ import { assert } from "chai";
 
 describe("FacebookBatchPosts", () => {
     describe("handle", () => {
+        const zero = 0, one = 1;
 
         let sandbox = null;
         let accessToken = null, userName = "test1";
@@ -80,8 +81,8 @@ describe("FacebookBatchPosts", () => {
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
             let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[1].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
 
             let next = {};
             new FacebookBatchPosts(requestData, response, next).handle();
@@ -138,8 +139,8 @@ describe("FacebookBatchPosts", () => {
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
             let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(urlResponse1));
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[1].url).returns(Promise.reject("error"));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url).returns(Promise.resolve(urlResponse1));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url).returns(Promise.reject("error"));
 
             let next = {};
             new FacebookBatchPosts(requestData, response, next).handle();

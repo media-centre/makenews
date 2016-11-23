@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
 
-import Route from "../../../src/routes/helpers/Route.js";
+
+import Route from "../../../src/routes/helpers/Route";
 import { assert } from "chai";
 
 describe("Route", () => {

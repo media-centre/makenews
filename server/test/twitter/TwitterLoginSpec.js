@@ -1,7 +1,7 @@
 /*eslint max-nested-callbacks:0, brace-style:0, no-shadow:0*/
-"use strict";
-import TwitterLogin from "../../src/twitter/TwitterLogin.js";
-import ApplicationConfig from "../../src/config/ApplicationConfig.js";
+
+import TwitterLogin from "../../src/twitter/TwitterLogin";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import LogTestHelper from "../helpers/LogTestHelper";

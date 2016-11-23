@@ -1,6 +1,6 @@
 /* eslint max-nested-callbacks: [2, 5]*/
 
-"use strict";
+
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchSession from "../../src/CouchSession";
 import CouchClient from "../../src/CouchClient";

@@ -1,9 +1,9 @@
-"use strict";
 
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import RenewSessionRoute from "../../../src/routes/helpers/RenewSessionRoute.js";
+
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import RenewSessionRoute from "../../../src/routes/helpers/RenewSessionRoute";
 import Logger from "../../../src/logging/Logger";
-import CouchSession from "../../../src/CouchSession.js";
+import CouchSession from "../../../src/CouchSession";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import { expect } from "chai";
 import sinon from "sinon";

@@ -1,22 +1,23 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0*/
-"use strict";
 
-import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
-import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
-import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
-import URLDocuments from "../../src/migration/db/20161114174315_URLDocument.js";
-import Migration from "../../src/migration/Migration.js";
-import MigrationFile from "../../src/migration/MigrationFile.js";
-import SchemaInfo from "../../src/migration/SchemaInfo.js";
-import CouchSession from "../../src/CouchSession.js";
-import Logger from "../../src/logging/Logger.js";
-import CouchClient from "../../src/CouchClient.js";
+
+import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument";
+import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
+import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
+import URLDocuments from "../../src/migration/db/20161114174315_URLDocument";
+import Migration from "../../src/migration/Migration";
+import MigrationFile from "../../src/migration/MigrationFile";
+import SchemaInfo from "../../src/migration/SchemaInfo";
+import CouchSession from "../../src/CouchSession";
+import Logger from "../../src/logging/Logger";
+import CouchClient from "../../src/CouchClient";
 import LogTestHelper from "../helpers/LogTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("Migration", () => {
     let dbName = null, accessToken = null, accessCookieHeader = null, migrationLoggerStub = null;
+    const zeroIndex = 0, oneIndex = 1;
     before("Migration", () => {
         dbName = "test";
         accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt";
@@ -56,7 +57,7 @@ describe("Migration", () => {
 
         it("should give the function object to create the instance of url document", () => {
             let migrationInstance = new Migration(dbName, accessToken);
-            let className ="URLDocument";
+            let className = "URLDocument";
             let object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof URLDocuments);
         });
@@ -110,12 +111,12 @@ describe("Migration", () => {
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
 
             let createCategoryDesignDocument = new CreateCategoryDesignDocument(dbName, accessToken);
-            getObjectMock.withArgs(migratableFileDetails[0][1]).returns(createCategoryDesignDocument);
+            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(createCategoryDesignDocument);
 
             let createCategoryDesignDocumentUpMock = sinon.mock(createCategoryDesignDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
-            saveMock.withArgs(migratableFileDetails[0][0]).returns(Promise.resolve("saveResponse"));
+            saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
 
             migration.start().then(status => {
                 assert.isTrue(status);
@@ -136,12 +137,12 @@ describe("Migration", () => {
             getMigratableFileClassNamesMock.withArgs("19700101000000").returns(migratableFileDetails);
 
             let createCategoryDesignDocument = new CreateCategoryDesignDocument(dbName, accessToken);
-            getObjectMock.withArgs(migratableFileDetails[0][1]).returns(createCategoryDesignDocument);
+            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(createCategoryDesignDocument);
 
             let createCategoryDesignDocumentUpMock = sinon.mock(createCategoryDesignDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
-            saveMock.withArgs(migratableFileDetails[0][0]).returns(Promise.resolve("saveResponse"));
+            saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
 
             migration.start().then(status => {
                 assert.isTrue(status);
@@ -180,7 +181,7 @@ describe("Migration", () => {
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
 
-            getObjectMock.withArgs(migratableFileDetails[0][1]).throws("Error");
+            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).throws("Error");
 
             migration.start().catch(status => {
                 assert.isFalse(status);
@@ -214,7 +215,7 @@ describe("Migration", () => {
             test1StartMock.returns(Promise.resolve(true));
 
             Migration.allDbs(userName, password).then(migrateCount => {
-                assert.equal(1, migrateCount[0]);
+                assert.equal(oneIndex, migrateCount[zeroIndex]);
                 migrationInstanceMock.verify();
                 test1StartMock.verify();
                 couchSessionLoginMock.verify();

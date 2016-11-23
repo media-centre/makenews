@@ -1,9 +1,9 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import RssBatchFeedsRoute from "../../../src/routes/helpers/RssBatchFeedsRoute.js";
+
+import RssBatchFeedsRoute from "../../../src/routes/helpers/RssBatchFeedsRoute";
 import Logger from "../../../src/logging/Logger";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import { expect } from "chai";
@@ -32,6 +32,7 @@ describe("RssBatchFeedsRoute", () => {
     });
 
     describe("feedsForAllUrls", () => {
+        const zero = 0, one = 1;
         it("should return the updated rss feeds for valid request data", (done) => {
 
             let requestData = {
@@ -64,8 +65,8 @@ describe("RssBatchFeedsRoute", () => {
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
 
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[0].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[1].url).returns(Promise.resolve({ "items": [{ "title": "test1", "description": "news cricket1" }] }));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.resolve({ "items": [{ "title": "test1", "description": "news cricket1" }] }));
             rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();
@@ -103,8 +104,8 @@ describe("RssBatchFeedsRoute", () => {
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
 
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[0].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[1].url).returns(Promise.reject("some error"));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.reject("some error"));
             rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();

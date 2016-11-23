@@ -1,9 +1,9 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import DefaultRoute from "../../../src/routes/helpers/DefaultRoute.js";
-import CouchSession from "../../../src/CouchSession.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+
+import DefaultRoute from "../../../src/routes/helpers/DefaultRoute";
+import CouchSession from "../../../src/CouchSession";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -113,8 +113,9 @@ describe("DefaultRoute", () => {
             };
             new DefaultRoute(request, response, nextSpy).handle();
             expect(nextSpy.called).to.be.ok;
-            expect("session expired").to.equal(nextSpy.getCall(0).args[0].message);
-            expect(HttpResponseHandler.codes.UNAUTHORIZED).to.equal(nextSpy.getCall(0).args[0].status);
+            const zeroIndex = 0;
+            expect("session expired").to.equal(nextSpy.getCall(zeroIndex).args[zeroIndex].message);
+            expect(HttpResponseHandler.codes.UNAUTHORIZED).to.equal(nextSpy.getCall(zeroIndex).args[zeroIndex].status);
         });
 
     });

@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import Logger from "../../src/logging/Logger";
 import LogTestHelper from "./LogTestHelper";
 import UserDbNameRoute from "../../src/routes/helpers/UserDbNameRoute";

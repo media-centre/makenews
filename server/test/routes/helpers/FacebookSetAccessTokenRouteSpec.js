@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import FacebookSetAccessTokenRoute from "../../../src/routes/helpers/FacebookSetAccessTokenRoute.js";
-import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler.js";
+
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import FacebookSetAccessTokenRoute from "../../../src/routes/helpers/FacebookSetAccessTokenRoute";
+import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";

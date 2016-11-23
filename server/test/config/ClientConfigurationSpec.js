@@ -1,9 +1,7 @@
 /* eslint max-nested-callbacks:0, no-magic-numbers:0 */
 
-"use strict";
-
-import ClientConfig from "../../src/config/ClientConfig.js";
-import EnvironmentConfig from "../../src/config/EnvironmentConfig.js";
+import ClientConfig from "../../src/config/ClientConfig";
+import EnvironmentConfig from "../../src/config/EnvironmentConfig";
 import sinon from "sinon";
 import { assert } from "chai";
 

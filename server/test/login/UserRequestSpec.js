@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: [2, 7] */
-"use strict";
 
-import UserRequest from "../../src/login/UserRequest.js";
-import CouchSession from "../../src/CouchSession.js";
+
+import UserRequest from "../../src/login/UserRequest";
+import CouchSession from "../../src/CouchSession";
 import LogTestHelper from "../../test/helpers/LogTestHelper";
 import sinon from "sinon";
 

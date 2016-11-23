@@ -1,10 +1,10 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
 
-import FetchFeedsFromAllSources from "../../src/fetchAllFeeds/FetchFeedsFromAllSources.js";
-import RssRequestHandler from "../../src/rss/RssRequestHandler.js";
-import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler.js";
-import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler.js";
+
+import FetchFeedsFromAllSources from "../../src/fetchAllFeeds/FetchFeedsFromAllSources";
+import RssRequestHandler from "../../src/rss/RssRequestHandler";
+import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
+import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler";
 import LogTestHelper from "../helpers/LogTestHelper";
 
 
@@ -12,6 +12,8 @@ import { assert } from "chai";
 import sinon from "sinon";
 
 describe("FetchFeedsFromAllSources", () => {
+
+    const indexZero = 0;
 
     function mockResponse() {
         let response = [
@@ -93,7 +95,7 @@ describe("FetchFeedsFromAllSources", () => {
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
 
             let fetchRssFeedRequestStub = sinon.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
-            fetchRssFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchRssFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
@@ -127,7 +129,7 @@ describe("FetchFeedsFromAllSources", () => {
             facebookRequestHandlerMock.withArgs(requestData.body.facebookAccessToken).returns(facebookRequestHandlerInstance);
 
             let fetchFacebookFeedRequestStub = sinon.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
@@ -158,7 +160,7 @@ describe("FetchFeedsFromAllSources", () => {
             let twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("instance");
             twitterRequestHandlerMock.returns(twitterRequestHandlerInstance);
             let fetchTwitterFeedRequestStub = sinon.stub(twitterRequestHandlerInstance, "fetchTweetsRequest");
-            fetchTwitterFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchTwitterFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
             fetchFeedsRequest.fetchFeeds().then((feeds)=> {
@@ -221,19 +223,19 @@ describe("FetchFeedsFromAllSources", () => {
             let rssRequestHandlerMock = sinon.mock(RssRequestHandler).expects("instance");
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
             let fetchRssFeedRequestStub = sinon.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
-            fetchRssFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchRssFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
 
             let twitterRequestHandlerInstance = new TwitterRequestHandler();
             let twitterRequestHandlerMock = sinon.mock(TwitterRequestHandler).expects("instance");
             twitterRequestHandlerMock.returns(twitterRequestHandlerInstance);
             let fetchTwitterFeedRequestStub = sinon.stub(twitterRequestHandlerInstance, "fetchTweetsRequest");
-            fetchTwitterFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchTwitterFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
 
             let facebookRequestHandlerInstance = new FacebookRequestHandler(accessToken);
             let facebookRequestHandlerMock = sinon.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(requestData.body.facebookAccessToken).returns(facebookRequestHandlerInstance);
             let fetchFacebookFeedRequestStub = sinon.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[0].url).returns(Promise.resolve(response));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
