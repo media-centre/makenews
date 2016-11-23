@@ -1,12 +1,11 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import { AllCategories } from "../../../src/js/config/components/AllCategories.jsx";
+import { AllCategories } from "../../../src/js/config/components/AllCategories";
 import { assert } from "chai";
 import React from "react";
 import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
-import "../../helper/TestHelper.js";
-import mockStore from "../../helper/ActionHelper.js";
+import "../../helper/TestHelper";
+import mockStore from "../../helper/ActionHelper";
 
 describe("All categories", ()=> {
 
@@ -15,10 +14,10 @@ describe("All categories", ()=> {
         categories = {
             "categories": [
                 { "_id": "id1",
-                  "name": "Default"
+                    "name": "Default"
                 },
                 { "_id": "id2",
-                  "name": "Category A"
+                    "name": "Category A"
                 }
             ]
         };
@@ -39,11 +38,11 @@ describe("All categories", ()=> {
 
     it("should have categories based on props input", ()=> {
         let categoryDOMList = ReactDOM.findDOMNode(allCategories).querySelectorAll("ul li.category");
-        assert.strictEqual(2, categoryDOMList.length);
+        assert.strictEqual(2, categoryDOMList.length); //eslint-disable-line no-magic-numbers
     });
 
     it("should have category name in the list", ()=> {
-        let categoryText = ReactDOM.findDOMNode(allCategories).querySelectorAll("ul li.category span")[1].textContent;
+        let categoryText = ReactDOM.findDOMNode(allCategories).querySelectorAll("ul li.category span")[1].textContent; //eslint-disable-line no-magic-numbers
         assert.strictEqual("Category A", categoryText);
     });
 

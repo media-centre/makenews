@@ -1,8 +1,6 @@
 /*eslint max-nested-callbacks:0, no-unused-vars:0 */
-"use strict";
-import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
-import PouchClient from "../../src/js/db/PouchClient.js";
-import CategoryDb from "../../src/js/config/db/CategoryDb.js";
+import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source";
+import PouchClient from "../../src/js/db/PouchClient";
 import FeedApplicationQueries from "../../src/js/feeds/db/FeedApplicationQueries";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -249,7 +247,7 @@ describe("Source", () => {
                 fetchDocumentsStub.returns(Promise.resolve(existingDocuments));
 
                 let pouchClientStub = sandbox.mock(PouchClient).expects("updateDocument");
-                pouchClientStub.withArgs(Source.instance(existingDocuments[0]).getDocument()).returns(Promise.resolve({}));
+                pouchClientStub.withArgs(Source.instance(existingDocuments[0]).getDocument()).returns(Promise.resolve({})); //eslint-disable-line no-magic-numbers
 
                 Source.instance(newUrlDocument).save().then((response)=> {
                     pouchClientStub.verify();

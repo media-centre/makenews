@@ -1,7 +1,6 @@
 /* eslint no-magic-numbers:0 no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-"use strict";
-import "../../helper/TestHelper.js";
-import CategoryNavigationHeader from "../../../src/js/config/components/CategoryNavigationHeader.jsx";
+import "../../helper/TestHelper";
+import CategoryNavigationHeader from "../../../src/js/config/components/CategoryNavigationHeader";
 import CategoryDb from "../../../src/js/config/db/CategoryDb";
 import { assert } from "chai";
 import React from "react";
@@ -61,10 +60,10 @@ describe("CategoryNavigationHeader", ()=> {
         assert.isFalse(deleteCategoryStub.called);
         CategoryDb.deleteCategory.restore();
     });
+
     it("Should  display empty message when category name is not updated", () => {
         const categoryTitleElement = categoryNavigationHeaderComponent.refs.categoryTitleElement;
         TestUtils.Simulate.keyPress(categoryTitleElement, { "key": "Enter", "keyCode": 13, "which": 13 });
         assert.strictEqual(categoryNavigationHeaderComponent.refs.errorMessage.innerHTML, "");
     });
-
 });

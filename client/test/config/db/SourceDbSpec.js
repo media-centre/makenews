@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0, no-undefined:0*/
 
-"use strict";
-import PouchClient from "../../../src/js/db/PouchClient.js";
-import SourceDb from "../../../src/js/config/db/SourceDb.js";
-import { STATUS_VALID, STATUS_INVALID } from "../../../src/js/config/Source.js";
+import PouchClient from "../../../src/js/db/PouchClient";
+import SourceDb from "../../../src/js/config/db/SourceDb";
+import { STATUS_VALID, STATUS_INVALID } from "../../../src/js/config/Source";
 import sinon from "sinon";
 import { expect, assert } from "chai";
 
@@ -171,5 +170,4 @@ describe("SourceDb", () => {
             });
         });
     });
-
 });

@@ -33,7 +33,7 @@ describe("Configure Pane", () => {
     it("should have Sources results component with the given sources", () => {
         let result = renderer.getRenderOutput();
         let renderedSources = findAllWithType(result, SourcesResults);
-        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers;
-        expect(renderedSources[0].props.sources).to.deep.equal(["something"]);
+        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+        expect(renderedSources[0].props.sources).to.deep.equal(["something"]); //eslint-disable-line no-magic-numbers
     });
 });

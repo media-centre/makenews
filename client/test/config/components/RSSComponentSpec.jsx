@@ -1,8 +1,6 @@
-"use strict";
-import RSSComponent from "../../../src/js/config/components/RSSComponent.jsx";
-import {assert} from "chai";
+import RSSComponent from "../../../src/js/config/components/RSSComponent";
+import { assert } from "chai";
 import sinon from "sinon";
-import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 
@@ -10,7 +8,7 @@ import React from "react";
 describe("Rss Component", () => {
 
     let content = null, categoryDetailsPageStrings = null;
-    let rssComponent;
+    let rssComponent = null;
 
     before("rss Component", () => {
         content = [];
@@ -20,13 +18,10 @@ describe("Rss Component", () => {
             },
             "exampleMessages": {
                 "RSSExampleURL": "rss example url"
-            },
+            }
         };
         rssComponent = TestUtils.renderIntoDocument(
-            <RSSComponent content={content}
-                          categoryDetailsPageStrings={categoryDetailsPageStrings }
-                          dispatch={ () => {
-                          }}/>
+            <RSSComponent content={content} categoryDetailsPageStrings={categoryDetailsPageStrings} dispatch={() => { }}/>
         );
     });
 
@@ -43,24 +38,18 @@ describe("Rss Component", () => {
     });
     it("should call dispath function in validate  ", () => {
 
-        let fun = () => {
-
-        };
+        let fun = () => { };
         fun = sinon.spy();
         let props =
-        {
-            "content": [],
-            "categoryDetailsPageStrings": {
-                "hintMessages": {"RSSHintMessage": "hint message"},
-                "exampleMessages": {"RSSExampleURL": "example message"}
-            },
-
-            "dispatch": fun
-
-        };
+            { "content": [],
+                "categoryDetailsPageStrings": {
+                    "hintMessages": { "RSSHintMessage": "hint message" },
+                    "exampleMessages": { "RSSExampleURL": "example message" }
+                },
+                "dispatch": fun };
+        
         let newob = new RSSComponent(props);
         newob._validateUrl("https://thehindu.com", fun, props);
         assert.isTrue(fun.called);
     });
 });
-

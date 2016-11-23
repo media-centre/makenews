@@ -1,18 +1,15 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] no-unused-vars:0*/
 
-"use strict";
-import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, updateCategoryName, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions.js";
-import CategoryDb from "../../src/js/config/db/CategoryDb.js";
-import SourceDb from "../../src/js/config/db/SourceDb.js";
-import { displayAllCategoriesAsync } from "../../src/js/config/actions/AllCategoriesActions.js";
-import Source, { STATUS_INVALID, STATUS_VALID } from "../../src/js/config/Source.js";
-import Category from "../../src/js/config/Category.js";
+import { populateCategoryDetails, DISPLAY_CATEGORY, createCategory, updateCategoryName, createDefaultCategory, addRssUrlAsync, addTwitterUrlAsync, TWITTER_TYPE } from "../../src/js/config/actions/CategoryActions";
+import CategoryDb from "../../src/js/config/db/CategoryDb";
+import SourceDb from "../../src/js/config/db/SourceDb";
+import Source, { STATUS_VALID } from "../../src/js/config/Source";
+import Category from "../../src/js/config/Category";
 import AjaxClient from "../../src/js/utils/AjaxClient";
-import UserSession from "../../src/js/user/UserSession.js";
+import UserSession from "../../src/js/user/UserSession";
 import TwitterDb from "../../src/js/twitter/TwitterDb";
 import RssFeeds from "../../src/js/rss/RssFeeds";
-import mockStore from "../helper/ActionHelper.js";
-import RssDb from "../../src/js/rss/RssDb.js";
+import mockStore from "../helper/ActionHelper";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import { expect, assert } from "chai";
 import sinon from "sinon";

@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
-"use strict";
-import { allCategories, categoryDetails, configurePageLocale } from "../../src/js/config/reducers/ConfigReducer.js";
-import Locale from "../../src/js/utils/Locale.js";
-import { DISPLAY_CATEGORY } from "../../src/js/config/actions/CategoryActions.js";
+import { allCategories, categoryDetails, configurePageLocale } from "../../src/js/config/reducers/ConfigReducer";
+import Locale from "../../src/js/utils/Locale";
+import { DISPLAY_CATEGORY } from "../../src/js/config/actions/CategoryActions";
 import { assert, expect } from "chai";
 import { List } from "immutable";
 import sinon from "sinon";
@@ -21,8 +20,8 @@ describe("Config Reducer", () => {
             let expectedState = { "categories": [{ "_id": "", "name": DEFAULT_CATEGORY }, { "_id": "id1", "name": "Sports" }] };
             let actualState = allCategories(null, action);
             expect(actualState.categories.size).to.equal(expectedState.categories.length);
-            expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]);
-            expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]);
+            expect(actualState.categories.get(0)).to.deep.equal(expectedState.categories[0]); //eslint-disable-line no-magic-numbers
+            expect(actualState.categories.get(1)).to.deep.equal(expectedState.categories[1]); //eslint-disable-line no-magic-numbers
         });
 
         it("should return the same state in case of default case", () => {
@@ -149,5 +148,4 @@ describe("Config Reducer", () => {
             Locale.applicationStrings.restore();
         });
     });
-
 });

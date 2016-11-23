@@ -1,10 +1,9 @@
 /*eslint max-nested-callbacks:0, no-unused-vars:0 */
-"use strict";
-import PouchClient from "../../src/js/db/PouchClient.js";
-import CategoryDb from "../../src/js/config/db/CategoryDb.js";
-import SourceDb from "../../src/js/config/db/SourceDb.js";
-import Category from "../../src/js/config/Category.js";
-import Source from "../../src/js/config/Source.js";
+import PouchClient from "../../src/js/db/PouchClient";
+import CategoryDb from "../../src/js/config/db/CategoryDb";
+import SourceDb from "../../src/js/config/db/SourceDb";
+import Category from "../../src/js/config/Category";
+import Source from "../../src/js/config/Source";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -44,7 +43,7 @@ describe("Category", () => {
             let categoryDocument = category.getDocument();
             assert.strictEqual(categoryDocument._id, "id");
             assert.strictEqual(categoryDocument._rev, "rev");
-            assert.strictEqual(1, new Date(categoryDocument.createdTime).getDate());
+            assert.strictEqual(1, new Date(categoryDocument.createdTime).getDate()); //eslint-disable-line no-magic-numbers
         });
     });
 

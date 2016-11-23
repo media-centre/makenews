@@ -1,12 +1,8 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0, no-undefined:0*/
 
-"use strict";
-import PouchClient from "../../../src/js/db/PouchClient.js";
-import CategoryDb from "../../../src/js/config/db/CategoryDb.js";
-import SourceDb from "../../../src/js/config/db/SourceDb.js";
-import Source from "../../../src/js/config/Source.js";
-import Category from "../../../src/js/config/Category.js";
-import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
+import PouchClient from "../../../src/js/db/PouchClient";
+import CategoryDb from "../../../src/js/config/db/CategoryDb";
+import Category from "../../../src/js/config/Category";
 import sinon from "sinon";
 import { expect, assert } from "chai";
 
