@@ -1,7 +1,6 @@
 /* eslint max-nested-callbacks: [2, 5]*/
-"use strict";
-import Locale from "../../src/js/utils/Locale.js";
-import AppWindow from "../../src/js/utils/AppWindow.js";
+import Locale from "../../src/js/utils/Locale";
+import AppWindow from "../../src/js/utils/AppWindow";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -20,7 +19,7 @@ describe("Locale", function() {
     describe("applicationStrings", () => {
         it("should return the english locale strings of the application", () => {
             let englishStringsFile = Locale.applicationStrings("en");
-            assert.strictEqual("en", englishStringsFile.locales[0]);
+            assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
         it("should thow an error if the language is not passed", () => {
             let applicationStringsFunc = () => {
@@ -31,12 +30,12 @@ describe("Locale", function() {
 
         it("should return the english locale strings as default", () => {
             let englishStringsFile = Locale.applicationStrings();
-            assert.strictEqual("en", englishStringsFile.locales[0]);
+            assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
 
         it("should return the english locale strings for all the languages other than english", () => {
             let englishStringsFile = Locale.applicationStrings("fr");
-            assert.strictEqual("en", englishStringsFile.locales[0]);
+            assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
 
     });

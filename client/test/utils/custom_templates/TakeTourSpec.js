@@ -1,8 +1,6 @@
 /* eslint max-nested-callbacks: [2, 7], radix:0 */
-"use strict";
-
 import TakeTour from "../../../src/js/utils/custom_templates/TakeTour";
-import UserInfo from "../../../src/js/user/UserInfo.js";
+import UserInfo from "../../../src/js/user/UserInfo";
 import sinon from "sinon";
 import { assert } from "chai";
 

@@ -1,9 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import UserSession from "../../src/js/user/UserSession.js";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
-import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
+import UserSession from "../../src/js/user/UserSession";
+import AjaxClient from "../../src/js/utils/AjaxClient";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import History from "../../src/js/History";
 import { assert } from "chai";
 import moment from "moment";
@@ -86,7 +85,7 @@ describe("UserSession", () => {
                 let ajaxInstance = new AjaxClient("/logout", true);
                 let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
                 ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
-                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").atMost(1);
+                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").atMost(1); // eslint-disable-line no-magic-numbers
                 sandbox.stub(appSessionStorage, "clear");
                 let historyMock = sandbox.mock(historyPush).expects("push");
                 historyMock.withArgs("/");

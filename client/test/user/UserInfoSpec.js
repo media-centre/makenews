@@ -1,8 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5] no-unused-expressions:0, no-unused-vars:0, no-undefined:0*/
 
-"use strict";
-import PouchClient from "../../src/js/db/PouchClient.js";
-import UserInfo from "../../src/js/user/UserInfo.js";
+import PouchClient from "../../src/js/db/PouchClient";
+import UserInfo from "../../src/js/user/UserInfo";
 import sinon from "sinon";
 
 describe("UserInfo", () => {

@@ -1,14 +1,13 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5]*/
 
-"use strict";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
-import UserSession from "../../src/js/user/UserSession.js";
-import AppWindow from "../../src/js/utils/AppWindow.js";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import AjaxClient from "../../src/js/utils/AjaxClient";
+import UserSession from "../../src/js/user/UserSession";
+import AppWindow from "../../src/js/utils/AppWindow";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import { expect, assert } from "chai";
 import nock from "nock";
 import sinon from "sinon";
-import R from "ramda";
+import R from "ramda"; // eslint-disable-line id-length
 
 describe("AjaxClient", function() {
     let userSessionMock = null, sandbox = null, userSession = null, requests = [];
@@ -16,7 +15,7 @@ describe("AjaxClient", function() {
         sandbox = sinon.sandbox.create();
         this.xhr = sinon.useFakeXMLHttpRequest();
 
-        this.xhr.onCreate = function (xhr) {
+        this.xhr.onCreate = function(xhr) {
             requests.push(xhr);
         };
 
@@ -36,7 +35,7 @@ describe("AjaxClient", function() {
         AppWindow.instance.restore();
     });
 
-    var assertRequest = function (request, url, method, data, headers = {}) {
+    var assertRequest = function(request, url, method, data, headers = {}) { // eslint-disable-line vars-on-top
         assert.equal(request.url, "http://localhost:5000" + url);
         assert.equal(request.method, method);
         assert.deepEqual(request.requestHeaders, headers);
@@ -56,7 +55,7 @@ describe("AjaxClient", function() {
                     done();
                 });
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}');
+            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
             assertRequest(request, url, "POST", data, headers);
         });
 
@@ -73,7 +72,7 @@ describe("AjaxClient", function() {
                 });
 
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"data": "error"}');
+            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"data": "error"}'); // eslint-disable-line quotes
             assertRequest(request, url, "POST", data, headers);
         });
 
@@ -91,14 +90,14 @@ describe("AjaxClient", function() {
                 });
 
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"message": "session expired"}');
+            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"message": "session expired"}'); // eslint-disable-line quotes
             assertRequest(request, url, "POST", data, headers);
         });
     });
 
     describe("get", () => {
         it("should do a get request to the url", function(done) {
-          var url = "/home";
+            var url = "/home";
             let ajax = new AjaxClient(url);
             ajax.get().then(succesData => {
                 expect(succesData.data).to.eq("success");
@@ -106,13 +105,13 @@ describe("AjaxClient", function() {
             });
 
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}');
+            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
             assertRequest(request, url, "GET");
 
         });
 
         it("should do a get request with query parameter to the url", function(done) {
-          var url = "/rss-feeds";
+            var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
             ajax.get({ "url": "http://rssfedd.com" }).then(succesData => {
                 expect(succesData.data).to.eq("success");
@@ -120,24 +119,24 @@ describe("AjaxClient", function() {
             });
 
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}');
+            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
             assertRequest(request, url + "?url=http%3A%2F%2Frssfedd.com", "GET");
         });
 
         it("should do a get request with multiple query parameters to the url", function(done) {
-          var url = "/rss-feeds";
+            var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
             ajax.get({ "url": "http://rssfedd.com", "page": 1 }).then(succesData => {
                 expect(succesData.data).to.eq("success");
                 done();
             });
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}');
+            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
             assertRequest(request, url + "?url=http%3A%2F%2Frssfedd.com&page=1", "GET");
         });
 
         it("should handle for empty objects", (done) => {
-          var url = "/rss-feeds";
+            var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
             ajax.get({}).then(succesData => {
                 expect(succesData.data).to.eq("success");
@@ -145,13 +144,13 @@ describe("AjaxClient", function() {
             });
 
             let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}');
+            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
             assertRequest(request, url, "GET");
         });
 
         it("should handle for 404", (done) => {
 
-          var url = "/rss-feeds";
+            var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
             ajax.get({}).catch(errorData => {
                 expect(errorData).to.eq("error");

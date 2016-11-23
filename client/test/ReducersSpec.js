@@ -1,2 +1,1 @@
-"use strict";
-import reducers from "../src/js/Reducers.js"; //eslint-disable-line no-unused-vars
+import reducers from "../src/js/Reducers"; //eslint-disable-line no-unused-vars

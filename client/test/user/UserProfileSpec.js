@@ -1,10 +1,9 @@
-"use strict";
 
 import { UserProfile } from "../../src/js/user/UserProfile.jsx";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 import UserProfileActions from "../../src/js/user/UserProfileActions";

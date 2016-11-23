@@ -1,6 +1,5 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
-import AppSessionStorage from "../../src/js/utils/AppSessionStorage.js";
+import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -8,8 +7,7 @@ describe("AppSessionStorage", ()=> {
     let key = null, value = null;
     before("AppSessionStorage", () => {
         key = "test_key";
-        value = 1234;
-
+        value = 1234; // eslint-disable-line no-magic-numbers
     });
 
     describe("setItem", () => {

@@ -1,11 +1,10 @@
 /* eslint max-nested-callbacks: [2, 5] */
-"use strict";
 import ConfirmPopup from "../../../../src/js/utils/components/ConfirmPopup/ConfirmPopup";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../../../helper/TestHelper.js";
+import "../../../helper/TestHelper";
 
 let confirmPop = null, cancelCalled = null;
 describe("ConfirmPopup", ()=> {

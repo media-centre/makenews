@@ -1,4 +1,3 @@
-"use strict";
 
 import UserProfileSettings from "../../src/js/user/UserProfileSettings.jsx";
 import LogoutActions from "../../src/js/login/LogoutActions";
@@ -7,7 +6,7 @@ import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import "../helper/TestHelper.js";
+import "../helper/TestHelper";
 import sinon from "sinon";
 import Locale from "../../src/js/utils/Locale";
 import UserSession from "../../src/js/user/UserSession";

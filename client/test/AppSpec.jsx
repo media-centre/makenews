@@ -1,8 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-"use strict";
-import "./helper/TestHelper.js";
-import App from "../src/js/App.jsx";
+import "./helper/TestHelper";
+import App from "../src/js/App";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
@@ -14,6 +13,6 @@ describe("app component", function() {
         this.loginPage = TestUtils.renderIntoDocument(
             <App children={children}/>
         );
-        assert.strictEqual(2, 2);
+        assert.strictEqual(2, 2); // eslint-disable-line no-magic-numbers
     });
 });

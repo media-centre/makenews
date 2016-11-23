@@ -1,11 +1,10 @@
-"use strict";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
-import "../../../helper/TestHelper.js";
+import "../../../helper/TestHelper";
 import TabComponent from "../../../../src/js/utils/components/TabComponent/TabComponent";
-import mockStore from "../../../helper/ActionHelper.js";
+import mockStore from "../../../helper/ActionHelper";
 
 describe("TabComponent with dispatch", () => {
     it("should highlight tab on click", (done) => {
@@ -52,7 +51,7 @@ describe("TabComponent", () => {
     });
 
     it("should have tab titles mandatory", () => {
-        assert.isDefined(tabComponentElement.props.children[0].props["tab-header"], "defined");
+        assert.isDefined(tabComponentElement.props.children[0].props["tab-header"], "defined"); // eslint-disable-line no-magic-numbers
     });
 
     it("should have tab title as same as in the properties", () => {
@@ -66,7 +65,7 @@ describe("TabComponent", () => {
     });
 
     it("should have minimum 2 tab contents", () => {
-        assert.equal(2, tabComponentElement.props.children.length);
+        assert.equal(2, tabComponentElement.props.children.length); // eslint-disable-line no-magic-numbers
     });
 
     it("should display content of selected by default", ()=> {

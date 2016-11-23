@@ -1,26 +1,24 @@
 /* eslint no-unused-expressions:0 */
 
-"use strict";
-
 import AddURLComponent from "../../../src/js/utils/components/AddURLComponent";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 import RssRequestHandler from "../../../src/js/rss/RssRequestHandler";
 
 describe("AddURLComponent", () => {
 
     let AddURLComponentElement = null;
     let categoryDetailsPageStrings = { "allCategoriesLinkLabel": "All Categories",
-            "deleteCategoryLinkLabel": "Delete Category",
-            "addUrlLinkLabel": "Add Url",
-            "successMessages": { "urlSuccess": "Url is successfully added" },
-            "errorMessages": { "invalidRssUrl": "Invalid URL format",
-                "emptyUrl": "URL should not be empty",
-                "alreadyAdded": "URL is already added" }
+        "deleteCategoryLinkLabel": "Delete Category",
+        "addUrlLinkLabel": "Add Url",
+        "successMessages": { "urlSuccess": "Url is successfully added" },
+        "errorMessages": { "invalidRssUrl": "Invalid URL format",
+            "emptyUrl": "URL should not be empty",
+            "alreadyAdded": "URL is already added" }
     };
 
     before("TabComponent", () => {
@@ -56,7 +54,7 @@ describe("AddURLComponent", () => {
 
     it("should display all the urls if content props has values", ()=> {
         let addUrlDom = ReactDOM.findDOMNode(AddURLComponentElement);
-        expect(2).to.eq(addUrlDom.querySelectorAll("ul.url-list li").length);
+        expect(2).to.eq(addUrlDom.querySelectorAll("ul.url-list li").length); // eslint-disable-line no-magic-numbers
     });
 
     it("should call showAddUrlTextBox function on clicking addUrlButton", () => {
@@ -149,7 +147,7 @@ describe("AddURLComponent", () => {
         setTimeout(() => {
             assert.isUndefined(addURLComponentTest.refs.addUrlTextBox, "Defined");
             done();
-        }, 0);
+        }, 0); // eslint-disable-line no-magic-numbers
     });
 
     it("should have addUrlTextBox if addURLHandler validation succeed", (done) => {
@@ -167,7 +165,7 @@ describe("AddURLComponent", () => {
         setTimeout(() => {
             assert.isDefined(addURLComponentTest.refs.addUrlTextBox, "Defined");
             done();
-        }, 0);
+        }, 0); // eslint-disable-line no-magic-numbers
     });
 
     it("should display example message on clicking addUrlButton", () => {

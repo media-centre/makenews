@@ -1,6 +1,5 @@
 
-"use strict";
-import DateTimeUtil from "../../src/js/utils/DateTimeUtil.js"; //eslint-disable-line no-unused-vars
+import DateTimeUtil from "../../src/js/utils/DateTimeUtil"; //eslint-disable-line no-unused-vars
 import { assert } from "chai";
 
 describe("DateTimeUtil", ()=> {

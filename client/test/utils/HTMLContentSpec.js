@@ -1,6 +1,4 @@
-"use strict";
-
-import getHtmlContent from "../../src/js/utils/HtmContent.js";
+import getHtmlContent from "../../src/js/utils/HtmContent";
 import { assert } from "chai";
 
 describe("HTMLContent", ()=> {
