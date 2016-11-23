@@ -1,4 +1,4 @@
-import { FACEBOOK_GOT_PROFILES, FACEBOOK_ADD_PROFILE } from "../../src/js/config/actions/FacebookConfigureActions";
+import { FACEBOOK_GOT_PROFILES, FACEBOOK_ADD_PROFILE, FACEBOOK_GOT_CONFIGURED_PROFILES } from "../../src/js/config/actions/FacebookConfigureActions";
 import { facebookProfiles, facebookConfiguredUrls } from "../../src/js/config/reducers/FacebookReducer";
 import { expect } from "chai";
 
@@ -15,6 +15,12 @@ describe("Facebook Reducer", () => {
             let action = { "type": FACEBOOK_ADD_PROFILE, "profile": { "name": "Profile1" } };
             let state = { "profiles": [], "pages": [], "groups": [] };
             expect(facebookConfiguredUrls(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
+        });
+
+        it("should return updated state with configured profiles", () => {
+            let action = { "type": FACEBOOK_GOT_CONFIGURED_PROFILES, "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }] };
+            let state = { "profiles": [], "pages": [], "groups": [] };
+            expect(facebookConfiguredUrls(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
         });
     });
 

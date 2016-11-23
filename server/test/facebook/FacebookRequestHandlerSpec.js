@@ -285,4 +285,61 @@ describe("FacebookRequestHandler", () => {
             });
         });
     });
+    
+    describe("Configured Profiles", () => {
+        let sandbox = null, dbName = null, body = null, facebookRequestHandler = null, couchClient = null;
+        beforeEach("Configured Profiles", () => {
+            sandbox = sinon.sandbox.create();
+            dbName = "db_name";
+            body = { "selector": {
+                "docType": {
+                    "$eq": "source"
+                },
+                "sourceType": {
+                    "$eq": "fb-profiles"
+                }
+            } };
+            facebookRequestHandler = new FacebookRequestHandler("somethings");
+            couchClient = new CouchClient(dbName, accessToken);
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+        });
+
+        afterEach("Configured Profiles", () => {
+            sandbox.restore();
+        });
+
+        it("should get the facebook configured profiles", (done) => {
+            let result = { "docs":
+            [{ "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                "docType": "source",
+                "sourceType": "fb-profiles",
+                "url": "http://www.facebook.com/profile1",
+                "latestFeedTimestamp": "2016-11-21T01:57:48Z" }] };
+
+            sandbox.stub(couchClient, "post").withArgs(`/${dbName}/_find`, body).returns(Promise.resolve(result));
+
+            facebookRequestHandler.fetchConfiguredSourcesOf("profiles", dbName, accessToken).then(data => {
+                try {
+                    expect(data).to.deep.equal(result.docs);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
+        });
+
+        it("should reject with error when database gives an error", (done) => {
+            let errorMessage = "unexpected response from the db";
+            sandbox.stub(couchClient, "post").returns(Promise.reject(errorMessage));
+            facebookRequestHandler.fetchConfiguredSourcesOf("profiles", dbName, accessToken).catch(error => {
+                try {
+                    expect(error).to.equal(errorMessage);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 });

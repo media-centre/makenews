@@ -1,10 +1,8 @@
 /* eslint max-nested-callbacks: [2, 7] */
-"use strict";
-
-import CouchClient from "../src/CouchClient.js";
-import NodeErrorHandler from "../src/NodeErrorHandler.js";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../src/config/ApplicationConfig.js";
+import CouchClient from "../src/CouchClient";
+import NodeErrorHandler from "../src/NodeErrorHandler";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../src/config/ApplicationConfig";
 import LogTestHelper from "./helpers/LogTestHelper";
 import sinon from "sinon";
 
@@ -37,7 +35,12 @@ describe("CouchClient", () => {
             let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
@@ -57,7 +60,13 @@ describe("CouchClient", () => {
             let headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json", "If-Match": "12345" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "If-Match": "12345"
+                }
+            })
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
@@ -76,7 +85,12 @@ describe("CouchClient", () => {
             let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .put("/" + dbName + "/schema_info", documentObj)
                 .replyWithError({
                     "code": "ECONNREFUSED",
@@ -100,7 +114,12 @@ describe("CouchClient", () => {
         it("should reject with error if the response code is not 200", (done) => {
             let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, "unexpected response from the db");
 
@@ -124,7 +143,12 @@ describe("CouchClient", () => {
             let documentObj = { "_id": docId, "test": "abcd" };
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
@@ -145,7 +169,13 @@ describe("CouchClient", () => {
             let headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json", "If-Match": "12345" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "If-Match": "12345"
+                }
+            })
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
@@ -164,7 +194,12 @@ describe("CouchClient", () => {
             let docId = "123456";
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, "");
 
@@ -183,7 +218,12 @@ describe("CouchClient", () => {
             let docId = "123456";
 
             nock("http://localhost:5984", {
-                "reqheaders": { "Cookie": "AuthSession=" + accessToken, "Content-Type": "application/json", "Accept": "application/json" } })
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
                 .get("/" + dbName + "/" + docId)
                 .replyWithError("error message");
 
@@ -203,8 +243,8 @@ describe("CouchClient", () => {
     describe("getAllDbs", () => {
         it("should get all db names in a couch db", (done) => {
             nock("http://localhost:5984")
-            .get("/_all_dbs")
-            .reply(HttpResponseHandler.codes.OK, ["_replicator", "_users", "test1", "test2", "test3"]);
+                .get("/_all_dbs")
+                .reply(HttpResponseHandler.codes.OK, ["_replicator", "_users", "test1", "test2", "test3"]);
 
             CouchClient.getAllDbs().then(dbs => {
                 assert.deepEqual(["test1", "test2", "test3"], dbs);
