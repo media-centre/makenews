@@ -1,11 +1,10 @@
 /* eslint no-unused-vars:0, callback-return:0, max-nested-callbacks:0 */
-"use strict";
 
-import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
-import PouchClient from "../../db/PouchClient.js";
-import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler.js";
-import FilterFeedsHandler from "../FilterFeedsHandler.js";
-import { parkFeedCounter } from "../../feeds/actions/FeedsActions.js";
+import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries";
+import PouchClient from "../../db/PouchClient";
+import RefreshFeedsHandler from "../../surf/RefreshFeedsHandler";
+import FilterFeedsHandler from "../FilterFeedsHandler";
+import { parkFeedCounter } from "../../feeds/actions/FeedsActions";
 export const DISPLAY_ALL_FEEDS = "DISPLAY_ALL_FEEDS";
 export const DISPLAY_EXISTING_FEEDS = "DISPLAY_EXISTING_FEEDS";
 export const PARK_FEED = "PARK_FEED";
@@ -16,7 +15,7 @@ export const PAGINATION_FEEDS = "PAGINATION_FEEDS";
 
 let isRefreshing = false, totalPercentage = 100;
 
-export function displayAllFeeds(feeds, refreshState = false, progressPercentage = 0, lastIndex = 0, hasMoreFeeds = true) {
+export function displayAllFeeds(feeds, refreshState = false, progressPercentage = 0, lastIndex = 0, hasMoreFeeds = true) { // eslint-disable-line no-magic-numbers
     return { "type": DISPLAY_ALL_FEEDS, feeds, refreshState, progressPercentage, lastIndex, hasMoreFeeds };
 }
 
@@ -24,7 +23,7 @@ export function removeParkItem(feed) {
     return { "type": PARK_FEED, feed };
 }
 
-export function displayExistingFeeds(feeds, refreshState, progressPercentage = 0) {
+export function displayExistingFeeds(feeds, refreshState, progressPercentage = 0) { // eslint-disable-line no-magic-numbers
     return { "type": DISPLAY_EXISTING_FEEDS, feeds, refreshState, progressPercentage };
 }
 export function storeFilterSourceMap(surfFilter, sourceHashMap, sourceIds) {
@@ -33,7 +32,7 @@ export function storeFilterSourceMap(surfFilter, sourceHashMap, sourceIds) {
 export function fetchAllCatgories(categories) {
     return { "type": FETCH_ALL_CATEGORIES, categories };
 }
-export function paginationFeeds(feeds, refreshState = false, progressPercentage = 0, lastIndex = 0, hasMoreFeeds = true) {
+export function paginationFeeds(feeds, refreshState = false, progressPercentage = 0, lastIndex = 0, hasMoreFeeds = true) { // eslint-disable-line no-magic-numbers
     return { "type": PAGINATION_FEEDS, feeds, refreshState, progressPercentage, lastIndex, hasMoreFeeds };
 }
 
@@ -41,15 +40,15 @@ export function initiateSurf(callback) {
     return dispatch => {
         dispatch(storeFilterAndSourceHashMap(()=> {
             dispatch(fetchAllCategories(()=> {
-                dispatch(fetchFeedsByPage(0, ()=> {}));
+                dispatch(fetchFeedsByPage(0, ()=> {})); // eslint-disable-line no-magic-numbers
                 callback();
             }));
         }));
     };
 }
 
-export function parkFeed(feedDoc, callback = ()=> {}) {
-    if(feedDoc && Object.keys(feedDoc).length !== 0) {
+export function parkFeed(feedDoc, callback = ()=> {}) { // eslint-disable-line consistent-return
+    if(feedDoc && Object.keys(feedDoc).length !== 0) { // eslint-disable-line no-magic-numbers
         return dispatch => {
             FeedApplicationQueries.updateFeed(feedDoc, "park").then(() => {
                 dispatch(removeParkItem(feedDoc));
@@ -62,7 +61,7 @@ export function parkFeed(feedDoc, callback = ()=> {}) {
 
 export function displayAllFeedsAsync(callback, progressPercentage) {
     return dispatch => {
-        FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => {
+        FeedApplicationQueries.fetchAllFeedsWithCategoryName().then((feeds) => { // eslint-disable-line consistent-return
             if(progressPercentage === totalPercentage) {
                 isRefreshing = false;
             }
@@ -70,7 +69,7 @@ export function displayAllFeedsAsync(callback, progressPercentage) {
             if(callback) {
                 return callback(feeds);
             }
-        }).catch(error => { //eslint-disable-line no-unused-vars
+        }).catch(error => { //eslint-disable-line consistent-return
             if(progressPercentage === totalPercentage) {
                 isRefreshing = false;
             }
@@ -102,7 +101,7 @@ export function updateLatestFeeds(completionPercentage, callback = ()=> {}) {
         dispatch(displayExistingFeeds([], isRefreshing, completionPercentage));
         if (completionPercentage === totalPercentage) {
             isRefreshing = false;
-            dispatch(fetchFeedsByPage(0));
+            dispatch(fetchFeedsByPage(0)); // eslint-disable-line no-magic-numbers
             callback();
         }
     };
@@ -142,7 +141,7 @@ export function updateFilterAndSourceHashMap() {
 export function fetchFeedsByPage(pageIndex, callback = ()=> {}) {
     return dispatch => {
         let filterFeedsHandler = new FilterFeedsHandler();
-        if(pageIndex === 0) {
+        if(pageIndex === 0) { // eslint-disable-line no-magic-numbers
             filterFeedsHandler.getFilterAndSourceHashMap().then(latestSourceMapAndFilter => {
                 let filterObj = dispatch(storeFilterSourceMap(latestSourceMapAndFilter.surfFilter, latestSourceMapAndFilter.sourceHashMap, latestSourceMapAndFilter.sourceIds));
                 fetchFeeds(pageIndex, filterObj, callback, dispatch);
@@ -157,10 +156,10 @@ function fetchFeeds(pageIndex, filterObj, callback, dispatch) {
     if(filterObj.surfFilter) {
         let filterFeedsHandler = new FilterFeedsHandler();
         filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, pageIndex).then((result)=> {
-            if(pageIndex === 0) {
-                dispatch(paginationFeeds([], false, 0, 0, true));
+            if(pageIndex === 0) { // eslint-disable-line no-magic-numbers
+                dispatch(paginationFeeds([], false, 0, 0, true)); // eslint-disable-line no-magic-numbers
             }
-            dispatch(paginationFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds));
+            dispatch(paginationFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds)); // eslint-disable-line no-magic-numbers
             callback(result);
         }).catch(()=> {
             callback({ "lastIndex": pageIndex });
@@ -177,8 +176,8 @@ export function fetchFeedsByFilter(latestFilterDocument, callback = ()=> {}) {
             filterFeedsHandler.getFilterAndSourceHashMap().then((filterObj) => {
                 dispatch(storeFilterSourceMap(filterObj.surfFilter, filterObj.sourceHashMap, filterObj.sourceIds));
 
-                filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, 0).then((result)=> {
-                    dispatch(displayAllFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds));
+                filterFeedsHandler.fetchFeedsByPageWithFilter(filterObj, 0).then((result)=> { // eslint-disable-line no-magic-numbers
+                    dispatch(displayAllFeeds(result.feeds, false, 0, result.lastIndex, result.hasMoreFeeds)); // eslint-disable-line no-magic-numbers
                     callback(result);
                 });
             });
