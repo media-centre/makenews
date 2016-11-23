@@ -113,7 +113,7 @@ describe("RssFeedsRoute", () => {
         rssRouteHelper.handle();
     });
 
-    xit("should return 400 error if url is invalid", (done) => {
+    it("should return 400 error if url is invalid", (done) => {
         nock("http://www.test1.com/cricket")
             .get("/", {
             })
@@ -130,7 +130,7 @@ describe("RssFeedsRoute", () => {
         rssRouteHelper.handle();
     });
 
-    xit("should return error if request to url returns error", (done) => {
+    it("should return error if request to url returns error", (done) => {
         nock("http://www.test1.com/cricket")
             .get("/", {
             })

@@ -273,10 +273,10 @@ describe("RssClient", () => {
             url = "http://www.example.com";
         });
 
-        xit("it should return error when invalid request on url", async () => {
+        it("it should return error when invalid request on url", async () => {
             nock(url)
               .get("/")
-              .replyWithError({ "message": "failed" });
+              .replyWithError("failed");
 
             try {
                 await rssClientMock.getRssData(url);
@@ -285,8 +285,13 @@ describe("RssClient", () => {
             }
         });
 
-        it("it should return feeds_not_found when parser doesnt return feeds", async() => {
+        it("it should return feeds_not_found when parser doesn't return feeds", async() => {
             try {
+                nock(url)
+                  .get("/")
+                  .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                sandbox.stub(RssParser.prototype, "parse", () => Promise.reject("error"));
+
                 await rssClientMock.getRssData(url);
             } catch (err) {
                 assert.deepEqual(err.message, "feeds_not_found");
@@ -294,6 +299,9 @@ describe("RssClient", () => {
         });
 
         it("it should return feeds when parser returns feeds", async() => {
+            nock(url)
+              .get("/")
+              .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
             sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve(feed));
             let res = await rssClientMock.getRssData(url);
             assert.equal(res, feed);

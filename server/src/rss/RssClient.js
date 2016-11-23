@@ -131,7 +131,8 @@ export default class RssClient {
                 "timeout": 6000
             }, (error, response, body) => {
                 if(error) {
-                    this.handleRequestError(url, error);
+                    RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
+                    reject({ "message": "Request failed for " + url });
                 }
                 data = body;
             });
