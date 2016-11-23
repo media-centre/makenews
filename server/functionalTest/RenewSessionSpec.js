@@ -1,8 +1,7 @@
-/* eslint max-nested-callbacks: [2, 5] handle-callback-err: 0 */
-"use strict";
-
+/* eslint max-nested-callbacks: [2, 5] react/jsx-wrap-multilines:0 */
+/* eslint handle-callback-err: 0 */
 import request from "supertest";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import CouchSession from "../src/CouchSession";
 import { expect } from "chai";
 import argv from "yargs";
@@ -25,9 +24,9 @@ describe("RenewSession", () => {
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .get("/renew_session")
                 .set("Cookie", accessToken)
-                .end((err, res) => {
+                .end((err, res) => { //eslint-disable-line handle-callback-err
                     let cookies = res.headers["set-cookie"].pop().split(";");
-                    expect(cookies[0]).to.contain("AuthSession=");
+                    expect(cookies[0]).to.contain("AuthSession="); //eslint-disable-line no-magic-numbers
                     done();
                 });
         });

@@ -1,6 +1,5 @@
-/* eslint max-nested-callbacks: [2, 5] handle-callback-err: 0 */
-"use strict";
-
+/* eslint max-nested-callbacks: [2, 5] react/jsx-wrap-multilines:0 */
+/* eslint handle-callback-err: 0 */
 import request from "supertest";
 import { expect, assert } from "chai";
 import argv from "yargs";
