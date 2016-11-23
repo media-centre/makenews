@@ -1,5 +1,4 @@
-"use strict";
-import TwitterClient from "./TwitterClient.js";
+import TwitterClient from "./TwitterClient";
 
 export default class TwitterRequestHandler {
 

@@ -1,6 +1,5 @@
 /* eslint no-empty: 0 */
-"use strict";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
+import DateTimeUtil from "../utils/DateTimeUtil";
 
 export default class TwitterResponseParser {
 
@@ -30,7 +29,7 @@ export default class TwitterResponseParser {
             "tags": TwitterResponseParser.hashTags(tweet)
         };
         let media = tweet.entities.media;
-        if(media && media.length > 0) {
+        if(media && media.length > 0) { // eslint-disable-line no-magic-numbers
             feedObj.type = "imagecontent";
             feedObj.images = [];
             media.forEach(item => {

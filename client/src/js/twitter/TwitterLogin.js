@@ -1,8 +1,7 @@
-"use strict";
-import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
-import AppWindow from "../utils/AppWindow.js";
-import LoginPage from "../login/pages/LoginPage.jsx";
-import UserInfo from "../user/UserInfo.js";
+import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
+import AppWindow from "../utils/AppWindow";
+import LoginPage from "../login/pages/LoginPage";
+import UserInfo from "../user/UserInfo";
 
 export default class TwitterLogin {
     static instance() {
@@ -46,7 +45,7 @@ export default class TwitterLogin {
                                 reject(false);
                             }
                         }
-                        iteration += 1;
+                        iteration += 1;  // eslint-disable-line no-magic-numbers
                     }, TwitterLogin.getWaitTime());
                 });
             }

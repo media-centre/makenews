@@ -1,6 +1,5 @@
-"use strict";
-import AjaxClient from "../utils/AjaxClient.js";
-import AppSessionStorage from "../utils/AppSessionStorage.js";
+import AjaxClient from "../utils/AjaxClient";
+import AppSessionStorage from "../utils/AppSessionStorage";
 
 export default class TwitterClient {
 
