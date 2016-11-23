@@ -6,7 +6,6 @@ import { expect, assert } from "chai";
 
 describe("Add URL Document Route", () => {
     function mockResponse(done, expectedValues) {
-        console.log(expectedValues);
         let response = {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
@@ -25,7 +24,6 @@ describe("Add URL Document Route", () => {
                 expect(status).to.equal(expectedValues.status);
             },
             "json": () => {
-                const zero = 0;
                 assert.strictEqual("web", expectedValues.json.document.sourceType);
                 done();
             }
@@ -77,6 +75,7 @@ describe("Add URL Document Route", () => {
         });
 
         new AddURLDocumentRoute(request, response, {}).handle();
+        sandbox.restore();
     });
 
 });

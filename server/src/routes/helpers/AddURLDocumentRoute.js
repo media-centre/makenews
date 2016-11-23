@@ -10,7 +10,6 @@ export default class AddURLDocumentRoute extends Route {
     }
 
     valid() {
-        console.log("In valid condition ");
         if (Object.keys(this.url).length === 0 || StringUtils.isEmptyString(this.url.name)) { //eslint-disable-line no-magic-numbers
             return false;
         }

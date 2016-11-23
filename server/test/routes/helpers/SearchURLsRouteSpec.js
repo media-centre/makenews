@@ -75,5 +75,6 @@ describe("Search Urls Route", () => {
         let response = mockResponseSuccess(done, { "status": HttpResponseHandler.codes.OK, "json": { feeds } });
         let searchURLsRoute = new SearchURLsRoute(request, response, {});
         searchURLsRoute.handle();
+        sandbox.restore();
     });
 });
