@@ -1,6 +1,4 @@
-"use strict";
-
-import EnvironmentConfig from "./EnvironmentConfig.js";
+import EnvironmentConfig from "./EnvironmentConfig";
 
 export default class ClientConfig {
 

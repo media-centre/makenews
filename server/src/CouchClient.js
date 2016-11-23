@@ -29,7 +29,7 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
-    getUrlDocument(body, customHeaders = {}){
+    getUrlDocument(body, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
         return this.post(path, body, customHeaders);
     }
@@ -51,11 +51,11 @@ export default class CouchClient {
     put(path, body, customHeaders = {}) {
         return new Promise((resolve, reject) => {
             request.put({
-                    "uri": this.dbUrl + path,
-                    "headers": this._headers(customHeaders),
-                    "body": body || {},
-                    "json": true
-                },
+                "uri": this.dbUrl + path,
+                "headers": this._headers(customHeaders),
+                "body": body || {},
+                "json": true
+            },
                 (error, response) => {
                     this.handleResponse(error, response, resolve, reject);
                 });
@@ -65,11 +65,11 @@ export default class CouchClient {
     get(path, data = {}, customHeaders = {}) {
         return new Promise((resolve, reject) => {
             request.get({
-                    "uri": this.dbUrl + path,
-                    "headers": this._headers(customHeaders),
-                    "data": data,
-                    "json": true
-                },
+                "uri": this.dbUrl + path,
+                "headers": this._headers(customHeaders),
+                "data": data,
+                "json": true
+            },
                 (error, response) => {
                     this.handleResponse(error, response, resolve, reject);
                 });

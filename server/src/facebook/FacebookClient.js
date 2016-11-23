@@ -17,7 +17,7 @@ export default class FacebookClient {
     }
 
     constructor(accessToken, appSecretProof, appId) {
-        if(StringUtil.isEmptyString(accessToken) || StringUtil.isEmptyString(appSecretProof)) {
+        if (StringUtil.isEmptyString(accessToken) || StringUtil.isEmptyString(appSecretProof)) {
             throw new Error("access token or application secret proof can not be null");
         }
         this.accessToken = accessToken;
@@ -56,7 +56,7 @@ export default class FacebookClient {
 
     pagePosts(pageId, parameters = {}) {
         return new Promise((resolve, reject) => {
-            if(StringUtil.isEmptyString(pageId)) {
+            if (StringUtil.isEmptyString(pageId)) {
                 reject({
                     "message": "page id cannot be empty",
                     "type": "InvalidArgument"
@@ -93,8 +93,8 @@ export default class FacebookClient {
                 "url": `${this.facebookParameters.url}/me/taggable_friends?${new HttpRequestUtil().queryString(parameters, false)}`
             }, (error, response, body) => {
                 let err = NodeErrorHandler.noError(error);
-                if(err) {
-                    if(new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
+                if (err) {
+                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                         let profiles = JSON.parse(body);
                         FacebookClient.logger().debug("FacebookClient:: successfully fetched the profiles");
                         resolve(profiles);
@@ -110,7 +110,7 @@ export default class FacebookClient {
             });
         });
     }
-    
+
     getFacebookId(facebookPageUrl) {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({

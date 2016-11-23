@@ -1,5 +1,4 @@
-"use strict";
-import FetchFeedsFromAllSources from "./FetchFeedsFromAllSources.js";
+import FetchFeedsFromAllSources from "./FetchFeedsFromAllSources";
 import RouteLogger from "../routes/RouteLogger";
 
 export default (app) => {

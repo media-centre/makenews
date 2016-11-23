@@ -1,4 +1,3 @@
-"use strict";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
@@ -12,7 +11,7 @@ export default class MigrationFile {
         let migratableClasses = [];
         fileNames.forEach((fileName) => {
             let timeStampAndFileName = this.split(fileName);
-            if(moment(timeStampAndFileName[0], "YYYYMMDDHHmmss") > moment(schemaVersion, "YYYYMMDDHHmmss")) {
+            if(moment(timeStampAndFileName[0], "YYYYMMDDHHmmss") > moment(schemaVersion, "YYYYMMDDHHmmss")) {   // eslint-disable-line no-magic-numbers
                 migratableClasses.push(timeStampAndFileName);
             }
         });
@@ -35,13 +34,13 @@ export default class MigrationFile {
 
     _extractVersion(fileName) {
         let fileNameAndVersion = fileName.split("_");
-        return fileNameAndVersion[0];
+        return fileNameAndVersion[0];    // eslint-disable-line no-magic-numbers
     }
 
     _extractFileName(fileName) {
         let fileNameAndVersion = fileName.split("_");
-        let fileNameWithJs = fileNameAndVersion[1].split(".");
-        return fileNameWithJs[0];
+        let fileNameWithJs = fileNameAndVersion[1].split(".");   // eslint-disable-line no-magic-numbers
+        return fileNameWithJs[0];    // eslint-disable-line no-magic-numbers
     }
 
     _validateTimeStamp(timeStamp) {

@@ -1,6 +1,5 @@
 /* eslint no-process-env:0, no-sync:0 */
-"use strict";
-import EnvironmentFileLoader from "../../../common/src/environment/EnvironmentFileLoader.js";
+import EnvironmentFileLoader from "../../../common/src/environment/EnvironmentFileLoader";
 import path from "path";
 
 

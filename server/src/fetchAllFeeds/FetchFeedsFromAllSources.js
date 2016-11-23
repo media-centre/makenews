@@ -1,9 +1,7 @@
-"use strict";
-
-import RssRequestHandler from "../rss/RssRequestHandler.js";
-import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
-import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
-import StringUtil from "../../../common/src/util/StringUtil.js";
+import RssRequestHandler from "../rss/RssRequestHandler";
+import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
+import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
+import StringUtil from "../../../common/src/util/StringUtil";
 import Logger from "../logging/Logger";
 
 export const RSS_TYPE = "rss";
@@ -43,7 +41,7 @@ export default class FetchFeedsFromAllSources {
             this.request.body.data.forEach((item, index)=> {
                 this.fetchFeedsFromSource(item).then((feeds)=> {
                     allFeeds = allFeeds.concat(feeds);
-                    if(this.request.body.data.length - 1 === index) {
+                    if(this.request.body.data.length - 1 === index) {  // eslint-disable-line no-magic-numbers
                         FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
                         resolve(allFeeds);
                     }
@@ -94,18 +92,16 @@ export default class FetchFeedsFromAllSources {
     }
 
     isValidateRequestData() {
-        if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) {
+        if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) {      // eslint-disable-line no-magic-numbers
             return false;
         }
-        let errorItems = this.request.body.data.filter((item)=> {
+        let errorItems = this.request.body.data.filter((item) => {                                      //eslint-disable-line consistent-return
             if(StringUtil.isEmptyString(item.source) || StringUtil.isEmptyString(item.url)) {
                 return item;
             }
         });
 
-        if(errorItems.length > 0) {
-            return false;
-        }
-        return true;
+        return errorItems.length <= 0;             // eslint-disable-line no-magic-numbers
+
     }
 }

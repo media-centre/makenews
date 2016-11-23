@@ -1,6 +1,4 @@
-import DesignDocumentMigration from "../helpers/DesignDocumentMigration";
 import Migration from "../Migration";
-import CouchClient from "../../CouchClient";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../config/ApplicationConfig";
 import NodeErrorHandler from "../../NodeErrorHandler";
@@ -23,14 +21,18 @@ export default class URLDocument {
             Migration.logger(this.dbName).info("URLDocument::up - started");
             let categoryDocument = this.getDocument();
             request.post({
-                    "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_bulk_docs",
-                    "headers": { "Cookie": "AuthSession=" + this.accessToken, "Content-Type": "application/json", "Accept": "application/json" },
-                    "body": categoryDocument,
-                    "json": true
+                "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_bulk_docs",
+                "headers": {
+                    "Cookie": "AuthSession=" + this.accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
+                "body": categoryDocument,
+                "json": true
+            },
                 (error, response) => {
-                    if(NodeErrorHandler.noError(error)) {
-                        if(new HttpResponseHandler(response.statusCode).success()) {
+                    if (NodeErrorHandler.noError(error)) {
+                        if (new HttpResponseHandler(response.statusCode).success()) {
                             Migration.logger(this.dbName).debug("URLDocument::up - response %j", response.body);
                             resolve(response.body);
                         } else {

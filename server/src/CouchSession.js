@@ -1,11 +1,9 @@
-"use strict";
-
-import ApplicationConfig from "./config/ApplicationConfig.js";
-import NodeErrorHandler from "./NodeErrorHandler.js";
-import StringUtil from "../../common/src/util/StringUtil.js";
-import HttpResponseHandler from "../../common/src/HttpResponseHandler.js";
+import ApplicationConfig from "./config/ApplicationConfig";
+import NodeErrorHandler from "./NodeErrorHandler";
+import StringUtil from "../../common/src/util/StringUtil";
+import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import Logger, { logCategories } from "./logging/Logger";
-import CouchClient from "./CouchClient.js";
+import CouchClient from "./CouchClient";
 import request from "request";
 import querystring from "querystring";
 
@@ -24,7 +22,7 @@ export default class CouchSession {
             (error, response) => {
                 if(CouchSession.requestSuccessful(error, response)) {
                     CouchSession.logger().debug("CouchSession:: login successful for user '%s'.", username);
-                    resolve(response.headers["set-cookie"][0]);
+                    resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
                 } else {
                     CouchSession.logger().error("CouchSession:: login unsuccessful for user '%s'. Error: %s", username, error);
                     reject(error);
@@ -47,7 +45,7 @@ export default class CouchSession {
                     CouchSession.logger().debug("CouchSession:: authenticating user successful.");
                     if(StringUtil.validNonEmptyString(userJson.userCtx.name)) {
                         if(response.headers["set-cookie"]) {
-                            resolve(response.headers["set-cookie"][0]);
+                            resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
                         } else {
                             resolve(authSessionToken);
                         }

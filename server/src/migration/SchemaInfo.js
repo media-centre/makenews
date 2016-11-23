@@ -1,11 +1,8 @@
-"use strict";
-
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
-import ApplicationConfig from "../config/ApplicationConfig.js";
-import CouchClient from "../CouchClient.js";
-import NodeErrorHandler from "../NodeErrorHandler.js";
-import Migration from "./Migration.js";
-
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../config/ApplicationConfig";
+import CouchClient from "../CouchClient";
+import NodeErrorHandler from "../NodeErrorHandler";
+import Migration from "./Migration";
 import request from "request";
 
 export default class SchemaInfo {

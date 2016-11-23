@@ -1,11 +1,10 @@
 /* eslint consistent-this:0*/
-"use strict";
 import moment from "moment";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
-import FacebookAccessToken from "../../facebook/FacebookAccessToken.js";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
+import FacebookAccessToken from "../../facebook/FacebookAccessToken";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class FacebookBatchPosts extends Route {
     constructor(request, response, next) {
@@ -14,13 +13,11 @@ export default class FacebookBatchPosts extends Route {
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.userName) || !this.isValidRequestData()) {
-            return false;
-        }
-        return true;
+        return !(StringUtil.isEmptyString(this.userName) || !this.isValidRequestData());
+
     }
 
-    handle() {
+    handle() {  //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("FacebookBatchPosts:: invalid facebook feed batch request for user %s.", this.userName);
             return this._handleInvalidRoute();
@@ -46,13 +43,13 @@ export default class FacebookBatchPosts extends Route {
             }
             facebookRequestHandler.pagePosts(item.url, options).then(feeds => {
                 allFeeds[item.id] = feeds;
-                counter += 1;
+                counter += 1;  //eslint-disable-line no-magic-numbers
                 if (this.request.body.data.length === counter) {
                     RouteLogger.instance().debug("FacebookBatchPosts:: successfully fetched facebook feeds for url %s.", item.url);
                     this._handleSuccess({ "posts": allFeeds });
                 }
             }).catch(() => {
-                counter += 1;
+                counter += 1;  // eslint-disable-line no-magic-numbers
                 allFeeds[item.id] = "failed";
                 if (this.request.body.data.length === counter) {
                     RouteLogger.instance().debug("FacebookBatchPosts:: fetching facebook feeds for url %s returned no feeds.", item.url);

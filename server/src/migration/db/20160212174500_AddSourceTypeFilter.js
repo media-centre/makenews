@@ -1,6 +1,5 @@
-"use strict";
-import Migration from "../Migration.js";
-import CouchClient from "../../CouchClient.js";
+import Migration from "../Migration";
+import CouchClient from "../../CouchClient";
 
 export default class AddSourceTypeFilter {
     constructor(dbName, accessToken) {

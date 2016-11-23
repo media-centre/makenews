@@ -1,6 +1,5 @@
-"use strict";
-import DesignDocumentMigration from "../helpers/DesignDocumentMigration.js";
-import Migration from "../Migration.js";
+import DesignDocumentMigration from "../helpers/DesignDocumentMigration";
+import Migration from "../Migration";
 
 export default class ModifyAllCategoriesByNameView {
     constructor(dbName, accessToken) {

@@ -1,19 +1,18 @@
 /*eslint no-unused-vars:0*/
-"use strict";
-import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument.js";
-import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument.js";
-import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument.js";
-import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645_ModifyAllCategoriesByNameView.js";
-import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter.js";
-import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed.js";
+import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument";
+import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
+import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
+import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645_ModifyAllCategoriesByNameView";
+import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter";
+import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed";
 import ModifyImageUrlToImagesArray from "../../src/migration/db/20160516122916_ModifyImageUrlToImagesArray";
 import URLDocument from "../../src/migration/db/20161114174315_URLDocument";
 
-import SchemaInfo from "./SchemaInfo.js";
-import MigrationFile from "./MigrationFile.js";
-import CouchSession from "../CouchSession.js";
-import CouchClient from "../CouchClient.js";
-import Logger from "../logging/Logger.js";
+import SchemaInfo from "./SchemaInfo";
+import MigrationFile from "./MigrationFile";
+import CouchSession from "../CouchSession";
+import CouchClient from "../CouchClient";
+import Logger from "../logging/Logger";
 
 export default class Migration {
 
@@ -41,8 +40,8 @@ export default class Migration {
             let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
                 let accessToken = null;
-                if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
-                    accessToken = cookieHeader.split("=")[1].split(";")[0];
+                if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) { // eslint-disable-line no-magic-numbers
+                    accessToken = cookieHeader.split("=")[1].split(";")[0];// eslint-disable-line no-magic-numbers
                 }
 
                 CouchClient.getAllDbs().then(dbNames => {
@@ -53,11 +52,11 @@ export default class Migration {
                         let migrationInstance = Migration.instance(dbName, accessToken);
                         migrationInstance.start().then(status => { //eslint-disable-line
                             allDbMigrationLogger.info("%s migration completed", dbName);
-                            finishedCount += 1;
+                            finishedCount += 1; // eslint-disable-line no-magic-numbers
                             resolveStatus(finishedCount, failedCount, dbNames.length);
                         }).catch(error => { //eslint-disable-line
                             allDbMigrationLogger.info("%s migration failed", dbName);
-                            failedCount += 1;
+                            failedCount += 1; // eslint-disable-line no-magic-numbers
                             resolveStatus(finishedCount, failedCount, dbNames.length);
                         });
                     });
@@ -101,32 +100,32 @@ export default class Migration {
 
     getObject(className) {
         switch (className) {
-            case "CreateCategoryDesignDocument" :
-                return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
-            case "CreateDefaultCategoryDocument" :
-                return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
-            case "AddFilterViewsToDesignDocument" :
-                return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
-            case "ModifyAllCategoriesByNameView" :
-                return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
-            case "AddSourceTypeFilter" :
-                return new AddSourceTypeFilter(this.dbName, this.accessToken);
-            case "ChangeGalleryTypeFeed" :
-                return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
-            case "URLDocument" :
-                return new URLDocument(this.dbName, this.accessToken);
-            case "ModifyImageUrlToImagesArray" :
-                return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
-            default :
-                throw new Error("class name : " + className + " not found");
+        case "CreateCategoryDesignDocument" :
+            return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
+        case "CreateDefaultCategoryDocument" :
+            return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
+        case "AddFilterViewsToDesignDocument" :
+            return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
+        case "ModifyAllCategoriesByNameView" :
+            return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
+        case "AddSourceTypeFilter" :
+            return new AddSourceTypeFilter(this.dbName, this.accessToken);
+        case "ChangeGalleryTypeFeed" :
+            return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
+        case "URLDocument" :
+            return new URLDocument(this.dbName, this.accessToken);
+        case "ModifyImageUrlToImagesArray" :
+            return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
+        default :
+            throw new Error("class name : " + className + " not found");
         }
     }
 
-    _migrateFileSynchronously(migratableFileDetails, index = 0) {
+    _migrateFileSynchronously(migratableFileDetails, index = 0) {  // eslint-disable-line no-magic-numbers
         return new Promise((resolve, reject) => {
             if (migratableFileDetails && migratableFileDetails.length > index) {
                 this._migrateFile(migratableFileDetails[index]).then(response => {
-                    this._migrateFileSynchronously(migratableFileDetails, index + 1).then(status => {
+                    this._migrateFileSynchronously(migratableFileDetails, index + 1).then(status => {  // eslint-disable-line no-magic-numbers
                         resolve(true);
                     }).catch(error => {
                         reject(false);
@@ -143,21 +142,21 @@ export default class Migration {
     _migrateFile(fileDetails) {
         return new Promise((resolve, reject) => {
             try {
-                this.getObject(fileDetails[1]).up().then(response => {
-                    Migration.logger(this.dbName).info("%s::up is successful", fileDetails[1]);
-                    SchemaInfo.instance(this.dbName, this.accessToken).save(fileDetails[0]).then(success => {
-                        Migration.logger(this.dbName).info("saving schema info token %s is successful.", fileDetails[0]);
+                this.getObject(fileDetails[1]).up().then(response => {   // eslint-disable-line no-magic-numbers
+                    Migration.logger(this.dbName).info("%s::up is successful", fileDetails[1]);    // eslint-disable-line no-magic-numbers
+                    SchemaInfo.instance(this.dbName, this.accessToken).save(fileDetails[0]).then(success => {   // eslint-disable-line no-magic-numbers
+                        Migration.logger(this.dbName).info("saving schema info token %s is successful.", fileDetails[0]);   // eslint-disable-line no-magic-numbers
                         resolve(success);
                     }).catch(error => {
-                        Migration.logger(this.dbName).error("saving schema info token %s is failed.", fileDetails[0]);
+                        Migration.logger(this.dbName).error("saving schema info token %s is failed.", fileDetails[0]);   // eslint-disable-line no-magic-numbers
                         reject(error);
                     });
                 }).catch(error => {
-                    Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]);
+                    Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]);  // eslint-disable-line no-magic-numbers
                     reject(error);
                 });
             } catch (error) {
-                Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);
+                Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);   // eslint-disable-line no-magic-numbers
                 reject(error);
             }
         });

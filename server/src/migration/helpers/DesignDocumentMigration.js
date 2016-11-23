@@ -1,5 +1,4 @@
-"use strict";
-import CouchClient from "../../../src/CouchClient.js";
+import CouchClient from "../../../src/CouchClient";
 
 export default class DesignDocumentMigration {
     static instance(dbName, accessToken, designDocName) {

@@ -1,5 +1,4 @@
 /* eslint no-sync:0 max-depth:0 */
-"use strict";
 import EnvironmentConfig from "../config/EnvironmentConfig";
 import winston from "winston";
 import fs from "fs";
@@ -172,9 +171,9 @@ export default class Logger {
 
     getFormattedDate() {
         let currentDate = new Date();
-        return this.appendZero(currentDate.getFullYear()) +
-            this.appendZero(1 + currentDate.getMonth()) +
-            this.appendZero(currentDate.getDate());
+        return Logger.appendZero(currentDate.getFullYear()) +
+            Logger.appendZero(1 + currentDate.getMonth()) +       // eslint-disable-line no-magic-numbers
+            Logger.appendZero(currentDate.getDate());
     }
 
     appendZero(value) {
@@ -200,7 +199,7 @@ export default class Logger {
     }
 
     getArguments(message) {
-        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message));
+        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message));      // eslint-disable-line no-magic-numbers
         args.push({});
         return args;
     }

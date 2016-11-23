@@ -1,7 +1,6 @@
-"use strict";
-import DesignDocumentMigration from "../helpers/DesignDocumentMigration.js";
-import Migration from "../Migration.js";
-import CouchClient from "../../CouchClient.js";
+import DesignDocumentMigration from "../helpers/DesignDocumentMigration";
+import Migration from "../Migration";
+import CouchClient from "../../CouchClient";
 
 export default class ChangeGalleryTypeFeed {
     constructor(dbName, accessToken) {

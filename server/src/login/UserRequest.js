@@ -1,7 +1,6 @@
-"use strict";
-import CouchSession from "../CouchSession.js";
-import StringUtil from "../../../common/src/util/StringUtil.js";
-import Logger from "../../src/logging/Logger.js";
+import CouchSession from "../CouchSession";
+import StringUtil from "../../../common/src/util/StringUtil";
+import Logger from "../../src/logging/Logger";
 
 export default class UserRequest {
     static logger() {
@@ -62,7 +61,7 @@ export default class UserRequest {
     }
 
     extractToken(authSessionCookie) {
-        return authSessionCookie.split("=")[1].split(";")[0];
+        return authSessionCookie.split("=")[1].split(";")[0];       // eslint-disable-line no-magic-numbers
     }
 
     updatePassword(newPassword) {

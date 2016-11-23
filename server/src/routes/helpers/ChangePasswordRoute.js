@@ -14,13 +14,11 @@ export default class ChangePasswordRoute extends Route {
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.userName) || StringUtil.isEmptyString(this.currentPassword) || StringUtil.isEmptyString(this.newPassword)) {
-            return false;
-        }
-        return true;
+        return !(StringUtil.isEmptyString(this.userName) || StringUtil.isEmptyString(this.currentPassword) || StringUtil.isEmptyString(this.newPassword));
+
     }
 
-    handle() {
+    handle() {  //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("ChangePasswordRoute:: invalid user name %s.", this.userName);
             return this._handleInvalidRoute();

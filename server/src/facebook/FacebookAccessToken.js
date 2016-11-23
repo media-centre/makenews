@@ -1,4 +1,3 @@
-"use strict";
 import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import Logger from "../logging/Logger";
