@@ -1,9 +1,7 @@
 /*eslint no-console:0, no-path-concat:0 */
-"use strict";
 var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var browserify = require("gulp-browserify");
 var babelify = require("babelify"); //eslint-disable-line
 var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
@@ -17,7 +15,8 @@ var cssnano = require("gulp-cssnano");
 var environments = require("gulp-environments");
 var browserif = require("browserify");
 var source = require('vinyl-source-stream');
-require("babel-register");
+var babelRegister = null;
+
 
 var development = environments.development;
 var production = environments.production;
@@ -25,6 +24,10 @@ var production = environments.production;
 function clean(path) {
     return del(path);
 }
+
+function loadBabelForTests() {
+    if(!babelRegister) require("babel-register");
+};
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
@@ -55,8 +58,6 @@ gulp.task("client:build-sources", function() {
         // .pipe(production(minify()))
         // .pipe(gulp.dest(parameters.client.distFolder));
 
-
-
     gulp.src(parameters.client.clientAppPath + "/config/*.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
 
@@ -85,8 +86,9 @@ gulp.task("client:clean", function() {
 });
 
 gulp.task("client:test", function() {
+    loadBabelForTests();
     return gulp.src([parameters.client.testPath + "**/**/*.jsx", parameters.client.testPath + "**/**/*.js"], { "read": false })
-    .pipe(mocha());
+      .pipe(mocha());
 });
 
 gulp.task("client:build", function(callback) {
@@ -143,6 +145,7 @@ gulp.task("functional:eslint", function() {
 });
 
 gulp.task("functional:test", function() {
+    loadBabelForTests();
     return gulp.src(parameters.functional.serverSpecPath + "**/**/*.js", { "read": false })
         .pipe(mocha({ "timeout": 3000 }));
 });
@@ -155,6 +158,7 @@ gulp.task("common:copy-js", function() {
 });
 
 gulp.task("common:test", function() {
+    loadBabelForTests();
     return gulp.src(parameters.common.testPath + "/**/**/*.js", { "read": false })
         .pipe(mocha());
 });
@@ -219,6 +223,7 @@ gulp.task("server:clean", function() {
 });
 
 gulp.task("server:test", function() {
+    loadBabelForTests();
     return gulp.src(parameters.server.testPath + "**/**/*.js", { "read": false })
     .pipe(mocha({ "timeout": 3000 }));
 });
