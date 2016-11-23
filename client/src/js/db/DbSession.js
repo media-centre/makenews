@@ -1,8 +1,8 @@
 /* eslint no-unused-vars:0, handle-callback-err:0, no-console:0 */
 
-"use strict";
-import DbParameters from "./DbParameters.js";
-import FeedDb from "../feeds/db/FeedDb.js";
+
+import DbParameters from "./DbParameters";
+import FeedDb from "../feeds/db/FeedDb";
 import PouchDB from "pouchdb";
 
 export default class DbSession {

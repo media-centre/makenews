@@ -1,7 +1,7 @@
 /* eslint no-unused-vars:0 */
 
-"use strict";
-import FacebookClient from "./FacebookClient.js";
+
+import FacebookClient from "./FacebookClient";
 
 export default class FacebookRequestHandler {
 

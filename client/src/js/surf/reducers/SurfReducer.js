@@ -13,9 +13,9 @@ export function allFeeds(state = { "messages": Locale.applicationStrings().messa
         return Object.assign({}, state, { "categories": action.categories });
     case DISPLAY_EXISTING_FEEDS:
         return Object.assign({}, state, { "messages": surfMessages, "refreshState": action.refreshState, "progressPercentage": action.progressPercentage });
-    case PARK_FEED:
+    case PARK_FEED: {
         let parkedItems = List(state.feeds);
-        return Object.assign({}, state, { "feeds": List(parkedItems.delete(parkedItems.indexOf(action.feed))).toArray(), "messages": surfMessages });
+        return Object.assign({}, state, { "feeds": List(parkedItems.delete(parkedItems.indexOf(action.feed))).toArray(), "messages": surfMessages }); }
     case STORE_FILTER_SOURCE_MAP:
         if(!action.surfFilter || !action.sourceHashMap) {
             action.surfFilter = state.surfFilter;

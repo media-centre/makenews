@@ -1,5 +1,5 @@
-"use strict";
-import RssClient from "./RssClient.js";
+
+import RssClient from "./RssClient";
 
 export default class RssRequestHandler {
 
@@ -8,9 +8,7 @@ export default class RssRequestHandler {
             let rssClient = RssClient.instance();
             let originalFeeds = await rssClient.fetchRssFeeds(url);
             return originalFeeds;
-        }
-
-        catch (error) {
+        } catch (error) {
             return [];
         }
 

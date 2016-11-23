@@ -1,6 +1,6 @@
 /*eslint new-cap:0, no-unused-vars:0*/
-"use strict";
-import Locale from "../../utils/Locale.js";
+
+import Locale from "../../utils/Locale";
 
 export function mainHeaderLocale(state = {}, action = {}) {
     let appLocaleEn = Locale.applicationStrings();

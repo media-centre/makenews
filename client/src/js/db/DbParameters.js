@@ -1,6 +1,6 @@
-"use strict";
-import AppSessionStorage from "../utils/AppSessionStorage.js";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+
+import AppSessionStorage from "../utils/AppSessionStorage";
+import StringUtil from "../../../../common/src/util/StringUtil";
 import AjaxClient from "../../js/utils/AjaxClient";
 
 export default class DbParameters {

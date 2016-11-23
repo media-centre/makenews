@@ -1,5 +1,5 @@
-"use strict";
-import AjaxClient from "../utils/AjaxClient.js";
+/* eslint no-unused-vars:0 */
+import AjaxClient from "../utils/AjaxClient";
 
 export default class RssClient {
 
@@ -7,13 +7,12 @@ export default class RssClient {
         return new RssClient();
     }
 
-     async fetchRssFeeds(url) {
+    async fetchRssFeeds(url) {
         try {
             let ajaxClient = AjaxClient.instance("/rss-feeds");
-            let response = await ajaxClient.get({"url": url});
+            let response = await ajaxClient.get({ "url": url });
             return response;
-        }
-        catch (error) {
+        } catch (error) {
             return error;
         }
         // return new Promise((resolve, reject) => {
@@ -35,8 +34,7 @@ export default class RssClient {
             };
             let feedMap = await ajaxClient.post(headers, sourceUrlDetails);
             return feedMap;
-        }
-        catch (error) {
+        } catch (error) {
             return error;
         }
         // return new Promise((resolve, reject) => {
@@ -53,9 +51,9 @@ export default class RssClient {
         // });
     }
 
-    fetchURLDocument(searchKey) {
-        return new Promise((resolve, reject) => {
-            let ajaxClient = AjaxClient.instance("/fetch-all-urls", skipSessionTi)
-        })
-    }
+    //fetchURLDocument(searchKey) {
+    //    return new Promise((resolve, reject) => {
+    //        let ajaxClient = AjaxClient.instance("/fetch-all-urls", skipSessionTi);
+    //    });
+    //}
 }

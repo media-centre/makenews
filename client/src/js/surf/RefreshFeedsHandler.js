@@ -1,19 +1,19 @@
-/* eslint max-nested-callbacks:0, operator-assignment:0, no-unused-vars:0 */
+/* eslint max-nested-callbacks:0, operator-assignment:0, no-unused-vars:0, no-magic-numbers:0 */
 
-"use strict";
-import SourceDb from "../config/db/SourceDb.js";
-import RssFeeds from "../rss/RssFeeds.js";
-import RssRequestHandler from "../rss/RssRequestHandler.js";
-import FacebookRequestHandler from "../facebook/FacebookRequestHandler.js";
-import FacebookResponseParser from "../facebook/FacebookResponseParser.js";
-import TwitterRequestHandler from "../twitter/TwitterRequestHandler.js";
-import TwitterResponseParser from "../twitter/TwitterResponseParser.js";
-import FacebookDb from "../facebook/FacebookDb.js";
-import TwitterDb from "../twitter/TwitterDb.js";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
-import PouchClient from "../db/PouchClient.js";
+
+import SourceDb from "../config/db/SourceDb";
+import RssFeeds from "../rss/RssFeeds";
+import RssRequestHandler from "../rss/RssRequestHandler";
+import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
+import FacebookResponseParser from "../facebook/FacebookResponseParser";
+import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
+import TwitterResponseParser from "../twitter/TwitterResponseParser";
+import FacebookDb from "../facebook/FacebookDb";
+import TwitterDb from "../twitter/TwitterDb";
+import DateTimeUtil from "../utils/DateTimeUtil";
+import PouchClient from "../db/PouchClient";
 import AppWindow from "../utils/AppWindow";
-import { displayAllFeeds } from "../surf/actions/SurfActions.js";
+import { displayAllFeeds } from "../surf/actions/SurfActions";
 
 const URLS_PER_BATCH = 5;
 const PERCENTAGE = 100;

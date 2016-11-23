@@ -1,9 +1,9 @@
 /*eslint max-nested-callbacks:0*/
-"use strict";
 
-import FeedDb from "./FeedDb.js";
+
+import FeedDb from "./FeedDb";
 import PouchClient from "../../../js/db/PouchClient";
-import StringUtil from "../../../../../common/src/util/StringUtil.js";
+import StringUtil from "../../../../../common/src/util/StringUtil";
 
 export default class FeedApplicationQueries {
     static fetchAllFeedsWithCategoryName() {
@@ -97,7 +97,7 @@ export default class FeedApplicationQueries {
     static removeParkFeedsSourceReference(sourceId) {
         return new Promise((resolve, reject) => {
             FeedDb.sourceParkFeeds(sourceId).then(parkFeeds => {
-                if(parkFeeds.length > 0) {
+                if(parkFeeds.length > 0) {                  //eslint-disable-line no-magic-numbers
                     parkFeeds.forEach(parkFeed => {
                         parkFeed.sourceId = "";
                     });

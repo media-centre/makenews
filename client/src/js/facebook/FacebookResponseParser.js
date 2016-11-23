@@ -1,7 +1,7 @@
 /* eslint no-empty:0 */
-"use strict";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
+
+import StringUtil from "../../../../common/src/util/StringUtil";
+import DateTimeUtil from "../utils/DateTimeUtil";
 
 export default class FacebookResponseParser {
 
@@ -31,7 +31,7 @@ export default class FacebookResponseParser {
             "type": "description",
             "title": post.name || "",
             "feedType": "facebook",
-            "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),
+            "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),          //eslint-disable-line no-magic-numbers
             "content": post.message || "",
             "postedDate": post.created_time ? DateTimeUtil.getUTCDateAndTime(post.created_time) : null,
             "tags": []
@@ -41,7 +41,7 @@ export default class FacebookResponseParser {
             feedDocument.type = "imagecontent";
             feedDocument.images = [];
             post.url = post.picture;
-            feedDocument.images[0] = post;
+            feedDocument.images[0] = post;                      //eslint-disable-line no-magic-numbers
            // feedDocument.url = post.picture;
         }
 

@@ -1,6 +1,6 @@
-"use strict";
 
-import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries.js";
+
+import FeedApplicationQueries from "../../feeds/db/FeedApplicationQueries";
 import { unparkFeedCounter } from "../../feeds/actions/FeedsActions";
 import PouchClient from "../../db/PouchClient";
 
@@ -25,8 +25,8 @@ export function displayParkedFeedsAsync() {
     };
 }
 
-export function unparkFeedAsync(feedDoc, callback) {
-    if (feedDoc && Object.keys(feedDoc).length !== 0) {
+export function unparkFeedAsync(feedDoc, callback) {                    //eslint-disable-line consistent-return
+    if (feedDoc && Object.keys(feedDoc).length !== 0) {                 //eslint-disable-line no-magic-numbers
 
         return dispatch => {
             if (feedDoc.sourceId === "") {

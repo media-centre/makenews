@@ -1,10 +1,10 @@
-/* eslint max-nested-callbacks:0, no-lonely-if:0, complexity:0 */
-"use strict";
+/* eslint max-nested-callbacks:0, no-lonely-if:0, complexity:0, no-magic-numbers:0 */
 
-import PouchClient from "../db/PouchClient.js";
-import FeedDb from "../feeds/db/FeedDb.js";
+
+import PouchClient from "../db/PouchClient";
+import FeedDb from "../feeds/db/FeedDb";
 import CategoryDb from "../config/db/CategoryDb";
-import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries.js";
+import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries";
 
 export const MAX_FEEDS_PER_PAGE = 20;
 let MAX_FEEDS_PER_REQUEST = 200;
@@ -174,7 +174,7 @@ export default class FilterFeedsHandler {
                     });
                     sourceTypes = filter.length === 0 ? sourceTypes : filter;
 
-                    feeds.forEach((feed, index)=> {
+                    feeds.forEach((feed, index)=> {                         //eslint-disable-line consistent-return
                         sourceFound = sourceTypes.indexOf(feed.feedType) !== NOT_FOUND;
                         if(!sourceFound) {
                             return false;

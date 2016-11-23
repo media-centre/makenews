@@ -1,7 +1,7 @@
-"use strict";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
-import RssDb from "./RssDb.js";
+
+import StringUtil from "../../../../common/src/util/StringUtil";
+import DateTimeUtil from "../utils/DateTimeUtil";
+import RssDb from "./RssDb";
 
 const NEGATIVE_INDEX = -1;
 export default class RssFeeds {
@@ -18,7 +18,7 @@ export default class RssFeeds {
     }
 
     parse() {
-        if(this.feeds.length === 0) {
+        if(this.feeds.length === 0) {                               //eslint-disable-line no-magic-numbers
             return true;
         }
         let parsedFeeds = [];
@@ -31,7 +31,7 @@ export default class RssFeeds {
         });
 
         this.feeds = parsedFeeds;
-        return this.feeds.length > 0;
+        return this.feeds.length > 0;                                //eslint-disable-line no-magic-numbers
     }
 
     save(sourceId) {
@@ -61,7 +61,7 @@ export default class RssFeeds {
             "postedDate": feed.pubDate ? DateTimeUtil.getUTCDateAndTime(feed.pubDate) : null,
             "tags": [this.meta.title]
         };
-        if(feed.enclosures && feed.enclosures.length > 0) {
+        if(feed.enclosures && feed.enclosures.length > 0) {                     //eslint-disable-line no-magic-numbers
             feedObj.type = "imagecontent";
             feedObj.images = [];
             feed.enclosures.forEach((item, index) => {

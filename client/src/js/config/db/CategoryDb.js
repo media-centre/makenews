@@ -1,12 +1,12 @@
 /* eslint no-underscore-dangle:0, no-unused-vars:0, max-nested-callbacks:0, no-inline-comments:0, no-warning-comments:0 */
 
-"use strict";
-import PouchClient from "../../db/PouchClient.js";
-import StringUtil from "../../../../../common/src/util/StringUtil.js";
+
+import PouchClient from "../../db/PouchClient";
+import StringUtil from "../../../../../common/src/util/StringUtil";
 import FeedApplicationQueries from "../../../js/feeds/db/FeedApplicationQueries";
 import Source from "../Source";
-import SourceDb from "../db/SourceDb.js";
-import Category from "../Category.js";
+import SourceDb from "../db/SourceDb";
+import Category from "../Category";
 
 export default class CategoryDb {
     static findById(id) {

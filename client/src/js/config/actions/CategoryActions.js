@@ -1,21 +1,21 @@
-/* eslint no-unused-vars:0, max-params:0 */
+/* eslint no-unused-vars:0, max-params:0, no-magic-numbers:0 */
 
-"use strict";
-import SourceDb from "../db/SourceDb.js";
-import Source, { STATUS_INVALID, STATUS_VALID } from "../Source.js";
-import Category from "../Category.js";
-import CategoryDb from "../db/CategoryDb.js";
-import { displayAllCategoriesAsync } from "./AllCategoriesActions.js";
-import RssDb from "../../rss/RssDb.js";
-import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
-import FacebookResponseParser from "../../facebook/FacebookResponseParser.js";
-import TwitterRequestHandler from "../../twitter/TwitterRequestHandler.js";
+
+import SourceDb from "../db/SourceDb";
+import Source, { STATUS_INVALID, STATUS_VALID } from "../Source";
+import Category from "../Category";
+import CategoryDb from "../db/CategoryDb";
+import { displayAllCategoriesAsync } from "./AllCategoriesActions";
+import RssDb from "../../rss/RssDb";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
+import FacebookResponseParser from "../../facebook/FacebookResponseParser";
+import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
 import TwitterResponseParser from "../../twitter/TwitterResponseParser";
-import RssRequestHandler from "../../rss/RssRequestHandler.js";
-import RssFeeds from "../../rss/RssFeeds.js";
+import RssRequestHandler from "../../rss/RssRequestHandler";
+import RssFeeds from "../../rss/RssFeeds";
 import TwitterDb from "../../twitter/TwitterDb";
-import FacebookDb from "../../facebook/FacebookDb.js";
-import DateTimeUtil from "../../utils/DateTimeUtil.js";
+import FacebookDb from "../../facebook/FacebookDb";
+import DateTimeUtil from "../../utils/DateTimeUtil";
 
 export const DISPLAY_CATEGORY = "DISPLAY_CATEGORY";
 export const DEFAULT_CATEGORY = "Default Category";
@@ -40,7 +40,7 @@ export function populateCategoryDetails(sourceUrlsObj) {
 
 export function addRssUrlAsync(categoryId, url, callback) {
     return dispatch => {
-        RssRequestHandler.fetchRssFeeds(url).then((responseFeed) => {
+        RssRequestHandler.fetchRssFeeds(url).then((responseFeed) => {               //eslint-disable-line consistent-return
             let sortedDates = DateTimeUtil.getSortedUTCDates(responseFeed.items.map(feed => {
                 return feed.pubDate;
             }));

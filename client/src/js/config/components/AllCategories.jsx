@@ -3,10 +3,10 @@
 import React, { PropTypes } from "react";
 import { Link } from "react-router";
 import { connect } from "react-redux";
-import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions.js";
-import { highLightTabAction } from "../../tabs/TabActions.js";
-import { createCategory } from "../actions/CategoryActions.js";
-import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import { displayAllCategoriesAsync } from "../actions/AllCategoriesActions";
+import { highLightTabAction } from "../../tabs/TabActions";
+import { createCategory } from "../actions/CategoryActions";
+import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions";
 import History from "../../History";
 
 export class AllCategories extends React.Component {

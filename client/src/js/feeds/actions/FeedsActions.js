@@ -1,4 +1,4 @@
-"use strict";
+
 import FeedDb from "../db/FeedDb";
 
 export const INCREMENT_PARK_COUNTER = "INCREMENT_PARK_COUNTER";

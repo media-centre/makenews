@@ -1,9 +1,9 @@
 /* eslint no-underscore-dangle:0 new-cap:0, no-unused-vars:0*/
 
-"use strict";
-import { DISPLAY_ALL_CATEGORIES } from "../actions/AllCategoriesActions.js";
-import { DISPLAY_CATEGORY } from "../actions/CategoryActions.js";
-import Locale from "../../utils/Locale.js";
+
+import { DISPLAY_ALL_CATEGORIES } from "../actions/AllCategoriesActions";
+import { DISPLAY_CATEGORY } from "../actions/CategoryActions";
+import Locale from "../../utils/Locale";
 
 import { List } from "immutable";
 

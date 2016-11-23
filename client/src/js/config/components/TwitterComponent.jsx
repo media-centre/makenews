@@ -1,10 +1,10 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
-import { addTwitterUrlAsync } from "../actions/CategoryActions.js";
-import AddURLComponent from "../../utils/components/AddURLComponent.js";
-import TwitterLogin from "../../twitter/TwitterLogin.js";
-import Toast from "../../utils/custom_templates/Toast.js";
+import { addTwitterUrlAsync } from "../actions/CategoryActions";
+import AddURLComponent from "../../utils/components/AddURLComponent";
+import TwitterLogin from "../../twitter/TwitterLogin";
+import Toast from "../../utils/custom_templates/Toast";
 
 export const twRegexHandler = (/[@][a-zA-Z0-9_]{1,15}$/);
 export const twRegexHashtag = /[#][a-zA-Z][a-zA-Z0-9_]{1,140}$/;

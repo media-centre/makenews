@@ -1,8 +1,8 @@
-"use strict";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
-import AjaxClient from "../utils/AjaxClient.js";
-import LoginPage from "../login/pages/LoginPage.jsx";
-import UserInfo from "../user/UserInfo.js";
+
+import StringUtil from "../../../../common/src/util/StringUtil";
+import AjaxClient from "../utils/AjaxClient";
+import LoginPage from "../login/pages/LoginPage";
+import UserInfo from "../user/UserInfo";
 import FacebookLogin from "./FacebookLogin";
 
 export default class FacebookClient {

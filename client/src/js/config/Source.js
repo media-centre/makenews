@@ -1,9 +1,9 @@
 /*eslint no-unused-vars:0 */
 
-"use strict";
+
 import PouchClient from "../db/PouchClient";
-import SourceDb from "../config/db/SourceDb.js";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
+import SourceDb from "../config/db/SourceDb";
+import DateTimeUtil from "../utils/DateTimeUtil";
 import FeedApplicationQueries from "../feeds/db/FeedApplicationQueries";
 
 export const STATUS_VALID = "valid", STATUS_INVALID = "invalid";
@@ -48,10 +48,10 @@ export default class Source {
     save() {
         return new Promise((resolve, reject) => {
             SourceDb.fetchSourceConfigurationByUrl(this.url).then(docs => {
-                let existingDocument = docs[0], NEGATIVE_INDEX = -1;
+                let existingDocument = docs[0], NEGATIVE_INDEX = -1;                            //eslint-disable-line no-magic-numbers
                 if(existingDocument) {
-                    if(existingDocument.categoryIds.indexOf(this.categoryIds[0]) === NEGATIVE_INDEX) {
-                        existingDocument.categoryIds.push(this.categoryIds[0]);
+                    if(existingDocument.categoryIds.indexOf(this.categoryIds[0]) === NEGATIVE_INDEX) {          //eslint-disable-line no-magic-numbers
+                        existingDocument.categoryIds.push(this.categoryIds[0]);                     //eslint-disable-line no-magic-numbers
                     }
                     this.update(existingDocument).then(response => {
                         resolve(response);
@@ -82,8 +82,8 @@ export default class Source {
     delete(categoryId) {
         return new Promise((resolve, reject) => {
             const foundIndex = this.categoryIds.indexOf(categoryId);
-            if (this.categoryIds.length > 1) {
-                this.categoryIds.splice(foundIndex, 1);
+            if (this.categoryIds.length > 1) {                                  //eslint-disable-line no-magic-numbers
+                this.categoryIds.splice(foundIndex, 1);                         //eslint-disable-line no-magic-numbers
                 this.update({ "categoryIds": this.categoryIds }).then(() => {
                     resolve(true);
                 }).catch(() => {

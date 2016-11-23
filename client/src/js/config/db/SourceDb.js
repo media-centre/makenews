@@ -1,8 +1,8 @@
 /* eslint no-underscore-dangle:0, no-unused-vars:0, max-nested-callbacks:0, no-inline-comments:0, no-warning-comments:0 */
 
-"use strict";
-import PouchClient from "../../db/PouchClient.js";
-import StringUtil from "../../../../../common/src/util/StringUtil.js";
+
+import PouchClient from "../../db/PouchClient";
+import StringUtil from "../../../../../common/src/util/StringUtil";
 
 export default class SourceDb {
     static fetchSourceConfigurationsByCategoryId(categoryId) {
@@ -54,17 +54,17 @@ export default class SourceDb {
         if(!sources) {
             return;
         }
-        sources.sort((source1, source2) => {
+        sources.sort((source1, source2) => {                //eslint-disable-line consistent-return
             let lowerUrl1 = source1.url.toLowerCase();
             let lowerUrl2 = source2.url.toLowerCase();
             if(lowerUrl1 === lowerUrl2) {
-                return 0;
+                return 0;                                   //eslint-disable-line no-magic-numbers
             }
             if(lowerUrl1 < lowerUrl2) {
                 return -1; //eslint-disable-line
             }
             if(lowerUrl1 > lowerUrl2) {
-                return 1;
+                return 1;                                   //eslint-disable-line no-magic-numbers
             }
         });
     }

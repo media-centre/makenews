@@ -1,12 +1,12 @@
 /* eslint max-len:0 no-unused-vars:0, react/no-set-state:0 */
 "use strict";
 import React, { Component, PropTypes } from "react";
-import { addFacebookUrlAsync } from "../actions/CategoryActions.js";
-import AddURLComponent from "../../utils/components/AddURLComponent.js";
+import { addFacebookUrlAsync } from "../actions/CategoryActions";
+import AddURLComponent from "../../utils/components/AddURLComponent";
 import FacebookLogin from "../../facebook/FacebookLogin";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
 import FacebookDb from "./../../facebook/FacebookDb";
-import Toast from "../../utils/custom_templates/Toast.js";
+import Toast from "../../utils/custom_templates/Toast";
 
 export const fbRegex = /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
 export default class FacebookComponent extends Component {

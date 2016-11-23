@@ -1,12 +1,12 @@
-/*eslint no-unused-vars:0 */
+/*eslint no-unused-vars:0, no-magic-numbers:0 */
 
-"use strict";
+
 import PouchClient from "../db/PouchClient";
-import CategoryDb from "./db/CategoryDb.js";
-import SourceDb from "./db/SourceDb.js";
-import Source from "./Source.js";
-import DateTimeUtil from "../utils/DateTimeUtil.js";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+import CategoryDb from "./db/CategoryDb";
+import SourceDb from "./db/SourceDb";
+import Source from "./Source";
+import DateTimeUtil from "../utils/DateTimeUtil";
+import StringUtil from "../../../../common/src/util/StringUtil";
 
 export default class Category {
     constructor(paramsObj = {}) {

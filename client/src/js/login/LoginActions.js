@@ -1,8 +1,8 @@
-"use strict";
+
 import AjaxClient from "../utils/AjaxClient";
-import DbSession from "../db/DbSession.js";
-import UserSession from "../user/UserSession.js";
-import AppSessionStorage from "../utils/AppSessionStorage.js";
+import DbSession from "../db/DbSession";
+import UserSession from "../user/UserSession";
+import AppSessionStorage from "../utils/AppSessionStorage";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";

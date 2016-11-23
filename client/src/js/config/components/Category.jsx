@@ -2,17 +2,17 @@
 
 "use strict";
 import React, { Component, PropTypes } from "react";
-import CategoryNavigationHeader from "./CategoryNavigationHeader.jsx";
-import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } from "../actions/CategoryActions.js";
-import CategoryDb from "../../config/db/CategoryDb.js";
+import CategoryNavigationHeader from "./CategoryNavigationHeader";
+import { populateCategoryDetailsAsync, DEFAULT_CATEGORY, updateCategoryName } from "../actions/CategoryActions";
+import CategoryDb from "../../config/db/CategoryDb";
 import { connect } from "react-redux";
-import TabComponent from "../../utils/components/TabComponent/TabComponent.jsx";
-import RSSComponent from "./RSSComponent.jsx";
-import FacebookComponent from "./FacebookComponent.jsx";
-import TwitterComponent from "./TwitterComponent.jsx";
-import { highLightTabAction } from "../../tabs/TabActions.js";
-import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
-import Toast from "../../utils/custom_templates/Toast.js";
+import TabComponent from "../../utils/components/TabComponent/TabComponent";
+import RSSComponent from "./RSSComponent";
+import FacebookComponent from "./FacebookComponent";
+import TwitterComponent from "./TwitterComponent";
+import { highLightTabAction } from "../../tabs/TabActions";
+import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions";
+import Toast from "../../utils/custom_templates/Toast";
 
 const RSS = "rss";
 const FACEBOOK = "facebook";

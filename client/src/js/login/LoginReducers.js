@@ -1,8 +1,8 @@
 /*eslint no-unused-vars:0 */
-"use strict";
 
-import { LOGIN_SUCCESS, LOGIN_FAILED } from "./LoginActions.js";
-import Locale from "../utils/Locale.js";
+
+import { LOGIN_SUCCESS, LOGIN_FAILED } from "./LoginActions";
+import Locale from "../utils/Locale";
 
 export function login(state = { "errorMessage": "" }, action = {}) {
 

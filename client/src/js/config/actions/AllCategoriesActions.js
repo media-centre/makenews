@@ -1,5 +1,5 @@
-"use strict";
-import CategoryDb from "../db/CategoryDb.js";
+
+import CategoryDb from "../db/CategoryDb";
 
 export const DISPLAY_ALL_CATEGORIES = "DISPLAY_ALL_CATEGORIES";
 

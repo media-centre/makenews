@@ -1,9 +1,9 @@
 /* eslint no-underscore-dangle:0, no-unused-vars:0 */
 
-"use strict";
-import PouchClient from "../../db/PouchClient.js";
-import DateTimeUtil from "../../utils/DateTimeUtil.js";
-import AppWindow from "../../utils/AppWindow.js";
+
+import PouchClient from "../../db/PouchClient";
+import DateTimeUtil from "../../utils/DateTimeUtil";
+import AppWindow from "../../utils/AppWindow";
 
 export default class FeedDb {
     static fetchSurfFeedsAndCategoriesWithSource(options = { "include_docs": true, "descending": true }) {
@@ -21,7 +21,7 @@ export default class FeedDb {
     static parkedFeedsCount() {
         return new Promise((resolve, reject) => {
             PouchClient.fetchDocuments("category/parkedFeedsCount", { "reduce": true }).then(countArray => {
-                resolve(countArray[0]);
+                resolve(countArray[0]);                                 //eslint-disable-line no-magic-numbers
             }).catch(error => {
                 reject(error);
             });
@@ -42,7 +42,7 @@ export default class FeedDb {
     }
 
     static deletePastFeeds() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {                   //eslint-disable-line consistent-return
             let maxSurfFeedsLifeInDays = AppWindow.instance().get("maxSurfFeedsLifeInDays");
             if(!maxSurfFeedsLifeInDays) {
                 return resolve("maxSurfFeedsLifeInDays is null or empty. Ignoring the action.");

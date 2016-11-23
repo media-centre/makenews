@@ -1,8 +1,8 @@
 /* eslint no-underscore-dangle:0, no-unused-vars:0 */
 
-"use strict";
-import DbSession from "./DbSession.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+
+import DbSession from "./DbSession";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 export default class PouchClient {
     static fetchDocuments(queryPath, options) {
@@ -94,7 +94,7 @@ export default class PouchClient {
 
     static bulkDocuments(documents, options = {}) {
         return new Promise((resolve, reject) => {
-            if(!documents || documents.length === 0) {
+            if(!documents || documents.length === 0) {                  //eslint-disable-line no-magic-numbers
                 resolve("no documents, ignoring the action.");
             } else {
                 DbSession.instance().then(session => {
