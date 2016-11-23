@@ -1,8 +1,7 @@
 /* eslint consistent-this:0*/
-"use strict";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
-import TwitterLogin from "../../twitter/TwitterLogin.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
+import TwitterLogin from "../../twitter/TwitterLogin";
 
 export default class TwitterOauthCallbackRoute extends Route {
 
@@ -19,7 +18,7 @@ export default class TwitterOauthCallbackRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() {                     //eslint-disable-line consistent-return
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }

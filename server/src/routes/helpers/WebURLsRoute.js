@@ -1,6 +1,6 @@
 import WebRequestHandler from "../../web/WebRequestHandler";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class WebURLsRoute extends Route {
     constructor(request, response, next) {
@@ -9,13 +9,13 @@ export default class WebURLsRoute extends Route {
     }
 
     valid() {
-        if(Object.keys(this.url).length === 0) {
+        if(Object.keys(this.url).length === 0) { //eslint-disable-line no-magic-numbers
             return false;
         }
         return true;
     }
 
-    handle() {
+    handle() {                                   //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("WebURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();

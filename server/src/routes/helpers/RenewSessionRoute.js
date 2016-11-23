@@ -1,9 +1,8 @@
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import CouchSession from "../../CouchSession.js";
-import RouteLogger from "../RouteLogger.js";
-import Route from "./Route.js";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import CouchSession from "../../CouchSession";
+import RouteLogger from "../RouteLogger";
+import Route from "./Route";
+import StringUtil from "../../../../common/src/util/StringUtil";
 
 export default class RenewSessionRoute extends Route {
     constructor(request, response, next) {
@@ -20,7 +19,7 @@ export default class RenewSessionRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() {     //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("RenewSessionRoute:: invalid authSession %s.", this.authSession);
             return this._handleInvalidRoute();

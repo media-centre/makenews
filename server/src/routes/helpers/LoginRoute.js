@@ -1,10 +1,9 @@
-"use strict";
-import UserRequest from "../../../src/login/UserRequest.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import ClientConfig from "../../../src/config/ClientConfig.js";
-import RouteLogger from "../RouteLogger.js";
-import Route from "./Route.js";
-import StringUtil from "../../../../common/src/util/StringUtil.js";
+import UserRequest from "../../../src/login/UserRequest";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import ClientConfig from "../../../src/config/ClientConfig";
+import RouteLogger from "../RouteLogger";
+import Route from "./Route";
+import StringUtil from "../../../../common/src/util/StringUtil";
 
 export default class LoginRoute extends Route {
     constructor(request, response, next) {
@@ -20,7 +19,7 @@ export default class LoginRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() {  //eslint-disable-line consistent-return
         try {
             if(!this.valid()) {
                 return this._handleFailure({ "message": "unauthorized" });

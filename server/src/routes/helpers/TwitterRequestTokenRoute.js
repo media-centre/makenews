@@ -1,10 +1,9 @@
 /* eslint consistent-this:0*/
-"use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
-import ApplicationConfig from "../../config/ApplicationConfig.js";
-import TwitterLogin from "../../twitter/TwitterLogin.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
+import ApplicationConfig from "../../config/ApplicationConfig";
+import TwitterLogin from "../../twitter/TwitterLogin";
 
 export default class TwitterRequestTokenRoute extends Route {
 
@@ -19,7 +18,7 @@ export default class TwitterRequestTokenRoute extends Route {
         RouteLogger.instance().error("TwitterRequestTokenRoute:: user name is empty");
         return StringUtil.validNonEmptyString(this.userName);
     }
-    handle() {
+    handle() {                //eslint-disable-line consistent-return
         if(!this.isValid()) {
             return this._handleInvalidRoute();
         }

@@ -1,9 +1,7 @@
 /* eslint consistent-this:0*/
-"use strict";
-
 import RssRequestHandler from "../../rss/RssRequestHandler";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class RssBatchFeedsRoute extends Route {
     constructor(request, response, next) {
@@ -18,18 +16,18 @@ export default class RssBatchFeedsRoute extends Route {
             this.request.body.data.forEach((item)=> {
                 rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
                     allFeeds[item.id] = feeds;
-                    if (this.request.body.data.length - 1 === counter) {
+                    if (this.request.body.data.length - 1 === counter) {  //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: successfully fetched rss feeds for url %s.", item.url);
                         this._handleSuccess(allFeeds);
                     }
-                    counter += 1;
+                    counter += 1; //eslint-disable-line no-magic-numbers
                 }).catch(() => {
                     allFeeds[item.id] = "failed";
-                    if (this.request.body.data.length - 1 === counter) {
+                    if (this.request.body.data.length - 1 === counter) { //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: fetching rss feeds for url %s returned no feeds.", item.url);
                         this._handleSuccess(allFeeds);
                     }
-                    counter += 1;
+                    counter += 1; //eslint-disable-line no-magic-numbers
                 });
             });
         } else {

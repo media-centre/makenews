@@ -1,8 +1,7 @@
 /*eslint no-console:0 */
-"use strict";
-import AdminDbClient from "./db/AdminDbClient.js";
+import AdminDbClient from "./db/AdminDbClient";
 import Migration from "./migration/Migration";
-import ApplicationConfig from "./config/ApplicationConfig.js";
+import ApplicationConfig from "./config/ApplicationConfig";
 import CryptUtil from "./util/CryptUtil";
 
 var argv = require("yargs").argv;

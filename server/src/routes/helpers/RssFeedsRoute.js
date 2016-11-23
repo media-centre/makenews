@@ -1,10 +1,8 @@
 /* eslint consistent-this:0*/
-"use strict";
-
 import StringUtil from "../../../../common/src/util/StringUtil";
 import RssRequestHandler from "../../rss/RssRequestHandler";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class RssFeedsRoute extends Route {
     constructor(request, response, next) {
@@ -19,7 +17,7 @@ export default class RssFeedsRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() { //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("RssFeedsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();

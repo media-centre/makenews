@@ -1,6 +1,5 @@
 /*eslint no-unused-vars:0 */
-"use strict";
-import Logger from "../src/logging/Logger.js";
+import Logger from "../src/logging/Logger";
 
 export default class NodeErrorHandler {
     static errored(error) {

@@ -1,6 +1,5 @@
-"use strict";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
-import Route from "./Route.js";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import Route from "./Route";
 
 export default class LogoutRoute extends Route {
     constructor(request, response, next) {

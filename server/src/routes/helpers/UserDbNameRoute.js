@@ -1,9 +1,8 @@
 /* eslint consistent-this:0*/
-"use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import CryptUtil from "../../util/CryptUtil";
 
 export default class UserDbNameRoute extends Route {
@@ -16,7 +15,7 @@ export default class UserDbNameRoute extends Route {
         return !StringUtil.isEmptyString(this.userName);
     }
 
-    handle() {
+    handle() {          //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("UserDbNameRoute:: invalid user name %s.", this.userName);
             return this._handleInvalidRoute();

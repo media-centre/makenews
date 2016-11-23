@@ -1,7 +1,6 @@
 /*eslint no-console:0 no-process-exit:0*/
-"use strict";
-import Migration from "./migration/Migration.js";
-import ApplicationConfig from "./config/ApplicationConfig.js";
+import Migration from "./migration/Migration";
+import ApplicationConfig from "./config/ApplicationConfig";
 var argv = require("yargs").argv;
 
 try {
@@ -17,19 +16,19 @@ try {
     Migration.allDbs(adminUserName, adminPassword).then(status => {
         console.log("[Success dbs, failed dbs] = ", status);
         console.log("Migration completed.");
-        if(status[1] > 0) {
+        if(status[1] > 0) {  //eslint-disable-line no-magic-numbers
             console.log("migration failed. [Success dbs, failed dbs] = " + status);
-            process.exit(1);
+            process.exit(1); //eslint-disable-line no-magic-numbers
         }
         return true;
     }).catch(error => {
         console.log(`Authentication failed. error = ${JSON.stringify(error)}`);
-        process.exit(1);
+        process.exit(1); //eslint-disable-line no-magic-numbers
 
     });
 } catch(error) {
     console.log(`Unexpected Error = ${JSON.stringify(error)}`);
-    process.exit(1);
+    process.exit(1); //eslint-disable-line no-magic-numbers
 
 }
 

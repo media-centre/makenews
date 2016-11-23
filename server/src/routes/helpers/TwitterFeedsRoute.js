@@ -1,9 +1,8 @@
 /* eslint consistent-this:0*/
-"use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class TwitterFeedsRoute extends Route {
 
@@ -20,7 +19,7 @@ export default class TwitterFeedsRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() {          //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("TwitterFeedsRoute:: invalid twitter feed route with url %s and user name %s.", this.url, this.userName);
             return this._handleInvalidRoute();

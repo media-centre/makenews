@@ -1,9 +1,8 @@
 /* eslint consistent-this:0*/
-"use strict";
 import StringUtil from "../../../../common/src/util/StringUtil";
-import FacebookRequestHandler from "../../facebook/FacebookRequestHandler.js";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 
 export default class FacebookSetAccessTokenRoute extends Route {
     constructor(request, response, next) {
@@ -19,7 +18,7 @@ export default class FacebookSetAccessTokenRoute extends Route {
         return true;
     }
 
-    handle() {
+    handle() {   //eslint-disable-line consistent-return
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }

@@ -1,8 +1,7 @@
 /* eslint consistent-this:0*/
-"use strict";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
-import Route from "./Route.js";
-import RouteLogger from "../RouteLogger.js";
+import Route from "./Route";
+import RouteLogger from "../RouteLogger";
 import StringUtil from "../../../../common/src/util/StringUtil";
 
 
@@ -18,7 +17,7 @@ export default class TwitterBatchFeedsRoute extends Route {
         }
         return true;
     }
-    handle() {
+    handle() {       //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("TwitterBatchFeedsRoute:: invalid twitter feed batch request for user %s.", this.userName);
             return this._handleInvalidRoute();
@@ -31,18 +30,18 @@ export default class TwitterBatchFeedsRoute extends Route {
         this.request.body.data.forEach((item)=> {
             twitterRequestHandler.fetchTweetsRequest(item.url, this.userName, item.timestamp).then(feeds => {
                 allFeeds[item.id] = feeds;
-                if (this.request.body.data.length - 1 === counter) {
+                if (this.request.body.data.length - 1 === counter) { //eslint-disable-line no-magic-numbers
                     RouteLogger.instance().debug("TwitterFeedsRoute:: successfully fetched twitter feeds for url %s.", item.url);
                     this._handleSuccess(allFeeds);
                 }
-                counter += 1;
+                counter += 1; //eslint-disable-line no-magic-numbers
             }).catch(() => {
                 RouteLogger.instance().debug("TwitterFeedsRoute:: fetching twitter feeds for url %s returned no feeds.", item.url);
                 allFeeds[item.id] = "failed";
-                if (this.request.body.data.length - 1 === counter) {
+                if (this.request.body.data.length - 1 === counter) { //eslint-disable-line no-magic-numbers
                     this._handleSuccess(allFeeds);
                 }
-                counter += 1;
+                counter += 1; //eslint-disable-line no-magic-numbers
             });
         });
     }
