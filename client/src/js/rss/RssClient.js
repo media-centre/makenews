@@ -7,30 +7,50 @@ export default class RssClient {
         return new RssClient();
     }
 
-    fetchRssFeeds(url) {
-        return new Promise((resolve, reject) => {
+     async fetchRssFeeds(url) {
+        try {
             let ajaxClient = AjaxClient.instance("/rss-feeds");
-            ajaxClient.get({ "url": url }).then(response => {
-                resolve(response);
-            }).catch(error => {
-                reject(error);
-            });
-        });
+            let response = await ajaxClient.get({"url": url});
+            return response;
+        }
+        catch (error) {
+            return error;
+        }
+        // return new Promise((resolve, reject) => {
+        //     let ajaxClient = AjaxClient.instance("/rss-feeds");
+        //     ajaxClient.get({ "url": url }).then(response => {
+        //         resolve(response);
+        //     }).catch(error => {
+        //         reject(error);
+        //     });
+        // });
     }
 
-    fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer) {
-        return new Promise((resolve, reject) => {
+    async fetchBatchRssFeeds(sourceUrlDetails, skipSessionTimer) {
+        try {
             let ajaxClient = AjaxClient.instance("/fetch-all-rss", skipSessionTimer);
             const headers = {
                 "Accept": "application/json",
                 "Content-type": "application/json"
             };
-            ajaxClient.post(headers, sourceUrlDetails).then((feedMap)=> {
-                resolve(feedMap);
-            }).catch((err)=> {
-                reject(err);
-            });
-        });
+            let feedMap = await ajaxClient.post(headers, sourceUrlDetails);
+            return feedMap;
+        }
+        catch (error) {
+            return error;
+        }
+        // return new Promise((resolve, reject) => {
+        //     let ajaxClient = AjaxClient.instance("/fetch-all-rss", skipSessionTimer);
+        //     const headers = {
+        //         "Accept": "application/json",
+        //         "Content-type": "application/json"
+        //     };
+        //     ajaxClient.post(headers, sourceUrlDetails).then((feedMap)=> {
+        //         resolve(feedMap);
+        //     }).catch((err)=> {
+        //         reject(err);
+        //     });
+        // });
     }
 
     fetchURLDocument(searchKey) {

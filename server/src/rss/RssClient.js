@@ -16,45 +16,56 @@ export default class RssClient {
         return new RssClient();
     }
 
-    fetchRssFeeds(url) {
-        return new Promise((resolve, reject) => {
-            this.getRssData(url).then(feeds => {
-                resolve(feeds);
-            }).catch(error => {
-                if(error.message === FEEDS_NOT_FOUND) {
-                    let root = cheerio.load(error.data);
-                    let rssLink = root("link[type ^= 'application/rss+xml']");
-                    if (rssLink && rssLink.length !== 0) {
-                        let rssUrl = rssLink.attr("href");
-                        if(rssUrl.startsWith("//")) {
-                            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
-                        } else if(rssUrl.startsWith("/")) {
-                            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
-                        }
-                        this.getRssData(rssUrl).then(feeds => {
-                            feeds.url = rssUrl;
-                            resolve(feeds);
-                        }).catch(rssError => {
-                            this.handleRequestError(url, rssError, reject);
-                        });
-                    } else {
-                        this.crawlForRssUrl(root, url.replace(/\/+$/g, ""), resolve, reject);
-                    }
+    async fetchRssFeeds(url) {
+
+        try {
+            let feeds = await this.getRssData(url);
+            return feeds;
+        }
+        catch (error) {
+
+            if (error.message === FEEDS_NOT_FOUND) {
+                let root = cheerio.load(error.data);
+                let rssLink = root("link[type ^= 'application/rss+xml']");
+                let rssUrl = rssLink.attr("href");
+                if (rssLink && rssLink.length !== 0) {
+                    return await this.getFeedsFromRssUrl(rssUrl,url)
+
                 } else {
-                    this.handleUrlError(url, error, reject);
+                    return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
                 }
-            });
-        });
+            } else {
+                this.handleUrlError(url, error);
+            }
+
+        }
+
     }
 
-    crawlForRssUrl(root, url, resolve, reject) {
+    async getFeedsFromRssUrl(rssUrl,url){
+
+        if (rssUrl.startsWith("//")) {
+            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;
+        } else if (rssUrl.startsWith("/")) {
+            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;
+        }
+        try {
+            let feeds = await this.getRssData(rssUrl);
+            feeds.url = rssUrl;
+            return feeds;
+        }
+        catch (rssError) {
+            return this.handleRequestError(url, rssError);
+        }
+    }
+
+    async crawlForRssUrl(root, url) {
         let links = new Set();
         let rssUrl = url.substring(0, url.indexOf("/", httpIndex));
         let relativeLinks = root("a[href^='/']");
         relativeLinks.each(function() {
             links.add(rssUrl + root(this).attr("href"));
         });
-
         rssUrl = rssUrl.replace(/.*?:\/\//g, "");
         rssUrl = rssUrl.replace("www.", "");
         let absoluteLinks = root("a[href*='" + rssUrl + "']");
@@ -63,25 +74,35 @@ export default class RssClient {
         });
 
         if(links.size === 0) {
-            this.handleUrlError(url, "no rss links found", reject);
+            this.handleUrlError(url, "no rss links found");
         } else {
-            let count = 0;
-            links.forEach((link) => {
-                this.getRssData(link, false).then(feeds => {
-                    feeds.url = link;
-                    resolve(feeds);
-                }).catch(error => {
-                    count += 1;
-                    this.crawlRssList(link, error, url, resolve);
-                    if (count === links.size) {
-                        this.handleUrlError(link, error, reject);
-                    }
-                });
-            });
+            return await this.getCrawledRssData(links, url);
+
         }
     }
 
-    crawlRssList(link, error, url, resolve) {
+     async getCrawledRssData(links, url) {
+         let linksIterator = links.values();
+         let link = linksIterator.next().value;
+         while(link) {
+            try {
+                let feeds = await this.getRssData(link, false);
+                feeds.url = link;
+                return feeds;
+            }
+            catch (error) {
+                try {
+                    let feed = await this.crawlRssList(link, error, url);
+                    return feed;
+                } catch (err) {
+                    link = linksIterator.next().value;
+                }
+            }
+         }
+         this.handleUrlError(url, "crawl failed");
+    }
+
+    async crawlRssList(link, error, url) {
         let rssPath = link.substring(link.lastIndexOf("/"));
         if ((rssPath.indexOf("rss")) !== NOT_FOUND_INDEX) {
             let rssListRoot = cheerio.load(error.data);
@@ -91,15 +112,18 @@ export default class RssClient {
                 rssListRoot("a[href$='" + urlPath + ".rss']").attr("href") ||
                 rssListRoot("a[href$='" + urlPath + ".xml']").attr("href");
             if (rssListLink) {
-                this.getRssData(rssListLink, false).then(rssFeeds => {
-                    rssFeeds.url = rssListLink;
-                    resolve(rssFeeds);
-                });
+                let rssFeeds = await this.getRssData(rssListLink, false);
+                rssFeeds.url = rssListLink;
+                return rssFeeds;
             }
         }
+        throw "no rss found";
     }
 
-    getRssData(url) {
+
+
+      getRssData(url) {
+
         return new Promise((resolve, reject) => {
             let data = null;
             let requestToUrl = request.get({
@@ -107,7 +131,7 @@ export default class RssClient {
                 "timeout": 6000
             }, (error, response, body) => {
                 if(error) {
-                    this.handleRequestError(url, error, reject);
+                    this.handleRequestError(url, error);
                 }
                 data = body;
             });
@@ -115,26 +139,31 @@ export default class RssClient {
                 if (res.statusCode !== HttpResponseHandler.codes.OK) {
                     RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
                     reject({ "message": "Bad status code" });
+                } else {
+                    let rssParser = new RssParser(this);
+                    rssParser.parse().then(feeds => {
+                        RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
+                        resolve(feeds);
+                    }).catch(error => {
+                        RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
+                        reject({ "message": FEEDS_NOT_FOUND, "data": data });
+                    });
                 }
-                let rssParser = new RssParser(this);
-                rssParser.parse().then(feeds => {
-                    RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
-                    resolve(feeds);
-                }).catch(error => {
-                    RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
-                    reject({ "message": FEEDS_NOT_FOUND, "data": data });
-                });
+
             });
         });
     }
 
-    handleUrlError(url, error, reject) {
+
+    handleUrlError(url, error) {
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
-        reject({ "message": url + " is not a proper feed" });
+        throw {"message": url + " is not a proper feed"};
     }
 
-    handleRequestError(url, error, reject) {
+    handleRequestError(url, error) {
         RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
-        reject({ "message": "Request failed for " + url });
+        throw {"message": "Request failed for " + url};
     }
 }
+
+

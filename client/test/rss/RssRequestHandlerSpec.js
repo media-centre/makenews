@@ -4,6 +4,7 @@ import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
 import AjaxClient from "../../src/js/utils/AjaxClient.js";
 import { expect } from "chai";
 import sinon from "sinon";
+import RssClient from "../../src/js/rss/RssClient";
 
 describe("RssRequestHandler", () => {
     describe("fetchBatchRssFeeds", () => {
@@ -38,8 +39,25 @@ describe("RssRequestHandler", () => {
             });
         });
     });
+    describe("fetchRSSFeeds", () => {
+        it("should fetch rss feed for the given url", () => {
+            let latestFeeds = [
+                {
+                    "title": "http://www.facebook.com/testuser",
+                    "description": "fb description"
+                }
+            ];
 
-    describe("getURLDocuments", () => {
-        it("should request RSS URLs for the e")
-    })
+            let sandbox = sinon.sandbox.create();
+            let rssMock = new RssClient();
+            let rssClientMock = sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            let rssPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withExactArgs("www.example.com").returns(Promise.resolve(latestFeeds));
+            return Promise.resolve(RssRequestHandler.fetchRssFeeds("www.example.com")).then((feeds) => {
+                expect(feeds).to.eq(latestFeeds);
+                rssClientMock.verify();
+                rssPostMock.verify();
+                sandbox.restore();
+            });
+        });
+    });
 });
