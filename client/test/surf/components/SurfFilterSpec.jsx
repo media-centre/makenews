@@ -1,13 +1,12 @@
 /* eslint max-nested-callbacks:0 */
 
-"use strict";
-import SurfFilter from "../../../src/js/surf/components/SurfFilter.jsx"; //eslint-disable-line no-unused-vars
+import SurfFilter from "../../../src/js/surf/components/SurfFilter"; //eslint-disable-line no-unused-vars
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDom from "react-dom";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 
 describe("SurfFilter Component", ()=> {
     let mediaTypes = [
@@ -61,7 +60,5 @@ describe("SurfFilter Component", ()=> {
             TestUtils.Simulate.click(surfFilterDom.querySelector("#filterToggle"));
             assert.isFalse(surfFilter.state.show);
         });
-
-
     });
 });

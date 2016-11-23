@@ -1,13 +1,12 @@
 /* eslint max-nested-callbacks:0 */
-"use strict";
 
-import SourceTypeFilter from "../../../src/js/surf/components/SourceTypeFilter.jsx"; //eslint-disable-line no-unused-vars
+import SourceTypeFilter from "../../../src/js/surf/components/SourceTypeFilter"; //eslint-disable-line no-unused-vars
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 
 let filter = null;
 describe("SourceTypeFilter", ()=> {
@@ -44,8 +43,8 @@ describe("SourceTypeFilter", ()=> {
             );
             let filterDom = ReactDOM.findDOMNode(sourceTypeFilter);
             let selectedItems = filterDom.querySelectorAll("ul.source-type-list li.selected");
-            assert.strictEqual("Rss", selectedItems[0].textContent);
-            assert.strictEqual("Twitter", selectedItems[1].textContent);
+            assert.strictEqual("Rss", selectedItems[0].textContent); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("Twitter", selectedItems[1].textContent); //eslint-disable-line no-magic-numbers
         });
 
         it("should toggle the section on clicking the items", ()=> {
@@ -56,8 +55,8 @@ describe("SourceTypeFilter", ()=> {
             );
             let filterDom = ReactDOM.findDOMNode(sourceTypeFilter);
             let items = filterDom.querySelectorAll("ul.source-type-list li");
-            TestUtils.Simulate.click(items[0]);
-            assert.isFalse(items[1].classList.contains("selected"));
+            TestUtils.Simulate.click(items[0]); //eslint-disable-line no-magic-numbers
+            assert.isFalse(items[1].classList.contains("selected")); //eslint-disable-line no-magic-numbers
         });
 
         it("should update the feeds on clicking the items", ()=> {
@@ -77,7 +76,7 @@ describe("SourceTypeFilter", ()=> {
             );
             let filterDom = ReactDOM.findDOMNode(sourceTypeFilter);
             let items = filterDom.querySelectorAll("ul.source-type-list li");
-            TestUtils.Simulate.click(items[0]);
+            TestUtils.Simulate.click(items[0]); //eslint-disable-line no-magic-numbers
         });
     });
 });

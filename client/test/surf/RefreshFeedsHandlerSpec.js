@@ -1,17 +1,16 @@
 /* eslint max-nested-callbacks:0, callback-return:0, no-undefined:0 */
-"use strict";
-import AjaxClient from "../../src/js/utils/AjaxClient.js";
-import SourceDb from "../../src/js/config/db/SourceDb.js";
-import PouchClient from "../../src/js/db/PouchClient.js";
-import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler.js";
-import RssRequestHandler from "../../src/js/rss/RssRequestHandler.js";
-import RssDb from "../../src/js/rss/RssDb.js";
-import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler.js";
-import FacebookDb from "../../src/js/facebook/FacebookDb.js";
-import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler.js";
-import TwitterDb from "../../src/js/twitter/TwitterDb.js";
-import RssFeeds from "../../src/js/rss/RssFeeds.js";
-import DateTimeUtil from "../../src/js/utils/DateTimeUtil.js";
+import AjaxClient from "../../src/js/utils/AjaxClient";
+import SourceDb from "../../src/js/config/db/SourceDb";
+import PouchClient from "../../src/js/db/PouchClient";
+import RefreshFeedsHandler from "../../src/js/surf/RefreshFeedsHandler";
+import RssRequestHandler from "../../src/js/rss/RssRequestHandler";
+import RssDb from "../../src/js/rss/RssDb";
+import FacebookRequestHandler from "../../src/js/facebook/FacebookRequestHandler";
+import FacebookDb from "../../src/js/facebook/FacebookDb";
+import TwitterRequestHandler from "../../src/js/twitter/TwitterRequestHandler";
+import TwitterDb from "../../src/js/twitter/TwitterDb";
+import RssFeeds from "../../src/js/rss/RssFeeds";
+import DateTimeUtil from "../../src/js/utils/DateTimeUtil";
 import AppWindow from "../../src/js/utils/AppWindow";
 import { expect, assert } from "chai";
 import sinon from "sinon";
@@ -144,7 +143,7 @@ describe("RefreshFeedsHandler", () => {
         it("should update the progress percentage on success of updation", (done) => {
             let counter = 0, percentageProgress = 25;
             displayAllFeedsAsync = (percentage) => {
-                counter += 1;
+                counter += 1;  //eslint-disable-line no-magic-numbers
                 assert.strictEqual(percentage, counter * percentageProgress);
                 let maxCounterValue = 4;
                 if(counter === maxCounterValue) {
@@ -544,16 +543,14 @@ describe("RefreshFeedsHandler", () => {
                         { "name": "test name1", "entities": { "hashtags": ["test"] } },
                         { "name": "test name1", "entities": { "hashtags": ["test"] } }
                     ] },
-                    "2": { "statuses":
-                        [
+                    "2": { "statuses": [
                             { "name": "test name2", "entities": { "hashtags": ["test"] } },
                             { "name": "test name2", "entities": { "hashtags": ["test"] } }
-                        ] },
-                    "3": { "statuses":
-                        [
+                    ] },
+                    "3": { "statuses": [
                             { "name": "test name", "entities": { "hashtags": ["test"] } },
                             { "name": "test name", "entities": { "hashtags": ["test"] } }
-                        ] }
+                    ] }
                 };
 
                 twitterRequestHandlerMock.withArgs({ "data": postData }).returns(Promise.resolve(twitterFeedMap));
@@ -717,7 +714,7 @@ describe("RefreshFeedsHandler", () => {
             dateMock = sandbox.stub(Date, "parse");
             let appwindow = new AppWindow();
             sandbox.stub(AppWindow, "instance").returns(appwindow);
-            sandbox.stub(appwindow, "get").withArgs("numberOfDaysToBackUp").returns(2);
+            sandbox.stub(appwindow, "get").withArgs("numberOfDaysToBackUp").returns(2); //eslint-disable-line no-magic-numbers
         });
 
         afterEach("_constructRequestData", () => {

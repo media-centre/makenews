@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
-"use strict";
-import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer.js";
-import Locale from "../../../src/js/utils/Locale.js";
-import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS } from "../../../src/js/surf/actions/SurfActions.js";
+import { allFeeds } from "../../../src/js/surf/reducers/SurfReducer";
+import Locale from "../../../src/js/utils/Locale";
+import { DISPLAY_ALL_FEEDS, DISPLAY_EXISTING_FEEDS } from "../../../src/js/surf/actions/SurfActions";
 import { expect } from "chai";
 import sinon from "sinon";
 

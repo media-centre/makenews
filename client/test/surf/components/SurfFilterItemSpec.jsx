@@ -1,13 +1,12 @@
 /* eslint max-nested-callbacks:0 */
 
-"use strict";
-import SurfFilterItem from "../../../src/js/surf/components/SurfFilterItem.jsx"; //eslint-disable-line no-unused-vars
+import SurfFilterItem from "../../../src/js/surf/components/SurfFilterItem"; //eslint-disable-line no-unused-vars
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import "../../helper/TestHelper.js";
+import "../../helper/TestHelper";
 
 describe("SurfFilterItem Component", ()=> {
     describe("Category Filter", ()=> {
@@ -31,7 +30,7 @@ describe("SurfFilterItem Component", ()=> {
                 <SurfFilterItem type="text" displayItems={categories} filterItems={[]} title="category" dispatchFilterAction={()=> {}}/>
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
-            assert.strictEqual(2, surfFilterItemDom.querySelectorAll("li").length);
+            assert.strictEqual(2, surfFilterItemDom.querySelectorAll("li").length); //eslint-disable-line no-magic-numbers
         });
         it("should display category text as a list", ()=> {
             let categories = [
@@ -141,8 +140,8 @@ describe("SurfFilterItem Component", ()=> {
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             let filterDomElements = surfFilterItemDom.querySelectorAll("ul li.selected .content-type");
-            assert.strictEqual("Text", filterDomElements[0].textContent);
-            assert.strictEqual("Videos", filterDomElements[1].textContent);
+            assert.strictEqual("Text", filterDomElements[0].textContent); //eslint-disable-line no-magic-numbers
+            assert.strictEqual("Videos", filterDomElements[1].textContent); //eslint-disable-line no-magic-numbers
 
         });
 
@@ -169,8 +168,8 @@ describe("SurfFilterItem Component", ()=> {
             );
             let surfFilterItemDom = ReactDOM.findDOMNode(surfFilterItem);
             let filterDomElements = surfFilterItemDom.querySelectorAll("ul li.selected");
-            TestUtils.Simulate.click(filterDomElements[1]);
-            assert.isUndefined(surfFilterItem.props.filterItems[2]);
+            TestUtils.Simulate.click(filterDomElements[1]); //eslint-disable-line no-magic-numbers
+            assert.isUndefined(surfFilterItem.props.filterItems[2]); //eslint-disable-line no-magic-numbers
 
         });
     });

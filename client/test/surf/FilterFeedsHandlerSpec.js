@@ -1,9 +1,8 @@
 /* eslint max-nested-callbacks:0 */
-"use strict";
 
-import PouchClient from "../../src/js/db/PouchClient.js";
-import FeedDb from "../../src/js/feeds/db/FeedDb.js";
-import FilterFeedsHandler from "../../src/js/surf/FilterFeedsHandler.js";
+import PouchClient from "../../src/js/db/PouchClient";
+import FeedDb from "../../src/js/feeds/db/FeedDb";
+import FilterFeedsHandler from "../../src/js/surf/FilterFeedsHandler";
 import { expect } from "chai";
 import sinon from "sinon";
 

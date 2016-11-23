@@ -1,14 +1,12 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined:0 */
 
-"use strict";
-import * as SurfActions from "../../../src/js/surf/actions/SurfActions.js";
+import * as SurfActions from "../../../src/js/surf/actions/SurfActions";
 import * as FeedsActions from "../../../src/js/feeds/actions/FeedsActions";
-import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries.js";
-import PouchClient from "../../../src/js/db/PouchClient.js";
-//import FeedDb from "../../../src/js/feeds/db/FeedDb.js";
-import RefreshFeedsHandler from "../../../src/js/surf/RefreshFeedsHandler.js";
-import FilterFeedsHandler from "../../../src/js/surf/FilterFeedsHandler.js";
-import mockStore from "../../helper/ActionHelper.js";
+import FeedApplicationQueries from "../../../src/js/feeds/db/FeedApplicationQueries";
+import PouchClient from "../../../src/js/db/PouchClient";
+import RefreshFeedsHandler from "../../../src/js/surf/RefreshFeedsHandler";
+import FilterFeedsHandler from "../../../src/js/surf/FilterFeedsHandler";
+import mockStore from "../../helper/ActionHelper";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -62,7 +60,7 @@ describe("SurfActions", () => {
         fetchAllFeedsWithCategoryNameMock.returns(Promise.reject("error"));
 
         let store = mockStore({ "feeds": [] }, [{ "type": SurfActions.DISPLAY_ALL_FEEDS, "feeds": [], "refreshState": false, "progressPercentage": 0, "hasMoreFeeds": true, "lastIndex": 0 }], done);
-        Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync([], 0))).then(() => {
+        Promise.resolve(store.dispatch(SurfActions.displayAllFeedsAsync([], 0))).then(() => { //eslint-disable-line no-magic-numbers
             fetchAllFeedsWithCategoryNameMock.verify();
             FeedApplicationQueries.fetchAllFeedsWithCategoryName.restore();
         });
@@ -185,7 +183,7 @@ describe("SurfActions", () => {
             let filterFeedsHandlerMock = sinon.mock(filterFeedsHandler).expects("fetchFeedsByPageWithFilter");
             filterFeedsHandlerMock.withArgs(filterStore).returns(Promise.resolve(feeds));
 
-            store.dispatch(SurfActions.fetchFeedsByPage(0));
+            store.dispatch(SurfActions.fetchFeedsByPage(0)); //eslint-disable-line no-magic-numbers
             filterFeedsHandlerMock.verify();
             filterFeedsHandler.fetchFeedsByPageWithFilter.restore();
         });
