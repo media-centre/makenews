@@ -2,37 +2,34 @@
 var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var babelify = require("babelify"); //eslint-disable-line
+var babelify = require("babelify");
 var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
 var eslint = require("gulp-eslint");
 var exec = require("child_process").exec;
-var rename = require("gulp-rename");
 var del = require("del");
-var minify = require("gulp-minify");
+var minify = require("gulp-minify"); //eslint-disable-line no-unused-vars
 var cssnano = require("gulp-cssnano");
 var environments = require("gulp-environments");
-var browserif = require("browserify");
-var source = require('vinyl-source-stream');
+var browserify = require("browserify");
+var source = require("vinyl-source-stream");
 var babelRegister = null;
 
 
-var development = environments.development;
+var development = environments.development; //eslint-disable-line no-unused-vars
 var production = environments.production;
 
-function clean(path) {
-    return del(path);
-}
-
 function loadBabelForTests() {
-    if(!babelRegister) require("babel-register");
-};
+    if(!babelRegister) {
+        require("babel-register"); //eslint-disable-line global-require
+    }
+}
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
           .pipe(sass({
-              sourceComments: true
+              "sourceComments": true
           }))
           .pipe(production(cssnano()))
           .pipe(gulp.dest(parameters.client.distFolder));
@@ -45,26 +42,15 @@ gulp.task("client:images", function() {
 });
 
 gulp.task("client:build-sources", function() {
-    gulp.src(parameters.client.srcPath + "/index.jsx")
-        // .pipe(browserify({
-        //     "transform": ["babelify"],
-        //     debug: true
-        // }))
-        // .pipe(plugins.filter(function (a) {
-        //     return a.sourceMap.mappings !== ''
-        // }))
-        // .pipe(production(rename("app.js")))
-        // .pipe(development(rename("app-min.js")))
-        // .pipe(production(minify()))
-        // .pipe(gulp.dest(parameters.client.distFolder));
-
     gulp.src(parameters.client.clientAppPath + "/config/*.js")
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
 
-    return browserif({ "entries": parameters.client.srcPath + "/index.jsx", "extensions": [".jsx", ".js"], "debug": true})
+    return browserify({ "entries": parameters.client.srcPath + "/index.jsx", "extensions": [".jsx", ".js"], "debug": true })
         .transform(babelify, { "presets": ["es2015", "react"] })
         .bundle()
-        .on("error", function(err) { console.log("Error : " + err.message); })
+        .on("error", function(err) {
+            console.log("Error : " + err.message);
+        })
         .pipe(source("app-min.js"))
         .pipe(gulp.dest(parameters.client.distFolder));
 });
