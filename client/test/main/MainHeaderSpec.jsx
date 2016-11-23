@@ -1,7 +1,7 @@
 /*eslint no-magic-numbers:0 */
-"use strict";
-import "../helper/TestHelper.js";
-import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
+
+import "../helper/TestHelper";
+import MainHeader from "../../src/js/main/headers/MainHeader";
 import { assert, expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";

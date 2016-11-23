@@ -1,8 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5],no-undefined: 0 */
 
-"use strict";
-import { mainHeaderLocale } from "../../src/js/main/reducers/MainReducer.js";
-import Locale from "../../src/js/utils/Locale.js";
+import { mainHeaderLocale } from "../../src/js/main/reducers/MainReducer";
+import Locale from "../../src/js/utils/Locale";
 import { assert } from "chai";
 import sinon from "sinon";
 

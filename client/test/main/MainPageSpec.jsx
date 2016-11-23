@@ -1,7 +1,6 @@
-"use strict";
-import "../helper/TestHelper.js";
-import { MainPage } from "../../src/js/main/pages/MainPage.jsx";
-import MainHeader from "../../src/js/main/headers/MainHeader.jsx";
+import "../helper/TestHelper";
+import { MainPage } from "../../src/js/main/pages/MainPage";
+import MainHeader from "../../src/js/main/headers/MainHeader";
 
 import { assert, expect } from "chai";
 import TestUtils from "react-addons-test-utils";
@@ -52,7 +51,7 @@ describe("main page component", () => {
     });
 
     it("should have MainHeader component", () => {
-        expect(TestUtils.scryRenderedComponentsWithType(mainPage, MainHeader).length).to.equal(1);
+        expect(TestUtils.scryRenderedComponentsWithType(mainPage, MainHeader).length).to.equal(1); //eslint-disable-line no-magic-numbers
     });
 
     it("should have section with children", () => {
