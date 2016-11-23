@@ -40,7 +40,6 @@ export default class Migration {
         return new Promise((resolve, reject) => {
             let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
-                console.log("*********************************");
                 let accessToken = null;
                 if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) {
                     accessToken = cookieHeader.split("=")[1].split(";")[0];

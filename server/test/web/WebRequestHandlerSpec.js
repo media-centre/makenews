@@ -112,9 +112,11 @@ describe("Web Request Handler", () => {
             });
         });
 
-        xit("should return Error IF Document Id is not there", (done) => {
+        it("should return Error IF Document Id is not there", (done) => {
             let webRequestHandler = WebRequestHandler.instance();
-            webRequestHandler.saveDocument(null, null).catch((error) => {
+            let getDocStub = sandbox.stub(couchClient, "saveDocument");
+            getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
+            webRequestHandler.saveDocument("", {}).catch((error) => {
                 assert.strictEqual("unexpected response from the db", error);
                 done();
             });
