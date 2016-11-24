@@ -3,6 +3,9 @@ import request from "request";
 import Logger from "../logging/Logger";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
+import AdminDbClient from "../db/AdminDbClient"
+import ApplicationConfig from "../config/ApplicationConfig";
+
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
 
 export default class RssClient {
@@ -147,7 +150,20 @@ export default class RssClient {
             });
         });
     }
-
+    addDocument(documentId, document) {
+        return new Promise((resolve, reject) => {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
+                dbInstance.saveDocument(documentId, document).then((response) => {
+                    RssClient.logger().debug("RssClient:: successfully added Document to database.");
+                    resolve(response);
+                }).catch((error) => {
+                    RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+                    reject(error);
+                });
+            });
+        });
+    }
 
     handleUrlError(url, error) {
         let errorMessage = { "message": url + " is not a proper feed" };

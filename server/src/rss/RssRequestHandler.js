@@ -50,12 +50,24 @@ export default class RssRequestHandler {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then(dbInstance => {
                 dbInstance.getUrlDocument(selector).then((document) => {
-                    RssRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
+                    RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for the selector.");
                     resolve(document);
                 }).catch((error) => {
-                    RssRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
+                    RssRequestHandler.logger().error("RssRequestHandler:: selector is not a proper feed url. Error: %j.", error);
                     reject(error);
                 });
+            });
+        });
+    }
+
+    addDocument(documentId, document) {
+        return new Promise((resolve, reject) => {
+            this.rssClient().addDocument(documentId, document).then((response) => {
+                RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
+                resolve(response);
+            }).catch((error) => {
+                RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
+                reject(error);
             });
         });
     }
