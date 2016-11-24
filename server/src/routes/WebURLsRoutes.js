@@ -3,7 +3,7 @@ import RouteLogger from "./RouteLogger";
 import SearchURLsRoute from "./helpers/SearchURLsRoute";
 
 export default (app) => {
-    app.get("/add-url", (request, response, next) => {
+    app.post("/add-url", (request, response, next) => {
         RouteLogger.instance().info("WebURLsRoutes:: /add-url request received. url = %s", request.url);
         new AddURLDocumentRoute(request, response, next).handle();
     });
