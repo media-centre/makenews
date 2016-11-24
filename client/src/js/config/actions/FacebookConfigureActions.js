@@ -5,25 +5,36 @@ import DbParameters from "../../db/DbParameters";
 export const FACEBOOK_GOT_PROFILES = "FACEBOOK_GOT_PROFILES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_GOT_CONFIGURED_PROFILES = "FACEBOOK_GOT_CONFIGURED_PROFILES";
+export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
+export const PROFILES = "Profiles";
+export const PAGES = "Pages";
+export const GROUPS = "Groups";
 
 export function facebookProfilesReceived(profiles) {
     return {
         "type": FACEBOOK_GOT_PROFILES,
-        "profiles": profiles
+        profiles
     };
 }
 
 export function configuredProfilesReceived(profiles) {
     return {
         "type": FACEBOOK_GOT_CONFIGURED_PROFILES,
-        "profiles": profiles
+        profiles
     };
 }
 
 export function addFacebookProfile(profile) {
     return {
         "type": FACEBOOK_ADD_PROFILE,
-        "profile": profile
+        profile
+    };
+}
+
+export function facebookSourceTabSwitch(currentTab) {
+    return {
+        "type": FACEBOOK_CHANGE_CURRENT_TAB,
+        currentTab
     };
 }
 

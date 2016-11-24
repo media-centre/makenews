@@ -51,9 +51,42 @@
     background-color: $background-color;
     padding: 20px;
     margin-top: 50px;
+
+    .fb-sources-tab {
+      display: inline-block;
+      &__item {
+        font-weight: 700;
+        color: $primary-color;
+        padding: 10px 20px;
+        opacity: .5;
+        cursor: pointer;
+
+        &.active,
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .add-all {
+      float: right;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 15px;
+      color: $primary-color;
+      padding-top: 0;
+
+      img {
+        width: 30px;
+        vertical-align: middle;
+        padding-right: 5px;
+      }
+    }
   }
 
   .source-results {
+    clear: both;
+
     .source {
       background: $dark-background-color;
       padding: 10px;

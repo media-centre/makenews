@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
 import Source from "./Source";
+import FacebookTabs from "./FacebookTabs";
 
 export default class SourcesResults extends Component {
 
@@ -12,7 +13,11 @@ export default class SourcesResults extends Component {
     render() {
         return (
             <div className="sources-suggestions">
-                <button> {"Add All"} </button>
+                <FacebookTabs dispatch={this.props.dispatch} />
+                <button className="add-all">
+                    <img src="./images/add-btn-dark.png"/>
+                    {"Add All"}
+                </button>
                 <div className="source-results">
                     { this._renderResults() }
                 </div>

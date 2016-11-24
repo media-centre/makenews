@@ -1,4 +1,4 @@
-import { facebookGetProfiles, facebookProfilesReceived, getConfiguredProfiles, configuredProfilesReceived, FACEBOOK_GOT_PROFILES, FACEBOOK_GOT_CONFIGURED_PROFILES } from "../../src/js/config/actions/FacebookConfigureActions";
+import * as FBActions from "../../src/js/config/actions/FacebookConfigureActions";
 import { expect } from "chai";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import sinon from "sinon";
@@ -22,8 +22,8 @@ describe("Facebook Configure Actions", () => {
         });
 
         it("should return type FACEBOOK_GOT_PROFILES action", () => {
-            let facebookConfigureAction = { "type": FACEBOOK_GOT_PROFILES, "profiles": profiles };
-            expect(facebookConfigureAction).to.deep.equal(facebookProfilesReceived(profiles));
+            let facebookConfigureAction = { "type": FBActions.FACEBOOK_GOT_PROFILES, "profiles": profiles };
+            expect(facebookConfigureAction).to.deep.equal(FBActions.facebookProfilesReceived(profiles));
         });
 
         it("should dispatch FACEBOOK_GOT_PROFILES action after getting fb profiles ", (done) => {
@@ -41,7 +41,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientGetMock.returns(Promise.resolve(profiles));
 
             let store = mockStore({}, [{ "type": "FACEBOOK_GOT_PROFILES", "profiles": profiles }], done);
-            store.dispatch(facebookGetProfiles());
+            store.dispatch(FBActions.facebookGetProfiles());
         });
     });
 
@@ -58,8 +58,8 @@ describe("Facebook Configure Actions", () => {
 
         it("should return FACEBOOK_GOT_CONFIGURED_PROFILES action when it receives configured profiles", () => {
             let profiles = [{ "name": "Profile1" }, { "name": "Profile2" }];
-            let action = configuredProfilesReceived(profiles);
-            expect(action.type).to.equal(FACEBOOK_GOT_CONFIGURED_PROFILES);
+            let action = FBActions.configuredProfilesReceived(profiles);
+            expect(action.type).to.equal(FBActions.FACEBOOK_GOT_CONFIGURED_PROFILES);
             expect(action.profiles).to.deep.equal(profiles);
         });
 
@@ -77,7 +77,16 @@ describe("Facebook Configure Actions", () => {
             sandbox.stub(ajaxClient, "get").withArgs({ "dbName": "dbName" }).returns(Promise.resolve(data));
 
             let store = mockStore({}, [{ "type": "FACEBOOK_GOT_CONFIGURED_PROFILES", "profiles": data.profiles }], done);
-            store.dispatch(getConfiguredProfiles());
+            store.dispatch(FBActions.getConfiguredProfiles());
+        });
+    });
+
+    describe("switch current Tab", () => {
+        it("should return the FACEBOOK_CHANGE_CURRENT_TAB action", () => {
+            let currentTab = "Profiles";
+            let facebookSourceTabSwitch = FBActions.facebookSourceTabSwitch(currentTab);
+            expect(facebookSourceTabSwitch.type).to.equal(FBActions.FACEBOOK_CHANGE_CURRENT_TAB);
+            expect(facebookSourceTabSwitch.currentTab).to.equal(currentTab);
         });
     });
 });

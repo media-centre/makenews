@@ -1,4 +1,10 @@
-import { FACEBOOK_GOT_PROFILES, FACEBOOK_ADD_PROFILE, FACEBOOK_GOT_CONFIGURED_PROFILES } from "./../actions/FacebookConfigureActions";
+import {
+    FACEBOOK_GOT_PROFILES,
+    FACEBOOK_ADD_PROFILE,
+    FACEBOOK_GOT_CONFIGURED_PROFILES,
+    FACEBOOK_CHANGE_CURRENT_TAB,
+    PROFILES
+} from "./../actions/FacebookConfigureActions";
 import { List } from "immutable";
 
 export const facebookConfiguredUrls = (state = { "profiles": [], "pages": [], "groups": [] }, action = {}) => {
@@ -20,6 +26,15 @@ export const facebookProfiles = (state = [], action = {}) => {
     }
     case FACEBOOK_ADD_PROFILE: {
         return Object.assign([], addSource(state, action.profile.id));
+    }
+    default: return state;
+    }
+};
+
+export const facebookCurrentSourceTab = (state = PROFILES, action = {}) => {
+    switch(action.type) {
+    case FACEBOOK_CHANGE_CURRENT_TAB: {
+        return action.currentTab;
     }
     default: return state;
     }

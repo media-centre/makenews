@@ -3,6 +3,7 @@ import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import Source from "../../../src/js/config/components/Source";
+import FacebookTabs from "../../../src/js/config/components/FacebookTabs";
 import { findAllWithType } from "react-shallow-testutils";
 
 describe("Source Results", () => {
@@ -18,8 +19,13 @@ describe("Source Results", () => {
         result = renderer.getRenderOutput();
     });
 
+    it("should have facebook tabs component", () => {
+        let renderedSources = findAllWithType(result, FacebookTabs);
+        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+    });
+
     it("should have add all button", () => {
-        let button = result.props.children[0]; //eslint-disable-line no-magic-numbers
+        let [, button] = result.props.children;
         expect(button.type).to.equal("button");
     });
 

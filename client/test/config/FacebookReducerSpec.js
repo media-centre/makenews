@@ -1,5 +1,11 @@
-import { FACEBOOK_GOT_PROFILES, FACEBOOK_ADD_PROFILE, FACEBOOK_GOT_CONFIGURED_PROFILES } from "../../src/js/config/actions/FacebookConfigureActions";
-import { facebookProfiles, facebookConfiguredUrls } from "../../src/js/config/reducers/FacebookReducer";
+import {
+    FACEBOOK_GOT_PROFILES,
+    FACEBOOK_ADD_PROFILE,
+    FACEBOOK_GOT_CONFIGURED_PROFILES,
+    FACEBOOK_CHANGE_CURRENT_TAB,
+    PAGES
+} from "../../src/js/config/actions/FacebookConfigureActions";
+import { facebookProfiles, facebookConfiguredUrls, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
 import { expect } from "chai";
 
 describe("Facebook Reducer", () => {
@@ -39,6 +45,17 @@ describe("Facebook Reducer", () => {
             let state = [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }];
             let action = { "type": FACEBOOK_ADD_PROFILE, "profile": { "id": 1, "name": "Profile" } };
             expect(facebookProfiles(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
+        });
+    });
+
+    describe("Facebook current Tab", () => {
+        it("should return Profiles as current tab by default", () => {
+            expect(facebookCurrentSourceTab()).to.equal("Profiles");
+        });
+
+        it("should return Pages when the current tab changed to Pages", () => {
+            let action = { "type": FACEBOOK_CHANGE_CURRENT_TAB, "currentTab": PAGES };
+            expect(facebookCurrentSourceTab([], action)).to.equal(PAGES);
         });
     });
 });
