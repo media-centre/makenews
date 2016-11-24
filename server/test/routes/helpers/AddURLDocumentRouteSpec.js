@@ -34,9 +34,11 @@ describe("Add URL Document Route", () => {
 
     it("should return bad request if URL is not valid", (done) => {
         let request = {
-            "query": {
-                "url": {
-                    "name": null
+            "body": {
+                "query": {
+                    "url": {
+                        "name": null
+                    }
                 }
             }
         };
@@ -51,23 +53,25 @@ describe("Add URL Document Route", () => {
     it("should add document for correct request", (done) => {
         let sandbox = sinon.sandbox.create();
         let request = {
-            "query": {
-                "url": {
-                    "name": "test"
+            "body": {
+                "query": {
+                    "url": {
+                        "name": "test"
+                    }
                 }
             }
         };
 
         let document = {
-            "id": request.query.url.name,
+            "id": request.body.query.url.name,
             "sourceType": "web",
-            "url": request.query.url
+            "url": request.body.query.url
         };
 
         let webRequestHandlerInstance = new WebRequestHandler();
         sandbox.stub(WebRequestHandler, "instance").returns(webRequestHandlerInstance);
         let requestHandlerMock = sandbox.mock(webRequestHandlerInstance).expects("addDocument");
-        requestHandlerMock.withArgs(request.query.url.name, request.query.url).returns(Promise.resolve(document));
+        requestHandlerMock.withArgs(request.body.query.url.name, request.body.query.url).returns(Promise.resolve(document));
 
         let response = mockResponseSuccess(done, {
             "status": HttpResponseHandler.codes.OK,

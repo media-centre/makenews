@@ -6,7 +6,7 @@ import StringUtils from "../../../../common/src/util/StringUtil";
 export default class AddURLDocumentRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.url = this.request.query.url;
+        this.url = this.request.body.query.url;
     }
 
     valid() {
@@ -16,7 +16,7 @@ export default class AddURLDocumentRoute extends Route {
         return true;
     }
 
-    handle() {                                    //eslint-disable-line consistent-return
+    handle() { //eslint-disable-line consistent-return
         if (!this.valid()) {
             RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();
