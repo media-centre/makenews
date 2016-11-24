@@ -150,6 +150,7 @@ export default class RssClient {
             });
         });
     }
+
     addDocument(documentId, document) {
         return new Promise((resolve, reject) => {
             const adminDetails = ApplicationConfig.instance().adminDetails();
