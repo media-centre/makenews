@@ -36,7 +36,7 @@ describe("Add URL Document Route", () => {
         let request = {
             "query": {
                 "url": {
-                    "name": {}
+                    "name": null
                 }
             }
         };
