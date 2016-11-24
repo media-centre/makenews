@@ -26,7 +26,7 @@ describe("Facebook Configure Actions", () => {
             expect(facebookConfigureAction).to.deep.equal(facebookProfilesReceived(profiles));
         });
 
-        it("should dispatch FACEBOOK_GOT_PROFILES action after getting fb profiles", (done) => {
+        it("should dispatch FACEBOOK_GOT_PROFILES action after getting fb profiles ", (done) => {
             let userName = "user";
             let serverUrl = "/facebook-profiles";
 
@@ -38,7 +38,7 @@ describe("Facebook Configure Actions", () => {
             let ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             let ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName });
-            ajaxClientGetMock.returns(Promise.resolve({ "profiles": profiles }));
+            ajaxClientGetMock.returns(Promise.resolve(profiles));
 
             let store = mockStore({}, [{ "type": "FACEBOOK_GOT_PROFILES", "profiles": profiles }], done);
             store.dispatch(facebookGetProfiles());

@@ -95,6 +95,18 @@ export default class FacebookRequestHandler {
         });
     }
 
+    async fetchPages(pageName) {
+        let facebookClientInstance = this.facebookClient();
+        try {
+            let pages = await facebookClientInstance.fetchPages(pageName);
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched Pages for ${pageName}.`);
+            return pages;
+        } catch(error) {
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook pages. Error: ${error}`);
+            throw "error fetching facebook pages";  // eslint-disable-line no-throw-literal
+        }
+    }
+
     fetchConfiguredSourcesOf(sourceType, dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
         return new Promise((resolve, reject) => {

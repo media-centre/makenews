@@ -32,7 +32,7 @@ export function facebookGetProfiles() {
     return dispatch => {
         ajaxClient.get({ "userName": LoginPage.getUserName() })
             .then((data) => {
-                dispatch(facebookProfilesReceived(data.profiles));
+                dispatch(facebookProfilesReceived(data));
             });
     };
 }

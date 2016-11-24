@@ -342,4 +342,51 @@ describe("FacebookRequestHandler", () => {
             });
         });
     });
+
+    describe("fetchPages", () => {
+        let sandbox = null, pageName = "TheHindu", facebookRequstHandler = null;
+        let facebookClientInstance = null;
+
+        beforeEach("fetchPages", () => {
+            sandbox = sinon.sandbox.create();
+            facebookRequstHandler = new FacebookRequestHandler(accessToken);
+            facebookClientInstance = new FacebookClient(accessToken, appSecretProof);
+            sandbox.mock(FacebookClient).expects("instance").returns(facebookClientInstance);
+        });
+
+        afterEach("fetchPages", () => {
+            sandbox.restore();
+        });
+
+        it("should throw an error when we got error from facebook client", (done) => {
+            sandbox.stub(facebookClientInstance, "fetchPages").returns(Promise.reject("Error fetching Pages"));
+            facebookRequstHandler.fetchPages(pageName).catch(error => {
+                try {
+                    expect(error).to.equal("error fetching facebook pages");
+                    done();
+                } catch(err) {
+                    done(err);
+                }
+            });
+        });
+
+        it("should get facebook pages", (done) => {
+            let pages = { "data": [
+                { "name": "The Hindu", "id": "163974433696568" },
+                { "name": "The Hindu Business Line", "id": "60573550946" },
+                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
+
+            sandbox.stub(facebookClientInstance, "fetchPages").returns(Promise.resolve(pages));
+
+            facebookRequstHandler.fetchPages(pageName).then(pagesData => {
+                try {
+                    expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
+                    expect(pagesData).to.deep.equal(pages);
+                    done();
+                } catch(error) {
+                    done(error);
+                }
+            });
+        });
+    });
 });
