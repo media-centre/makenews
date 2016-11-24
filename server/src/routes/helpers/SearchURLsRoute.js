@@ -1,4 +1,4 @@
-import WebRequestHandler from "../../web/WebRequestHandler";
+import RssRequestHandler from "../../rss/RssRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 
@@ -20,8 +20,8 @@ export default class SearchURLsRoute extends Route {
             RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();
         }
-        let webRequestHandler = WebRequestHandler.instance();
-        webRequestHandler.searchUrl(this.url).then(feeds => {
+        let rssRequestHandler = RssRequestHandler.instance();
+        rssRequestHandler.searchUrl(this.url).then(feeds => {
             RouteLogger.instance().debug("Web URL's Route:: successfully searched for the url %s .", this.url);
             this._handleSuccess(feeds);
         }).catch(error => { //eslint-disable-line

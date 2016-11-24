@@ -1,4 +1,4 @@
-import WebRequestHandler from "../../web/WebRequestHandler";
+import RssRequestHandler from "../../rss/RssRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 import StringUtils from "../../../../common/src/util/StringUtil";
@@ -21,8 +21,8 @@ export default class AddURLDocumentRoute extends Route {
             RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
             return this._handleInvalidRoute();
         }
-        let webRequestHandler = WebRequestHandler.instance();
-        webRequestHandler.addDocument(this.url.name, this.url).then(document => {
+        let rssRequestHandler = RssRequestHandler.instance();
+        rssRequestHandler.addDocument(this.url.name, this.url).then(document => {
             RouteLogger.instance().debug("SearchURLsRoute:: successfully saved the document");
             this._handleSuccess(document);
         }).catch(error => { //eslint-disable-line

@@ -17,10 +17,10 @@ export default class WebRequestHandler {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
                 dbInstance.getUrlDocument(selector).then((document) => {
-                    WebRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
+                    WebRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for the selector.");
                     resolve(document);
                 }).catch((error) => {
-                    WebRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
+                    WebRequestHandler.logger().error("RssRequestHandler:: selector is not a proper feed url. Error: %j.", error);
                     reject(error);
                 });
             });
@@ -32,10 +32,10 @@ export default class WebRequestHandler {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
                 dbInstance.saveDocument(documentId, document).then((response) => {
-                    WebRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
+                    WebRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for the selector.");
                     resolve(response);
                 }).catch((error) => {
-                    WebRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
+                    WebRequestHandler.logger().error("RssRequestHandler:: selector is not a proper feed url. Error: %j.", error);
                     reject(error);
                 });
             });
