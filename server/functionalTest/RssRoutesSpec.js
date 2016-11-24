@@ -60,8 +60,8 @@ describe("RssRoutesSpec", () => {
                 .query("url=http://localhost:3000/thehindu/error-feeds/")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
-                    assert.strictEqual("bad request", res.body.message);
+                    assert.strictEqual(res.statusCode, HttpResponseHandler.codes.BAD_REQUEST);
+                    assert.strictEqual(res.body.message, "bad request");
                     done();
                 });
         });
@@ -72,8 +72,8 @@ describe("RssRoutesSpec", () => {
                 .query("url=http://localhost:3000/gardian/timeout-feeds/")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
-                    assert.strictEqual("bad request", res.body.message);
+                    assert.strictEqual(res.statusCode, HttpResponseHandler.codes.BAD_REQUEST);
+                    assert.strictEqual(res.body.message, "bad request");
                     done();
                 });
         }).timeout(requestTime);

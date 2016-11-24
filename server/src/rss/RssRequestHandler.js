@@ -20,7 +20,7 @@ export default class RssRequestHandler {
             return feeds;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            return error;
+            throw error;
         }
     }
 

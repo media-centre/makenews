@@ -168,10 +168,10 @@ app.get("/news/cities/chennai/", (request, response, next) => {
     next();
 });
 
-app.get("/thehindu/errorfeeds", (request, response, next) => {
-    console.log("/thehindu/errorfeeds request received");
+app.get("/thehindu/error-feeds", (request, response, next) => {
+    console.log("/thehindu/error-feeds request received");
 
-    response.status(404);
+    response.status(400);
     response.json({});
     next();
 });
