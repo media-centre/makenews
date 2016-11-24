@@ -8,6 +8,9 @@ import * as cheerio from "cheerio/lib/static";
 import RssParser from "../../../server/src/rss/RssParser";
 import nock from "nock";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
+import CouchClient from "../../src/CouchClient";
+import AdminDbClient from "../../src/db/AdminDbClient";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -338,6 +341,59 @@ describe("RssClient", () => {
             } catch (err) {
                 assert.deepEqual(err, { "message": "Request failed for " + url });
             }
+        });
+    });
+
+    describe("Add Document", () => {
+        let couchClient = null;
+        beforeEach("Web Request Handler", () => {
+            sandbox = sinon.sandbox.create();
+            let applicationConfig = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(applicationConfig, "adminDetails").returns({
+                "couchDbAdmin": {
+                    "username": "adminUser",
+                    "password": "adminPwd"
+                },
+                "db": "adminDb"
+            });
+            couchClient = new CouchClient();
+            sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
+        });
+
+        afterEach("FacebookAccessToken", () => {
+            sandbox.restore();
+        });
+
+        it("should Save the Document", (done) => {
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": "NewsClick",
+                "url": "http://www.newsclick.in"
+            };
+            let getDocStub = sandbox.stub(couchClient, "saveDocument");
+            getDocStub.withArgs(document.name, document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "NewsClick",
+                "rev": "test_revition"
+            }));
+
+            let webRequestHandler = RssClient.instance();
+            webRequestHandler.addDocument(document.name, document).then((response) => {
+                assert.strictEqual("NewsClick", response.id);
+                done();
+            });
+        });
+
+        it("should return Error IF Document Id is not there", (done) => {
+            let webRequestHandler = RssClient.instance();
+            let getDocStub = sandbox.stub(couchClient, "saveDocument");
+            getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
+            webRequestHandler.addDocument("", {}).catch((error) => {
+                assert.strictEqual("unexpected response from the db", error);
+                done();
+            });
         });
     });
 });

@@ -9,7 +9,7 @@ import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
 import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 
-describe.only("Rss Request Handler", () => {
+describe("Rss Request Handler", () => {
     describe("search Url", () => {
         let couchClient = null, sandbox = null;
         beforeEach("Rss Request Handler", () => {
