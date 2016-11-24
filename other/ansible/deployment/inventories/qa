@@ -1,2 +1,2 @@
 [web]
-qa.contentdiscovery.in  project_environment=ci_qa pipeline_deployment_folder_name=QaDeployment
+46.101.145.29  project_environment=ci_qa pipeline_deployment_folder_name=QaDeployment
