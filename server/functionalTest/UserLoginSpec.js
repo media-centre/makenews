@@ -4,7 +4,7 @@ import request from "supertest";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import { expect, assert } from "chai";
 import argv from "yargs";
-import config from "../config/application.json";
+import config from "../config/application";
 
 let cookies = "";
 let env = argv.client_environment || "default";

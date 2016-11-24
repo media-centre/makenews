@@ -1,5 +1,5 @@
 import ApplicationConfig from "../../src/config/ApplicationConfig";
-import Logger from "../logging/Logger.js";
+import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import TwitterLogin from "./TwitterLogin";
 

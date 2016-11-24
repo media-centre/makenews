@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import UserInfo from "../../user/UserInfo.js";
+import UserInfo from "../../user/UserInfo";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {

@@ -2,7 +2,7 @@
 /* eslint handle-callback-err: 0 no-magic-numbers:0  */
 import request from "supertest";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
-import ApplicationConfig from "../src/config/ApplicationConfig.js";
+import ApplicationConfig from "../src/config/ApplicationConfig";
 import { assert, expect } from "chai";
 import CouchSession from "../src/CouchSession";
 

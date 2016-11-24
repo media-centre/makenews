@@ -1,4 +1,4 @@
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler.js";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 
 export default function(app) {
     app.use((err, req, res, next) => { //eslint-disable-line consistent-return
@@ -8,5 +8,4 @@ export default function(app) {
         res.status(HttpResponseHandler.codes.UNAUTHORIZED);
         res.send(err);
     });
-
 }
