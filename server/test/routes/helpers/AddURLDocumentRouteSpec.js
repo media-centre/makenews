@@ -1,6 +1,6 @@
 import AddURLDocumentRoute from "../../../src/routes/helpers/AddURLDocumentRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import WebRequestHandler from "../../../src/web/WebRequestHandler";
+import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import sinon from "sinon";
 import { expect, assert } from "chai";
 
@@ -68,9 +68,9 @@ describe("Add URL Document Route", () => {
             "url": request.body.query.url
         };
 
-        let webRequestHandlerInstance = new WebRequestHandler();
-        sandbox.stub(WebRequestHandler, "instance").returns(webRequestHandlerInstance);
-        let requestHandlerMock = sandbox.mock(webRequestHandlerInstance).expects("addDocument");
+        let rssRequestHandlerInstance = new RssRequestHandler();
+        sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
+        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addDocument");
         requestHandlerMock.withArgs(request.body.query.url.name, request.body.query.url).returns(Promise.resolve(document));
 
         let response = mockResponseSuccess(done, {

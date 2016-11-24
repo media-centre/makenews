@@ -1,6 +1,6 @@
 import SearchURLsRoute from "../../../src/routes/helpers/SearchURLsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import WebRequestHandler from "../../../src/web/WebRequestHandler";
+import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import { expect, assert } from "chai";
 import sinon from "sinon";
 
@@ -68,8 +68,8 @@ describe("Search Urls Route", () => {
                 "name": "url test",
                 "url": "http://www.thehindu.com/sport/?service" }]
         };
-        let requestHandlerInstance = new WebRequestHandler();
-        sandbox.stub(WebRequestHandler, "instance").returns(requestHandlerInstance);
+        let requestHandlerInstance = new RssRequestHandler();
+        sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
         requestHandlerMock.withArgs(request.query.url).returns(Promise.resolve(feeds));
         let response = mockResponseSuccess(done, { "status": HttpResponseHandler.codes.OK, "json": { feeds } });
