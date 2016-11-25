@@ -2,6 +2,7 @@ import RssClient from "./RssClient";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
+import RssBatchFeedsFetch from "./RssBatchFeedsFetch";
 
 export default class RssRequestHandler {
 
@@ -22,6 +23,21 @@ export default class RssRequestHandler {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             throw error;
         }
+    }
+
+    async fetchBatchRssFeedsRequest(url, authSession) {
+        try {
+            let responseMessage = await this.rssBatchFeedsFetch().fetchBatchFeeds(url, authSession);
+            RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
+            return { "message": responseMessage };
+        } catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
+            throw { "message": error };
+        }
+    }
+
+    rssBatchFeedsFetch() {
+        return RssBatchFeedsFetch.instance();
     }
 
     rssClient() {

@@ -6,6 +6,7 @@ import RouteLogger from "../RouteLogger";
 export default class RssBatchFeedsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
+        this.authSession = this.request.cookies.authSession;
     }
 
     handle() {
@@ -14,7 +15,7 @@ export default class RssBatchFeedsRoute extends Route {
             let rssRequestHandler = RssRequestHandler.instance();
             let counter = 0;
             this.request.body.data.forEach((item)=> {
-                rssRequestHandler.fetchRssFeedRequest(item.url).then(feeds => {
+                rssRequestHandler.fetchBatchRssFeedsRequest(item.url, this.authSession).then(feeds => {
                     allFeeds[item.id] = feeds;
                     if (this.request.body.data.length - 1 === counter) {  //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: successfully fetched rss feeds for url %s.", item.url);

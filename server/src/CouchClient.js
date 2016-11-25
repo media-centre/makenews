@@ -1,7 +1,7 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "./config/ApplicationConfig";
 import NodeErrorHandler from "./NodeErrorHandler";
-import Logger, { logCategories } from "./logging/Logger";
+import Logger, {logCategories} from "./logging/Logger";
 import request from "request";
 
 export default class CouchClient {
@@ -23,6 +23,12 @@ export default class CouchClient {
         const path = "/" + this.dbName + "/" + documentId;
         return this.put(path, documentObj, customHeaders);
     }
+
+    saveBulkDocuments(body, customHeaders = {}) {
+        const path = "/" + this.dbName + "/_bulk_docs";
+        return this.post(path, body, customHeaders);
+    }
+
 
     getDocument(documentId, customHeaders = {}) {
         const path = "/" + this.dbName + "/" + documentId;
