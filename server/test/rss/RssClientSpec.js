@@ -53,7 +53,7 @@ describe("RssClient", () => {
             try {
                 let result = await rssClientMock.fetchRssFeeds(url);
                 assert.deepEqual(result, feed);
-            } catch(err) {
+            } catch (err) {
                 assert.fail();
             } finally {
                 rssClientMock.getRssData.restore();
@@ -261,8 +261,8 @@ describe("RssClient", () => {
             }
         });
 
-        it("should throw an error when there is no rss in url", async () => {
-            try{
+        it("should throw an error when there is no rss in url", async() => {
+            try {
                 await rssClientMock.crawlRssList("/abc", error, "http://www.example.com/abc");
             } catch (err) {
                 assert.deepEqual(err.message, "no rss found");
@@ -275,10 +275,10 @@ describe("RssClient", () => {
             url = "http://www.example.com";
         });
 
-        it("it should return error when invalid request on url", async () => {
+        it("it should return error when invalid request on url", async() => {
             nock(url)
-              .get("/")
-              .replyWithError("failed");
+                .get("/")
+                .replyWithError("failed");
 
             try {
                 await rssClientMock.getRssData(url);
@@ -290,8 +290,8 @@ describe("RssClient", () => {
         it("it should return feeds_not_found when parser doesn't return feeds", async() => {
             try {
                 nock(url)
-                  .get("/")
-                  .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                    .get("/")
+                    .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
                 sandbox.stub(RssParser.prototype, "parse", () => Promise.reject("error"));
 
                 await rssClientMock.getRssData(url);
@@ -302,8 +302,8 @@ describe("RssClient", () => {
 
         it("it should return feeds when parser returns feeds", async() => {
             nock(url)
-              .get("/")
-              .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                .get("/")
+                .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
             sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve(feed));
             let res = await rssClientMock.getRssData(url);
             assert.equal(res, feed);
@@ -364,12 +364,14 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should Save the Document", (done) => {
+        it.only("should Save the Document", async() => {
+            url = "http://www.newsclick.in";
+            let name = "NewsClick";
             let document = {
                 "docType": "source",
                 "sourceType": "web",
-                "name": "NewsClick",
-                "url": "http://www.newsclick.in"
+                "name": name,
+                "url": url
             };
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
             getDocStub.withArgs(document.name, document).returns(Promise.resolve({
@@ -377,19 +379,22 @@ describe("RssClient", () => {
                 "id": "NewsClick",
                 "rev": "test_revition"
             }));
-
-            let webRequestHandler = RssClient.instance();
-            webRequestHandler.addDocument(document.name, document).then((response) => {
-                assert.strictEqual("NewsClick", response.id);
-                done();
-            });
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            fetchRssFeedsStub.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            try {
+                let response = await rssClient.addURL(url);
+                assert.strictEqual("URL added to Database", response);
+            } catch (err) {
+                assert.fail();
+            }
         });
 
-        it("should return Error IF Document Id is not there", (done) => {
-            let webRequestHandler = RssClient.instance();
+        xit("should return Error IF Document Id is not there", (done) => {
+            let rssClient = RssClient.instance();
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
             getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
-            webRequestHandler.addDocument("", {}).catch((error) => { //eslint-disable-line no-shadow
+            rssClient.addURL({}).catch((error) => { //eslint-disable-line no-shadow
                 assert.strictEqual("unexpected response from the db", error);
                 done();
             });
@@ -418,14 +423,56 @@ describe("RssClient", () => {
         });
 
         it("should return the default URL Documents", (done) => {
-            let body = { "selector": { "url": { "$eq": "the" } } };
-            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
+            let key = "the";
+            let body = { "selector": { "name": { "$eq": key } } };
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            let rssClient = RssClient.instance();
             getDocStub.withArgs(body).returns(Promise.resolve({
                 "docs": [{
                     "_id": "1",
                     "docType": "test",
                     "sourceType": "web",
-                    "name": "url1 test",
+                    "name": "the url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                {
+                    "_id": "2",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "the url test",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }]
+            }));
+            rssClient.searchURL(key).then((document) => {
+                const zero = 0;
+                assert.strictEqual("web", document.docs[zero].sourceType);
+                done();
+            });
+        });
+
+        it("should reject with an error if the URL document rejects with an error when key is null", (done) => {
+            let key = null;
+            let body = { "selector": { "name": { "$eq": key } } };
+            let rssClient = RssClient.instance();
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
+            rssClient.searchURL(key).catch((error) => {  //eslint-disable-line no-shadow
+                assert.strictEqual("No selector found", error);
+                done();
+            });
+        });
+
+        it("should reject with an error if the URL document rejects with an error when key is empty string", (done) => {
+            let key = "";
+            let body = { "selector": { "name": { "$eq": key } } };
+            let rssClient = RssClient.instance();
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            getDocStub.withArgs(body).returns(Promise.resolve({
+                "docs": [{
+                    "_id": "1",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "the url1 test",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
                 },
                 {
@@ -433,24 +480,12 @@ describe("RssClient", () => {
                     "docType": "test",
                     "sourceType": "web",
                     "name": "url test",
-                    "url": "http://www.thehindu.com/sport/?service=rss"
+                    "url": "http://www.hindu.com/sport/?service=rss"
                 }]
             }));
-            let rssClient = RssClient.instance();
-            rssClient.searchURL(body).then((document) => {
+            rssClient.searchURL(key).then((document) => {
                 const zero = 0;
                 assert.strictEqual("web", document.docs[zero].sourceType);
-                done();
-            });
-        });
-
-        it("should reject with an error if the URL document rejects with an error when body is null", (done) => {
-            let body = null;
-            let rssClient = RssClient.instance();
-            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
-            getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
-            rssClient.searchURL(body).catch((error) => {  //eslint-disable-line no-shadow
-                assert.strictEqual("No selector found", error);
                 done();
             });
         });

@@ -70,7 +70,7 @@ describe("Add URL Document Route", () => {
 
         let rssRequestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
-        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addDocument");
+        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
         requestHandlerMock.withArgs(request.body.query.url.name, request.body.query.url).returns(Promise.resolve(document));
 
         let response = mockResponseSuccess(done, {

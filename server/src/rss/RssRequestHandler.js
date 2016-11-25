@@ -43,9 +43,9 @@ export default class RssRequestHandler {
         return RssClient.instance();
     }
 
-    searchUrl(selector) {
+    searchUrl(key) {
         return new Promise((resolve, reject) => {
-            this.rssClient().searchURL(selector).then(document => {
+            this.rssClient().searchURL(key).then(document => {
                 RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
                 resolve(document);
             }).catch(error => {
@@ -57,7 +57,7 @@ export default class RssRequestHandler {
 
     addDocument(documentId, document) {
         return new Promise((resolve, reject) => {
-            this.rssClient().addDocument(documentId, document).then((response) => {
+            this.rssClient().addURL(document).then((response) => {
                 RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
                 resolve(response);
             }).catch((error) => {

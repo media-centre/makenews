@@ -115,14 +115,13 @@ describe("Rss Request Handler", () => {
         });
     });
     describe("fetchBatchRssFeedsRequest", ()=> {
-        let rssRequestHandler, response, rssBatchMock, rssClientMock;
+        let rssRequestHandler, response, rssBatchMock, rssClientMock, sandbox;
         beforeEach("fetchBatchRssFeedsRequest", () => {
             rssRequestHandler = new RssRequestHandler();
             response = "successfully fetched feeds";
             rssBatchMock = new RssBatchFeedsFetch();
             rssClientMock = sandbox.mock(RssBatchFeedsFetch).expects("instance").returns(rssBatchMock);
         });
-
         it("should fetch rss feed for given url", () => {
             let url = "www.example.com";
             let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
@@ -144,6 +143,56 @@ describe("Rss Request Handler", () => {
                 rssClientMock.verify();
                 rssClientPostMock.verify();
                 sandbox.restore();
+            });
+        });
+    });
+
+    describe("Add URL Document", () => {
+        let sandbox = null;
+        beforeEach("Add URL Document", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("Add URL Document", () => {
+            sandbox.restore();
+        });
+
+        it("should return the sucess response for correct URL Document", (done) => {
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": "NewsClick",
+                "url": "http://www.newsclick.in"
+            };
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "NewsClick",
+                "rev": "test_revition"
+            }));
+            let rssRequestHandler = new RssRequestHandler();
+            rssRequestHandler.addDocument(document.name, document).then((response) => {
+                assert.strictEqual("NewsClick", response.id);
+                done();
+            });
+        });
+
+        it("should return Error IF Document Id is not there", (done) => {
+
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": "",
+                "url": "http://www.newsclick.in"
+            };
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.reject("unexpected response from the db"));
+            let rssRequestHandler = new RssRequestHandler();
+            rssRequestHandler.addDocument(document.name, document).catch((error) => {
+                assert.strictEqual("unexpected response from the db", error);
+                done();
             });
         });
     });
