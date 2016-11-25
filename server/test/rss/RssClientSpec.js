@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0, init-declarations:0*/
 
-
 import RssClient from "../../src/rss/RssClient";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -346,7 +345,7 @@ describe("RssClient", () => {
 
     describe("Add Document", () => {
         let couchClient = null;
-        beforeEach("Web Request Handler", () => {
+        beforeEach("RssClient", () => {
             sandbox = sinon.sandbox.create();
             let applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
@@ -361,7 +360,7 @@ describe("RssClient", () => {
             sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
         });
 
-        afterEach("FacebookAccessToken", () => {
+        afterEach("RssClient", () => {
             sandbox.restore();
         });
 
@@ -390,10 +389,71 @@ describe("RssClient", () => {
             let webRequestHandler = RssClient.instance();
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
             getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
-            webRequestHandler.addDocument("", {}).catch((error) => {
+            webRequestHandler.addDocument("", {}).catch((error) => { //eslint-disable-line no-shadow
                 assert.strictEqual("unexpected response from the db", error);
                 done();
             });
         });
     });
+
+    describe("Search URLS", () => {
+        let couchClient = null;
+        beforeEach("RssClient", () => {
+            sandbox = sinon.sandbox.create();
+            let applicationConfig = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(applicationConfig, "adminDetails").returns({
+                "couchDbAdmin": {
+                    "username": "adminUser",
+                    "password": "adminPwd"
+                },
+                "db": "adminDb"
+            });
+            couchClient = new CouchClient();
+            sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
+        });
+
+        afterEach("RssClient", () => {
+            sandbox.restore();
+        });
+
+        it("should return the default URL Documents", (done) => {
+            let body = { "selector": { "url": { "$eq": "the" } } };
+            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
+            getDocStub.withArgs(body).returns(Promise.resolve({
+                "docs": [{
+                    "_id": "1",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                {
+                    "_id": "2",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "url test",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }]
+            }));
+            let rssClient = RssClient.instance();
+            rssClient.searchURL(body).then((document) => {
+                const zero = 0;
+                assert.strictEqual("web", document.docs[zero].sourceType);
+                done();
+            });
+        });
+
+        it("should reject with an error if the URL document rejects with an error when body is null", (done) => {
+            let body = null;
+            let rssClient = RssClient.instance();
+            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
+            getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
+            rssClient.searchURL(body).catch((error) => {  //eslint-disable-line no-shadow
+                assert.strictEqual("No selector found", error);
+                done();
+            });
+        });
+    });
+
 });
