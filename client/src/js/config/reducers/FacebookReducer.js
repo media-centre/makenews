@@ -1,5 +1,5 @@
 import {
-    FACEBOOK_GOT_PROFILES,
+    FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_GOT_CONFIGURED_PROFILES,
     FACEBOOK_CHANGE_CURRENT_TAB,
@@ -19,10 +19,10 @@ export const facebookConfiguredUrls = (state = { "profiles": [], "pages": [], "g
     }
 };
 
-export const facebookProfiles = (state = [], action = {}) => {
+export const facebookSources = (state = [], action = {}) => {
     switch(action.type) {
-    case FACEBOOK_GOT_PROFILES: {
-        return action.profiles;
+    case FACEBOOK_GOT_SOURCES: {
+        return action.sources;
     }
     case FACEBOOK_ADD_PROFILE: {
         return Object.assign([], addSource(state, action.profile.id));

@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { facebookGetProfiles, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
-        this.props.dispatch(facebookGetProfiles());
+        this.props.dispatch(getSourcesOf(this.props.currentTab));
         this.props.dispatch(getConfiguredProfiles());
     }
 

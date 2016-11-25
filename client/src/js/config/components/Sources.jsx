@@ -5,15 +5,13 @@ import { connect } from "react-redux";
 
 export class Sources extends Component {
 
-    _renderResults() {
-        let mappedIndex = R.addIndex(R.map);
-        return mappedIndex((source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} />, this.props.sources);
-    }
-
     render() {
         return (
             <div className="source-results">
-                { this._renderResults() }
+                { R.addIndex(R.map)(
+                    (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} />,
+                    this.props.sources
+                ) }
             </div>
         );
     }
@@ -21,7 +19,7 @@ export class Sources extends Component {
 
 function mapToStore(store) {
     return {
-        "sources": store.facebookProfiles
+        "sources": store.facebookSources
     };
 }
 

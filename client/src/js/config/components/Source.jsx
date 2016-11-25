@@ -7,7 +7,10 @@ export default class Source extends Component {
         return (
             <div className={this.props.source.added ? "source added" : "source"}>
                 <div className="source__icon">
-                    <img src={this.props.source.picture.data.url} />
+                    { this.props.source.picture ?
+                        <img src={this.props.source.picture.data.url} />
+                        : <img src="./images/default-source-icon.jpg" />
+                    }
                 </div>
                 <div className="source__title">
                     { this.props.source.name }

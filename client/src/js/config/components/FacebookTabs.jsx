@@ -1,19 +1,19 @@
 /* eslint react/jsx-no-literals:0 */
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { PROFILES, PAGES, GROUPS, facebookSourceTabSwitch } from "../actions/FacebookConfigureActions";
+import { PROFILES, PAGES, GROUPS, getSourcesOf } from "../actions/FacebookConfigureActions";
 
 export class FacebookTabs extends Component {
     render() {
         return (
             <nav className="fb-sources-tab">
-                <a onClick={() => this.props.dispatch(facebookSourceTabSwitch(PROFILES))} className={this.props.currentTab === PROFILES ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
+                <a onClick={() => this.props.dispatch(getSourcesOf(PROFILES))} className={this.props.currentTab === PROFILES ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
                     Profiles
                 </a>
-                <a onClick={() => this.props.dispatch(facebookSourceTabSwitch(PAGES))} className={this.props.currentTab === PAGES ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
+                <a onClick={() => this.props.dispatch(getSourcesOf(PAGES, "The Hindu"))} className={this.props.currentTab === PAGES ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
                     Pages
                 </a>
-                <a onClick={() => this.props.dispatch(facebookSourceTabSwitch(GROUPS))} className={this.props.currentTab === GROUPS ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
+                <a onClick={() => this.props.dispatch(getSourcesOf(GROUPS))} className={this.props.currentTab === GROUPS ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
                     Groups
                 </a>
             </nav>

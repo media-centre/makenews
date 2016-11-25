@@ -620,14 +620,12 @@ describe("PouchClient", () => {
                 });
             });
         });
-        it("should fetch surf filter document", (done) => {
-            PouchClient.fetchDocuments("category/surfFilter", {
+        it("should fetch surf filter document", async () => {
+            let docs = await PouchClient.fetchDocuments("category/surfFilter", {
                 "include_docs": true
-            }).then((docs) => {
-                assert.deepEqual([{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }], docs[0].categoryIds);
-                assert.deepEqual(["image", "video", "text"], docs[0].content);
-                done();
             });
+            assert.deepEqual([{ "categoryId": "sports_category_id_01", "name": "category name 01" }, { "categoryId": "politics_category_id_02", "name": "category name 02" }], docs[0].categoryIds);
+            assert.deepEqual(["image", "video", "text"], docs[0].content);
         });
     });
 

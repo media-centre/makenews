@@ -1,11 +1,11 @@
 import {
-    FACEBOOK_GOT_PROFILES,
+    FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_GOT_CONFIGURED_PROFILES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PAGES
 } from "../../src/js/config/actions/FacebookConfigureActions";
-import { facebookProfiles, facebookConfiguredUrls, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
+import { facebookSources, facebookConfiguredUrls, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
 import { expect } from "chai";
 
 describe("Facebook Reducer", () => {
@@ -32,19 +32,19 @@ describe("Facebook Reducer", () => {
 
     describe("Facebook Profiles", () => {
         it("should return an empty list by default when asked facebook sources", () => {
-            expect([]).to.deep.equal(facebookProfiles());
+            expect([]).to.deep.equal(facebookSources());
         });
 
         it("should return the list of profiles when it got the profiles", () => {
             let profiles = [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }];
-            let action = { "type": FACEBOOK_GOT_PROFILES, "profiles": profiles };
-            expect(facebookProfiles([], action)).to.deep.equal(profiles);
+            let action = { "type": FACEBOOK_GOT_SOURCES, "sources": profiles };
+            expect(facebookSources([], action)).to.deep.equal(profiles);
         });
 
         it("should add the added property to the source", () => {
             let state = [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }];
             let action = { "type": FACEBOOK_ADD_PROFILE, "profile": { "id": 1, "name": "Profile" } };
-            expect(facebookProfiles(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
+            expect(facebookSources(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
         });
     });
 
