@@ -1,21 +1,21 @@
-import SourcesResults from "../../../src/js/config/components/SourcesResults";
+import SourcePane from "../../../src/js/config/components/SourcePane";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
-import Source from "../../../src/js/config/components/Source";
+import Sources from "../../../src/js/config/components/Sources";
 import FacebookTabs from "../../../src/js/config/components/FacebookTabs";
 import { findAllWithType } from "react-shallow-testutils";
 
-describe("Source Results", () => {
+describe("SourcePane", () => {
     let sources = null;
     let result = null;
 
-    beforeEach("Source Results", () => {
+    beforeEach("SourcePane", () => {
         sources = [
             { "name": "Profile 1" }
         ];
         let renderer = TestUtils.createRenderer();
-        renderer.render(<SourcesResults sources={sources} dispatch={()=>{}}/>);
+        renderer.render(<SourcePane sources={sources} dispatch={()=>{}}/>);
         result = renderer.getRenderOutput();
     });
 
@@ -29,8 +29,8 @@ describe("Source Results", () => {
         expect(button.type).to.equal("button");
     });
 
-    it("should render the source URLs", () => {
-        let renderedSources = findAllWithType(result, Source);
+    it("should have Sources", () => {
+        let renderedSources = findAllWithType(result, Sources);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
     });
 });
