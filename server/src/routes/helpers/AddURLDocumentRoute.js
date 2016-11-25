@@ -18,15 +18,15 @@ export default class AddURLDocumentRoute extends Route {
 
     handle() { //eslint-disable-line consistent-return
         if (!this.valid()) {
-            RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
+            RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
             return this._handleInvalidRoute();
         }
         let rssRequestHandler = RssRequestHandler.instance();
         rssRequestHandler.addDocument(this.url.name, this.url).then(document => {
-            RouteLogger.instance().debug("SearchURLsRoute:: successfully saved the document");
+            RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
             this._handleSuccess(document);
         }).catch(error => { //eslint-disable-line
-            RouteLogger.instance().debug("SearchURLsRoute:: failed to save the document Error: %s", error);
+            RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %s", error);
             this._handleBadRequest();
         });
     }

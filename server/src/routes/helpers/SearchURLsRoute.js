@@ -22,7 +22,7 @@ export default class SearchURLsRoute extends Route {
         }
         let rssRequestHandler = RssRequestHandler.instance();
         rssRequestHandler.searchUrl(this.url).then(feeds => {
-            RouteLogger.instance().debug("Web URL's Route:: successfully searched for the url %s .", this.url);
+            RouteLogger.instance().debug("SearchURLsRoute:: successfully searched for the url %s .", this.url);
             this._handleSuccess(feeds);
         }).catch(error => { //eslint-disable-line
             RouteLogger.instance().debug("SearchURLsRoute:: failed to search for url  %s. Error: %s", this.url, error);

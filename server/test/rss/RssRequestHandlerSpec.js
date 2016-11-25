@@ -1,9 +1,6 @@
 /* eslint init-declarations:0*/
 
 import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
-import ApplicationConfig from "../../src/config/ApplicationConfig";
-import CouchClient from "../../src/CouchClient";
-import AdminDbClient from "../../src/db/AdminDbClient";
 import { assert, expect } from "chai";
 import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
@@ -11,18 +8,9 @@ import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 
 describe("Rss Request Handler", () => {
     describe("search Url", () => {
-        let couchClient = null, sandbox = null;
+        let sandbox = null;
         beforeEach("Rss Request Handler", () => {
             sandbox = sinon.sandbox.create();
-            let applicationConfig = new ApplicationConfig();
-            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
-            sandbox.stub(applicationConfig, "adminDetails").returns({
-                "username": "adminUser",
-                "password": "adminPwd",
-                "db": "adminDb"
-            });
-            couchClient = new CouchClient();
-            sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
         });
 
         afterEach("Rss Request Handler", () => {
@@ -37,8 +25,10 @@ describe("Rss Request Handler", () => {
                 }
             };
             let rssRequestHandler = RssRequestHandler.instance();
-            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
-            getDocStub.withArgs(body).returns(Promise.resolve({
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            rssClientMock.withArgs(body).returns(Promise.resolve({
                 "docs": [{
                     "_id": "1",
                     "docType": "test",
@@ -63,9 +53,11 @@ describe("Rss Request Handler", () => {
 
         it("should reject with an error if the URL document rejects with an error", (done) => {
             let body = null;
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            rssClientMock.withArgs(body).returns(Promise.reject("No selector found"));
             let rssRequestHandler = RssRequestHandler.instance();
-            let getDocStub = sinon.stub(couchClient, "getUrlDocument");
-            getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
             rssRequestHandler.searchUrl(body).catch((error) => {
                 assert.strictEqual("No selector found", error);
                 done();

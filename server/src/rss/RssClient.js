@@ -3,7 +3,7 @@ import request from "request";
 import Logger from "../logging/Logger";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
-import AdminDbClient from "../db/AdminDbClient"
+import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
@@ -160,6 +160,21 @@ export default class RssClient {
                     resolve(response);
                 }).catch((error) => {
                     RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+                    reject(error);
+                });
+            });
+        });
+    }
+
+    searchURL(selector) {
+        return new Promise((resolve, reject) => {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
+                dbInstance.getUrlDocument(selector).then((document) => {
+                    RssClient.logger().debug("RssClient:: successfully fetched feeds for the selector.");
+                    resolve(document);
+                }).catch((error) => {
+                    RssClient.logger().error("RssClient:: selector is not a proper feed url. Error: %j.", error);
                     reject(error);
                 });
             });
