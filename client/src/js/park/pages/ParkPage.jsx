@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from "react";
-import AllFeeds from "../../surf/components/AllFeeds.jsx";
+import AllFeeds from "../../surf/components/AllFeeds";
 import { unparkFeedAsync, displayParkedFeedsAsync } from "../actions/ParkActions";
-import { highLightTabAction } from "../../tabs/TabActions.js";
-import ParkFeedActionComponent from "../components/ParkFeedActionComponent.jsx";
-import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions.js";
+import { highLightTabAction } from "../../tabs/TabActions";
+import ParkFeedActionComponent from "../components/ParkFeedActionComponent";
+import { initialiseParkedFeedsCount } from "../../feeds/actions/FeedsActions";
 import { connect } from "react-redux";
 import Toast from "../../utils/custom_templates/Toast";
 

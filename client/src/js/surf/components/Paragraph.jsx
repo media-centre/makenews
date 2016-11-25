@@ -1,9 +1,9 @@
 /* eslint react/no-danger:0 max-len:0, no-set-state:0 */
 import React, { Component, PropTypes } from "react";
-import FeedHeader from "./FeedHeader.jsx";
-import getHtmlContent from "../../utils/HtmContent.js";
+import FeedHeader from "./FeedHeader";
+import getHtmlContent from "../../utils/HtmContent";
 import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
-import Toast from "../../utils/custom_templates/Toast.js";
+import Toast from "../../utils/custom_templates/Toast";
 
 export default class Paragraph extends Component {
     constructor(props) {

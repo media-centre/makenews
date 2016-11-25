@@ -3,7 +3,7 @@
 import request from "supertest";
 import { expect, assert } from "chai";
 import argv from "yargs";
-import config from "../config/application.json";
+import config from "../config/application";
 
 let env = argv.client_environment || "default";
 describe("SecurityCheckSpec", () => {

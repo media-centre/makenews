@@ -5,7 +5,7 @@ import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import CouchSession from "../src/CouchSession";
 import { expect } from "chai";
 import argv from "yargs";
-import config from "../config/application.json";
+import config from "../config/application";
 
 let env = argv.client_environment || "default";
 describe("RenewSession", () => {
