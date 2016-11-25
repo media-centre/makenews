@@ -35,6 +35,5 @@ describe("Configure Pane", () => {
         let result = renderer.getRenderOutput();
         let renderedSources = findAllWithType(result, SourcePane);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
-        expect(renderedSources[0].props.dispatch).to.deep.equal(dispatch); //eslint-disable-line no-magic-numbers
     });
 });

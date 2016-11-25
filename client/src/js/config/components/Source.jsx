@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
 import React, { Component, PropTypes } from "react";
-import { addFacebookProfile } from "./../actions/FacebookConfigureActions";
+import { addSourceToConfigureListOf } from "./../actions/FacebookConfigureActions";
 
 export default class Source extends Component {
     render() {
@@ -20,7 +20,7 @@ export default class Source extends Component {
                         <img src="./images/success-arrow.png"/>
                     </div>)
                     :
-                    (<div className="source__add-icon source__action-icon" onClick={() => this.props.dispatch(addFacebookProfile(this.props.source))}>
+                    (<div className="source__add-icon source__action-icon" onClick={() => this.props.dispatch(addSourceToConfigureListOf(this.props.currentSourceType, this.props.source))}>
                         <img src="./images/add-btn.png"/>
                     </div>)
                 }
@@ -31,5 +31,6 @@ export default class Source extends Component {
 
 Source.propTypes = {
     "source": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "currentSourceType": PropTypes.string.isRequired
 };

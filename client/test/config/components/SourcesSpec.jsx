@@ -15,7 +15,7 @@ describe("SourcePane", () => {
             { "name": "Profile 2" }
         ];
         let renderer = TestUtils.createRenderer();
-        renderer.render(<Sources sources={sources} dispatch={()=>{}}/>);
+        renderer.render(<Sources sources={sources} dispatch={()=>{}} currentTab="Profiles" />);
         result = renderer.getRenderOutput();
     });
 

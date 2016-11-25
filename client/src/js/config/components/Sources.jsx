@@ -9,7 +9,7 @@ export class Sources extends Component {
         return (
             <div className="source-results">
                 { R.addIndex(R.map)(
-                    (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} />,
+                    (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>,
                     this.props.sources
                 ) }
             </div>
@@ -19,13 +19,15 @@ export class Sources extends Component {
 
 function mapToStore(store) {
     return {
-        "sources": store.facebookSources
+        "sources": store.facebookSources,
+        "currentTab": store.facebookCurrentSourceTab
     };
 }
 
 Sources.propTypes = {
     "sources": PropTypes.array.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "currentTab": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(Sources);

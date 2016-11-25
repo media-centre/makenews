@@ -1,6 +1,7 @@
 import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
+    FACEBOOK_ADD_PAGE,
     FACEBOOK_GOT_CONFIGURED_PROFILES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PAGES
@@ -18,9 +19,15 @@ describe("Facebook Reducer", () => {
         });
 
         it("should add a profile to the state when asked for adding a profile", () => {
-            let action = { "type": FACEBOOK_ADD_PROFILE, "profile": { "name": "Profile1" } };
+            let action = { "type": FACEBOOK_ADD_PROFILE, "source": { "name": "Profile1" } };
             let state = { "profiles": [], "pages": [], "groups": [] };
             expect(facebookConfiguredUrls(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
+        });
+
+        it("should add a profile to the state when asked for adding a page", () => {
+            let action = { "type": FACEBOOK_ADD_PAGE, "source": { "name": "Page1" } };
+            let state = { "profiles": [], "pages": [], "groups": [] };
+            expect(facebookConfiguredUrls(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
         });
 
         it("should return updated state with configured profiles", () => {
@@ -30,7 +37,7 @@ describe("Facebook Reducer", () => {
         });
     });
 
-    describe("Facebook Profiles", () => {
+    describe("Facebook Sources", () => {
         it("should return an empty list by default when asked facebook sources", () => {
             expect([]).to.deep.equal(facebookSources());
         });
@@ -41,10 +48,16 @@ describe("Facebook Reducer", () => {
             expect(facebookSources([], action)).to.deep.equal(profiles);
         });
 
-        it("should add the added property to the source", () => {
+        it("should add the added=true property to the configured facebook profile", () => {
             let state = [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }];
-            let action = { "type": FACEBOOK_ADD_PROFILE, "profile": { "id": 1, "name": "Profile" } };
+            let action = { "type": FACEBOOK_ADD_PROFILE, "source": { "id": 1, "name": "Profile" } };
             expect(facebookSources(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
+        });
+
+        it("should add the added=true property to the configured facebook page", () => {
+            let state = [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }];
+            let action = { "type": FACEBOOK_ADD_PAGE, "source": { "id": 1, "name": "Profile" } };
+            expect(facebookSources(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
         });
     });
 

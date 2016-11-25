@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import Sources from "./Sources";
 import FacebookTabs from "./FacebookTabs";
 
@@ -7,7 +7,7 @@ export default class SourcePane extends Component {
     render() {
         return (
             <div className="sources-suggestions">
-                <FacebookTabs dispatch={this.props.dispatch} />
+                <FacebookTabs />
                 <button className="add-all">
                     <img src="./images/add-btn-dark.png"/>
                     {"Add All"}
@@ -17,7 +17,3 @@ export default class SourcePane extends Component {
         );
     }
 }
-
-SourcePane.propTypes = {
-    "dispatch": PropTypes.func.isRequired
-};

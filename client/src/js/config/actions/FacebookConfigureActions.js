@@ -4,6 +4,7 @@ import DbParameters from "../../db/DbParameters";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
+export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
 export const FACEBOOK_GOT_CONFIGURED_PROFILES = "FACEBOOK_GOT_CONFIGURED_PROFILES";
 export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
 export const PROFILES = "Profiles";
@@ -24,11 +25,27 @@ export function configuredProfilesReceived(profiles) {
     };
 }
 
-export function addFacebookProfile(profile) {
-    return {
-        "type": FACEBOOK_ADD_PROFILE,
-        profile
-    };
+export function addSourceToConfigureListOf(souceType, source) {
+    switch (souceType) {
+    case PROFILES: {
+        return {
+            "type": FACEBOOK_ADD_PROFILE,
+            source
+        };
+    }
+    case PAGES: {
+        return {
+            "type": FACEBOOK_ADD_PAGE,
+            source
+        };
+    }
+    default: {
+        return {
+            "type": FACEBOOK_ADD_PROFILE,
+            source
+        };
+    }
+    }
 }
 
 export function facebookSourceTabSwitch(currentTab) {

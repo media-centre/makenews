@@ -35,7 +35,7 @@ describe("Facebook Configure Actions", () => {
             expect(action.profiles).to.deep.equal(profiles);
         });
 
-        it("should dispatch FACEBOOK_GOT_CONFIGURED_PROFILES once it gets the configured profiles", (done) => {
+        it("should dispatch FACEBOOK_GOT_CONFIGURED_PROFILES once it gets the configured profiles from server", (done) => {
             let data = { "profiles": [{ "name": "profile1" }, { "name": "profile2" }] };
             let dbParams = new DbParameters();
             sandbox.mock(DbParameters).expects("instance").returns(dbParams);
@@ -105,6 +105,26 @@ describe("Facebook Configure Actions", () => {
             let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
             let store = mockStore({}, actions, done);
             store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
+        });
+    });
+    
+    describe("add source to configred list", () => {
+        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, () => {
+            let event = FBActions.addSourceToConfigureListOf(FBActions.PROFILES, { "name": "something" });
+            expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PROFILE);
+            expect(event.source).to.deep.equal({ "name": "something" });
+        });
+
+        it(`should dispatch ${FBActions.FACEBOOK_ADD_PAGE} when requested for adding profile`, () => {
+            let event = FBActions.addSourceToConfigureListOf(FBActions.PAGES, { "name": "something" });
+            expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PAGE);
+            expect(event.source).to.deep.equal({ "name": "something" });
+        });
+
+        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} by default`, () => {
+            let event = FBActions.addSourceToConfigureListOf("", { "name": "something" });
+            expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PROFILE);
+            expect(event.source).to.deep.equal({ "name": "something" });
         });
     });
 });
