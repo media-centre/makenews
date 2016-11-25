@@ -29,7 +29,7 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
-    getUrlDocument(body, customHeaders = {}) {
+    findDocuments(body, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
         return this.post(path, body, customHeaders);
     }

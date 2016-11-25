@@ -72,7 +72,7 @@ export default class RssClient {
             links.add(root(this).attr("href"));
         });
 
-        if(links.size === 0) {   //eslint-disable-line no-magic-numbers
+        if (links.size === 0) {   //eslint-disable-line no-magic-numbers
             this.handleUrlError(url, "no rss links found");
         } else {
             return await this.getCrawledRssData(links, url);
@@ -83,7 +83,7 @@ export default class RssClient {
     async getCrawledRssData(links, url) {  //eslint-disable-line consistent-return
         let linksIterator = links.values();
         let link = linksIterator.next().value;
-        while(link) {
+        while (link) {
             try {
                 let feeds = await this.getRssData(link, false);
                 feeds.url = link;
@@ -126,7 +126,7 @@ export default class RssClient {
                 "uri": url,
                 "timeout": 6000
             }, (error, response, body) => {
-                if(error) {
+                if (error) {
                     RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
                     reject({ "message": "Request failed for " + url });
                 }
@@ -151,26 +151,34 @@ export default class RssClient {
         });
     }
 
-    addDocument(documentId, document) {
-        return new Promise((resolve, reject) => {
+    async addURL(url) { //eslint-disable-line consistent-return
+        try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
-                dbInstance.saveDocument(documentId, document).then((response) => {
-                    RssClient.logger().debug("RssClient:: successfully added Document to database.");
-                    resolve(response);
-                }).catch((error) => {
-                    RssClient.logger().error("RssClient:: Error while adding document %j.", error);
-                    reject(error);
-                });
-            });
-        });
+            let response = await this.fetchRssFeeds(url);
+            let name = response.meta.title;
+            let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            await dbInstance.saveDocument(url, document);
+            RssClient.logger().debug("RssClient:: successfully added Document to database.");
+            return "URL added to Database";
+        }catch(error) {
+            RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+            this.handleUrlError(url, error);
+        }
     }
 
-    searchURL(selector) {
+    searchURL(key) {
         return new Promise((resolve, reject) => {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
-                dbInstance.getUrlDocument(selector).then((document) => {
+                let selector = {
+                    "selector": {
+                        "name": {
+                            "$eq": key
+                        }
+                    }
+                };
+                dbInstance.findDocuments(selector).then((document) => {
                     RssClient.logger().debug("RssClient:: successfully fetched feeds for the selector.");
                     resolve(document);
                 }).catch((error) => {

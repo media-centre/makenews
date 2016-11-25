@@ -22,7 +22,7 @@ export default class AddURLDocumentRoute extends Route {
             return this._handleInvalidRoute();
         }
         let rssRequestHandler = RssRequestHandler.instance();
-        rssRequestHandler.addDocument(this.url.name, this.url).then(document => {
+        rssRequestHandler.addURL(this.url).then(document => {
             RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
             this._handleSuccess(document);
         }).catch(error => { //eslint-disable-line

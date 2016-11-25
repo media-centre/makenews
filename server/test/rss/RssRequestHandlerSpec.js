@@ -133,7 +133,7 @@ describe("Rss Request Handler", () => {
             };
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.resolve({
+            sandbox.mock(rssMock).expects("addURL").withArgs(document.name, document).returns(Promise.resolve({
                 "ok": "true",
                 "id": "NewsClick",
                 "rev": "test_revition"
@@ -155,7 +155,7 @@ describe("Rss Request Handler", () => {
             };
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.reject("unexpected response from the db"));
+            sandbox.mock(rssMock).expects("addURL").withArgs(document.name, document).returns(Promise.reject("unexpected response from the db"));
             let rssRequestHandler = new RssRequestHandler();
             rssRequestHandler.addDocument(document.name, document).catch((error) => {
                 assert.strictEqual("unexpected response from the db", error);
