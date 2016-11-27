@@ -16,7 +16,7 @@ describe("Rss Request Handler", () => {
         afterEach("Rss Request Handler", () => {
             sandbox.restore();
         });
-        it("should return the default URL Document", (done) => {
+        it("should return the default URL Document", async() => {
             let body = {
                 "selector": {
                     "url": {
@@ -44,24 +44,28 @@ describe("Rss Request Handler", () => {
                     "url": "http://www.thehindu.com/sport/?service=rss"
                 }]
             }));
-            rssRequestHandler.searchUrl(body).then(document => {
+            try {
+                let document = await rssRequestHandler.searchUrl(body);
                 const zero = 0;
                 assert.strictEqual("web", document.docs[zero].sourceType);
-                done();
-            });
+            }catch (err) {
+                assert.fail(err);
+            }
         });
 
-        it("should reject with an error if the URL document rejects with an error", (done) => {
+        it("should reject with an error if the URL document rejects with an error", async() => {
             let body = null;
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
             rssClientMock.withArgs(body).returns(Promise.reject("No selector found"));
             let rssRequestHandler = RssRequestHandler.instance();
-            rssRequestHandler.searchUrl(body).catch((error) => {
-                assert.strictEqual("No selector found", error);
-                done();
-            });
+            try {
+                await rssRequestHandler.searchUrl(body);
+                assert.fail();
+            }catch (err) {
+                assert.strictEqual("No selector found", err);
+            }
         });
     });
 
@@ -158,39 +162,25 @@ describe("Rss Request Handler", () => {
         });
 
         it("should return the sucess response for correct URL Document", (done) => {
-            let document = {
-                "docType": "source",
-                "sourceType": "web",
-                "name": "NewsClick",
-                "url": "http://www.newsclick.in"
-            };
+            let url = "http://www.newsclick.in";
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.resolve({
-                "ok": "true",
-                "id": "NewsClick",
-                "rev": "test_revition"
-            }));
+            sandbox.mock(rssMock).expects("addURL").withArgs(url).returns(Promise.resolve({ "message": "URL added to Database" }));
             let rssRequestHandler = new RssRequestHandler();
-            rssRequestHandler.addDocument(document.name, document).then((response) => {
-                assert.strictEqual("NewsClick", response.id);
+            rssRequestHandler.addURL(url).then((response) => {
+                assert.strictEqual("URL added to Database", response.message);
                 done();
             });
         });
 
-        it("should return Error IF Document Id is not there", (done) => {
+        it("should return Error If url is invalid", (done) => {
 
-            let document = {
-                "docType": "source",
-                "sourceType": "web",
-                "name": "",
-                "url": "http://www.newsclick.in"
-            };
+            let url = "http://www.newsclick.in";
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            sandbox.mock(rssMock).expects("addDocument").withArgs(document.name, document).returns(Promise.reject("unexpected response from the db"));
+            sandbox.mock(rssMock).expects("addURL").withArgs(url).returns(Promise.reject("unexpected response from the db"));
             let rssRequestHandler = new RssRequestHandler();
-            rssRequestHandler.addDocument(document.name, document).catch((error) => {
+            rssRequestHandler.addURL(url).catch((error) => {
                 assert.strictEqual("unexpected response from the db", error);
                 done();
             });

@@ -364,7 +364,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it.only("should Save the Document", async() => {
+        it("should Save the Document", async() => {
             url = "http://www.newsclick.in";
             let name = "NewsClick";
             let document = {
@@ -390,14 +390,34 @@ describe("RssClient", () => {
             }
         });
 
-        xit("should return Error IF Document Id is not there", (done) => {
+        it("should return Error If url is invalid", async() => {
             let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            fetchRssFeedsStub.withArgs("").returns(Promise.reject("[object Object] is not a proper feed"));
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
             getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
-            rssClient.addURL({}).catch((error) => { //eslint-disable-line no-shadow
-                assert.strictEqual("unexpected response from the db", error);
-                done();
-            });
+            try {
+                await rssClient.addURL({});
+                assert.fail();
+            } catch (err) {
+                assert.deepEqual(err.message, "[object Object] is not a proper feed");
+            }
+        });
+
+        it("should return Error If save document rejects with an error", async() => {
+            url = "http://www.newsclick.in";
+            let name = "NewsClick";
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            fetchRssFeedsStub.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let getDocStub = sandbox.stub(couchClient, "saveDocument");
+            getDocStub.withArgs(url, {}).returns(Promise.reject("unexpected response from the db"));
+            try {
+                await rssClient.addURL({});
+                assert.fail();
+            } catch (err) {
+                assert.deepEqual(err.message, "[object Object] is not a proper feed");
+            }
         });
     });
 
@@ -422,7 +442,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should return the default URL Documents", (done) => {
+        it("should return the default URL Documents", async() => {
             let key = "the";
             let body = { "selector": { "name": { "$eq": key } } };
             let getDocStub = sinon.stub(couchClient, "findDocuments");
@@ -443,26 +463,29 @@ describe("RssClient", () => {
                     "url": "http://www.thehindu.com/sport/?service=rss"
                 }]
             }));
-            rssClient.searchURL(key).then((document) => {
+            try {
+                let document = await rssClient.searchURL(key);
                 const zero = 0;
                 assert.strictEqual("web", document.docs[zero].sourceType);
-                done();
-            });
+            }catch (err) {
+                assert.fail(err);
+            }
         });
 
-        it("should reject with an error if the URL document rejects with an error when key is null", (done) => {
+        it("should reject with an error if the URL document rejects with an error when key is null", async() => {
             let key = null;
             let body = { "selector": { "name": { "$eq": key } } };
             let rssClient = RssClient.instance();
             let getDocStub = sinon.stub(couchClient, "findDocuments");
             getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
-            rssClient.searchURL(key).catch((error) => {  //eslint-disable-line no-shadow
-                assert.strictEqual("No selector found", error);
-                done();
-            });
+            try {
+                await rssClient.searchURL(key);
+            }catch (err) {
+                assert.strictEqual("No selector found", err);
+            }
         });
 
-        it("should reject with an error if the URL document rejects with an error when key is empty string", (done) => {
+        it("should reject with an error if the URL document rejects with an error when key is empty string", async() => {
             let key = "";
             let body = { "selector": { "name": { "$eq": key } } };
             let rssClient = RssClient.instance();
@@ -483,11 +506,13 @@ describe("RssClient", () => {
                     "url": "http://www.hindu.com/sport/?service=rss"
                 }]
             }));
-            rssClient.searchURL(key).then((document) => {
+            try {
+                let document = await rssClient.searchURL(key);
                 const zero = 0;
                 assert.strictEqual("web", document.docs[zero].sourceType);
-                done();
-            });
+            }catch(err) {
+                assert.fail(err);
+            }
         });
     });
 

@@ -16,15 +16,15 @@ export default class AddURLDocumentRoute extends Route {
         return true;
     }
 
-    handle() { //eslint-disable-line consistent-return
+    handle() {                                                                              //eslint-disable-line consistent-return
         if (!this.valid()) {
             RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
             return this._handleInvalidRoute();
         }
         let rssRequestHandler = RssRequestHandler.instance();
-        rssRequestHandler.addURL(this.url).then(document => {
+        rssRequestHandler.addURL(this.url).then(response => {
             RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
-            this._handleSuccess(document);
+            this._handleSuccess(response);
         }).catch(error => { //eslint-disable-line
             RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %s", error);
             this._handleBadRequest();
