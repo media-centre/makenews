@@ -26,21 +26,20 @@ export default class RssRequestHandler {
         return RssClient.instance();
     }
 
-    searchUrl(key) {
-        return new Promise((resolve, reject) => {
-            this.rssClient().searchURL(key).then(document => {
-                RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
-                resolve(document);
-            }).catch(error => {
-                RssRequestHandler.logger().error("RssRequestHandler:: Error while fething documents for selector. Error: %j", error);
-                reject(error);
-            });
-        });
+    async searchUrl(key) {
+        try {
+            let document = await this.rssClient().searchURL(key);
+            RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
+            return document;
+        }catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while fething documents for selector. Error: %j", error);
+            throw error;
+        }
     }
 
-    addDocument(documentId, document) {
+    addURL(url) {
         return new Promise((resolve, reject) => {
-            this.rssClient().addURL(document).then((response) => {
+            this.rssClient().addURL(url).then((response) => {
                 RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
                 resolve(response);
             }).catch((error) => {

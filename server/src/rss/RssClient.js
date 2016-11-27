@@ -151,7 +151,7 @@ export default class RssClient {
         });
     }
 
-    async addURL(url) { //eslint-disable-line consistent-return
+    async addURL(url) {                                                     //eslint-disable-line consistent-return
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             let response = await this.fetchRssFeeds(url);
@@ -167,26 +167,24 @@ export default class RssClient {
         }
     }
 
-    searchURL(key) {
-        return new Promise((resolve, reject) => {
+    async searchURL(key) {                                                  //eslint-disable-line consistent-return
+        try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db).then(dbInstance => {
-                let selector = {
-                    "selector": {
-                        "name": {
-                            "$eq": key
-                        }
+            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            let selector = {
+                "selector": {
+                    "name": {
+                        "$eq": key
                     }
-                };
-                dbInstance.findDocuments(selector).then((document) => {
-                    RssClient.logger().debug("RssClient:: successfully fetched feeds for the selector.");
-                    resolve(document);
-                }).catch((error) => {
-                    RssClient.logger().error("RssClient:: selector is not a proper feed url. Error: %j.", error);
-                    reject(error);
-                });
-            });
-        });
+                }
+            };
+            let document = dbInstance.findDocuments(selector);
+            RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
+            return document;
+        }catch (error) {
+            RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
+            this.handleRequestError(key, error);
+        }
     }
 
     handleUrlError(url, error) {

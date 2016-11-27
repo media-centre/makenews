@@ -2,7 +2,7 @@ import AddURLDocumentRoute from "../../../src/routes/helpers/AddURLDocumentRoute
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
 import sinon from "sinon";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 describe("Add URL Document Route", () => {
     function mockResponse(done, expectedValues) {
@@ -23,8 +23,8 @@ describe("Add URL Document Route", () => {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
             },
-            "json": () => {
-                assert.strictEqual("web", expectedValues.json.document.sourceType);
+            "json": (jsonData) => {
+                expect(jsonData).to.deep.equal(expectedValues.json);
                 done();
             }
         };
@@ -36,9 +36,7 @@ describe("Add URL Document Route", () => {
         let request = {
             "body": {
                 "query": {
-                    "url": {
-                        "name": null
-                    }
+                    "url": "Invalid url"
                 }
             }
         };
@@ -62,20 +60,14 @@ describe("Add URL Document Route", () => {
             }
         };
 
-        let document = {
-            "id": request.body.query.url.name,
-            "sourceType": "web",
-            "url": request.body.query.url
-        };
-
         let rssRequestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
         let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
-        requestHandlerMock.withArgs(request.body.query.url.name, request.body.query.url).returns(Promise.resolve(document));
+        requestHandlerMock.withArgs(request.body.query.url).returns(Promise.resolve({ "message": "URL added to Database" }));
 
         let response = mockResponseSuccess(done, {
             "status": HttpResponseHandler.codes.OK,
-            "json": { document }
+            "json": { "message": "URL added to Database" }
         });
 
         new AddURLDocumentRoute(request, response, {}).handle();
