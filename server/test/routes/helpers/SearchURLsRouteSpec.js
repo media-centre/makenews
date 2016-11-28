@@ -5,20 +5,19 @@ import { expect, assert } from "chai";
 import sinon from "sinon";
 
 describe("Search Urls Route", () => {
-    function mockResponse(done, expectedValues) {
+    function mockResponse(expectedValues) {
         let response = {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
             },
             "json": (jsonData) => {
                 expect(jsonData).to.deep.equal(expectedValues.json);
-                done();
             }
         };
         return response;
     }
 
-    function mockResponseSuccess(done, expectedValues) {
+    function mockResponseSuccess(expectedValues) {
         let response = {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
@@ -26,24 +25,23 @@ describe("Search Urls Route", () => {
             "json": () => {
                 const zero = 0;
                 assert.strictEqual("web", expectedValues.json.feeds.docs[zero].sourceType);
-                done();
             }
         };
         return response;
     }
 
-    it("should return bad request if url is not present in request", (done) => {
+    it("should return bad request if url is not present in request", async () => {
         let request = {
             "query": {
                 "url": {}
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+        let response = mockResponse({ "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
-        new SearchURLsRoute(request, response, {}).handle();
+        await new SearchURLsRoute(request, response, {}).handle();
     });
 
-    it("should return feeds for correct request", (done) => {
+    it("should return feeds for correct request", async () => {
         let sandbox = sinon.sandbox.create();
         let request = {
             "query": {
@@ -72,8 +70,8 @@ describe("Search Urls Route", () => {
         sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
         requestHandlerMock.withArgs(request.query.url).returns(Promise.resolve(feeds));
-        let response = mockResponseSuccess(done, { "status": HttpResponseHandler.codes.OK, "json": { feeds } });
-        let searchURLsRoute = new SearchURLsRoute(request, response, {});
+        let response = mockResponseSuccess({ "status": HttpResponseHandler.codes.OK, "json": { feeds } });
+        let searchURLsRoute = await new SearchURLsRoute(request, response, {});
         searchURLsRoute.handle();
         sandbox.restore();
     });

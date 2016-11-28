@@ -128,29 +128,33 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
 
-        it("should return the sucess response for correct URL Document", (done) => {
+        it("should return the sucess response for correct URL Document", async() => {
             let url = "http://www.newsclick.in";
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             sandbox.mock(rssMock).expects("addURL").withArgs(url).returns(Promise.resolve({ "message": "URL added to Database" }));
             let rssRequestHandler = new RssRequestHandler();
-            rssRequestHandler.addURL(url).then((response) => {
+            try {
+                let response = await rssRequestHandler.addURL(url);
                 assert.strictEqual("URL added to Database", response.message);
-                done();
-            });
+            }catch (error) {
+                assert.fail(error);
+            }
         });
 
-        it("should return Error If url is invalid", (done) => {
+        it("should return Error If url is invalid", async() => {
 
             let url = "http://www.newsclick.in";
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             sandbox.mock(rssMock).expects("addURL").withArgs(url).returns(Promise.reject("unexpected response from the db"));
             let rssRequestHandler = new RssRequestHandler();
-            rssRequestHandler.addURL(url).catch((error) => {
+            try {
+                await rssRequestHandler.addURL(url);
+                assert.fail();
+            }catch(error) {
                 assert.strictEqual("unexpected response from the db", error);
-                done();
-            });
+            }
         });
     });
 });

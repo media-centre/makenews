@@ -5,57 +5,51 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 describe("Add URL Document Route", () => {
-    function mockResponse(done, expectedValues) {
+    function mockResponse(expectedValues) {
         let response = {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
             },
             "json": (jsonData) => {
                 expect(jsonData).to.deep.equal(expectedValues.json);
-                done();
             }
         };
         return response;
     }
 
-    function mockResponseSuccess(done, expectedValues) {
+    function mockResponseSuccess(expectedValues) {
         let response = {
             "status": (status) => {
                 expect(status).to.equal(expectedValues.status);
             },
             "json": (jsonData) => {
                 expect(jsonData).to.deep.equal(expectedValues.json);
-                done();
             }
         };
         return response;
     }
 
 
-    it("should return bad request if URL is not valid", (done) => {
+    it("should return bad request if URL is not valid", async() => {
         let request = {
             "body": {
-                "query": {
-                    "url": "Invalid url"
-                }
+                "url": "Invalid url"
             }
         };
-        let response = mockResponse(done, {
+        let response = mockResponse({
             "status": HttpResponseHandler.codes.BAD_REQUEST,
             "json": { "message": "bad request" }
         });
-        new AddURLDocumentRoute(request, response, {}).handle();
+        await new AddURLDocumentRoute(request, response, {}).handle();
 
     });
 
-    it("should add document for correct request", (done) => {
+    it("should add document for correct request", async() => {
         let sandbox = sinon.sandbox.create();
         let request = {
             "body": {
-                "query": {
-                    "url": {
-                        "name": "test"
-                    }
+                "url": {
+                    "name": "test"
                 }
             }
         };
@@ -63,14 +57,14 @@ describe("Add URL Document Route", () => {
         let rssRequestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
         let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
-        requestHandlerMock.withArgs(request.body.query.url).returns(Promise.resolve({ "message": "URL added to Database" }));
+        requestHandlerMock.withArgs(request.body.url).returns(Promise.resolve({ "message": "URL added to Database" }));
 
-        let response = mockResponseSuccess(done, {
+        let response = mockResponseSuccess({
             "status": HttpResponseHandler.codes.OK,
             "json": { "message": "URL added to Database" }
         });
 
-        new AddURLDocumentRoute(request, response, {}).handle();
+        await new AddURLDocumentRoute(request, response, {}).handle();
         sandbox.restore();
     });
 

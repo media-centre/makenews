@@ -37,15 +37,14 @@ export default class RssRequestHandler {
         }
     }
 
-    addURL(url) {
-        return new Promise((resolve, reject) => {
-            this.rssClient().addURL(url).then((response) => {
-                RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
-                resolve(response);
-            }).catch((error) => {
-                RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
-                reject(error);
-            });
-        });
+    async addURL(url) {
+        try {
+            let response = await this.rssClient().addURL(url);
+            RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
+            return response;
+        } catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
+            throw error;
+        }
     }
 }

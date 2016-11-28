@@ -15,18 +15,19 @@ export default class SearchURLsRoute extends Route {
         return true;
     }
 
-    handle() {                                   //eslint-disable-line consistent-return
-        if(!this.valid()) {
-            RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
-            return this._handleInvalidRoute();
-        }
-        let rssRequestHandler = RssRequestHandler.instance();
-        rssRequestHandler.searchUrl(this.url).then(feeds => {
+    async handle() {                                   //eslint-disable-line consistent-return
+        try {
+            if (!this.valid()) {
+                RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.url);
+                return this._handleInvalidRoute();
+            }
+            let rssRequestHandler = RssRequestHandler.instance();
+            let feeds = await rssRequestHandler.searchUrl(this.url);
             RouteLogger.instance().debug("SearchURLsRoute:: successfully searched for the url %s .", this.url);
-            this._handleSuccess(feeds);
-        }).catch(error => { //eslint-disable-line
+            return this._handleSuccess(feeds);
+        } catch (error) {
             RouteLogger.instance().debug("SearchURLsRoute:: failed to search for url  %s. Error: %s", this.url, error);
-            this._handleBadRequest();
-        });
+            throw this._handleBadRequest();
+        }
     }
 }

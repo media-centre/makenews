@@ -6,7 +6,8 @@ import StringUtils from "../../../../common/src/util/StringUtil";
 export default class AddURLDocumentRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.url = this.request.body.query.url;
+        this.url = this.request.body.url;
+        this.url = this.request.body.url;
     }
 
     valid() {
@@ -16,18 +17,20 @@ export default class AddURLDocumentRoute extends Route {
         return true;
     }
 
-    handle() {                                                                              //eslint-disable-line consistent-return
-        if (!this.valid()) {
-            RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
-            return this._handleInvalidRoute();
-        }
-        let rssRequestHandler = RssRequestHandler.instance();
-        rssRequestHandler.addURL(this.url).then(response => {
+    async handle() {                                                                              //eslint-disable-line consistent-return
+        try {
+            if (!this.valid()) {
+                RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
+                return this._handleInvalidRoute();
+            }
+            let rssRequestHandler = RssRequestHandler.instance();
+            let response = await rssRequestHandler.addURL(this.url);
             RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
-            this._handleSuccess(response);
-        }).catch(error => { //eslint-disable-line
+            return this._handleSuccess(response);
+
+        } catch (error) { //eslint-disable-line
             RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %s", error);
-            this._handleBadRequest();
-        });
+            throw this._handleBadRequest();
+        }
     }
 }
