@@ -47,4 +47,15 @@ export default class RssRequestHandler {
             throw error;
         }
     }
+
+    async addURLToUserDb(accessToken, url, dbName) {
+        try {
+            let response = await this.rssClient().addURLToUserDb(accessToken, url, dbName);
+            RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
+            return response;
+        } catch(error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
+            throw error;
+        }
+    }
 }

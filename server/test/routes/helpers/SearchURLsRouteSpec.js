@@ -33,7 +33,7 @@ describe("Search Urls Route", () => {
     it("should return bad request if url is not present in request", async () => {
         let request = {
             "query": {
-                "url": {}
+                "key": ""
             }
         };
         let response = mockResponse({ "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
@@ -45,13 +45,7 @@ describe("Search Urls Route", () => {
         let sandbox = sinon.sandbox.create();
         let request = {
             "query": {
-                "url": {
-                    "selector": {
-                        "name": {
-                            "$regex": "test"
-                        }
-                    }
-                }
+                "key": "The"
             }
         };
         let feeds = { "docs":
@@ -69,7 +63,7 @@ describe("Search Urls Route", () => {
         let requestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
-        requestHandlerMock.withArgs(request.query.url).returns(Promise.resolve(feeds));
+        requestHandlerMock.withArgs(request.query.key).returns(Promise.resolve(feeds));
         let response = mockResponseSuccess({ "status": HttpResponseHandler.codes.OK, "json": { feeds } });
         let searchURLsRoute = await new SearchURLsRoute(request, response, {});
         searchURLsRoute.handle();

@@ -10,6 +10,7 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
+import CryptUtil from "../../../server/src/util/CryptUtil";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -393,14 +394,12 @@ describe("RssClient", () => {
         it("should return Error If url is invalid", async() => {
             let rssClient = RssClient.instance();
             let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
-            fetchRssFeedsStub.withArgs("").returns(Promise.reject("[object Object] is not a proper feed"));
-            let getDocStub = sandbox.stub(couchClient, "saveDocument");
-            getDocStub.withArgs("", {}).returns(Promise.reject("unexpected response from the db"));
+            fetchRssFeedsStub.withArgs("http://www.test.com/").returns(Promise.reject({ "message": "http://www.test.com/ is not a proper feed" }));
             try {
-                await rssClient.addURL({});
+                await rssClient.addURL("http://www.test.com/");
                 assert.fail();
             } catch (err) {
-                assert.deepEqual(err.message, "[object Object] is not a proper feed");
+                assert.deepEqual(err.message, "http://www.test.com/ is not a proper feed");
             }
         });
 
@@ -411,12 +410,12 @@ describe("RssClient", () => {
             let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
             fetchRssFeedsStub.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
             let getDocStub = sandbox.stub(couchClient, "saveDocument");
-            getDocStub.withArgs(url, {}).returns(Promise.reject("unexpected response from the db"));
+            getDocStub.withArgs(url, { "name": name, "url": url, "docType": "source", "sourceType": "web" }).returns(Promise.reject("unexpected response from the db"));
             try {
-                await rssClient.addURL({});
+                await rssClient.addURL(url);
                 assert.fail();
             } catch (err) {
-                assert.deepEqual(err.message, "[object Object] is not a proper feed");
+                assert.deepEqual(err, "unexpected response from the db");
             }
         });
     });
@@ -515,5 +514,94 @@ describe("RssClient", () => {
             }
         });
     });
+
+    describe("Add URL Doc To User Database", () => {
+        let couchClient = null;
+        beforeEach("RssClient", () => {
+            sandbox = sinon.sandbox.create();
+            couchClient = new CouchClient();
+        });
+
+        afterEach("RssClient", () => {
+            sandbox.restore();
+        });
+
+        it("should Save the Document", async() => {
+            url = "http://www.newsclick.in";
+            let name = "NewsClick";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let dbHashName = "db_test_hash";
+            let dbName = "testdb";
+            let accessToken = "TestAccessToken";
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            sandbox.stub(CouchClient, "instance").returns(couchClientInstance);
+            sandbox.mock(couchClientInstance).expects("saveDocument").withArgs(url, document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "NewsClick",
+                "rev": "test_revition"
+            }));
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            sandbox.stub(CryptUtil, "dbNameHash").withArgs(dbName).returns(dbHashName);
+            fetchRssFeedsStub.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            try {
+                let response = await rssClient.addURLToUserDb(accessToken, url, dbName);
+                assert.strictEqual("URL added to Database", response);
+            } catch (err) {
+                assert.fail();
+            }
+        });
+
+        it("should return Error If url is invalid", async() => {
+            let accessToken = "test_token";
+            let dbName = "test";
+            let dbHashName = "db_test_hash";
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            sandbox.stub(CryptUtil, "dbNameHash").withArgs(dbName).returns(dbHashName);
+            fetchRssFeedsStub.withArgs("http://www.test.com/").returns(Promise.reject({ "message": "http://www.test.com/ is not a proper feed" }));
+            try {
+                await rssClient.addURLToUserDb(accessToken, "http://www.test.com/", dbName);
+                assert.fail();
+            } catch (err) {
+                assert.deepEqual(err.message, "http://www.test.com/ is not a proper feed");
+            }
+        });
+
+        it("should return Error If save document rejects with an error", async() => {
+            url = "http://www.invalid.com/";
+            let name = "NewsClick";
+            let dbHashName = "db_test_hash";
+            let dbName = "testdb";
+            let accessToken = "TestAccessToken";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            fetchRssFeedsStub.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            sandbox.stub(CouchClient, "instance").returns(couchClientInstance);
+            sandbox.mock(couchClientInstance).expects("saveDocument").withArgs(url, document).returns(Promise.reject("unexpected response from the db"));
+            sandbox.stub(CryptUtil, "dbNameHash").withArgs(dbName).returns(dbHashName);
+            let getDocStub = sandbox.stub(couchClient, "saveDocument");
+            getDocStub.withArgs(url, { "name": name, "url": url, "docType": "source", "sourceType": "web" }).returns(Promise.reject("unexpected response from the db"));
+            try {
+                await rssClient.addURLToUserDb(accessToken, url, dbName);
+                assert.fail();
+            } catch (err) {
+                assert.deepEqual(err, "unexpected response from the db");
+            }
+        });
+    });
+
 
 });
