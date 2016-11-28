@@ -7,11 +7,10 @@ export default class AddURLDocumentRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.body.url;
-        this.url = this.request.body.url;
     }
 
     valid() {
-        if (Object.keys(this.url).length === 0 || StringUtils.isEmptyString(this.url.name)) { //eslint-disable-line no-magic-numbers
+        if (StringUtils.isEmptyString(this.url)) { //eslint-disable-line no-magic-numbers
             return false;
         }
         return true;

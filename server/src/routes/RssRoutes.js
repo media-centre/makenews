@@ -3,6 +3,7 @@ import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute";
 import RouteLogger from "./RouteLogger";
 import SearchURLsRoute from "./helpers/SearchURLsRoute";
 import AddURLDocumentRoute from "./helpers/AddURLDocumentRoute";
+import AddURLToUserDbRoute from "./helpers/AddURLToUserDbRoute";
 
 export default (app) => {
     app.get("/rss-feeds", (request, response, next) => {
@@ -22,5 +23,10 @@ export default (app) => {
     app.post("/search-all-urls", (request, response, next) => {
         RouteLogger.instance().info("WebURLS:: /search-all-urls request received. url = %s", request.url);
         new SearchURLsRoute(request, response, next).handle();
+    });
+
+    app.post("/add-url-to-user-database", (request, response, next) => {
+        RouteLogger.instance().info("AddURLTOUserDbRoute :: /add-url-to-user-database request received. url = %s", request.url);
+        new AddURLToUserDbRoute(request, response, next).handle();
     });
 };

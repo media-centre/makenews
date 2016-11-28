@@ -190,4 +190,47 @@ describe("Rss Request Handler", () => {
             }
         });
     });
+
+    describe("Add URL To User Database", () => {
+        let sandbox = null;
+        beforeEach("Add URL To User Database", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("Add URL To User Database", () => {
+            sandbox.restore();
+        });
+
+        it("should return the sucess response for correct URL Document", async() => {
+            let url = "http://www.newsclick.in";
+            let rssMock = new RssClient();
+            let accessToken = "TestAccessToken";
+            let userName = "test";
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addURLToUserDb").withArgs(accessToken, url, userName).returns(Promise.resolve({ "message": "URL added to Database" }));
+            let rssRequestHandler = new RssRequestHandler();
+            try {
+                let response = await rssRequestHandler.addURLToUserDb(accessToken, url, userName);
+                assert.strictEqual("URL added to Database", response.message);
+            }catch (error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should return Error If url is invalid", async() => {
+            let accessToken = "TestAccessToken";
+            let userName = "test";
+            let url = "http://www.newsclick.in";
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addURLToUserDb").withArgs(accessToken, url, userName).returns(Promise.reject("unexpected response from the db"));
+            let rssRequestHandler = new RssRequestHandler();
+            try {
+                await rssRequestHandler.addURLToUserDb(accessToken, url, userName);
+                assert.fail();
+            }catch(error) {
+                assert.strictEqual("unexpected response from the db", error);
+            }
+        });
+    });
 });

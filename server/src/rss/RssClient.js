@@ -5,6 +5,8 @@ import RssParser from "./RssParser";
 import cheerio from "cheerio";
 import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
+import CouchClient from "../CouchClient";
+import CryptUtil from "../util/CryptUtil";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
 
@@ -153,17 +155,22 @@ export default class RssClient {
 
     async addURL(url) {                                                     //eslint-disable-line consistent-return
         try {
-            const adminDetails = ApplicationConfig.instance().adminDetails();
             let response = await this.fetchRssFeeds(url);
             let name = response.meta.title;
             let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+            const adminDetails = ApplicationConfig.instance().adminDetails();
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
-            await dbInstance.saveDocument(url, document);
-            RssClient.logger().debug("RssClient:: successfully added Document to database.");
-            return "URL added to Database";
-        }catch(error) {
+            try {
+                await dbInstance.saveDocument(url, document);
+                RssClient.logger().debug("RssClient:: successfully added Document to database.");
+                return "URL added to Database";
+            } catch (error) {
+                RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+                throw error;
+            }
+        } catch (error) {
             RssClient.logger().error("RssClient:: Error while adding document %j.", error);
-            this.handleUrlError(url, error);
+            throw error;
         }
     }
 
@@ -184,6 +191,22 @@ export default class RssClient {
         }catch (error) {
             RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
             this.handleRequestError(key, error);
+        }
+    }
+
+    async addURLToUserDb(accessToken, url, dbName) {    //eslint-disable-line consistent-return
+        try {
+            let response = await this.fetchRssFeeds(url);
+            let name = response.meta.title;
+            let dbHashName = CryptUtil.dbNameHash(dbName);
+            let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+            let couchClient = CouchClient.instance(dbHashName, accessToken);
+            await couchClient.saveDocument(url, document);
+            RssClient.logger().debug("RssClient:: successfully added Document to user specific database.");
+            return "URL added to Database";
+        }catch(error) {
+            RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+            throw error;
         }
     }
 
