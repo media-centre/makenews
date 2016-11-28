@@ -5,9 +5,10 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
-import { assert, expect } from "chai";
+import {assert, expect} from "chai";
 import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
+import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 
 describe("Rss Request Handler", () => {
     let sandbox = null, couchClient = null;
@@ -115,6 +116,41 @@ describe("Rss Request Handler", () => {
                     rssClientPostMock.verify();
                     sandbox.restore();
                 });
+            });
+        });
+    });
+
+
+    describe("fetchBatchRssFeedsRequest", ()=> {
+        let rssRequestHandler, response, rssBatchMock, rssClientMock;
+        beforeEach("fetchBatchRssFeedsRequest", () => {
+            rssRequestHandler = new RssRequestHandler();
+            response = "successfully fetched feeds";
+            rssBatchMock = new RssBatchFeedsFetch();
+            rssClientMock = sandbox.mock(RssBatchFeedsFetch).expects("instance").returns(rssBatchMock);
+        });
+
+        it("should fetch rss feed for given url", () => {
+            let url = "www.example.com";
+            let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
+            rssClientPostMock.returns(response);
+            return Promise.resolve(rssRequestHandler.fetchBatchRssFeedsRequest(url, "auth_token")).then((res) => {
+                expect(res).to.eq(response);
+                rssClientMock.verify();
+                rssClientPostMock.verify();
+                sandbox.restore();
+            });
+        });
+
+        it("should return error rss feed for given url", () => {
+            let url = "www.error.com";
+            let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
+            rssClientPostMock.returns(Promise.reject("error"));
+            return rssRequestHandler.fetchBatchRssFeedsRequest(url, "auth_token").catch((error) => {
+                assert.strictEqual("error", error);
+                rssClientMock.verify();
+                rssClientPostMock.verify();
+                sandbox.restore();
             });
         });
     });

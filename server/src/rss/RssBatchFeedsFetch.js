@@ -11,27 +11,29 @@ export default class RssBatchFeedsFetch {
         let rssClient = RssClient.instance();
         try {
             let feeds = await rssClient.getRssData(url);
-            await this.storeInDb(feeds, authSession);
-            return { "message": "successfully stored into db" };
+            let response = await this.storeInDb(feeds, authSession);
+            return response;
         }catch(error) {
-            RssBatchFeedsFetch.logger().error("RssBatchFeedsFetch:: could not fetch feeds. Error: %j.", error);
-            throw { "message": error };
+            // RssBatchFeedsFetch.logger().error("RssBatchFeedsFetch:: could not fetch feeds. Error: %j.", error);
+            throw (error);
         }
 
     }
 
     async storeInDb(feeds, accesstoken) {
+        let SUCCESS_MESSAGE = "Successfully added feeds to Database";
         try {
-            let couchClient = new CouchClient(null, accesstoken);
-            let response = couchClient.get("/_session");
-            let userName = response.UserCtx.name;
+            let couchClient = CouchClient.instance(null, accesstoken);
+            let response = await couchClient.get("/_session");
+            let userName = response.userCtx.name;
             let userDbName = CryptUtil.dbNameHash(userName);
             couchClient.dbName = userDbName;
-            let feedObject = {"docs": feeds.items};
-            couchClient.saveBulkDocuments(feedObject);
+            let feedObject = { "docs": feeds.items };
+            await couchClient.saveBulkDocuments(feedObject);
+            return SUCCESS_MESSAGE;
         } catch(error) {
-            RssBatchFeedsFetch.logger().error("RssBatchFeedsFetch:: could not able to store in db. Error: %j.", error);
-            throw { "message": error };
+            // RssBatchFeedsFetch.logger().error("RssBatchFeedsFetch:: could not able to store in db. Error: %j.", error);
+            throw (error);
         }
     }
 }

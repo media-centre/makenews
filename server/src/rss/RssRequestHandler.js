@@ -21,7 +21,7 @@ export default class RssRequestHandler {
             return feeds;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            throw error;
+            throw (error);
         }
     }
 
@@ -29,10 +29,10 @@ export default class RssRequestHandler {
         try {
             let responseMessage = await this.rssBatchFeedsFetch().fetchBatchFeeds(url, authSession);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-            return { "message": responseMessage };
+            return responseMessage;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            throw { "message": error };
+            throw (error);
         }
     }
 

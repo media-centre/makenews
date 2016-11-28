@@ -6,7 +6,7 @@ import RouteLogger from "../RouteLogger";
 export default class RssBatchFeedsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.authSession = this.request.cookies.authSession;
+        this.authSession = this.request.cookies.AuthSession;
     }
 
     handle() {

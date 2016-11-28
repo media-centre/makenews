@@ -49,6 +49,9 @@ describe("RssBatchFeedsRoute", () => {
                             "timestamp": "3432424234"
                         }
                     ]
+                },
+                "cookies": {
+                    "AuthSession": "auth session"
                 }
             };
 
@@ -64,7 +67,7 @@ describe("RssBatchFeedsRoute", () => {
             let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
 
-            let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
+            let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchBatchRssFeedsRequest");
             fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
             fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.resolve({ "items": [{ "title": "test1", "description": "news cricket1" }] }));
             rssRouteHelper.handle();
@@ -88,6 +91,9 @@ describe("RssBatchFeedsRoute", () => {
                             "timestamp": "3432424234"
                         }
                     ]
+                },
+                "cookies": {
+                    "AuthSession": "auth session"
                 }
             };
 
@@ -102,8 +108,7 @@ describe("RssBatchFeedsRoute", () => {
             let rssRequestHandlerInstance = new RssRequestHandler();
             let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
-
-            let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchRssFeedRequest");
+            let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchBatchRssFeedsRequest");
             fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
             fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.reject("some error"));
             rssRouteHelper.handle();

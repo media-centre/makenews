@@ -1,7 +1,7 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "./config/ApplicationConfig";
 import NodeErrorHandler from "./NodeErrorHandler";
-import Logger, {logCategories} from "./logging/Logger";
+import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
 
 export default class CouchClient {
@@ -84,8 +84,10 @@ export default class CouchClient {
 
     handleResponse(error, response, resolve, reject) {
         if (NodeErrorHandler.noError(error)) {
+
             if (new HttpResponseHandler(response.statusCode).success()) {
                 CouchClient.logger().debug("successful response from database.");
+                // resolve("successful response from database.");
                 resolve(response.body);
             } else {
                 CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
