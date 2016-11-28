@@ -6,15 +6,15 @@ import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
 
-describe("FacebookProfilesRoutes", () => {
+describe("FacebookConfigureRoute", () => {
 
     let sandbox = sinon.sandbox.create();
 
-    beforeEach("FacebookProfilesRoutes", () => {
+    beforeEach("FacebookConfigureRoute", () => {
         sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
-    afterEach("FacebookProfilesRoute", () => {
+    afterEach("FacebookConfigureRoute", () => {
         sandbox.restore();
     });
 

@@ -2,6 +2,7 @@ import StringUtil from "../../../../common/src/util/StringUtil";
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookConfigureRoute extends Route {
     constructor(request, response, next) {
@@ -12,18 +13,21 @@ export default class FacebookConfigureRoute extends Route {
         }
     }
 
-    fetchProfiles() {
-        if(StringUtil.isEmptyString(this.dbName) && StringUtil.isEmptyString(this.authSession)) {
-            RouteLogger.instance().warn(`FacebookPostsRoute:: invalid facebook feed route with url ${this.url}`);
+    _checkRequiredParams(params) {
+        if(R.any(StringUtil.isEmptyString)(params)) {
+            RouteLogger.instance().warn("FacebookConfigureRoute:: invalid facebook feed route with url %s and user name %s.", this.url, this.userName);
             this._handleInvalidRoute();
-        } else {
-            FacebookRequestHandler.instance("token").fetchConfiguredSourcesOf("profiles", this.dbName, this.authSession).then(profiles => {
-                RouteLogger.instance().debug("FacebookConfigureRoute:: successfully fetched configured facebook profiles");
-                this._handleSuccess({ "profiles": profiles });
-            }).catch(error => {
-                RouteLogger.instance().error(`FacebookConfigureRoute:: fetching configured facebook profiles failed. Error: ${error}`);
-                this._handleBadRequest();
-            });
         }
+    }
+
+    fetchProfiles() {
+        this._checkRequiredParams([this.dbName, this.authSession]);
+        FacebookRequestHandler.instance("token").fetchConfiguredSourcesOf("profiles", this.dbName, this.authSession).then(profiles => {
+            RouteLogger.instance().debug("FacebookConfigureRoute:: successfully fetched configured facebook profiles");
+            this._handleSuccess({ "profiles": profiles });
+        }).catch(error => {
+            RouteLogger.instance().error(`FacebookConfigureRoute:: fetching configured facebook profiles failed. Error: ${error}`);
+            this._handleBadRequest();
+        });
     }
 }

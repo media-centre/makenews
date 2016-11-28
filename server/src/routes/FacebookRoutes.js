@@ -4,6 +4,7 @@ import FacebookSetAccessTokenRoute from "./helpers/FacebookSetAccessTokenRoute";
 import RouteLogger from "./RouteLogger";
 import FacebookSourceRoute from "./helpers/FacebookSourceRoute";
 import FacebookConfigureRoute from "./helpers/FacebookConfigureRoute";
+import FacebookAddConfigureRoute from "./helpers/FacebookAddConfigureRoute";
 
 export default (app) => {
     app.get("/facebook-posts", (request, response, next) => {
@@ -34,5 +35,10 @@ export default (app) => {
     app.get("/facebook/configured/profiles", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook/configured/profiles request received. url = %s", request.url);
         new FacebookConfigureRoute(request, response, next).fetchProfiles();
+    });
+    
+    app.put("/facebook/configuredSource", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook/configuredSource request received. url = %s", request.url);
+        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource();
     });
 };

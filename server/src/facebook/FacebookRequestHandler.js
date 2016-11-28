@@ -127,6 +127,22 @@ export default class FacebookRequestHandler {
         });
     }
 
+    async addConfiguredSource(source, dbName, authSession) {
+        let couchClient = CouchClient.instance(dbName, authSession);
+        try {
+            return await couchClient.saveDocument(source.url, {
+                "_id": source.url,
+                "name": source.name,
+                "docType": "configuredSource",
+                "sourceType": "fb-pages",
+                "latestFeedTimeStamp": DateUtil.getCurrentTime()
+            });
+        } catch (error) {
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
+            throw error;
+        }
+    }
+
     _getAllOptions(userOptions) {
         let allOptions = userOptions ? userOptions : {};
         allOptions.fields = "link,message,picture,name,caption,place,privacy,created_time";
