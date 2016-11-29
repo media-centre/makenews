@@ -54,9 +54,9 @@ export default class RssRequestHandler {
         }
     }
 
-    async addURL(url) {
+    async addURL(url, accessToken) {
         try {
-            let response = await this.rssClient().addURL(url);
+            let response = await this.rssClient().addURL(url, accessToken);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
             return response;
         } catch (error) {
@@ -67,7 +67,7 @@ export default class RssRequestHandler {
 
     async addURLToUserDb(accessToken, url, dbName) {
         try {
-            let response = await this.rssClient().addURLToUserDb(accessToken, url, dbName);
+            let response = await this.rssClient().addURLToUser(accessToken, url, dbName);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
             return response;
         } catch(error) {

@@ -7,29 +7,31 @@ export default class AddURLDocumentRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.url = this.request.body.url;
+        this.accessToken = this.request.cookies.AuthSession;
     }
 
     valid() {
-        if (StringUtils.isEmptyString(this.url)) { //eslint-disable-line no-magic-numbers
+        if (StringUtils.isEmptyString(this.url) || StringUtils.isEmptyString(this.accessToken)) {
             return false;
         }
         return true;
     }
 
-    async handle() {                                                                              //eslint-disable-line consistent-return
+    async handle() {
+        let response = {};
         try {
             if (!this.valid()) {
                 RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
                 return this._handleInvalidRoute();
             }
             let rssRequestHandler = RssRequestHandler.instance();
-            let response = await rssRequestHandler.addURL(this.url);
+            response = await rssRequestHandler.addURL(this.url, this.accessToken);
             RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
-            return this._handleSuccess(response);
-
+            this._handleSuccess(response);
         } catch (error) { //eslint-disable-line
             RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %s", error);
             throw this._handleBadRequest();
         }
+        return response;
     }
 }

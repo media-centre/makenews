@@ -153,28 +153,36 @@ export default class RssClient {
         });
     }
 
-    async addURL(url) {                                                     //eslint-disable-line consistent-return
+    async addURL(url, accessToken) {                                                     //eslint-disable-line consistent-return
         try {
             let response = await this.fetchRssFeeds(url);
             let name = response.meta.title;
             let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
-            try {
-                await dbInstance.saveDocument(url, document);
-                RssClient.logger().debug("RssClient:: successfully added Document to database.");
-                return "URL added to Database";
-            } catch (error) {
-                RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-                throw error;
-            }
+            await this.addUrlToCommon(document);
+            await this.addURLToUser(document, accessToken);
         } catch (error) {
             RssClient.logger().error("RssClient:: Error while adding document %j.", error);
             throw error;
         }
+        return "URL added to Database";
     }
 
-    async searchURL(key) {                                                  //eslint-disable-line consistent-return
+    async addUrlToCommon(document) {
+        const adminDetails = ApplicationConfig.instance().adminDetails();
+        let dbInstance = await
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+        try {
+            await dbInstance.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to common database.");
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+            throw error;
+        }
+        return "URL added to Database";
+    }
+
+    async searchURL(key) {
+        let document = null;
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
@@ -185,29 +193,26 @@ export default class RssClient {
                     }
                 }
             };
-            let document = dbInstance.findDocuments(selector);
+            document = await dbInstance.findDocuments(selector);
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
-            return document;
         }catch (error) {
             RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
             this.handleRequestError(key, error);
         }
+        return document;
     }
 
-    async addURLToUserDb(accessToken, url, dbName) {    //eslint-disable-line consistent-return
+    async addURLToUser(document, accessToken) {
         try {
-            let response = await this.fetchRssFeeds(url);
-            let name = response.meta.title;
-            let dbHashName = CryptUtil.dbNameHash(dbName);
-            let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+            let dbHashName = CryptUtil.dbNameHash("test");
             let couchClient = CouchClient.instance(dbHashName, accessToken);
-            await couchClient.saveDocument(url, document);
-            RssClient.logger().debug("RssClient:: successfully added Document to user specific database.");
-            return "URL added to Database";
-        }catch(error) {
-            RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+            await couchClient.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
             throw error;
         }
+        return "URL added to Database";
     }
 
     handleUrlError(url, error) {

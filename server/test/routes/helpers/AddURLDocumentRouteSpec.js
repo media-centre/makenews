@@ -34,6 +34,27 @@ describe("Add URL Document Route", () => {
         let request = {
             "body": {
                 "url": ""
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        };
+        let response = mockResponse({
+            "status": HttpResponseHandler.codes.BAD_REQUEST,
+            "json": { "message": "bad request" }
+        });
+        await new AddURLDocumentRoute(request, response, {}).handle();
+
+    });
+
+
+    it("should return bad request if AuthSession is empty", async() => {
+        let request = {
+            "body": {
+                "url": "test"
+            },
+            "cookies": {
+                "AuthSession": ""
             }
         };
         let response = mockResponse({
@@ -49,6 +70,9 @@ describe("Add URL Document Route", () => {
         let request = {
             "body": {
                 "url": "http://test.com/rss"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
             }
         };
 
