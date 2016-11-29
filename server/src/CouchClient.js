@@ -13,14 +13,9 @@ export default class CouchClient {
     }
 
     async getUserDbName() {
-        try {
-            let response = await this.get("/_session");
-            let userName = response.userCtx.name;
-            return CryptUtil.dbNameHash(userName);
-        } catch(error) {
-            return null;
-        }
-
+        let response = await this.get("/_session");
+        let userName = response.userCtx.name;
+        return CryptUtil.dbNameHash(userName);
     }
 
     static logger() {

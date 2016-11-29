@@ -21,7 +21,7 @@ export default class RssRequestHandler {
             return feeds;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            throw (error);
+            throw error;
         }
     }
 
@@ -32,7 +32,7 @@ export default class RssRequestHandler {
             return responseMessage;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            throw (error);
+            throw error;
         }
     }
 

@@ -132,7 +132,7 @@ export default class RssClient {
             requestToUrl.on("response", function(res) {
                 if (res.statusCode === HttpResponseHandler.codes.OK) {
                     let rssParser = new RssParser(this);
-                    rssParser.parse().then(feeds => {
+                    rssParser.parse(url).then(feeds => {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
                         resolve(feeds);
                     }).catch(error => {

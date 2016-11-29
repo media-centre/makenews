@@ -47,7 +47,7 @@ describe("RssBatchFeedsFetch", () => {
         it("should throw not stored in db error when store in db thrown an error", async() => {
             sinon.mock(RssClient).expects("instance").returns(rssClientMock);
             sinon.mock(rssClientMock).expects("getRssData").returns(Promise.resolve(feed));
-            sinon.mock(rssBatchFeedsFetch).expects("storeInDb").returns(Promise.reject("not able to store in db"));
+            sinon.mock(rssBatchFeedsFetch).expects("saveFeedDocumentsToDb").returns(Promise.reject("not able to store in db"));
 
             try {
                 await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
@@ -56,10 +56,10 @@ describe("RssBatchFeedsFetch", () => {
             }
         });
 
-        it("should return successfully stored in db when there is no error from both getRssData and storeInDb", async() => {
+        it("should return successfully stored in db when there is no error from both getRssData and saveFeedDocumentsToDb", async() => {
             sinon.mock(RssClient).expects("instance").returns(rssClientMock);
             sinon.mock(rssClientMock).expects("getRssData").returns(Promise.resolve(feed));
-            sinon.mock(rssBatchFeedsFetch).expects("storeInDb").returns(Promise.resolve("stored in db"));
+            sinon.mock(rssBatchFeedsFetch).expects("saveFeedDocumentsToDb").returns(Promise.resolve("stored in db"));
 
             try {
                 let response = await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
@@ -67,7 +67,7 @@ describe("RssBatchFeedsFetch", () => {
             } catch(error) {
                 assert.fail();
             } finally {
-                rssBatchFeedsFetch.storeInDb.restore();
+                rssBatchFeedsFetch.saveFeedDocumentsToDb.restore();
             }
         });
 
@@ -77,7 +77,7 @@ describe("RssBatchFeedsFetch", () => {
         });
     });
 
-    describe("storeInDb", () => {
+    describe("saveFeedDocumentsToDb", () => {
         it("should throw failed to store in db when there is an error save bulk docs", async() => {
             let response = {
                 "userCtx": {
@@ -91,7 +91,7 @@ describe("RssBatchFeedsFetch", () => {
                 sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
                 sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
                 sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.reject("failed to store in db"));
-                await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
+                await rssBatchFeedsFetch.saveFeedDocumentsToDb(feeds, accessToken);
             } catch (error) {
                 assert.equal(error, "failed to store in db");
             }
@@ -108,11 +108,9 @@ describe("RssBatchFeedsFetch", () => {
             try {
                 sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
                 sinon.stub(couchClientMock, "get").returns(Promise.resolve(response));
-                // sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
                 sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
                 sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
-                // sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
-                let res = await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
+                let res = await rssBatchFeedsFetch.saveFeedDocumentsToDb(feeds, accessToken);
                 assert.equal(res, "Successfully added feeds to Database");
             } catch (error) {
                 assert.fail();

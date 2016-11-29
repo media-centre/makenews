@@ -55,16 +55,18 @@ describe("RssParser", () => {
             let requestToUrl = request.get({
                 "uri": "http://mytest.com/rss2"
             });
+            let url = "http://www.mytest.com/the_news_source";
 
             requestToUrl.on("response", function() {
                 let rssParser = new RssParser(this);
-                rssParser.parse().then(feed => {
+                rssParser.parse(url).then(feed => {
                     const zero = 0;
                     let feedItem = feed.items[zero];
                     assert.strictEqual(feedItem.title, "Sensex surges 260 points, Nifty above 8,000");
                     assert.strictEqual(feedItem.description, "Sample description");
                     assert.strictEqual(feedItem.link, "http://www.mytest.com/the_news");
                     assert.equal(feedItem.pubDate.toString(), "Tue Nov 22 2016 10:14:51 GMT+0530 (IST)");
+                    assert.equal(feedItem.sourceUrl, "http://www.mytest.com/the_news_source");
                     done();
                 }).catch(err => {
                     done(err);

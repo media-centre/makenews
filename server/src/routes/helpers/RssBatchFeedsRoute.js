@@ -11,19 +11,16 @@ export default class RssBatchFeedsRoute extends Route {
 
     handle() {
         if(this.isValidRequestData()) {
-            // let allFeeds = {};
             let rssRequestHandler = RssRequestHandler.instance();
             let counter = 0;
             this.request.body.data.forEach((item)=> {
                 rssRequestHandler.fetchBatchRssFeedsRequest(item.url, this.authSession).then(response => {
-                    // allFeeds[item.id] = feeds;
                     if (this.request.body.data.length - 1 === counter) {  //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: successfully fetched rss feeds for url %s.", item.url);
                         this._handleSuccess({ "message": response });
                     }
                     counter += 1; //eslint-disable-line no-magic-numbers
                 }).catch(() => {
-                    // allFeeds[item.id] = "failed";
                     if (this.request.body.data.length - 1 === counter) { //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: fetching rss feeds for url %s returned no feeds.", item.url);
                         this._handleSuccess({ "message": "sucessfully added feeds" });

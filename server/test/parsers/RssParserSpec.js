@@ -86,7 +86,10 @@ describe("RssParser", () => {
                 "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
                 "pubDate": null,
                 "enclosures": [],
-                "image": {}
+                "image": {},
+                "docType": "feed",
+                "sourceType": "rss",
+                "sourceUrl": url
             },
                 {
                     "guid": "test-guid-2",
@@ -95,13 +98,16 @@ describe("RssParser", () => {
                     "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
                     "pubDate": null,
                     "enclosures": [],
-                    "image": {}
+                    "image": {},
+                    "docType": "feed",
+                    "sourceType": "rss",
+                    "sourceUrl": url
                 }]
         };
 
         restRequest(url).on("response", function(res) {
             let rssParser = new RssParser(res);
-            rssParser.parse().then((feedJson) => {
+            rssParser.parse(url).then((feedJson) => {
                 expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();
             });

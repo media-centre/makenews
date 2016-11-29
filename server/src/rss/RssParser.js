@@ -13,7 +13,7 @@ export default class RssParser {
         return Logger.instance();
     }
 
-    parse() {
+    parse(url) {
         return new Promise((resolve, reject) => {
             let items = [];
             this.response.pipe(this.feedParser);
@@ -32,7 +32,10 @@ export default class RssParser {
                         "description": feed.description,
                         "pubDate": feed.pubDate,
                         "enclosures": feed.enclosures,
-                        "image": feed.image
+                        "image": feed.image,
+                        "docType": "feed",
+                        "sourceType": "rss",
+                        "sourceUrl": url
                     });
                     feed = this.read();
                 }
