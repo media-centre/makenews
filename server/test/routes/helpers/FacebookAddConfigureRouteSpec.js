@@ -112,7 +112,7 @@ describe("FacebookAddConfigureRoute", () => {
         let data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
         let source = { "name": "SourceName", "url": "http://source.url/" };
         let response = {
-            "status": (status) => {
+            "status": (status) => { //eslint-disable-line consistent-return
                 try {
                     assert.strictEqual(HttpResponseHandler.codes.OK, status);
                     return response;
