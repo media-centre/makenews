@@ -1,9 +1,9 @@
 import React from "react";
 import { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
 import TestUtils from "react-addons-test-utils";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
-import { findAllWithType } from "react-shallow-testutils";
+import { findAllWithType, findWithClass } from "react-shallow-testutils";
 
 describe("Configure Pane", () => {
     let store = null, renderer = null, configurePaneDOM = null, dispatch = null;
@@ -28,12 +28,38 @@ describe("Configure Pane", () => {
     });
 
     it("should have an input box for searching sources", () => {
-        expect(configurePaneDOM.props.children).to.contain(<input type="text" ref="searchSources" className="search-sources" placeholder="Search...." />);
+        let result = renderer.getRenderOutput();
+        let inputBox = findWithClass(result, "search-sources");
+
+        expect(inputBox.type).to.equal("input");
+        expect(inputBox.ref).to.equal("searchSources");
+        expect(inputBox.props.type).to.equal("text");
+        expect(inputBox.props.placeholder).to.equal("Search....");
     });
 
     it("should have SourcePane", () => {
         let result = renderer.getRenderOutput();
         let renderedSources = findAllWithType(result, SourcePane);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+    });
+
+
+    /* TODO: fix these four test */ //eslint-disable-line
+    xdescribe("search input box", () => {
+        it("should not dispatch til the enter key is pressed", () => {
+
+        });
+
+        it("should not dispatch if the current tab is profiles", () => {
+
+        });
+
+        it("should not dispatch if there is no value in input box", () => {
+
+        });
+
+        it("should dispatch the getSources", () => {
+
+        });
     });
 });

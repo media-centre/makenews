@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { getSourcesOf, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf, getConfiguredProfiles, PROFILES } from "./../actions/FacebookConfigureActions";
+import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
@@ -9,10 +10,21 @@ export class ConfigurePane extends Component {
         this.props.dispatch(getConfiguredProfiles());
     }
 
+    fetchSources(event) {
+        const ENTERKEY = 13;
+        if (event.keyCode === ENTERKEY) {
+            let value = this.refs.searchSources.value;
+            if(this.props.currentTab !== PROFILES && !StringUtils.isEmptyString(value)) {
+                console.log("inside");
+                this.props.dispatch(getSourcesOf(this.props.currentTab, value));
+            }
+        }
+    }
+
     render() {
         return (
           <div className="configure-sources">
-              <input type="text" ref="searchSources" className="search-sources" placeholder="Search...." />
+              <input type="text" ref="searchSources" onKeyUp ={(event) => { this.fetchSources(event); }} className="search-sources" placeholder="Search...." />
               <SourcePane />
           </div>
         );
