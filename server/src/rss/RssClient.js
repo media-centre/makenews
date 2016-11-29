@@ -153,7 +153,7 @@ export default class RssClient {
         });
     }
 
-    async addURL(url, accessToken) {                                                     //eslint-disable-line consistent-return
+    async addURL(url, accessToken) {
         try {
             let response = await this.fetchRssFeeds(url);
             let name = response.meta.title;

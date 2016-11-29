@@ -343,7 +343,6 @@ describe("RssClient", () => {
             }
         });
     });
-
     describe("addURL", () => {
         beforeEach("addURL", () => {
             sandbox = sinon.sandbox.create();
@@ -554,7 +553,6 @@ describe("RssClient", () => {
             saveDocMock.verify();
         });
     });
-    
     describe("Search URLS", () => {
         let couchClient = null;
         beforeEach("RssClient", () => {
