@@ -293,7 +293,7 @@ describe("FacebookRequestHandler", () => {
             dbName = "db_name";
             body = { "selector": {
                 "docType": {
-                    "$eq": "source"
+                    "$eq": "configuredSource"
                 },
                 "sourceType": {
                     "$eq": "fb-profiles"

@@ -113,7 +113,7 @@ export default class FacebookRequestHandler {
             couchClient.post(`/${dbName}/_find`, {
                 "selector": {
                     "docType": {
-                        "$eq": "source"
+                        "$eq": "configuredSource"
                     },
                     "sourceType": {
                         "$eq": `fb-${sourceType}`
@@ -130,13 +130,16 @@ export default class FacebookRequestHandler {
     async addConfiguredSource(source, dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
         try {
-            return await couchClient.saveDocument(source.url, {
+            let data = await couchClient.saveDocument(source.url, {
                 "_id": source.url,
                 "name": source.name,
                 "docType": "configuredSource",
                 "sourceType": "fb-pages",
                 "latestFeedTimeStamp": DateUtil.getCurrentTime()
             });
+            delete data.id;
+            delete data.rev;
+            return data;
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
             throw error;

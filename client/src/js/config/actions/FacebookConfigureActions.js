@@ -1,6 +1,8 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import LoginPage from "../../login/pages/LoginPage";
 import DbParameters from "../../db/DbParameters";
+import fetch from "isomorphic-fetch";
+import AppWindow from "../../utils/AppWindow";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
@@ -25,6 +27,26 @@ export function configuredProfilesReceived(profiles) {
     };
 }
 
+export async function addPageToConfiguredSources(dispatch, source) {
+    let dbName = await DbParameters.instance().getLocalDbUrl();
+    let configuredSource = Object.assign({}, source, { "url": source.id });
+    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configuredSource`, {
+        "method": "PUT",
+        "headers": {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        "credentials": "same-origin",
+        "body": JSON.stringify({ "dbName": dbName, "source": configuredSource })
+    });
+    if (data.ok) {
+        dispatch({
+            "type": FACEBOOK_ADD_PAGE,
+            source
+        });
+    }
+}
+
 export function addSourceToConfigureListOf(souceType, source) {
     switch (souceType) {
     case PROFILES: {
@@ -34,10 +56,7 @@ export function addSourceToConfigureListOf(souceType, source) {
         };
     }
     case PAGES: {
-        return {
-            "type": FACEBOOK_ADD_PAGE,
-            source
-        };
+        return dispatch => addPageToConfiguredSources(dispatch, source);
     }
     default: {
         return {
