@@ -95,13 +95,25 @@ export default class FacebookRequestHandler {
         });
     }
 
+    async fetchPages(pageName) {
+        let facebookClientInstance = this.facebookClient();
+        try {
+            let pages = await facebookClientInstance.fetchPages(pageName);
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched Pages for ${pageName}.`);
+            return pages;
+        } catch(error) {
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook pages. Error: ${error}`);
+            throw "error fetching facebook pages";  // eslint-disable-line no-throw-literal
+        }
+    }
+
     fetchConfiguredSourcesOf(sourceType, dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
         return new Promise((resolve, reject) => {
             couchClient.post(`/${dbName}/_find`, {
                 "selector": {
                     "docType": {
-                        "$eq": "source"
+                        "$eq": "configuredSource"
                     },
                     "sourceType": {
                         "$eq": `fb-${sourceType}`
@@ -113,6 +125,25 @@ export default class FacebookRequestHandler {
                 reject(error);
             });
         });
+    }
+
+    async addConfiguredSource(source, dbName, authSession) {
+        let couchClient = CouchClient.instance(dbName, authSession);
+        try {
+            let data = await couchClient.saveDocument(source.url, {
+                "_id": source.url,
+                "name": source.name,
+                "docType": "configuredSource",
+                "sourceType": "fb-pages",
+                "latestFeedTimeStamp": DateUtil.getCurrentTime()
+            });
+            delete data.id;
+            delete data.rev;
+            return data;
+        } catch (error) {
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
+            throw error;
+        }
     }
 
     _getAllOptions(userOptions) {

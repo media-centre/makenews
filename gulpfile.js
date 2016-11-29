@@ -220,7 +220,7 @@ gulp.task("server:watch", function() {
     this.srcPath = parameters.server.srcPath + "/**/*.js";
     this.serverJSFilePath = parameters.server.serverJsFile;
     this.testPath = parameters.server.testPath + "/**/*.js";
-    gulp.watch(this.srcPath, ["server:src-eslint", "server:copy-js"]);
+    gulp.watch(this.srcPath, ["server:src-eslint", "server:copy-js","server:test-eslint", "server:test"]);
     gulp.watch(this.serverJSFilePath, ["server:src-eslint", "server:copy-js"]);
     gulp.watch(this.testPath, ["server:test", "server:test-eslint"]);
 });

@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from "react";
-import SourcesResults from "./SourcesResults";
+import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { facebookGetProfiles, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf, getConfiguredProfiles } from "./../actions/FacebookConfigureActions";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
-        this.props.dispatch(facebookGetProfiles());
+        this.props.dispatch(getSourcesOf(this.props.currentTab));
         this.props.dispatch(getConfiguredProfiles());
     }
 
@@ -13,7 +13,7 @@ export class ConfigurePane extends Component {
         return (
           <div className="configure-sources">
               <input type="text" ref="searchSources" className="search-sources" placeholder="Search...." />
-              <SourcesResults sources={this.props.sources} dispatch={this.props.dispatch} />
+              <SourcePane />
           </div>
         );
     }
@@ -21,12 +21,12 @@ export class ConfigurePane extends Component {
 
 function mapToStore(state) {
     return {
-        "sources": state.facebookProfiles
+        "currentTab": state.facebookCurrentSourceTab
     };
 }
 
 ConfigurePane.propTypes = {
-    "sources": PropTypes.array.isRequired,
+    "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired
 };
 

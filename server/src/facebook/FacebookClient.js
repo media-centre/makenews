@@ -1,6 +1,7 @@
 import StringUtil from "../../../common/src/util/StringUtil";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import request from "request";
+import fetch from "isomorphic-fetch";
 import NodeErrorHandler from "../NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
@@ -109,6 +110,25 @@ export default class FacebookClient {
                 }
             });
         });
+    }
+
+    async fetchPages(pageName) {
+        let parameters = { "q": pageName, "type": "page" };
+        this._addDefaultParameters(parameters);
+
+        try {
+            let response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
+            let responseJson = await response.json();
+            if(response.status === HttpResponseHandler.codes.BAD_REQUEST) {
+                FacebookClient.logger().debug(`FacebookClient:: successfully fetched the pages for ${pageName}`);
+                throw responseJson.error;
+            } else {
+                return responseJson;
+            }
+        } catch(err) {
+            FacebookClient.logger().error(`FacebookClient:: Error fetching pages. Error ${err}`);
+            throw err;
+        }
     }
 
     getFacebookId(facebookPageUrl) {

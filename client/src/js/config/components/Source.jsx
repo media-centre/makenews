@@ -1,13 +1,16 @@
 /* eslint-disable operator-linebreak */
 import React, { Component, PropTypes } from "react";
-import { addFacebookProfile } from "./../actions/FacebookConfigureActions";
+import { addSourceToConfigureListOf } from "./../actions/FacebookConfigureActions";
 
 export default class Source extends Component {
     render() {
         return (
             <div className={this.props.source.added ? "source added" : "source"}>
                 <div className="source__icon">
-                    <img src={this.props.source.picture.data.url} />
+                    { this.props.source.picture ?
+                        <img src={this.props.source.picture.data.url} />
+                        : <img src="./images/default-source-icon.jpg" />
+                    }
                 </div>
                 <div className="source__title">
                     { this.props.source.name }
@@ -17,7 +20,7 @@ export default class Source extends Component {
                         <img src="./images/success-arrow.png"/>
                     </div>)
                     :
-                    (<div className="source__add-icon source__action-icon" onClick={() => this.props.dispatch(addFacebookProfile(this.props.source))}>
+                    (<div className="source__add-icon source__action-icon" onClick={() => this.props.dispatch(addSourceToConfigureListOf(this.props.currentSourceType, this.props.source))}>
                         <img src="./images/add-btn.png"/>
                     </div>)
                 }
@@ -28,5 +31,6 @@ export default class Source extends Component {
 
 Source.propTypes = {
     "source": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "currentSourceType": PropTypes.string.isRequired
 };
