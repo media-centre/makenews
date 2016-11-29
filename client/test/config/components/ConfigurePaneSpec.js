@@ -5,8 +5,9 @@ import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 
-describe("Configure Pane", () => {
+describe.only("Configure Pane", () => {
     let store = null, renderer = null, configurePaneDOM = null, dispatch = null;
+    let currentTab = null;
 
     beforeEach("Configure Pane", () => {
         dispatch = () => {};
@@ -18,8 +19,9 @@ describe("Configure Pane", () => {
                 };
             }
         };
+        currentTab = "Profiles";
         renderer = TestUtils.createRenderer();
-        configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab="Profiles" />);
+        configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} />);
     });
 
     it("wraps with a <div> with a proper class name", function() {
@@ -34,7 +36,16 @@ describe("Configure Pane", () => {
         expect(inputBox.type).to.equal("input");
         expect(inputBox.ref).to.equal("searchSources");
         expect(inputBox.props.type).to.equal("text");
-        expect(inputBox.props.placeholder).to.equal("Search....");
+        expect(inputBox.props.placeholder).to.equal(`Search ${currentTab}....`);
+    });
+
+    it("should have an addon search icon", () => {
+        let result = renderer.getRenderOutput();
+        let addon = findWithClass(result, "input-group__addon");
+        expect(addon.type).to.equal("span");
+
+        let img = addon.props.children;
+        expect(img.props.src).to.equal("./images/search-icon.png");
     });
 
     it("should have SourcePane", () => {

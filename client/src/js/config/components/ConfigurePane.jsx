@@ -24,7 +24,12 @@ export class ConfigurePane extends Component {
     render() {
         return (
           <div className="configure-sources">
-              <input type="text" ref="searchSources" onKeyUp ={(event) => { this.fetchSources(event); }} className="search-sources" placeholder="Search...." />
+              <div className="input-group">
+                  <input type="text" ref="searchSources" onKeyUp ={(event) => { this.fetchSources(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
+                  <span className="input-group__addon">
+                    <img src="./images/search-icon.png" alt="search"/>
+                  </span>
+              </div>
               <SourcePane />
           </div>
         );
