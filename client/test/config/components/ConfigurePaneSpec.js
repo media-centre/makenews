@@ -1,7 +1,7 @@
 import React from "react";
 import { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
 import TestUtils from "react-addons-test-utils";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 

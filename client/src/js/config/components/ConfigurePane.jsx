@@ -1,3 +1,4 @@
+/* eslint brace-style:0*/
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
@@ -15,7 +16,6 @@ export class ConfigurePane extends Component {
         if (event.keyCode === ENTERKEY) {
             let value = this.refs.searchSources.value;
             if(this.props.currentTab !== PROFILES && !StringUtils.isEmptyString(value)) {
-                console.log("inside");
                 this.props.dispatch(getSourcesOf(this.props.currentTab, value));
             }
         }
