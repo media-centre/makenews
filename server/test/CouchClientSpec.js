@@ -8,6 +8,7 @@ import sinon from "sinon";
 
 import { assert } from "chai";
 import nock from "nock";
+import CryptUtil from "../src/util/CryptUtil";
 
 describe("CouchClient", () => {
     let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
@@ -299,6 +300,47 @@ describe("CouchClient", () => {
                 done();
             });
         });
+    });
+
+    describe("getUserDbName", () => {
+        it("should fetch the dbname", async () => {
+            nock("http://localhost:5984")
+                .get("/_session")
+                .reply(HttpResponseHandler.codes.OK, { "userCtx": { "name": "userName" } });
+
+            let cryptUtilMock = sinon.mock(CryptUtil).expects("dbNameHash").withArgs("userName");
+            cryptUtilMock.returns("dbName");
+            let couchClientMock = new CouchClient("dbName", "accessToken");
+            try {
+                let dbNameResponse = await couchClientMock.getUserDbName();
+                assert.equal(dbNameResponse, "dbName");
+            }catch(error) {
+                assert.fail(error);
+            }finally {
+                CryptUtil.dbNameHash.restore();
+            }
+
+        });
+    });
+
+    describe("createInstance", () => {
+        it("should create an instance with the new dbname", async () => {
+            nock("http://localhost:5984")
+                .get("/_session")
+                .reply(HttpResponseHandler.codes.OK, { "userCtx": { "name": "userName" } });
+            let cryptUtilMock = sinon.mock(CryptUtil).expects("dbNameHash").withArgs("userName");
+            cryptUtilMock.returns("dbName");
+            try {
+                let instance = await CouchClient.createInstance("access_token");
+                assert.equal(CouchClient.getDbInstance("access_token"), instance);
+            }catch(error) {
+                assert.fail(error);
+            }finally {
+                CryptUtil.dbNameHash.restore();
+            }
+
+        });
+
     });
 });
 

@@ -1,4 +1,4 @@
-import {assert} from "chai";
+import { assert } from "chai";
 import sinon from "sinon";
 import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 import RssClient from "../../src/rss/RssClient";
@@ -38,7 +38,7 @@ describe("RssBatchFeedsFetch", () => {
             sinon.mock(rssClientMock).expects("getRssData").returns(Promise.reject("feeds not found"));
 
             try {
-                await rssBatchFeedsFetch.fetchBatchFeeds(url,accessToken);
+                await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
             } catch(error) {
                 assert.equal(error, "feeds not found");
             }
@@ -50,7 +50,7 @@ describe("RssBatchFeedsFetch", () => {
             sinon.mock(rssBatchFeedsFetch).expects("storeInDb").returns(Promise.reject("not able to store in db"));
 
             try {
-                await rssBatchFeedsFetch.fetchBatchFeeds(url,accessToken);
+                await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
             } catch(error) {
                 assert.equal(error, "not able to store in db");
             }
@@ -62,12 +62,11 @@ describe("RssBatchFeedsFetch", () => {
             sinon.mock(rssBatchFeedsFetch).expects("storeInDb").returns(Promise.resolve("stored in db"));
 
             try {
-                let response = await rssBatchFeedsFetch.fetchBatchFeeds(url,accessToken);
+                let response = await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
                 assert.equal(response, "stored in db");
             } catch(error) {
                 assert.fail();
-            }
-            finally {
+            } finally {
                 rssBatchFeedsFetch.storeInDb.restore();
             }
         });
@@ -79,45 +78,49 @@ describe("RssBatchFeedsFetch", () => {
     });
 
     describe("storeInDb", () => {
-       it("should throw failed to store in db when there is an error save bulk docs", async () => {
-           let response = { "userCtx": {
-               "name" : "dbName"
-           }};
-           let dbName = "dbName";
-           let feeds = {"items": ["feed items"]};
-           try {
-               sinon.mock(CouchClient).expects("instance").returns(couchClientMock);
-               sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
-               sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
-               sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.reject("failed to store in db"));
-               await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
-           } catch (error) {
-               assert.equal(error, "failed to store in db");
-           }
-       });
+        it("should throw failed to store in db when there is an error save bulk docs", async() => {
+            let response = {
+                "userCtx": {
+                    "name": "dbName"
+                }
+            };
+            let dbName = "dbName";
+            let feeds = { "items": ["feed items"] };
+            try {
+                sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
+                sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
+                sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
+                sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.reject("failed to store in db"));
+                await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
+            } catch (error) {
+                assert.equal(error, "failed to store in db");
+            }
+        });
 
         it("should return success message when there is no error", async () => {
-           let response = { "userCtx": {
-               "name" : "dbName"
-           }};
-           let dbName = "dbName";
-            let feeds = {"items": ["feed items"]};
-           try {
-               sinon.mock(CouchClient).expects("instance").returns(couchClientMock);
-               sinon.stub(couchClientMock, "get").returns(Promise.resolve(response));
-               // sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
-               sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
-               sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
-               // sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
-               let res = await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
-               assert.equal(res, "Successfully added feeds to Database");
-           } catch (error) {
-               assert.fail();
-           }
-       });
+            let response = {
+                "userCtx": {
+                    "name": "dbName"
+                }
+            };
+            let dbName = "dbName";
+            let feeds = { "items": ["feed items"] };
+            try {
+                sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
+                sinon.stub(couchClientMock, "get").returns(Promise.resolve(response));
+                // sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
+                sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
+                sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
+                // sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
+                let res = await rssBatchFeedsFetch.storeInDb(feeds, accessToken);
+                assert.equal(res, "Successfully added feeds to Database");
+            } catch (error) {
+                assert.fail();
+            }
+        });
 
         afterEach("rssBatchFeedsFetch afterEach", () => {
-            CouchClient.instance.restore();
+            CouchClient.createInstance.restore();
             couchClientMock.get.restore();
             CryptUtil.dbNameHash.restore();
             couchClientMock.saveBulkDocuments.restore();

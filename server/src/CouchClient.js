@@ -3,10 +3,24 @@ import ApplicationConfig from "./config/ApplicationConfig";
 import NodeErrorHandler from "./NodeErrorHandler";
 import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
+import CryptUtil from "./util/CryptUtil";
 
+let dbInstanceMap = new Map();
 export default class CouchClient {
     static instance(dbName, accessToken, dbUrl = null) {
+
         return new CouchClient(dbName, accessToken, dbUrl);
+    }
+
+    async getUserDbName() {
+        try {
+            let response = await this.get("/_session");
+            let userName = response.userCtx.name;
+            return CryptUtil.dbNameHash(userName);
+        } catch(error) {
+            return null;
+        }
+
     }
 
     static logger() {
@@ -14,9 +28,23 @@ export default class CouchClient {
     }
 
     constructor(dbName, accessToken, dbUrl) {
-        this.dbName = dbName;
         this.accessToken = accessToken;
         this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
+        this.dbName = dbName;
+    }
+
+    static async createInstance(accesToken) {
+        let instance = CouchClient.getDbInstance(accesToken);
+        if(!instance) {
+            instance = new CouchClient(null, accesToken);
+            instance.dbName = await instance.getUserDbName();
+            dbInstanceMap.set(accesToken, instance);
+        }
+        return instance;
+    }
+
+    static getDbInstance(accesToken) {
+        return dbInstanceMap.get(accesToken);
     }
 
     saveDocument(documentId, documentObj, customHeaders = {}) {
@@ -24,7 +52,7 @@ export default class CouchClient {
         return this.put(path, documentObj, customHeaders);
     }
 
-    saveBulkDocuments(body, customHeaders = {}) {
+    async saveBulkDocuments(body, customHeaders = {}) {
         const path = "/" + this.dbName + "/_bulk_docs";
         return this.post(path, body, customHeaders);
     }
@@ -121,6 +149,7 @@ export default class CouchClient {
                 });
         });
     }
+
 
     _headers(customHeaders) {
         let headers = {};

@@ -55,11 +55,8 @@ describe("RssBatchFeedsRoute", () => {
                 }
             };
 
-            let feedResponse = {
-                "6E4B3A-5B3E-15CD-95CB-7E9D89857316": { "items": [{ "title": "test", "description": "news cricket" }] },
-                "6E4B3A-5B3E-15CD-95CB-7E9D82343249": { "items": [{ "title": "test1", "description": "news cricket1" }] }
-            };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedResponse });
+
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "message": "success" } });
             let rssRouteHelper = new RssBatchFeedsRoute(requestData, response);
 
             let sandbox = sinon.sandbox.create();
@@ -68,23 +65,18 @@ describe("RssBatchFeedsRoute", () => {
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
 
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchBatchRssFeedsRequest");
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.resolve({ "items": [{ "title": "test1", "description": "news cricket1" }] }));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url, "auth session").returns(Promise.resolve("success"));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url, "auth session").returns(Promise.resolve("success"));
             rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();
         });
 
         it("should set invalid response only for the particular url, if fetching fails", (done) => {
-
             let requestData = {
                 "body": {
                     "data": [
-                        {
-                            "url": "www.rssurl1.com/rss",
-                            "id": "6E4B3A-5B3E-15CD-95CB-7E9D89857316",
-                            "timestamp": "1232323"
-                        },
+
                         {
                             "url": "www.rssurl2.com/rss",
                             "id": "6E4B3A-5B3E-15CD-95CB-7E9D82343249",
@@ -97,11 +89,7 @@ describe("RssBatchFeedsRoute", () => {
                 }
             };
 
-            let feedResponse = {
-                "6E4B3A-5B3E-15CD-95CB-7E9D89857316": { "items": [{ "title": "test", "description": "news cricket" }] },
-                "6E4B3A-5B3E-15CD-95CB-7E9D82343249": "failed"
-            };
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedResponse });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "message": "sucessfully added feeds" } });
             let rssRouteHelper = new RssBatchFeedsRoute(requestData, response);
 
             let sandbox = sinon.sandbox.create();
@@ -109,8 +97,7 @@ describe("RssBatchFeedsRoute", () => {
             let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
             let fetchRssFeedRequestMock = sandbox.stub(rssRequestHandlerInstance, "fetchBatchRssFeedsRequest");
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.resolve({ "items": [{ "title": "test", "description": "news cricket" }] }));
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[one].url).returns(Promise.reject("some error"));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[zero].url).returns(Promise.reject("some error"));
             rssRouteHelper.handle();
             rssRequestHandlerMock.verify();
             sandbox.restore();

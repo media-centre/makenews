@@ -36,6 +36,7 @@ export default class RssRequestHandler {
         }
     }
 
+
     rssBatchFeedsFetch() {
         return RssBatchFeedsFetch.instance();
     }

@@ -5,7 +5,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
-import {assert, expect} from "chai";
+import { assert, expect } from "chai";
 import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
 import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
