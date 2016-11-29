@@ -2,13 +2,13 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_GOT_CONFIGURED_PROFILES,
+    GOT_CONFIGURED_SOURCES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PROFILES
 } from "./../actions/FacebookConfigureActions";
 import { List } from "immutable";
 
-export const facebookConfiguredUrls = (state = { "profiles": [], "pages": [], "groups": [] }, action = {}) => {
+export const configuredSources = (state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] }, action = {}) => {
     switch (action.type) {
     case FACEBOOK_ADD_PROFILE: {
         return Object.assign({}, state, { "profiles": List(state.profiles).push(action.source).toArray() }); //eslint-disable-line new-cap
@@ -16,8 +16,8 @@ export const facebookConfiguredUrls = (state = { "profiles": [], "pages": [], "g
     case FACEBOOK_ADD_PAGE: {
         return Object.assign({}, state, { "pages": List(state.pages).push(action.source).toArray() }); //eslint-disable-line new-cap
     }
-    case FACEBOOK_GOT_CONFIGURED_PROFILES: {
-        return Object.assign({}, state, { "profiles": action.profiles });
+    case GOT_CONFIGURED_SOURCES: {
+        return action.sources;
     }
     default: return state;
     }

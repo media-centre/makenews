@@ -34,7 +34,7 @@ describe("FacebookConfigureRoute", () => {
             "query": {},
             "cookies": { "AuthSession": "session" }
         }, response);
-        facebookRoute.fetchProfiles();
+        facebookRoute.fetchConfiguredSources();
     });
 
     it("should reject the request if auth session is missing", (done) => {
@@ -53,7 +53,7 @@ describe("FacebookConfigureRoute", () => {
             "query": { "dbName": "user" },
             "cookies": {}
         }, response);
-        facebookRoute.fetchProfiles();
+        facebookRoute.fetchConfiguredSources();
     });
 
     it("should give 400 when there is a problem getting the sources", (done) => {
@@ -76,14 +76,17 @@ describe("FacebookConfigureRoute", () => {
         let facebookRequestHandler = new FacebookRequestHandler("token");
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
         
-        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSourcesOf");
-        configStub.withArgs("profiles", "user", "session").returns(Promise.reject("error fetching data"));
+        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
+        configStub.withArgs("user", "session").returns(Promise.reject("error fetching data"));
 
-        facebookRoute.fetchProfiles();
+        facebookRoute.fetchConfiguredSources();
     });
 
     it("should get the sources", (done) => {
-        let profiles = [{ "name": "profile1" }, { "name": "profile2" }];
+        let sources = {
+            "profiles": [{ "name": "Name", "id": "Id_" }],
+            "pages": [], "groups": [], "twitter": [], "web": []
+        };
         let response = {
             "status": (status) => {
                 assert.strictEqual(HttpResponseHandler.codes.OK, status);
@@ -91,7 +94,7 @@ describe("FacebookConfigureRoute", () => {
             },
             "json": (json) => {
                 try {
-                    assert.deepEqual({ "profiles": profiles }, json);
+                    assert.deepEqual(sources, json);
                     done();
                 } catch (err) {
                     done(err);
@@ -107,9 +110,9 @@ describe("FacebookConfigureRoute", () => {
         let facebookRequestHandler = new FacebookRequestHandler("token");
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
 
-        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSourcesOf");
-        configStub.withArgs("profiles", "user", "session").returns(Promise.resolve(profiles));
+        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
+        configStub.withArgs("user", "session").returns(Promise.resolve(sources));
 
-        facebookRoute.fetchProfiles();
+        facebookRoute.fetchConfiguredSources();
     });
 });

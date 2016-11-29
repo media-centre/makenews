@@ -2,22 +2,26 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { getSourcesOf, getConfiguredProfiles, PROFILES } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf, getConfiguredSources, PROFILES } from "./../actions/FacebookConfigureActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
         this.props.dispatch(getSourcesOf(this.props.currentTab));
-        this.props.dispatch(getConfiguredProfiles());
+        this.props.dispatch(getConfiguredSources());
     }
 
-    fetchSources(event) {
+    checkEnterKey(event) {
         const ENTERKEY = 13;
         if (event.keyCode === ENTERKEY) {
-            let value = this.refs.searchSources.value;
-            if(this.props.currentTab !== PROFILES && !StringUtils.isEmptyString(value)) {
-                this.props.dispatch(getSourcesOf(this.props.currentTab, value));
-            }
+            this.fetchSources();
+        }
+    }
+
+    fetchSources() {
+        let value = this.refs.searchSources.value;
+        if(this.props.currentTab !== PROFILES && !StringUtils.isEmptyString(value)) {
+            this.props.dispatch(getSourcesOf(this.props.currentTab, value));
         }
     }
 
@@ -25,9 +29,9 @@ export class ConfigurePane extends Component {
         return (
           <div className="configure-sources">
               <div className="input-group">
-                  <input type="text" ref="searchSources" onKeyUp ={(event) => { this.fetchSources(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
+                  <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
                   <span className="input-group__addon">
-                    <img src="./images/search-icon.png" alt="search"/>
+                    <img src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
               <SourcePane />

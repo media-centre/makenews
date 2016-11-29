@@ -32,9 +32,9 @@ export default (app) => {
         new FacebookSourceRoute(request, response, next).fetchPages();
     });
 
-    app.get("/facebook/configured/profiles", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configured/profiles request received. url = %s", request.url);
-        new FacebookConfigureRoute(request, response, next).fetchProfiles();
+    app.get("/facebook/configured/", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook/configured/ request received. url = %s", request.url);
+        new FacebookConfigureRoute(request, response, next).fetchConfiguredSources();
     });
     
     app.put("/facebook/configuredSource", (request, response, next) => {

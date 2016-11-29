@@ -2,38 +2,40 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_GOT_CONFIGURED_PROFILES,
+    GOT_CONFIGURED_SOURCES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PAGES
 } from "../../src/js/config/actions/FacebookConfigureActions";
-import { facebookSources, facebookConfiguredUrls, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
+import { facebookSources, configuredSources, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
 import { expect } from "chai";
 
 describe("Facebook Reducer", () => {
 
     describe("Facebook Configured Sources", () => {
         it("should return an empty list by default when there are no configured sources", () => {
-            expect(facebookConfiguredUrls().profiles).to.deep.equal([]);
-            expect(facebookConfiguredUrls().groups).to.deep.equal([]);
-            expect(facebookConfiguredUrls().pages).to.deep.equal([]);
+            expect(configuredSources().profiles).to.deep.equal([]);
+            expect(configuredSources().groups).to.deep.equal([]);
+            expect(configuredSources().pages).to.deep.equal([]);
         });
 
         it("should add a profile to the state when asked for adding a profile", () => {
             let action = { "type": FACEBOOK_ADD_PROFILE, "source": { "name": "Profile1" } };
-            let state = { "profiles": [], "pages": [], "groups": [] };
-            expect(facebookConfiguredUrls(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
+            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
         });
 
         it("should add a profile to the state when asked for adding a page", () => {
             let action = { "type": FACEBOOK_ADD_PAGE, "source": { "name": "Page1" } };
-            let state = { "profiles": [], "pages": [], "groups": [] };
-            expect(facebookConfiguredUrls(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
+            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
         });
 
         it("should return updated state with configured profiles", () => {
-            let action = { "type": FACEBOOK_GOT_CONFIGURED_PROFILES, "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }] };
-            let state = { "profiles": [], "pages": [], "groups": [] };
-            expect(facebookConfiguredUrls(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
+            let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
+                "pages": [], "groups": [], "twitter": [], "web": [] };
+            let action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
+            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
         });
     });
 

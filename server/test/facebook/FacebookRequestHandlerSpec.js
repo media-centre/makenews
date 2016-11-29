@@ -287,17 +287,14 @@ describe("FacebookRequestHandler", () => {
         });
     });
     
-    describe("Configured Profiles", () => {
+    describe("Configured Sources", () => {
         let sandbox = null, dbName = null, body = null, facebookRequestHandler = null, couchClient = null;
-        beforeEach("Configured Profiles", () => {
+        beforeEach("Configured Sources", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";
             body = { "selector": {
                 "docType": {
                     "$eq": "configuredSource"
-                },
-                "sourceType": {
-                    "$eq": "fb-profiles"
                 }
             } };
             facebookRequestHandler = new FacebookRequestHandler("somethings");
@@ -305,24 +302,52 @@ describe("FacebookRequestHandler", () => {
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
         });
 
-        afterEach("Configured Profiles", () => {
+        afterEach("Configured Sources", () => {
             sandbox.restore();
         });
 
-        it("should get the facebook configured profiles", (done) => {
+        it("should get the facebook configured Sources", (done) => {
             let result = { "docs":
             [{ "_id": "7535677770c76f0bf6045a0e1401ccf4",
                 "_rev": "1-23d11b676e21bca63e16d032a03b0826",
                 "docType": "source",
                 "sourceType": "fb-profiles",
                 "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" }] };
+                "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
+                { "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                    "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                    "docType": "source",
+                    "sourceType": "fb-pages",
+                    "url": "http://www.facebook.com/profile1",
+                    "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
+                { "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                    "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                    "docType": "source",
+                    "sourceType": "fb-groups",
+                    "url": "http://www.facebook.com/profile1",
+                    "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
+                { "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                    "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                    "docType": "source",
+                    "sourceType": "twitter",
+                    "url": "http://www.facebook.com/profile1",
+                    "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
+                { "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                    "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                    "docType": "source",
+                    "sourceType": "web",
+                    "url": "http://www.facebook.com/profile1",
+                    "latestFeedTimestamp": "2016-11-21T01:57:48Z" }] };
 
             sandbox.stub(couchClient, "post").withArgs(`/${dbName}/_find`, body).returns(Promise.resolve(result));
 
-            facebookRequestHandler.fetchConfiguredSourcesOf("profiles", dbName, accessToken).then(data => {
+            facebookRequestHandler.fetchConfiguredSources(dbName, accessToken).then(data => {
                 try {
-                    expect(data).to.deep.equal(result.docs);
+                    expect(data.profiles).to.deep.equal([result.docs[0]]); //eslint-disable-line no-magic-numbers
+                    expect(data.pages).to.deep.equal([result.docs[1]]); //eslint-disable-line no-magic-numbers
+                    expect(data.groups).to.deep.equal([result.docs[2]]); //eslint-disable-line no-magic-numbers
+                    expect(data.twitter).to.deep.equal([result.docs[3]]); //eslint-disable-line no-magic-numbers
+                    expect(data.web).to.deep.equal([result.docs[4]]); //eslint-disable-line no-magic-numbers
                     done();
                 } catch (err) {
                     done(err);
@@ -333,7 +358,7 @@ describe("FacebookRequestHandler", () => {
         it("should reject with error when database gives an error", (done) => {
             let errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "post").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.fetchConfiguredSourcesOf("profiles", dbName, accessToken).catch(error => {
+            facebookRequestHandler.fetchConfiguredSources(dbName, accessToken).catch(error => {
                 try {
                     expect(error).to.equal(errorMessage);
                     done();

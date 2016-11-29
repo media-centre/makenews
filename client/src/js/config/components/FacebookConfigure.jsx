@@ -16,7 +16,7 @@ class FacebookConfigure extends Component {
 
 function mapToStore(state) {
     return {
-        "sources": state.facebookConfiguredUrls
+        "sources": state.configuredSources
     };
 }
 

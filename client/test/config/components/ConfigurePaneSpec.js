@@ -5,7 +5,7 @@ import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 
-describe.only("Configure Pane", () => {
+describe("Configure Pane", () => {
     let store = null, renderer = null, configurePaneDOM = null, dispatch = null;
     let currentTab = null;
 
