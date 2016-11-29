@@ -479,7 +479,7 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(document.url, document).returns(Promise.resolve({
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
                 "ok": "true",
                 "id": "test_name",
                 "rev": "test_revision"
@@ -495,7 +495,7 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(document.url, document).returns(Promise.reject("unexpected response from the db"));
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
             try {
                 await RssClient.instance().addUrlToCommon(document);
                 assert.fail("expected error");
@@ -526,7 +526,7 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(document.url, document).returns(Promise.resolve({
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
                 "ok": "true",
                 "id": "test_name",
                 "rev": "test_revision"
@@ -542,7 +542,7 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(document.url, document).returns(Promise.reject("unexpected response from the db"));
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
             try {
                 await RssClient.instance().addURLToUser(document, "token");
                 assert.fail("expected error");

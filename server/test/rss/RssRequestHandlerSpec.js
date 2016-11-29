@@ -119,8 +119,9 @@ describe("Rss Request Handler", () => {
         });
     });
     describe("fetchBatchRssFeedsRequest", ()=> {
-        let rssRequestHandler, response, rssBatchMock, rssClientMock, sandbox;
+        let rssRequestHandler = null, response = null, rssBatchMock = null, rssClientMock = null, sandbox = null;
         beforeEach("fetchBatchRssFeedsRequest", () => {
+            sandbox = sinon.sandbox.create();
             rssRequestHandler = new RssRequestHandler();
             response = "successfully fetched feeds";
             rssBatchMock = new RssBatchFeedsFetch();
