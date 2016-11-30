@@ -6,7 +6,6 @@ import cheerio from "cheerio";
 import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import CouchClient from "../CouchClient";
-import CryptUtil from "../util/CryptUtil";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
 
@@ -204,8 +203,7 @@ export default class RssClient {
 
     async addURLToUser(document, accessToken) {
         try {
-            let dbHashName = CryptUtil.dbNameHash("test");
-            let couchClient = CouchClient.instance(dbHashName, accessToken);
+            let couchClient = CouchClient.createInstance(accessToken);
             await couchClient.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to user database.");
         } catch (error) {

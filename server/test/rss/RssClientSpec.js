@@ -10,7 +10,6 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
-import CryptUtil from "../../../server/src/util/CryptUtil";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -508,13 +507,14 @@ describe("RssClient", () => {
     });
     
     describe("addURLToUser", () => {
-        let couchClient = null, dbHashMock = null, couchInstanceMock = null;
+        let couchClient = null, accessToken = null, couchClientMock = null;
 
         beforeEach("addURLToUser", () => {
+            accessToken = "test_token";
             sandbox = sinon.sandbox.create();
             couchClient = new CouchClient();
-            dbHashMock = sandbox.mock(CryptUtil).expects("dbNameHash").withArgs("test").returns("testHash");
-            couchInstanceMock = sandbox.mock(CouchClient).expects("instance").withArgs("testHash", "token").returns(couchClient);
+            couchClientMock = sandbox.mock(CouchClient).expects("createInstance").withArgs(accessToken).returns(couchClient);
+            sandbox.stub(couchClient, "getUserDbName").returns("test");
         });
 
         afterEach("addURLToUser", () => {
@@ -530,10 +530,9 @@ describe("RssClient", () => {
                 "id": "test_name",
                 "rev": "test_revision"
             }));
-            let response = await RssClient.instance().addURLToUser(document, "token");
+            let response = await RssClient.instance().addURLToUser(document, accessToken);
             assert.strictEqual("URL added to Database", response);
-            dbHashMock.verify();
-            couchInstanceMock.verify();
+            couchClientMock.verify();
             saveDocMock.verify();
         });
 
@@ -543,13 +542,12 @@ describe("RssClient", () => {
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
             try {
-                await RssClient.instance().addURLToUser(document, "token");
+                await RssClient.instance().addURLToUser(document, accessToken);
                 assert.fail("expected error");
             } catch (err) {
                 assert.strictEqual("unexpected response from the db", err);
             }
-            dbHashMock.verify();
-            couchInstanceMock.verify();
+            couchClientMock.verify();
             saveDocMock.verify();
         });
     });
