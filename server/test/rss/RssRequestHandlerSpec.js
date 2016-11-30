@@ -17,18 +17,13 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
         it("should return the default URL Document", async() => {
-            let body = {
-                "selector": {
-                    "url": {
-                        "$eq": "the"
-                    }
-                }
-            };
+            let key = "the";
+            let offSet = 0;
             let rssRequestHandler = RssRequestHandler.instance();
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
-            rssClientMock.withArgs(body).returns(Promise.resolve({
+            rssClientMock.withExactArgs(key, offSet).returns(Promise.resolve({
                 "docs": [{
                     "_id": "1",
                     "docType": "test",
@@ -45,26 +40,29 @@ describe("Rss Request Handler", () => {
                 }]
             }));
             try {
-                let document = await rssRequestHandler.searchUrl(body);
+                let document = await rssRequestHandler.searchUrl(key, offSet);
                 const zero = 0;
                 assert.strictEqual("web", document.docs[zero].sourceType);
+                rssClientMock.verify();
             }catch (err) {
                 assert.fail(err);
             }
         });
 
         it("should reject with an error if the URL document rejects with an error", async() => {
-            let body = null;
+            let key = "Error";
+            let offSet = 5;
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
-            rssClientMock.withArgs(body).returns(Promise.reject("No selector found"));
+            rssClientMock.withExactArgs(key, offSet).returns(Promise.reject("No selector found"));
             let rssRequestHandler = RssRequestHandler.instance();
             try {
-                await rssRequestHandler.searchUrl(body);
+                await rssRequestHandler.searchUrl(key, offSet);
                 assert.fail();
             }catch (err) {
                 assert.strictEqual("No selector found", err);
+                rssClientMock.verify();
             }
         });
     });
