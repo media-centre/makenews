@@ -30,7 +30,7 @@ describe("Search Urls Route", () => {
         return response;
     }
 
-    it("should return bad request if url is not present in request", async () => {
+    it("should return bad request if key is not present in request", async () => {
         let request = {
             "query": {
                 "key": ""
@@ -42,10 +42,12 @@ describe("Search Urls Route", () => {
     });
 
     it("should return feeds for correct request", async () => {
+        let ZERO = 0;
         let sandbox = sinon.sandbox.create();
         let request = {
             "query": {
-                "key": "The"
+                "key": "The",
+                "offset": ""
             }
         };
         let feeds = { "docs":
@@ -63,10 +65,66 @@ describe("Search Urls Route", () => {
         let requestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
-        requestHandlerMock.withArgs(request.query.key).returns(Promise.resolve(feeds));
+        requestHandlerMock.withArgs(request.query.key, ZERO).returns(Promise.resolve(feeds));
         let response = mockResponseSuccess({ "status": HttpResponseHandler.codes.OK, "json": { feeds } });
         let searchURLsRoute = await new SearchURLsRoute(request, response, {});
         searchURLsRoute.handle();
+        requestHandlerMock.verify();
         sandbox.restore();
+    });
+
+    describe("Offset Value", () => {
+        let ZERO = 0;
+
+        it("should set the offset value zero if it is not in request", () => {
+            let request = {
+                "query": {
+                    "key": ""
+                }
+            };
+            let response = {};
+
+            let offsetValue = new SearchURLsRoute(request, response, {}).offsetValue();
+            expect(offsetValue).to.be.equal(ZERO);
+        });
+
+        it("should set the offset value zero if it is not integer", () => {
+            let request = {
+                "query": {
+                    "key": "",
+                    "offset": "test"
+                }
+            };
+            let response = {};
+
+            let offsetValue = new SearchURLsRoute(request, response, {}).offsetValue();
+            expect(offsetValue).to.be.equal(ZERO);
+        });
+
+        it("should set the offset value zero if it is negative value", () => {
+            let request = {
+                "query": {
+                    "key": "",
+                    "offset": -1
+                }
+            };
+            let response = {};
+
+            let offsetValue = new SearchURLsRoute(request, response, {}).offsetValue();
+            expect(offsetValue).to.be.equal(ZERO);
+        });
+
+        it("should return the offset value", () => {
+            let request = {
+                "query": {
+                    "key": "",
+                    "offset": 2  //eslint-disable-line no-magic-numbers
+                }
+            };
+            let response = {};
+
+            let offsetValue = new SearchURLsRoute(request, response, {}).offsetValue();
+            expect(offsetValue).to.be.equal(2); //eslint-disable-line no-magic-numbers
+        });
     });
 });

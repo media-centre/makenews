@@ -43,9 +43,9 @@ export default class RssRequestHandler {
         return RssClient.instance();
     }
 
-    async searchUrl(key) {
+    async searchUrl(key, offSetValue) {
         try {
-            let document = await this.rssClient().searchURL(key);
+            let document = await this.rssClient().searchURL(key, offSetValue);
             RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
             return document;
         }catch (error) {

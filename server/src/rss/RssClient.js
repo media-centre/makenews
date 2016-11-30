@@ -7,7 +7,7 @@ import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import CouchClient from "../CouchClient";
 
-const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
+const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1, LIMIT_VALUE = 50;
 
 export default class RssClient {
 
@@ -180,17 +180,20 @@ export default class RssClient {
         return "URL added to Database";
     }
 
-    async searchURL(key) {
+    async searchURL(key, offsetValue) {
         let document = null;
+        let skipValue = offsetValue * LIMIT_VALUE;
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
             let selector = {
                 "selector": {
                     "name": {
-                        "$eq": key
+                        "$regex": key
                     }
-                }
+                },
+                "limit": LIMIT_VALUE,
+                "skip": skipValue
             };
             document = await dbInstance.findDocuments(selector);
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
