@@ -110,20 +110,17 @@ export default class FacebookRequestHandler {
 
     async fetchConfiguredSources(dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
-        try {
-            let data = await couchClient.post(`/${dbName}/_find`, {
-                "selector": {
-                    "docType": {
-                        "$eq": "configuredSource"
-                    }
+        let data = await couchClient.findDocuments({
+            "selector": {
+                "docType": {
+                    "$eq": "configuredSource"
                 }
-            });
-            return this.formatConfiguredSources(data.docs);
-        } catch(error) {
-            throw error;
-        }
+            }
+        });
+        return this.formatConfiguredSources(data.docs);
     }
 
+    /* TODO change it to one time traversal */ //eslint-disable-line
     formatConfiguredSources(docs) {
         let result = {
             "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []

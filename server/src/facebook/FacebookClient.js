@@ -116,18 +116,20 @@ export default class FacebookClient {
         let parameters = { "q": pageName, "type": "page", "fields": "id,name,picture" };
         this._addDefaultParameters(parameters);
 
+        let response = null;
         try {
-            let response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
-            let responseJson = await response.json();
-            if(response.status === HttpResponseHandler.codes.OK) {
-                return responseJson;
-            }
-            FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the pages for ${pageName}`);
-            throw responseJson.error;
+            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
         } catch(err) {
             FacebookClient.logger().error(`FacebookClient:: Error fetching pages. Error ${err}`);
             throw err;
         }
+
+        let responseJson = await response.json();
+        if(response.status === HttpResponseHandler.codes.OK) {
+            return responseJson;
+        }
+        FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the pages for ${pageName}`);
+        throw responseJson.error;
     }
 
     getFacebookId(facebookPageUrl) {

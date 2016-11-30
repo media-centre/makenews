@@ -28,18 +28,18 @@ export default class CouchClient {
         this.dbName = dbName;
     }
 
-    static async createInstance(accesToken) {
-        let instance = CouchClient.getDbInstance(accesToken);
+    static async createInstance(accessToken) {
+        let instance = CouchClient.getDbInstance(accessToken);
         if(!instance) {
-            instance = new CouchClient(null, accesToken);
+            instance = new CouchClient(null, accessToken);
             instance.dbName = await instance.getUserDbName();
-            dbInstanceMap.set(accesToken, instance);
+            dbInstanceMap.set(accessToken, instance);
         }
         return instance;
     }
 
-    static getDbInstance(accesToken) {
-        return dbInstanceMap.get(accesToken);
+    static getDbInstance(accessToken) {
+        return dbInstanceMap.get(accessToken);
     }
 
     saveDocument(documentId, documentObj, customHeaders = {}) {
