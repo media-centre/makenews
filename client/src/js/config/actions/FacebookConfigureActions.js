@@ -3,6 +3,7 @@ import LoginPage from "../../login/pages/LoginPage";
 import DbParameters from "../../db/DbParameters";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
+import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
@@ -97,12 +98,18 @@ export function getConfiguredSources() {
     };
 }
 
+function cmp(first, second) {
+    return first.id === second._id;
+}
+
 function fetchFacebookPages(pageName) {
     let ajaxClient = AjaxClient.instance("/facebook-pages", false);
-    return dispatch => {
+    return (dispatch, getState) => {
         ajaxClient.get({ "userName": LoginPage.getUserName(), "pageName": pageName })
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(PAGES));
+                let configuredSources = getState().configuredSources.pages;
+                intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response.data));
             });
     };

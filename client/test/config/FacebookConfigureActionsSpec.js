@@ -107,7 +107,24 @@ describe("Facebook Configure Actions", () => {
             ajaxClientGetMock.returns(Promise.resolve(sources));
 
             let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
-            let store = mockStore({}, actions, done);
+            let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
+            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
+        });
+
+        it("should dispatch configured pages with added property", (done) => {
+            let serverUrl = "/facebook-pages";
+            let pageName = "testPage";
+            let fbResponse = { "data": [{ "id": 1, "name": "testProfile" },
+                { "id": 2, "name": "testProfile2" }] };
+            let sources = { "data": [{ "id": 1, "name": "testProfile", "added": true },
+                { "id": 2, "name": "testProfile2" }] };
+
+            ajaxClient = AjaxClient.instance(serverUrl, false);
+            sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
+            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "pageName": pageName });
+            ajaxClientGetMock.returns(Promise.resolve(fbResponse));
+            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
+            let store = mockStore(() => ({ "configuredSources": { "pages": [{ "_id": 1 }, { "_id": 3 }] } }), actions, done);
             store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
         });
     });
