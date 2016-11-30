@@ -10,17 +10,14 @@ export default class AddURLDocumentRoute extends Route {
         this.accessToken = this.request.cookies.AuthSession;
     }
 
-    valid() {
-        if (StringUtils.isEmptyString(this.url) || StringUtils.isEmptyString(this.accessToken)) {
-            return false;
-        }
-        return true;
+    inValid() {
+        return StringUtils.isEmptyString(this.url) || StringUtils.isEmptyString(this.accessToken);
     }
 
     async handle() {
         let response = {};
         try {
-            if (!this.valid()) {
+            if (this.inValid()) {
                 RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
                 return this._handleInvalidRoute();
             }

@@ -9,16 +9,9 @@ export default class SearchURLsRoute extends Route {
         this.key = this.request.query.key;
     }
 
-    valid() {
-        if(StringUtils.isEmptyString(this.key)) { //eslint-disable-line no-magic-numbers
-            return false;
-        }
-        return true;
-    }
-
-    async handle() {                                   //eslint-disable-line consistent-return
+    async handle() {
         try {
-            if (!this.valid()) {
+            if (StringUtils.isEmptyString(this.key)) {
                 RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.key);
                 return this._handleInvalidRoute();
             }
