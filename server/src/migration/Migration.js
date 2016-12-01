@@ -7,6 +7,7 @@ import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSource
 import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed";
 import ModifyImageUrlToImagesArray from "../../src/migration/db/20160516122916_ModifyImageUrlToImagesArray";
 import URLDocument from "../../src/migration/db/20161114174315_URLDocument";
+import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
 
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
@@ -116,6 +117,8 @@ export default class Migration {
             return new URLDocument(this.dbName, this.accessToken);
         case "ModifyImageUrlToImagesArray" :
             return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
+        case "IndexDocument" :
+            return new IndexDocument(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
