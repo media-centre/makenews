@@ -23,13 +23,18 @@ export default (app) => {
     });
 
     app.get("/facebook-profiles", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-batch-posts request received. url = %s", request.url);
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-profiles request received. url = %s", request.url);
         new FacebookSourceRoute(request, response, next).fetchProfiles();
     });
 
     app.get("/facebook-pages", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-batch-posts request received. url = %s", request.url);
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-pages request received. url = %s", request.url);
         new FacebookSourceRoute(request, response, next).fetchPages();
+    });
+
+    app.get("/facebook-groups", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-groups request received. url = %s", request.url);
+        new FacebookSourceRoute(request, response, next).fetchGroups();
     });
 
     app.get("/facebook/configured/", (request, response, next) => {

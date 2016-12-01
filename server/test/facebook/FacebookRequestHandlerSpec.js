@@ -426,24 +426,25 @@ describe("FacebookRequestHandler", () => {
         });
     });
 
-    describe("fetchPages", () => {
-        let sandbox = null, pageName = "TheHindu", facebookRequstHandler = null;
+    describe("fetchSourceUrls", () => {
+        let sandbox = null, keyword = "TheHindu", type = "page", facebookRequstHandler = null;
         let facebookClientInstance = null;
 
-        beforeEach("fetchPages", () => {
+        beforeEach("fetchSourceUrls", () => {
             sandbox = sinon.sandbox.create();
             facebookRequstHandler = new FacebookRequestHandler(accessToken);
             facebookClientInstance = new FacebookClient(accessToken, appSecretProof);
             sandbox.mock(FacebookClient).expects("instance").returns(facebookClientInstance);
         });
 
-        afterEach("fetchPages", () => {
+        afterEach("fetchSourceUrls", () => {
             sandbox.restore();
         });
 
         it("should throw an error when we got error from facebook client", (done) => {
-            sandbox.stub(facebookClientInstance, "fetchPages").returns(Promise.reject("Error fetching Pages"));
-            facebookRequstHandler.fetchPages(pageName).catch(error => {
+            sandbox.stub(facebookClientInstance, "fetchSourceUrlsOf")
+                .withArgs(keyword, type).returns(Promise.reject("Error fetching Pages"));
+            facebookRequstHandler.fetchSourceUrlsOf(keyword, type).catch(error => {
                 try {
                     expect(error).to.equal("error fetching facebook pages");
                     done();
@@ -459,9 +460,10 @@ describe("FacebookRequestHandler", () => {
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
-            sandbox.stub(facebookClientInstance, "fetchPages").returns(Promise.resolve(pages));
+            sandbox.stub(facebookClientInstance, "fetchSourceUrlsOf")
+                .withArgs(keyword, type).returns(Promise.resolve(pages));
 
-            facebookRequstHandler.fetchPages(pageName).then(pagesData => {
+            facebookRequstHandler.fetchSourceUrlsOf(keyword, type).then(pagesData => {
                 try {
                     expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
                     expect(pagesData).to.deep.equal(pages);

@@ -10,7 +10,7 @@ export default class FacebookSourceRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.userName = this.request.query.userName;
-        this.pageName = this.request.query.pageName;
+        this.keyword = this.request.query.keyword;
         this.options = {};
     }
     
@@ -20,10 +20,15 @@ export default class FacebookSourceRoute extends Route {
     }
     
     fetchPages() {
-        this._checkRequiredParams([this.userName, this.pageName]);
-        this._getFBDataUsingFuncName("fetchPages", [this.pageName]);
+        this._checkRequiredParams([this.userName, this.keyword]);
+        this._getFBDataUsingFuncName("fetchSourceUrlsOf", [this.keyword, "page"]);
     }
 
+    fetchGroups() {
+        this._checkRequiredParams([this.userName, this.keyword]);
+        this._getFBDataUsingFuncName("fetchSourceUrlsOf", [this.keyword, "group"]);
+    }
+    
     _checkRequiredParams(params) {
         if(R.any(StringUtil.isEmptyString)(params)) {
             RouteLogger.instance().warn("FacebookPostsRoute:: invalid facebook feed route with url %s and user name %s.", this.url, this.userName);
