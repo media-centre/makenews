@@ -52,7 +52,6 @@ export default class CouchClient {
         return this.post(path, body, customHeaders);
     }
 
-
     getDocument(documentId, customHeaders = {}) {
         const path = "/" + this.dbName + "/" + documentId;
         return this.get(path, {}, customHeaders);

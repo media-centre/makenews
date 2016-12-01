@@ -3,8 +3,7 @@ import rssReaderRoutes from "./RssRoutes";
 import facebookReaderRoutes from "./FacebookRoutes";
 import twitterReaderRoutes from "./TwitterRoutes";
 import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
-import webURLsRoutes from "./WebURLsRoutes";
-import fetchAllConfiguredFeedsRoute from "../fetchAllFeeds/FetchAllConfiguredFeedsRoute";
+import fetchAllConfiguredFeedsRoute from "FetchFeedsRoutes";
 
 export default function(app) {
     authorizationRoutes(app);
@@ -12,7 +11,5 @@ export default function(app) {
     facebookReaderRoutes(app);
     twitterReaderRoutes(app);
     fetchAllFeedsRoutes(app);
-    webURLsRoutes(app);
     fetchAllConfiguredFeedsRoute(app);
-
 }

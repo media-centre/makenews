@@ -1,5 +1,5 @@
-import FetchAllConfiguredFeeds from "./FetchAllConfiguredFeeds";
-import RouteLogger from "../routes/RouteLogger";
+import FetchAllConfiguredFeeds from "./helpers/FetchAllConfiguredFeedsRoute";
+import RouteLogger from "RouteLogger";
 
 export default (app) => {
     app.post("/fetch-all-feeds", (request, response) => {
