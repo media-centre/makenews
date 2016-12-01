@@ -105,7 +105,7 @@ function cmp(first, second) {
 function fetchFacebookPages(pageName) {
     let ajaxClient = AjaxClient.instance("/facebook-pages", false);
     return (dispatch, getState) => {
-        ajaxClient.get({ "userName": LoginPage.getUserName(), "pageName": pageName })
+        ajaxClient.get({ "userName": LoginPage.getUserName(), "keyword": pageName })
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(PAGES));
                 let configuredSources = getState().configuredSources.pages;

@@ -145,16 +145,16 @@ describe("FacebookSourceRoutes", () => {
         });
     });
 
-    describe("fetchPages", () => {
-        let facebookAccessToken = null, facebookAccessTokenMock = null;
-
-        beforeEach("fetchProfiles", () => {
+    describe("fetchSources", () => {
+        let facebookAccessToken = "accessToken", facebookAccessTokenMock = null;
+        let keyword = "journalist", type = "page";
+        beforeEach("fetchSources", () => {
             facebookAccessToken = new FacebookAccessToken();
             facebookAccessTokenMock = sandbox.mock(FacebookAccessToken);
             facebookAccessTokenMock.expects("instance").returns(facebookAccessToken);
         });
 
-        afterEach("fetchProfiles", () => {
+        afterEach("fetchSources", () => {
             sandbox.restore();
         });
 
@@ -190,7 +190,7 @@ describe("FacebookSourceRoutes", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
                 "query": {
                     "userName": "user",
-                    "pageName": "TheHindu"
+                    "keyword": keyword
                 }
             }, response);
 
@@ -200,8 +200,9 @@ describe("FacebookSourceRoutes", () => {
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
-            sandbox.stub(facebookRequestHandler, "fetchPages").returns(Promise.reject(response));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
+            sandbox.stub(facebookRequestHandler, "fetchSourceUrlsOf")
+                .withArgs(keyword, type).returns(Promise.reject(response));
 
             facebookRouteHelper.fetchPages();
         });
@@ -212,9 +213,13 @@ describe("FacebookSourceRoutes", () => {
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
             let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.OK, status);
-                    return response;
+                "status": (status) => { //eslint-disable-line consistent-return
+                    try {
+                        assert.strictEqual(HttpResponseHandler.codes.OK, status);
+                        return response;
+                    } catch(err) {
+                        done(err);
+                    }
                 },
                 "json": (json) => {
                     try {
@@ -228,7 +233,7 @@ describe("FacebookSourceRoutes", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
                 "query": {
                     "userName": "user",
-                    "pageName": "TheHindu"
+                    "keyword": keyword
                 }
             }, response);
 
@@ -238,10 +243,55 @@ describe("FacebookSourceRoutes", () => {
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
-            sandbox.stub(facebookRequestHandler, "fetchPages").returns(Promise.resolve(pages));
+            sandbox.stub(facebookRequestHandler, "fetchSourceUrlsOf")
+                .withArgs(keyword, type).returns(Promise.resolve(pages));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.fetchPages();
+        });
+
+        it("should get the facebook groups", (done) => {
+            type = "group";
+            let groups = { "data": [
+                { "name": "The Hindu", "id": "163974433696568" },
+                { "name": "The Hindu Business Line", "id": "60573550946" },
+                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
+            let response = {
+                "status": (status) => { //eslint-disable-line consistent-return
+                    try {
+                        assert.strictEqual(HttpResponseHandler.codes.OK, status);
+                        return response;
+                    } catch(err) {
+                        done(err);
+                    }
+                },
+                "json": (json) => {
+                    try {
+                        assert.deepEqual(groups, json);
+                        done();
+                    } catch(error) {
+                        done(error);
+                    }
+                }
+            };
+            let facebookRouteHelper = new FacebookSourceRoute({
+                "query": {
+                    "userName": "user",
+                    "keyword": keyword
+                }
+            }, response);
+
+            let accessToken = "token";
+
+            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
+
+            sandbox.stub(facebookRequestHandler, "fetchSourceUrlsOf")
+                .withArgs(keyword, type).returns(Promise.resolve(groups));
+            sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
+
+            facebookRouteHelper.fetchGroups();
         });
     });
 });
