@@ -9,6 +9,7 @@ import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler
 describe("FacebookAddConfigureRoute", () => {
 
     let sandbox = sinon.sandbox.create();
+    let sourceType = "fb-profile";
 
     beforeEach("FacebookAddConfigureRoute", () => {
         sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
@@ -37,7 +38,7 @@ describe("FacebookAddConfigureRoute", () => {
                 "dbName": ""
             }
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should reject the request if auth session is missing", (done) => {
@@ -57,7 +58,7 @@ describe("FacebookAddConfigureRoute", () => {
             "body": { "source": {} },
             "cookies": {}
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should reject the request if source name or url is missing", (done) => {
@@ -77,7 +78,7 @@ describe("FacebookAddConfigureRoute", () => {
             "body": { "source": {} },
             "cookies": { "AuthSession": "session" }
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should give 400 when there is a problem getting the sources", (done) => {
@@ -105,7 +106,7 @@ describe("FacebookAddConfigureRoute", () => {
         let configStub = sandbox.stub(facebookRequestHandler, "addConfiguredSource");
         configStub.withArgs(source, "user", "session").returns(Promise.reject("error fetching data"));
 
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should get the sources", (done) => {
@@ -139,8 +140,8 @@ describe("FacebookAddConfigureRoute", () => {
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
 
         let configStub = sandbox.stub(facebookRequestHandler, "addConfiguredSource");
-        configStub.withArgs(source, "user", "session").returns(Promise.resolve(data));
+        configStub.withArgs(sourceType, source, "user", "session").returns(Promise.resolve(data));
 
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 });

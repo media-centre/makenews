@@ -13,7 +13,7 @@ export class FacebookTabs extends Component {
                 <a onClick={() => this.props.dispatch(getSourcesOf(PAGES, "The Hindu"))} className={this.props.currentTab === PAGES ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
                     Pages
                 </a>
-                <a onClick={() => this.props.dispatch(getSourcesOf(GROUPS))} className={this.props.currentTab === GROUPS ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
+                <a onClick={() => this.props.dispatch(getSourcesOf(GROUPS, "journalism"))} className={this.props.currentTab === GROUPS ? "fb-sources-tab__item active" : "fb-sources-tab__item"}>
                     Groups
                 </a>
             </nav>

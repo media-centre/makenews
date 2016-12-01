@@ -2,6 +2,7 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
+    FACEBOOK_ADD_GROUP,
     GOT_CONFIGURED_SOURCES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PROFILES
@@ -16,6 +17,9 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     case FACEBOOK_ADD_PAGE: {
         return Object.assign({}, state, { "pages": List(state.pages).push(action.source).toArray() }); //eslint-disable-line new-cap
     }
+    case FACEBOOK_ADD_GROUP: {
+        return Object.assign({}, state, { "groups": List(state.groups).push(action.source).toArray() }); //eslint-disable-line new-cap
+    }
     case GOT_CONFIGURED_SOURCES: {
         return action.sources;
     }
@@ -28,12 +32,13 @@ export const facebookSources = (state = [], action = {}) => {
     case FACEBOOK_GOT_SOURCES: {
         return action.sources;
     }
-    case FACEBOOK_ADD_PROFILE: {
+
+    case FACEBOOK_ADD_PROFILE:
+    case FACEBOOK_ADD_PAGE:
+    case FACEBOOK_ADD_GROUP: {
         return Object.assign([], addSource(state, action.source.id));
     }
-    case FACEBOOK_ADD_PAGE: {
-        return Object.assign([], addSource(state, action.source.id));
-    }
+
     default: return state;
     }
 };

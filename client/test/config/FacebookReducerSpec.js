@@ -2,6 +2,7 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
+    FACEBOOK_ADD_GROUP,
     GOT_CONFIGURED_SOURCES,
     FACEBOOK_CHANGE_CURRENT_TAB,
     PAGES
@@ -24,10 +25,16 @@ describe("Facebook Reducer", () => {
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
         });
 
-        it("should add a profile to the state when asked for adding a page", () => {
+        it("should add a page to the state when asked for adding a page", () => {
             let action = { "type": FACEBOOK_ADD_PAGE, "source": { "name": "Page1" } };
             let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
             expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
+        });
+
+        it("should add a group to the state when asked for adding a group", () => {
+            let action = { "type": FACEBOOK_ADD_GROUP, "source": { "name": "Group1" } };
+            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1" }]);
         });
 
         it("should return updated state with configured profiles", () => {
@@ -61,6 +68,12 @@ describe("Facebook Reducer", () => {
             let action = { "type": FACEBOOK_ADD_PAGE, "source": { "id": 1, "name": "Profile" } };
             expect(facebookSources(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
         });
+
+        it("should add the added=true property to the configured facebook group", () => {
+            let state = [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }];
+            let action = { "type": FACEBOOK_ADD_GROUP, "source": { "id": 1, "name": "Group" } };
+            expect(facebookSources(state, action)).to.deep.equal([{ "id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
+        });
     });
 
     describe("Facebook current Tab", () => {
@@ -68,9 +81,9 @@ describe("Facebook Reducer", () => {
             expect(facebookCurrentSourceTab()).to.equal("Profiles");
         });
 
-        it("should return Pages when the current tab changed to Pages", () => {
+        it(`should return given currentTab when ${FACEBOOK_CHANGE_CURRENT_TAB} is dispatched`, () => {
             let action = { "type": FACEBOOK_CHANGE_CURRENT_TAB, "currentTab": PAGES };
-            expect(facebookCurrentSourceTab([], action)).to.equal(PAGES);
+            expect(facebookCurrentSourceTab("", action)).to.equal(PAGES);
         });
     });
 });

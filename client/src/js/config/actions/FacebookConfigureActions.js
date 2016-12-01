@@ -8,6 +8,7 @@ import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
+export const FACEBOOK_ADD_GROUP = "FACEBOOK_ADD_GROUP";
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
 export const PROFILES = "Profiles";
@@ -28,10 +29,10 @@ export function configuredSourcesReceived(sources) {
     };
 }
 
-export async function addPageToConfiguredSources(dispatch, source) {
+export async function addToConfiguredSources(dispatch, source, sourceType, eventType) {
     let dbName = await DbParameters.instance().getLocalDbUrl();
     let configuredSource = Object.assign({}, source, { "url": source.id });
-    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configuredSource`, {
+    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configuredSource/${sourceType}`, {
         "method": "PUT",
         "headers": {
             "Accept": "application/json",
@@ -42,14 +43,14 @@ export async function addPageToConfiguredSources(dispatch, source) {
     });
     if (data.ok) {
         dispatch({
-            "type": FACEBOOK_ADD_PAGE,
+            "type": eventType,
             source
         });
     }
 }
 
-export function addSourceToConfigureListOf(souceType, source) {
-    switch (souceType) {
+export function addSourceToConfigureListOf(sourceType, source) {
+    switch (sourceType) {
     case PROFILES: {
         return {
             "type": FACEBOOK_ADD_PROFILE,
@@ -57,7 +58,10 @@ export function addSourceToConfigureListOf(souceType, source) {
         };
     }
     case PAGES: {
-        return dispatch => addPageToConfiguredSources(dispatch, source);
+        return dispatch => addToConfiguredSources(dispatch, source, "pages", FACEBOOK_ADD_PAGE);
+    }
+    case GROUPS: {
+        return dispatch => addToConfiguredSources(dispatch, source, "groups", FACEBOOK_ADD_GROUP);
     }
     default: {
         return {
@@ -99,28 +103,33 @@ export function getConfiguredSources() {
 }
 
 function cmp(first, second) {
-    return first.id === second._id;
+    return (first.id === second._id || first.id === second.id);
 }
 
-function fetchFacebookPages(pageName) {
-    let ajaxClient = AjaxClient.instance("/facebook-pages", false);
+function fetchSources(keyword, path, sourceType) {
+    let ajaxClient = AjaxClient.instance(path, false);
     return (dispatch, getState) => {
-        ajaxClient.get({ "userName": LoginPage.getUserName(), "keyword": pageName })
+        ajaxClient.get({ "userName": LoginPage.getUserName(), "keyword": keyword })
             .then((response) => {
-                dispatch(facebookSourceTabSwitch(PAGES));
-                let configuredSources = getState().configuredSources.pages;
+                dispatch(facebookSourceTabSwitch(sourceType));
+                let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response.data));
             });
     };
 }
-export function getSourcesOf(sourceType, pageName) {
+
+
+export function getSourcesOf(sourceType, keyword) {
     switch (sourceType) {
     case PROFILES: {
         return fetchFacebookProfiles();
     }
     case PAGES: {
-        return fetchFacebookPages(pageName);
+        return fetchSources(keyword, "/facebook-pages", sourceType);
+    }
+    case GROUPS: {
+        return fetchSources(keyword, "/facebook-groups", sourceType);
     }
     default: {
         return fetchFacebookProfiles();
