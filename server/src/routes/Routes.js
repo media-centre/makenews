@@ -4,6 +4,7 @@ import facebookReaderRoutes from "./FacebookRoutes";
 import twitterReaderRoutes from "./TwitterRoutes";
 import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
 import webURLsRoutes from "./WebURLsRoutes";
+import fetchAllConfiguredFeedsRoute from "../fetchAllFeeds/FetchAllConfiguredFeedsRoute";
 
 export default function(app) {
     authorizationRoutes(app);
@@ -12,4 +13,5 @@ export default function(app) {
     twitterReaderRoutes(app);
     fetchAllFeedsRoutes(app);
     webURLsRoutes(app);
+    fetchAllConfiguredFeedsRoute(app);
 }

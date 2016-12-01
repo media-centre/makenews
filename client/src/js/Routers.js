@@ -15,6 +15,7 @@ import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
 import FacebookConfigure from "./config/components/FacebookConfigure";
+import NewsBoardPage from "../js/newsboard/components/NewsBoardPage";
 
 
 export function renderRoutes() {
@@ -29,6 +30,8 @@ export function renderRoutes() {
                     <Route path="/configure/facebook" component={FacebookConfigure}/>
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
+
+                <Route path="/newsboard" component={NewsBoardPage} />
 
                 <Route path="/surf" component={SurfPage} />
                 <Route path="/park" component={ParkPage} />
