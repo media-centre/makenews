@@ -11,6 +11,7 @@ import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
 import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { fetchedFeeds } from "./newsboard/reducers/NewsBoardReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -30,7 +31,8 @@ const contentDiscoveryApp = combineReducers({
     hasMoreSourceResults,
     facebookSources,
     facebookCurrentSourceTab,
-    currentHeaderTab
+    currentHeaderTab,
+    fetchedFeeds
 });
 
 export default contentDiscoveryApp;
