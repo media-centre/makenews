@@ -3,15 +3,15 @@ import { displayAllConfiguredFeeds } from "../actions/NewsBoardActions";
 import { connect } from "react-redux";
 
 class NewsBoardPage extends Component {
-    componentWillMount() {
-        this.props.dispatch(displayAllConfiguredFeeds());
-    }
+    //componentWillMount() {
+    //    this.props.dispatch(displayAllConfiguredFeeds());
+    //}
 
     render() {
         return (
             <div className="news-board-container">
                 <div className="source-type-bar">{"Sources"}</div>
-                <div className="configured-feeds-container">{"Feeds"}</div>
+                <div className="configured-feeds-container">{"Saisree"}</div>
             </div>
         );
     }
@@ -19,13 +19,14 @@ class NewsBoardPage extends Component {
 
 NewsBoardPage.displayName = "NewsBoardPage";
 
-function mapToStore(state) {
+function mapToStore(store) {
     return {
-        //"sources": state.facebookConfiguredUrls
+        "feeds": store.fetchedFeeds
     };
 }
 
 NewsBoardPage.propTypes = {
+    "feeds": PropTypes.array,
     "dispatch": PropTypes.func
 };
 

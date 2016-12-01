@@ -1,4 +1,4 @@
-import FeedsClient from "./FeedsClient";
+import CouchClient from "../CouchClient";
 
 export default class FeedsRequestHandler {
     static instance() {
@@ -6,7 +6,14 @@ export default class FeedsRequestHandler {
     }
 
     async fetchFeeds(authSession) {
-        let feedsClient = FeedsClient.instance();
-        return feedsClient.getFeeds(authSession);
+        let couchClient = await CouchClient.createInstance(authSession);
+        let selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "feed"
+                }
+            }
+        };
+        return await couchClient.findDocuments(selector);
     }
 }

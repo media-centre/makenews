@@ -3,7 +3,7 @@ import rssReaderRoutes from "./RssRoutes";
 import facebookReaderRoutes from "./FacebookRoutes";
 import twitterReaderRoutes from "./TwitterRoutes";
 import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
-import fetchAllConfiguredFeedsRoute from "FetchFeedsRoutes";
+import fetchAllConfiguredFeedsRoute from "./FetchFeedsRoutes";
 
 export default function(app) {
     authorizationRoutes(app);
