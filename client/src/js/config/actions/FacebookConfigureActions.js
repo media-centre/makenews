@@ -3,11 +3,12 @@ import LoginPage from "../../login/pages/LoginPage";
 import DbParameters from "../../db/DbParameters";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
+import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
-export const FACEBOOK_GOT_CONFIGURED_PROFILES = "FACEBOOK_GOT_CONFIGURED_PROFILES";
+export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
 export const PROFILES = "Profiles";
 export const PAGES = "Pages";
@@ -20,10 +21,10 @@ export function facebookSourcesReceived(sources) {
     };
 }
 
-export function configuredProfilesReceived(profiles) {
+export function configuredSourcesReceived(sources) {
     return {
-        "type": FACEBOOK_GOT_CONFIGURED_PROFILES,
-        profiles
+        "type": GOT_CONFIGURED_SOURCES,
+        "sources": sources
     };
 }
 
@@ -85,24 +86,30 @@ export function fetchFacebookProfiles() {
     };
 }
 
-export function getConfiguredProfiles() {
-    let ajaxClient = AjaxClient.instance("/facebook/configured/profiles", false);
+export function getConfiguredSources() {
+    let ajaxClient = AjaxClient.instance("/facebook/configured", false);
     return dispatch => {
         DbParameters.instance().getLocalDbUrl().then(dbName => {
             ajaxClient.get({ "dbName": dbName })
-                .then((data) => {
-                    dispatch(configuredProfilesReceived(data.profiles));
+                .then((sources) => {
+                    dispatch(configuredSourcesReceived(sources));
                 });
         });
     };
 }
 
+function cmp(first, second) {
+    return first.id === second._id;
+}
+
 function fetchFacebookPages(pageName) {
     let ajaxClient = AjaxClient.instance("/facebook-pages", false);
-    return dispatch => {
+    return (dispatch, getState) => {
         ajaxClient.get({ "userName": LoginPage.getUserName(), "pageName": pageName })
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(PAGES));
+                let configuredSources = getState().configuredSources.pages;
+                intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response.data));
             });
     };

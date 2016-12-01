@@ -3,6 +3,10 @@ import request from "request";
 import Logger from "../logging/Logger";
 import RssParser from "./RssParser";
 import cheerio from "cheerio";
+import AdminDbClient from "../db/AdminDbClient";
+import ApplicationConfig from "../config/ApplicationConfig";
+import CouchClient from "../CouchClient";
+
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1;
 
 export default class RssClient {
@@ -69,7 +73,7 @@ export default class RssClient {
             links.add(root(this).attr("href"));
         });
 
-        if(links.size === 0) {   //eslint-disable-line no-magic-numbers
+        if (links.size === 0) {   //eslint-disable-line no-magic-numbers
             this.handleUrlError(url, "no rss links found");
         } else {
             return await this.getCrawledRssData(links, url);
@@ -80,7 +84,7 @@ export default class RssClient {
     async getCrawledRssData(links, url) {  //eslint-disable-line consistent-return
         let linksIterator = links.values();
         let link = linksIterator.next().value;
-        while(link) {
+        while (link) {
             try {
                 let feeds = await this.getRssData(link, false);
                 feeds.url = link;
@@ -123,7 +127,7 @@ export default class RssClient {
                 "uri": url,
                 "timeout": 6000
             }, (error, response, body) => {
-                if(error) {
+                if (error) {
                     RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
                     reject({ "message": "Request failed for " + url });
                 }
@@ -148,6 +152,66 @@ export default class RssClient {
         });
     }
 
+    async addURL(url, accessToken) {
+        try {
+            let response = await this.fetchRssFeeds(url);
+            let name = response.meta.title;
+            let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+            await this.addUrlToCommon(document);
+            await this.addURLToUser(document, accessToken);
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+            throw error;
+        }
+        return "URL added to Database";
+    }
+
+    async addUrlToCommon(document) {
+        const adminDetails = ApplicationConfig.instance().adminDetails();
+        let dbInstance = await
+            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+        try {
+            await dbInstance.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to common database.");
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+            throw error;
+        }
+        return "URL added to Database";
+    }
+
+    async searchURL(key) {
+        let document = null;
+        try {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            let selector = {
+                "selector": {
+                    "name": {
+                        "$eq": key
+                    }
+                }
+            };
+            document = await dbInstance.findDocuments(selector);
+            RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
+        }catch (error) {
+            RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
+            this.handleRequestError(key, error);
+        }
+        return document;
+    }
+
+    async addURLToUser(document, accessToken) {
+        try {
+            let couchClient = CouchClient.createInstance(accessToken);
+            await couchClient.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+            throw error;
+        }
+        return "URL added to Database";
+    }
 
     handleUrlError(url, error) {
         let errorMessage = { "message": url + " is not a proper feed" };

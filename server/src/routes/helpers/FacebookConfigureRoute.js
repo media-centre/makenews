@@ -20,11 +20,11 @@ export default class FacebookConfigureRoute extends Route {
         }
     }
 
-    fetchProfiles() {
+    fetchConfiguredSources() {
         this._checkRequiredParams([this.dbName, this.authSession]);
-        FacebookRequestHandler.instance("token").fetchConfiguredSourcesOf("profiles", this.dbName, this.authSession).then(profiles => {
+        FacebookRequestHandler.instance("token").fetchConfiguredSources(this.dbName, this.authSession).then(sources => {
             RouteLogger.instance().debug("FacebookConfigureRoute:: successfully fetched configured facebook profiles");
-            this._handleSuccess({ "profiles": profiles });
+            this._handleSuccess(sources);
         }).catch(error => {
             RouteLogger.instance().error(`FacebookConfigureRoute:: fetching configured facebook profiles failed. Error: ${error}`);
             this._handleBadRequest();

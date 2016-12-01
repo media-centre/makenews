@@ -1,7 +1,5 @@
 import RssClient from "./RssClient";
 import Logger from "../logging/Logger";
-import AdminDbClient from "../db/AdminDbClient";
-import ApplicationConfig from "../config/ApplicationConfig";
 import RssBatchFeedsFetch from "./RssBatchFeedsFetch";
 
 export default class RssRequestHandler {
@@ -45,18 +43,36 @@ export default class RssRequestHandler {
         return RssClient.instance();
     }
 
-    searchUrl(selector) {
-        return new Promise((resolve, reject) => {
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then(dbInstance => {
-                dbInstance.getUrlDocument(selector).then((document) => {
-                    RssRequestHandler.logger().debug("WebRequestHandler:: successfully fetched feeds for the selector.");
-                    resolve(document);
-                }).catch((error) => {
-                    RssRequestHandler.logger().error("WebRequestHandler:: selector is not a proper feed url. Error: %j.", error);
-                    reject(error);
-                });
-            });
-        });
+    async searchUrl(key) {
+        try {
+            let document = await this.rssClient().searchURL(key);
+            RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
+            return document;
+        }catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while fething documents for selector. Error: %j", error);
+            throw error;
+        }
+    }
+
+    async addURL(url, accessToken) {
+        try {
+            let response = await this.rssClient().addURL(url, accessToken);
+            RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
+            return response;
+        } catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
+            throw error;
+        }
+    }
+
+    async addURLToUserDb(accessToken, url, dbName) {
+        try {
+            let response = await this.rssClient().addURLToUser(accessToken, url, dbName);
+            RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
+            return response;
+        } catch(error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
+            throw error;
+        }
     }
 }

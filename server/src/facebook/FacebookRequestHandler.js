@@ -6,6 +6,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
 
@@ -107,24 +108,30 @@ export default class FacebookRequestHandler {
         }
     }
 
-    fetchConfiguredSourcesOf(sourceType, dbName, authSession) {
+    async fetchConfiguredSources(dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
-        return new Promise((resolve, reject) => {
-            couchClient.post(`/${dbName}/_find`, {
-                "selector": {
-                    "docType": {
-                        "$eq": "configuredSource"
-                    },
-                    "sourceType": {
-                        "$eq": `fb-${sourceType}`
-                    }
+        let data = await couchClient.findDocuments({
+            "selector": {
+                "docType": {
+                    "$eq": "configuredSource"
                 }
-            }).then(data => {
-                resolve(data.docs);
-            }).catch(error => {
-                reject(error);
-            });
+            }
         });
+        return this.formatConfiguredSources(data.docs);
+    }
+
+    /* TODO change it to one time traversal */ //eslint-disable-line
+    formatConfiguredSources(docs) {
+        let result = {
+            "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
+        };
+        result.profiles = R.filter(R.propEq("sourceType", "fb-profiles"), docs);
+        result.pages = R.filter(R.propEq("sourceType", "fb-pages"), docs);
+        result.groups = R.filter(R.propEq("sourceType", "fb-groups"), docs);
+        result.twitter = R.filter(R.propEq("sourceType", "twitter"), docs);
+        result.web = R.filter(R.propEq("sourceType", "web"), docs);
+
+        return result;
     }
 
     async addConfiguredSource(source, dbName, authSession) {

@@ -1,83 +1,80 @@
 /* eslint init-declarations:0*/
 
 import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
-import ApplicationConfig from "../../src/config/ApplicationConfig";
-import LogTestHelper from "../helpers/LogTestHelper";
-import CouchClient from "../../src/CouchClient";
-import AdminDbClient from "../../src/db/AdminDbClient";
 import { assert, expect } from "chai";
 import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
 import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 
 describe("Rss Request Handler", () => {
-    let sandbox = null, couchClient = null;
-    beforeEach("Rss Request Handler", () => {
-        sandbox = sinon.sandbox.create();
-        sandbox.stub(RssRequestHandler, "logger").returns(LogTestHelper.instance());
-        let applicationConfig = new ApplicationConfig();
-        sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
-        sandbox.stub(applicationConfig, "adminDetails").returns({
-            "username": "adminUser",
-            "password": "adminPwd",
-            "db": "adminDb"
+    describe("search Url", () => {
+        let sandbox = null;
+        beforeEach("Rss Request Handler", () => {
+            sandbox = sinon.sandbox.create();
         });
-        couchClient = new CouchClient();
-        sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
-    });
 
-    afterEach("FacebookAccessToken", () => {
-        sandbox.restore();
-    });
-
-    it("should return the default URL Document", (done) => {
-        let body = {
-            "selector": {
-                "url": {
-                    "$eq": "the"
+        afterEach("Rss Request Handler", () => {
+            sandbox.restore();
+        });
+        it("should return the default URL Document", async() => {
+            let body = {
+                "selector": {
+                    "url": {
+                        "$eq": "the"
+                    }
                 }
+            };
+            let rssRequestHandler = RssRequestHandler.instance();
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            rssClientMock.withArgs(body).returns(Promise.resolve({
+                "docs": [{
+                    "_id": "1",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                {
+                    "_id": "2",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "url test",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }]
+            }));
+            try {
+                let document = await rssRequestHandler.searchUrl(body);
+                const zero = 0;
+                assert.strictEqual("web", document.docs[zero].sourceType);
+            }catch (err) {
+                assert.fail(err);
             }
-        };
-        let rssRequestHandler = RssRequestHandler.instance();
-        let getDocStub = sinon.stub(couchClient, "getUrlDocument");
-        getDocStub.withArgs(body).returns(Promise.resolve({
-            "docs": [{
-                "_id": "1",
-                "docType": "test",
-                "sourceType": "web",
-                "name": "url1 test",
-                "url": "http://www.thehindu.com/news/international/?service=rss"
-            },
-            {
-                "_id": "2",
-                "docType": "test",
-                "sourceType": "web",
-                "name": "url test",
-                "url": "http://www.thehindu.com/sport/?service=rss"
-            }]
-        }));
-        rssRequestHandler.searchUrl(body).then(document => {
-            const zero = 0;
-            assert.strictEqual("web", document.docs[zero].sourceType);
-            done();
         });
-    });
 
-    it("should reject with an error if the URL document rejects with an error", (done) => {
-        let body = null;
-        let rssRequestHandler = RssRequestHandler.instance();
-        let getDocStub = sinon.stub(couchClient, "getUrlDocument");
-        getDocStub.withArgs(body).returns(Promise.reject("No selector found"));
-        rssRequestHandler.searchUrl(body).catch((error) => {
-            assert.strictEqual("No selector found", error);
-            done();
+        it("should reject with an error if the URL document rejects with an error", async() => {
+            let body = null;
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            rssClientMock.withArgs(body).returns(Promise.reject("No selector found"));
+            let rssRequestHandler = RssRequestHandler.instance();
+            try {
+                await rssRequestHandler.searchUrl(body);
+                assert.fail();
+            }catch (err) {
+                assert.strictEqual("No selector found", err);
+            }
         });
     });
 
     describe("RssRequestHandler", () => {
+        let sandbox = null;
         describe("fetchRssFeedRequest", ()=> {
             let rssRequestHandler, feedsJson, rssMock, rssClientMock;
             beforeEach("fetchRssFeedsRequest", () => {
+                sandbox = sinon.sandbox.create();
                 rssRequestHandler = new RssRequestHandler();
                 feedsJson = {
                     "items": [{
@@ -94,6 +91,10 @@ describe("Rss Request Handler", () => {
                 rssClientMock = sandbox.mock(RssClient).expects("instance").returns(rssMock);
             });
 
+            afterEach("fetchRssFeedRequest", () => {
+                sandbox.restore();
+            });
+
             it("should fetch rss feed for given url", () => {
                 let url = "www.example.com";
                 let rssClientPostMock = sandbox.mock(rssMock).expects("fetchRssFeeds").withArgs(url);
@@ -102,7 +103,6 @@ describe("Rss Request Handler", () => {
                     expect(feeds).to.eq(feedsJson);
                     rssClientMock.verify();
                     rssClientPostMock.verify();
-                    sandbox.restore();
                 });
             });
 
@@ -114,22 +114,19 @@ describe("Rss Request Handler", () => {
                     assert.strictEqual("error", error);
                     rssClientMock.verify();
                     rssClientPostMock.verify();
-                    sandbox.restore();
                 });
             });
         });
     });
-
-
     describe("fetchBatchRssFeedsRequest", ()=> {
-        let rssRequestHandler, response, rssBatchMock, rssClientMock;
+        let rssRequestHandler = null, response = null, rssBatchMock = null, rssClientMock = null, sandbox = null;
         beforeEach("fetchBatchRssFeedsRequest", () => {
+            sandbox = sinon.sandbox.create();
             rssRequestHandler = new RssRequestHandler();
             response = "successfully fetched feeds";
             rssBatchMock = new RssBatchFeedsFetch();
             rssClientMock = sandbox.mock(RssBatchFeedsFetch).expects("instance").returns(rssBatchMock);
         });
-
         it("should fetch rss feed for given url", () => {
             let url = "www.example.com";
             let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
@@ -152,6 +149,47 @@ describe("Rss Request Handler", () => {
                 rssClientPostMock.verify();
                 sandbox.restore();
             });
+        });
+    });
+
+    describe("Add URL Document", () => {
+        let sandbox = null;
+        beforeEach("Add URL Document", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("Add URL Document", () => {
+            sandbox.restore();
+        });
+
+        it("should return the sucess response for correct URL Document", async() => {
+            let url = "http://www.newsclick.in";
+            let accessToken = "tes_token";
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.resolve({ "message": "URL added to Database" }));
+            let rssRequestHandler = new RssRequestHandler();
+            try {
+                let response = await rssRequestHandler.addURL(url, accessToken);
+                assert.strictEqual("URL added to Database", response.message);
+            }catch (error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should return Error If url is invalid", async() => {
+            let accessToken = "test_token";
+            let url = "http://www.newsclick.in";
+            let rssMock = new RssClient();
+            sandbox.mock(RssClient).expects("instance").returns(rssMock);
+            sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.reject("unexpected response from the db"));
+            let rssRequestHandler = new RssRequestHandler();
+            try {
+                await rssRequestHandler.addURL(url, accessToken);
+                assert.fail();
+            }catch(error) {
+                assert.strictEqual("unexpected response from the db", error);
+            }
         });
     });
 });

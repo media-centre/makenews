@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0, init-declarations:0*/
 
-
 import RssClient from "../../src/rss/RssClient";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -8,6 +7,9 @@ import * as cheerio from "cheerio/lib/static";
 import RssParser from "../../../server/src/rss/RssParser";
 import nock from "nock";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import ApplicationConfig from "../../src/config/ApplicationConfig";
+import CouchClient from "../../src/CouchClient";
+import AdminDbClient from "../../src/db/AdminDbClient";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -51,7 +53,7 @@ describe("RssClient", () => {
             try {
                 let result = await rssClientMock.fetchRssFeeds(url);
                 assert.deepEqual(result, feed);
-            } catch(err) {
+            } catch (err) {
                 assert.fail();
             } finally {
                 rssClientMock.getRssData.restore();
@@ -259,8 +261,8 @@ describe("RssClient", () => {
             }
         });
 
-        it("should throw an error when there is no rss in url", async () => {
-            try{
+        it("should throw an error when there is no rss in url", async() => {
+            try {
                 await rssClientMock.crawlRssList("/abc", error, "http://www.example.com/abc");
             } catch (err) {
                 assert.deepEqual(err.message, "no rss found");
@@ -273,10 +275,10 @@ describe("RssClient", () => {
             url = "http://www.example.com";
         });
 
-        it("it should return error when invalid request on url", async () => {
+        it("it should return error when invalid request on url", async() => {
             nock(url)
-              .get("/")
-              .replyWithError("failed");
+                .get("/")
+                .replyWithError("failed");
 
             try {
                 await rssClientMock.getRssData(url);
@@ -288,8 +290,8 @@ describe("RssClient", () => {
         it("it should return feeds_not_found when parser doesn't return feeds", async() => {
             try {
                 nock(url)
-                  .get("/")
-                  .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                    .get("/")
+                    .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
                 sandbox.stub(RssParser.prototype, "parse", () => Promise.reject("error"));
 
                 await rssClientMock.getRssData(url);
@@ -300,8 +302,8 @@ describe("RssClient", () => {
 
         it("it should return feeds when parser returns feeds", async() => {
             nock(url)
-              .get("/")
-              .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                .get("/")
+                .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
             sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve(feed));
             let res = await rssClientMock.getRssData(url);
             assert.equal(res, feed);
@@ -337,6 +339,309 @@ describe("RssClient", () => {
                 rssClientMock.handleRequestError(url);
             } catch (err) {
                 assert.deepEqual(err, { "message": "Request failed for " + url });
+            }
+        });
+    });
+    describe("addURL", () => {
+        beforeEach("addURL", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("addURL", () => {
+            sandbox.restore();
+        });
+
+        it("should fetch data and update common and user db", async () => {
+            url = "http://www.newsclick.in";
+            let accessToken = "test-token";
+            let name = "test";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added to Database"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.resolve("URL added to Database"));
+            let response = await rssClient.addURL(url, accessToken);
+            assert.strictEqual("URL added to Database", response);
+            fetchRssFeedsMock.verify();
+            addURLtoCommonMock.verify();
+            addURLtoUserMock.verify();
+        });
+
+        it("should return error when fetchRss throws error", async () => {
+            url = "http://www.test.in";
+            let accessToken = "test-token";
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.reject({ "message": url + " is not a proper feed" }));
+            try {
+                await rssClient.addURL(url, accessToken);
+                assert.fail("Expected error");
+            } catch(err) {
+                assert.strictEqual(url + " is not a proper feed", err.message);
+                fetchRssFeedsMock.verify();
+            }
+        });
+
+        it("should return error when addURLtoCommon throws error", async () => {
+            url = "http://www.newsclick.in";
+            let accessToken = "test-token";
+            let name = "test";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("Unexpected response from db"));
+            try {
+                await rssClient.addURL(url, accessToken);
+                assert.fail("Expected error");
+            } catch(err) {
+                assert.strictEqual("Unexpected response from db", err);
+                fetchRssFeedsMock.verify();
+                addURLtoCommonMock.verify();
+            }
+        });
+
+        it("should return error when addURLtoCommon throws error", async () => {
+            url = "http://www.newsclick.in";
+            let accessToken = "test-token";
+            let name = "test";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added to Database"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from db"));
+            try {
+                await rssClient.addURL(url, accessToken);
+                assert.fail("Expected error");
+            } catch(err) {
+                assert.strictEqual("Unexpected response from db", err);
+                fetchRssFeedsMock.verify();
+                addURLtoCommonMock.verify();
+                addURLtoUserMock.verify();
+            }
+        });
+
+        it("should return Error If url is invalid", async() => {
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsStub = sandbox.stub(rssClient, "fetchRssFeeds");
+            fetchRssFeedsStub.withArgs("http://www.test.com/").returns(Promise.reject({ "message": "http://www.test.com/ is not a proper feed" }));
+            try {
+                await rssClient.addURL("http://www.test.com/");
+                assert.fail();
+            } catch (err) {
+                assert.deepEqual(err.message, "http://www.test.com/ is not a proper feed");
+            }
+        });
+    });
+
+    describe("addUrlToCommon", () => {
+        let couchClient = null, adminDetailsMock = null, adminDbInstance = null;
+
+        beforeEach("addUrlToCommon", () => {
+            sandbox = sinon.sandbox.create();
+            let applicationConfig = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            adminDetailsMock = sandbox.mock(applicationConfig).expects("adminDetails").returns({
+                "couchDbAdmin": {
+                    "username": "adminUser",
+                    "password": "adminPwd"
+                },
+                "db": "adminDb"
+            });
+            couchClient = new CouchClient();
+            adminDbInstance = sandbox.mock(AdminDbClient).expects("instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
+        });
+
+        afterEach("addUrlToCommon", () => {
+            sandbox.restore();
+        });
+
+        it("should save the document", async () => {
+            url = "http://www.test.com/rss";
+            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "test_name",
+                "rev": "test_revision"
+            }));
+            let response = await RssClient.instance().addUrlToCommon(document);
+            assert.strictEqual("URL added to Database", response);
+            adminDetailsMock.verify();
+            adminDbInstance.verify();
+            saveDocMock.verify();
+        });
+
+        it("should return the error response when server throws error while saving the document", async () => {
+            url = "http://www.test.com/rss";
+            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
+            try {
+                await RssClient.instance().addUrlToCommon(document);
+                assert.fail("expected error");
+            } catch (err) {
+                assert.strictEqual("unexpected response from the db", err);
+            }
+            adminDetailsMock.verify();
+            adminDbInstance.verify();
+            saveDocMock.verify();
+        });
+    });
+    
+    describe("addURLToUser", () => {
+        let couchClient = null, accessToken = null, couchClientMock = null;
+
+        beforeEach("addURLToUser", () => {
+            accessToken = "test_token";
+            sandbox = sinon.sandbox.create();
+            couchClient = new CouchClient();
+            couchClientMock = sandbox.mock(CouchClient).expects("createInstance").withArgs(accessToken).returns(couchClient);
+            sandbox.stub(couchClient, "getUserDbName").returns("test");
+        });
+
+        afterEach("addURLToUser", () => {
+            sandbox.restore();
+        });
+
+        it("should save the document", async () => {
+            url = "http://www.test.com/rss";
+            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "test_name",
+                "rev": "test_revision"
+            }));
+            let response = await RssClient.instance().addURLToUser(document, accessToken);
+            assert.strictEqual("URL added to Database", response);
+            couchClientMock.verify();
+            saveDocMock.verify();
+        });
+
+        it("should return the error response when server throws error while saving the document", async () => {
+            url = "http://www.test.com/rss";
+            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
+            try {
+                await RssClient.instance().addURLToUser(document, accessToken);
+                assert.fail("expected error");
+            } catch (err) {
+                assert.strictEqual("unexpected response from the db", err);
+            }
+            couchClientMock.verify();
+            saveDocMock.verify();
+        });
+    });
+    describe("Search URLS", () => {
+        let couchClient = null;
+        beforeEach("RssClient", () => {
+            sandbox = sinon.sandbox.create();
+            let applicationConfig = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+            sandbox.stub(applicationConfig, "adminDetails").returns({
+                "couchDbAdmin": {
+                    "username": "adminUser",
+                    "password": "adminPwd"
+                },
+                "db": "adminDb"
+            });
+            couchClient = new CouchClient();
+            sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
+        });
+
+        afterEach("RssClient", () => {
+            sandbox.restore();
+        });
+
+        it("should return the default URL Documents", async() => {
+            let key = "the";
+            let body = { "selector": { "name": { "$eq": key } } };
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            let rssClient = RssClient.instance();
+            getDocStub.withArgs(body).returns(Promise.resolve({
+                "docs": [{
+                    "_id": "1",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "the url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                {
+                    "_id": "2",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "the url test",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }]
+            }));
+            try {
+                let document = await rssClient.searchURL(key);
+                const zero = 0;
+                assert.strictEqual("web", document.docs[zero].sourceType);
+            }catch (err) {
+                assert.fail(err);
+            }
+        });
+
+        it("should reject with an error if the URL document rejects with an error when key is null", async() => {
+            let key = "asldkfjkldsafj";
+            let body = { "selector": { "name": { "$eq": key } } };
+            let rssClient = RssClient.instance();
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            getDocStub.withArgs(body).returns(Promise.reject({ "message": "Request failed for " + key }));
+            try {
+                await rssClient.searchURL(key);
+            }catch (err) {
+                assert.strictEqual("Request failed for " + key, err.message);
+            }
+        });
+
+        it("should reject with an error if the URL document rejects with an error when key is empty string", async() => {
+            let key = "";
+            let body = { "selector": { "name": { "$eq": key } } };
+            let rssClient = RssClient.instance();
+            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            getDocStub.withArgs(body).returns(Promise.resolve({
+                "docs": [{
+                    "_id": "1",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "the url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                {
+                    "_id": "2",
+                    "docType": "test",
+                    "sourceType": "web",
+                    "name": "url test",
+                    "url": "http://www.hindu.com/sport/?service=rss"
+                }]
+            }));
+            try {
+                let document = await rssClient.searchURL(key);
+                const zero = 0;
+                assert.strictEqual("web", document.docs[zero].sourceType);
+            }catch(err) {
+                assert.fail(err);
             }
         });
     });
