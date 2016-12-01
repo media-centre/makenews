@@ -21,10 +21,10 @@ export default class FacebookAddConfigureRoute extends Route {
         }
     }
 
-    async addConfiguredSource() {
+    async addConfiguredSource(sourceType) {
         this._checkRequiredParams([this.dbName, this.authSession, this.source.name, this.source.url]);
         try {
-            let status = await FacebookRequestHandler.instance("token").addConfiguredSource(this.source, this.dbName, this.authSession);
+            let status = await FacebookRequestHandler.instance("token").addConfiguredSource(sourceType, this.source, this.dbName, this.authSession);
             RouteLogger.instance().debug("FacebookAddConfigureRoute:: successfully added configured source to db");
             this._handleSuccess(status);
         } catch(error) {

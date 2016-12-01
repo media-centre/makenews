@@ -125,23 +125,23 @@ export default class FacebookRequestHandler {
         let result = {
             "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
         };
-        result.profiles = R.filter(R.propEq("sourceType", "fb-profiles"), docs);
-        result.pages = R.filter(R.propEq("sourceType", "fb-pages"), docs);
-        result.groups = R.filter(R.propEq("sourceType", "fb-groups"), docs);
+        result.profiles = R.filter(R.propEq("sourceType", "fb-profile"), docs);
+        result.pages = R.filter(R.propEq("sourceType", "fb-page"), docs);
+        result.groups = R.filter(R.propEq("sourceType", "fb-group"), docs);
         result.twitter = R.filter(R.propEq("sourceType", "twitter"), docs);
         result.web = R.filter(R.propEq("sourceType", "web"), docs);
 
         return result;
     }
 
-    async addConfiguredSource(source, dbName, authSession) {
+    async addConfiguredSource(sourceType, source, dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
         try {
             let data = await couchClient.saveDocument(source.url, {
                 "_id": source.url,
                 "name": source.name,
                 "docType": "configuredSource",
-                "sourceType": "fb-pages",
+                "sourceType": sourceType,
                 "latestFeedTimeStamp": DateUtil.getCurrentTime()
             });
             delete data.id;
