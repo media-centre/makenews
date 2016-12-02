@@ -41,18 +41,27 @@ describe("Facebook Configure Actions", () => {
         it("should dispatch GOT_CONFIGURED_SOURCES once it gets the configured sources from server", (done) => {
             let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
-            let dbParams = new DbParameters();
-            sandbox.mock(DbParameters).expects("instance").returns(dbParams);
-            sandbox.stub(dbParams, "getLocalDbUrl").returns(Promise.resolve("dbName"));
 
             sandbox.mock(UserSession).expects("instance").returns({
                 "continueSessionIfActive": () => {}
             });
             let ajaxClient = AjaxClient.instance("/facebook/configured", false);
             sandbox.mock(AjaxClient).expects("instance").withArgs("/facebook/configured", false).returns(ajaxClient);
-            sandbox.stub(ajaxClient, "get").withArgs({ "dbName": "dbName" }).returns(Promise.resolve(sources));
+            sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
 
             let store = mockStore({}, [{ "type": "GOT_CONFIGURED_SOURCES", "sources": sources }], done);
+            store.dispatch(FBActions.getConfiguredSources());
+        });
+
+        it("should dispatch GOT_CONFIGURED_SOURCES with empty array if there is an error from server", (done) => {
+            sandbox.mock(UserSession).expects("instance").returns({
+                "continueSessionIfActive": () => {}
+            });
+            let ajaxClient = AjaxClient.instance("/facebook/configured", false);
+            sandbox.mock(AjaxClient).expects("instance").withArgs("/facebook/configured", false).returns(ajaxClient);
+            sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.reject("error"));
+
+            let store = mockStore({}, [{ "type": "GOT_CONFIGURED_SOURCES", "sources": [] }], done);
             store.dispatch(FBActions.getConfiguredSources());
         });
     });

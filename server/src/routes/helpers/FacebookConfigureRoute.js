@@ -7,7 +7,6 @@ import R from "ramda"; //eslint-disable-line id-length
 export default class FacebookConfigureRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.dbName = this.request.query.dbName;
         if(this.request.cookies) {
             this.authSession = this.request.cookies.AuthSession;
         }
@@ -21,8 +20,8 @@ export default class FacebookConfigureRoute extends Route {
     }
 
     fetchConfiguredSources() {
-        this._checkRequiredParams([this.dbName, this.authSession]);
-        FacebookRequestHandler.instance("token").fetchConfiguredSources(this.dbName, this.authSession).then(sources => {
+        this._checkRequiredParams([this.authSession]);
+        FacebookRequestHandler.instance("token").fetchConfiguredSources(this.authSession).then(sources => {
             RouteLogger.instance().debug("FacebookConfigureRoute:: successfully fetched configured facebook profiles");
             this._handleSuccess(sources);
         }).catch(error => {

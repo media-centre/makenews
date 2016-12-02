@@ -18,25 +18,6 @@ describe("FacebookConfigureRoute", () => {
         sandbox.restore();
     });
 
-    it("should reject the request if db name is missing", (done) => {
-        let response = {
-            "status": (status) => {
-                try {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                    done();
-                } catch(error) {
-                    done(error);
-                }
-            }
-        };
-
-        let facebookRoute = new FacebookConfigureRoute({
-            "query": {},
-            "cookies": { "AuthSession": "session" }
-        }, response);
-        facebookRoute.fetchConfiguredSources();
-    });
-
     it("should reject the request if auth session is missing", (done) => {
         let response = {
             "status": (status) => {
@@ -50,7 +31,6 @@ describe("FacebookConfigureRoute", () => {
         };
 
         let facebookRoute = new FacebookConfigureRoute({
-            "query": { "dbName": "user" },
             "cookies": {}
         }, response);
         facebookRoute.fetchConfiguredSources();
@@ -69,7 +49,6 @@ describe("FacebookConfigureRoute", () => {
         };
 
         let facebookRoute = new FacebookConfigureRoute({
-            "query": { "dbName": "user" },
             "cookies": { "AuthSession": "session" }
         }, response);
 
@@ -77,7 +56,7 @@ describe("FacebookConfigureRoute", () => {
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
         
         let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
-        configStub.withArgs("user", "session").returns(Promise.reject("error fetching data"));
+        configStub.withArgs("session").returns(Promise.reject("error fetching data"));
 
         facebookRoute.fetchConfiguredSources();
     });
@@ -103,7 +82,6 @@ describe("FacebookConfigureRoute", () => {
         };
 
         let facebookRoute = new FacebookConfigureRoute({
-            "query": { "dbName": "user" },
             "cookies": { "AuthSession": "session" }
         }, response);
 
@@ -111,7 +89,7 @@ describe("FacebookConfigureRoute", () => {
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
 
         let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
-        configStub.withArgs("user", "session").returns(Promise.resolve(sources));
+        configStub.withArgs("session").returns(Promise.resolve(sources));
 
         facebookRoute.fetchConfiguredSources();
     });

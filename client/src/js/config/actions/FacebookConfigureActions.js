@@ -92,18 +92,15 @@ export function fetchFacebookProfiles() {
 
 export function getConfiguredSources() {
     let ajaxClient = AjaxClient.instance("/facebook/configured", false);
-    return dispatch => {
-        DbParameters.instance().getLocalDbUrl().then(dbName => {
-            ajaxClient.get({ "dbName": dbName })
-                .then((sources) => {
-                    dispatch(configuredSourcesReceived(sources));
-                });
-        });
+    return async dispatch => {
+        let sources = [];
+        try {
+            sources = await ajaxClient.get();
+        } catch (err) {
+            sources = [];
+        }
+        dispatch(configuredSourcesReceived(sources));
     };
-}
-
-function cmp(first, second) {
-    return (first.id === second._id || first.id === second.id);
 }
 
 function fetchSources(keyword, path, sourceType) {
@@ -113,6 +110,7 @@ function fetchSources(keyword, path, sourceType) {
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(sourceType));
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
+                const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response.data));
             });

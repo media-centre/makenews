@@ -299,7 +299,7 @@ describe("FacebookRequestHandler", () => {
             } };
             facebookRequestHandler = new FacebookRequestHandler("somethings");
             couchClient = new CouchClient(dbName, accessToken);
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
         });
 
         afterEach("Configured Sources", () => {
@@ -339,9 +339,9 @@ describe("FacebookRequestHandler", () => {
                     "url": "http://www.facebook.com/profile1",
                     "latestFeedTimestamp": "2016-11-21T01:57:48Z" }] };
 
-            sandbox.stub(couchClient, "post").withArgs(`/${dbName}/_find`, body).returns(Promise.resolve(result));
+            sandbox.stub(couchClient, "findDocuments").withArgs(body).returns(Promise.resolve(result));
 
-            facebookRequestHandler.fetchConfiguredSources(dbName, accessToken).then(data => {
+            facebookRequestHandler.fetchConfiguredSources(accessToken).then(data => {
                 try {
                     expect(data.profiles).to.deep.equal([result.docs[0]]); //eslint-disable-line no-magic-numbers
                     expect(data.pages).to.deep.equal([result.docs[1]]); //eslint-disable-line no-magic-numbers
@@ -358,7 +358,7 @@ describe("FacebookRequestHandler", () => {
         it("should reject with error when database gives an error", (done) => {
             let errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "post").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.fetchConfiguredSources(dbName, accessToken).catch(error => {
+            facebookRequestHandler.fetchConfiguredSources(accessToken).catch(error => {
                 try {
                     expect(error).to.equal(errorMessage);
                     done();
@@ -404,7 +404,7 @@ describe("FacebookRequestHandler", () => {
 
             facebookRequestHandler.addConfiguredSource(sourceType, source, dbName, accessToken).then(data => {
                 try {
-                    expect(data).to.deep.equal(result);
+                    expect(data).to.deep.equal({ "ok": true });
                     done();
                 } catch (err) {
                     done(err);
@@ -442,9 +442,9 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should throw an error when we got error from facebook client", (done) => {
-            sandbox.stub(facebookClientInstance, "fetchSourceUrlsOf")
+            sandbox.stub(facebookClientInstance, "fetchSourceUrls")
                 .withArgs(keyword, type).returns(Promise.reject("Error fetching Pages"));
-            facebookRequstHandler.fetchSourceUrlsOf(keyword, type).catch(error => {
+            facebookRequstHandler.fetchSourceUrls(keyword, type).catch(error => {
                 try {
                     expect(error).to.equal("error fetching facebook pages");
                     done();
@@ -460,10 +460,10 @@ describe("FacebookRequestHandler", () => {
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
-            sandbox.stub(facebookClientInstance, "fetchSourceUrlsOf")
+            sandbox.stub(facebookClientInstance, "fetchSourceUrls")
                 .withArgs(keyword, type).returns(Promise.resolve(pages));
 
-            facebookRequstHandler.fetchSourceUrlsOf(keyword, type).then(pagesData => {
+            facebookRequstHandler.fetchSourceUrls(keyword, type).then(pagesData => {
                 try {
                     expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
                     expect(pagesData).to.deep.equal(pages);
