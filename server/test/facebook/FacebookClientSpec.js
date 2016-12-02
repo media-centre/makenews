@@ -387,7 +387,7 @@ describe("FacebookClient", () => {
                     } }
                 );
 
-            facebookClient.fetchSourceUrlsOf(keyword, type).catch(error => {
+            facebookClient.fetchSourceUrls(keyword, type).catch(error => {
                 try {
                     assert.strictEqual("OAuthException", error.type);
                     assert.strictEqual("Invalid OAuth access token.", error.message);
@@ -408,7 +408,7 @@ describe("FacebookClient", () => {
                 .get(`/v2.8/search?q=${keyword}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
                 .reply(HttpResponseHandler.codes.OK, pages);
 
-            facebookClient.fetchSourceUrlsOf(keyword, type).then(data => {
+            facebookClient.fetchSourceUrls(keyword, type).then(data => {
                 try {
                     expect(data).to.deep.equal(pages);
                     done();
@@ -420,7 +420,7 @@ describe("FacebookClient", () => {
 
         it("should throw and error when given an invalid source type", (done) => {
             type = "something";
-            facebookClient.fetchSourceUrlsOf("keyword", type).catch(errorData => {
+            facebookClient.fetchSourceUrls("keyword", type).catch(errorData => {
                 try {
                     expect(errorData.error).to.eq(`Source type ${type} is not valid`);
                     done();

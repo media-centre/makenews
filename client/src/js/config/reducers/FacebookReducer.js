@@ -52,7 +52,10 @@ export const facebookCurrentSourceTab = (state = PROFILES, action = {}) => {
     }
 };
 
-function addSource(profiles, id) {
-    profiles.find(profile => profile.id === id).added = true;
-    return profiles;
+function addSource(sources, id) {
+    let addedSource = sources.find(source => source.id === id);
+    addedSource.added = true;
+    addedSource._id = addedSource.id;
+    delete addedSource.id;
+    return sources;
 }

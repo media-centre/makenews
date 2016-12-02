@@ -21,12 +21,12 @@ export default class FacebookSourceRoute extends Route {
     
     fetchPages() {
         this._checkRequiredParams([this.userName, this.keyword]);
-        this._getFBDataUsingFuncName("fetchSourceUrlsOf", [this.keyword, "page"]);
+        this._getFBDataUsingFuncName("fetchSourceUrls", [this.keyword, "page"]);
     }
 
     fetchGroups() {
         this._checkRequiredParams([this.userName, this.keyword]);
-        this._getFBDataUsingFuncName("fetchSourceUrlsOf", [this.keyword, "group"]);
+        this._getFBDataUsingFuncName("fetchSourceUrls", [this.keyword, "group"]);
     }
     
     _checkRequiredParams(params) {

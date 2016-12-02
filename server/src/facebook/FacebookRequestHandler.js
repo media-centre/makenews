@@ -96,10 +96,10 @@ export default class FacebookRequestHandler {
         });
     }
 
-    async fetchSourceUrlsOf(keyword, type) {
+    async fetchSourceUrls(keyword, type) {
         let facebookClientInstance = this.facebookClient();
         try {
-            let pages = await facebookClientInstance.fetchSourceUrlsOf(keyword, type);
+            let pages = await facebookClientInstance.fetchSourceUrls(keyword, type);
             FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched Pages for ${keyword}.`);
             return pages;
         } catch(error) {
@@ -108,8 +108,8 @@ export default class FacebookRequestHandler {
         }
     }
 
-    async fetchConfiguredSources(dbName, authSession) {
-        let couchClient = CouchClient.instance(dbName, authSession);
+    async fetchConfiguredSources(authSession) {
+        let couchClient = await CouchClient.createInstance(authSession);
         let data = await couchClient.findDocuments({
             "selector": {
                 "docType": {
@@ -137,16 +137,14 @@ export default class FacebookRequestHandler {
     async addConfiguredSource(sourceType, source, dbName, authSession) {
         let couchClient = CouchClient.instance(dbName, authSession);
         try {
-            let data = await couchClient.saveDocument(source.url, {
+            await couchClient.saveDocument(source.url, {
                 "_id": source.url,
                 "name": source.name,
                 "docType": "configuredSource",
                 "sourceType": sourceType,
                 "latestFeedTimeStamp": DateUtil.getCurrentTime()
             });
-            delete data.id;
-            delete data.rev;
-            return data;
+            return { "ok": true };
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
             throw error;

@@ -114,7 +114,7 @@ export default class FacebookClient {
         });
     }
 
-    async fetchSourceUrlsOf(keyword, type) {
+    async fetchSourceUrls(keyword, type) {
         if(R.contains(type, this.validSourceTypes)) {
             let parameters = { "q": keyword, "type": type, "fields": "id,name,picture" };
             this._addDefaultParameters(parameters);
