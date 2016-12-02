@@ -21,9 +21,9 @@ export class FacebookTabs extends Component {
     }
 }
 
-function mapToStore(store) {
+function mapToStore(state) {
     return {
-        "currentTab": store.facebookCurrentSourceTab
+        "currentTab": state.facebookCurrentSourceTab
     };
 }
 

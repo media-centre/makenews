@@ -15,6 +15,7 @@ import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
 import FacebookConfigure from "./config/components/FacebookConfigure";
+import Header from "./header/components/MainHeader";
 
 
 export function renderRoutes() {
@@ -35,6 +36,7 @@ export function renderRoutes() {
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />
                 <Route path="/help" component={Help} />
+                <Route path="/header" component={Header} />
             </Route>
         </Route>
     );

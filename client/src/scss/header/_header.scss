@@ -1,0 +1,126 @@
+.main-header {
+  height: 64px;
+  width: 100%;
+  background-color: $primary-color;
+
+  &__logo {
+    width: 177px;
+    float: left;
+
+    img {
+      width: 145px;
+      height: 23px;
+      margin-left: 28px;
+      margin-top: 20px;
+    }
+  }
+}
+
+.main-header__tabs {
+  height: 64px;
+  margin-left: 200px;
+}
+
+.main-header-left-sources {
+  float: left;
+  height: 64px;
+
+  &__scannews {
+    float: left;
+    width: 144px;
+    height: 64px;
+
+    &__name {
+      float: left;
+      margin-top: 18px;
+      margin-left: 30px;
+      width: 84px;
+      height: 24px;
+      cursor: pointer;
+    }
+    &.active{
+      background-color: $secondary-color;
+    }
+  }
+
+  &__writeastory {
+    float: left;
+    width: 144px;
+    height: 64px;
+
+    &__name {
+      float: left;
+      width: 106px;
+      height: 24px;
+      margin-top: 18px;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    &.active{
+      background-color: $secondary-color;
+    }
+  }
+}
+.main-header-right-sources {
+  float: right;
+  height: 64px;
+  margin-right: 30px;
+
+  &__configure {
+    float: left;
+    width: 144px;
+    height: 64px;
+
+    &__image {
+      float: left;
+      margin-top: 20px;
+      margin-left: 60px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+    }
+
+    &.active{
+      background-color: $secondary-color;
+    }
+  }
+
+  &__userprofile {
+    float: left;
+    width: 165px;
+    height: 64px;
+
+    img {
+      width: 36px;
+      height: 36px;
+    }
+
+    &__image {
+      float: left;
+      margin-top: 13px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    &__name {
+      float: left;
+      margin-top: 18px;
+      margin-left: 10px;
+    }
+
+    &__down {
+      float: left;
+      margin-top: 18px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    &.active{
+      background-color: $secondary-color;
+    }
+  }
+}
