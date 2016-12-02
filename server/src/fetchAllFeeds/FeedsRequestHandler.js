@@ -9,6 +9,9 @@ export default class FeedsRequestHandler {
         let couchClient = await CouchClient.createInstance(authSession);
         let selector = {
             "selector": {
+                "sourceUrl": {
+                    "$gt": null
+                },
                 "docType": {
                     "$eq": "feed"
                 }

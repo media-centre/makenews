@@ -24,9 +24,17 @@ describe("FeedsRequestHandler", () => {
         authSession = "Access Token";
         feedsRequestHandler = new FeedsRequestHandler();
         dbName = "dbName";
-        body = { "selector": { "docType": { "$eq": "feed" } } };
+        body = {
+            "selector": {
+                "sourceUrl": {
+                    "$gt": null
+                },
+                "docType": {
+                    "$eq": "feed"
+                }
+            }
+        };
         couchClientInstanceMock = new CouchClient(dbName, authSession);
-
     });
     afterEach("feedsRequestHandlerAfter", () => {
         CouchClient.createInstance.restore();
