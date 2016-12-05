@@ -7,9 +7,9 @@ export default class UserProfile extends Component {
         return (
             <div>
                 <ul>
-                    <li ref="updateProfile" id="updateProfile">Change Password</li>
-                    <li ref="help" id="help">Help & FAQs</li>
-                    <li ref="logout" id="logout">Logout</li>
+                    <li className="user-profile--dropdown__item">Change Password</li>
+                    <li className="user-profile--dropdown__item">Help & FAQs</li>
+                    <li className="user-profile--dropdown__item">Logout</li>
                 </ul>
             </div>
         );
