@@ -10,7 +10,7 @@ export default class DisplayFeeds extends Component {
     feedsDisplay() {
         let active = this.state.activeIndex;
         return this.props.feeds.map((feed, index) => {
-            return (<Feed feed={feed} key={index} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
+            return (<Feed feed={feed} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
         });
     }
 

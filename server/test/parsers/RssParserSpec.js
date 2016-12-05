@@ -89,7 +89,8 @@ describe("RssParser", () => {
                 "image": {},
                 "docType": "feed",
                 "sourceType": "rss",
-                "sourceUrl": url
+                "sourceUrl": url,
+                "tags": [null]
             },
                 {
                     "guid": "test-guid-2",
@@ -101,7 +102,8 @@ describe("RssParser", () => {
                     "image": {},
                     "docType": "feed",
                     "sourceType": "rss",
-                    "sourceUrl": url
+                    "sourceUrl": url,
+                    "tags": [null]
                 }]
         };
 
