@@ -31,8 +31,12 @@ describe("FeedsRequestHandler", () => {
                 },
                 "docType": {
                     "$eq": "feed"
+                },
+                "pubDate": {
+                    "$gt": null
                 }
-            }
+            },
+            "fields": ["title", "description", "sourceType", "tags", "pubDate"]
         };
         couchClientInstanceMock = new CouchClient(dbName, authSession);
     });
