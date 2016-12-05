@@ -1,4 +1,4 @@
-.main-header {
+.header {
   height: 64px;
   width: 100%;
   background-color: $primary-color;
@@ -16,12 +16,12 @@
   }
 }
 
-.main-header__tabs {
+.header-tabs {
   height: 64px;
   margin-left: 200px;
 }
 
-.main-header-left-sources {
+.header-tabs__left {
   float: left;
   height: 64px;
 
@@ -62,20 +62,20 @@
     }
   }
 }
-.main-header-right-sources {
+.header-tabs__right {
   float: right;
   height: 64px;
   margin-right: 30px;
 
   &__configure {
     float: left;
-    width: 144px;
+    width: 100px;
     height: 64px;
 
     &__image {
       float: left;
       margin-top: 20px;
-      margin-left: 60px;
+      margin-left: 40px;
 
       img {
         width: 20px;
@@ -91,7 +91,7 @@
 
   &__userprofile {
     float: left;
-    width: 165px;
+    width: 180px;
     height: 64px;
 
     img {
@@ -112,7 +112,7 @@
       margin-left: 10px;
     }
 
-    &__down {
+    &__downarrow {
       float: left;
       margin-top: 18px;
       margin-left: 10px;
@@ -122,5 +122,24 @@
     &.active{
       background-color: $secondary-color;
     }
+  }
+}
+
+.header-tabs__userprofile {
+  position: absolute;
+  top: 124px;
+  right: -2px;
+  width: 212px;
+  background: $primary-color;
+  height: 134px;
+
+  & li {
+      list-style-type: none;
+      height: 45px;
+      margin-left: 26px;
+  }
+
+  &.hide {
+    display: none;
   }
 }
