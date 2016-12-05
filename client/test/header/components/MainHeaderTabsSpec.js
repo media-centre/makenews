@@ -44,7 +44,7 @@ describe("MainHeaderTabs", () => {
         let [firstTab, secondTab] = rightSideHeaders;
 
         let userProfileTab = secondTab.props.children;
-        let [ image, name, arrow ] = userProfileTab;
+        let [image, name, arrow] = userProfileTab;
 
         expect(secondNav.type).to.equal("nav");
         expect(firstTab.props.children.props.className).to.equal("header-tabs__right__configure__image");
@@ -58,9 +58,9 @@ describe("MainHeaderTabs", () => {
         it("should have toggle option", () => {
             let userProfile = TestUtils.renderIntoDocument(<MainHeaderTabs />);
             let userProfileDom = ReactDOM.findDOMNode(userProfile);
-            TestUtils.Simulate.click(userProfileDom.querySelector(".header-tabs__right__userprofile__downarrow"));
+            TestUtils.Simulate.click(userProfileDom.querySelector(".header-tabs__right__userprofile"));
             assert.isTrue(userProfile.state.show);
-            TestUtils.Simulate.click(userProfileDom.querySelector(".header-tabs__right__userprofile__downarrow"));
+            TestUtils.Simulate.click(userProfileDom.querySelector(".header-tabs__right__userprofile"));
             assert.isFalse(userProfile.state.show);
         });
 

@@ -32,12 +32,12 @@ export class MainHeaderTabs extends Component {
                         <img src="../../../images/configure-icon.png"/>
                     </span>
                 </a>
-                <a className="header-tabs__right__userprofile">
+                <a className="header-tabs__right__userprofile" onClick={() => { this._toggleDropdown(); }}>
                     <span className="header-tabs__right__userprofile__image">
                         <img src="../../../images/userprofile-icon.png"/>
                     </span>
                     <span className="header-tabs__right__userprofile__name">User Profile</span>
-                    <span className="header-tabs__right__userprofile__downarrow" onClick={() => { this._toggleDropdown(); }}>
+                    <span className="header-tabs__right__userprofile__downarrow">
                         <i className="fa fa-caret-down" aria-hidden="true"/>
                         <div className={this.state.show ? "header-tabs__userprofile" : "header-tabs__userprofile hide"}>
                             <UserProfile />

@@ -93,6 +93,7 @@
     float: left;
     width: 180px;
     height: 64px;
+    cursor: pointer;
 
     img {
       width: 36px;
@@ -116,7 +117,6 @@
       float: left;
       margin-top: 18px;
       margin-left: 10px;
-      cursor: pointer;
     }
 
     &.active{
