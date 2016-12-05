@@ -26,9 +26,6 @@ function mapToStore(store) {
     return { "feeds": store.fetchedFeeds };
 }
 
-NewsBoardPage.defaultType = {
-};
-
 NewsBoardPage.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired

@@ -14,6 +14,7 @@ export function displayAllConfiguredFeeds() {
             let feeds = await ajax.post(headers, {});
             dispatch(displayFetchedFeeds(feeds.docs));
         } catch (error) {
+            console.log("Error display===============>", error);
             dispatch(displayFetchedFeeds([]));
         }
     };

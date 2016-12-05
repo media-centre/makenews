@@ -1,20 +1,25 @@
 import React, { Component, PropTypes } from "react";
+import Feed from "./Feed.jsx";
 
 export default class DisplayFeeds extends Component {
+    constructor() {
+        super();
+        this.state = { "activeIndex": 0 };
+    }
 
     feedsDisplay() {
-        return this.props.feeds.map((feed) => {
-            return (<div className = "feed">
-               <span className="feed-title">{feed.title}</span>
-               <span className="feed-description">{feed.description}</span>
-               <span className="feed-type">{feed.sourceType}</span>
-               <span className="feed-source">{feed.sourceUrl}</span>
-           </div>);
+        let active = this.state.activeIndex;
+        return this.props.feeds.map((feed, index) => {
+            return (<Feed feed={feed} key={index} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
         });
     }
 
+    handleToggle(index) {
+        this.setState({ "activeIndex": index });
+    }
+
     render() {
-        return (<div className = "feeds-display">
+        return (<div className="feeds-display">
             {this.feedsDisplay()}
         </div>);
     }
