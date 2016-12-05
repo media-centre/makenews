@@ -6,8 +6,6 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
-import R from "ramda"; //eslint-disable-line id-length
-import { sourceTypes } from "../util/Constants";
 
 export default class FacebookRequestHandler {
 
@@ -107,32 +105,6 @@ export default class FacebookRequestHandler {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${type}s. Error: ${error}`);
             throw `error fetching facebook ${type}s`;  // eslint-disable-line no-throw-literal
         }
-    }
-
-    async fetchConfiguredSources(authSession) {
-        let couchClient = await CouchClient.createInstance(authSession);
-        let data = await couchClient.findDocuments({
-            "selector": {
-                "docType": {
-                    "$eq": "configuredSource"
-                }
-            }
-        });
-        return this.formatConfiguredSources(data.docs);
-    }
-
-    /* TODO change it to one time traversal */ //eslint-disable-line
-    formatConfiguredSources(docs) {
-        let result = {
-            "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
-        };
-        result.profiles = R.filter(R.propEq("sourceType", sourceTypes.fb_profile), docs);
-        result.pages = R.filter(R.propEq("sourceType", sourceTypes.fb_page), docs);
-        result.groups = R.filter(R.propEq("sourceType", sourceTypes.fb_group), docs);
-        result.twitter = R.filter(R.propEq("sourceType", "twitter"), docs);
-        result.web = R.filter(R.propEq("sourceType", "web"), docs);
-
-        return result;
     }
 
     async addConfiguredSource(sourceType, source, authSession) {

@@ -1,20 +1,20 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import FacebookConfigureRoute from "../../../src/routes/helpers/FacebookConfigureRoute";
+import SourceConfigureRoute from "../../../src/routes/helpers/SourceConfigureRoute";
 import { assert } from "chai";
 import sinon from "sinon";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
+import SourceConfigRequestHandler from "../../../src/sourceConfig/SourceConfigRequestHandler";
 
-describe("FacebookConfigureRoute", () => {
+describe("SourceConfigureRoute", () => {
 
     let sandbox = sinon.sandbox.create();
 
-    beforeEach("FacebookConfigureRoute", () => {
+    beforeEach("SourceConfigureRoute", () => {
         sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
-    afterEach("FacebookConfigureRoute", () => {
+    afterEach("SourceConfigureRoute", () => {
         sandbox.restore();
     });
 
@@ -30,10 +30,10 @@ describe("FacebookConfigureRoute", () => {
             }
         };
 
-        let facebookRoute = new FacebookConfigureRoute({
+        let sourceRoute = new SourceConfigureRoute({
             "cookies": {}
         }, response);
-        facebookRoute.fetchConfiguredSources();
+        sourceRoute.fetchConfiguredSources();
     });
 
     it("should give 400 when there is a problem getting the sources", (done) => {
@@ -48,17 +48,17 @@ describe("FacebookConfigureRoute", () => {
             }
         };
 
-        let facebookRoute = new FacebookConfigureRoute({
+        let sourceRoute = new SourceConfigureRoute({
             "cookies": { "AuthSession": "session" }
         }, response);
 
-        let facebookRequestHandler = new FacebookRequestHandler("token");
-        sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
-        
-        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
+        let sourceRequestHandler = new SourceConfigRequestHandler();
+        sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(sourceRequestHandler);
+
+        let configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
         configStub.withArgs("session").returns(Promise.reject("error fetching data"));
 
-        facebookRoute.fetchConfiguredSources();
+        sourceRoute.fetchConfiguredSources();
     });
 
     it("should get the sources", (done) => {
@@ -81,16 +81,16 @@ describe("FacebookConfigureRoute", () => {
             }
         };
 
-        let facebookRoute = new FacebookConfigureRoute({
+        let sourceRoute = new SourceConfigureRoute({
             "cookies": { "AuthSession": "session" }
         }, response);
 
-        let facebookRequestHandler = new FacebookRequestHandler("token");
-        sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
+        let sourceRequestHandler = new SourceConfigRequestHandler();
+        sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(sourceRequestHandler);
 
-        let configStub = sandbox.stub(facebookRequestHandler, "fetchConfiguredSources");
+        let configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
         configStub.withArgs("session").returns(Promise.resolve(sources));
 
-        facebookRoute.fetchConfiguredSources();
+        sourceRoute.fetchConfiguredSources();
     });
 });

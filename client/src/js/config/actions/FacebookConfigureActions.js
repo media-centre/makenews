@@ -8,7 +8,6 @@ export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
 export const FACEBOOK_ADD_GROUP = "FACEBOOK_ADD_GROUP";
-export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
 export const PROFILES = "Profiles";
 export const PAGES = "Pages";
@@ -21,12 +20,6 @@ export function facebookSourcesReceived(sources) {
     };
 }
 
-export function configuredSourcesReceived(sources) {
-    return {
-        "type": GOT_CONFIGURED_SOURCES,
-        "sources": sources
-    };
-}
 
 export async function addToConfiguredSources(dispatch, source, sourceType, eventType) {
     let configuredSource = Object.assign({}, source, { "url": source.id });
@@ -71,19 +64,6 @@ export function facebookSourceTabSwitch(currentTab) {
     return {
         "type": FACEBOOK_CHANGE_CURRENT_TAB,
         currentTab
-    };
-}
-
-export function getConfiguredSources() {
-    let ajaxClient = AjaxClient.instance("/facebook/configured", false);
-    return async dispatch => {
-        let sources = [];
-        try {
-            sources = await ajaxClient.get();
-        } catch (err) {
-            sources = [];
-        }
-        dispatch(configuredSourcesReceived(sources));
     };
 }
 
