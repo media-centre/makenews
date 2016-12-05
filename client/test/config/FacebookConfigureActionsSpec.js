@@ -5,7 +5,6 @@ import sinon from "sinon";
 import LoginPage from "../../src/js/login/pages/LoginPage";
 import "../helper/TestHelper";
 import UserSession from "../../src/js/user/UserSession";
-import DbParameters from "../../src/js/db/DbParameters";
 import mockStore from "../helper/ActionHelper";
 import AppWindow from "../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
@@ -138,7 +137,7 @@ describe("Facebook Configure Actions", () => {
         });
     });
     
-    describe("add source to configred list", () => {
+    describe.only("add source to configred list", () => {
         let sandbox = null;
 
         beforeEach("add source to configred list", () => {
@@ -149,18 +148,8 @@ describe("Facebook Configure Actions", () => {
             sandbox.restore();
         });
         
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, () => {
-            let event = FBActions.addSourceToConfigureListOf(FBActions.PROFILES, { "name": "something" });
-            expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PROFILE);
-            expect(event.source).to.deep.equal({ "name": "something" });
-        });
-
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_PAGE} when requested for adding page`, (done) => {
+        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, (done) => {
             let source = { "name": "something", "id": "id_" };
-
-            let dbParams = new DbParameters();
-            sandbox.mock(DbParameters).expects("instance").returns(dbParams);
-            sandbox.stub(dbParams, "getLocalDbUrl").returns(Promise.resolve("dbName"));
 
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
@@ -171,7 +160,26 @@ describe("Facebook Configure Actions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configuredSource/pages")
+                .put("/facebook/configureSource")
+                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+
+            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PROFILE, "source": source }], done);
+            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PROFILES, source));
+        });
+
+        it(`should dispatch ${FBActions.FACEBOOK_ADD_PAGE} when requested for adding page`, (done) => {
+            let source = { "name": "something", "id": "id_" };
+
+            let appWindow = new AppWindow();
+            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
+            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
+
+            sandbox.mock(UserSession).expects("instance").returns({
+                "continueSessionIfActive": () => {}
+            });
+
+            nock("http://localhost")
+                .put("/facebook/configureSource")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PAGE, "source": source }], done);
@@ -181,10 +189,6 @@ describe("Facebook Configure Actions", () => {
         it(`should dispatch ${FBActions.FACEBOOK_ADD_GROUP} when requested for adding group`, (done) => {
             let source = { "name": "something", "id": "id_" };
 
-            let dbParams = new DbParameters();
-            sandbox.mock(DbParameters).expects("instance").returns(dbParams);
-            sandbox.stub(dbParams, "getLocalDbUrl").returns(Promise.resolve("dbName"));
-
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
@@ -194,7 +198,7 @@ describe("Facebook Configure Actions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configuredSource/groups")
+                .put("/facebook/configureSource")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_GROUP, "source": source }], done);

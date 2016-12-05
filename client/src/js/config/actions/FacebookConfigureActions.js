@@ -1,6 +1,5 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import LoginPage from "../../login/pages/LoginPage";
-import DbParameters from "../../db/DbParameters";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
@@ -30,16 +29,15 @@ export function configuredSourcesReceived(sources) {
 }
 
 export async function addToConfiguredSources(dispatch, source, sourceType, eventType) {
-    let dbName = await DbParameters.instance().getLocalDbUrl();
     let configuredSource = Object.assign({}, source, { "url": source.id });
-    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configuredSource/${sourceType}`, {
+    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`, {
         "method": "PUT",
         "headers": {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         "credentials": "same-origin",
-        "body": JSON.stringify({ "dbName": dbName, "source": configuredSource })
+        "body": JSON.stringify({ "source": configuredSource, "type": sourceType })
     });
     if (data.ok) {
         dispatch({
@@ -52,16 +50,13 @@ export async function addToConfiguredSources(dispatch, source, sourceType, event
 export function addSourceToConfigureListOf(sourceType, source) {
     switch (sourceType) {
     case PROFILES: {
-        return {
-            "type": FACEBOOK_ADD_PROFILE,
-            source
-        };
+        return dispatch => addToConfiguredSources(dispatch, source, "fb_profile", FACEBOOK_ADD_PROFILE);
     }
     case PAGES: {
-        return dispatch => addToConfiguredSources(dispatch, source, "pages", FACEBOOK_ADD_PAGE);
+        return dispatch => addToConfiguredSources(dispatch, source, "fb_page", FACEBOOK_ADD_PAGE);
     }
     case GROUPS: {
-        return dispatch => addToConfiguredSources(dispatch, source, "groups", FACEBOOK_ADD_GROUP);
+        return dispatch => addToConfiguredSources(dispatch, source, "fb_group", FACEBOOK_ADD_GROUP);
     }
     default: {
         return {
@@ -76,17 +71,6 @@ export function facebookSourceTabSwitch(currentTab) {
     return {
         "type": FACEBOOK_CHANGE_CURRENT_TAB,
         currentTab
-    };
-}
-
-export function fetchFacebookProfiles() {
-    let ajaxClient = AjaxClient.instance("/facebook-profiles", false);
-    return dispatch => {
-        ajaxClient.get({ "userName": LoginPage.getUserName() })
-            .then((data) => {
-                dispatch(facebookSourceTabSwitch(PROFILES));
-                dispatch(facebookSourcesReceived(data));
-            });
     };
 }
 

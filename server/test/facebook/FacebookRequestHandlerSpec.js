@@ -11,6 +11,7 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import { assert, expect } from "chai";
 import sinon from "sinon";
+import { sourceTypes } from "../../src/util/Constants";
 
 describe("FacebookRequestHandler", () => {
     let accessToken = null, appSecretKey = null, appSecretProof = null, appId = null;
@@ -311,19 +312,19 @@ describe("FacebookRequestHandler", () => {
             [{ "_id": "7535677770c76f0bf6045a0e1401ccf4",
                 "_rev": "1-23d11b676e21bca63e16d032a03b0826",
                 "docType": "source",
-                "sourceType": "fb-profile",
+                "sourceType": sourceTypes.fb_profile,
                 "url": "http://www.facebook.com/profile1",
                 "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
                 { "_id": "7535677770c76f0bf6045a0e1401ccf4",
                     "_rev": "1-23d11b676e21bca63e16d032a03b0826",
                     "docType": "source",
-                    "sourceType": "fb-page",
+                    "sourceType": sourceTypes.fb_page,
                     "url": "http://www.facebook.com/profile1",
                     "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
                 { "_id": "7535677770c76f0bf6045a0e1401ccf4",
                     "_rev": "1-23d11b676e21bca63e16d032a03b0826",
                     "docType": "source",
-                    "sourceType": "fb-group",
+                    "sourceType": sourceTypes.fb_group,
                     "url": "http://www.facebook.com/profile1",
                     "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
                 { "_id": "7535677770c76f0bf6045a0e1401ccf4",
@@ -371,7 +372,7 @@ describe("FacebookRequestHandler", () => {
 
     describe("Add Configured Sources", () => {
         let sandbox = null, dbName = null, facebookRequestHandler = null, couchClient = null;
-        let document = null, source = null, currentTime = 123456, sourceType = "fb-page";
+        let document = null, source = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
         beforeEach("Add Configured Sources", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";
@@ -389,7 +390,7 @@ describe("FacebookRequestHandler", () => {
 
             facebookRequestHandler = new FacebookRequestHandler("somethings");
             couchClient = new CouchClient(dbName, accessToken);
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+            sandbox.mock(CouchClient).expects("createInstance").returns(couchClient);
             sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
         });
 
@@ -402,7 +403,7 @@ describe("FacebookRequestHandler", () => {
 
             sandbox.stub(couchClient, "saveDocument").withArgs(source.url, document).returns(Promise.resolve(result));
 
-            facebookRequestHandler.addConfiguredSource(sourceType, source, dbName, accessToken).then(data => {
+            facebookRequestHandler.addConfiguredSource(sourceType, source, accessToken).then(data => {
                 try {
                     expect(data).to.deep.equal({ "ok": true });
                     done();
@@ -415,7 +416,7 @@ describe("FacebookRequestHandler", () => {
         it("should reject with error when database gives an error", (done) => {
             let errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "saveDocument").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.addConfiguredSource(sourceType, source, dbName, accessToken).catch(error => {
+            facebookRequestHandler.addConfiguredSource(sourceType, source, accessToken).catch(error => {
                 try {
                     expect(error).to.equal(errorMessage);
                     done();

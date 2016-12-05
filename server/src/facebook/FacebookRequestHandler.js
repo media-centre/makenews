@@ -7,6 +7,7 @@ import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
+import { sourceTypes } from "../util/Constants";
 
 export default class FacebookRequestHandler {
 
@@ -125,17 +126,17 @@ export default class FacebookRequestHandler {
         let result = {
             "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
         };
-        result.profiles = R.filter(R.propEq("sourceType", "fb-profile"), docs);
-        result.pages = R.filter(R.propEq("sourceType", "fb-page"), docs);
-        result.groups = R.filter(R.propEq("sourceType", "fb-group"), docs);
+        result.profiles = R.filter(R.propEq("sourceType", sourceTypes.fb_profile), docs);
+        result.pages = R.filter(R.propEq("sourceType", sourceTypes.fb_page), docs);
+        result.groups = R.filter(R.propEq("sourceType", sourceTypes.fb_group), docs);
         result.twitter = R.filter(R.propEq("sourceType", "twitter"), docs);
         result.web = R.filter(R.propEq("sourceType", "web"), docs);
 
         return result;
     }
 
-    async addConfiguredSource(sourceType, source, dbName, authSession) {
-        let couchClient = CouchClient.instance(dbName, authSession);
+    async addConfiguredSource(sourceType, source, authSession) {
+        let couchClient = await CouchClient.createInstance(authSession);
         try {
             await couchClient.saveDocument(source.url, {
                 "_id": source.url,

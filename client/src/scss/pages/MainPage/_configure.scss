@@ -193,6 +193,8 @@
         top: 50%;
         width: 70%;
         display: inline-table;
+        word-break: break-all;
+        word-wrap: break-word;
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
