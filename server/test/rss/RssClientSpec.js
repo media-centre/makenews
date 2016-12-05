@@ -574,10 +574,11 @@ describe("RssClient", () => {
 
         it("should return the default URL Documents", async() => {
             let key = "the";
-            let body = { "selector": { "name": { "$eq": key } } };
-            let getDocStub = sinon.stub(couchClient, "findDocuments");
+            let offSet = 2;
+            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 100 };
+            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             let rssClient = RssClient.instance();
-            getDocStub.withArgs(body).returns(Promise.resolve({
+            searchUrlMock.withArgs(body).returns(Promise.resolve({
                 "docs": [{
                     "_id": "1",
                     "docType": "test",
@@ -593,34 +594,32 @@ describe("RssClient", () => {
                     "url": "http://www.thehindu.com/sport/?service=rss"
                 }]
             }));
-            try {
-                let document = await rssClient.searchURL(key);
-                const zero = 0;
-                assert.strictEqual("web", document.docs[zero].sourceType);
-            }catch (err) {
-                assert.fail(err);
-            }
+            let document = await rssClient.searchURL(key, offSet);
+            const zero = 0;
+            assert.strictEqual("web", document.docs[zero].sourceType);
+            searchUrlMock.verify();
         });
 
-        it("should reject with an error if the URL document rejects with an error when key is null", async() => {
+        it("should return empty document if No documents found for the key", async() => {
             let key = "asldkfjkldsafj";
-            let body = { "selector": { "name": { "$eq": key } } };
+            let ZERO = 0;
+            let offset = 2;
+            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 100 };
             let rssClient = RssClient.instance();
-            let getDocStub = sinon.stub(couchClient, "findDocuments");
-            getDocStub.withArgs(body).returns(Promise.reject({ "message": "Request failed for " + key }));
-            try {
-                await rssClient.searchURL(key);
-            }catch (err) {
-                assert.strictEqual("Request failed for " + key, err.message);
-            }
+            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
+            searchUrlMock.withArgs(body).returns(Promise.resolve({ "docs": [] }));
+            let response = await rssClient.searchURL(key, offset);
+            assert.strictEqual(ZERO, response.docs.length);
+            searchUrlMock.verify();
         });
 
-        it("should reject with an error if the URL document rejects with an error when key is empty string", async() => {
+        it("should return all documents when they enter for empty string", async() => {
             let key = "";
-            let body = { "selector": { "name": { "$eq": key } } };
+            let offset = 1;
+            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 50 };
             let rssClient = RssClient.instance();
-            let getDocStub = sinon.stub(couchClient, "findDocuments");
-            getDocStub.withArgs(body).returns(Promise.resolve({
+            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
+            searchUrlMock.withArgs(body).returns(Promise.resolve({
                 "docs": [{
                     "_id": "1",
                     "docType": "test",
@@ -636,12 +635,25 @@ describe("RssClient", () => {
                     "url": "http://www.hindu.com/sport/?service=rss"
                 }]
             }));
-            try {
-                let document = await rssClient.searchURL(key);
-                const zero = 0;
-                assert.strictEqual("web", document.docs[zero].sourceType);
+            let document = await rssClient.searchURL(key, offset);
+            const zero = 0;
+            assert.strictEqual("web", document.docs[zero].sourceType);
+            searchUrlMock.verify();
+        });
+
+        it("should reject with an error when couchdb throws an error", async() => {
+            let key = "error";
+            let offset = 1;
+            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 50 };
+            let rssClient = RssClient.instance();
+            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
+            searchUrlMock.withArgs(body).returns(Promise.reject("Unexpected Repsonse from DB"));
+            try{
+                await rssClient.searchURL(key, offset);
+                assert.fail();
             }catch(err) {
-                assert.fail(err);
+                assert.strictEqual(err.message, "Request failed for error");
+                searchUrlMock.verify();
             }
         });
     });

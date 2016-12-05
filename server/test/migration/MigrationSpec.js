@@ -5,6 +5,7 @@ import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_
 import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
 import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
 import URLDocuments from "../../src/migration/db/20161114174315_URLDocument";
+import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
 import Migration from "../../src/migration/Migration";
 import MigrationFile from "../../src/migration/MigrationFile";
 import SchemaInfo from "../../src/migration/SchemaInfo";
@@ -60,6 +61,13 @@ describe("Migration", () => {
             let className = "URLDocument";
             let object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof URLDocuments);
+        });
+
+        it("should give the function object to create the instance of Index document", () => {
+            let migrationInstance = new Migration(dbName, accessToken);
+            let className = "IndexDocument";
+            let object = migrationInstance.getObject(className);
+            assert.isTrue(object instanceof IndexDocument);
         });
 
         it("should throw an error if the class name does not found in case", ()=> {
