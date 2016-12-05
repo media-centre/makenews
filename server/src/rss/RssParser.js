@@ -35,7 +35,8 @@ export default class RssParser {
                         "image": feed.image,
                         "docType": "feed",
                         "sourceType": "rss",
-                        "sourceUrl": url
+                        "sourceUrl": url,
+                        "tags": [meta.title]
                     });
                     feed = this.read();
                 }

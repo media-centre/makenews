@@ -14,8 +14,12 @@ export default class FeedsRequestHandler {
                 },
                 "docType": {
                     "$eq": "feed"
+                },
+                "pubDate": {
+                    "$gt": null
                 }
-            }
+            },
+            "fields": ["title", "description", "sourceType", "tags", "pubDate"]
         };
         return await couchClient.findDocuments(selector);
     }
