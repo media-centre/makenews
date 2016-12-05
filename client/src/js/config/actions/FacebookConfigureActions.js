@@ -103,10 +103,10 @@ export function getConfiguredSources() {
     };
 }
 
-function fetchSources(keyword, path, sourceType) {
-    let ajaxClient = AjaxClient.instance(path, false);
+function fetchSources(keyword, type, sourceType) {
+    let ajaxClient = AjaxClient.instance("/facebook-sources", false);
     return (dispatch, getState) => {
-        ajaxClient.get({ "userName": LoginPage.getUserName(), "keyword": keyword })
+        ajaxClient.get({ "userName": LoginPage.getUserName(), keyword, type })
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(sourceType));
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
@@ -121,16 +121,16 @@ function fetchSources(keyword, path, sourceType) {
 export function getSourcesOf(sourceType, keyword) {
     switch (sourceType) {
     case PROFILES: {
-        return fetchFacebookProfiles();
+        return fetchSources(keyword, "profile", sourceType);
     }
     case PAGES: {
-        return fetchSources(keyword, "/facebook-pages", sourceType);
+        return fetchSources(keyword, "page", sourceType);
     }
     case GROUPS: {
-        return fetchSources(keyword, "/facebook-groups", sourceType);
+        return fetchSources(keyword, "group", sourceType);
     }
     default: {
-        return fetchFacebookProfiles();
+        return fetchSources(keyword, "profile", sourceType);
     }
     }
 }

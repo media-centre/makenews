@@ -6,7 +6,6 @@ import NodeErrorHandler from "../NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
-import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookClient {
 
@@ -26,7 +25,6 @@ export default class FacebookClient {
         this.appSecretProof = appSecretProof;
         this.appId = appId;
         this.facebookParameters = ApplicationConfig.instance().facebook();
-        this.validSourceTypes = ["page", "group"];
     }
 
     //didn't find any call stack for this
@@ -115,28 +113,23 @@ export default class FacebookClient {
     }
 
     async fetchSourceUrls(keyword, type) {
-        if(R.contains(type, this.validSourceTypes)) {
-            let parameters = { "q": keyword, "type": type, "fields": "id,name,picture" };
-            this._addDefaultParameters(parameters);
+        let parameters = { "q": keyword, "type": type, "fields": "id,name,picture" };
+        this._addDefaultParameters(parameters);
 
-            let response = null;
-            try {
-                response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
-            } catch(err) {
-                FacebookClient.logger().error(`FacebookClient:: Error fetching ${type}s for ${keyword}. Error ${err}`);
-                throw err;
-            }
-
-            let responseJson = await response.json();
-            if(response.status === HttpResponseHandler.codes.OK) {
-                return responseJson;
-            }
-            FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the ${type}s for ${keyword}`);
-            throw responseJson.error;
+        let response = null;
+        try {
+            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
+        } catch(err) {
+            FacebookClient.logger().error(`FacebookClient:: Error fetching ${type}s for ${keyword}. Error ${err}`);
+            throw err;
         }
 
-        let sourceTypeError = { "error": `Source type ${type} is not valid` };
-        throw sourceTypeError;
+        let responseJson = await response.json();
+        if(response.status === HttpResponseHandler.codes.OK) {
+            return responseJson;
+        }
+        FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the ${type}s for ${keyword}`);
+        throw responseJson.error;
     }
 
     getFacebookId(facebookPageUrl) {

@@ -99,12 +99,12 @@ export default class FacebookRequestHandler {
     async fetchSourceUrls(keyword, type) {
         let facebookClientInstance = this.facebookClient();
         try {
-            let pages = await facebookClientInstance.fetchSourceUrls(keyword, type);
-            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched Pages for ${keyword}.`);
-            return pages;
+            let sources = await facebookClientInstance.fetchSourceUrls(keyword, type);
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${type}s for ${keyword}.`);
+            return sources;
         } catch(error) {
-            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook pages. Error: ${error}`);
-            throw "error fetching facebook pages";  // eslint-disable-line no-throw-literal
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${type}s. Error: ${error}`);
+            throw `error fetching facebook ${type}s`;  // eslint-disable-line no-throw-literal
         }
     }
 

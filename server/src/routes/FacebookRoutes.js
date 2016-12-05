@@ -22,19 +22,9 @@ export default (app) => {
         new FacebookBatchPosts(request, response, next).handle();
     });
 
-    app.get("/facebook-profiles", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-profiles request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).fetchProfiles();
-    });
-
-    app.get("/facebook-pages", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-pages request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).fetchPages();
-    });
-
-    app.get("/facebook-groups", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-groups request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).fetchGroups();
+    app.get("/facebook-sources", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-sources request received. url = %s", request.url);
+        new FacebookSourceRoute(request, response, next).searchSources();
     });
 
     app.get("/facebook/configured/", (request, response, next) => {
