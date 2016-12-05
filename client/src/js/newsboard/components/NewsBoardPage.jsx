@@ -1,17 +1,20 @@
 import React, { Component, PropTypes } from "react";
 import { displayAllConfiguredFeeds } from "../actions/NewsBoardActions";
 import { connect } from "react-redux";
+import DisplayFeeds from "./DisplayFeeds";
 
-class NewsBoardPage extends Component {
-    //componentWillMount() {
-    //    this.props.dispatch(displayAllConfiguredFeeds());
-    //}
+export class NewsBoardPage extends Component {
+    componentWillMount() {
+        this.props.dispatch(displayAllConfiguredFeeds());
+    }
 
     render() {
         return (
             <div className="news-board-container">
                 <div className="source-type-bar">{"Sources"}</div>
-                <div className="configured-feeds-container">{"Saisree"}</div>
+                <div className="configured-feeds-container">
+                    <DisplayFeeds feeds = {this.props.feeds} />
+                </div>
             </div>
         );
     }
@@ -20,14 +23,15 @@ class NewsBoardPage extends Component {
 NewsBoardPage.displayName = "NewsBoardPage";
 
 function mapToStore(store) {
-    return {
-        "feeds": store.fetchedFeeds
-    };
+    return { "feeds": store.fetchedFeeds };
 }
 
+NewsBoardPage.defaultType = {
+};
+
 NewsBoardPage.propTypes = {
-    "feeds": PropTypes.array,
-    "dispatch": PropTypes.func
+    "dispatch": PropTypes.func.isRequired,
+    "feeds": PropTypes.array.isRequired
 };
 
 export default connect(mapToStore)(NewsBoardPage);
