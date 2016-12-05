@@ -1,7 +1,13 @@
 import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
+import { getConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { connect } from "react-redux";
 
-export default class ConfiguredSources extends Component {
+export class ConfiguredSources extends Component {
+    
+    componentDidMount() {
+        this.props.dispatch(getConfiguredSources());
+    }
 
     _renderSources(sourceType) {
         let sourceCategory = (source, index) => {
@@ -38,6 +44,15 @@ export default class ConfiguredSources extends Component {
     }
 }
 
+function mapToStore(state) {
+    return {
+        "sources": state.configuredSources
+    };
+}
+
 ConfiguredSources.propTypes = {
-    "sources": PropTypes.object.isRequired
+    "sources": PropTypes.object.isRequired,
+    "dispatch": PropTypes.func.isRequired
 };
+
+export default connect(mapToStore)(ConfiguredSources);

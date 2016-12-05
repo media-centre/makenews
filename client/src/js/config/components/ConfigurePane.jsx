@@ -2,13 +2,12 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { getSourcesOf, getConfiguredSources } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf } from "./../actions/FacebookConfigureActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
     componentDidMount() {
         this.props.dispatch(getSourcesOf(this.props.currentTab));
-        this.props.dispatch(getConfiguredSources());
     }
 
     checkEnterKey(event) {

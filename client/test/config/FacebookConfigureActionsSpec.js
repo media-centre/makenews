@@ -19,52 +19,6 @@ describe("Facebook Configure Actions", () => {
         });
     });
 
-    describe("configured sources", () => {
-        let sandbox = null;
-
-        beforeEach("configured sources", () => {
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach("configured sources", () => {
-            sandbox.restore();
-        });
-
-        it("should return GOT_CONFIGURED_SOURCES action when it receives configured sources", () => {
-            let sources = [{ "name": "Profile1" }, { "name": "Profile2" }];
-            let action = FBActions.configuredSourcesReceived(sources);
-            expect(action.type).to.equal(FBActions.GOT_CONFIGURED_SOURCES);
-            expect(action.sources).to.deep.equal(sources);
-        });
-
-        it("should dispatch GOT_CONFIGURED_SOURCES once it gets the configured sources from server", (done) => {
-            let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
-                "pages": [], "groups": [], "twitter": [], "web": [] };
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-            let ajaxClient = AjaxClient.instance("/facebook/configured", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/facebook/configured", false).returns(ajaxClient);
-            sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
-
-            let store = mockStore({}, [{ "type": "GOT_CONFIGURED_SOURCES", "sources": sources }], done);
-            store.dispatch(FBActions.getConfiguredSources());
-        });
-
-        it("should dispatch GOT_CONFIGURED_SOURCES with empty array if there is an error from server", (done) => {
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-            let ajaxClient = AjaxClient.instance("/facebook/configured", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/facebook/configured", false).returns(ajaxClient);
-            sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.reject("error"));
-
-            let store = mockStore({}, [{ "type": "GOT_CONFIGURED_SOURCES", "sources": [] }], done);
-            store.dispatch(FBActions.getConfiguredSources());
-        });
-    });
-
     describe("switch current Tab", () => {
         it("should return the FACEBOOK_CHANGE_CURRENT_TAB action", () => {
             let currentTab = "Profiles";
@@ -137,7 +91,7 @@ describe("Facebook Configure Actions", () => {
         });
     });
     
-    describe.only("add source to configred list", () => {
+    describe("add source to configred list", () => {
         let sandbox = null;
 
         beforeEach("add source to configred list", () => {
