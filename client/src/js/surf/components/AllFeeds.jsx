@@ -11,7 +11,6 @@ export default class AllFeeds extends Component {
         this.appEnMessages = Locale.applicationStrings().messages;
     }
     render() {
-
         let categories = this.props.feeds.map((category, index)=>
             category.type === "description" ? <Paragraph key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler} appEnMessages={this.appEnMessages}/>
                 : category.type === "imagecontent" ? <ImageContent key={index} category={category} dispatch={this.props.dispatch} actionComponent={this.props.actionComponent} clickHandler={this.props.clickHandler} appEnMessages={this.appEnMessages}/> : null
