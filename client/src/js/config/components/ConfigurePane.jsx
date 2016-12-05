@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { getSourcesOf, getConfiguredSources, PROFILES } from "./../actions/FacebookConfigureActions";
+import { getSourcesOf, getConfiguredSources } from "./../actions/FacebookConfigureActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
@@ -20,7 +20,7 @@ export class ConfigurePane extends Component {
 
     fetchSources() {
         let value = this.refs.searchSources.value;
-        if(this.props.currentTab !== PROFILES && !StringUtils.isEmptyString(value)) {
+        if(!StringUtils.isEmptyString(value)) {
             this.props.dispatch(getSourcesOf(this.props.currentTab, value));
         }
     }

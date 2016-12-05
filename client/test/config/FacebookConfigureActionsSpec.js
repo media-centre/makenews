@@ -92,27 +92,27 @@ describe("Facebook Configure Actions", () => {
         });
 
         it("should dispatch FACEBOOK_GOT_SOURCES action after getting fb profiles ", (done) => {
-            let serverUrl = "/facebook-profiles";
-            let profiles = [{ "name": "testProfile" }];
+            let serverUrl = "/facebook-sources";
+            let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }] };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get");
-            ajaxClientGetMock.withArgs({ "userName": userName }).returns(Promise.resolve(profiles));
+            ajaxClientGetMock.withArgs({ "userName": userName, "keyword": "testProfile", "type": "profile" }).returns(Promise.resolve(sources));
 
-            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": "Profiles" }, { "type": "FACEBOOK_GOT_SOURCES", "sources": profiles }];
-            let store = mockStore({}, actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PROFILES));
+            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": "Profiles" }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
+            let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
+            store.dispatch(FBActions.getSourcesOf(FBActions.PROFILES, "testProfile"));
         });
 
         it("fetch pages when requested source type is pages", (done) => {
-            let serverUrl = "/facebook-pages";
+            let serverUrl = "/facebook-sources";
             let pageName = "testPage";
             let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }] };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
-            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName });
+            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName, "type": "page" });
             ajaxClientGetMock.returns(Promise.resolve(sources));
 
             let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
@@ -121,7 +121,7 @@ describe("Facebook Configure Actions", () => {
         });
 
         it("should dispatch configured pages with added property", (done) => {
-            let serverUrl = "/facebook-pages";
+            let serverUrl = "/facebook-sources";
             let pageName = "testPage";
             let fbResponse = { "data": [{ "id": 1, "name": "testProfile" },
                 { "id": 2, "name": "testProfile2" }] };
@@ -130,7 +130,7 @@ describe("Facebook Configure Actions", () => {
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
-            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName });
+            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName, "type": "page" });
             ajaxClientGetMock.returns(Promise.resolve(fbResponse));
             let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
             let store = mockStore(() => ({ "configuredSources": { "pages": [{ "_id": 1 }, { "_id": 3 }] } }), actions, done);

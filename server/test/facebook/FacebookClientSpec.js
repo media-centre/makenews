@@ -417,17 +417,5 @@ describe("FacebookClient", () => {
                 }
             });
         });
-
-        it("should throw and error when given an invalid source type", (done) => {
-            type = "something";
-            facebookClient.fetchSourceUrls("keyword", type).catch(errorData => {
-                try {
-                    expect(errorData.error).to.eq(`Source type ${type} is not valid`);
-                    done();
-                } catch(err) {
-                    done(err);
-                }
-            });
-        });
     });
 });
