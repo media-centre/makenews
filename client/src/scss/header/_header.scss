@@ -32,7 +32,7 @@
 
     &__name {
       float: left;
-      margin-top: 18px;
+      margin-top: 20px;
       margin-left: 30px;
       width: 84px;
       height: 24px;
@@ -51,7 +51,7 @@
     &__name {
       float: left;
       width: 106px;
-      height: 24px;
+      height: 20px;
       margin-top: 18px;
       margin-left: 20px;
       cursor: pointer;
@@ -94,6 +94,7 @@
     width: 180px;
     height: 64px;
     cursor: pointer;
+    color: white;
 
     img {
       width: 36px;
@@ -104,18 +105,11 @@
       float: left;
       margin-top: 13px;
       margin-left: 10px;
-      cursor: pointer;
     }
 
-    &__name {
+    &__name, &__downarrow {
       float: left;
-      margin-top: 18px;
-      margin-left: 10px;
-    }
-
-    &__downarrow {
-      float: left;
-      margin-top: 18px;
+      margin-top: 20px;
       margin-left: 10px;
     }
 
@@ -127,9 +121,9 @@
 
 .header-tabs__userprofile {
   position: absolute;
-  top: 124px;
-  right: -2px;
-  width: 212px;
+  top: 64px;
+  right: 0px;
+  width: 210px;
   background: $primary-color;
   height: 134px;
 

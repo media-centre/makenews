@@ -31,12 +31,11 @@ export function renderRoutes() {
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
 
-                <Route path="/surf" component={SurfPage} />
+                <Route path="/surf" component={Header} />
                 <Route path="/park" component={ParkPage} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />
                 <Route path="/help" component={Help} />
-                <Route path="/header" component={Header} />
             </Route>
         </Route>
     );

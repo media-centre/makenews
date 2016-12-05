@@ -32,7 +32,7 @@ export class MainHeaderTabs extends Component {
                         <img src="../../../images/configure-icon.png"/>
                     </span>
                 </a>
-                <a className="header-tabs__right__userprofile" onClick={() => { this._toggleDropdown(); }}>
+                <div className="header-tabs__right__userprofile" onClick={() => { this._toggleDropdown(); }} onMouseLeave={() => { this._toggleDropdown(); }}>
                     <span className="header-tabs__right__userprofile__image">
                         <img src="../../../images/userprofile-icon.png"/>
                     </span>
@@ -43,7 +43,7 @@ export class MainHeaderTabs extends Component {
                             <UserProfile />
                         </div>
                     </span>
-                </a>
+                </div>
             </nav>
         </div>);
     }
