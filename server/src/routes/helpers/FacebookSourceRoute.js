@@ -3,7 +3,7 @@ import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
 import FacebookAccessToken from "../../facebook/FacebookAccessToken";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
-import { fbSourceTypes } from "../../util/Constants";
+import { fbSourceTypesToFetch } from "../../util/Constants";
 import R from "ramda";  //eslint-disable-line id-length
 
 export default class FacebookSourceRoute extends Route {
@@ -17,11 +17,11 @@ export default class FacebookSourceRoute extends Route {
 
     async searchSources() {
         if(this.checkInvalidParameters(this.userName, this.type, this.keyword) ||
-            R.not(fbSourceTypes[this.type])) {
+            R.not(fbSourceTypesToFetch[this.type])) {
             RouteLogger.instance().warn(`FacebookSourceRoute:: invalid facebook search route with user name ${this.userName}, type ${this.type} and keyword ${this.keyword}.`);
             this._handleInvalidRoute();
         }
-        await this._getSources(this.keyword, fbSourceTypes[this.type]);
+        await this._getSources(this.keyword, fbSourceTypesToFetch[this.type]);
     }
 
     async _getSources(keyword, type) {

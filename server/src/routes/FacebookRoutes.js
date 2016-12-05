@@ -32,18 +32,8 @@ export default (app) => {
         new FacebookConfigureRoute(request, response, next).fetchConfiguredSources();
     });
     
-    app.put("/facebook/configuredSource/pages", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configuredSource request received. url = %s", request.url);
-        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource("fb-page");
-    });
-    
-    app.put("/facebook/configuredSource/profiles", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configuredSource request received. url = %s", request.url);
-        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource("fb-profile");
-    });
-    
-    app.put("/facebook/configuredSource/groups", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configuredSource request received. url = %s", request.url);
-        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource("fb-group");
+    app.put("/facebook/configureSource", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook/configureSource request received. url = %s", request.url);
+        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource();
     });
 };

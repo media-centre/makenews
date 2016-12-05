@@ -6,7 +6,7 @@ import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
-import { fbSourceTypes } from "../../../src/util/Constants";
+import { fbSourceTypesToFetch } from "../../../src/util/Constants";
 import mockResponse from "../../helpers/MockResponse";
 
 describe("FacebookSourceRoutes", () => {
@@ -23,7 +23,7 @@ describe("FacebookSourceRoutes", () => {
 
     describe("searchSources", () => {
         let facebookAccessToken = "accessToken", facebookAccessTokenMock = null;
-        let keyword = "journalist", type = fbSourceTypes.page;
+        let keyword = "journalist", type = fbSourceTypesToFetch.page;
         beforeEach("searchSources", () => {
             facebookAccessToken = new FacebookAccessToken();
             facebookAccessTokenMock = sandbox.mock(FacebookAccessToken);
@@ -96,7 +96,7 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(keyword, fbSourceTypes.profile).returns(Promise.resolve(profiles));
+                .withArgs(keyword, fbSourceTypesToFetch.profile).returns(Promise.resolve(profiles));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
@@ -209,7 +209,7 @@ describe("FacebookSourceRoutes", () => {
                 "query": {
                     "userName": "user",
                     "keyword": keyword,
-                    "type": fbSourceTypes.page
+                    "type": fbSourceTypesToFetch.page
                 }
             }, response);
 
@@ -254,7 +254,7 @@ describe("FacebookSourceRoutes", () => {
                 "query": {
                     "userName": "user",
                     "keyword": keyword,
-                    "type": fbSourceTypes.group
+                    "type": fbSourceTypesToFetch.group
                 }
             }, response);
 
