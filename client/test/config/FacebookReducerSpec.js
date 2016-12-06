@@ -23,20 +23,32 @@ describe("Facebook Reducer", () => {
 
         it("should add the added=true property to the configured facebook profile", () => {
             let state = [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }];
-            let action = { "type": FACEBOOK_ADD_PROFILE, "source": { "id": 1, "name": "Profile" } };
+            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
             expect(facebookSources(state, action)).to.deep.equal([{ "_id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
         });
 
         it("should add the added=true property to the configured facebook page", () => {
             let state = [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }];
-            let action = { "type": FACEBOOK_ADD_PAGE, "source": { "id": 1, "name": "Profile" } };
+            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "id": 1, "name": "Profile" }] };
             expect(facebookSources(state, action)).to.deep.equal([{ "_id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
         });
 
         it("should add the added=true property to the configured facebook group", () => {
             let state = [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }];
-            let action = { "type": FACEBOOK_ADD_GROUP, "source": { "id": 1, "name": "Group" } };
+            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "id": 1, "name": "Group" }] };
             expect(facebookSources(state, action)).to.deep.equal([{ "_id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
+        });
+
+        it("should add the added=true property to all the sources", () => {
+            let state = [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }];
+            let action = {
+                "type": FACEBOOK_ADD_GROUP,
+                "sources": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }]
+            };
+            expect(facebookSources(state, action)).to.deep.equal([
+                { "_id": 1, "added": true, "name": "Group" },
+                { "_id": 2, "added": true, "name": "Group2" }
+            ]);
         });
     });
 

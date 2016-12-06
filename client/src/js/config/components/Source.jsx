@@ -20,7 +20,9 @@ export default class Source extends Component {
                         <img src="./images/success-arrow.png"/>
                     </div>)
                     :
-                    (<div className="source__add-icon source__action-icon" onClick={() => this.props.dispatch(addSourceToConfigureListOf(this.props.currentSourceType, this.props.source))}>
+                    (<div className="source__add-icon source__action-icon"
+                        onClick={() => this.props.dispatch(addSourceToConfigureListOf(this.props.currentSourceType, this.props.source))}
+                     >
                         <img src="./images/add-btn.png"/>
                     </div>)
                 }

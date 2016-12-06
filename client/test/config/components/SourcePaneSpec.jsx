@@ -29,6 +29,11 @@ describe("SourcePane", () => {
         expect(button.type).to.equal("button");
     });
 
+    /* TODO: write the test case*/ //eslint-disable-line no-warning-comments,no-inline-comments
+    it("add all button should dispatch allAllSources on click", () => {
+
+    });
+
     it("should have Sources", () => {
         let renderedSources = findAllWithType(result, Sources);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers

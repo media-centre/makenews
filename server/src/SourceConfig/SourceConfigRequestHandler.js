@@ -14,7 +14,8 @@ export default class SourceConfigRequestHandler {
                 "docType": {
                     "$eq": "configuredSource"
                 }
-            }
+            },
+            "limit": 1000
         });
         return this._formatConfiguredSources(data.docs);
     }

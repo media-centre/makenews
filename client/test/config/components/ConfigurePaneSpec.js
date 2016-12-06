@@ -52,10 +52,11 @@ describe("Configure Pane", () => {
         let result = renderer.getRenderOutput();
         let renderedSources = findAllWithType(result, SourcePane);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+        expect(renderedSources[0].props.dispatch).to.deep.equal(dispatch); //eslint-disable-line no-magic-numbers
     });
 
 
-    /* TODO: fix these four test */ //eslint-disable-line
+    /* TODO: write these four test */ //eslint-disable-line
     xdescribe("search input box", () => {
         it("should not dispatch til the enter key is pressed", () => {
 

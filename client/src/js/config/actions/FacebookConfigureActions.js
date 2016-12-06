@@ -21,8 +21,8 @@ export function facebookSourcesReceived(sources) {
 }
 
 
-export async function addToConfiguredSources(dispatch, source, sourceType, eventType) {
-    let configuredSource = Object.assign({}, source, { "url": source.id });
+export async function addToConfiguredSources(dispatch, sources, sourceType, eventType) {
+    let configuredSource = sources.map(source => Object.assign({}, source, { "url": source.id }));
     let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`, {
         "method": "PUT",
         "headers": {
@@ -30,31 +30,39 @@ export async function addToConfiguredSources(dispatch, source, sourceType, event
             "Content-Type": "application/json"
         },
         "credentials": "same-origin",
-        "body": JSON.stringify({ "source": configuredSource, "type": sourceType })
+        "body": JSON.stringify({ "sources": configuredSource, "type": sourceType })
     });
     if (data.ok) {
         dispatch({
             "type": eventType,
-            source
+            sources
         });
     }
 }
 
-export function addSourceToConfigureListOf(sourceType, source) {
+export function addAllSources() {
+    return (dispatch, getState) => {
+        let sourceType = getState().facebookCurrentSourceTab;
+        let sources = getState().facebookSources;
+        dispatch(addSourceToConfigureListOf(sourceType, ...sources));
+    };
+}
+
+export function addSourceToConfigureListOf(sourceType, ...sources) {
     switch (sourceType) {
     case PROFILES: {
-        return dispatch => addToConfiguredSources(dispatch, source, "fb_profile", FACEBOOK_ADD_PROFILE);
+        return dispatch => addToConfiguredSources(dispatch, sources, "fb_profile", FACEBOOK_ADD_PROFILE);
     }
     case PAGES: {
-        return dispatch => addToConfiguredSources(dispatch, source, "fb_page", FACEBOOK_ADD_PAGE);
+        return dispatch => addToConfiguredSources(dispatch, sources, "fb_page", FACEBOOK_ADD_PAGE);
     }
     case GROUPS: {
-        return dispatch => addToConfiguredSources(dispatch, source, "fb_group", FACEBOOK_ADD_GROUP);
+        return dispatch => addToConfiguredSources(dispatch, sources, "fb_group", FACEBOOK_ADD_GROUP);
     }
     default: {
         return {
             "type": FACEBOOK_ADD_PROFILE,
-            source
+            sources
         };
     }
     }

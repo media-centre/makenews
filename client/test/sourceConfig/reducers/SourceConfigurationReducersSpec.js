@@ -20,21 +20,22 @@ describe("SourceConfigurationReducers", () => {
     });
 
     describe("getConfiguredSources", () => {
+        let state = null;
+        beforeEach("getConfiguredSources", () => {
+            state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+        });
         it("should add a profile to the state when asked for adding a profile", () => {
-            let action = { "type": FACEBOOK_ADD_PROFILE, "source": { "name": "Profile1" } };
-            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "name": "Profile1" }] };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
         });
 
         it("should add a page to the state when asked for adding a page", () => {
-            let action = { "type": FACEBOOK_ADD_PAGE, "source": { "name": "Page1" } };
-            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "name": "Page1" }] };
             expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
         });
 
         it("should add a group to the state when asked for adding a group", () => {
-            let action = { "type": FACEBOOK_ADD_GROUP, "source": { "name": "Group1" } };
-            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
+            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1" }] };
             expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1" }]);
         });
 
@@ -42,7 +43,6 @@ describe("SourceConfigurationReducers", () => {
             let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
             let action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
-            let state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
         });
     });
