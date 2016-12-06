@@ -6,30 +6,19 @@
     width: 3%;
     height: 100vh;
     float: left;
-
   }
+
   .configured-feeds-container {
     background-color: $background-color;
-    width: 25%;
+    width: 30%;
     height: 100vh;
     margin-left: 3%;
     overflow-y: scroll;
-    .feed {
-      cursor: pointer;
-      line-height: 24px;
-      padding: 8px 13px 13px 16px;
-    }
-    .feed-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      font-family: "Lato", sans-serif;
-      font-size: 18px;
-      color: $primary-color;
-      line-height: 24px;
-      padding-bottom: 10px;
+  }
+
+  .feed, .feed-highlight {
+    div {
+      display: inline-block;
     }
     .feed-description {
       overflow: hidden;
@@ -42,58 +31,104 @@
       color: $primary-color-light;
       line-height: 18px;
     }
-    .feed-source {
-      display: inline-block;
-      width:100%;
-      .source-type, .source, .date {
-        display: inline-block;
-        font-family: "Lato", sans-serif;
-        font-size: 13px;
-        color: #917A99;
-        letter-spacing: 0;
-        padding: 5px;
-      }
-    }
-    .source-type {
-      width: 5%;
-    }
-
-    .source {
-      width: 33%;
-    }
-    .date {
-      width: 55%;
-    }
-    .feed-highlight {
-      font-family: "Lato", sans-serif;
-      font-size: 18px;
-      line-height: 24px;
-      background-color: #FFFFFF;
-      padding: 8px 13px 13px 16px;
-      .feed-title {
-      color: $secondary-color;
-        padding-bottom: 10px;
-      }
-    }
-    .feed-content-withImg {
-      width:70%;
-      display: inline-block;
-    }
-    .feed-content-noImg {
-      width:100%;
-      display: inline-block;
-    }
-    .feed-image {
-      float: right;
-      width: 30%;
-    }
-    .feed-image img{
-
-      width: 100%;
-      height: 100%;
-      max-width: 239px;
-      max-height: 105px;
-    }
-
   }
+
+  .feed {
+    cursor: pointer;
+    line-height: 24px;
+    padding: 8px 13px 13px 16px;
+  }
+
+  .feed-highlight {
+    line-height: 24px;
+    background-color: #FFFFFF;
+    padding: 8px 13px 13px 16px;
+    .feed-title {
+      color: $secondary-color;
+    }
+  }
+
+  .feed-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-family: "Lato", sans-serif;
+    font-size: 18px;
+    color: $primary-color;
+    line-height: 24px;
+  }
+
+  .feed-image img {
+    width: 100%;
+    height: 100%;
+    max-width: 239px;
+    max-height: 105px;
+  }
+
+  .feed-content-withImg {
+    width: 70%;
+    display: inline-block;
+  }
+  .feed-content-noImg {
+    width: 100%;
+    display: inline-block;
+  }
+  .feed-image {
+    float: right;
+    width: 30%;
+  }
+
+  .feed-source div {
+    display: inline-block;
+    font-family: "Lato", sans-serif;
+    font-size: 13px;
+    color: #917A99;
+    letter-spacing: 0;
+    padding: 2px 5px;
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
