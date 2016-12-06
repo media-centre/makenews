@@ -15,27 +15,38 @@
     margin-left: 3%;
     overflow-y: scroll;
     .feed {
+      cursor: pointer;
+      line-height: 24px;
       padding: 8px 13px 13px 16px;
     }
-    .selected {
-      background-color: white;
-    }
     .feed-title {
-      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
       font-family: "Lato", sans-serif;
       font-size: 18px;
       color: $primary-color;
       line-height: 24px;
+      padding-bottom: 10px;
     }
     .feed-description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
       font-family: "Lato", sans-serif;
       font-size: 12px;
       color: $primary-color-light;
       line-height: 18px;
     }
     .feed-source {
-      display: inline-flex;
+      display: inline-block;
+      width:100%;
       .source-type, .source, .date {
+        display: inline-block;
         font-family: "Lato", sans-serif;
         font-size: 13px;
         color: #917A99;
@@ -43,11 +54,46 @@
         padding: 5px;
       }
     }
-    .feed-select-title {
-      color: $secondary-color;
+    .source-type {
+      width: 5%;
+    }
+
+    .source {
+      width: 33%;
+    }
+    .date {
+      width: 55%;
+    }
+    .feed-highlight {
       font-family: "Lato", sans-serif;
       font-size: 18px;
       line-height: 24px;
+      background-color: #FFFFFF;
+      padding: 8px 13px 13px 16px;
+      .feed-title {
+      color: $secondary-color;
+        padding-bottom: 10px;
+      }
     }
+    .feed-content-withImg {
+      width:70%;
+      display: inline-block;
+    }
+    .feed-content-noImg {
+      width:100%;
+      display: inline-block;
+    }
+    .feed-image {
+      float: right;
+      width: 30%;
+    }
+    .feed-image img{
+
+      width: 100%;
+      height: 100%;
+      max-width: 239px;
+      max-height: 105px;
+    }
+
   }
 }
