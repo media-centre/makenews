@@ -1,6 +1,6 @@
-export const SCAN_NEWS = "SCAN_NEWS";
-export const WRITE_A_STORY = "WRITE_A_STORY";
-export const CONFIGURE = "CONFIGURE";
+export const SCAN_NEWS = "Scan News";
+export const WRITE_A_STORY = "Write a Story";
+export const CONFIGURE = "Configure";
 
 export function setCurrentHeaderTab(currentHeaderTab) {
     return {

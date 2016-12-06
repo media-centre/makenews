@@ -1,5 +1,4 @@
 /*eslint no-multi-str:0*/
-"use strict";
 if(!window.mediaCenter) {
     window.mediaCenter = {};
 }
@@ -130,6 +129,14 @@ window.mediaCenter.appEn = {
             },
             "logoutButton": {
                 "Name": "Logout"
+            }
+        },
+        "mainHeaderStrings": {
+            "newsBoard": {
+                "Name": "Scan News"
+            },
+            "storyBoard": {
+                "Name": "Write a Story"
             }
         }
     }
