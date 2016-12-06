@@ -44,7 +44,7 @@ export class MainHeaderTabs extends Component {
                         <span>
                             <i className="fa fa-caret-down down-arrow" aria-hidden="true"/>
                         </span>
-                        <div className={this.state.show ? "user-profile--dropdown" : "user-profile--dropdown hide"}>
+                        <div className={this.state.show ? "user-profile__dropdown" : "user-profile__dropdown hide"}>
                             <UserProfile />
                         </div>
                     </div>

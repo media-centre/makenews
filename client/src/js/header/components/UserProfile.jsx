@@ -6,10 +6,10 @@ export default class UserProfile extends Component {
     render() {
         return (
             <div>
-                <ul>
-                    <li className="user-profile--dropdown__item">Change Password</li>
-                    <li className="user-profile--dropdown__item">Help & FAQs</li>
-                    <li className="user-profile--dropdown__item">Logout</li>
+                <ul className="user-profile--dropdown">
+                    <li className="user-profile--change-password">Change Password</li>
+                    <li className="user-profile--help">Help & FAQs</li>
+                    <li className="user-profile--logout">Logout</li>
                 </ul>
             </div>
         );

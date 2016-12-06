@@ -100,6 +100,13 @@
   &.active{
     background-color: $secondary-color;
   }
+  &.__dropdown {
+    position: absolute;
+  }
+
+  &.hide {
+    display: none;
+  }
 }
 
 .user-profile--dropdown {
@@ -108,15 +115,14 @@
   right: 0px;
   width: 210px;
   background: $primary-color;
-  height: 134px;
+  
+  .user-profile--change-password, .user-profile--help, .user-profile--logout {
+    vertical-align: top;
+    padding: 12px 0;
+    padding-left: 26px;
 
-  & li {
-    list-style-type: none;
-    height: 45px;
-    margin-left: 26px;
-  }
-
-  &.hide {
-    display: none;
+    &:hover{
+      background-color: $secondary-color;
+    }
   }
 }
