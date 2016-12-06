@@ -92,9 +92,10 @@ describe("Facebook Configure Actions", () => {
     });
     
     describe("add source to configred list", () => {
-        let sandbox = null;
+        let sandbox = null, sources = null;
 
         beforeEach("add source to configred list", () => {
+            sources = [{ "name": "something", "id": "432455" }];
             sandbox = sinon.sandbox.create();
         });
 
@@ -103,8 +104,6 @@ describe("Facebook Configure Actions", () => {
         });
         
         it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, (done) => {
-            let source = { "name": "something", "id": "id_" };
-
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
@@ -117,13 +116,11 @@ describe("Facebook Configure Actions", () => {
                 .put("/facebook/configureSource")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PROFILE, "source": source }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PROFILES, source));
+            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PROFILE, "sources": sources }], done);
+            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PROFILES, ...sources));
         });
 
         it(`should dispatch ${FBActions.FACEBOOK_ADD_PAGE} when requested for adding page`, (done) => {
-            let source = { "name": "something", "id": "id_" };
-
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
@@ -136,13 +133,11 @@ describe("Facebook Configure Actions", () => {
                 .put("/facebook/configureSource")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PAGE, "source": source }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PAGES, source));
+            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PAGE, "sources": sources }], done);
+            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PAGES, ...sources));
         });
 
         it(`should dispatch ${FBActions.FACEBOOK_ADD_GROUP} when requested for adding group`, (done) => {
-            let source = { "name": "something", "id": "id_" };
-
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
@@ -155,14 +150,14 @@ describe("Facebook Configure Actions", () => {
                 .put("/facebook/configureSource")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_GROUP, "source": source }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.GROUPS, source));
+            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_GROUP, "sources": sources }], done);
+            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.GROUPS, ...sources));
         });
 
         it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} by default`, () => {
             let event = FBActions.addSourceToConfigureListOf("", { "name": "something" });
             expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PROFILE);
-            expect(event.source).to.deep.equal({ "name": "something" });
+            expect(event.sources).to.deep.equal([{ "name": "something" }]);
         });
     });
 });

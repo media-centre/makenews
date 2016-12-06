@@ -114,12 +114,12 @@ describe("FacebookAddConfigureRoute", () => {
 
     it("should add the source to configured list", async () => {
         let data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
-        let source = { "name": "SourceName", "url": "http://source.url/" };
+        let source = [{ "name": "SourceName", "url": "http://source.url/" }];
         let response = mockResponse();
 
         let facebookRoute = new FacebookAddConfigureRoute({
             "cookies": { "AuthSession": "session" },
-            "body": { "source": source, "type": sourceTypes.fb_group }
+            "body": { "sources": source, "type": sourceTypes.fb_group }
         }, response);
 
         let facebookRequestHandler = new FacebookRequestHandler("token");

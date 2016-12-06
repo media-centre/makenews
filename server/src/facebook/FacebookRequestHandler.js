@@ -6,6 +6,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
 
@@ -107,19 +108,30 @@ export default class FacebookRequestHandler {
         }
     }
 
-    async addConfiguredSource(sourceType, source, authSession) {
+    _getFormattedSources(sourceType, sources) {
+        let date = DateUtil.getCurrentTime();
+        let formatSources = source => ({
+            "_id": source.url,
+            "name": source.name,
+            "docType": "configuredSource",
+            "sourceType": sourceType,
+            "latestFeedTimeStamp": date
+        });
+        let filterEmpty = source => !StringUtil.isEmptyString(source.url);
+        return R.pipe(
+                    R.filter(filterEmpty),
+                    R.map(formatSources)
+                )(sources);
+    }
+
+    async addConfiguredSource(sourceType, sources, authSession) {
         let couchClient = await CouchClient.createInstance(authSession);
         try {
-            await couchClient.saveDocument(source.url, {
-                "_id": source.url,
-                "name": source.name,
-                "docType": "configuredSource",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": DateUtil.getCurrentTime()
-            });
+            let data = this._getFormattedSources(sourceType, sources);
+            await couchClient.saveBulkDocuments({ "docs": data });
             return { "ok": true };
         } catch (error) {
-            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error adding source. Error: ${error}`);
             throw error;
         }
     }

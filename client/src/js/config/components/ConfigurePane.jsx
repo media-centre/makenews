@@ -33,7 +33,7 @@ export class ConfigurePane extends Component {
                     <img src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              <SourcePane />
+              <SourcePane dispatch={this.props.dispatch}/>
           </div>
         );
     }

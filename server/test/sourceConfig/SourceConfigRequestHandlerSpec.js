@@ -9,11 +9,14 @@ describe("SourceConfigRequestHandler", () => {
     beforeEach("SourceConfigRequestHandler", () => {
         sandbox = sinon.sandbox.create();
         dbName = "db_name";
-        body = { "selector": {
-            "docType": {
-                "$eq": "configuredSource"
-            }
-        } };
+        body = {
+            "selector": {
+                "docType": {
+                    "$eq": "configuredSource"
+                }
+            },
+            "limit": 1000
+        };
         sourceRequestHandler = new SourceConfigRequestHandler();
         couchClient = new CouchClient(dbName, "accessToken");
         sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));

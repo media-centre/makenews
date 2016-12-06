@@ -164,7 +164,6 @@ export default class CouchClient {
             }
         }
         return headers;
-
     }
 
     _defaultHeaders() {

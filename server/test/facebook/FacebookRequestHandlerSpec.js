@@ -287,24 +287,23 @@ describe("FacebookRequestHandler", () => {
             });
         });
     });
-    
+
     describe("Add Configured Sources", () => {
         let sandbox = null, dbName = null, facebookRequestHandler = null, couchClient = null;
-        let document = null, source = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
+        let documents = null, sources = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
         beforeEach("Add Configured Sources", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";
-            source = {
+            sources = [{
                 "name": "Source Name",
                 "url": "http://source.url"
-            };
-            document = {
-                "_id": source.url,
-                "name": source.name,
-                "docType": "configuredSource",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
-            };
+            }, {
+                "name": "Source Name1",
+                "url": "http://source.url.in"
+            }, {
+                "name": "Source Name2",
+                "url": ""
+            }];
 
             facebookRequestHandler = new FacebookRequestHandler("somethings");
             couchClient = new CouchClient(dbName, accessToken);
@@ -316,13 +315,32 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
+        it("should format the sources to put them in database", () => {
+            let [first, second] = sources;
+            documents = [{
+                "_id": first.url,
+                "name": first.name,
+                "docType": "configuredSource",
+                "sourceType": sourceType,
+                "latestFeedTimeStamp": currentTime
+            }, {
+                "_id": second.url,
+                "name": second.name,
+                "docType": "configuredSource",
+                "sourceType": sourceType,
+                "latestFeedTimeStamp": currentTime
+            }];
+
+            expect(facebookRequestHandler._getFormattedSources(sourceType, sources)).to.deep.equal(documents);
+        });
+
         it("should add the source to configured list", (done) => {
-            let result = { "ok": true, "id": source.url, "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
+            let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
+            bulkDocksMock.returns({ "ok": true });
 
-            sandbox.stub(couchClient, "saveDocument").withArgs(source.url, document).returns(Promise.resolve(result));
-
-            facebookRequestHandler.addConfiguredSource(sourceType, source, accessToken).then(data => {
+            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).then(data => {
                 try {
+                    bulkDocksMock.verify();
                     expect(data).to.deep.equal({ "ok": true });
                     done();
                 } catch (err) {
@@ -333,8 +351,8 @@ describe("FacebookRequestHandler", () => {
 
         it("should reject with error when database gives an error", (done) => {
             let errorMessage = "unexpected response from the db";
-            sandbox.stub(couchClient, "saveDocument").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.addConfiguredSource(sourceType, source, accessToken).catch(error => {
+            sandbox.stub(couchClient, "saveBulkDocuments").returns(Promise.reject(errorMessage));
+            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).catch(error => {
                 try {
                     expect(error).to.equal(errorMessage);
                     done();
