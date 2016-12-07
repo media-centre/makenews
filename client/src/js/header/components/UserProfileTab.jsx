@@ -18,7 +18,7 @@ export default class UserProfileTab extends Component {
                         <span className="user-profile__image">
                             <img src="../../../images/userprofile-icon.png"/>
                         </span>
-                <span className="user-profile__name">User Profile</span>
+                        <span className="user-profile__name">User Profile</span>
                         <span>
                             <i className="fa fa-caret-down down-arrow" aria-hidden="true"/>
                         </span>

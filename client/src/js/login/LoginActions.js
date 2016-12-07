@@ -24,7 +24,7 @@ export function userLogin(history, userName, password) {
                 appSessionStorage.setValue(AppSessionStorage.KEYS.REMOTEDBURL, successData.dbParameters.remoteDbUrl);
                 DbSession.instance().then(session => { //eslint-disable-line no-unused-vars
                     dispatch(loginSuccess(successData.userName));
-                    history.push("/surf");
+                    history.push("/main");
                 });
             })
             .catch(errorData => { //eslint-disable-line no-unused-vars

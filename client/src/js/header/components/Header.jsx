@@ -2,9 +2,8 @@ import React, { Component, PropTypes } from "react";
 import HeaderTab from "./HeaderTab";
 import ConfigureTab from "./ConfigureTab";
 import UserProfileTab from "./UserProfileTab";
-import { connect } from "react-redux";
 
-export class Header extends Component {
+export default class Header extends Component {
     render() {
         return(
             <div>
@@ -19,16 +18,7 @@ export class Header extends Component {
     }
 }
 
-function mapToStore(state) {
-    return {
-        "currentHeaderTab": state.currentHeaderTab
-    };
-}
-
 Header.propTypes = {
     "mainHeaderStrings": PropTypes.object.isRequired,
-    "currentHeaderTab": PropTypes.string.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "currentHeaderTab": PropTypes.string.isRequired
 };
-
-export default connect(mapToStore)(Header);

@@ -3,11 +3,11 @@ import { expect } from "chai";
 
 describe("Header Reducer", () => {
     it("should return action with type and actions of scan news ", () => {
-        expect(currentHeaderTab()).to.equals("SCAN_NEWS");
+        expect(currentHeaderTab()).to.equals("Scan News");
     });
 
     it("should return action with type and actions of write a story ", () => {
-        let action = { "type": "WRITE_A_STORY", "currentHeaderTab": "WRITE_A_STORY" };
-        expect(currentHeaderTab({}, action)).to.equals("WRITE_A_STORY");
+        let action = { "type": "Write a Story", "currentHeaderTab": "Write a Story" };
+        expect(currentHeaderTab({}, action)).to.equals("Write a Story");
     });
 });

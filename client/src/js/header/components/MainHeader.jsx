@@ -7,7 +7,6 @@ export class MainHeader extends Component {
         return (
             <div>
                 <div className = "header">
-
                     <div className = "header__logo">
                         <img src=".../../../images/makenews-logo.png"/>
                     </div>
