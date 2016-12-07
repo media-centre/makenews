@@ -9,7 +9,7 @@ import React from "react";
 import { findAllWithType } from "react-shallow-testutils";
 
 describe("Header component", () => {
-    let result = null, currentHeaderTab = null, mainHeaderStrings = null, header = null;
+    let result = null, currentHeaderTab = null, mainHeaderStrings = null, header = null, renderer = null;
     beforeEach("Header component", () => {
         currentHeaderTab = "Scan News";
         mainHeaderStrings = {
@@ -23,22 +23,25 @@ describe("Header component", () => {
                 "Name": "Configure"
             }
         };
-        let renderer = TestUtils.createRenderer();
+        renderer = TestUtils.createRenderer();
         header = renderer.render(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab={currentHeaderTab}/>);
         result = renderer.getRenderOutput();
     });
 
     it("should have headerTab element", () => {
+        header = renderer.render(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab={currentHeaderTab}/>);
         let renderedSources = findAllWithType(result, HeaderTab);
         expect(renderedSources).to.have.lengthOf(2);
     });
 
     it("should have ConfigureTab element", () => {
+        header = renderer.render(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab={currentHeaderTab}/>);
         let renderedSources = findAllWithType(result, ConfigureTab);
         expect(renderedSources).to.have.lengthOf(1);
     });
 
     it("should have UserProfileTab element", () => {
+        header = renderer.render(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab={currentHeaderTab}/>);
         let renderedSources = findAllWithType(result, UserProfileTab);
         expect(renderedSources).to.have.lengthOf(1);
     });
