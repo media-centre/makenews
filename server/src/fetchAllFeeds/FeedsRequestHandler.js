@@ -19,7 +19,8 @@ export default class FeedsRequestHandler {
                     "$gt": null
                 }
             },
-            "fields": ["title", "description", "sourceType", "tags", "pubDate", "enclosures"]
+            "fields": ["title", "description", "sourceType", "tags", "pubDate", "enclosures", "images"],
+            "sort": [{ "pubDate": "desc" }]
         };
         return await couchClient.findDocuments(selector);
     }

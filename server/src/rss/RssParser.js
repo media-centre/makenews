@@ -3,6 +3,8 @@ import FeedParser from "feedparser";
 import Logger from "../logging/Logger";
 import CryptUtil from "../../src/util/CryptUtil";
 
+const NEGATIVE_INDEX = -1;
+
 export default class RssParser {
     constructor(response) {
         this.response = response;
@@ -24,20 +26,30 @@ export default class RssParser {
 
             this.feedParser.on("readable", function() {
                 let meta = this.meta, feed = this.read();
-                while(feed) {
-                    items.push({
+                while (feed) {
+                    let feedObject = {
                         "guid": CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid),
                         "title": feed.title,
                         "link": feed.link,
                         "description": feed.description,
                         "pubDate": feed.pubDate,
                         "enclosures": feed.enclosures,
-                        "image": feed.image,
                         "docType": "feed",
                         "sourceType": "rss",
                         "sourceUrl": url,
                         "tags": [meta.title]
-                    });
+                    };
+                    if (feed.enclosures && feed.enclosures.length > 0) {                     //eslint-disable-line no-magic-numbers
+                        feedObject.images = [];
+                        feed.enclosures.forEach((item, index) => {
+                            if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
+                                feedObject.images.push(feed.enclosures[index]);
+                            } else if (item.type.indexOf("video") !== NEGATIVE_INDEX) {
+                                feedObject.images.push({ "type": "video", "url": feed.image.url });
+                            }
+                        });
+                    }
+                    items.push(feedObject);
                     feed = this.read();
                 }
             });
