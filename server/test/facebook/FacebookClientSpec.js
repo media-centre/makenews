@@ -371,15 +371,23 @@ describe("FacebookClient", () => {
     });
 
     describe("getSourceUrls", () => {
-        let facebookClient = null, keyword = "TheHindu", type = "page";
+        let facebookClient = null;
 
         beforeEach("getSourceUrls", () => {
             facebookClient = FacebookClient.instance(accessToken, appSecretProof);
         });
 
         it("should give an error when facebook is rejected with some error", (done) => {
+            let params = {
+                "q": "keyword",
+                "type": "user",
+                "limit": "24",
+                "offset": "",
+                "__after_id": ""
+            };
+
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${keyword}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${params.q}&type=user&limit=${params.limit}&offset=&__after_id=&access_token=test_token&appsecret_proof=test_secret_proof&fields=id,name,picture`)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, {
                     "error": { "message": "Invalid OAuth access token.",
                         "type": "OAuthException",
@@ -387,7 +395,7 @@ describe("FacebookClient", () => {
                     } }
                 );
 
-            facebookClient.fetchSourceUrls(keyword, type).catch(error => {
+            facebookClient.fetchSourceUrls(params).catch(error => {
                 try {
                     assert.strictEqual("OAuthException", error.type);
                     assert.strictEqual("Invalid OAuth access token.", error.message);
@@ -404,11 +412,19 @@ describe("FacebookClient", () => {
                     { "name": "The Hindu Business Line", "id": "60573550946" },
                     { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
+            let params = {
+                "q": "keyword",
+                "type": "user",
+                "limit": "24",
+                "offset": "",
+                "__after_id": ""
+            };
+
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${keyword}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${params.q}&type=user&limit=${params.limit}&offset=&__after_id=&access_token=test_token&appsecret_proof=test_secret_proof&fields=id,name,picture`)
                 .reply(HttpResponseHandler.codes.OK, pages);
 
-            facebookClient.fetchSourceUrls(keyword, type).then(data => {
+            facebookClient.fetchSourceUrls(params).then(data => {
                 try {
                     expect(data).to.deep.equal(pages);
                     done();

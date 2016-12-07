@@ -48,7 +48,9 @@ describe("FacebookSourceRoutes", () => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "query": {
-                    "userName": "user"
+                    "userName": "user",
+                    "type": "user",
+                    "keyword": "keyword"
                 }
             }, response);
 
@@ -91,12 +93,20 @@ describe("FacebookSourceRoutes", () => {
 
             let accessToken = "token";
 
+            let params = {
+                "q": keyword,
+                "type": fbSourceTypesToFetch.profile,
+                "offset": "",
+                "limit": "",
+                "__after_id": ""
+            };
+
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(keyword, fbSourceTypesToFetch.profile).returns(Promise.resolve(profiles));
+                .withArgs(params).returns(Promise.resolve(profiles));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
@@ -170,13 +180,21 @@ describe("FacebookSourceRoutes", () => {
 
             let accessToken = "token";
 
+            let params = {
+                "q": keyword,
+                "type": type,
+                "offset": "",
+                "limit": "",
+                "__after_id": ""
+            };
+
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(keyword, type).returns(Promise.reject("response"));
+                .withArgs(params).returns(Promise.reject("response"));
 
             await facebookRouteHelper.searchSources();
             assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
@@ -205,6 +223,15 @@ describe("FacebookSourceRoutes", () => {
                     }
                 }
             };
+
+            let params = {
+                "q": keyword,
+                "type": fbSourceTypesToFetch.page,
+                "offset": "",
+                "limit": "",
+                "__after_id": ""
+            };
+
             let facebookRouteHelper = new FacebookSourceRoute({
                 "query": {
                     "userName": "user",
@@ -220,7 +247,7 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(keyword, type).returns(Promise.resolve(pages));
+                .withArgs(params).returns(Promise.resolve(pages));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
@@ -250,6 +277,15 @@ describe("FacebookSourceRoutes", () => {
                     }
                 }
             };
+
+            let params = {
+                "q": keyword,
+                "type": fbSourceTypesToFetch.group,
+                "offset": "",
+                "limit": "",
+                "__after_id": ""
+            };
+
             let facebookRouteHelper = new FacebookSourceRoute({
                 "query": {
                     "userName": "user",
@@ -265,7 +301,7 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(keyword, type).returns(Promise.resolve(groups));
+                .withArgs(params).returns(Promise.resolve(groups));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
