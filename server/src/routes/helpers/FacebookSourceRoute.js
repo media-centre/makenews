@@ -12,6 +12,9 @@ export default class FacebookSourceRoute extends Route {
         this.userName = this.request.query.userName;
         this.keyword = this.request.query.keyword;
         this.type = this.request.query.type;
+        this.offset = this.request.query.offset;
+        this.limit = this.request.query.limit;
+        this.__after_id = this.request.query.__after_id; //eslint-disable-line camelcase
         this.options = {};
     }
 
@@ -20,18 +23,26 @@ export default class FacebookSourceRoute extends Route {
             R.not(fbSourceTypesToFetch[this.type])) {
             RouteLogger.instance().warn(`FacebookSourceRoute:: invalid facebook search route with user name ${this.userName}, type ${this.type} and keyword ${this.keyword}.`);
             this._handleInvalidRoute();
+        } else {
+            await this._getSources();
         }
-        await this._getSources(this.keyword, fbSourceTypesToFetch[this.type]);
     }
 
-    async _getSources(keyword, type) {
+    async _getSources() {
+        let params = {
+            "q": this.keyword,
+            "type": fbSourceTypesToFetch[this.type],
+            "offset": this.offset ? this.offset : "",
+            "limit": this.limit ? this.limit : "",
+            "__after_id": this.__after_id ? this.__after_id : ""
+        };
         try {
             let token = await FacebookAccessToken.instance().getAccessToken(this.userName);
-            let data = await FacebookRequestHandler.instance(token).fetchSourceUrls(keyword, type);
-            RouteLogger.instance().debug(`FacebookPostsRoute:: ${type} :: successfully fetched data for ${this.userName}`);
+            let data = await FacebookRequestHandler.instance(token).fetchSourceUrls(params);
+            RouteLogger.instance().debug(`FacebookPostsRoute:: ${this.type} :: successfully fetched data for ${this.userName}`);
             this._handleSuccess(data);
         } catch(err) {
-            RouteLogger.instance().error(`FacebookPostsRoute:: ${type} :: fetching data failed for user: ${this.userName}. Error: ${err}`);
+            RouteLogger.instance().error(`FacebookPostsRoute:: ${this.type} :: fetching data failed for user: ${this.userName}. Error: ${err}`);
             this._handleBadRequest();
         }
     }

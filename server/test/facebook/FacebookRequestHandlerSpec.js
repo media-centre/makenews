@@ -380,8 +380,8 @@ describe("FacebookRequestHandler", () => {
 
         it("should throw an error when we got error from facebook client", (done) => {
             sandbox.stub(facebookClientInstance, "fetchSourceUrls")
-                .withArgs(keyword, type).returns(Promise.reject("Error fetching Pages"));
-            facebookRequstHandler.fetchSourceUrls(keyword, type).catch(error => {
+                .returns(Promise.reject("Error fetching Pages"));
+            facebookRequstHandler.fetchSourceUrls({ "type": "page" }).catch(error => {
                 try {
                     expect(error).to.equal("error fetching facebook pages");
                     done();
@@ -395,20 +395,73 @@ describe("FacebookRequestHandler", () => {
             let pages = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },
                 { "name": "The Hindu Business Line", "id": "60573550946" },
-                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
+                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
+                "paging": {
+                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=user&q=undefined&access_token=EAACQgZBvNveQ&limit=25&offset=25&__after_id=enc_AdClDCor0"
+                }
+            };
+
+            let result = {
+                "data": pages.data,
+                "limit": "25",
+                "offset": "25",
+                "__after_id": "enc_AdClDCor0"
+            };
+
+            let params = {
+                "q": keyword,
+                "type": type
+            };
 
             sandbox.stub(facebookClientInstance, "fetchSourceUrls")
-                .withArgs(keyword, type).returns(Promise.resolve(pages));
+                .withArgs(params).returns(Promise.resolve(pages));
 
-            facebookRequstHandler.fetchSourceUrls(keyword, type).then(pagesData => {
+            facebookRequstHandler.fetchSourceUrls(params).then(pagesData => {
                 try {
                     expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
-                    expect(pagesData).to.deep.equal(pages);
+                    expect(pagesData).to.deep.equal(result);
                     done();
                 } catch(error) {
                     done(error);
                 }
             });
+        });
+
+        it("_getPagingParams should return empty object properties if no path is provided", () => {
+            let params = {
+                "__after_id": "",
+                "limit": "",
+                "offset": ""
+            };
+            expect(facebookRequstHandler._getPagingParams()).to.deep.equal(params);
+        });
+
+        it("_getPagingParams should return empty object if path has no next property", () => {
+            let params = {
+                "__after_id": "",
+                "limit": "",
+                "offset": ""
+            };
+            expect(facebookRequstHandler._getPagingParams({})).to.deep.equal(params);
+        });
+
+        it("_getPagingParams should return empty object if path.next has less than 3 properties", () => {
+            let params = {
+                "__after_id": "",
+                "limit": "",
+                "offset": ""
+            };
+            expect(facebookRequstHandler._getPagingParams({ "next": "limit=21&offset=20" })).to.deep.equal(params);
+        });
+
+        it("_getPagingParams should return paging parameters", () => {
+            let result = {
+                "__after_id": "123",
+                "limit": "21",
+                "offset": "20"
+            };
+            expect(facebookRequstHandler._getPagingParams({ "next": "limit=21&offset=20&__after_id=123" }))
+                .to.deep.equal(result);
         });
     });
 });

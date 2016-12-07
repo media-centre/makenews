@@ -96,15 +96,40 @@ export default class FacebookRequestHandler {
         });
     }
 
-    async fetchSourceUrls(keyword, type) {
+    _getPagingParams(path) {
+        let queryParams = {
+            "offset": "",
+            "__after_id": "",
+            "limit": ""
+        };
+        
+        if(!path || !path.next) {
+            return queryParams;
+        }
+
+        let vars = path.next.split("&");
+        if(vars.length < 3) { // eslint-disable-line
+            return queryParams;
+        }
+
+        for (let i = 0; i < vars.length; i++) { // eslint-disable-line
+            let pair = vars[i].split("="); // eslint-disable-line
+            if(queryParams.hasOwnProperty(pair[0])) { // eslint-disable-line
+                queryParams[pair[0]] = pair[1]; // eslint-disable-line
+            }
+        }
+        return queryParams;
+    }
+
+    async fetchSourceUrls(params) {
         let facebookClientInstance = this.facebookClient();
         try {
-            let sources = await facebookClientInstance.fetchSourceUrls(keyword, type);
-            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${type}s for ${keyword}.`);
-            return sources;
+            let sources = await facebookClientInstance.fetchSourceUrls(params);
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${params.type}s for ${params.q}.`);
+            return R.assoc("data", sources.data, this._getPagingParams(sources.paging));
         } catch(error) {
-            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${type}s. Error: ${error}`);
-            throw `error fetching facebook ${type}s`;  // eslint-disable-line no-throw-literal
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${error}`);
+            throw `error fetching facebook ${params.type}s`;  // eslint-disable-line no-throw-literal
         }
     }
 
