@@ -103,30 +103,27 @@ export default class FacebookRequestHandler {
             "limit": ""
         };
         
-        if(!path || !path.next) {
-            return queryParams;
-        }
-
-        let vars = path.next.split("&");
-        if(vars.length < 3) { // eslint-disable-line
-            return queryParams;
-        }
-
-        for (let i = 0; i < vars.length; i++) { // eslint-disable-line
-            let pair = vars[i].split("="); // eslint-disable-line
-            if(queryParams.hasOwnProperty(pair[0])) { // eslint-disable-line
-                queryParams[pair[0]] = pair[1]; // eslint-disable-line
+        if(path && path.next) {
+            let vars = path.next.split("&");
+            if (vars.length >= 3) { // eslint-disable-line
+                for (let i = 0; i < vars.length; i++) { // eslint-disable-line
+                    let pair = vars[i].split("="); // eslint-disable-line
+                    if (queryParams.hasOwnProperty(pair[0])) { // eslint-disable-line
+                        queryParams[pair[0]] = pair[1]; // eslint-disable-line
+                    }
+                }
             }
         }
-        return queryParams;
+
+        return `&offset=${queryParams.offset}&limit=${queryParams.limit}&__after_id=${queryParams.__after_id}`;
     }
 
-    async fetchSourceUrls(params) {
+    async fetchSourceUrls(params, paging = "") {
         let facebookClientInstance = this.facebookClient();
         try {
-            let sources = await facebookClientInstance.fetchSourceUrls(params);
+            let sources = await facebookClientInstance.fetchSourceUrls(params, paging);
             FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${params.type}s for ${params.q}.`);
-            return R.assoc("data", sources.data, this._getPagingParams(sources.paging));
+            return R.assoc("data", sources.data, { "paging": this._getPagingParams(sources.paging) });
         } catch(error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${error}`);
             throw `error fetching facebook ${params.type}s`;  // eslint-disable-line no-throw-literal

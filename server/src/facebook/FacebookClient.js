@@ -112,11 +112,11 @@ export default class FacebookClient {
         });
     }
 
-    async fetchSourceUrls(parameters) {
+    async fetchSourceUrls(parameters, paging = "") {
         this._addDefaultParameters(parameters);
         let response = null;
         try {
-            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}&fields=id,name,picture`);
+            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}&fields=id,name,picture${paging}`);
         } catch(err) {
             FacebookClient.logger().error(`FacebookClient:: Error fetching ${parameters.type}s for ${parameters.q}. Error ${err}`);
             throw err;

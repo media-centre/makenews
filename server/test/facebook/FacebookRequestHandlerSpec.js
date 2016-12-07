@@ -397,15 +397,13 @@ describe("FacebookRequestHandler", () => {
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
                 "paging": {
-                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=user&q=undefined&access_token=EAACQgZBvNveQ&limit=25&offset=25&__after_id=enc_AdClDCor0"
+                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=user&q=undefined&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
                 }
             };
 
             let result = {
                 "data": pages.data,
-                "limit": "25",
-                "offset": "25",
-                "__after_id": "enc_AdClDCor0"
+                "paging": "&offset=25&limit=25&__after_id=enc_AdClDCor0"
             };
 
             let params = {
@@ -428,30 +426,15 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("_getPagingParams should return empty object properties if no path is provided", () => {
-            let params = {
-                "__after_id": "",
-                "limit": "",
-                "offset": ""
-            };
-            expect(facebookRequstHandler._getPagingParams()).to.deep.equal(params);
+            expect(facebookRequstHandler._getPagingParams()).to.deep.equal("&offset=&limit=&__after_id=");
         });
 
         it("_getPagingParams should return empty object if path has no next property", () => {
-            let params = {
-                "__after_id": "",
-                "limit": "",
-                "offset": ""
-            };
-            expect(facebookRequstHandler._getPagingParams({})).to.deep.equal(params);
+            expect(facebookRequstHandler._getPagingParams({})).to.deep.equal("&offset=&limit=&__after_id=");
         });
 
         it("_getPagingParams should return empty object if path.next has less than 3 properties", () => {
-            let params = {
-                "__after_id": "",
-                "limit": "",
-                "offset": ""
-            };
-            expect(facebookRequstHandler._getPagingParams({ "next": "limit=21&offset=20" })).to.deep.equal(params);
+            expect(facebookRequstHandler._getPagingParams({ "next": "limit=21&offset=20" })).to.deep.equal("&offset=&limit=&__after_id=");
         });
 
         it("_getPagingParams should return paging parameters", () => {
@@ -461,7 +444,7 @@ describe("FacebookRequestHandler", () => {
                 "offset": "20"
             };
             expect(facebookRequstHandler._getPagingParams({ "next": "limit=21&offset=20&__after_id=123" }))
-                .to.deep.equal(result);
+                .to.deep.equal(`&offset=${result.offset}&limit=${result.limit}&__after_id=${result.__after_id}`);
         });
     });
 });

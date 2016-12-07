@@ -9,12 +9,10 @@ import R from "ramda";  //eslint-disable-line id-length
 export default class FacebookSourceRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.userName = this.request.query.userName;
-        this.keyword = this.request.query.keyword;
-        this.type = this.request.query.type;
-        this.offset = this.request.query.offset;
-        this.limit = this.request.query.limit;
-        this.__after_id = this.request.query.__after_id; //eslint-disable-line camelcase
+        this.userName = this.request.body.userName;
+        this.keyword = this.request.body.keyword;
+        this.type = this.request.body.type;
+        this.paging = this.request.body.paging;
         this.options = {};
     }
 
@@ -31,14 +29,11 @@ export default class FacebookSourceRoute extends Route {
     async _getSources() {
         let params = {
             "q": this.keyword,
-            "type": fbSourceTypesToFetch[this.type],
-            "offset": this.offset ? this.offset : "",
-            "limit": this.limit ? this.limit : "",
-            "__after_id": this.__after_id ? this.__after_id : ""
+            "type": fbSourceTypesToFetch[this.type]
         };
         try {
             let token = await FacebookAccessToken.instance().getAccessToken(this.userName);
-            let data = await FacebookRequestHandler.instance(token).fetchSourceUrls(params);
+            let data = await FacebookRequestHandler.instance(token).fetchSourceUrls(params, this.paging);
             RouteLogger.instance().debug(`FacebookPostsRoute:: ${this.type} :: successfully fetched data for ${this.userName}`);
             this._handleSuccess(data);
         } catch(err) {
