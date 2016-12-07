@@ -27,4 +27,14 @@ export default class DateTimeUtil {
     static getCurrentTimeStamp() {
         return moment();
     }
+
+    static getLocalTime(dateString) {
+        let DAY_CHARS = 4;
+        let timeStamp = new Date(dateString);
+        let date = timeStamp.toDateString();
+        date = date.substring(DAY_CHARS, date.length);
+        let time = timeStamp.toLocaleTimeString();
+        let formatedDate = date + ", " + time + " IST";
+        return formatedDate;
+    }
 }
