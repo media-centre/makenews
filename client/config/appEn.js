@@ -137,6 +137,9 @@ window.mediaCenter.appEn = {
             },
             "storyBoard": {
                 "Name": "Write a Story"
+            },
+            "configure": {
+                "Name": "Configure"
             }
         }
     }

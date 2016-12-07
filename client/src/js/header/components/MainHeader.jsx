@@ -12,7 +12,7 @@ export class MainHeader extends Component {
                         <img src=".../../../images/makenews-logo.png"/>
                     </div>
                     <div>
-                        <Header mainHeaderStrings={this.props.mainHeaderStrings} />
+                        <Header mainHeaderStrings={this.props.mainHeaderStrings} currentHeaderTab={this.props.currentHeaderTab}/>
                     </div>
                 </div>
                 <section>{this.props.children}</section>
@@ -23,11 +23,13 @@ export class MainHeader extends Component {
 
 MainHeader.propTypes = {
     "children": PropTypes.node,
-    "mainHeaderStrings": PropTypes.object.isRequired
+    "mainHeaderStrings": PropTypes.object.isRequired,
+    "currentHeaderTab": PropTypes.string.isRequired,
+    "dispatch": PropTypes.func.isRequired
 };
 
 function select(store) {
-    return { "mainHeaderStrings": store.mainHeaderStrings };
+    return { "mainHeaderStrings": store.mainHeaderStrings, "currentHeaderTab": store.currentHeaderTab };
 }
 
 export default connect(select)(MainHeader);

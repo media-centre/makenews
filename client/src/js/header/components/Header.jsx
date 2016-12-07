@@ -1,16 +1,19 @@
 import React, { Component, PropTypes } from "react";
 import HeaderTab from "./HeaderTab";
-import { setCurrentHeaderTab } from "./../HeaderActions";
+import ConfigureTab from "./ConfigureTab";
+import UserProfileTab from "./UserProfileTab";
 import { connect } from "react-redux";
 
 export class Header extends Component {
     render() {
         return(
             <div>
-                <HeaderTab url="/newsBoard" name={this.props.mainHeaderStrings.newsBoard.Name} currentHeader={this.props.dispatch(setCurrentHeaderTab("Scan News"))}
-                    class={this.props.currentHeaderTab === this.currentHeader ? "header-tabs--left__item active" : "header-tabs--left__item"}
-                />
-                <HeaderTab url="/storyBoard" name={this.props.mainHeaderStrings.storyBoard.Name} class ={""}/>
+                <HeaderTab url="/newsBoard" name={this.props.mainHeaderStrings.newsBoard.Name} currentHeaderTab={this.props.currentHeaderTab}/>
+                <HeaderTab url="/storyBoard" name={this.props.mainHeaderStrings.storyBoard.Name} currentHeaderTab={this.props.currentHeaderTab}/>
+                <div className = "header-tabs-right">
+                    <ConfigureTab url="/configure" name={this.props.mainHeaderStrings.configure.Name} currentHeaderTab={this.props.currentHeaderTab}/>
+                    <UserProfileTab/>
+                </div>
             </div>
         );
     }

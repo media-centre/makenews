@@ -3,21 +3,22 @@ import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
 
-export class ScanNews extends Component {
+export class ConfigureURLs extends Component {
+
     componentWillMount() {
-        this.props.dispatch(setCurrentHeaderTab("Scan News"));
+        this.props.dispatch(setCurrentHeaderTab("Configure"));
     }
 
     render() {
         return (
             <div>
-                <h2> Scan News </h2>
+                <h1>Configure URL</h1>
             </div>
         );
     }
 }
 
-ScanNews.propTypes = {
+ConfigureURLs.propTypes = {
     "dispatch": PropTypes.func.isRequired
 };
 
@@ -25,4 +26,5 @@ function select(store) {
     return store;
 }
 
-export default connect(select)(ScanNews);
+export default connect(select)(ConfigureURLs);
+

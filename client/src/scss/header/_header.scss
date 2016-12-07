@@ -39,36 +39,35 @@
       cursor: pointer;
     }
 
-    &.active{
+    &.active {
       background-color: $secondary-color;
     }
   }
 }
-.header-tabs--right {
+
+.header-tabs-right {
   float: right;
+}
+
+.header-tabs--configure {
+  float: left;
   height: 64px;
   margin-right: 30px;
-
-  &__item {
+  width: 100px;
+  &__image {
     float: left;
-    width: 100px;
-    height: 64px;
+    margin-top: 20px;
+    margin-left: 40px;
 
-    &__image {
-      float: left;
-      margin-top: 20px;
-      margin-left: 40px;
-
-      img {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-      }
+    img {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
     }
+  }
 
-    &.active{
-      background-color: $secondary-color;
-    }
+  &.active {
+    background-color: $secondary-color;
   }
 }
 
@@ -97,7 +96,7 @@
     margin-left: 10px;
   }
 
-  &.active{
+  &.active {
     background-color: $secondary-color;
   }
   &.__dropdown {
@@ -115,13 +114,13 @@
   right: 0px;
   width: 210px;
   background: $primary-color;
-  
+
   .user-profile--change-password, .user-profile--help, .user-profile--logout {
     vertical-align: top;
     padding: 12px 0;
     padding-left: 26px;
 
-    &:hover{
+    &:hover {
       background-color: $secondary-color;
     }
   }
