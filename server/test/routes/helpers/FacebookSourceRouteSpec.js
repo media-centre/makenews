@@ -10,7 +10,7 @@ import { fbSourceTypesToFetch } from "../../../src/util/Constants";
 import mockResponse from "../../helpers/MockResponse";
 
 describe("FacebookSourceRoutes", () => {
-
+//
     let sandbox = sinon.sandbox.create();
 
     before("FacebookSourceRoutes", () => {
@@ -47,7 +47,7 @@ describe("FacebookSourceRoutes", () => {
             };
 
             let facebookRouteHelper = new FacebookSourceRoute({
-                "query": {
+                "body": {
                     "userName": "user",
                     "type": "user",
                     "keyword": "keyword"
@@ -56,6 +56,92 @@ describe("FacebookSourceRoutes", () => {
 
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.reject("access token not there"));
             facebookRouteHelper.searchSources();
+        });
+
+        it("should reject the request if type is missing", (done) => {
+            let response = {
+                "status": (status) => {
+                    try {
+                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        done();
+                    } catch(error) {
+                        done(error);
+                    }
+                }
+            };
+
+            let facebookRouteHelper = new FacebookSourceRoute({
+                "body": { "userName": "something" }
+            }, response);
+            facebookRouteHelper.searchSources();
+        });
+
+        it("should reject the request if invalid type is passed", (done) => {
+            let response = {
+                "status": (status) => {
+                    try {
+                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        done();
+                    } catch(error) {
+                        done(error);
+                    }
+                }
+            };
+
+            let facebookRouteHelper = new FacebookSourceRoute({
+                "body": { "userName": "something", "type": "mypage", "keyword": "filt" }
+            }, response);
+            facebookRouteHelper.searchSources();
+        });
+        
+        it("should reject the request if keyword is missing", (done) => {
+            let response = {
+                "status": (status) => {
+                    try {
+                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        done();
+                    } catch(error) {
+                        done(error);
+                    }
+                }
+            };
+
+            let facebookRouteHelper = new FacebookSourceRoute({
+                "body": { "userName": "something", "type": "page" }
+            }, response);
+            facebookRouteHelper.searchSources();
+        });
+
+        it("should throw error if any problem from getting pages from facebook", async () => {
+
+            let response = mockResponse();
+
+            let facebookRouteHelper = new FacebookSourceRoute({
+                "body": {
+                    "userName": "user",
+                    "keyword": keyword,
+                    "type": type,
+                    "paging": "&offset=50"
+                }
+            }, response);
+
+            let accessToken = "token";
+
+            let params = {
+                "q": keyword,
+                "type": type
+            };
+
+            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
+
+            sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
+            sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
+                .withArgs(params).returns(Promise.reject("response"));
+
+            await facebookRouteHelper.searchSources();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
         });
 
         it("should get the facebook profiles", (done) => {
@@ -84,10 +170,11 @@ describe("FacebookSourceRoutes", () => {
                 }
             };
             let facebookRouteHelper = new FacebookSourceRoute({
-                "query": {
+                "body": {
                     "userName": "user",
                     "keyword": keyword,
-                    "type": "profile"
+                    "type": "profile",
+                    "paging": ""
                 }
             }, response);
 
@@ -95,10 +182,7 @@ describe("FacebookSourceRoutes", () => {
 
             let params = {
                 "q": keyword,
-                "type": fbSourceTypesToFetch.profile,
-                "offset": "",
-                "limit": "",
-                "__after_id": ""
+                "type": fbSourceTypesToFetch.profile
             };
 
             let facebookRequestHandler = new FacebookRequestHandler(accessToken);
@@ -106,98 +190,10 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(params).returns(Promise.resolve(profiles));
+                .withArgs(params, "").returns(Promise.resolve(profiles));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
-        });
-
-        it("should reject the request if type is missing", (done) => {
-            let response = {
-                "status": (status) => {
-                    try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        done();
-                    } catch(error) {
-                        done(error);
-                    }
-                }
-            };
-
-            let facebookRouteHelper = new FacebookSourceRoute({
-                "query": { "userName": "something" }
-            }, response);
-            facebookRouteHelper.searchSources();
-        });
-
-        it("should reject the request if invalid type is passed", (done) => {
-            let response = {
-                "status": (status) => {
-                    try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        done();
-                    } catch(error) {
-                        done(error);
-                    }
-                }
-            };
-
-            let facebookRouteHelper = new FacebookSourceRoute({
-                "query": { "userName": "something", "type": "mypage", "keyword": "filt" }
-            }, response);
-            facebookRouteHelper.searchSources();
-        });
-        
-        it("should reject the request if keyword is missing", (done) => {
-            let response = {
-                "status": (status) => {
-                    try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        done();
-                    } catch(error) {
-                        done(error);
-                    }
-                }
-            };
-
-            let facebookRouteHelper = new FacebookSourceRoute({
-                "query": { "userName": "something", "type": "page" }
-            }, response);
-            facebookRouteHelper.searchSources();
-        });
-
-        it("should throw error if any problem from getting pages from facebook", async () => {
-
-            let response = mockResponse();
-
-            let facebookRouteHelper = new FacebookSourceRoute({
-                "query": {
-                    "userName": "user",
-                    "keyword": keyword,
-                    "type": type
-                }
-            }, response);
-
-            let accessToken = "token";
-
-            let params = {
-                "q": keyword,
-                "type": type,
-                "offset": "",
-                "limit": "",
-                "__after_id": ""
-            };
-
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
-            facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
-
-            sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
-            sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(params).returns(Promise.reject("response"));
-
-            await facebookRouteHelper.searchSources();
-            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
         });
 
         it("should get the facebook pages", (done) => {
@@ -226,17 +222,15 @@ describe("FacebookSourceRoutes", () => {
 
             let params = {
                 "q": keyword,
-                "type": fbSourceTypesToFetch.page,
-                "offset": "",
-                "limit": "",
-                "__after_id": ""
+                "type": fbSourceTypesToFetch.page
             };
 
             let facebookRouteHelper = new FacebookSourceRoute({
-                "query": {
+                "body": {
                     "userName": "user",
                     "keyword": keyword,
-                    "type": fbSourceTypesToFetch.page
+                    "type": fbSourceTypesToFetch.page,
+                    "paging": ""
                 }
             }, response);
 
@@ -247,7 +241,7 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(params).returns(Promise.resolve(pages));
+                .withArgs(params, "").returns(Promise.resolve(pages));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
@@ -280,17 +274,15 @@ describe("FacebookSourceRoutes", () => {
 
             let params = {
                 "q": keyword,
-                "type": fbSourceTypesToFetch.group,
-                "offset": "",
-                "limit": "",
-                "__after_id": ""
+                "type": fbSourceTypesToFetch.group
             };
 
             let facebookRouteHelper = new FacebookSourceRoute({
-                "query": {
+                "body": {
                     "userName": "user",
                     "keyword": keyword,
-                    "type": fbSourceTypesToFetch.group
+                    "type": fbSourceTypesToFetch.group,
+                    "paging": "&offset=50"
                 }
             }, response);
 
@@ -301,7 +293,7 @@ describe("FacebookSourceRoutes", () => {
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
-                .withArgs(params).returns(Promise.resolve(groups));
+                .withArgs(params, "&offset=50").returns(Promise.resolve(groups));
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
 
             facebookRouteHelper.searchSources();
