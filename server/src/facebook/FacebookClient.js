@@ -6,6 +6,7 @@ import NodeErrorHandler from "../NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookClient {
 
@@ -112,11 +113,13 @@ export default class FacebookClient {
         });
     }
 
-    async fetchSourceUrls(parameters, paging = "") {
-        this._addDefaultParameters(parameters);
+    async fetchSourceUrls(parameters, paging = {}) {
+        parameters.fields = "id,name,picture";
+        let params = R.merge(parameters, paging);
+        this._addDefaultParameters(params);
         let response = null;
         try {
-            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}&fields=id,name,picture${paging}`);
+            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(params, false)}`);
         } catch(err) {
             FacebookClient.logger().error(`FacebookClient:: Error fetching ${parameters.type}s for ${parameters.q}. Error ${err}`);
             throw err;
