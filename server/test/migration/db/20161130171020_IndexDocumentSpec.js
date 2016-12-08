@@ -6,7 +6,7 @@ import sinon from "sinon";
 
 chai.use(chaiAsPromised);
 
-describe.only("IndexDocument", () => {
+describe("IndexDocument", () => {
     let accessToken = "testToken", dbName = "testDb", sandbox = sinon.sandbox.create();
     let indexDoc = {
         "index": {
