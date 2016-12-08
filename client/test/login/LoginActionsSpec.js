@@ -69,7 +69,7 @@ describe("userLogin", () => {
         it("should dispatch login successful action if the login is successful", (done) => {
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
             dbSessionInstanceMock.returns(Promise.resolve({}));
-            historyMock.withArgs("/surf");
+            historyMock.withArgs("/main");
             const expectedActions = [
                 { "type": LOGIN_SUCCESS, "userName": userName }
             ];
@@ -83,7 +83,7 @@ describe("userLogin", () => {
         it("should not set taken tour if user already taken tour", (done) => {
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
             dbSessionInstanceMock.returns(Promise.resolve({}));
-            historyMock.withArgs("/surf");
+            historyMock.withArgs("/main");
             const expectedActions = [
                 { "type": LOGIN_SUCCESS, "userName": userName }
             ];

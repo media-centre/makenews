@@ -8,28 +8,9 @@ import LogTestHelper from "../../helpers/LogTestHelper";
 import Logger from "../../../src/logging/Logger";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import sinon from "sinon";
+import mockResponse from "../../helpers/MockResponse";
 
 describe("TwitterFeedsRoute", () => {
-
-    let responseStatus = null, responseJson = null;
-
-    function mockResponse() {
-        return {
-            "status": (status) => {
-                if(status) {
-                    responseStatus = status;
-                }
-                return responseStatus;
-            },
-            "json": (jsonData) => {
-                if(jsonData) {
-                    responseJson = jsonData;
-                }
-                return responseJson;
-            }
-        };
-    }
-
     let applicationConfig = null;
 
     before("TwitterFeedsRoute", () => {

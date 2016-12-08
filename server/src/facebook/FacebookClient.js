@@ -112,15 +112,15 @@ export default class FacebookClient {
         });
     }
 
-    async fetchPages(pageName) {
-        let parameters = { "q": pageName, "type": "page", "fields": "id,name,picture" };
+    async fetchSourceUrls(keyword, type) {
+        let parameters = { "q": keyword, "type": type, "fields": "id,name,picture" };
         this._addDefaultParameters(parameters);
 
         let response = null;
         try {
             response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(parameters, false)}`);
         } catch(err) {
-            FacebookClient.logger().error(`FacebookClient:: Error fetching pages. Error ${err}`);
+            FacebookClient.logger().error(`FacebookClient:: Error fetching ${type}s for ${keyword}. Error ${err}`);
             throw err;
         }
 
@@ -128,7 +128,7 @@ export default class FacebookClient {
         if(response.status === HttpResponseHandler.codes.OK) {
             return responseJson;
         }
-        FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the pages for ${pageName}`);
+        FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the ${type}s for ${keyword}`);
         throw responseJson.error;
     }
 

@@ -6,7 +6,6 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
-import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
 
@@ -96,57 +95,29 @@ export default class FacebookRequestHandler {
         });
     }
 
-    async fetchPages(pageName) {
+    async fetchSourceUrls(keyword, type) {
         let facebookClientInstance = this.facebookClient();
         try {
-            let pages = await facebookClientInstance.fetchPages(pageName);
-            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched Pages for ${pageName}.`);
-            return pages;
+            let sources = await facebookClientInstance.fetchSourceUrls(keyword, type);
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${type}s for ${keyword}.`);
+            return sources;
         } catch(error) {
-            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook pages. Error: ${error}`);
-            throw "error fetching facebook pages";  // eslint-disable-line no-throw-literal
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${type}s. Error: ${error}`);
+            throw `error fetching facebook ${type}s`;  // eslint-disable-line no-throw-literal
         }
     }
 
-    async fetchConfiguredSources(dbName, authSession) {
-        let couchClient = CouchClient.instance(dbName, authSession);
-        let data = await couchClient.findDocuments({
-            "selector": {
-                "docType": {
-                    "$eq": "configuredSource"
-                }
-            }
-        });
-        return this.formatConfiguredSources(data.docs);
-    }
-
-    /* TODO change it to one time traversal */ //eslint-disable-line
-    formatConfiguredSources(docs) {
-        let result = {
-            "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
-        };
-        result.profiles = R.filter(R.propEq("sourceType", "fb-profiles"), docs);
-        result.pages = R.filter(R.propEq("sourceType", "fb-pages"), docs);
-        result.groups = R.filter(R.propEq("sourceType", "fb-groups"), docs);
-        result.twitter = R.filter(R.propEq("sourceType", "twitter"), docs);
-        result.web = R.filter(R.propEq("sourceType", "web"), docs);
-
-        return result;
-    }
-
-    async addConfiguredSource(source, dbName, authSession) {
-        let couchClient = CouchClient.instance(dbName, authSession);
+    async addConfiguredSource(sourceType, source, authSession) {
+        let couchClient = await CouchClient.createInstance(authSession);
         try {
-            let data = await couchClient.saveDocument(source.url, {
+            await couchClient.saveDocument(source.url, {
                 "_id": source.url,
                 "name": source.name,
                 "docType": "configuredSource",
-                "sourceType": "fb-pages",
+                "sourceType": sourceType,
                 "latestFeedTimeStamp": DateUtil.getCurrentTime()
             });
-            delete data.id;
-            delete data.rev;
-            return data;
+            return { "ok": true };
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error added source. Error: ${error}`);
             throw error;

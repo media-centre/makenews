@@ -3,7 +3,6 @@ import FacebookBatchPosts from "./helpers/FacebookBatchPosts";
 import FacebookSetAccessTokenRoute from "./helpers/FacebookSetAccessTokenRoute";
 import RouteLogger from "./RouteLogger";
 import FacebookSourceRoute from "./helpers/FacebookSourceRoute";
-import FacebookConfigureRoute from "./helpers/FacebookConfigureRoute";
 import FacebookAddConfigureRoute from "./helpers/FacebookAddConfigureRoute";
 
 export default (app) => {
@@ -22,23 +21,13 @@ export default (app) => {
         new FacebookBatchPosts(request, response, next).handle();
     });
 
-    app.get("/facebook-profiles", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-batch-posts request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).fetchProfiles();
-    });
-
-    app.get("/facebook-pages", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook-batch-posts request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).fetchPages();
-    });
-
-    app.get("/facebook/configured/", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configured/ request received. url = %s", request.url);
-        new FacebookConfigureRoute(request, response, next).fetchConfiguredSources();
+    app.get("/facebook-sources", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-sources request received. url = %s", request.url);
+        new FacebookSourceRoute(request, response, next).searchSources();
     });
     
-    app.put("/facebook/configuredSource", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configuredSource request received. url = %s", request.url);
+    app.put("/facebook/configureSource", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook/configureSource request received. url = %s", request.url);
         new FacebookAddConfigureRoute(request, response, next).addConfiguredSource();
     });
 };

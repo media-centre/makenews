@@ -5,11 +5,12 @@ import { parkedFeeds } from "./park/reducers/ParkReducer";
 import { login, loginPageLocale } from "./login/LoginReducers";
 import { highlightedTab } from "./tabs/TabReducers";
 import { combineReducers } from "redux";
-import { mainHeaderLocale } from "./main/reducers/MainReducer";
+import { mainHeaderLocale, mainHeaderStrings } from "./main/reducers/MainReducer";
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { configuredSources, facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
 import { fetchedFeeds } from "./newsboard/reducers/NewsBoardReducer";
+import { currentHeaderTab } from "./header/HeaderReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -20,6 +21,7 @@ const contentDiscoveryApp = combineReducers({
     categoryDetails,
     configurePageLocale,
     mainHeaderLocale,
+    mainHeaderStrings,
     highlightedTab,
     parkCounter,
     changePassword,
@@ -27,7 +29,8 @@ const contentDiscoveryApp = combineReducers({
     configuredSources,
     facebookSources,
     facebookCurrentSourceTab,
-    fetchedFeeds
+    fetchedFeeds,
+    currentHeaderTab
 });
 
 export default contentDiscoveryApp;

@@ -370,16 +370,16 @@ describe("FacebookClient", () => {
         });
     });
 
-    describe("getPages", () => {
-        let facebookClient = null, pageName = "TheHindu";
+    describe("getSourceUrls", () => {
+        let facebookClient = null, keyword = "TheHindu", type = "page";
 
-        beforeEach("getPages", () => {
+        beforeEach("getSourceUrls", () => {
             facebookClient = FacebookClient.instance(accessToken, appSecretProof);
         });
 
         it("should give an error when facebook is rejected with some error", (done) => {
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${pageName}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${keyword}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, {
                     "error": { "message": "Invalid OAuth access token.",
                         "type": "OAuthException",
@@ -387,7 +387,7 @@ describe("FacebookClient", () => {
                     } }
                 );
 
-            facebookClient.fetchPages(pageName).catch(error => {
+            facebookClient.fetchSourceUrls(keyword, type).catch(error => {
                 try {
                     assert.strictEqual("OAuthException", error.type);
                     assert.strictEqual("Invalid OAuth access token.", error.message);
@@ -405,10 +405,10 @@ describe("FacebookClient", () => {
                     { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${pageName}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${keyword}&type=page&fields=id,name,picture&access_token=test_token&appsecret_proof=test_secret_proof`)
                 .reply(HttpResponseHandler.codes.OK, pages);
 
-            facebookClient.fetchPages(pageName).then(data => {
+            facebookClient.fetchSourceUrls(keyword, type).then(data => {
                 try {
                     expect(data).to.deep.equal(pages);
                     done();

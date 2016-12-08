@@ -1,6 +1,7 @@
 @import "../../utils/variable";
 
 .main-page header {
+  display: none;
   color: $primary-font-color;
   height: 60px;
   position: relative;

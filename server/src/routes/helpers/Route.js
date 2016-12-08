@@ -1,5 +1,6 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class Route {
     constructor(request, response, next) {
@@ -15,14 +16,17 @@ export default class Route {
     handle() {
     }
 
+    checkInvalidParameters(...params) {
+        return R.any(StringUtil.isEmptyString)(params);
+    }
+
     isValidRequestData() {
         if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) { //eslint-disable-line no-magic-numbers
             return false;
         }
         let errorItems = this.request.body.data.filter((item)=> { //eslint-disable-line consistent-return
-            if(StringUtil.isEmptyString(item.timestamp) || StringUtil.isEmptyString(item.url) || StringUtil.isEmptyString(item.id)) {
-                return item;
-            }
+            let { timestamp, url, id } = item;
+            return R.any(StringUtil.isEmptyString)([timestamp, url, id]);
         });
 
         return errorItems.length === 0; //eslint-disable-line no-magic-numbers

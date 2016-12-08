@@ -5,10 +5,13 @@ import sinon from "sinon";
 import Logger from "../../../src/logging/Logger";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
+import { sourceTypes } from "../../../src/util/Constants";
+import mockResponse from "../../helpers/MockResponse";
 
 describe("FacebookAddConfigureRoute", () => {
 
     let sandbox = sinon.sandbox.create();
+    let sourceType = "fb-profile";
 
     beforeEach("FacebookAddConfigureRoute", () => {
         sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
@@ -18,7 +21,7 @@ describe("FacebookAddConfigureRoute", () => {
         sandbox.restore();
     });
 
-    it("should reject the request if db name is missing", (done) => {
+    it("should reject the request if type is missing", (done) => {
         let response = {
             "status": (status) => {
                 try {
@@ -34,10 +37,11 @@ describe("FacebookAddConfigureRoute", () => {
             "cookies": { "AuthSession": "session" },
             "body": {
                 "source": {},
-                "dbName": ""
+                "dbName": "",
+                "type": sourceTypes.fb_page
             }
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should reject the request if auth session is missing", (done) => {
@@ -57,7 +61,7 @@ describe("FacebookAddConfigureRoute", () => {
             "body": { "source": {} },
             "cookies": {}
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should reject the request if source name or url is missing", (done) => {
@@ -77,7 +81,7 @@ describe("FacebookAddConfigureRoute", () => {
             "body": { "source": {} },
             "cookies": { "AuthSession": "session" }
         }, response);
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
     it("should give 400 when there is a problem getting the sources", (done) => {
@@ -105,42 +109,27 @@ describe("FacebookAddConfigureRoute", () => {
         let configStub = sandbox.stub(facebookRequestHandler, "addConfiguredSource");
         configStub.withArgs(source, "user", "session").returns(Promise.reject("error fetching data"));
 
-        facebookRoute.addConfiguredSource();
+        facebookRoute.addConfiguredSource(sourceType);
     });
 
-    it("should get the sources", (done) => {
+    it("should add the source to configured list", async () => {
         let data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
         let source = { "name": "SourceName", "url": "http://source.url/" };
-        let response = {
-            "status": (status) => { //eslint-disable-line consistent-return
-                try {
-                    assert.strictEqual(HttpResponseHandler.codes.OK, status);
-                    return response;
-                } catch(err) {
-                    done(err);
-                }
-            },
-            "json": (json) => {
-                try {
-                    assert.deepEqual(data, json);
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            }
-        };
+        let response = mockResponse();
 
         let facebookRoute = new FacebookAddConfigureRoute({
             "cookies": { "AuthSession": "session" },
-            "body": { "source": source, "dbName": "user" }
+            "body": { "source": source, "type": sourceTypes.fb_group }
         }, response);
 
         let facebookRequestHandler = new FacebookRequestHandler("token");
         sandbox.mock(FacebookRequestHandler).expects("instance").withArgs("token").returns(facebookRequestHandler);
 
         let configStub = sandbox.stub(facebookRequestHandler, "addConfiguredSource");
-        configStub.withArgs(source, "user", "session").returns(Promise.resolve(data));
+        configStub.withArgs(sourceTypes[sourceTypes.fb_group], source, "session").returns(Promise.resolve(data));
 
-        facebookRoute.addConfiguredSource();
+        await facebookRoute.addConfiguredSource();
+        assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
+        assert.deepEqual(response.json(), data);
     });
 });
