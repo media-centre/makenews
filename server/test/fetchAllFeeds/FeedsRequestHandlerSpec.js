@@ -36,7 +36,8 @@ describe("FeedsRequestHandler", () => {
                     "$gt": null
                 }
             },
-            "fields": ["title", "description", "sourceType", "tags", "pubDate"]
+            "fields": ["title", "description", "sourceType", "tags", "pubDate", "enclosures", "images"],
+            "sort": [{ "pubDate": "desc" }]
         };
         couchClientInstanceMock = new CouchClient(dbName, authSession);
     });
