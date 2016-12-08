@@ -97,28 +97,22 @@ export default class FacebookRequestHandler {
     }
 
     _getPagingParams(path) {
-        let queryParams = {
-            "offset": "",
-            "__after_id": "",
-            "limit": ""
-        };
+        let queryParams = { };
         
         if(path && path.next) {
-            let vars = path.next.split("&");
-            if (vars.length >= 3) { // eslint-disable-line
-                for (let i = 0; i < vars.length; i++) { // eslint-disable-line
-                    let pair = vars[i].split("="); // eslint-disable-line
-                    if (queryParams.hasOwnProperty(pair[0])) { // eslint-disable-line
-                        queryParams[pair[0]] = pair[1]; // eslint-disable-line
-                    }
-                }
+            let queryStrings = path.next.split("?")[1]; // eslint-disable-line no-magic-numbers
+            let vars = queryStrings.split("&");
+            for (let param of vars) {
+                let pair = param.split("=");
+                queryParams[pair[0]] = pair[1]; // eslint-disable-line no-magic-numbers
             }
         }
-
-        return `&offset=${queryParams.offset}&limit=${queryParams.limit}&__after_id=${queryParams.__after_id}`;
+        delete queryParams.access_token;
+        delete queryParams.fields;
+        return queryParams;
     }
 
-    async fetchSourceUrls(params, paging = "") {
+    async fetchSourceUrls(params, paging = {}) {
         let facebookClientInstance = this.facebookClient();
         try {
             let sources = await facebookClientInstance.fetchSourceUrls(params, paging);
