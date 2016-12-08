@@ -1,10 +1,6 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0*/
 
-
-import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument";
-import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
-import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
-import URLDocuments from "../../src/migration/db/20161114174315_URLDocument";
+import URLDocuments from "../../src/migration/admin/20161114174315_URLDocument";
 import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
 import Migration from "../../src/migration/Migration";
 import MigrationFile from "../../src/migration/MigrationFile";
@@ -34,27 +30,6 @@ describe("Migration", () => {
 
 
     describe("getObject", () => {
-        it("should give the function object to create the instance of create category design document", ()=> {
-            let migrationInstance = new Migration(dbName, accessToken);
-            let className = "CreateCategoryDesignDocument";
-            let object = migrationInstance.getObject(className);
-            assert.isTrue(object instanceof CreateCategoryDesignDocument);
-        });
-
-        it("should give the function object to create the instance of create default category design document", ()=> {
-            let migrationInstance = new Migration(dbName, accessToken);
-            let className = "CreateDefaultCategoryDocument";
-            let object = migrationInstance.getObject(className);
-            assert.isTrue(object instanceof CreateDefaultCategoryDocument);
-        });
-
-        it("should give the function object to create the instance of add filter views to design document", () => {
-            let migrationInstance = new Migration(dbName, accessToken);
-            let className = "AddFilterViewsToDesignDocument";
-            let object = migrationInstance.getObject(className);
-            assert.isTrue(object instanceof AddFilterViewsToDesignDocument);
-
-        });
 
         it("should give the function object to create the instance of url document", () => {
             let migrationInstance = new Migration(dbName, accessToken);
@@ -113,15 +88,15 @@ describe("Migration", () => {
         });
 
         it("should migrate db and save version", (done) => {
-            let migratableFileDetails = [["20151218145511", "CreateCategoryDesignDocument"]];
+            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
 
-            let createCategoryDesignDocument = new CreateCategoryDesignDocument(dbName, accessToken);
-            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(createCategoryDesignDocument);
+            let indexDocument = new IndexDocument(dbName, accessToken);
+            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
-            let createCategoryDesignDocumentUpMock = sinon.mock(createCategoryDesignDocument).expects("up");
+            let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
             saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
@@ -133,21 +108,21 @@ describe("Migration", () => {
                 getObjectMock.verify();
                 saveMock.verify();
                 createCategoryDesignDocumentUpMock.verify();
-                createCategoryDesignDocument.up.restore();
+                indexDocument.up.restore();
                 done();
             });
         });
 
         it("should migrate db and save version incase there is no schema version in db yet", (done) => {
-            let migratableFileDetails = [["20151218145511", "CreateCategoryDesignDocument"]];
+            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
 
             getSchemaInfoMock.returns(Promise.resolve(null));
             getMigratableFileClassNamesMock.withArgs("19700101000000").returns(migratableFileDetails);
 
-            let createCategoryDesignDocument = new CreateCategoryDesignDocument(dbName, accessToken);
-            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(createCategoryDesignDocument);
+            let indexDocument = new IndexDocument(dbName, accessToken);
+            getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
-            let createCategoryDesignDocumentUpMock = sinon.mock(createCategoryDesignDocument).expects("up");
+            let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
             saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
@@ -159,7 +134,7 @@ describe("Migration", () => {
                 getObjectMock.verify();
                 saveMock.verify();
                 createCategoryDesignDocumentUpMock.verify();
-                createCategoryDesignDocument.up.restore();
+                indexDocument.up.restore();
                 done();
             });
         });
@@ -184,7 +159,7 @@ describe("Migration", () => {
 
         it("should stop the migration after the failure", (done) => {
 
-            let migratableFileDetails = [["20151218145511", "CreateCategoryDesignDocument"]];
+            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);

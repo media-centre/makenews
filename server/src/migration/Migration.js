@@ -1,13 +1,6 @@
 /*eslint no-unused-vars:0*/
-import CreateCategoryDesignDocument from "../../src/migration/db/20151217145510_CreateCategoryDesignDocument";
-import CreateDefaultCategoryDocument from "../../src/migration/db/20151217171910_CreateDefaultCategoryDocument";
-import AddFilterViewsToDesignDocument from "../../src/migration/db/20160205174500_AddFilterViewsToDesignDocument";
-import ModifyAllCategoriesByNameView from "../../src/migration/db/20160210182645_ModifyAllCategoriesByNameView";
-import AddSourceTypeFilter from "../../src/migration/db/20160212174500_AddSourceTypeFilter";
-import ChangeGalleryTypeFeed from "../../src/migration/db/20160310113335_ChangeGalleryTypeFeed";
-import ModifyImageUrlToImagesArray from "../../src/migration/db/20160516122916_ModifyImageUrlToImagesArray";
-import URLDocument from "../../src/migration/db/20161114174315_URLDocument";
-import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
+import URLDocument from "./admin/20161114174315_URLDocument";
+import IndexDocument from "./db/20161130171020_IndexDocument";
 
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
@@ -25,13 +18,14 @@ export default class Migration {
         return this.logs[dbName];
     }
 
-    static instance(dbName, accessToken) {
-        return new Migration(dbName, accessToken);
+    static instance(dbName, accessToken, isAdmin = false) {
+        return new Migration(dbName, accessToken, isAdmin);
     }
 
-    constructor(dbName, accessToken) {
+    constructor(dbName, accessToken, isAdmin) {
         this.dbName = dbName;
         this.accessToken = accessToken;
+        this.isAdmin = isAdmin;
         Migration.logger(this.dbName).info("dbName = %s", this.dbName);
     }
 
@@ -84,7 +78,7 @@ export default class Migration {
                     schemaVersion = schemaInfoDoc.lastMigratedDocumentTimeStamp;
                 }
                 Migration.logger(this.dbName).info("schema version in db is %s ", schemaVersion);
-                let migratableFileDetails = MigrationFile.instance().getMigratableFileClassNames(schemaVersion);
+                let migratableFileDetails = MigrationFile.instance(this.isAdmin).getMigratableFileClassNames(schemaVersion);
                 Migration.logger(this.dbName).info("migratable file names = %j", migratableFileDetails);
                 this._migrateFileSynchronously(migratableFileDetails).then(success => {
                     Migration.logger(this.dbName).info("migration successful.");
@@ -101,22 +95,8 @@ export default class Migration {
 
     getObject(className) {
         switch (className) {
-        case "CreateCategoryDesignDocument" :
-            return new CreateCategoryDesignDocument(this.dbName, this.accessToken);
-        case "CreateDefaultCategoryDocument" :
-            return new CreateDefaultCategoryDocument(this.dbName, this.accessToken);
-        case "AddFilterViewsToDesignDocument" :
-            return new AddFilterViewsToDesignDocument(this.dbName, this.accessToken);
-        case "ModifyAllCategoriesByNameView" :
-            return new ModifyAllCategoriesByNameView(this.dbName, this.accessToken);
-        case "AddSourceTypeFilter" :
-            return new AddSourceTypeFilter(this.dbName, this.accessToken);
-        case "ChangeGalleryTypeFeed" :
-            return new ChangeGalleryTypeFeed(this.dbName, this.accessToken);
         case "URLDocument" :
             return new URLDocument(this.dbName, this.accessToken);
-        case "ModifyImageUrlToImagesArray" :
-            return new ModifyImageUrlToImagesArray(this.dbName, this.accessToken);
         case "IndexDocument" :
             return new IndexDocument(this.dbName, this.accessToken);
         default :

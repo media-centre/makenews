@@ -3,11 +3,17 @@ import path from "path";
 import moment from "moment";
 
 export default class MigrationFile {
-    static instance() {
-        return new MigrationFile();
+    constructor(isAdmin = false) {
+        this.isAdmin = isAdmin;
+    }
+
+    static instance(isAdmin) {
+        return new MigrationFile(isAdmin);
     }
     getMigratableFileClassNames(schemaVersion) {
-        let fileNames = this.getFileNames();
+
+        let migrationPath = this.isAdmin ? MigrationFile.ADMIN_MIGRATION_FILES_PATH : MigrationFile.MIGRATION_FILES_PATH;
+        let fileNames = this.getFileNames(migrationPath);
         let migratableClasses = [];
         fileNames.forEach((fileName) => {
             let timeStampAndFileName = this.split(fileName);
@@ -18,9 +24,9 @@ export default class MigrationFile {
         return migratableClasses;
     }
 
-    getFileNames() {
+    getFileNames(filePath = MigrationFile.MIGRATION_FILES_PATH) {
         try {
-            return fs.readdirSync(MigrationFile.MIGRATION_FILES_PATH); //eslint-disable-line no-sync
+            return fs.readdirSync(filePath); //eslint-disable-line no-sync
         } catch(error) {
             return null;
         }
@@ -53,4 +59,5 @@ export default class MigrationFile {
 }
 
 MigrationFile.MIGRATION_FILES_PATH = path.join(__dirname, "./db");
+MigrationFile.ADMIN_MIGRATION_FILES_PATH = path.join(__dirname, "./admin");
 MigrationFile.TIMESTAMPFORMATDIGITS = 14;
