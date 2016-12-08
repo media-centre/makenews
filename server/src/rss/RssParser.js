@@ -37,10 +37,10 @@ export default class RssParser {
                         "docType": "feed",
                         "sourceType": "rss",
                         "sourceUrl": url,
-                        "tags": [meta.title]
+                        "tags": [meta.title],
+                        "images": []
                     };
                     if (feed.enclosures && feed.enclosures.length > 0) {                     //eslint-disable-line no-magic-numbers
-                        feedObject.images = [];
                         feed.enclosures.forEach((item, index) => {
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
                                 feedObject.images.push(feed.enclosures[index]);
