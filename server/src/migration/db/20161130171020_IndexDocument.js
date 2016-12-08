@@ -19,7 +19,6 @@ export default class IndexDocument {
             return await CouchClient.instance(this.dbName, this.accessToken).createIndex(nameIdIndex);
         } catch (error) {
             Migration.logger(this.dbName).error("IndexDocument::up - error %j", error);
-            console.log("ee", error);
             throw error;
         }
     }
