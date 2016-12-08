@@ -8,7 +8,6 @@ import CryptUtil from "./util/CryptUtil";
 let dbInstanceMap = new Map();
 export default class CouchClient {
     static instance(dbName, accessToken, dbUrl = null) {
-
         return new CouchClient(dbName, accessToken, dbUrl);
     }
 
@@ -58,9 +57,14 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
-    findDocuments(body, customHeaders = {}) {
+    findDocuments(query, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
-        return this.post(path, body, customHeaders);
+        return this.post(path, query, customHeaders);
+    }
+
+    createIndex(indexDoc, customHeaders = {}) {
+        const path = "/" + this.dbName + "/_index";
+        return this.post(path, indexDoc, customHeaders);
     }
 
     post(path, body, customHeaders = {}) {

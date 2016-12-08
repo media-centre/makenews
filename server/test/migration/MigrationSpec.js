@@ -1,6 +1,6 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0*/
 
-import URLDocuments from "../../src/migration/admin/20161114174315_URLDocument";
+import URLDocuments from "../../src/migration/admin/20161114174315_WebURLDocuments";
 import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
 import Migration from "../../src/migration/Migration";
 import MigrationFile from "../../src/migration/MigrationFile";

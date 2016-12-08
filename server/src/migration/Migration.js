@@ -1,5 +1,5 @@
 /*eslint no-unused-vars:0*/
-import URLDocument from "./admin/20161114174315_URLDocument";
+import URLDocument from "./admin/20161114174315_WebURLDocuments";
 import IndexDocument from "./db/20161130171020_IndexDocument";
 
 import SchemaInfo from "./SchemaInfo";

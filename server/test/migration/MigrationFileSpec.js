@@ -21,7 +21,7 @@ describe("MigrationFile", () => {
             fs.readdirSync.restore(); //eslint-disable-line no-sync
         });
         it("should get all the migration file names from admin folder", () =>{
-            let fileName = ["20161114174315_URLDocument.js", "20161118174315_AddIndex.js"];
+            let fileName = ["20161114174315_WebURLDocuments.js", "20161118174315_AddIndex.js"];
             let fsReadDirSyncMock = sinon.mock(fs).expects("readdirSync");
             fsReadDirSyncMock.withArgs(MigrationFile.ADMIN_MIGRATION_FILES_PATH).returns(fileName);
             let migrationFileInstance = new MigrationFile();
@@ -81,13 +81,13 @@ describe("MigrationFile", () => {
         });
 
         it("should give the class names of admin migratable files", () =>{
-            let fileNames = ["20161114174315_URLDocument.js", "20161118174315_AddIndex.js"];
+            let fileNames = ["20161114174315_WebURLDocuments.js", "20161118174315_AddIndex.js"];
             let schemaInfoTimestamp = "20161114174310";
             let migrationFileInstance = new MigrationFile(true);
             let migrationFileInstanceStub = sinon.stub(migrationFileInstance, "getFileNames").withArgs(MigrationFile.ADMIN_MIGRATION_FILES_PATH);
             migrationFileInstanceStub.returns(fileNames);
             let migratableClassNames = migrationFileInstance.getMigratableFileClassNames(schemaInfoTimestamp);
-            assert.deepEqual(migratableClassNames, [["20161114174315", "URLDocument"], ["20161118174315", "AddIndex"]]);
+            assert.deepEqual(migratableClassNames, [["20161114174315", "WebURLDocuments"], ["20161118174315", "AddIndex"]]);
             migrationFileInstance.getFileNames.restore();
         });
     });

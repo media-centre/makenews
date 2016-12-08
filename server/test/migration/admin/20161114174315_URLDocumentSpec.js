@@ -1,5 +1,5 @@
 /* eslint max-nested-callbacks: [2, 7]*/
-import URLDocument from "../../../src/migration/admin/20161114174315_URLDocument";
+import URLDocument from "../../../src/migration/admin/20161114174315_WebURLDocuments";
 import Migration from "../../../src/migration/Migration";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../../src/config/ApplicationConfig";
