@@ -8,10 +8,10 @@ import { combineReducers } from "redux";
 import { mainHeaderLocale, mainHeaderStrings } from "./main/reducers/MainReducer";
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
+import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
 import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
-import { fetchedFeeds } from "./newsboard/reducers/NewsBoardReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
