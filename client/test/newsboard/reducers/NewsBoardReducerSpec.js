@@ -1,4 +1,4 @@
-import { fetchedFeeds } from "../../../src/js/newsboard/reducers/NewsBoardReducer";
+import { fetchedFeeds } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { expect } from "chai";
 
 describe("NewsBoardReducer", () => {

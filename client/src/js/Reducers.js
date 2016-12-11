@@ -9,7 +9,7 @@ import { mainHeaderLocale, mainHeaderStrings } from "./main/reducers/MainReducer
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { configuredSources, facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
-import { fetchedFeeds } from "./newsboard/reducers/NewsBoardReducer";
+import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 
 const contentDiscoveryApp = combineReducers({

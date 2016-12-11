@@ -165,6 +165,7 @@ export class SurfPage extends Component {
                 "_id": "imagecontent"
             }
         ];
+
         return (
             <div className="surf-page-container">
                 <SurfFilter updateFilter={this.updateFilter.bind(this)} categories={this.props.categories} filter={this.state.filter} sourceTypeFilter={sourceTypeFilter} mediaTypes={mediaTypes}/>
@@ -176,6 +177,7 @@ export class SurfPage extends Component {
                     {paginationSpinner}
                 </div>
                 {mask}
+
             </div>
         );
     }

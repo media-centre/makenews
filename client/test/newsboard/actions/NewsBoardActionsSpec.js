@@ -1,4 +1,4 @@
-import { displayFetchedFeeds, displayAllConfiguredFeeds, DISPLAY_FETCHED_FEEDS } from "../../../src/js/newsboard/actions/NewsBoardActions";
+import { displayFetchedFeeds, displayAllConfiguredFeeds, DISPLAY_FETCHED_FEEDS } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
