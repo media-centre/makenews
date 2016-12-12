@@ -4,7 +4,7 @@ import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe.only("NewsBoardActions", () => {
+describe.only("DisplayFeedActions", () => {
     describe("displayFetchedFeeds", () => {
         it("should return type DISPLAY_FETCHED_FEEDS action ", () => {
             let feeds = [

@@ -6,7 +6,7 @@ export function fetchedFeeds(state = [], action = {}) {
     case DISPLAY_FETCHED_FEEDS:
         return Object.assign([], state, List(action.feeds).toArray()); //eslint-disable-line new-cap
     case PAGINATED_FETCHED_FEEDS:
-    return Object.assign([], List(state).concat(action.feeds).toArray());
+        return Object.assign([], List(state).concat(action.feeds).toArray());
     default:
         return state;
     }
