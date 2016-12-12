@@ -7,7 +7,7 @@
     "adminDetails": {
       "username": "common",
       "password": "common",
-      "db": "common",
+      "db": "common1",
       "couchDbAdmin": {
         "username": "admin",
         "password": "admin"

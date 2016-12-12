@@ -13,7 +13,7 @@ export default class URLDocument {
     }
 
     getDocument() {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, "../documents/defaultURLDocument.json"), "utf-8"));  //eslint-disable-line no-sync
+        return JSON.parse(fs.readFileSync(path.join(__dirname, "../documents/WebURLDocuments.json"), "utf-8"));  //eslint-disable-line no-sync
     }
 
     up() {

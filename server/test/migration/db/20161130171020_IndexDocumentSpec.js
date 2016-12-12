@@ -1,66 +1,56 @@
 import IndexDocument from "../../../src/migration/db/20161130171020_IndexDocument";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import nock from "nock";
-import { assert } from "chai";
+import CouchClient from "../../../src/CouchClient";
+import chai, { assert } from "chai";
+import chaiAsPromised from "chai-as-promised";
+import sinon from "sinon";
+
+chai.use(chaiAsPromised);
 
 describe("IndexDocument", () => {
-    let accessToken = null, dbName = null;
+    let accessToken = "testToken", dbName = "testDb", sandbox = sinon.sandbox.create();
+    let indexDoc = {
+        "index": {
+            "fields": ["name", "id"]
+        },
+        "name": "name-id"
+    };
+
+    afterEach("IndexDocument", () => {
+        sandbox.restore();
+    });
 
     it("should give successResponse for cerating index", async() => {
-        accessToken = "testToken";
-        dbName = "testDb";
-        let defaultDocument = {
-            "index": {
-                "fields": ["name", "id"]
-            },
-            "name": "defaultIndex"
-        };
-
         let response = {
             "result": "created",
             "id": "_design/b508cf6095783f0e83e50554ee572df5460fea3b",
             "name": "defaultIndex"
         };
 
-        nock("http://localhost:5984", {
-            "reqheaders": {
-                "Cookie": "AuthSession=" + accessToken,
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        }).post("/" + dbName + "/_index", defaultDocument).reply(HttpResponseHandler.codes.OK, response);
+        let couchInstance = new CouchClient(dbName, accessToken);
+        sandbox.stub(CouchClient, "instance")
+          .withArgs(dbName, accessToken)
+          .returns(couchInstance);
+        let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
+          .withArgs(indexDoc)
+          .returns(response);
+
 
         let indexDocument = new IndexDocument(dbName, accessToken);
-        let responseJson = await indexDocument.up();
-        assert.deepEqual(responseJson, response);
+        await indexDocument.up();
+        createIndexMock.verify();
     });
 
-    it("should give successResponse as exists for cerating index", async() => {
-        accessToken = "testToken";
-        dbName = "testDb";
-        let defaultDocument = {
-            "index": {
-                "fields": ["name", "id"]
-            },
-            "name": "defaultIndex"
-        };
-
-        let response = {
-            "result": "exist",
-            "id": "_design/b508cf6095783f0e83e50554ee572df5460fea3b",
-            "name": "defaultIndex"
-        };
-
-        nock("http://localhost:5984", {
-            "reqheaders": {
-                "Cookie": "AuthSession=" + accessToken,
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        }).post("/" + dbName + "/_index", defaultDocument).reply(HttpResponseHandler.codes.OK, response);
+    it("should throw error if index creation failed", async() => {
+        let couchInstance = new CouchClient(dbName, accessToken);
+        sandbox.stub(CouchClient, "instance")
+          .withArgs(dbName, accessToken)
+          .returns(couchInstance);
+        let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
+          .withArgs(indexDoc)
+          .throws(new Error("failed"));
 
         let indexDocument = new IndexDocument(dbName, accessToken);
-        let responseJson = await indexDocument.up();
-        assert.deepEqual(responseJson, response);
+        await assert.isRejected(indexDocument.up(), "failed");
+        createIndexMock.verify();
     });
 });

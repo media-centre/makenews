@@ -1,6 +1,5 @@
 import Migration from "../Migration";
-import ApplicationConfig from "../../config/ApplicationConfig";
-import fetch from "isomorphic-fetch";
+import CouchClient from "../../CouchClient";
 
 export default class IndexDocument {
     constructor(dbName, accessToken) {
@@ -11,24 +10,13 @@ export default class IndexDocument {
     async up() {
         try {
             Migration.logger(this.dbName).info("IndexDocument::up - started");
-            let categoryDocument = {
+            let nameIdIndex = {
                 "index": {
                     "fields": ["name", "id"]
                 },
-                "name": "defaultIndex"
+                "name": "name-id"
             };
-            let dbUrl = `${ApplicationConfig.instance().dbUrl()}/${this.dbName}/_index`;
-            let response = await fetch(dbUrl, {
-                "method": "POST",
-                "body": JSON.stringify(categoryDocument),
-                "headers": {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Cookie": `AuthSession=${this.accessToken}`
-                }
-            });
-            let responseJson = await response.json();
-            return responseJson;
+            return await CouchClient.instance(this.dbName, this.accessToken).createIndex(nameIdIndex);
         } catch (error) {
             Migration.logger(this.dbName).error("IndexDocument::up - error %j", error);
             throw error;

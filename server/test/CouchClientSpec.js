@@ -25,8 +25,8 @@ describe("CouchClient", () => {
         CouchClient.logger.restore();
     });
 
-    describe("searchDatabase", () => {
-        before("searchDatabase", () => {
+    describe("findDocuments", () => {
+        before("findDocuments", () => {
             response = {
                 "docs": [
                     {
@@ -72,6 +72,38 @@ describe("CouchClient", () => {
                 done();
             });
         });
+    });
+
+    describe("createIndex", () => {
+        it("should return response for createIndex", (done) => {
+            let indexDoc = {
+                "index": {
+                    "fields": ["name", "id"]
+                },
+                "name": "name-id"
+            };
+
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+              .post("/" + dbName + "/_index")
+              .reply(HttpResponseHandler.codes.OK, response);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.createIndex(indexDoc).then((actualResponse) => {
+                assert.deepEqual(actualResponse, response);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+        
     });
 
     describe("saveDocument", () => {
