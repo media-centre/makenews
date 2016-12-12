@@ -9,6 +9,7 @@ describe("FeedsRequestHandler", () => {
     let feedsRequestHandler = null;
     let couchClientInstanceMock = null;
     let dbName = null, body = null;
+    let lastIndex = null;
     beforeEach("FeedsRequestHandlerBefore", () => {
         feed = [{
             "_id": "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3",
@@ -24,6 +25,7 @@ describe("FeedsRequestHandler", () => {
         authSession = "Access Token";
         feedsRequestHandler = new FeedsRequestHandler();
         dbName = "dbName";
+        lastIndex = 0;
         body = {
             "selector": {
                 "sourceUrl": {
@@ -37,6 +39,7 @@ describe("FeedsRequestHandler", () => {
                 }
             },
             "fields": ["title", "description", "sourceType", "tags", "pubDate", "enclosures", "images"],
+            "skip": 0,
             "sort": [{ "pubDate": "desc" }]
         };
         couchClientInstanceMock = new CouchClient(dbName, authSession);
@@ -50,7 +53,7 @@ describe("FeedsRequestHandler", () => {
         try {
             sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
             sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.reject("unexpected response from db"));
-            await feedsRequestHandler.fetchFeeds(authSession);
+            await feedsRequestHandler.fetchFeeds(authSession, lastIndex);
             assert.fail();
 
         } catch (error) {
@@ -62,7 +65,7 @@ describe("FeedsRequestHandler", () => {
         try {
             sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
             sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.resolve(feed));
-            let feeds = await feedsRequestHandler.fetchFeeds(authSession);
+            let feeds = await feedsRequestHandler.fetchFeeds(authSession, lastIndex);
             assert.equal(feeds.docType, feed.docType);
             assert.equal(feeds.sourceType, feed.sourceType);
         } catch (error) {

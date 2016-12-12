@@ -13,7 +13,6 @@ export function displayAllConfiguredFeeds() {
                 "Content-Type": "application/json"
             };
             let feeds = await ajax.post(headers, { "lastIndex": 0 });
-            console.log("feeds in up====>", feeds);
             dispatch(displayFetchedFeeds(feeds.docs));
         } catch (error) {
             dispatch(displayFetchedFeeds([]));
@@ -27,7 +26,6 @@ export function displayFetchedFeeds(feeds) {
 
 
 export function displayFeedsByPage(pageIndex) {
-    console.log("page index=======>", pageIndex)
     return async dispatch => {
         try {
             let ajax = AjaxClient.instance("/fetch-all-feeds", true);
@@ -36,8 +34,7 @@ export function displayFeedsByPage(pageIndex) {
                 "Content-Type": "application/json"
             };
 
-            let feeds = await ajax.post(headers, { "lastIndex": 0 });
-            console.log("feeds in actions ======>", feeds);
+            let feeds = await ajax.post(headers, { "lastIndex": pageIndex });
             dispatch(paginatedFeeds(feeds.docs));
         } catch (error) {
             dispatch(paginatedFeeds([]));

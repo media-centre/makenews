@@ -6,8 +6,6 @@ export default class FeedsRequestHandler {
     }
 
     async fetchFeeds(authSession, lastIndex) {
-        console.log("authSession======>", authSession);
-        console.log("lastIndex======>", lastIndex);
         let couchClient = await CouchClient.createInstance(authSession);
         let selector = {
             "selector": {
@@ -26,7 +24,6 @@ export default class FeedsRequestHandler {
             "skip": lastIndex
         };
         let feeds = await couchClient.findDocuments(selector);
-        console.log("feeds====>", feeds);
         return feeds;
     }
 }

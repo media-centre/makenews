@@ -34,6 +34,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
         it("should return feeds for correct response", async () => {
             let authSession = "authSession";
             let fetchRequestHandlerInstance = new FetchRequestHandler();
+            let lastIndex = 0;
             let feeds = {
                 "docs": [{
                     "_id": "1",
@@ -57,6 +58,9 @@ describe("FetchAllConfiguredFeedsRoute", () => {
             let request = {
                 "cookies": {
                     "authSession": authSession
+                },
+                "body": {
+                    "lastIndex": lastIndex
                 }
             };
             try {
@@ -76,9 +80,13 @@ describe("FetchAllConfiguredFeedsRoute", () => {
 
         it("should retrun bad request if fetch feeds reject with an error", async () => {
             let response = mockResponse({ "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+            let lastIndex = 0;
             let request = {
                 "cookies": {
                     "authSession": {}
+                },
+                "body": {
+                    "lastIndex": lastIndex
                 }
             };
             await new FetchAllConfiguredFeedsRoute(request, response, {}).fetchFeeds();
