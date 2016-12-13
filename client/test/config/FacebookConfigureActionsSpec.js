@@ -9,6 +9,7 @@ import mockStore from "../helper/ActionHelper";
 import AppWindow from "../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import nock from "nock";
+import { HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("Facebook Configure Actions", () => {
     describe("fetch facebook sources", () => {
@@ -29,7 +30,11 @@ describe("Facebook Configure Actions", () => {
     });
 
     describe("get Sources of", () => {
-        let sandbox = null, ajaxClient = null, ajaxClientGetMock = null, userName = null;
+        let sandbox = null, ajaxClient = null, ajaxClientMock = null, userName = null;
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
 
         beforeEach("get Sources of", () => {
             userName = "user";
@@ -44,16 +49,20 @@ describe("Facebook Configure Actions", () => {
             sandbox.restore();
         });
 
-        it("should dispatch FACEBOOK_GOT_SOURCES action after getting fb profiles ", (done) => {
+        it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES}, ${HAS_MORE_SOURCE_RESULTS} action after getting fb profiles`, (done) => {
             let serverUrl = "/facebook-sources";
             let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }] };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
-            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get");
-            ajaxClientGetMock.withArgs({ "userName": userName, "keyword": "testProfile", "type": "profile" }).returns(Promise.resolve(sources));
+            ajaxClientMock = sandbox.mock(ajaxClient).expects("post");
+            ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} }).returns(Promise.resolve(sources));
 
-            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": "Profiles" }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
+            let actions = [
+                { "type": FBActions.FACEBOOK_CHANGE_CURRENT_TAB, "currentTab": "Profiles" },
+                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources },
+                { "type": HAS_MORE_SOURCE_RESULTS }
+            ];
             let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
             store.dispatch(FBActions.getSourcesOf(FBActions.PROFILES, "testProfile"));
         });
@@ -65,10 +74,16 @@ describe("Facebook Configure Actions", () => {
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
-            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName, "type": "page" });
-            ajaxClientGetMock.returns(Promise.resolve(sources));
+            ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
+                "userName": userName, "keyword": pageName, "type": "page", "paging": {}
+            });
+            ajaxClientMock.returns(Promise.resolve(sources));
 
-            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
+            let actions = [
+                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
+                { "type": HAS_MORE_SOURCE_RESULTS }
+            ];
             let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
             store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
         });
@@ -83,15 +98,58 @@ describe("Facebook Configure Actions", () => {
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
-            ajaxClientGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "userName": userName, "keyword": pageName, "type": "page" });
-            ajaxClientGetMock.returns(Promise.resolve(fbResponse));
-            let actions = [{ "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES }, { "type": "FACEBOOK_GOT_SOURCES", "sources": sources.data }];
-            let store = mockStore(() => ({ "configuredSources": { "pages": [{ "_id": 1 }, { "_id": 3 }] } }), actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
+            ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
+                "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
+            ajaxClientMock.returns(Promise.resolve(fbResponse));
+            let actions = [
+                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
+                { "type": HAS_MORE_SOURCE_RESULTS }
+            ];
+
+            const getStore = () => ({
+                "configuredSources": {
+                    "pages": [
+                        { "_id": 1 },
+                        { "_id": 3 }
+                    ]
+                }
+            });
+
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName, {}));
+        });
+
+        it(`should dispatch ${NO_MORE_SOURCE_RESULTS} when the sources are empty`, (done) => {
+            let serverUrl = "/facebook-sources";
+            let pageName = "testPage";
+            let fbResponse = { "data": [] };
+
+            ajaxClient = AjaxClient.instance(serverUrl, false);
+            sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
+            ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
+                "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
+            ajaxClientMock.returns(Promise.resolve(fbResponse));
+            let actions = [
+                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": NO_MORE_SOURCE_RESULTS }
+            ];
+
+            const getStore = () => ({
+                "configuredSources": {
+                    "pages": [
+                        { "_id": 1 },
+                        { "_id": 3 }
+                    ]
+                }
+            });
+
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName, {}));
         });
     });
     
-    describe("add source to configred list", () => {
+    describe("add source to configured list", () => {
         let sandbox = null, sources = null;
 
         beforeEach("add source to configred list", () => {

@@ -4,8 +4,14 @@ import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import {
     GOT_CONFIGURED_SOURCES,
+    NO_MORE_SOURCE_RESULTS,
+    HAS_MORE_SOURCE_RESULTS,
+    CLEAR_SOURCES,
     configuredSourcesReceived,
-    getConfiguredSources
+    getConfiguredSources,
+    noMoreSourceResults,
+    hasMoreSourceResults,
+    clearSources
 } from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import sinon from "sinon";
 
@@ -53,6 +59,20 @@ describe("SourceConfigurationActions", () => {
 
             let store = mockStore({}, [{ "type": GOT_CONFIGURED_SOURCES, "sources": [] }], done);
             store.dispatch(getConfiguredSources());
+        });
+    });
+
+    describe("source results", () => {
+        it(`should return ${NO_MORE_SOURCE_RESULTS} when request for noMoreSourceResults action`, () => {
+            expect(noMoreSourceResults()).to.deep.equal({ "type": NO_MORE_SOURCE_RESULTS });
+        });
+
+        it(`should return ${HAS_MORE_SOURCE_RESULTS} when request for hasMoreSourceResults action`, () => {
+            expect(hasMoreSourceResults()).to.deep.equal({ "type": HAS_MORE_SOURCE_RESULTS });
+        });
+
+        it(`should return ${CLEAR_SOURCES} when request for clearSources action`, () => {
+            expect(clearSources()).to.deep.equal({ "type": CLEAR_SOURCES });
         });
     });
 });

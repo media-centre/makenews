@@ -4,7 +4,7 @@ import {
     FACEBOOK_ADD_GROUP
 } from "./../../config/actions/FacebookConfigureActions";
 import { List } from "immutable";
-import { GOT_CONFIGURED_SOURCES } from "./../actions/SourceConfigurationActions";
+import { GOT_CONFIGURED_SOURCES, HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS } from "./../actions/SourceConfigurationActions";
 
 export const configuredSources = (state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] }, action = {}) => {
     switch (action.type) {
@@ -21,5 +21,19 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
         return action.sources;
     }
     default: return state;
+    }
+};
+
+export const hasMoreSourceResults = (state, action = {}) => {
+    switch (action.type) {
+    case HAS_MORE_SOURCE_RESULTS: {
+        return true;
+    }
+    case NO_MORE_SOURCE_RESULTS: {
+        return false;
+    }
+    default: {
+        return true;
+    }
     }
 };

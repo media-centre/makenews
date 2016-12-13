@@ -3,13 +3,10 @@ import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
 import { getSourcesOf } from "./../actions/FacebookConfigureActions";
+import { clearSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
-    componentDidMount() {
-        this.props.dispatch(getSourcesOf(this.props.currentTab));
-    }
-
     checkEnterKey(event) {
         const ENTERKEY = 13;
         if (event.keyCode === ENTERKEY) {
@@ -20,6 +17,7 @@ export class ConfigurePane extends Component {
     fetchSources() {
         let value = this.refs.searchSources.value;
         if(!StringUtils.isEmptyString(value)) {
+            this.props.dispatch(clearSources());
             this.props.dispatch(getSourcesOf(this.props.currentTab, value));
         }
     }

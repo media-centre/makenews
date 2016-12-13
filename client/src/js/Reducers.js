@@ -8,8 +8,9 @@ import { combineReducers } from "redux";
 import { mainHeaderLocale, mainHeaderStrings } from "./main/reducers/MainReducer";
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
-import { configuredSources, facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
+import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
+import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -26,6 +27,7 @@ const contentDiscoveryApp = combineReducers({
     changePassword,
     userProfileStrings,
     configuredSources,
+    hasMoreSourceResults,
     facebookSources,
     facebookCurrentSourceTab,
     currentHeaderTab
