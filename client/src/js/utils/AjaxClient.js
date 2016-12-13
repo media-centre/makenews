@@ -13,7 +13,6 @@ export default class AjaxClient {
         if (!skipTimer) {
             UserSession.instance().continueSessionIfActive();
         }
-        console.log(AppWindow.instance().get("serverUrl") + url)
         this.url = AppWindow.instance().get("serverUrl") + url;
     }
 

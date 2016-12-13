@@ -1,6 +1,7 @@
 /* eslint react/jsx-no-literals:0 */
-import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
+import DisplayFeeds from "./DisplayFeeds";
+import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
 export class ScanNews extends Component {
@@ -10,8 +11,9 @@ export class ScanNews extends Component {
 
     render() {
         return (
-            <div>
-                <h2> Scan News </h2>
+            <div className="news-board-container">
+                <span className="source-type-bar">{"Filters"}</span>
+                <DisplayFeeds />
             </div>
         );
     }

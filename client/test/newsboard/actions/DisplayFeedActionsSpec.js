@@ -4,7 +4,7 @@ import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe.only("DisplayFeedActions", () => {
+describe("DisplayFeedActions", () => {
     describe("displayFetchedFeeds", () => {
         it("should return type DISPLAY_FETCHED_FEEDS action ", () => {
             let feeds = [
@@ -16,7 +16,7 @@ describe.only("DisplayFeedActions", () => {
         });
     });
 
-    describe("displayFetchedFeedAction", () => {
+    describe("displayAllConfiguredFeeds", () => {
         it("dispatch displayFetchedFeedAction action with feeds on successful fetch", async () => {
             let feeds = [
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },

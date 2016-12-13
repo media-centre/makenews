@@ -4,11 +4,9 @@
   height: 100vh;
   margin-left: 3%;
   overflow-y: scroll;
+  display: inline-block;
 
   .feed, .feed-highlight {
-    div {
-      display: inline-block;
-    }
     min-height: 105px;
     .feed-description {
       overflow: hidden;
@@ -34,7 +32,11 @@
     background-color: #FFFFFF;
     padding: 8px 13px 13px 16px;
     .feed-title {
+      overflow: hidden;
+      display: -webkit-box;
       color: $secondary-color;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
   }
 
@@ -50,11 +52,19 @@
     line-height: 24px;
   }
 
+  .feed-media i{
+    max-width: 230px;
+    max-height: 100px;
+    font-size: 880%;
+    font-weight: 500;
+  }
+
   .feed-media img {
     width: 100%;
     height: 100%;
     max-width: 230px;
     max-height: 100px;
+    padding-top: 6%;
   }
 
   .feed-content-withEnclosure {

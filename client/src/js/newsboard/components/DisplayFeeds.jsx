@@ -2,11 +2,13 @@ import React, { Component, PropTypes } from "react";
 import Feed from "./Feed.jsx";
 import { connect } from "react-redux";
 import { displayAllConfiguredFeeds, displayFeedsByPage } from "../actions/DisplayFeedActions";
+import Toast from "../../utils/custom_templates/Toast";
+const MAX_FEEDS_PER_REQUEST = 25;
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = {"activeIndex": 0, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true};
+        this.state = { "activeIndex": 0, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true };
     }
 
     componentWillMount() {
@@ -15,7 +17,8 @@ export class DisplayFeeds extends Component {
     }
 
     paginateFeeds() {
-        document.addEventListener("scroll", () => this.getFeedsCallBack());
+        // document.addEventListener("scroll", () => this.getFeedsCallBack());
+        document.addEventListener("scroll", () => setTimeout(this.getMoreFeeds(), 4000));
     }
 
     getFeedsCallBack() {
@@ -29,34 +32,29 @@ export class DisplayFeeds extends Component {
         //    console.log("first if in getmoreFeeds");
         //    return;
         //}
-
+        console.log("get more feeds");
         if (!this.state.hasMoreFeeds) {
-            console.log("no feeds in getmoreFeeds");
-            //Toast.show(this.props.messages.noMoreFeeds);
+            Toast.show("No more feeds");
             return;
         }
 
         if (!this.state.showPaginationSpinner) {
+            console.log("in pagination spinner if");
             //    console.log("third if in getmoreFeeds");
             this.setState({ "showPaginationSpinner": true });
-            this.props.dispatch(displayFeedsByPage(this.state.lastIndex));
-                //, (result)=> {
-                //    //    console.log("dispatch in getmorefeeds");
-                //    //    result.lastIndex = result.lastIndex === 0 ? this.state.lastIndex : result.lastIndex; //eslint-disable-line no-magic-numbers
-                //    //    result.hasMoreFeeds = typeof result.hasMoreFeeds === "undefined" ? true : result.hasMoreFeeds;
-                //    //    this.setState({ "showPaginationSpinner": false, "lastIndex": result.lastIndex, "hasMoreFeeds": result.hasMoreFeeds });
-                //    //}));
-                //});
-                //
-                ////if(!this.state.hasMoreFeeds) {
-                ////    Toast.show(this.props.messages.noMoreFeeds);
-            //}));
+            this.setState({ "lastIndex": this.state.lastIndex + MAX_FEEDS_PER_REQUEST });
+            let some = this.props.dispatch(displayFeedsByPage(this.state.lastIndex));
+            console.log("some========>", some);
+            //     , () => {
+            //     console.log("no more feeds");
+            //     this.setState({ "hasMoreFeeds": false, "showPaginationSpinner": false });
+            //     Toast.show("No more feeds");
+            // });
         }
     }
 
     feedsDisplay() {
         let active = this.state.activeIndex;
-        console.log("Displaying feeds================>", this.props.feeds)
         return this.props.feeds.map((feed, index) => {
             return (<Feed feed={feed} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
         });

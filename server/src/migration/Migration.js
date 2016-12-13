@@ -1,6 +1,7 @@
 /*eslint no-unused-vars:0*/
 import URLDocument from "./admin/20161114174315_WebURLDocuments";
 import IndexDocument from "./db/20161130171020_IndexDocument";
+import FetchFeedsIndex from "./db/20161212122859_FetchFeedsIndex";
 
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
@@ -99,6 +100,8 @@ export default class Migration {
             return new URLDocument(this.dbName, this.accessToken);
         case "IndexDocument" :
             return new IndexDocument(this.dbName, this.accessToken);
+        case "FetchFeedsIndex" :
+            return new FetchFeedsIndex(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
