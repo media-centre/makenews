@@ -9,7 +9,7 @@ import { mainHeaderLocale } from "./main/reducers/MainReducer";
 import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
-import { configuredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -25,6 +25,7 @@ const contentDiscoveryApp = combineReducers({
     changePassword,
     userProfileStrings,
     configuredSources,
+    hasMoreSourceResults,
     facebookSources,
     facebookCurrentSourceTab
 });

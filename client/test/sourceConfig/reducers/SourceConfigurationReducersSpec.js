@@ -3,8 +3,12 @@ import {
     FACEBOOK_ADD_PAGE,
     FACEBOOK_ADD_GROUP
 } from "../../../src/js/config/actions/FacebookConfigureActions";
-import { configuredSources } from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
-import { GOT_CONFIGURED_SOURCES } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import { configuredSources, hasMoreSourceResults } from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
+import {
+    GOT_CONFIGURED_SOURCES,
+    HAS_MORE_SOURCE_RESULTS,
+    NO_MORE_SOURCE_RESULTS
+} from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { expect } from "chai";
 
 describe("SourceConfigurationReducers", () => {
@@ -44,6 +48,20 @@ describe("SourceConfigurationReducers", () => {
                 "pages": [], "groups": [], "twitter": [], "web": [] };
             let action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
+        });
+    });
+
+    describe("hasMoreSourceResults", () => {
+        it("should give true if no action type is given", () => {
+            expect(hasMoreSourceResults()).to.be.true; //eslint-disable-line no-unused-expressions
+        });
+
+        it(`should give true if action type is ${HAS_MORE_SOURCE_RESULTS}`, () => {
+            expect(hasMoreSourceResults(null, { "type": HAS_MORE_SOURCE_RESULTS })).to.be.true; //eslint-disable-line no-unused-expressions
+        });
+
+        it(`should give false if action type is ${NO_MORE_SOURCE_RESULTS}`, () => {
+            expect(hasMoreSourceResults(null, { "type": NO_MORE_SOURCE_RESULTS })).to.be.false; //eslint-disable-line no-unused-expressions
         });
     });
 });

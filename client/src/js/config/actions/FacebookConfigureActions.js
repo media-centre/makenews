@@ -3,6 +3,7 @@ import LoginPage from "../../login/pages/LoginPage";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
+import { hasMoreSourceResults, noMoreSourceResults } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
@@ -13,10 +14,10 @@ export const PROFILES = "Profiles";
 export const PAGES = "Pages";
 export const GROUPS = "Groups";
 
-export function facebookSourcesReceived(sources) {
+export function facebookSourcesReceived(response) {
     return {
         "type": FACEBOOK_GOT_SOURCES,
-        sources
+        "sources": response
     };
 }
 
@@ -43,7 +44,7 @@ export async function addToConfiguredSources(dispatch, sources, sourceType, even
 export function addAllSources() {
     return (dispatch, getState) => {
         let sourceType = getState().facebookCurrentSourceTab;
-        let sources = getState().facebookSources;
+        let sources = getState().facebookSources.data;
         dispatch(addSourceToConfigureListOf(sourceType, ...sources));
     };
 }
@@ -75,34 +76,43 @@ export function facebookSourceTabSwitch(currentTab) {
     };
 }
 
-function fetchSources(keyword, type, sourceType) {
+function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
     let ajaxClient = AjaxClient.instance("/facebook-sources", false);
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
     return (dispatch, getState) => {
-        ajaxClient.get({ "userName": LoginPage.getUserName(), keyword, type })
+        ajaxClient.post(headers, { "userName": LoginPage.getUserName(), keyword, type, "paging": props })
             .then((response) => {
                 dispatch(facebookSourceTabSwitch(sourceType));
-                let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
-                const cmp = (first, second) => first.id === second._id;
-                intersectionWith(cmp, response.data, configuredSources);
-                dispatch(facebookSourcesReceived(response.data));
+                if(response.data.length) {
+                    let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
+                    const cmp = (first, second) => first.id === second._id;
+                    intersectionWith(cmp, response.data, configuredSources);
+                    dispatch(facebookSourcesReceived(response));
+                    dispatch(hasMoreSourceResults());
+                } else {
+                    dispatch(noMoreSourceResults());
+                }
             });
     };
 }
 
 
-export function getSourcesOf(sourceType, keyword) {
+export function getSourcesOf(sourceType, keyword, params) {
     switch (sourceType) {
     case PROFILES: {
-        return fetchSources(keyword, "profile", sourceType);
+        return _fetchSources(keyword, "profile", sourceType, params);
     }
     case PAGES: {
-        return fetchSources(keyword, "page", sourceType);
+        return _fetchSources(keyword, "page", sourceType, params);
     }
     case GROUPS: {
-        return fetchSources(keyword, "group", sourceType);
+        return _fetchSources(keyword, "group", sourceType, params);
     }
     default: {
-        return fetchSources(keyword, "profile", sourceType);
+        return _fetchSources(keyword, "profile", sourceType, params);
     }
     }
 }
