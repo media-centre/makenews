@@ -1,4 +1,4 @@
-import { displayFetchedFeeds, displayAllConfiguredFeeds, DISPLAY_FETCHED_FEEDS } from "../../../src/js/newsboard/actions/DisplayFeedActions";
+import { displayFetchedFeeds, displayFeedsByPage, DISPLAY_FETCHED_FEEDS } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
@@ -16,7 +16,7 @@ describe("DisplayFeedActions", () => {
         });
     });
 
-    describe("displayAllConfiguredFeeds", () => {
+    describe("displayFeedsByPage", () => {
         it("dispatch displayFetchedFeedAction action with feeds on successful fetch", async () => {
             let feeds = [
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },
@@ -28,7 +28,7 @@ describe("DisplayFeedActions", () => {
             let postMock = sinon.mock(ajaxClientInstance);
             postMock.expects("post").returns(Promise.resolve(feeds));
             let store = mockStore([], [{ "type": DISPLAY_FETCHED_FEEDS, "feeds": feeds }]);
-            store.dispatch(displayAllConfiguredFeeds());
+            store.dispatch(displayFeedsByPage());
             ajaxClientMock.verify();
             postMock.verify();
         });

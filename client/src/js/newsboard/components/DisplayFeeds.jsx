@@ -1,62 +1,52 @@
 import React, { Component, PropTypes } from "react";
+import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import { connect } from "react-redux";
-import { displayAllConfiguredFeeds, displayFeedsByPage } from "../actions/DisplayFeedActions";
-import Toast from "../../utils/custom_templates/Toast";
-const MAX_FEEDS_PER_REQUEST = 25;
+import { displayFeedsByPage } from "../actions/DisplayFeedActions";
+// const MAX_FEEDS_PER_REQUEST = 25;
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "activeIndex": 0, "lastIndex": 0, "showPaginationSpinner": false, "hasMoreFeeds": true };
+        this.state = { "activeIndex": 0, "lastIndex": 0, "hasMoreFeeds": true };
+        this.getMoreFeeds = this.getMoreFeeds.bind(this);
     }
 
-    componentWillMount() {
-        this.props.dispatch(displayAllConfiguredFeeds());
-        this.paginateFeeds();
+    componentDidMount() {
+        window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
+        ReactDOM.findDOMNode(this).addEventListener("scroll", this.getFeedsCallBack.bind(this));
+        this.getMoreFeeds();
     }
 
-    paginateFeeds() {
-        // document.addEventListener("scroll", () => this.getFeedsCallBack());
-        document.addEventListener("scroll", () => setTimeout(this.getMoreFeeds(), 4000));
+    componentWillUnmount() {
+        ReactDOM.findDOMNode(this).removeEventListener("scroll", this.getFeedsCallBack);
     }
 
     getFeedsCallBack() {
-        if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
-            this.getMoreFeeds();
+        if (!this.timer) {
+            const scrollTimeInterval = 250;
+            this.timer = setTimeout(() => {
+                this.timer = null;
+                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
+                    this.getMoreFeeds();
+                }
+            }, scrollTimeInterval);
         }
     }
 
     getMoreFeeds() {
-        //if(!this._reactInternalInstance) {
-        //    console.log("first if in getmoreFeeds");
-        //    return;
-        //}
-        console.log("get more feeds");
-        if (!this.state.hasMoreFeeds) {
-            Toast.show("No more feeds");
-            return;
-        }
-
-        if (!this.state.showPaginationSpinner) {
-            console.log("in pagination spinner if");
-            //    console.log("third if in getmoreFeeds");
-            this.setState({ "showPaginationSpinner": true });
-            this.setState({ "lastIndex": this.state.lastIndex + MAX_FEEDS_PER_REQUEST });
-            let some = this.props.dispatch(displayFeedsByPage(this.state.lastIndex));
-            console.log("some========>", some);
-            //     , () => {
-            //     console.log("no more feeds");
-            //     this.setState({ "hasMoreFeeds": false, "showPaginationSpinner": false });
-            //     Toast.show("No more feeds");
-            // });
+        if (this.state.hasMoreFeeds) {
+            this.props.dispatch(displayFeedsByPage(this.state.lastIndex, (result) => {
+                let skip = result.docsLenght === 0 ? this.state.lastIndex : (this.state.lastIndex + result.docsLenght); //eslint-disable-line no-magic-numbers
+                this.setState({ "lastIndex": skip, "hasMoreFeeds": result.hasMoreFeeds });
+            }));
         }
     }
 
     feedsDisplay() {
         let active = this.state.activeIndex;
         return this.props.feeds.map((feed, index) => {
-            return (<Feed feed={feed} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
+            return (<Feed feed={feed} key={index} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
         });
     }
 

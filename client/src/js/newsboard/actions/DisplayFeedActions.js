@@ -2,30 +2,16 @@ import AjaxClient from "../../../js/utils/AjaxClient";
 
 export const DISPLAY_FETCHED_FEEDS = "DISPLAY_FETCHED_FEEDS";
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
+const MAX_FEEDS_PAGE = 7;
+const FEEDS_LENGTH_ZERO = 0;
 
-
-export function displayAllConfiguredFeeds() {
-    return async dispatch => {
-        try {
-            let ajax = AjaxClient.instance("/fetch-all-feeds", true);
-            const headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            };
-            let feeds = await ajax.post(headers, { "lastIndex": 0 });
-            dispatch(displayFetchedFeeds(feeds.docs));
-        } catch (error) {
-            dispatch(displayFetchedFeeds([]));
-        }
-    };
-}
 
 export function displayFetchedFeeds(feeds) {
     return { "type": DISPLAY_FETCHED_FEEDS, feeds };
 }
 
 
-export function displayFeedsByPage(pageIndex) {
+export function displayFeedsByPage(pageIndex, callback = () => {}) {
     return async dispatch => {
         try {
             let ajax = AjaxClient.instance("/fetch-all-feeds", true);
@@ -33,27 +19,24 @@ export function displayFeedsByPage(pageIndex) {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             };
-
+            let result = {
+                "docsLenght": 0,
+                "hasMoreFeeds": true
+            };
             let feeds = await ajax.post(headers, { "lastIndex": pageIndex });
-            if(feeds.docs.length > 0) {
+            if(feeds.docs.length > FEEDS_LENGTH_ZERO) {
                 dispatch(paginatedFeeds(feeds.docs));
+                result.docsLenght = feeds.docs.length + 1;   //eslint-disable-line no-magic-numbers
+                if (feeds.docs.length < MAX_FEEDS_PAGE) {
+                    result.hasMoreFeeds = false;
+                }
+                callback(result);  //eslint-disable-line callback-return
             } else {
-                console.log("call back======>", callback);
-                return "no feeds";
+                callback(result);  //eslint-disable-line callback-return
             }
         } catch (error) {
             dispatch(paginatedFeeds([]));
         }
-
-        //let filterFeedsHandler = new FilterFeedsHandler();
-        //if(pageIndex === 0) { // eslint-disable-line no-magic-numbers
-        //    filterFeedsHandler.getFilterAndSourceHashMap().then(latestSourceMapAndFilter => {
-        //        let filterObj = dispatch(storeFilterSourceMap(latestSourceMapAndFilter.surfFilter, latestSourceMapAndFilter.sourceHashMap, latestSourceMapAndFilter.sourceIds));
-        //        fetchFeeds(pageIndex, filterObj, callback, dispatch);
-        //    });
-        //} else {
-        //    fetchFeeds(pageIndex, dispatch(storeFilterSourceMap()), callback, dispatch);
-        //}
     };
 }
 
