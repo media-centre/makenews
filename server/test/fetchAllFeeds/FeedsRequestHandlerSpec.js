@@ -38,7 +38,7 @@ describe("FeedsRequestHandler", () => {
                     "$gt": null
                 }
             },
-            "fields": ["title", "description", "sourceType", "tags", "pubDate", "enclosures", "images"],
+            "fields": ["title", "description", "sourceType", "tags", "pubDate", "videos", "images"],
             "skip": 0,
             "sort": [{ "pubDate": "desc" }]
         };

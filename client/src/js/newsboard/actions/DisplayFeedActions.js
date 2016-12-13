@@ -35,7 +35,12 @@ export function displayFeedsByPage(pageIndex) {
             };
 
             let feeds = await ajax.post(headers, { "lastIndex": pageIndex });
-            dispatch(paginatedFeeds(feeds.docs));
+            if(feeds.docs.length > 0) {
+                dispatch(paginatedFeeds(feeds.docs));
+            } else {
+                console.log("call back======>", callback);
+                return "no feeds";
+            }
         } catch (error) {
             dispatch(paginatedFeeds([]));
         }

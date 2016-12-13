@@ -5,19 +5,16 @@ import getHtmlContent from "../../utils/HtmContent";
 export default class Feed extends Component {
     getMedia() {
         let media = null;
-        if (this.props.feed.enclosures[0]) {
-            console.log("Media--------------->", this.props.feed);
-            if(this.props.feed.images[0].type === "video" && this.props.feed.images[0].url === undefined) {
-                media = <i className="fa fa-youtube-play"/>;
-            } else {
-                media = <img src={this.props.feed.images[0].url}/>;
-            }
+        if(this.props.feed.videos[0]) {
+            media = <i className="fa fa-youtube-play" />;
+        } else if (this.props.feed.images[0]) {
+            media = <img src={this.props.feed.images[0].url}/>;
         }
         return media;
     }
     render() {
         return (<div className={this.props.active ? "feed-highlight" : "feed"} onClick={this.props.onToggle}>
-            <div className={this.props.feed.enclosures[0] ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
+            <div className={this.props.feed.images[0] ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
                 <div className="feed-title">{this.props.feed.title}</div>
                 <div className="feed-description">{getHtmlContent(this.props.feed.description)}</div>
 

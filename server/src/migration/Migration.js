@@ -1,7 +1,7 @@
 /*eslint no-unused-vars:0*/
 import RssURLDocuments from "./admin/20161114174315_RssURLDocuments";
 import RssURLSearchIndex from "./admin/20161130171020_RssURLSearchIndex";
-
+import FetchFeedsIndex from "./db/20161212122859_FetchFeedsIndex";
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
 import CouchSession from "../CouchSession";
@@ -99,6 +99,8 @@ export default class Migration {
             return new RssURLDocuments(this.dbName, this.accessToken);
         case "RssURLSearchIndex" :
             return new RssURLSearchIndex(this.dbName, this.accessToken);
+        case "FetchFeedsIndex" :
+            return new FetchFeedsIndex(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
