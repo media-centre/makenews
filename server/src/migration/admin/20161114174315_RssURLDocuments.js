@@ -18,7 +18,7 @@ export default class URLDocument {
 
     up() {
         return new Promise((resolve, reject) => {
-            Migration.logger(this.dbName).info("URLDocument::up - started");
+            Migration.logger(this.dbName).info("RssURLDocuments::up - started");
             let categoryDocument = this.getDocument();
             request.post({
                 "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_bulk_docs",
@@ -33,14 +33,14 @@ export default class URLDocument {
                 (error, response) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (new HttpResponseHandler(response.statusCode).success()) {
-                            Migration.logger(this.dbName).debug("URLDocument::up - response %j", response.body);
+                            Migration.logger(this.dbName).debug("RssURLDocuments::up - response %j", response.body);
                             resolve(response.body);
                         } else {
-                            Migration.logger(this.dbName).error("URLDocument::up - error %j", response.body);
+                            Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", response.body);
                             reject("unexpected response from the db");
                         }
                     } else {
-                        Migration.logger(this.dbName).error("URLDocument::up - error %j", error);
+                        Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", error);
                         reject(error);
                     }
                 });

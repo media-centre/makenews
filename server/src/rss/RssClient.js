@@ -190,6 +190,12 @@ export default class RssClient {
                 "selector": {
                     "name": {
                         "$regex": key
+                    },
+                    "docType": {
+                        "$eq": "source"
+                    },
+                    "sourceType": {
+                        "$eq": "web"
                     }
                 },
                 "limit": LIMIT_VALUE,

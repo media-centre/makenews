@@ -29,7 +29,7 @@ routers(app);
 const DEFAULT_PORT = 5000;
 const port = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get("serverPort") || DEFAULT_PORT;
 
-const clientPath = app.get("env") === "development" ? "/dist/" : "/";
+const clientPath = app.get("env") === "debug" ? "/dist/" : "/";
 app.use(express.static(path.join(__dirname, `${clientPath}client`)));
 routeErrorHandler(app);
 let server = app.listen(port);

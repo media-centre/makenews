@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0*/
 
-import URLDocuments from "../../src/migration/admin/20161114174315_WebURLDocuments";
-import IndexDocument from "../../src/migration/db/20161130171020_IndexDocument";
+import RssURLDocuments from "../../src/migration/admin/20161114174315_RssURLDocuments";
+import RssURLSearchIndex from "../../src/migration/admin/20161130171020_RssURLSearchIndex";
 import Migration from "../../src/migration/Migration";
 import MigrationFile from "../../src/migration/MigrationFile";
 import SchemaInfo from "../../src/migration/SchemaInfo";
@@ -33,16 +33,16 @@ describe("Migration", () => {
 
         it("should give the function object to create the instance of url document", () => {
             let migrationInstance = new Migration(dbName, accessToken);
-            let className = "URLDocument";
+            let className = "RssURLDocuments";
             let object = migrationInstance.getObject(className);
-            assert.isTrue(object instanceof URLDocuments);
+            assert.isTrue(object instanceof RssURLDocuments);
         });
 
         it("should give the function object to create the instance of Index document", () => {
             let migrationInstance = new Migration(dbName, accessToken);
-            let className = "IndexDocument";
+            let className = "RssURLSearchIndex";
             let object = migrationInstance.getObject(className);
-            assert.isTrue(object instanceof IndexDocument);
+            assert.isTrue(object instanceof RssURLSearchIndex);
         });
 
         it("should throw an error if the class name does not found in case", ()=> {
@@ -88,12 +88,12 @@ describe("Migration", () => {
         });
 
         it("should migrate db and save version", (done) => {
-            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
+            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
 
-            let indexDocument = new IndexDocument(dbName, accessToken);
+            let indexDocument = new RssURLSearchIndex(dbName, accessToken);
             getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
             let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
@@ -114,12 +114,12 @@ describe("Migration", () => {
         });
 
         it("should migrate db and save version incase there is no schema version in db yet", (done) => {
-            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
+            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(null));
             getMigratableFileClassNamesMock.withArgs("19700101000000").returns(migratableFileDetails);
 
-            let indexDocument = new IndexDocument(dbName, accessToken);
+            let indexDocument = new RssURLSearchIndex(dbName, accessToken);
             getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
             let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
@@ -159,7 +159,7 @@ describe("Migration", () => {
 
         it("should stop the migration after the failure", (done) => {
 
-            let migratableFileDetails = [["20161130171021", "IndexDocument"]];
+            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);

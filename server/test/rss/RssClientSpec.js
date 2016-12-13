@@ -575,7 +575,7 @@ describe("RssClient", () => {
         it("should return the default URL Documents", async() => {
             let key = "the";
             let offSet = 2;
-            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 100 };
+            let body = { "selector": { "name": { "$regex": key }, "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } }, "limit": 50, "skip": 100 };
             let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             let rssClient = RssClient.instance();
             searchUrlMock.withArgs(body).returns(Promise.resolve({
@@ -604,7 +604,7 @@ describe("RssClient", () => {
             let key = "asldkfjkldsafj";
             let ZERO = 0;
             let offset = 2;
-            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 100 };
+            let body = { "selector": { "name": { "$regex": key }, "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } }, "limit": 50, "skip": 100 };
             let rssClient = RssClient.instance();
             let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             searchUrlMock.withArgs(body).returns(Promise.resolve({ "docs": [] }));
@@ -616,7 +616,7 @@ describe("RssClient", () => {
         it("should return all documents when they enter for empty string", async() => {
             let key = "";
             let offset = 1;
-            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 50 };
+            let body = { "selector": { "name": { "$regex": key }, "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } }, "limit": 50, "skip": 50 };
             let rssClient = RssClient.instance();
             let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             searchUrlMock.withArgs(body).returns(Promise.resolve({
@@ -644,7 +644,7 @@ describe("RssClient", () => {
         it("should reject with an error when couchdb throws an error", async() => {
             let key = "error";
             let offset = 1;
-            let body = { "selector": { "name": { "$regex": key } }, "limit": 50, "skip": 50 };
+            let body = { "selector": { "name": { "$regex": key }, "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } }, "limit": 50, "skip": 50 };
             let rssClient = RssClient.instance();
             let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             searchUrlMock.withArgs(body).returns(Promise.reject("Unexpected Repsonse from DB"));

@@ -1,5 +1,5 @@
 /* eslint max-nested-callbacks: [2, 7]*/
-import URLDocument from "../../../src/migration/admin/20161114174315_WebURLDocuments";
+import RssURLDocuments from "../../../src/migration/admin/20161114174315_RssURLDocuments";
 import Migration from "../../../src/migration/Migration";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../../src/config/ApplicationConfig";
@@ -7,11 +7,11 @@ import { assert } from "chai";
 import sinon from "sinon";
 import nock from "nock";
 
-describe("URLDocument", ()=> {
+describe("RssURLDocuments", ()=> {
     let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
     let sandbox = null, migrationLoggerStub = null, applicationConfig = null;
 
-    before("URLDocument", () => {
+    before("RssURLDocuments", () => {
         sandbox = sinon.sandbox.create();
         migrationLoggerStub = sandbox.stub(Migration, "logger");
         migrationLoggerStub.withArgs(dbName).returns({
@@ -28,7 +28,7 @@ describe("URLDocument", ()=> {
         sandbox.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
 
     });
-    after("URLDocument", () => {
+    after("RssURLDocuments", () => {
         sandbox.restore();
     });
 
@@ -77,7 +77,7 @@ describe("URLDocument", ()=> {
                 .post("/" + dbName + "/_bulk_docs", defaultDocument)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
             let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
@@ -106,7 +106,7 @@ describe("URLDocument", ()=> {
                 .post("/" + dbName + "/_bulk_docs", defaultDocument)
                 .replyWithError(errorObj);
 
-            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
             let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
@@ -121,7 +121,7 @@ describe("URLDocument", ()=> {
     });
     describe("getDocument", () => {
         it("should fetch default URL document json and return", () => {
-            let defaultDocumentInstance = new URLDocument(dbName, accessToken);
+            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
             let defaultURLJson = defaultDocumentInstance.getDocument();
             const zeroIndex = 0;
             assert.deepEqual("web", defaultURLJson.docs[zeroIndex].sourceType);

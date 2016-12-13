@@ -9,16 +9,16 @@ export default class IndexDocument {
 
     async up() {
         try {
-            Migration.logger(this.dbName).info("IndexDocument::up - started");
+            Migration.logger(this.dbName).info("RssURLSearchIndex::up - started");
             let nameIdIndex = {
                 "index": {
-                    "fields": ["name", "id"]
+                    "fields": ["sourceType", "docType", "name"]
                 },
-                "name": "name-id"
+                "name": "rssUrlSearch"
             };
             return await CouchClient.instance(this.dbName, this.accessToken).createIndex(nameIdIndex);
         } catch (error) {
-            Migration.logger(this.dbName).error("IndexDocument::up - error %j", error);
+            Migration.logger(this.dbName).error("RssURLSearchIndex::up - error %j", error);
             throw error;
         }
     }
