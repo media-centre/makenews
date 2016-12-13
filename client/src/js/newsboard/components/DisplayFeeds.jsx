@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { displayFeedsByPage } from "../actions/DisplayFeedActions";
 // const MAX_FEEDS_PER_REQUEST = 25;
 
+
 export class DisplayFeeds extends Component {
     constructor() {
         super();
@@ -31,6 +32,7 @@ export class DisplayFeeds extends Component {
                     this.getMoreFeeds();
                 }
             }, scrollTimeInterval);
+
         }
     }
 
@@ -47,6 +49,7 @@ export class DisplayFeeds extends Component {
         let active = this.state.activeIndex;
         return this.props.feeds.map((feed, index) => {
             return (<Feed feed={feed} key={index} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
+
         });
     }
 

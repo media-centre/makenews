@@ -33,6 +33,7 @@ const contentDiscoveryApp = combineReducers({
     facebookCurrentSourceTab,
     currentHeaderTab,
     fetchedFeeds
+
 });
 
 export default contentDiscoveryApp;

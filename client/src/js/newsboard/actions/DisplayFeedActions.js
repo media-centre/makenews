@@ -6,6 +6,7 @@ const MAX_FEEDS_PAGE = 7;
 const FEEDS_LENGTH_ZERO = 0;
 
 
+
 export function displayFetchedFeeds(feeds) {
     return { "type": DISPLAY_FETCHED_FEEDS, feeds };
 }

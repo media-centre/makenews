@@ -3,6 +3,7 @@ import rssReaderRoutes from "./RssRoutes";
 import facebookReaderRoutes from "./FacebookRoutes";
 import twitterReaderRoutes from "./TwitterRoutes";
 import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
+import fetchAllConfiguredFeedsRoute from "./FetchFeedsRoutes";
 import configurationRoutes from "./ConfigurationRoutes";
 import fetchAllConfiguredFeedsRoute from "./FetchFeedsRoutes";
 
