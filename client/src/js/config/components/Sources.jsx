@@ -31,10 +31,13 @@ export class Sources extends Component {
     render() {
         return (
             <div className="source-results">
-                { R.addIndex(R.map)(
-                    (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>,
-                    this.props.sources.data
-                ) }
+                { this.props.sources.data.length
+                    ? R.addIndex(R.map)(
+                        (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>,
+                        this.props.sources.data
+                    )
+                    : (<p>{"Enter a keyword in the input box to get some sources"}</p>)
+                }
             </div>
         );
     }

@@ -53,7 +53,7 @@ function showLoginPage(nextState, replaceState) {
     let userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
         userSession.setLastAccessedTime();
-        replaceState("/newsBoard");
+        replaceState("/configure/facebook");
     }
 }
 
