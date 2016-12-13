@@ -507,14 +507,15 @@ describe("RssClient", () => {
     });
     
     describe("addURLToUser", () => {
-        let couchClient = null, accessToken = null, couchClientMock = null;
+        let couchClient = null, accessToken = "access token", couchClientMock = null;
 
         beforeEach("addURLToUser", () => {
             accessToken = "test_token";
             sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient();
-            couchClientMock = sandbox.mock(CouchClient).expects("createInstance").withArgs(accessToken).returns(couchClient);
-            sandbox.stub(couchClient, "getUserDbName").returns("test");
+            couchClient = new CouchClient(null, accessToken);
+            sandbox.mock(CouchClient).expects("createInstance").withArgs(accessToken).returns(Promise.resolve(couchClient));
+            //sandbox.stub(couchClient, "getUserDbName").returns("test");
+
         });
 
         afterEach("addURLToUser", () => {
@@ -522,18 +523,23 @@ describe("RssClient", () => {
         });
 
         it("should save the document", async () => {
-            url = "http://www.test.com/rss";
-            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
-                "ok": "true",
-                "id": "test_name",
-                "rev": "test_revision"
-            }));
-            let response = await RssClient.instance().addURLToUser(document, accessToken);
-            assert.strictEqual("URL added to Database", response);
-            couchClientMock.verify();
-            saveDocMock.verify();
+            let saveDocMock = null;
+            try {
+                url = "http://www.test.com/rss";
+                let document = {"name": "test_name", "url": url, "docType": "source", "sourceType": "web"};
+                saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+                saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
+                    "ok": "true",
+                    "id": "test_name",
+                    "rev": "test_revision"
+                }));
+                let response = await RssClient.instance().addURLToUser(document, accessToken);
+                assert.strictEqual("URL added to Database", response);
+            } catch(err) {
+                assert.fail(err);
+            } finally {
+                saveDocMock.verify();
+            }
         });
 
         it("should return the error response when server throws error while saving the document", async () => {
@@ -546,9 +552,9 @@ describe("RssClient", () => {
                 assert.fail("expected error");
             } catch (err) {
                 assert.strictEqual("unexpected response from the db", err);
+            } finally {
+                saveDocMock.verify();
             }
-            couchClientMock.verify();
-            saveDocMock.verify();
         });
     });
     describe("Search URLS", () => {
