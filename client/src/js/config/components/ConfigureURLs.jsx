@@ -12,6 +12,11 @@ export class ConfigureURLs extends Component {
     render() {
         return (
             <div>
+                <nav className="sources-nav">
+                    <div className="sources-nav__item">Web</div>
+                    <div className="sources-nav__item">Facebook</div>
+                    <div className="sources-nav__item">Twitter</div>
+                </nav>
                 { this.props.children }
             </div>
         );

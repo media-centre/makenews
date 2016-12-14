@@ -2,11 +2,9 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_ADD_GROUP,
-    FACEBOOK_CHANGE_CURRENT_TAB,
-    PAGES
+    FACEBOOK_ADD_GROUP
 } from "../../src/js/config/actions/FacebookConfigureActions";
-import { facebookSources, facebookCurrentSourceTab } from "../../src/js/config/reducers/FacebookReducer";
+import { facebookSources } from "../../src/js/config/reducers/FacebookReducer";
 import { CLEAR_SOURCES } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { expect } from "chai";
 
@@ -65,17 +63,6 @@ describe("Facebook Reducer", () => {
             let sources = facebookSources(state, action);
             expect(sources.data).to.deep.equal([]);
             expect(sources.nextPage).to.deep.equal({});
-        });
-    });
-
-    describe("Facebook current Tab", () => {
-        it("should return Profiles as current tab by default", () => {
-            expect(facebookCurrentSourceTab()).to.equal("Profiles");
-        });
-
-        it(`should return given currentTab when ${FACEBOOK_CHANGE_CURRENT_TAB} is dispatched`, () => {
-            let action = { "type": FACEBOOK_CHANGE_CURRENT_TAB, "currentTab": PAGES };
-            expect(facebookCurrentSourceTab("", action)).to.equal(PAGES);
         });
     });
 });

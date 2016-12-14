@@ -1,9 +1,9 @@
 import { FacebookTabs } from "../../../src/js/config/components/FacebookTabs";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
-import * as FBActions from "./../../../src/js/config/actions/FacebookConfigureActions";
 import { expect } from "chai";
 import sinon from "sinon";
+import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("Facebook Tabs", () => {
     let nav = null, store = null;
@@ -38,7 +38,7 @@ describe("Facebook Tabs", () => {
 
     it("should dispatch facebookSourceTabSwitch on clicking Pages tab", () => {
         let sandbox = sinon.sandbox.create();
-        let fbSourceTabSwitch = sandbox.mock(FBActions).expects("facebookSourceTabSwitch").withArgs("Pages");
+        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("Pages");
         nav = TestUtils.renderIntoDocument(<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>);
         let [, secondTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
         TestUtils.Simulate.click(secondTab);

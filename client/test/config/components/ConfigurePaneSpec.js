@@ -22,7 +22,7 @@ describe("Configure Pane", () => {
             store = {
                 "getState": ()=>{
                     return { "state": {
-                        "facebookCurrentSourceTab": []
+                        "currentSourceTab": []
                     }
                     };
                 }
@@ -72,7 +72,7 @@ describe("Configure Pane", () => {
         beforeEach("search input box", () => {
             currentTab = "Profiles";
             store = createStore(() => ({
-                "facebookCurrentSourceTab": currentTab,
+                "currentSourceTab": currentTab,
                 "facebookSources": { "data": [] },
                 "hasMoreSourceResults": false
             }), applyMiddleware(thunkMiddleware));

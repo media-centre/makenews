@@ -3,13 +3,12 @@ import LoginPage from "../../login/pages/LoginPage";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
-import { hasMoreSourceResults, noMoreSourceResults } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { hasMoreSourceResults, noMoreSourceResults, switchSourceTab } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
 export const FACEBOOK_ADD_GROUP = "FACEBOOK_ADD_GROUP";
-export const FACEBOOK_CHANGE_CURRENT_TAB = "FACEBOOK_CHANGE_CURRENT_TAB";
 export const PROFILES = "Profiles";
 export const PAGES = "Pages";
 export const GROUPS = "Groups";
@@ -69,13 +68,6 @@ export function addSourceToConfigureListOf(sourceType, ...sources) {
     }
 }
 
-export function facebookSourceTabSwitch(currentTab) {
-    return {
-        "type": FACEBOOK_CHANGE_CURRENT_TAB,
-        currentTab
-    };
-}
-
 function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
     let ajaxClient = AjaxClient.instance("/facebook-sources", false);
     const headers = {
@@ -85,7 +77,7 @@ function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
     return (dispatch, getState) => {
         ajaxClient.post(headers, { "userName": LoginPage.getUserName(), keyword, type, "paging": props })
             .then((response) => {
-                dispatch(facebookSourceTabSwitch(sourceType));
+                dispatch(switchSourceTab(sourceType));
                 if(response.data.length) {
                     let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                     const cmp = (first, second) => first.id === second._id;
@@ -98,7 +90,6 @@ function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
             });
     };
 }
-
 
 export function getSourcesOf(sourceType, keyword, params) {
     switch (sourceType) {
