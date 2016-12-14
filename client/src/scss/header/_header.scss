@@ -52,7 +52,6 @@
 .header-tabs--configure {
   float: left;
   height: 64px;
-  margin-right: 30px;
   width: 100px;
   &__image {
     float: left;
@@ -111,9 +110,10 @@
 .user-profile--dropdown {
   position: absolute;
   top: 64px;
-  right: 0px;
+  right: 0;
   width: 210px;
   background: $primary-color;
+  z-index: 1;
 
   .user-profile--change-password, .user-profile--help, .user-profile--logout {
     vertical-align: top;

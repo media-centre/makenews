@@ -12,14 +12,15 @@ export class ConfigureURLs extends Component {
     render() {
         return (
             <div>
-                <h1>Configure URL</h1>
+                { this.props.children }
             </div>
         );
     }
 }
 
 ConfigureURLs.propTypes = {
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "children": PropTypes.node.isRequired
 };
 
 function select(store) {
