@@ -1,6 +1,5 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
 
-export const DISPLAY_FETCHED_FEEDS = "DISPLAY_FETCHED_FEEDS";
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 const FEEDS_LENGTH_ZERO = 0;
 
