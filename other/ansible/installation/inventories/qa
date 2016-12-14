@@ -1,5 +1,5 @@
 [web]
-46.101.145.29
+188.166.166.121
 [web:vars]
-nginx_domain=46.101.145.29
+nginx_domain=188.166.166.121
 project_environment=ci_qa
