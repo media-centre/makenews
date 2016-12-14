@@ -507,7 +507,7 @@ describe("RssClient", () => {
     });
     
     describe("addURLToUser", () => {
-        let couchClient = null, accessToken = "access token", couchClientMock = null;
+        let couchClient = null, accessToken = "access token";
 
         beforeEach("addURLToUser", () => {
             accessToken = "test_token";
@@ -526,7 +526,7 @@ describe("RssClient", () => {
             let saveDocMock = null;
             try {
                 url = "http://www.test.com/rss";
-                let document = {"name": "test_name", "url": url, "docType": "source", "sourceType": "web"};
+                let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
                 saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
                 saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
                     "ok": "true",
