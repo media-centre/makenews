@@ -212,7 +212,7 @@ export default class RssClient {
 
     async addURLToUser(document, accessToken) {
         try {
-            let couchClient = CouchClient.createInstance(accessToken);
+            let couchClient = await CouchClient.createInstance(accessToken);
             await couchClient.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to user database.");
         } catch (error) {

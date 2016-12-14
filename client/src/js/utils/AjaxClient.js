@@ -1,8 +1,8 @@
 /* eslint react/jsx-wrap-multilines:0*/
-import StringUtil from "../../../../common/src/util/StringUtil";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import UserSession from "../user/UserSession";
 import AppWindow from "../utils/AppWindow";
+import fetch from "isomorphic-fetch";
 
 export default class AjaxClient {
     static instance(url, skipTimer) {
@@ -16,11 +16,16 @@ export default class AjaxClient {
         this.url = AppWindow.instance().get("serverUrl") + url;
     }
 
-    post(headers, data) {
-        return this.request("POST", headers, data);
+    async post(headers, data) {
+        return await this.request({
+            "method": "POST",
+            "credentials": "same-origin",
+            "headers": headers,
+            "body": JSON.stringify(data)
+        });
     }
 
-    get(queryParams = {}) {
+    async get(queryParams = {}) {
         let keys = Object.keys(queryParams);
         if (keys.length !== 0) { //eslint-disable-line no-magic-numbers
             this.url = this.url + "?";
@@ -29,51 +34,28 @@ export default class AjaxClient {
             });
             this.url = this.url + keyValues.join("&");
         }
-        return this.request("GET");
-    }
-
-    request(method, headers, data = {}) {
-        let xhttp = new XMLHttpRequest();
-        xhttp.open(method, this.url, true);
-        this.setRequestHeaders(xhttp, headers);
-        xhttp.send(JSON.stringify(data));
-        return this.responsePromise(xhttp);
-    }
-
-    setRequestHeaders(xhttp, userHeaders) {
-        for (let key in userHeaders) {
-            if (StringUtil.validNonEmptyString(key) && StringUtil.validString(userHeaders[key])) {
-                xhttp.setRequestHeader(key.trim(), userHeaders[key].trim());
-            }
-        }
-    }
-
-    responsePromise(xhttp) {
-        return new Promise((resolve, reject) => {
-            let response = this.responseCodes();
-            xhttp.onreadystatechange = function(event) {
-                if (xhttp.readyState === response.REQUEST_FINISHED) {
-                    if (xhttp.status === response.OK) {
-                        let jsonResponse = JSON.parse(event.target.response);
-                        resolve(jsonResponse);
-                    } else if (xhttp.status === response.UNAUTHORIZED) {
-                        let jsonResponse = event.target.response;
-                        try {
-                            jsonResponse = JSON.parse(event.target.response);
-                            if (jsonResponse.message === "session expired") { //eslint-disable-line max-depth
-                                UserSession.instance().autoLogout();
-                            }
-                        } catch (error) {
-                            reject(jsonResponse);
-                        }
-                        reject(jsonResponse);
-                    } else if (xhttp.status === response.BAD_GATEWAY) {
-                        reject("connection refused");
-                    }
-                    reject(event.target.response);
-                }
-            };
+        return await this.request({
+            "method": "GET",
+            "credentials": "same-origin"
         });
+    }
+
+    async request(params) {  //eslint-disable-line consistent-return
+        let response = await fetch(this.url, params);
+
+        let responseJson = await response.json();
+
+        if (response.status === this.responseCodes().OK) {
+            return responseJson;
+        } else if(response.status === this.responseCodes().UNAUTHORIZED) {
+            if (responseJson.message === "session expired") { //eslint-disable-line max-depth
+                UserSession.instance().autoLogout();
+            }
+            throw responseJson;
+        } else if (response.status === this.responseCodes().BAD_GATEWAY) {
+            throw "connection refused"; //eslint-disable-line no-throw-literal
+        }
+        throw responseJson;
     }
 
     responseCodes() {

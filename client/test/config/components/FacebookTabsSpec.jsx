@@ -1,6 +1,7 @@
 import { FacebookTabs } from "../../../src/js/config/components/FacebookTabs";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
+import * as FBActions from "./../../../src/js/config/actions/FacebookConfigureActions";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -35,12 +36,13 @@ describe("Facebook Tabs", () => {
         expect(firstTab.props.className).to.have.string("active");
     });
 
-    /* TODO: should mock the getSourcesOf method which is getting called inside dispatch*/ //eslint-disable-line
-    xit("should dispacth on clicking it", () => {
-        let dispatch = sinon.spy();
-        nav = TestUtils.renderIntoDocument(<FacebookTabs dispatch={dispatch} store currentTab="Profiles"/>);
+    it("should dispatch facebookSourceTabSwitch on clicking Pages tab", () => {
+        let sandbox = sinon.sandbox.create();
+        let fbSourceTabSwitch = sandbox.mock(FBActions).expects("facebookSourceTabSwitch").withArgs("Pages");
+        nav = TestUtils.renderIntoDocument(<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>);
         let [, secondTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
         TestUtils.Simulate.click(secondTab);
-        expect(dispatch.calledOnce).to.be.ok; //eslint-disable-line no-unused-expressions
+        fbSourceTabSwitch.verify();
+        sandbox.restore();
     });
 });

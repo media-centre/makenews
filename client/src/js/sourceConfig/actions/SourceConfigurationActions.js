@@ -34,12 +34,12 @@ export const clearSources = () => {
 export function getConfiguredSources() {
     let ajaxClient = AjaxClient.instance("/configuredSources", false);
     return async dispatch => {
-        let sources = [];
+        let sources = null;
         try {
             sources = await ajaxClient.get();
-        } catch (err) {
-            sources = [];
+            dispatch(configuredSourcesReceived(sources));
+        } catch(err) { //eslint-disable-line no-empty
+            /* TODO: we can use this to stop the spinner or give a warning once request failed */ //eslint-disable-line
         }
-        dispatch(configuredSourcesReceived(sources));
     };
 }
