@@ -27,7 +27,9 @@ export default class SourceConfigRequestHandler {
         };
 
         for (let source of docs) {
-            result[configSourceTypes[source.sourceType]].push(source);
+            if(source.sourceType) {
+                result[configSourceTypes[source.sourceType]].push(source);
+            }
         }
         return result;
     }

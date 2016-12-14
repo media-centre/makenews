@@ -5,7 +5,7 @@ import * as FBActions from "./../../../src/js/config/actions/FacebookConfigureAc
 import { expect } from "chai";
 import sinon from "sinon";
 
-describe.only("Facebook Tabs", () => {
+describe("Facebook Tabs", () => {
     let nav = null, store = null;
 
     beforeEach("Facebook Tabs", () => {
@@ -43,5 +43,6 @@ describe.only("Facebook Tabs", () => {
         let [, secondTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
         TestUtils.Simulate.click(secondTab);
         fbSourceTabSwitch.verify();
+        sandbox.restore();
     });
 });

@@ -48,18 +48,6 @@ describe("SourceConfigurationActions", () => {
             let store = mockStore({}, [{ "type": GOT_CONFIGURED_SOURCES, "sources": sources }], done);
             store.dispatch(getConfiguredSources());
         });
-
-        it(`should dispatch ${GOT_CONFIGURED_SOURCES} with empty array if there is an error from server`, (done) => {
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-            let ajaxClient = AjaxClient.instance("/configuredSources", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/configuredSources", false).returns(ajaxClient);
-            sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.reject("error"));
-
-            let store = mockStore({}, [{ "type": GOT_CONFIGURED_SOURCES, "sources": [] }], done);
-            store.dispatch(getConfiguredSources());
-        });
     });
 
     describe("source results", () => {
