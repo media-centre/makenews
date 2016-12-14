@@ -1,7 +1,7 @@
 import { fetchedFeeds } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { expect } from "chai";
 
-describe.only("DisplayFeedReducer", () => {
+describe("DisplayFeedReducer", () => {
     describe("Fetched Feeds", () => {
         it("should return an empty list when fetched feeds called without any action type", () => {
             expect([]).to.deep.equal(fetchedFeeds());

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import { connect } from "react-redux";
-import { displayFeedsByPage } from "../actions/DisplayFeedActions";
+import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 // const MAX_FEEDS_PER_REQUEST = 25;
 
 
@@ -38,7 +38,7 @@ export class DisplayFeeds extends Component {
 
     getMoreFeeds() {
         if (this.state.hasMoreFeeds) {
-            this.props.dispatch(displayFeedsByPage(this.state.lastIndex, (result) => {
+            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, (result) => {
                 let skip = result.docsLenght === 0 ? this.state.lastIndex : (this.state.lastIndex + result.docsLenght); //eslint-disable-line no-magic-numbers
                 this.setState({ "lastIndex": skip, "hasMoreFeeds": result.hasMoreFeeds });
             }));
