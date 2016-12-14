@@ -46,7 +46,7 @@ export class Sources extends Component {
 function mapToStore(store) {
     return {
         "sources": store.facebookSources,
-        "currentTab": store.facebookCurrentSourceTab,
+        "currentTab": store.currentSourceTab,
         "hasMoreSourceResults": store.hasMoreSourceResults
     };
 }

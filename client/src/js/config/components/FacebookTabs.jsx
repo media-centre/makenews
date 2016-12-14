@@ -1,13 +1,13 @@
 /* eslint react/jsx-no-literals:0, brace-style:0 react/jsx-closing-bracket-location:0*/
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import * as FBActions from "../actions/FacebookConfigureActions";
-import { clearSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { PROFILES, PAGES, GROUPS } from "../actions/FacebookConfigureActions";
+import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export class FacebookTabs extends Component {
     _tabHandler(tab) {
-        this.props.dispatch(clearSources());
-        this.props.dispatch(FBActions.facebookSourceTabSwitch(tab));
+        this.props.dispatch(sourceConfigActions.clearSources());
+        this.props.dispatch(sourceConfigActions.switchSourceTab(tab));
     }
 
     _renderTab(tab, tabName) {
@@ -20,9 +20,9 @@ export class FacebookTabs extends Component {
     render() {
         return (
             <nav className="fb-sources-tab">
-                { this._renderTab(FBActions.PROFILES, "Profiles") }
-                { this._renderTab(FBActions.PAGES, "Pages") }
-                { this._renderTab(FBActions.GROUPS, "Groups") }
+                { this._renderTab(PROFILES, "Profiles") }
+                { this._renderTab(PAGES, "Pages") }
+                { this._renderTab(GROUPS, "Groups") }
             </nav>
         );
     }
@@ -30,7 +30,7 @@ export class FacebookTabs extends Component {
 
 function mapToStore(state) {
     return {
-        "currentTab": state.facebookCurrentSourceTab
+        "currentTab": state.currentSourceTab
     };
 }
 

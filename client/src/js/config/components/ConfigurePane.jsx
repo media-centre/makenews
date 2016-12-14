@@ -39,7 +39,7 @@ export class ConfigurePane extends Component {
 
 function mapToStore(state) {
     return {
-        "currentTab": state.facebookCurrentSourceTab
+        "currentTab": state.currentSourceTab
     };
 }
 

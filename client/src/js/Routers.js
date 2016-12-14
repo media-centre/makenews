@@ -25,11 +25,13 @@ export function renderRoutes() {
 
                 <Route path="/configure" component={ConfigureURLs}>
                     <Route path="/configure/addurl" component={AddUrl} />
-                    <Route path="/configure/categories" component={AllCategories} />
-                    <Route path="/configure/facebook" component={FacebookConfigure}/>
-                    <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
+                    <Route path="/configure/:sourceType" component={FacebookConfigure}/>
                 </Route>
-                <Route path="/newsboard" component={ScanNews} />
+
+                <Route path="/old-configure/categories" component={AllCategories} />
+                <Route path="/old-configure/category/:categoryId/:categoryName" component={CategoryPage}/>
+
+                <Route path="/newsBoard" component={ScanNews} />
                 <Route path="/storyBoard" component={WriteAStory} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />

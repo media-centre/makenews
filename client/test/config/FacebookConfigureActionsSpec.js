@@ -9,7 +9,11 @@ import mockStore from "../helper/ActionHelper";
 import AppWindow from "../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import nock from "nock";
-import { HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import {
+    HAS_MORE_SOURCE_RESULTS,
+    NO_MORE_SOURCE_RESULTS,
+    CHANGE_CURRENT_SOURCE_TAB
+} from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("Facebook Configure Actions", () => {
     describe("fetch facebook sources", () => {
@@ -17,15 +21,6 @@ describe("Facebook Configure Actions", () => {
             let sources = [{ "name": "Profile1" }, { "name": "Profile2" }];
             let facebookConfigureAction = { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources };
             expect(facebookConfigureAction).to.deep.equal(FBActions.facebookSourcesReceived(sources));
-        });
-    });
-
-    describe("switch current Tab", () => {
-        it("should return the FACEBOOK_CHANGE_CURRENT_TAB action", () => {
-            let currentTab = "Profiles";
-            let facebookSourceTabSwitch = FBActions.facebookSourceTabSwitch(currentTab);
-            expect(facebookSourceTabSwitch.type).to.equal(FBActions.FACEBOOK_CHANGE_CURRENT_TAB);
-            expect(facebookSourceTabSwitch.currentTab).to.equal(currentTab);
         });
     });
 
@@ -59,7 +54,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} }).returns(Promise.resolve(sources));
 
             let actions = [
-                { "type": FBActions.FACEBOOK_CHANGE_CURRENT_TAB, "currentTab": "Profiles" },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "Profiles" },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
@@ -80,7 +75,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.returns(Promise.resolve(sources));
 
             let actions = [
-                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
@@ -102,7 +97,7 @@ describe("Facebook Configure Actions", () => {
                 "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
-                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
@@ -131,7 +126,7 @@ describe("Facebook Configure Actions", () => {
                 "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
-                { "type": "FACEBOOK_CHANGE_CURRENT_TAB", "currentTab": FBActions.PAGES },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": NO_MORE_SOURCE_RESULTS }
             ];
 

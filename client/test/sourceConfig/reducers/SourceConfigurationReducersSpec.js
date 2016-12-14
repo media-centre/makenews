@@ -1,13 +1,19 @@
 import {
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_ADD_GROUP
+    FACEBOOK_ADD_GROUP,
+    PAGES
 } from "../../../src/js/config/actions/FacebookConfigureActions";
-import { configuredSources, hasMoreSourceResults } from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
+import {
+    configuredSources,
+    hasMoreSourceResults,
+    currentSourceTab
+} from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
 import {
     GOT_CONFIGURED_SOURCES,
     HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS
+    NO_MORE_SOURCE_RESULTS,
+    CHANGE_CURRENT_SOURCE_TAB
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { expect } from "chai";
 
@@ -64,4 +70,15 @@ describe("SourceConfigurationReducers", () => {
             expect(hasMoreSourceResults(null, { "type": NO_MORE_SOURCE_RESULTS })).to.be.false; //eslint-disable-line no-unused-expressions
         });
     });
+    describe("Facebook current Tab", () => {
+        it("should return Profiles as current tab by default", () => {
+            expect(currentSourceTab()).to.equal("Profiles");
+        });
+
+        it(`should return given currentTab when ${CHANGE_CURRENT_SOURCE_TAB} is dispatched`, () => {
+            let action = { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": PAGES };
+            expect(currentSourceTab("", action)).to.equal(PAGES);
+        });
+    });
+
 });

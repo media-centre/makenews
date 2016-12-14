@@ -2,9 +2,7 @@ import {
     FACEBOOK_GOT_SOURCES,
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_ADD_GROUP,
-    FACEBOOK_CHANGE_CURRENT_TAB,
-    PROFILES
+    FACEBOOK_ADD_GROUP
 } from "./../actions/FacebookConfigureActions";
 import { CLEAR_SOURCES } from "./../../sourceConfig/actions/SourceConfigurationActions";
 import { List } from "immutable";
@@ -24,15 +22,6 @@ export const facebookSources = (state = { "data": [], "nextPage": {} }, action =
         return Object.assign({}, state, { "data": _addSource(state.data, action.sources) });
     }
 
-    default: return state;
-    }
-};
-
-export const facebookCurrentSourceTab = (state = PROFILES, action = {}) => {
-    switch(action.type) {
-    case FACEBOOK_CHANGE_CURRENT_TAB: {
-        return action.currentTab;
-    }
     default: return state;
     }
 };

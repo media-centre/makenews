@@ -10,10 +10,10 @@ import { parkCounter } from "./feeds/reducers/FeedReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
-import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
-import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
+import { facebookSources } from "./config/reducers/FacebookReducer";
+import { configuredSources, hasMoreSourceResults, currentSourceTab } from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -32,11 +32,11 @@ const contentDiscoveryApp = combineReducers({
     configuredSources,
     hasMoreSourceResults,
     facebookSources,
-    facebookCurrentSourceTab,
-    currentHeaderTab,
     fetchedFeeds,
     addUrlMessage,
-    newsBoardCurrentSourceTab
+    newsBoardCurrentSourceTab,
+    currentSourceTab,
+    currentHeaderTab
 });
 
 export default contentDiscoveryApp;
