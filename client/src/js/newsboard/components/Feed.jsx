@@ -13,17 +13,18 @@ export default class Feed extends Component {
         return media;
     }
     render() {
+        let feed = this.props.feed;
         return (<div className={this.props.active ? "feed-highlight" : "feed"} onClick={this.props.onToggle}>
-            <div className={(this.props.feed.images[0] || this.props.feed.videos[0]) ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
-                <div className="feed-title">{this.props.feed.title}</div>
-                <div className="feed-description">{getHtmlContent(this.props.feed.description)}</div>
+            <div className={this.getMedia() === null ? "feed-content-withOutEnclosure " : "feed-content-withEnclosure"}>
+                <div className="feed-title">{feed.title}</div>
+                <div className="feed-description">{getHtmlContent(feed.description)}</div>
 
             </div>
             <div className="feed-media">{this.getMedia()}</div>
             <div className="feed-source">
-                <div className="source-type">{this.props.feed.sourceType === "rss" ? <i className="fa fa-globe"/> : <i className={"fa fa-" + this.props.feed.sourceType.toLowerCase()}/>}</div>
-                <div className="source">{this.props.feed.tags[0]}</div>
-                <div className="date">{DateTimeUtil.getLocalTime(this.props.feed.pubDate)}</div>
+                <div className="source-type">{feed.sourceType === "rss" ? <i className="fa fa-globe"/> : <i className={"fa fa-" + feed.sourceType.toLowerCase()}/>}</div>
+                <div className="source">{feed.tags[0]}</div>
+                <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
 
             </div>
         </div>);

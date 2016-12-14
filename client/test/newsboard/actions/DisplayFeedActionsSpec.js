@@ -4,8 +4,8 @@ import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe.only("DisplayFeedActions", () => {
-    describe("displayFetchedFeeds", () => {
+describe("DisplayFeedActions", () => {
+    describe("paginatedFeeds", () => {
         it("should return type DISPLAY_FETCHED_FEEDS action ", () => {
             let feeds = [
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },
@@ -30,22 +30,23 @@ describe.only("DisplayFeedActions", () => {
             postMock.expects("post").returns(Promise.resolve(feeds));
             let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
             store.dispatch(displayFeedsByPage(defaultIndex, (result)=> {
-                assert.deepEqual(result, { "docsLenght": 2, "hasMoreFeeds": false });
+                assert.deepEqual(result, { "docsLenght": 2, "hasMoreFeeds": true });
                 ajaxClientMock.verify();
                 postMock.verify();
             }));
         });
 
-        it.only("dispatch displayFetchedFeedAction action with no feeds on successful fetch", (done) => {
+        it("dispatch displayFetchedFeedAction action with no feeds on successful fetch", () => {
             let feeds = { "docs": [] };
             let ajaxClientInstance = AjaxClient.instance("/fetch-all-feeds", true);
             let ajaxClientMock = sinon.mock(AjaxClient);
             ajaxClientMock.expects("instance").returns(ajaxClientInstance);
             let postMock = sinon.mock(ajaxClientInstance);
             postMock.expects("post").returns(Promise.resolve(feeds));
-            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
+            let store = mockStore([], []);
             store.dispatch(displayFeedsByPage(0, (result)=> {
-                assert.deepEqual(result, { "docsLenght": 0, "hasMoreFeeds": false });
+                let expected = { "docsLenght": 0, "hasMoreFeeds": false };
+                assert.deepEqual(result, expected);
                 ajaxClientMock.verify();
                 postMock.verify();
             }));

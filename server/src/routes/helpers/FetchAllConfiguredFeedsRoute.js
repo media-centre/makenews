@@ -8,10 +8,18 @@ export default class FetchAllConfiguredFeeds extends Route {
         this.lastIndex = this.request.body.lastIndex;
     }
 
+    index() {
+        let ZERO = 0;
+        if(!Number.isInteger(this.lastIndex) || this.lastIndex < ZERO) {
+            return ZERO;
+        }
+        return this.lastIndex;
+    }
+
     async fetchFeeds() { //eslint-disable-line consistent-return
         try {
             let feedsRequestHandler = FeedsRequestHandler.instance();
-            let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.lastIndex);
+            let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.index());
             RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
             return this._handleSuccess(feeds);
 

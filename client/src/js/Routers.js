@@ -15,7 +15,7 @@ import DisplayFeeds from "../js/newsboard/components/DisplayFeeds";
 import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
 import WriteAStory from "./storyboard/components/WriteAStory";
-import ConfigurePage from "./config/pages/ConfigurePage";
+import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 
 export function renderRoutes() {
     return (
@@ -23,7 +23,7 @@ export function renderRoutes() {
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
             <Route path="/main" component={Header} onEnter={isLoggedIn}>
 
-                <Route path="/configure" component={ConfigurePage}>
+                <Route path="/configure" component={ConfigureURLs}>
                     <Route path="/configure/categories" component={AllCategories} />
                     <Route path="/configure/facebook" component={FacebookConfigure}/>
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>

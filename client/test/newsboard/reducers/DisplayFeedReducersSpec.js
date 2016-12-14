@@ -1,7 +1,7 @@
 import { fetchedFeeds } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { expect } from "chai";
 
-describe("DisplayFeedReducer", () => {
+describe.only("DisplayFeedReducer", () => {
     describe("Fetched Feeds", () => {
         it("should return an empty list when fetched feeds called without any action type", () => {
             expect([]).to.deep.equal(fetchedFeeds());
@@ -19,7 +19,7 @@ describe("DisplayFeedReducer", () => {
                 "docType": "feed",
                 "sourceUrl": "http://www.test3.com/rss"
             }];
-            let action = { "type": "DISPLAY_FETCHED_FEEDS", feeds };
+            let action = { "type": "PAGINATED_FETCHED_FEEDS", feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
     });

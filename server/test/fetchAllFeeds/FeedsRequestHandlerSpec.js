@@ -1,7 +1,9 @@
 import FeedsRequestHandler from "../../src/fetchAllFeeds/FeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
-import { assert } from "chai";
+import chai, { assert } from "chai";
 import sinon from "sinon";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
 
 describe("FeedsRequestHandler", () => {
     let feed = null;
@@ -28,9 +30,6 @@ describe("FeedsRequestHandler", () => {
         lastIndex = 0;
         body = {
             "selector": {
-                "sourceUrl": {
-                    "$gt": null
-                },
                 "docType": {
                     "$eq": "feed"
                 },
@@ -49,27 +48,17 @@ describe("FeedsRequestHandler", () => {
         couchClientInstanceMock.findDocuments.restore();
     });
 
-    it("should fetch feeds from the db", async () => {
-        try {
-            sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
-            sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.reject("unexpected response from db"));
-            await feedsRequestHandler.fetchFeeds(authSession, lastIndex);
-            assert.fail();
-
-        } catch (error) {
-            assert.equal(error, "unexpected response from db");
-        }
+    it("should throw an unexpected response from db", async () => {
+        sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
+        sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.reject("unexpected response from db"));
+        await assert.isRejected(feedsRequestHandler.fetchFeeds(authSession, lastIndex), "unexpected response from db");
     });
 
-    it("should throw an unexpected response from db", async () => {
-        try {
-            sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
-            sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.resolve(feed));
-            let feeds = await feedsRequestHandler.fetchFeeds(authSession, lastIndex);
-            assert.equal(feeds.docType, feed.docType);
-            assert.equal(feeds.sourceType, feed.sourceType);
-        } catch (error) {
-            assert.fail();
-        }
+    it("should fetch feeds from the db", async () => {
+        sinon.mock(CouchClient).expects("createInstance").withArgs(authSession).returns(couchClientInstanceMock);
+        sinon.mock(couchClientInstanceMock).expects("findDocuments").withArgs(body).returns(Promise.resolve(feed));
+        let feeds = await feedsRequestHandler.fetchFeeds(authSession, lastIndex);
+        assert.equal(feeds.docType, feed.docType);
+        assert.equal(feeds.sourceType, feed.sourceType);
     });
 });
