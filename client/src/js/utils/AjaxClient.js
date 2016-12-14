@@ -17,7 +17,12 @@ export default class AjaxClient {
     }
 
     async post(headers, data) {
-        return await this.request("POST", headers, data);
+        return await this.request({
+            "method": "POST",
+            "credentials": "same-origin",
+            "headers": headers,
+            "body": JSON.stringify(data)
+        });
     }
 
     async get(queryParams = {}) {
@@ -29,16 +34,14 @@ export default class AjaxClient {
             });
             this.url = this.url + keyValues.join("&");
         }
-        return await this.request("GET");
+        return await this.request({
+            "method": "GET",
+            "credentials": "same-origin"
+        });
     }
 
-    async request(method, headers = {}, data = {}) {  //eslint-disable-line consistent-return
-        let response = await fetch(this.url, {
-            "method": method,
-            "credentials": "same-origin",
-            "headers": headers,
-            "body": JSON.stringify(data)
-        });
+    async request(params) {  //eslint-disable-line consistent-return
+        let response = await fetch(this.url, params);
 
         let responseJson = await response.json();
 
