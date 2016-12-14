@@ -3,6 +3,7 @@ import StringUtil from "../../../../common/src/util/StringUtil";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import UserSession from "../user/UserSession";
 import AppWindow from "../utils/AppWindow";
+import fetch from "isomorphic-fetch";
 
 export default class AjaxClient {
     static instance(url, skipTimer) {
@@ -16,11 +17,11 @@ export default class AjaxClient {
         this.url = AppWindow.instance().get("serverUrl") + url;
     }
 
-    post(headers, data) {
-        return this.request("POST", headers, data);
+    async post(headers, data) {
+        return await this.request("POST", headers, data);
     }
 
-    get(queryParams = {}) {
+    async get(queryParams = {}) {
         let keys = Object.keys(queryParams);
         if (keys.length !== 0) { //eslint-disable-line no-magic-numbers
             this.url = this.url + "?";
@@ -29,15 +30,23 @@ export default class AjaxClient {
             });
             this.url = this.url + keyValues.join("&");
         }
-        return this.request("GET");
+        return await this.request("GET");
     }
 
-    request(method, headers, data = {}) {
-        let xhttp = new XMLHttpRequest();
-        xhttp.open(method, this.url, true);
-        this.setRequestHeaders(xhttp, headers);
-        xhttp.send(JSON.stringify(data));
-        return this.responsePromise(xhttp);
+    async request(method, headers = {}, data = {}) {
+        let response = await fetch(this.url, {
+            "method": method,
+            "credentials": "same-origin",
+            "headers": headers,
+            "body": JSON.stringify(data)
+        });
+
+        let responseJson = await response.json();
+
+        if (response.status === this.responseCodes().OK) {
+            return responseJson;
+        }
+        throw responseJson;
     }
 
     setRequestHeaders(xhttp, userHeaders) {
@@ -51,7 +60,7 @@ export default class AjaxClient {
     responsePromise(xhttp) {
         return new Promise((resolve, reject) => {
             let response = this.responseCodes();
-            xhttp.onreadystatechange = function(event) {
+            xhttp.onreadystatechange = function (event) {
                 if (xhttp.readyState === response.REQUEST_FINISHED) {
                     if (xhttp.status === response.OK) {
                         let jsonResponse = JSON.parse(event.target.response);

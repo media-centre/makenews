@@ -9,13 +9,13 @@ import nock from "nock";
 import sinon from "sinon";
 import R from "ramda"; // eslint-disable-line id-length
 
-describe("AjaxClient", function() {
+describe("AjaxClient", function () {
     let userSessionMock = null, sandbox = null, userSession = null, requests = [];
     beforeEach("beforeEach", () => {
         sandbox = sinon.sandbox.create();
         this.xhr = sinon.useFakeXMLHttpRequest();
 
-        this.xhr.onCreate = function(xhr) {
+        this.xhr.onCreate = function (xhr) {
             requests.push(xhr);
         };
 
@@ -35,7 +35,7 @@ describe("AjaxClient", function() {
         AppWindow.instance.restore();
     });
 
-    var assertRequest = function(request, url, method, data, headers = {}) { // eslint-disable-line vars-on-top
+    var assertRequest = function (request, url, method, data, headers = {}) { // eslint-disable-line vars-on-top
         assert.equal(request.url, "http://localhost:5000" + url);
         assert.equal(request.method, method);
         assert.deepEqual(request.requestHeaders, headers);
@@ -43,139 +43,152 @@ describe("AjaxClient", function() {
     };
 
     describe("post", () => {
-        it("should post and return success promise on success", (done) => {
+        it("should post and return success promise on success", async () => {
             let url = "/login";
             let headers = {};
-            let data = { "username": "username", "password": "pwd" };
+            let data = {"username": "username", "password": "pwd"};
+            nock("http://localhost:5000")
+                .post(url)
+                .reply(HttpResponseHandler.codes.OK, {"data": "success"});
             let ajax = new AjaxClient(url);
             userSessionMock.verify();
-            ajax.post(headers, data)
-                .then(succesData => {
-                    expect(succesData.data).to.eq("success");
-                    done();
-                });
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
-            assertRequest(request, url, "POST", data, headers);
+            try{
+                let succesData = await ajax.post(headers, data);
+                expect(succesData.data).to.eq("success");
+            } catch(err) {
+                assert.fail(err);
+            }
         });
 
-        it("should post and return error promise on failure", function(done) {
+        it("should post and return error promise on failure", async () => {
             let url = "/login";
             let headers = {};
             let data = { "username": "ssds", "password": "sds" };
-
+            nock("http://localhost:5000")
+                .post(url)
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "error": "error" });
             let ajax = new AjaxClient(url);
-            ajax.post(headers, data)
-                .catch((errorData) => {
-                    expect(errorData.data).to.eq("error");
-                    done();
-                });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"data": "error"}'); // eslint-disable-line quotes
-            assertRequest(request, url, "POST", data, headers);
+            try{
+                await ajax.post(headers, data);
+                assert.fail();
+            } catch(errorData) {
+                expect(errorData.error).to.eq("error");
+            }
         });
 
-        it("should logout if session expired", function(done) {
+        it("should logout if session expired", async () => {
             let url = "/login";
             let headers = {};
-            let data = { "username": "ssds", "password": "sds" };
-
+            let data = {"username": "ssds", "password": "sds"};
+            nock("http://localhost:5000")
+                .post(url)
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, {"message": "session expired"});
             let ajax = new AjaxClient(url);
             let userSessionLogOutMock = sandbox.mock(userSession).expects("autoLogout");
-            ajax.post(headers, data)
-                .catch(() => {
-                    userSessionLogOutMock.verify();
-                    done();
-                });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.UNAUTHORIZED, {}, '{"message": "session expired"}'); // eslint-disable-line quotes
-            assertRequest(request, url, "POST", data, headers);
+            try {
+                await ajax.post(headers, data);
+                assert.fail();
+            } catch(error) {
+                //userSessionLogOutMock.verify();
+                expect(error.message).to.eq("session expired");
+            }
         });
     });
 
     describe("get", () => {
-        it("should do a get request to the url", function(done) {
+        it("should do a get request to the url", async () => {
             var url = "/home";
             let ajax = new AjaxClient(url);
-            ajax.get().then(succesData => {
-                expect(succesData.data).to.eq("success");
-                done();
-            });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
-            assertRequest(request, url, "GET");
+            nock("http://localhost:5000")
+                .get(url)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
+            try {
+                let successData = await ajax.get();
+                expect(successData.data).to.eq("success");
+            } catch(err) {
+                assert.fail(err);
+            }
 
         });
 
-        it("should do a get request with query parameter to the url", function(done) {
+        it("should do a get request with query parameter to the url", async () => {
             var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
-            ajax.get({ "url": "http://rssfedd.com" }).then(succesData => {
+            nock("http://localhost:5000")
+                .get(`${url}?url=http%3A%2F%2Frssfedd.com`)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
+            try {
+                let succesData = await ajax.get({"url": "http://rssfedd.com"});
                 expect(succesData.data).to.eq("success");
-                done();
-            });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
-            assertRequest(request, url + "?url=http%3A%2F%2Frssfedd.com", "GET");
+            } catch(err) {
+                assert.fail(err);
+            }
         });
 
-        it("should do a get request with multiple query parameters to the url", function(done) {
+        it("should do a get request with multiple query parameters to the url", async () => {
             var url = "/rss-feeds";
+            nock("http://localhost:5000")
+                .get(`${url}?url=http%3A%2F%2Frssfedd.com&page=1`)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
             let ajax = new AjaxClient(url);
-            ajax.get({ "url": "http://rssfedd.com", "page": 1 }).then(succesData => {
+            try{
+                let succesData = await ajax.get({"url": "http://rssfedd.com", "page": 1});
                 expect(succesData.data).to.eq("success");
-                done();
-            });
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
-            assertRequest(request, url + "?url=http%3A%2F%2Frssfedd.com&page=1", "GET");
+            } catch(err) {
+                assert.fail(err);
+            }
         });
 
-        it("should handle for empty objects", (done) => {
+        it("should handle for empty objects", async () => {
             var url = "/rss-feeds";
+            nock("http://localhost:5000")
+                .get(url)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
             let ajax = new AjaxClient(url);
-            ajax.get({}).then(succesData => {
+            try {
+                let succesData = await ajax.get({});
                 expect(succesData.data).to.eq("success");
-                done();
-            });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.OK, {}, '{"data": "success"}'); // eslint-disable-line quotes
-            assertRequest(request, url, "GET");
+            } catch(err) {
+                assert.fail(err);
+            }
         });
 
-        it("should handle for 404", (done) => {
+        it("should handle for 404", async () => {
 
             var url = "/rss-feeds";
+            nock("http://localhost:5000")
+                .get(url)
+                .reply(HttpResponseHandler.codes.NOT_FOUND, { "error": "error" });
             let ajax = new AjaxClient(url);
-            ajax.get({}).catch(errorData => {
-                expect(errorData).to.eq("error");
-                done();
-            });
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.NOT_FOUND, {}, "error");
-            assertRequest(request, url, "GET");
+            try {
+                await ajax.get({});
+                assert.fail();
+            } catch(errorData) {
+                expect(errorData.error).to.eq("error");
+            }
         });
 
-        it("should reject on connection refused", function(done) {
+        it("should reject on connection refused", async () => {
             let url = "/home";
             nock("http://localhost:5000")
                 .get(url)
-                .reply(HttpResponseHandler.codes.BAD_GATEWAY);
+                .reply(HttpResponseHandler.codes.BAD_GATEWAY, { "error": "connection refused" });
 
             let ajax = new AjaxClient(url);
-            ajax.get().catch(errorData => {
-                expect(errorData).to.eq("connection refused");
-                done();
-            });
-
-            let request = R.head(requests);
-            request.respond(HttpResponseHandler.codes.BAD_GATEWAY);
-            assertRequest(request, url, "GET");
+            try {
+                await ajax.get()
+                assert.fail();
+            } catch(errorData) {
+                expect(errorData.error).to.eq("connection refused");
+            }
         });
     });
 });
