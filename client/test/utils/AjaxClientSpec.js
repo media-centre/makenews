@@ -7,15 +7,14 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import { expect, assert } from "chai";
 import nock from "nock";
 import sinon from "sinon";
-import R from "ramda"; // eslint-disable-line id-length
 
-describe("AjaxClient", function () {
+describe("AjaxClient", function() {
     let userSessionMock = null, sandbox = null, userSession = null, requests = [];
     beforeEach("beforeEach", () => {
         sandbox = sinon.sandbox.create();
         this.xhr = sinon.useFakeXMLHttpRequest();
 
-        this.xhr.onCreate = function (xhr) {
+        this.xhr.onCreate = function(xhr) {
             requests.push(xhr);
         };
 
@@ -35,27 +34,20 @@ describe("AjaxClient", function () {
         AppWindow.instance.restore();
     });
 
-    var assertRequest = function (request, url, method, data, headers = {}) { // eslint-disable-line vars-on-top
-        assert.equal(request.url, "http://localhost:5000" + url);
-        assert.equal(request.method, method);
-        assert.deepEqual(request.requestHeaders, headers);
-        assert.equal(request.requestBody, JSON.stringify(data));
-    };
-
     describe("post", () => {
         it("should post and return success promise on success", async () => {
             let url = "/login";
             let headers = {};
-            let data = {"username": "username", "password": "pwd"};
+            let data = { "username": "username", "password": "pwd" };
             nock("http://localhost:5000")
                 .post(url)
-                .reply(HttpResponseHandler.codes.OK, {"data": "success"});
+                .reply(HttpResponseHandler.codes.OK, { "data": "success" });
             let ajax = new AjaxClient(url);
             userSessionMock.verify();
-            try{
+            try {
                 let succesData = await ajax.post(headers, data);
                 expect(succesData.data).to.eq("success");
-            } catch(err) {
+            } catch (err) {
                 assert.fail(err);
             }
         });
@@ -68,10 +60,10 @@ describe("AjaxClient", function () {
                 .post(url)
                 .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "error": "error" });
             let ajax = new AjaxClient(url);
-            try{
+            try {
                 await ajax.post(headers, data);
                 assert.fail();
-            } catch(errorData) {
+            } catch (errorData) {
                 expect(errorData.error).to.eq("error");
             }
         });
@@ -79,17 +71,17 @@ describe("AjaxClient", function () {
         it("should logout if session expired", async () => {
             let url = "/login";
             let headers = {};
-            let data = {"username": "ssds", "password": "sds"};
+            let data = { "username": "ssds", "password": "sds" };
             nock("http://localhost:5000")
                 .post(url)
-                .reply(HttpResponseHandler.codes.UNAUTHORIZED, {"message": "session expired"});
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "message": "session expired" });
             let ajax = new AjaxClient(url);
             let userSessionLogOutMock = sandbox.mock(userSession).expects("autoLogout");
             try {
                 await ajax.post(headers, data);
                 assert.fail();
-            } catch(error) {
-                //userSessionLogOutMock.verify();
+            } catch (error) {
+                userSessionLogOutMock.verify();
                 expect(error.message).to.eq("session expired");
             }
         });
@@ -107,7 +99,7 @@ describe("AjaxClient", function () {
             try {
                 let successData = await ajax.get();
                 expect(successData.data).to.eq("success");
-            } catch(err) {
+            } catch (err) {
                 assert.fail(err);
             }
 
@@ -122,9 +114,9 @@ describe("AjaxClient", function () {
                     "data": "success"
                 });
             try {
-                let succesData = await ajax.get({"url": "http://rssfedd.com"});
+                let succesData = await ajax.get({ "url": "http://rssfedd.com" });
                 expect(succesData.data).to.eq("success");
-            } catch(err) {
+            } catch (err) {
                 assert.fail(err);
             }
         });
@@ -137,10 +129,10 @@ describe("AjaxClient", function () {
                     "data": "success"
                 });
             let ajax = new AjaxClient(url);
-            try{
-                let succesData = await ajax.get({"url": "http://rssfedd.com", "page": 1});
+            try {
+                let succesData = await ajax.get({ "url": "http://rssfedd.com", "page": 1 });
                 expect(succesData.data).to.eq("success");
-            } catch(err) {
+            } catch (err) {
                 assert.fail(err);
             }
         });
@@ -156,7 +148,7 @@ describe("AjaxClient", function () {
             try {
                 let succesData = await ajax.get({});
                 expect(succesData.data).to.eq("success");
-            } catch(err) {
+            } catch (err) {
                 assert.fail(err);
             }
         });
@@ -171,7 +163,7 @@ describe("AjaxClient", function () {
             try {
                 await ajax.get({});
                 assert.fail();
-            } catch(errorData) {
+            } catch (errorData) {
                 expect(errorData.error).to.eq("error");
             }
         });
@@ -184,9 +176,9 @@ describe("AjaxClient", function () {
 
             let ajax = new AjaxClient(url);
             try {
-                await ajax.get()
+                await ajax.get();
                 assert.fail();
-            } catch(errorData) {
+            } catch (errorData) {
                 expect(errorData.error).to.eq("connection refused");
             }
         });
