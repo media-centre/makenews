@@ -52,6 +52,7 @@ export default class AjaxClient {
         } else if (response.status === this.responseCodes().BAD_GATEWAY) {
             throw "connection refused"; //eslint-disable-line no-throw-literal
         }
+        throw responseJson;
     }
 
     responseCodes() {

@@ -179,7 +179,7 @@ describe("AjaxClient", function() {
                 await ajax.get();
                 assert.fail();
             } catch (errorData) {
-                expect(errorData.error).to.eq("connection refused");
+                expect(errorData).to.eq("connection refused");
             }
         });
     });
