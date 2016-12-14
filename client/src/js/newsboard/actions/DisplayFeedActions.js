@@ -13,14 +13,14 @@ export function displayFeedsByPage(pageIndex, callback = () => {}) {
         };
         ajax.post(headers, { "lastIndex": pageIndex }).then((feeds) => {
             let result = {
-                "docsLenght": 0,
-                "hasMoreFeeds": false
+                "docsLenght": 0
             };
             if (feeds.docs.length > FEEDS_LENGTH_ZERO) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLenght = feeds.docs.length;
-                result.hasMoreFeeds = true;
             }
+            let defaultPageSize = 25;
+            result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
             callback(result);  //eslint-disable-line callback-return
         }).catch(() => {
             dispatch(paginatedFeeds([]));

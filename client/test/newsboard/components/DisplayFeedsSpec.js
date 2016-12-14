@@ -13,11 +13,6 @@ describe("DisplayFeeds", () => {
     let result = null;
     let sandbox = null;
     beforeEach("DisplayFeeds", () => {
-        // let feeds = [
-        //     { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },
-        //     { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed" }
-        // ];
-        // let dispatch = () => {};
         sandbox = sinon.sandbox.create();
     });
 
@@ -25,7 +20,7 @@ describe("DisplayFeeds", () => {
         sandbox.restore();
     });
 
-    it("should render the display feeds", () => {
+    it("should render the feeds", () => {
         let feeds = [
             { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
             { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": []}
@@ -42,10 +37,9 @@ describe("DisplayFeeds", () => {
             <Provider store={store}>
                 <DisplayFeeds />
             </Provider>);
-
         let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Feed);
-        expect(renderedSources).to.have.lengthOf(2);
-
-        //can do assertion for getMoreFeeds
+        expect(renderedSources).to.have.lengthOf(2);  //eslint-disable-line no-magic-numbers
+        console.log("this========>result", result.state.hasMoreFeeds);
     });
+
 });

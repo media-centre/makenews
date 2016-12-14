@@ -30,10 +30,12 @@ describe("DisplayFeedActions", () => {
             postMock.expects("post").returns(Promise.resolve(feeds));
             let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
             store.dispatch(displayFeedsByPage(defaultIndex, (result)=> {
-                assert.deepEqual(result, { "docsLenght": 2, "hasMoreFeeds": true });
+                assert.deepEqual(result, { "docsLenght": 2, "hasMoreFeeds": false });
                 ajaxClientMock.verify();
                 postMock.verify();
             }));
+            ajaxClientMock.restore();
+            postMock.restore();
         });
 
         it("dispatch displayFetchedFeedAction action with no feeds on successful fetch", () => {
@@ -50,6 +52,8 @@ describe("DisplayFeedActions", () => {
                 ajaxClientMock.verify();
                 postMock.verify();
             }));
+            ajaxClientMock.restore();
+            postMock.restore();
         });
     });
 });
