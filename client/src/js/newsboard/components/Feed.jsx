@@ -14,7 +14,7 @@ export default class Feed extends Component {
     }
     render() {
         return (<div className={this.props.active ? "feed-highlight" : "feed"} onClick={this.props.onToggle}>
-            <div className={this.props.feed.images[0] ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
+            <div className={(this.props.feed.images[0] || this.props.feed.videos[0]) ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
                 <div className="feed-title">{this.props.feed.title}</div>
                 <div className="feed-description">{getHtmlContent(this.props.feed.description)}</div>
 
