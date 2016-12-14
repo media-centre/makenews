@@ -27,7 +27,7 @@ describe("FeedsRequestHandler", () => {
         authSession = "Access Token";
         feedsRequestHandler = new FeedsRequestHandler();
         dbName = "dbName";
-        lastIndex = 0;
+        lastIndex = 0;  //eslint-disable-line no-magic-numbers
         body = {
             "selector": {
                 "docType": {

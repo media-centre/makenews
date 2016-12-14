@@ -112,7 +112,7 @@ describe("RssParser", () => {
             rssParser.parse(url).then((feedJson) => {
                 expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();
-            })
+            });
         });
     });
 });

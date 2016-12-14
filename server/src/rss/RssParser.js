@@ -41,7 +41,7 @@ export default class RssParser {
                         "images": []
                     };
                     if (feed.enclosures && feed.enclosures.length > 0) {                     //eslint-disable-line no-magic-numbers
-                        feed.enclosures.forEach((item, index) => {
+                        feed.enclosures.forEach((item, index) => {  //eslint-disable-line no-loop-func
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
                                 feedObject.images.push(feed.enclosures[index]);
                             } else if (item.type.indexOf("video") !== NEGATIVE_INDEX) {

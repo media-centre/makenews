@@ -23,7 +23,7 @@ describe("DisplayFeeds", () => {
     it("should render the feeds", () => {
         let feeds = [
             { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
-            { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": []}
+            { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
         ];
         let store = createStore(() => ({
             "fetchedFeeds": feeds

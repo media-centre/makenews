@@ -6,7 +6,7 @@ import { findAllWithType } from "react-shallow-testutils";
 import { expect } from "chai";
 
 xdescribe("Scan News", () => {
-    let scanNews = null, result = null;
+    let scanNews = null, result = null; //eslint-disable-line no-unused-vars
 
     beforeEach("Scan News", () => {
         let dispatch = () => {};
@@ -20,6 +20,6 @@ xdescribe("Scan News", () => {
 
     it("should have DisplayFeeds Component", () => {
         let renderedSources = findAllWithType(result, DisplayFeeds);
-        expect(renderedSources).to.have.lengthOf(1);
+        expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
     });
 });

@@ -25,8 +25,8 @@ export default class Feed extends Component {
             </div>
             <div className="feed-media">{this.getMedia()}</div>
             <div className="feed-source">
-                <div className="source-type">{feed.sourceType === "rss" ? <i className="fa fa-globe"/> : <i className={"fa fa-" + feed.sourceType }/>}</div>
-                <div className="source">{feed.tags[0]}</div>
+                <div className="source-type">{feed.sourceType === "rss" ? <i className="fa fa-globe"/> : <i className={"fa fa-" + feed.sourceType}/>}</div>
+                <div className="source">{[feed.tags]}</div>
                 <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
 
             </div>

@@ -45,7 +45,7 @@ describe("DisplayFeedActions", () => {
             let postMock = sinon.mock(ajaxClientInstance);
             postMock.expects("post").returns(Promise.reject("error"));
             let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }], done);
-            store.dispatch(displayFeedsByPage(0, ()=> {
+            store.dispatch(displayFeedsByPage(0, ()=> {  //eslint-disable-line no-magic-numbers
                 ajaxClientMock.verify();
                 postMock.verify();
             }));
