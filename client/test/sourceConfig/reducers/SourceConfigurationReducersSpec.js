@@ -13,7 +13,8 @@ import {
     GOT_CONFIGURED_SOURCES,
     HAS_MORE_SOURCE_RESULTS,
     NO_MORE_SOURCE_RESULTS,
-    CHANGE_CURRENT_SOURCE_TAB
+    CHANGE_CURRENT_SOURCE_TAB,
+    WEB
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { expect } from "chai";
 
@@ -70,9 +71,9 @@ describe("SourceConfigurationReducers", () => {
             expect(hasMoreSourceResults(null, { "type": NO_MORE_SOURCE_RESULTS })).to.be.false; //eslint-disable-line no-unused-expressions
         });
     });
-    describe("Facebook current Tab", () => {
-        it("should return Profiles as current tab by default", () => {
-            expect(currentSourceTab()).to.equal("Profiles");
+    describe("current source Tab", () => {
+        it("should return Web as current tab by default", () => {
+            expect(currentSourceTab()).to.equal(WEB);
         });
 
         it(`should return given currentTab when ${CHANGE_CURRENT_SOURCE_TAB} is dispatched`, () => {

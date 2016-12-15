@@ -10,7 +10,7 @@ import Help from "./help/Help";
 import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
-import FacebookConfigure from "./config/components/FacebookConfigure";
+import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
 import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
 import WriteAStory from "./storyboard/components/WriteAStory";
@@ -25,7 +25,7 @@ export function renderRoutes() {
 
                 <Route path="/configure" component={ConfigureURLs}>
                     <Route path="/configure/addurl" component={AddUrl} />
-                    <Route path="/configure/:sourceType" component={FacebookConfigure}/>
+                    <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
                 </Route>
 
                 <Route path="/old-configure/categories" component={AllCategories} />
@@ -56,7 +56,7 @@ function showLoginPage(nextState, replaceState) {
     let userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
         userSession.setLastAccessedTime();
-        replaceState("/configure/facebook");
+        replaceState("/configure/web");
     }
 }
 

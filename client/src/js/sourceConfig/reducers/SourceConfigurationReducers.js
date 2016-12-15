@@ -1,11 +1,10 @@
 import {
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
-    FACEBOOK_ADD_GROUP,
-    PROFILES
+    FACEBOOK_ADD_GROUP
 } from "./../../config/actions/FacebookConfigureActions";
 import { List } from "immutable";
-import { GOT_CONFIGURED_SOURCES, HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS, CHANGE_CURRENT_SOURCE_TAB } from "./../actions/SourceConfigurationActions";
+import { GOT_CONFIGURED_SOURCES, HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS, CHANGE_CURRENT_SOURCE_TAB, WEB } from "./../actions/SourceConfigurationActions";
 
 export const configuredSources = (state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] }, action = {}) => {
     switch (action.type) {
@@ -39,7 +38,7 @@ export const hasMoreSourceResults = (state, action = {}) => {
     }
 };
 
-export const currentSourceTab = (state = PROFILES, action = {}) => {
+export const currentSourceTab = (state = WEB, action = {}) => {
     switch(action.type) {
     case CHANGE_CURRENT_SOURCE_TAB: {
         return action.currentTab;
