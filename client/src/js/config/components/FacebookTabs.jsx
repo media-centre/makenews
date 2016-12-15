@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { PROFILES, PAGES, GROUPS } from "../actions/FacebookConfigureActions";
 import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { Link } from "react-router";
 
 export class FacebookTabs extends Component {
     _tabHandler(tab) {
@@ -11,10 +12,10 @@ export class FacebookTabs extends Component {
     }
 
     _renderTab(tab, tabName) {
-        return (<a onClick={() => { this._tabHandler(tab); }}
+        return (<Link to={`/configure/facebook/${tabName.toLowerCase()}`} onClick={() => { this._tabHandler(tab); }}
             className={this.props.currentTab === tab ? "fb-sources-tab__item active" : "fb-sources-tab__item"} >
             { tabName }
-        </a>);
+        </Link>);
     }
 
     render() {

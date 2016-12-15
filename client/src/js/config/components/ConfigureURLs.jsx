@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
+import { Link } from "react-router";
 
 export class ConfigureURLs extends Component {
 
@@ -13,9 +14,9 @@ export class ConfigureURLs extends Component {
         return (
             <div>
                 <nav className="sources-nav">
-                    <div className="sources-nav__item">Web</div>
-                    <div className="sources-nav__item">Facebook</div>
-                    <div className="sources-nav__item">Twitter</div>
+                    <Link to="/configure/web" className={this.props.params.sourceType === "web" ? "sources-nav__item active" : "sources-nav__item"}>Web</Link>
+                    <Link to="/configure/facebook/profiles" className={this.props.params.sourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>Facebook</Link>
+                    <Link to="/configure/twitter" className={this.props.params.sourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>Twitter</Link>
                 </nav>
                 { this.props.children }
             </div>
@@ -25,7 +26,8 @@ export class ConfigureURLs extends Component {
 
 ConfigureURLs.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "children": PropTypes.node.isRequired
+    "children": PropTypes.node.isRequired,
+    "params": PropTypes.object.isRequired
 };
 
 function select(store) {
@@ -33,4 +35,3 @@ function select(store) {
 }
 
 export default connect(select)(ConfigureURLs);
-
