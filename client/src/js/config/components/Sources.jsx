@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
 import Source from "./Source";
 import { connect } from "react-redux";
-import { getSourcesOf } from "./../actions/FacebookConfigureActions";
+import { getSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export class Sources extends Component {
 
@@ -22,7 +22,7 @@ export class Sources extends Component {
                 this.timer = null;
                 if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
                     /* TODO: store the search box query in redux-store. so you can use q= , rather than relying on the response from the server*/ // eslint-disable-line
-                    this.props.dispatch(getSourcesOf(this.props.currentTab, "moana", this.props.sources.nextPage));
+                    this.props.dispatch(getSources(this.props.currentTab, "moana", this.props.sources.nextPage));
                 }
             }, scrollTimeInterval);
         }

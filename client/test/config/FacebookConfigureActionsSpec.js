@@ -24,14 +24,14 @@ describe("Facebook Configure Actions", () => {
         });
     });
 
-    describe("get Sources of", () => {
+    describe("fetchFacebookSources", () => {
         let sandbox = null, ajaxClient = null, ajaxClientMock = null, userName = null;
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
 
-        beforeEach("get Sources of", () => {
+        beforeEach("fetchFacebookSources", () => {
             userName = "user";
             sandbox = sinon.sandbox.create();
             sandbox.mock(UserSession).expects("instance").returns({
@@ -40,7 +40,7 @@ describe("Facebook Configure Actions", () => {
             sandbox.mock(LoginPage).expects("getUserName").returns(userName);
         });
 
-        afterEach("get Sources of", () => {
+        afterEach("fetchFacebookSources", () => {
             sandbox.restore();
         });
 
@@ -59,7 +59,7 @@ describe("Facebook Configure Actions", () => {
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
             let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PROFILES, "testProfile"));
+            store.dispatch(FBActions.fetchFacebookSources("testProfile", "profile", FBActions.PROFILES));
         });
 
         it("fetch pages when requested source type is pages", (done) => {
@@ -80,7 +80,7 @@ describe("Facebook Configure Actions", () => {
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
             let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName));
+            store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
         it("should dispatch configured pages with added property", (done) => {
@@ -112,7 +112,7 @@ describe("Facebook Configure Actions", () => {
             });
 
             let store = mockStore(getStore, actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName, {}));
+            store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
         it(`should dispatch ${NO_MORE_SOURCE_RESULTS} when the sources are empty`, (done) => {
@@ -140,7 +140,7 @@ describe("Facebook Configure Actions", () => {
             });
 
             let store = mockStore(getStore, actions, done);
-            store.dispatch(FBActions.getSourcesOf(FBActions.PAGES, pageName, {}));
+            store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
     });
     

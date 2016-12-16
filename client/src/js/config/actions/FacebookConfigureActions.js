@@ -68,7 +68,7 @@ export function addSourceToConfigureListOf(sourceType, ...sources) {
     }
 }
 
-function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
+export function fetchFacebookSources(keyword = "Murali", type, sourceType, props = {}) {
     let ajaxClient = AjaxClient.instance("/facebook-sources", false);
     const headers = {
         "Accept": "application/json",
@@ -89,21 +89,4 @@ function _fetchSources(keyword = "Murali", type, sourceType, props = {}) {
                 }
             });
     };
-}
-
-export function getSourcesOf(sourceType, keyword, params) {
-    switch (sourceType) {
-    case PROFILES: {
-        return _fetchSources(keyword, "profile", sourceType, params);
-    }
-    case PAGES: {
-        return _fetchSources(keyword, "page", sourceType, params);
-    }
-    case GROUPS: {
-        return _fetchSources(keyword, "group", sourceType, params);
-    }
-    default: {
-        return _fetchSources(keyword, "profile", sourceType, params);
-    }
-    }
 }

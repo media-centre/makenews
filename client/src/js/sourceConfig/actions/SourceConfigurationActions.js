@@ -1,4 +1,5 @@
 import AjaxClient from "./../../utils/AjaxClient";
+import * as FbActions from "./../../config/actions/FacebookConfigureActions";
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
@@ -52,4 +53,21 @@ export function switchSourceTab(currentTab) {
         "type": CHANGE_CURRENT_SOURCE_TAB,
         currentTab
     };
+}
+
+export function getSources(sourceType, keyword, params) {
+    switch (sourceType) {
+    case FbActions.PAGES: {
+        return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);
+    }
+    case FbActions.GROUPS: {
+        return FbActions.fetchFacebookSources(keyword, "group", sourceType, params);
+    }
+    case FbActions.PROFILES: {
+        return FbActions.fetchFacebookSources(keyword, "profile", sourceType, params);
+    }
+    default: {
+        return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);
+    }
+    }
 }
