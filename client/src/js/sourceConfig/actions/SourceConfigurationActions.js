@@ -1,5 +1,6 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import * as FbActions from "./../../config/actions/FacebookConfigureActions";
+import * as WebConfigActions from "./../../config/actions/WebConfigureActions";
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
@@ -65,6 +66,9 @@ export function getSources(sourceType, keyword, params) {
     }
     case FbActions.PROFILES: {
         return FbActions.fetchFacebookSources(keyword, "profile", sourceType, params);
+    }
+    case WEB: {
+        return WebConfigActions.fetchWebSources(keyword, params);
     }
     default: {
         return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);

@@ -222,7 +222,10 @@
     "react/react-in-jsx-scope": 2,
     "react/self-closing-comp": 2,
     "react/sort-comp": 2,
-    "react/jsx-wrap-multilines": 2
+    "react/jsx-wrap-multilines": 2,
+
+    //mocha
+    "mocha-no-only/mocha-no-only": 2
   },
   "env": {
     "es6": true,
@@ -258,6 +261,7 @@
   },
   "plugins": [
     "react",
-    "import"
+    "import",
+    "mocha-no-only"
   ]
 }
