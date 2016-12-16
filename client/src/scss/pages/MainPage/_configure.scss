@@ -167,6 +167,10 @@
         .source__title {
           color: #fff;
         }
+
+        .source__url {
+          color: #fff;
+        }
       }
 
       &__icon {
@@ -187,17 +191,29 @@
         }
       }
 
-      &__title {
-        color: $primary-color;
-        position: relative;
+      &__details {
         top: 50%;
-        width: 70%;
-        display: inline-table;
-        word-break: break-all;
-        word-wrap: break-word;
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
+        width: 70%;
+        position: relative;
+        display: inline-table;
+      }
+
+      &__title {
+        color: $primary-color;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+
+      &__url {
+        color: $primary-color;
+        opacity: .54;
+        font-size: 12px;
+        display: inline-table;
+        word-break: break-all;
+        word-wrap: break-word;
       }
 
       &__action-icon {
