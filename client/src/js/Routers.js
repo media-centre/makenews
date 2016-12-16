@@ -16,6 +16,7 @@ import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
 import WriteAStory from "./storyboard/components/WriteAStory";
 import ConfigureURLs from "./../js/config/components/ConfigureURLs";
+import AddUrl from "./../js/config/components/AddUrl";
 
 export function renderRoutes() {
     return (
@@ -24,6 +25,7 @@ export function renderRoutes() {
             <Route path="/main" component={Header} onEnter={isLoggedIn}>
 
                 <Route path="/configure" component={ConfigureURLs}>
+                    <Route path="/configure/addurl" component={AddUrl} />
                     <Route path="/configure/categories" component={AllCategories} />
                     <Route path="/configure/facebook" component={FacebookConfigure}/>
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>

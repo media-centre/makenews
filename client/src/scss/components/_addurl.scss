@@ -1,0 +1,51 @@
+.addurl{
+  margin-top: 15%;
+  margin-left: 35%;
+  height: 180px;
+  width: 30%;
+
+  &-helpmessage{
+    background-color: $primary-color-bold;
+    width: 100%;
+    height: 60px;
+
+    img{
+      padding: 13px;
+      width: 30px;
+    }
+
+    span  {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .text {
+      width:70%;
+      color: white;
+      font-size: $extra-small-font-size;
+    }
+  }
+  &-inputcontainer{
+    background-color: $primary-color;
+    width: 100%;
+    height: 120px;
+  }
+
+  .addurl-input {
+    margin-top: 10%;
+    margin-left: 8%;
+    width: 80%;
+    opacity: 0.37;
+    border: 0;
+    border-bottom: 2px solid white;
+    background-color: $primary-color;
+    display: inline-block;
+    color: #ffffff;
+    font-size: $medium-font-size;
+    line-height: 24px;
+  }
+  .addurl-icon {
+    display: inline-block;
+    padding: 2px;
+  }
+}
