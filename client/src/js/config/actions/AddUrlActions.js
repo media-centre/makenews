@@ -1,4 +1,4 @@
-import RssRequestHandler from "./../../rss/RssRequestHandler";
+/* eslint no-unused-vars:0*/
 import AjaxClient from "./../../utils/AjaxClient";
 
 export function addRssUrl(url) {
@@ -8,9 +8,7 @@ export function addRssUrl(url) {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        console.log("in action");
         ajax.post(headers, { "url": url }).then((result) => {
-            console.log(result);
         });
 
     };

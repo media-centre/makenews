@@ -1,3 +1,4 @@
+/* eslint brace-style:0, react/jsx-no-literals:0*/
 import React, { Component, PropTypes } from "react";
 import * as AddUrlActions from "../actions/AddUrlActions";
 import { connect } from "react-redux";
@@ -8,9 +9,7 @@ export class AddUrl extends Component {
     addUrl() {
         let url = this.refs.url.value.trim();
         if(url.match(urlRegex)) {
-            console.log(url);
             this.props.dispatch(AddUrlActions.addRssUrl(url, () => {
-                console.log("In comp")
             }));
         }
     }
