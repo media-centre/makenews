@@ -3,6 +3,7 @@ import UserSession from "../../../src/js/user/UserSession";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import * as FbActions from "./../../../src/js/config/actions/FacebookConfigureActions";
 import sinon from "sinon";
 
 describe("SourceConfigurationActions", () => {
@@ -60,6 +61,39 @@ describe("SourceConfigurationActions", () => {
             let facebookSourceTabSwitch = sourceConfigActions.switchSourceTab(currentTab);
             expect(facebookSourceTabSwitch.type).to.equal(sourceConfigActions.CHANGE_CURRENT_SOURCE_TAB);
             expect(facebookSourceTabSwitch.currentTab).to.equal(currentTab);
+        });
+    });
+
+    describe("getSources", () => {
+        let sandbox = null;
+        let keyword = "bla";
+        beforeEach("", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("", () => {
+            sandbox.restore();
+        });
+
+        it("should delegate to fetchFacebookSources for pages if sourceType is pages", () => {
+            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+                .withArgs(keyword, "page", FbActions.PAGES, {});
+            sourceConfigActions.getSources(FbActions.PAGES, keyword, {});
+            fetchFacebookPagesMock.verify();
+        });
+
+        it("should delegate to fetchFacebookSources for groups if sourceType is groups", () => {
+            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+                .withArgs(keyword, "group", FbActions.GROUPS, {});
+            sourceConfigActions.getSources(FbActions.GROUPS, keyword, {});
+            fetchFacebookPagesMock.verify();
+        });
+
+        it("should delegate to fetchFacebookSources for profiles if sourceType is profiles", () => {
+            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+                .withArgs(keyword, "profile", FbActions.PROFILES, {});
+            sourceConfigActions.getSources(FbActions.PROFILES, keyword, {});
+            fetchFacebookPagesMock.verify();
         });
     });
 });
