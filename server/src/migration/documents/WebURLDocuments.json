@@ -1,70 +1,70 @@
 {
   "docs": [
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - International","url":"http://www.thehindu.com/news/international/?service=rss"
+      "docType":"source","sourceType":"web","name":"The Hindu - International","url":"http://www.thehindu.com/news/international/?service=rss","_id":"http://www.thehindu.com/news/international/?service=rss"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Sport","url":"http://www.thehindu.com/sport/?service=rss"
+      "docType":"source","sourceType":"web","name":"The Hindu - Sport","url":"http://www.thehindu.com/sport/?service=rss","_id":"http://www.thehindu.com/sport/?service=rss"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Economic Times","url":"http://economictimes.indiatimes.com/rssfeedsdefault.cms"
+      "docType":"source","sourceType":"web","name":"The Economic Times","url":"http://economictimes.indiatimes.com/rssfeedsdefault.cms","_id":"http://economictimes.indiatimes.com/rssfeedsdefault.cms"
     },
     {
-      "docType":"source","sourceType":"web","name":"Hindustan Times - topnews","url":"http://www.hindustantimes.com/rss/topnews/rssfeed.xml"
+      "docType":"source","sourceType":"web","name":"Hindustan Times - topnews","url":"http://www.hindustantimes.com/rss/topnews/rssfeed.xml","_id":"http://www.hindustantimes.com/rss/topnews/rssfeed.xml"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Indian Express","url":"http://indianexpress.com/print/front-page/feed/"
+      "docType":"source","sourceType":"web","name":"The Indian Express","url":"http://indianexpress.com/print/front-page/feed/","_id":"http://indianexpress.com/print/front-page/feed/"
     },
     {
-      "docType":"source","sourceType":"web","name":"NYT > Home Page","url":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+      "docType":"source","sourceType":"web","name":"NYT > Home Page","url":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml","_id":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
     },
     {
-      "docType":"source","sourceType":"web","name":"india","url":"http://newsclick.in/taxonomy/term/india/feed"
+      "docType":"source","sourceType":"web","name":"india","url":"http://newsclick.in/taxonomy/term/india/feed","_id":"http://newsclick.in/taxonomy/term/india/feed"
     },
     {
-      "docType":"source","sourceType":"web","name":"RSS - Feeds","url":"https://sabrangindia.in/rssfeeds"
+      "docType":"source","sourceType":"web","name":"RSS - Feeds","url":"https://sabrangindia.in/rssfeeds","_id":"http://https://sabrangindia.in/rssfeeds"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Sci-Tech","url":"http://www.thehindu.com/sci-tech/?service=rss"
+      "docType":"source","sourceType":"web","name":"The Hindu - Sci-Tech","url":"http://www.thehindu.com/sci-tech/?service=rss","_id":"http://www.thehindu.com/sci-tech/?service=rss"
     },
     {
-      "docType":"source","sourceType":"web","name":"India The Indian Express","url":"http://indianexpress.com/section/india/feed/"
+      "docType":"source","sourceType":"web","name":"India The Indian Express","url":"http://indianexpress.com/section/india/feed/","_id":"http://indianexpress.com/section/india/feed/"
     },
     {
-      "docType":"source","sourceType":"web","name":"Top Tv News- News18.com","url":"http://www.news18.com/rss/tv.xml"
+      "docType":"source","sourceType":"web","name":"Top Tv News- News18.com","url":"http://www.news18.com/rss/tv.xml","_id":"http://www.news18.com/rss/tv.xml"
     },
     {
-      "docType":"source","sourceType":"web","name":"DO NOT USE Asia The Indian Express","url":"http://indianexpress.com/section/world/asia/feed/"
+      "docType":"source","sourceType":"web","name":"DO NOT USE Asia The Indian Express","url":"http://indianexpress.com/section/world/asia/feed/","_id":"http://indianexpress.com/section/world/asia/feed/"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Home","url":"http://www.thehindu.com/?service=rss"
+      "docType":"source","sourceType":"web","name":"The Hindu - Home","url":"http://www.thehindu.com/?service=rss","_id":"http://www.thehindu.com/?service=rss"
     },
     {
-      "docType":"source","sourceType":"web","name":"Zee News :India National","url":"http://zeenews.india.com/rss/india-national-news.xml"
+      "docType":"source","sourceType":"web","name":"Zee News :India National","url":"http://zeenews.india.com/rss/india-national-news.xml","_id":"http://zeenews.india.com/rss/india-national-news.xml"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
     },
     {
-      "docType":"source","sourceType":"web","name":"India Today NATION ","url":"http://indiatoday.intoday.in/rss/article.jsp?sid=36"
+      "docType":"source","sourceType":"web","name":"India Today NATION ","url":"http://indiatoday.intoday.in/rss/article.jsp?sid=36","_id":"http://indiatoday.intoday.in/rss/article.jsp?sid=36"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-TopStories","url":"http://feeds.feedburner.com/NdtvNews-TopStories"
+      "docType":"source","sourceType":"web","name":"NDTV-TopStories","url":"http://feeds.feedburner.com/NdtvNews-TopStories","_id":"http://feeds.feedburner.com/NdtvNews-TopStories"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - National","url":"http://www.thehindu.com/news/national/?service=rss"
+      "docType":"source","sourceType":"web","name":"The Hindu - National","url":"http://www.thehindu.com/news/national/?service=rss","_id":"http://www.thehindu.com/news/national/?service=rss"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
     },
     {
-      "docType":"source","sourceType":"web","name":"Lucknow &#8211; The Indian Express","url":"http://indianexpress.com/section/cities/lucknow/feed/"
+      "docType":"source","sourceType":"web","name":"Lucknow &#8211; The Indian Express","url":"http://indianexpress.com/section/cities/lucknow/feed/","_id":"http://indianexpress.com/section/cities/lucknow/feed/"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
     }
   ]
 }

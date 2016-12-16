@@ -9,7 +9,10 @@ export function addRssUrl(url) {
             "Content-Type": "application/json"
         };
         ajax.post(headers, { "url": url }).then((result) => {
+            return result;
+        }).catch((error) => {
+            // console.log("Action---", error);
+            // return error;
         });
-
     };
 }

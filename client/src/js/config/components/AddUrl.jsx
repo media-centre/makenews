@@ -9,7 +9,9 @@ export class AddUrl extends Component {
     addUrl() {
         let url = this.refs.url.value.trim();
         if(url.match(urlRegex)) {
+            // console.log("url---")
             this.props.dispatch(AddUrlActions.addRssUrl(url, () => {
+                // console.log(response);
             }));
         }
     }
