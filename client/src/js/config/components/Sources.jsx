@@ -21,8 +21,7 @@ export class Sources extends Component {
             this.timer = setTimeout(() => {
                 this.timer = null;
                 if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
-                    /* TODO: store the search box query in redux-store. so you can use q= , rather than relying on the response from the server*/ // eslint-disable-line
-                    this.props.dispatch(getSources(this.props.currentTab, "moana", this.props.sources.nextPage));
+                    this.props.dispatch(getSources(this.props.currentTab, this.props.sourceSearchKeyword, this.props.sources.nextPage));
                 }
             }, scrollTimeInterval);
         }
@@ -47,7 +46,8 @@ function mapToStore(store) {
     return {
         "sources": store.sourceResults,
         "currentTab": store.currentSourceTab,
-        "hasMoreSourceResults": store.hasMoreSourceResults
+        "hasMoreSourceResults": store.hasMoreSourceResults,
+        "sourceSearchKeyword": store.sourceSearchKeyword
     };
 }
 
@@ -55,7 +55,8 @@ Sources.propTypes = {
     "sources": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "currentTab": PropTypes.string.isRequired,
-    "hasMoreSourceResults": PropTypes.bool.isRequired
+    "hasMoreSourceResults": PropTypes.bool.isRequired,
+    "sourceSearchKeyword": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(Sources);

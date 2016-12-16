@@ -12,7 +12,8 @@ import {
     NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
-    CLEAR_SOURCES
+    CLEAR_SOURCES,
+    SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
 
 import { WEB_GOT_SOURCE_RESULTS } from "./../../config/actions/WebConfigureActions";
@@ -77,4 +78,11 @@ export const currentSourceTab = (state = WEB, action = {}) => {
     }
     default: return state;
     }
+};
+
+export const sourceSearchKeyword = (keyword = "", action = {}) => {
+    if(action.type === SOURCE_SEARCH_KEYWORD) {
+        return action.keyword;
+    }
+    return keyword;
 };

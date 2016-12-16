@@ -12,7 +12,7 @@ import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
-import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults }
+import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
@@ -35,6 +35,7 @@ const contentDiscoveryApp = combineReducers({
     addUrlMessage,
     newsBoardCurrentSourceTab,
     sourceResults,
+    sourceSearchKeyword,
     currentSourceTab,
     currentHeaderTab
 });

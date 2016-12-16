@@ -9,16 +9,22 @@ describe("WebConfigureActions", () => {
 
     describe("gotWebSourceResults", () => {
         it("should return source and type object", () => {
-            let source = [{
-                "name": "The Hindu - International",
-                "url": "http://www.thehindu.com/news/international/?service=rss"
-            },
-                {
-                    "name": "The Hindu - Sport",
-                    "url": "http://www.thehindu.com/sport/?service=rss"
-                }];
-            let result = gotWebSourceResults(source);
-            assert.strictEqual(result.sources.data, source);
+            let sources = {
+                "docs": [{
+                    "name": "The Hindu - International",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                    {
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss"
+                    }],
+                "paging": {
+                    "offset": "25"
+                }
+            };
+            let result = gotWebSourceResults(sources);
+            assert.strictEqual(result.sources.data, sources.docs);
+            assert.strictEqual(result.sources.paging, sources.paging);
             assert.equal(result.type, WEB_GOT_SOURCE_RESULTS);
         });
     });
@@ -29,9 +35,9 @@ describe("WebConfigureActions", () => {
 
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();
-            ajaxClient = new AjaxClient("/search-all-urls");
+            ajaxClient = new AjaxClient("/web-sources");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
-            ajaxGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ "key": keyword });
+            ajaxGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ keyword });
         });
 
         afterEach("fetchSources", () => {
@@ -46,20 +52,25 @@ describe("WebConfigureActions", () => {
                 {
                     "name": "The Hindu - Sport",
                     "url": "http://www.thehindu.com/sport/?service=rss"
-                }] };
+                }],
+                "paging": {
+                    "offset": "25"
+                }
+            };
             ajaxGetMock.returns(Promise.resolve(result));
 
             let gotWebSourcesActionObj = {
                 "type": WEB_GOT_SOURCE_RESULTS,
-                "sources": { "data": result.docs, "paging": {} }
+                "sources": { "data": result.docs, "paging": result.paging }
             };
 
             let store = mockStore({}, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
             store.dispatch(fetchWebSources(keyword));
+            ajaxGetMock.verify();
         });
 
         it(`should dispatch ${NO_MORE_SOURCE_RESULTS} if sources are empty`, (done) => {
-            let result = { "docs": [] };
+            let result = { "docs": [], "paging": { "offset": "25" } };
             ajaxGetMock.returns(Promise.resolve(result));
 
             let store = mockStore({}, [{ "type": NO_MORE_SOURCE_RESULTS }], done);

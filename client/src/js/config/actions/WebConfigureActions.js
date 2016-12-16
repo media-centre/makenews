@@ -6,18 +6,18 @@ export const WEB_GOT_SOURCE_RESULTS = "WEB_GOT_SOURCE_RESULTS";
 export function gotWebSourceResults(sources) {
     return {
         "type": WEB_GOT_SOURCE_RESULTS,
-        "sources": { "data": sources, "paging": {} }
+        "sources": { "data": sources.docs, "paging": sources.paging }
     };
 }
 
-export function fetchWebSources(keyword) {
-    let ajaxClient = AjaxClient.instance("/search-all-urls");
+export function fetchWebSources(keyword, params = {}) {
+    let ajaxClient = AjaxClient.instance("/web-sources");
 
     return async (dispatch) => {
         try {
-            let data = await ajaxClient.get({ "key": keyword });
+            let data = await ajaxClient.get({ keyword, ...params });
             if(data.docs.length) {
-                dispatch(gotWebSourceResults(data.docs));
+                dispatch(gotWebSourceResults(data));
                 dispatch(hasMoreSourceResults());
             } else {
                 dispatch(noMoreSourceResults());

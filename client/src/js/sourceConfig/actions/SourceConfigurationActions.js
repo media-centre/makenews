@@ -9,6 +9,7 @@ export const CLEAR_SOURCES = "CLEAR_SOURCES";
 export const CHANGE_CURRENT_SOURCE_TAB = "CHANGE_CURRENT_SOURCE_TAB";
 export const WEB = "WEB";
 export const TWITTER = "TWITTER";
+export const SOURCE_SEARCH_KEYWORD = "SOURCE_SEARCH_KEYWORD";
 
 export function configuredSourcesReceived(sources) {
     return {
@@ -53,6 +54,13 @@ export function switchSourceTab(currentTab) {
     return {
         "type": CHANGE_CURRENT_SOURCE_TAB,
         currentTab
+    };
+}
+
+export function searchSourceKeyword(keyword = "") {
+    return {
+        "type": SOURCE_SEARCH_KEYWORD,
+        keyword
     };
 }
 
