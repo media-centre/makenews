@@ -31,18 +31,6 @@ describe("Source URL component", () => {
         expect(image.src).to.equal(source.picture.data.url);
     });
 
-    it("should have default icon when image is not provided", () => {
-        source = {
-            "name": "Source Url"
-        };
-        sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
-        );
-        sourceDOM = ReactDOM.findDOMNode(sourceRendered);
-        let [image] = sourceDOM.querySelectorAll("img");
-        expect(image.src).to.equal("./images/default-source-icon.jpg");
-    });
-
     it("should have add button in the source when it's not added to configured list", () =>{
         let imageSrc = sourceDOM.querySelectorAll(".source__action-icon img")[0].src; //eslint-disable-line no-magic-numbers
         expect(imageSrc).to.equal("./images/add-btn.png");
