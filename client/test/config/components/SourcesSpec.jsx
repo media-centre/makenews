@@ -32,7 +32,8 @@ describe("Sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
             "sourceResults": sources,
-            "hasMoreSourceResults": false
+            "hasMoreSourceResults": false,
+            "sourceSearchKeyword": "Bla"
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
@@ -47,7 +48,8 @@ describe("Sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
             "sourceResults": { "data": [] },
-            "hasMoreSourceResults": false
+            "hasMoreSourceResults": false,
+            "sourceSearchKeyword": "Bla"
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>

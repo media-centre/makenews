@@ -17,6 +17,7 @@ export class ConfigurePane extends Component {
         let value = this.refs.searchSources.value;
         if(!StringUtils.isEmptyString(value)) {
             this.props.dispatch(SourceConfigActions.clearSources());
+            this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
             this.props.dispatch(SourceConfigActions.getSources(this.props.currentTab, value));
         }
     }

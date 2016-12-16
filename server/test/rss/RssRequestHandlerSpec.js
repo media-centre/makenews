@@ -25,16 +25,10 @@ describe("Rss Request Handler", () => {
             let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
             rssClientMock.withExactArgs(key, offSet).returns(Promise.resolve({
                 "docs": [{
-                    "_id": "1",
-                    "docType": "test",
-                    "sourceType": "web",
                     "name": "url1 test",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
                 },
                 {
-                    "_id": "2",
-                    "docType": "test",
-                    "sourceType": "web",
                     "name": "url test",
                     "url": "http://www.thehindu.com/sport/?service=rss"
                 }]
@@ -42,9 +36,9 @@ describe("Rss Request Handler", () => {
             try {
                 let document = await rssRequestHandler.searchUrl(key, offSet);
                 const zero = 0;
-                assert.strictEqual("web", document.docs[zero].sourceType);
+                assert.strictEqual("url1 test", document.docs[zero].name);
                 rssClientMock.verify();
-            }catch (err) {
+            } catch (err) {
                 assert.fail(err);
             }
         });

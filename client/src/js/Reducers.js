@@ -11,7 +11,7 @@ import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
-import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults }
+import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
@@ -33,6 +33,7 @@ const contentDiscoveryApp = combineReducers({
     fetchedFeeds,
     addUrlMessage,
     sourceResults,
+    sourceSearchKeyword,
     currentSourceTab,
     currentHeaderTab
 });

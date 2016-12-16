@@ -46,7 +46,7 @@ describe("Search Urls Route", () => {
         let sandbox = sinon.sandbox.create();
         let request = {
             "query": {
-                "key": "The",
+                "keyword": "The",
                 "offset": ""
             }
         };
@@ -65,7 +65,7 @@ describe("Search Urls Route", () => {
         let requestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
         let requestHandlerMock = sandbox.mock(requestHandlerInstance).expects("searchUrl");
-        requestHandlerMock.withArgs(request.query.key, ZERO).returns(Promise.resolve(feeds));
+        requestHandlerMock.withArgs(request.query.keyword, ZERO).returns(Promise.resolve(feeds));
         let response = mockResponseSuccess({ "status": HttpResponseHandler.codes.OK, "json": { feeds } });
         let searchURLsRoute = await new SearchURLsRoute(request, response, {});
         searchURLsRoute.handle();
