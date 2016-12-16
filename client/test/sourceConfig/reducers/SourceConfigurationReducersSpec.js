@@ -2,9 +2,11 @@ import {
     FACEBOOK_ADD_PROFILE,
     FACEBOOK_ADD_PAGE,
     FACEBOOK_ADD_GROUP,
+    FACEBOOK_GOT_SOURCES,
     PAGES
 } from "../../../src/js/config/actions/FacebookConfigureActions";
 import {
+    sourceResults,
     configuredSources,
     hasMoreSourceResults,
     currentSourceTab
@@ -14,8 +16,10 @@ import {
     HAS_MORE_SOURCE_RESULTS,
     NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
-    WEB
+    WEB,
+    CLEAR_SOURCES
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import { WEB_GOT_SOURCE_RESULTS } from "./../../../src/js/config/actions/WebConfigureActions";
 import { expect } from "chai";
 
 describe("SourceConfigurationReducers", () => {
@@ -82,4 +86,68 @@ describe("SourceConfigurationReducers", () => {
         });
     });
 
+    describe("Sources Results", () => {
+        it("should return an empty list by default when asked sources", () => {
+            expect({ "data": [], "nextPage": {} }).to.deep.equal(sourceResults());
+        });
+
+        it("should return the list of sources when it got the FACEBOOK sources", () => {
+            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            let action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources };
+            let state = sourceResults([], action);
+            expect(state.data).to.deep.equal(sources.data);
+            expect(state.nextPage).to.deep.equal(sources.paging);
+        });
+
+        it("should return the list of sources when it got the WEB sources", () => {
+            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            let action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources };
+            let state = sourceResults([], action);
+            expect(state.data).to.deep.equal(sources.data);
+            expect(state.nextPage).to.deep.equal(sources.paging);
+        });
+
+        it("should add the added=true property to the configured facebook profile", () => {
+            let state = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
+            expect(sourceResults(state, action).data).to.deep.equal(
+                [{ "_id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
+        });
+
+        it("should add the added=true property to the configured facebook page", () => {
+            let state = { "data": [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }], "paging": {} };
+            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "id": 1, "name": "Page" }] };
+            expect(sourceResults(state, action).data).to.deep.equal(
+                [{ "_id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
+        });
+
+        it("should add the added=true property to the configured facebook group", () => {
+            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
+            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "id": 1, "name": "Group" }] };
+            expect(sourceResults(state, action).data).to.deep.equal(
+                [{ "_id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
+        });
+
+        it("should add the added=true property to multiple FACEBOOK_GROUPS when requested with multiple sources", () => {
+            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
+            let action = {
+                "type": FACEBOOK_ADD_GROUP,
+                "sources": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }]
+            };
+            expect(sourceResults(state, action).data).to.deep.equal([
+                { "_id": 1, "added": true, "name": "Group" },
+                { "_id": 2, "added": true, "name": "Group2" }
+            ]);
+        });
+
+        it(`should clear the sources and next page when ${CLEAR_SOURCES} is action is performed`, () => {
+            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": { "offset": 50 } };
+            let action = {
+                "type": CLEAR_SOURCES
+            };
+            let sources = sourceResults(state, action);
+            expect(sources.data).to.deep.equal([]);
+            expect(sources.nextPage).to.deep.equal({});
+        });
+    });
 });

@@ -73,7 +73,7 @@ describe("Configure Pane", () => {
             currentTab = "Profiles";
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
-                "facebookSources": { "data": [] },
+                "sourceResults": { "data": [] },
                 "hasMoreSourceResults": false
             }), applyMiddleware(thunkMiddleware));
 

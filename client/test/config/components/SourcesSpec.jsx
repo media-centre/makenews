@@ -31,7 +31,7 @@ describe("Sources", () => {
     it("should render Sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
-            "facebookSources": sources,
+            "sourceResults": sources,
             "hasMoreSourceResults": false
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(
@@ -46,7 +46,7 @@ describe("Sources", () => {
     it("should display a search for source message if there are no sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
-            "facebookSources": { "data": [] },
+            "sourceResults": { "data": [] },
             "hasMoreSourceResults": false
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(

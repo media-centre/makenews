@@ -12,8 +12,8 @@ import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
-import { facebookSources } from "./config/reducers/FacebookReducer";
-import { configuredSources, hasMoreSourceResults, currentSourceTab } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults }
+    from "./sourceConfig/reducers/SourceConfigurationReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -31,10 +31,10 @@ const contentDiscoveryApp = combineReducers({
     userProfileStrings,
     configuredSources,
     hasMoreSourceResults,
-    facebookSources,
     fetchedFeeds,
     addUrlMessage,
     newsBoardCurrentSourceTab,
+    sourceResults,
     currentSourceTab,
     currentHeaderTab
 });
