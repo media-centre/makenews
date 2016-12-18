@@ -401,14 +401,14 @@ describe("RssClient", () => {
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
-            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("Unexpected response from db"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from the db"));
             try {
                 await rssClient.addURL(url, accessToken);
                 assert.fail("Expected error");
             } catch(err) {
-                assert.strictEqual("Unexpected response from db", err);
+                assert.strictEqual("Unexpected response from the db", err);
                 fetchRssFeedsMock.verify();
-                addURLtoCommonMock.verify();
+                addURLtoUserMock.verify();
             }
         });
 
@@ -425,16 +425,16 @@ describe("RssClient", () => {
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
-            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added to Database"));
-            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from db"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.resolve("URL added to Database"));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("Unexpected response from the db"));
             try {
                 await rssClient.addURL(url, accessToken);
                 assert.fail("Expected error");
             } catch(err) {
-                assert.strictEqual("Unexpected response from db", err);
+                assert.strictEqual("Unexpected response from the db", err);
                 fetchRssFeedsMock.verify();
-                addURLtoCommonMock.verify();
                 addURLtoUserMock.verify();
+                addURLtoCommonMock.verify();
             }
         });
 

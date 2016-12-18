@@ -12,6 +12,7 @@ import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { facebookSources, facebookCurrentSourceTab } from "./config/reducers/FacebookReducer";
 import { configuredSources, hasMoreSourceResults } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -32,7 +33,8 @@ const contentDiscoveryApp = combineReducers({
     facebookSources,
     facebookCurrentSourceTab,
     currentHeaderTab,
-    fetchedFeeds
+    fetchedFeeds,
+    addUrlMessage
 
 });
 

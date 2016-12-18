@@ -157,10 +157,9 @@ export default class RssClient {
             let response = await this.fetchRssFeeds(url);
             let name = response.meta.title;
             let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-            await this.addUrlToCommon(document);
             await this.addURLToUser(document, accessToken);
+            await this.addUrlToCommon(document);
         } catch (error) {
-            // console.log("AddUrl inside client", error)
             RssClient.logger().error("RssClient:: Error while adding document %j.", error);
             throw error;
         }
@@ -175,7 +174,6 @@ export default class RssClient {
             await dbInstance.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
         } catch (error) {
-            // console.log("add url client to common====>", error)
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
             throw error;
         }
@@ -218,7 +216,6 @@ export default class RssClient {
             await couchClient.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to user database.");
         } catch (error) {
-            // console.log("add URL client To User====>",error)
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
             throw error;
         }

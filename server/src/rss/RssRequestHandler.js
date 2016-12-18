@@ -60,7 +60,6 @@ export default class RssRequestHandler {
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
             return response;
         } catch (error) {
-            // console.log("Inside request handler", error)
             RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
             throw error;
         }
