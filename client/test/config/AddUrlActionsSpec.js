@@ -1,0 +1,41 @@
+import { addRssUrl, MESSAGE } from "./../../src/js/config/actions/AddUrlActions";
+import AjaxClient from "./../../src/js/utils/AjaxClient";
+import mockStore from "./../helper/ActionHelper";
+import { assert } from "chai";
+import sinon from "sinon";
+
+describe("AddUrl Actions", () => {
+    let message = null, url = null;
+    let ajaxClientInstance = null, ajaxClientMock = null, postMock = null;
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+
+    beforeEach("AddUrl Actions", () => {
+        ajaxClientInstance = AjaxClient.instance("/add-url", true);
+        ajaxClientMock = sinon.mock(AjaxClient);
+        ajaxClientMock.expects("instance").returns(ajaxClientInstance);
+        postMock = sinon.mock(ajaxClientInstance);
+    });
+
+    afterEach("AddUrl Actions", () => {
+        ajaxClientMock.restore();
+        postMock.restore();
+    });
+
+    it("should return successful message", (done) => {
+        message = "URL added Suessfully";
+        url = "http://newsclick.in/taxonomy/term/economy/feed";
+
+        postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.resolve(message));
+
+        let action = [{ "type": MESSAGE, message }];
+        let store = mockStore([], action, done);
+        store.dispatch(addRssUrl(url, (result) => {
+            assert.deepEqual(result, message);
+            ajaxClientMock.verify();
+            postMock.verify();
+        }));
+    });
+});
