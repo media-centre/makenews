@@ -7,7 +7,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
-
+import FacebookParser from "./FacebookParser.js";
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof, appId) {
@@ -56,6 +56,8 @@ export default class FacebookClient {
         });
     }
 
+
+
     pagePosts(pageId, parameters = {}) {
         return new Promise((resolve, reject) => {
             if (StringUtil.isEmptyString(pageId)) {
@@ -73,6 +75,7 @@ export default class FacebookClient {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
+                            feedResponse = FacebookParser.parsePosts(feedResponse.data)
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);

@@ -6,19 +6,18 @@ export default class RssBatchFeedsFetch {
         return new RssBatchFeedsFetch();
     }
 
-    async fetchBatchFeeds(url, authSession) {
+    async fetchBatchFeeds(url) {
         let rssClient = RssClient.instance();
         let feeds = await rssClient.getRssData(url);
-        let response = await this.saveFeedDocumentsToDb(feeds, authSession);
-        return response;
+        return feeds.items;
     }
 
-    async saveFeedDocumentsToDb(feeds, accesstoken) {
-        let SUCCESS_MESSAGE = "Successfully added feeds to Database";
-        let couchClient = await CouchClient.createInstance(accesstoken);
-        let feedObject = { "docs": feeds.items };
-        await couchClient.saveBulkDocuments(feedObject);
-        return SUCCESS_MESSAGE;
-
-    }
+    //async saveFeedDocumentsToDb(feeds, accesstoken) {
+    //    let SUCCESS_MESSAGE = "Successfully added feeds to Database";
+    //    let couchClient = await CouchClient.createInstance(accesstoken);
+    //    let feedObject = { "docs": feeds.items };
+    //    await couchClient.saveBulkDocuments(feedObject);
+    //    return SUCCESS_MESSAGE;
+    //
+    //}
 }

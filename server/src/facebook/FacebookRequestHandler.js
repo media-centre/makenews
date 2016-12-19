@@ -25,23 +25,39 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pagePosts(webUrl, options = {}) {
-        return new Promise((resolve, reject) => {
-            let facebookClientInstance = this.facebookClient();
-            facebookClientInstance.getFacebookId(webUrl).then(pageId => {
-                facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-                    FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
-                    resolve(feeds.data);
-                }).catch(error => {
-                    FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
-                    reject("error fetching facebook feeds of web url = " + webUrl);
-                });
-            }).catch(error => {
-                FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-                reject("error fetching facebook feeds of web url = " + webUrl);
-            });
-        });
+    async pagePosts(webUrl, options = {}) {
+        let facebookClientInstance = this.facebookClient();
+        try {
+            console.log(12)
+            let pageId = await facebookClientInstance.getFacebookId(webUrl);
+            let feeds = await facebookClientInstance.pagePosts(pageId, this._getAllOptions(options));
+            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
+            return feeds;
+
+        } catch (error) {
+            console.log(13)
+            FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
+            throw ("error fetching facebook feeds of web url = " + webUrl);
+
+        }
+
     }
+        //return new Promise((resolve, reject) => {
+        //    let facebookClientInstance = this.facebookClient();
+        //    facebookClientInstance.getFacebookId(webUrl).then(pageId => {
+        //        facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
+        //            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
+        //            resolve(feeds.data);
+        //        }).catch(error => {
+        //            FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
+        //            reject("error fetching facebook feeds of web url = " + webUrl);
+        //        });
+        //    }).catch(error => {
+        //        FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
+        //        reject("error fetching facebook feeds of web url = " + webUrl);
+        //    });
+        //});
+    //}
 
     saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {
         dbInstance.saveDocument(tokenDocumentId, document).then(() => {

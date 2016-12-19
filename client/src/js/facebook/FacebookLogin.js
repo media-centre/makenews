@@ -57,19 +57,20 @@ export default class FacebookLogin {
 
     login() {
         return new Promise((resolve, reject) => {
-            if(this.tokenExpired) {
-                this.showLogin((response, error) => {
-                    if(response) {
-                        FacebookRequestHandler.setToken(response.accessToken);
-                        this.tokenExpired = false;
-                        resolve(true);
-                    } else {
-                        reject(error);
-                    }
-                });
-            } else {
-                resolve(true);
-            }
+            //if(this.tokenExpired) {
+            //    this.showLogin((response, error) => {
+            //        if(response) {
+            //            FacebookRequestHandler.setToken(response.accessToken);
+            //            this.tokenExpired = false;
+            //            resolve(true);
+            //        } else {
+            //            reject(error);
+            //        }
+            //    });
+            //} else {
+            //    resolve(true);
+            //}
+            resolve(true);
         });
     }
 
@@ -79,14 +80,15 @@ export default class FacebookLogin {
 
     static isTokenExpired() {
         return new Promise((resolve) => {
-            UserInfo.getUserDocument().then((document) => {
-                if (!document.facebookExpiredAfter) {
-                    resolve(true);
-                }
-                resolve(FacebookLogin.getCurrentTime() > document.facebookExpiredAfter);
-            }).catch(() => {
-                resolve(true);
-            });
+            resolve(true);
+            //UserInfo.getUserDocument().then((document) => {
+            //    if (!document.facebookExpiredAfter) {
+            //        resolve(true);
+            //    }
+            //    resolve(FacebookLogin.getCurrentTime() > document.facebookExpiredAfter);
+            //}).catch(() => {
+            //    resolve(true);
+            //});
         });
     }
 }
