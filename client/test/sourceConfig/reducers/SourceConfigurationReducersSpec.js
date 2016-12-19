@@ -116,21 +116,21 @@ describe("SourceConfigurationReducers", () => {
             let state = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
             let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
-                [{ "_id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
+                [{ "_id": 1, "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
         });
 
         it("should add the added=true property to the configured facebook page", () => {
             let state = { "data": [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }], "paging": {} };
             let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "id": 1, "name": "Page" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
-                [{ "_id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
+                [{ "_id": 1, "id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
         });
 
         it("should add the added=true property to the configured facebook group", () => {
             let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
             let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "id": 1, "name": "Group" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
-                [{ "_id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
+                [{ "_id": 1, "id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
         });
 
         it("should add the added=true property to multiple FACEBOOK_GROUPS when requested with multiple sources", () => {
@@ -140,8 +140,8 @@ describe("SourceConfigurationReducers", () => {
                 "sources": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }]
             };
             expect(sourceResults(state, action).data).to.deep.equal([
-                { "_id": 1, "added": true, "name": "Group" },
-                { "_id": 2, "added": true, "name": "Group2" }
+                { "_id": 1, "id": 1, "added": true, "name": "Group" },
+                { "_id": 2, "id": 2, "added": true, "name": "Group2" }
             ]);
         });
 
@@ -149,7 +149,8 @@ describe("SourceConfigurationReducers", () => {
             let state = { "data": [{ "url": "http://web.url", "name": "Group" }, { "url": "http://web2.url", "name": "Group2" }], "paging": {} };
             let action = { "type": WEB_ADD_SOURCE, "sources": [{ "url": "http://web.url", "name": "Group" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
-                [{ "url": "http://web.url", "name": "Group" }, { "url": "http://web2.url", "name": "Group2" }]);
+                [{ "_id": "http://web.url", "added": true, "url": "http://web.url", "name": "Group" },
+                    { "url": "http://web2.url", "name": "Group2" }]);
         });
 
         it(`should clear the sources and next page when ${CLEAR_SOURCES} is action is performed`, () => {

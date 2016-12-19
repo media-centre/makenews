@@ -14,7 +14,8 @@ describe("Source URL component", () => {
                 "data": {
                     "url": "https://facebook.com/user.png"
                 }
-            }
+            },
+            "url": "http://some.url"
         };
         sourceRendered = TestUtils.renderIntoDocument(
             <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
@@ -22,8 +23,23 @@ describe("Source URL component", () => {
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
     });
 
-    it("should have url name", () => {
+    it("should have source name", () => {
         expect(sourceDOM.textContent).to.equal("Source Url");
+    });
+
+    it("should not have source url if currentSourceType is not WEB", () => {
+        let sourceUrl = sourceDOM.querySelectorAll(".source__url");
+        expect(sourceUrl).to.have.lengthOf(0); // eslint-disable-line no-magic-numbers
+    });
+
+    it("should have source url if currentSourceType is WEB", () => {
+        sourceRendered = TestUtils.renderIntoDocument(
+            <Source source={source} dispatch={()=>{}} currentSourceType="WEB" />
+        );
+        sourceDOM = ReactDOM.findDOMNode(sourceRendered);
+
+        let sourceUrl = sourceDOM.querySelectorAll(".source__url");
+        expect(sourceUrl).to.have.lengthOf(1); // eslint-disable-line no-magic-numbers
     });
     
     it("should have user icon with the give source", () => {

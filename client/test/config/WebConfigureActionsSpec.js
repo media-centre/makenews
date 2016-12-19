@@ -64,7 +64,50 @@ describe("WebConfigureActions", () => {
                 "sources": { "data": result.docs, "paging": result.paging }
             };
 
-            let store = mockStore({}, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            let store = mockStore({ "configuredSources": { "web": [] } }, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            store.dispatch(fetchWebSources(keyword));
+            ajaxGetMock.verify();
+        });
+
+        it(`should dispatch ${WEB_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
+            let result = { "docs": [{
+                "name": "The Hindu - International",
+                "url": "http://www.thehindu.com/news/international/?service=rss"
+            },
+                {
+                    "name": "The Hindu - Sport",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }],
+                "paging": {
+                    "offset": "25"
+                }
+            };
+            ajaxGetMock.returns(Promise.resolve(result));
+
+            let gotWebSourcesActionObj = {
+                "type": WEB_GOT_SOURCE_RESULTS,
+                "sources": {
+                    "data": [{
+                        "name": "The Hindu - International",
+                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                    },
+                        {
+                            "name": "The Hindu - Sport",
+                            "url": "http://www.thehindu.com/sport/?service=rss",
+                            "added": true
+                        }],
+                    "paging": result.paging }
+            };
+
+            const getStore = { "configuredSources": {
+                "web": [{
+                    "name": "The Hindu - Sport",
+                    "url": "http://www.thehindu.com/sport/?service=rss",
+                    "_id": "http://www.thehindu.com/sport/?service=rss"
+                }]
+            } };
+
+            let store = mockStore(getStore, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
             store.dispatch(fetchWebSources(keyword));
             ajaxGetMock.verify();
         });

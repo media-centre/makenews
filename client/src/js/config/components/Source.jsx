@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
 import React, { Component, PropTypes } from "react";
-import { addSourceToConfigureList } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { addSourceToConfigureList, WEB } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export default class Source extends Component {
     render() {
@@ -16,7 +16,7 @@ export default class Source extends Component {
                         { this.props.source.name }
                     </div>
 
-                    { this.props.source.url &&
+                    { this.props.currentSourceType === WEB &&
                     <div className="source__url">
                         { this.props.source.url }
                     </div>
