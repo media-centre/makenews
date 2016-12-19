@@ -25,7 +25,7 @@ describe("AddUrl Actions", () => {
     });
 
     it("should return successful message", (done) => {
-        message = "URL added Suessfully";
+        message = "URL added Successfully";
         url = "http://newsclick.in/taxonomy/term/economy/feed";
 
         postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.resolve(message));

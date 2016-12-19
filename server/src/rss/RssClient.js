@@ -175,6 +175,18 @@ export default class RssClient {
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
         } catch (error) {
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+            throw "unexpected response from common db"; //eslint-disable-line no-throw-literal
+        }
+        return "URL added to Database";
+    }
+
+    async addURLToUser(document, accessToken) {
+        try {
+            let couchClient = await CouchClient.createInstance(accessToken);
+            await couchClient.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
+        } catch (error) {
+            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
             throw error;
         }
         return "URL added to Database";
@@ -208,18 +220,6 @@ export default class RssClient {
             this.handleRequestError(key, error);
         }
         return document;
-    }
-
-    async addURLToUser(document, accessToken) {
-        try {
-            let couchClient = await CouchClient.createInstance(accessToken);
-            await couchClient.saveDocument(encodeURIComponent(document.url), document);
-            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
-        } catch (error) {
-            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-            throw error;
-        }
-        return "URL added to Database";
     }
 
     handleUrlError(url, error) {

@@ -60,4 +60,9 @@ export default class Route {
         this.response.status(HttpResponseHandler.codes.OK);
         this.response.json(json);
     }
+
+    _handleConflict(error) {
+        this.response.status(HttpResponseHandler.codes.OK);
+        this.response.json(error);
+    }
 }

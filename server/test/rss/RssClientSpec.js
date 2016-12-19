@@ -493,12 +493,12 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from the db"));
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from common db"));
             try {
                 await RssClient.instance().addUrlToCommon(document);
                 assert.fail("expected error");
             } catch (err) {
-                assert.strictEqual("unexpected response from the db", err);
+                assert.strictEqual("unexpected response from common db", err);
             }
             adminDetailsMock.verify();
             adminDbInstance.verify();
