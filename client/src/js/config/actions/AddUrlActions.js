@@ -1,4 +1,4 @@
-/* eslint no-unused-vars:0*/
+/* eslint no-unused-vars:0 no-magic-numbers:0*/
 import AjaxClient from "./../../utils/AjaxClient";
 
 export const MESSAGE = "MESSAGE";
