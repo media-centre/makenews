@@ -53,8 +53,8 @@ describe("FacebookClient", () => {
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.pagePosts(pageId, userParameters).then((feeds) => {
                 try {
-                    assert.strictEqual("test news 1", feeds.data[0].message);
-                    assert.strictEqual("test news 2", feeds.data[1].message);
+                    assert.strictEqual("test news 1", feeds[0].description);
+                    assert.strictEqual("test news 2", feeds[1].description);
                     nodeErrorHandlerMock.verify();
                     NodeErrorHandler.noError.restore();
                     done();

@@ -22,15 +22,13 @@ export default class FetchFeedsFromAllSources {
     }
 
     fetchFeeds() {
-        console.log(2);
 
         return new Promise((resolve, reject)=> {
             if (this.isValidateRequestData()) {
                 this.fetchFeedsFromAllSources().then((feeds)=> {
-                    console.log(3);
 
                     FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
-                    console.log(feeds)
+                    console.log(feeds) 
                     resolve(feeds);
 
                 }).catch((err) => {
@@ -51,7 +49,8 @@ export default class FetchFeedsFromAllSources {
     fetchFeedsFromAllSources() {
         return new Promise((resolve, reject)=> {
             let allFeeds = [];
-            this.request.body.data.forEach((item, index)=> {
+            let urlDocuments = this._getUrlDocuments();
+            urlDocuments.forEach((item, index)=> {
                 this.fetchFeedsFromSource(item).then((feeds)=> {
                     allFeeds = allFeeds.concat(feeds);
                     this.saveFeedDocumentsToDb(feeds).then(response => {
@@ -70,15 +69,29 @@ export default class FetchFeedsFromAllSources {
         });
     }
 
+    async _getUrlDocuments() {
+        let couchClient = await CouchClient.createInstance(this.accesstoken);
+        let selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                }
+            }
+        };
+        let response = await couchClient.findDocuments(selector);
+        console.log(response);
+
+    }
+
     async fetchFeedsFromSource(item) {
         let feeds = null;
-        switch (item.source) {
+        switch (item.sourceType) {
 
         case RSS_TYPE:
             try {
                 console.log(6);
 
-                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item.url);
+                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
                 return feeds;
             } catch (err) {
@@ -91,7 +104,7 @@ export default class FetchFeedsFromAllSources {
         case FACEBOOK_TYPE:
             try {
                 console.log(10);
-                feeds = await FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item.url);
+                feeds = await FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 return feeds;
 
@@ -103,7 +116,7 @@ export default class FetchFeedsFromAllSources {
 
         case TWITTER_TYPE:
             try {
-                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item.url);
+                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
                 return feeds;
             } catch (err) {

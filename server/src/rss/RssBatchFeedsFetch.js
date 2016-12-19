@@ -1,5 +1,4 @@
 import RssClient from "./RssClient";
-import CouchClient from "../CouchClient";
 
 export default class RssBatchFeedsFetch {
     static instance() {

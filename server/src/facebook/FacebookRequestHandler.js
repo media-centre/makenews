@@ -145,7 +145,7 @@ export default class FacebookRequestHandler {
         let formatSources = source => ({
             "_id": source.url,
             "name": source.name,
-            "docType": "configuredSource",
+            "docType": "source",
             "sourceType": sourceType,
             "latestFeedTimeStamp": date
         });

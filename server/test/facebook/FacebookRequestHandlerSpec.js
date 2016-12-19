@@ -132,7 +132,9 @@ describe("FacebookRequestHandler", () => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
             facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.resolve(feeds));
             facebookRequestHandler.pagePosts(facebookWebUrl).then(actualFeeds => {
-                assert.strictEqual(5, actualFeeds.length); //eslint-disable-line
+                console.log("jdf");
+                console.log(actualFeeds);
+                assert.strictEqual(5, actualFeeds.data.length); //eslint-disable-line
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();

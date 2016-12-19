@@ -29,7 +29,7 @@ export default class FacebookParser {
             "sourceType": "facebook",
             "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),          //eslint-disable-line no-magic-numbers
             "description": post.message || "",
-            "pubDate": post.created_time,
+            "pubDate": post.created_time ,
             "tags": []
         };
 
