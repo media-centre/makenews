@@ -230,7 +230,7 @@ export default class RssClient {
         }
         return document;
     }
-
+    
     handleUrlError(url, error) {
         let errorMessage = { "message": url + " is not a proper feed" };
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
