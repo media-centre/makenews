@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Sources from "./Sources";
 import FacebookTabs from "./FacebookTabs";
-import { addAllSources } from "./../actions/FacebookConfigureActions";
-import { WEB, TWITTER } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { WEB, TWITTER, addAllSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class SourcePane extends Component {

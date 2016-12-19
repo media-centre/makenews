@@ -6,9 +6,6 @@ import LoginPage from "../../src/js/login/pages/LoginPage";
 import "../helper/TestHelper";
 import UserSession from "../../src/js/user/UserSession";
 import mockStore from "../helper/ActionHelper";
-import AppWindow from "../../src/js/utils/AppWindow";
-import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
-import nock from "nock";
 import {
     HAS_MORE_SOURCE_RESULTS,
     NO_MORE_SOURCE_RESULTS,
@@ -141,76 +138,6 @@ describe("Facebook Configure Actions", () => {
 
             let store = mockStore(getStore, actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
-        });
-    });
-    
-    describe("add source to configured list", () => {
-        let sandbox = null, sources = null;
-
-        beforeEach("add source to configred list", () => {
-            sources = [{ "name": "something", "id": "432455" }];
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach("add source to configred list", () => {
-            sandbox.restore();
-        });
-        
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-
-            nock("http://localhost")
-                .put("/facebook/configureSource")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
-
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PROFILE, "sources": sources }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PROFILES, ...sources));
-        });
-
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_PAGE} when requested for adding page`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-
-            nock("http://localhost")
-                .put("/facebook/configureSource")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
-
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_PAGE, "sources": sources }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.PAGES, ...sources));
-        });
-
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_GROUP} when requested for adding group`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-
-            nock("http://localhost")
-                .put("/facebook/configureSource")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
-
-            let store = mockStore({}, [{ "type": FBActions.FACEBOOK_ADD_GROUP, "sources": sources }], done);
-            store.dispatch(FBActions.addSourceToConfigureListOf(FBActions.GROUPS, ...sources));
-        });
-
-        it(`should dispatch ${FBActions.FACEBOOK_ADD_PROFILE} by default`, () => {
-            let event = FBActions.addSourceToConfigureListOf("", { "name": "something" });
-            expect(event.type).to.equal(FBActions.FACEBOOK_ADD_PROFILE);
-            expect(event.sources).to.deep.equal([{ "name": "something" }]);
         });
     });
 });

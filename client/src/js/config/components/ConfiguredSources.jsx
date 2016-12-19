@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
-import { getConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { getConfiguredSources, TWITTER, WEB } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
 
 export class ConfiguredSources extends Component {
@@ -17,42 +17,62 @@ export class ConfiguredSources extends Component {
         return R.addIndex(R.map)(sourceCategory, R.prop(sourceType, this.props.sources));
     }
 
-    render() {
+    _configuredSourcesGroup(heading, sourceType) {
+        return (
+            <div className="configured-sources__group open">
+                <h3 className="configured-sources__group__heading">{heading}</h3>
+                <ul className="configured-sources">
+                    { this._renderSources(sourceType) }
+                </ul>
+            </div>
+        );
+    }
+
+    _displayConfiguredSources() {
+        if(this.props.currentTab === TWITTER) {
+            return (
+                <aside className="configured-sources-container">
+                    <h1>{ "My Sources" }</h1>
+                    { this._configuredSourcesGroup("Twitter", "twitter") }
+                </aside>
+            );
+        }
+
+        if(this.props.currentTab === WEB) {
+            return (
+                <aside className="configured-sources-container">
+                    <h1>{ "My Sources" }</h1>
+                    { this._configuredSourcesGroup("Web", "web") }
+                </aside>
+            );
+        }
+
         return (
             <aside className="configured-sources-container">
                 <h1>{ "My Sources" }</h1>
-                <div className="configured-sources__group open">
-                    <h3 className="configured-sources__group__heading">{ "Facebook Friends" }</h3>
-                    <ul className="configured-sources">
-                        { this._renderSources("profiles") }
-                    </ul>
-                </div>
-                <div className="configured-sources__group">
-                    <h3 className="configured-sources__group__heading">{ "Facebook Pages" }</h3>
-                    <ul className="configured-sources">
-                        { this._renderSources("pages") }
-                    </ul>
-                </div>
-                <div className="configured-sources__group">
-                    <h3 className="configured-sources__group__heading">{ "Facebook Groups" }</h3>
-                    <ul className="configured-sources">
-                        { this._renderSources("groups") }
-                    </ul>
-                </div>
+                { this._configuredSourcesGroup("Facebook Profiles", "profiles") }
+                { this._configuredSourcesGroup("Facebook Pages", "pages") }
+                { this._configuredSourcesGroup("Facebook Groups", "groups") }
             </aside>
         );
+    }
+
+    render() {
+        return this._displayConfiguredSources();
     }
 }
 
 function mapToStore(state) {
     return {
-        "sources": state.configuredSources
+        "sources": state.configuredSources,
+        "currentTab": state.currentSourceTab
     };
 }
 
 ConfiguredSources.propTypes = {
     "sources": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "currentTab": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(ConfiguredSources);

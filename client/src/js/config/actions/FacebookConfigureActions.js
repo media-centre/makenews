@@ -1,7 +1,5 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import LoginPage from "../../login/pages/LoginPage";
-import fetch from "isomorphic-fetch";
-import AppWindow from "../../utils/AppWindow";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 import { hasMoreSourceResults, noMoreSourceResults, switchSourceTab } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
@@ -18,54 +16,6 @@ export function facebookSourcesReceived(response) {
         "type": FACEBOOK_GOT_SOURCES,
         "sources": response
     };
-}
-
-
-export async function addToConfiguredSources(dispatch, sources, sourceType, eventType) {
-    let configuredSource = sources.map(source => Object.assign({}, source, { "url": source.id }));
-    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`, {
-        "method": "PUT",
-        "headers": {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        "credentials": "same-origin",
-        "body": JSON.stringify({ "sources": configuredSource, "type": sourceType })
-    });
-    if (data.ok) {
-        dispatch({
-            "type": eventType,
-            sources
-        });
-    }
-}
-
-export function addAllSources() {
-    return (dispatch, getState) => {
-        let sourceType = getState().facebookCurrentSourceTab;
-        let sources = getState().facebookSources.data;
-        dispatch(addSourceToConfigureListOf(sourceType, ...sources));
-    };
-}
-
-export function addSourceToConfigureListOf(sourceType, ...sources) {
-    switch (sourceType) {
-    case PROFILES: {
-        return dispatch => addToConfiguredSources(dispatch, sources, "fb_profile", FACEBOOK_ADD_PROFILE);
-    }
-    case PAGES: {
-        return dispatch => addToConfiguredSources(dispatch, sources, "fb_page", FACEBOOK_ADD_PAGE);
-    }
-    case GROUPS: {
-        return dispatch => addToConfiguredSources(dispatch, sources, "fb_group", FACEBOOK_ADD_GROUP);
-    }
-    default: {
-        return {
-            "type": FACEBOOK_ADD_PROFILE,
-            sources
-        };
-    }
-    }
 }
 
 export function fetchFacebookSources(keyword = "Murali", type, sourceType, props = {}) {
