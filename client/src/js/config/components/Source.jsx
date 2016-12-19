@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
 import React, { Component, PropTypes } from "react";
-import { addSourceToConfigureListOf } from "./../actions/FacebookConfigureActions";
+import { addSourceToConfigureList } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export default class Source extends Component {
     render() {
@@ -29,7 +29,7 @@ export default class Source extends Component {
                     </div>)
                     :
                     (<div className="source__add-icon source__action-icon"
-                        onClick={() => this.props.dispatch(addSourceToConfigureListOf(this.props.currentSourceType, this.props.source))}
+                        onClick={() => this.props.dispatch(addSourceToConfigureList(this.props.currentSourceType, this.props.source))}
                      >
                         <img src="./images/add-btn.png"/>
                     </div>)

@@ -2,6 +2,7 @@ import AjaxClient from "./../../utils/AjaxClient";
 import { hasMoreSourceResults, noMoreSourceResults } from "../../sourceConfig/actions/SourceConfigurationActions";
 
 export const WEB_GOT_SOURCE_RESULTS = "WEB_GOT_SOURCE_RESULTS";
+export const WEB_ADD_SOURCE = "WEB_ADD_SOURCE";
 
 export function gotWebSourceResults(sources) {
     return {

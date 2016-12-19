@@ -16,7 +16,7 @@ import {
     SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
 
-import { WEB_GOT_SOURCE_RESULTS } from "./../../config/actions/WebConfigureActions";
+import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
 
 
 export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {}) => {
@@ -29,6 +29,10 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
     case FACEBOOK_ADD_PAGE:
     case FACEBOOK_ADD_GROUP: {
         return Object.assign({}, state, { "data": markFBSourcesAsAdded(state.data, action.sources) });
+    }
+
+    case WEB_ADD_SOURCE: {
+        return Object.assign({}, state, { "data": state.data });
     }
         
     case CLEAR_SOURCES: {
@@ -49,6 +53,9 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     }
     case FACEBOOK_ADD_GROUP: {
         return Object.assign({}, state, { "groups": List(state.groups).concat(action.sources).toArray() }); //eslint-disable-line new-cap
+    }
+    case WEB_ADD_SOURCE: {
+        return Object.assign({}, state, { "web": List(state.web).concat(action.sources).toArray() }); //eslint-disable-line new-cap
     }
     case GOT_CONFIGURED_SOURCES: {
         return action.sources;

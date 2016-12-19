@@ -19,7 +19,7 @@ import {
     WEB,
     CLEAR_SOURCES
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
-import { WEB_GOT_SOURCE_RESULTS } from "./../../../src/js/config/actions/WebConfigureActions";
+import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
 import { expect } from "chai";
 
 describe("SourceConfigurationReducers", () => {
@@ -34,9 +34,9 @@ describe("SourceConfigurationReducers", () => {
         });
     });
 
-    describe("getConfiguredSources", () => {
+    describe("configuredSources", () => {
         let state = null;
-        beforeEach("getConfiguredSources", () => {
+        beforeEach("configuredSources", () => {
             state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
         });
         it("should add a profile to the state when asked for adding a profile", () => {
@@ -52,6 +52,11 @@ describe("SourceConfigurationReducers", () => {
         it("should add a group to the state when asked for adding a group", () => {
             let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1" }] };
             expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1" }]);
+        });
+
+        it("should add a web url to the state when asked for adding a web source", () => {
+            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "http://website.url" }] };
+            expect(configuredSources(state, action).web).to.deep.equal([{ "name": "http://website.url" }]);
         });
 
         it("should return updated state with configured profiles", () => {
@@ -138,6 +143,13 @@ describe("SourceConfigurationReducers", () => {
                 { "_id": 1, "added": true, "name": "Group" },
                 { "_id": 2, "added": true, "name": "Group2" }
             ]);
+        });
+
+        it("should add the added=true property to the configured web url", () => {
+            let state = { "data": [{ "url": "http://web.url", "name": "Group" }, { "url": "http://web2.url", "name": "Group2" }], "paging": {} };
+            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "url": "http://web.url", "name": "Group" }] };
+            expect(sourceResults(state, action).data).to.deep.equal(
+                [{ "url": "http://web.url", "name": "Group" }, { "url": "http://web2.url", "name": "Group2" }]);
         });
 
         it(`should clear the sources and next page when ${CLEAR_SOURCES} is action is performed`, () => {
