@@ -4,7 +4,7 @@ import {
     FACEBOOK_ADD_GROUP,
     FACEBOOK_GOT_SOURCES
 } from "./../../config/actions/FacebookConfigureActions";
-import { markFBSourcesAsAdded } from "./../../config/reducers/FacebookReducer";
+import { markSourcesAsAdded } from "./../../sourceConfig/reducers/SourceConfiguraionReducersUtils";
 import { List } from "immutable";
 import {
     GOT_CONFIGURED_SOURCES,
@@ -28,11 +28,11 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
     case FACEBOOK_ADD_PROFILE:
     case FACEBOOK_ADD_PAGE:
     case FACEBOOK_ADD_GROUP: {
-        return Object.assign({}, state, { "data": markFBSourcesAsAdded(state.data, action.sources) });
+        return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "id") });
     }
 
     case WEB_ADD_SOURCE: {
-        return Object.assign({}, state, { "data": state.data });
+        return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "url") });
     }
         
     case CLEAR_SOURCES: {

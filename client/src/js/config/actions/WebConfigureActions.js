@@ -1,5 +1,6 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import { hasMoreSourceResults, noMoreSourceResults } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const WEB_GOT_SOURCE_RESULTS = "WEB_GOT_SOURCE_RESULTS";
 export const WEB_ADD_SOURCE = "WEB_ADD_SOURCE";
@@ -14,10 +15,13 @@ export function gotWebSourceResults(sources) {
 export function fetchWebSources(keyword, params = {}) {
     let ajaxClient = AjaxClient.instance("/web-sources");
 
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
             let data = await ajaxClient.get({ keyword, ...params });
             if(data.docs.length) {
+                let configuredSources = getState().configuredSources.web;
+                const cmp = (first, second) => first.url === second._id;
+                intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotWebSourceResults(data));
                 dispatch(hasMoreSourceResults());
             } else {
