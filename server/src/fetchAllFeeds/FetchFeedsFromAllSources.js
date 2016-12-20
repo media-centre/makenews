@@ -3,7 +3,9 @@ import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
 import StringUtil from "../../../common/src/util/StringUtil";
 import Logger from "../logging/Logger";
-import CouchClient from "../../src/CouchClient.js";
+import CouchClient from "../../src/CouchClient";
+import ApplicationConfig from "../config/ApplicationConfig";
+import AdminDbClient from "../db/AdminDbClient";
 
 export const RSS_TYPE = "rss";
 export const FACEBOOK_TYPE = "facebook";
@@ -11,9 +13,9 @@ export const TWITTER_TYPE = "twitter";
 
 export default class FetchFeedsFromAllSources {
     constructor(request, response) {
-        this.request = request;
         this.response = response;
         this.accesstoken = request.cookies.AuthSession;
+        this.urlDocuments = request.body.data;
         console.log(1);
     }
 
@@ -48,11 +50,10 @@ export default class FetchFeedsFromAllSources {
 
     fetchFeedsFromAllSources() {
         return new Promise((resolve, reject)=> {
-            let allFeeds = [];
-            let urlDocuments = this._getUrlDocuments();
+            let ZERO = 0;
+            let urlDocuments = this.urlDocuments.length === ZERO ? this._getUrlDocuments() : this.urlDocuments;
             urlDocuments.forEach((item, index)=> {
                 this.fetchFeedsFromSource(item).then((feeds)=> {
-                    allFeeds = allFeeds.concat(feeds);
                     this.saveFeedDocumentsToDb(feeds).then(response => {
                         resolve(response);
                     }).catch(error => {
@@ -79,8 +80,7 @@ export default class FetchFeedsFromAllSources {
             }
         };
         let response = await couchClient.findDocuments(selector);
-        console.log(response);
-
+        return response.docs;
     }
 
     async fetchFeedsFromSource(item) {
@@ -90,13 +90,11 @@ export default class FetchFeedsFromAllSources {
         case RSS_TYPE:
             try {
                 console.log(6);
-
                 feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
                 return feeds;
             } catch (err) {
                 console.log(err);
-
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching rss feeds. Error: %s", err);
                 throw(err);
             }
@@ -104,7 +102,7 @@ export default class FetchFeedsFromAllSources {
         case FACEBOOK_TYPE:
             try {
                 console.log(10);
-                feeds = await FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item._id);
+                feeds = await FacebookRequestHandler.instance(this._getFacebookAccessToken()).pagePosts(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 return feeds;
 
@@ -127,6 +125,29 @@ export default class FetchFeedsFromAllSources {
         default:
             throw([]);
         }
+    }
+
+    async _getFacebookAccessToken() {
+        try{
+            let couchClient = await CouchClient.createInstance(this.accesstoken);
+            let userName = await couchClient.getUserName();
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            let selector = {
+                "selector": {
+                    "_id": {
+                        "$eq": userName + "_facebookToken"
+                    }
+                }
+            };
+            let response = await dbInstance.findDocuments(selector);
+            let ZeroIndex = 0;
+            return response.docs[ZeroIndex];
+        } catch(error) {
+            throw error;
+        }
+
+
     }
 
     isValidateRequestData() {
