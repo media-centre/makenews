@@ -11,7 +11,7 @@ export class ConfiguredSources extends Component {
 
     _renderSources(sourceType) {
         let sourceCategory = (source, index) => {
-            return <li key={index}>{source.name}</li>;
+            return <li className="source-name" key={index}>{source.name}</li>;
         };
 
         return R.addIndex(R.map)(sourceCategory, R.prop(sourceType, this.props.sources));
