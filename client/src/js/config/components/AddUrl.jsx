@@ -15,13 +15,6 @@ export class AddUrl extends Component {
         }
     }
 
-    _onKeyDownInputBox(event) {
-        const ENTERKEY = 13;
-        if (event.keyCode === ENTERKEY) {
-            this._addUrl();
-        }
-    }
-
     render() {
         return (
             <div className="addurl">
