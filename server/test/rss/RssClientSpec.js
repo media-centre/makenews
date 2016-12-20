@@ -401,18 +401,18 @@ describe("RssClient", () => {
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
-            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from the db"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("URL is not a proper feed"));
             try {
                 await rssClient.addURL(url, accessToken);
                 assert.fail("Expected error");
             } catch(err) {
-                assert.strictEqual("Unexpected response from the db", err);
+                assert.strictEqual("URL is not a proper feed", err);
                 fetchRssFeedsMock.verify();
                 addURLtoUserMock.verify();
             }
         });
 
-        it("should return error when addURLtoCommon throws error", async () => {
+        it("should return error when addURLtoUser throws error", async () => {
             url = "http://www.newsclick.in";
             let accessToken = "test-token";
             let name = "test";
@@ -425,13 +425,64 @@ describe("RssClient", () => {
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
-            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.resolve("URL added to Database"));
-            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("Unexpected response from the db"));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added successfully"));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from the db"));
             try {
                 await rssClient.addURL(url, accessToken);
                 assert.fail("Expected error");
             } catch(err) {
                 assert.strictEqual("Unexpected response from the db", err);
+                fetchRssFeedsMock.verify();
+                addURLtoUserMock.verify();
+                addURLtoCommonMock.verify();
+            }
+        });
+
+        it("should return conflict error if url already exists in both common and user db", async() => {
+            url = "http://www.newsclick.in";
+            let accessToken = "test-token";
+            let name = "test";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve({ "status": "confilct" }));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").returns(Promise.reject("URL already exist"));
+            try {
+                await rssClient.addURL(url, accessToken);
+                assert.fail("Expected error");
+            } catch (err) {
+                assert.strictEqual("URL already exist", err);
+                fetchRssFeedsMock.verify();
+                addURLtoUserMock.verify();
+                addURLtoCommonMock.verify();
+            }
+        });
+
+        it("should add url to user db if it present in common db not in user db", async() => {
+            url = "http://www.newsclick.in";
+            let accessToken = "test-token";
+            let name = "test";
+            let document = {
+                "docType": "source",
+                "sourceType": "web",
+                "name": name,
+                "url": url
+            };
+            let rssClient = RssClient.instance();
+            let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve({ "status": "confilct" }));
+            let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").returns(Promise.resolve("URL added successfully"));
+            try {
+                let result = await rssClient.addURL(url, accessToken);
+                assert.strictEqual("URL added successfully", result);
+            } catch (err) {
                 fetchRssFeedsMock.verify();
                 addURLtoUserMock.verify();
                 addURLtoCommonMock.verify();
@@ -483,7 +534,7 @@ describe("RssClient", () => {
                 "rev": "test_revision"
             }));
             let response = await RssClient.instance().addUrlToCommon(document);
-            assert.strictEqual("URL added to Database", response);
+            assert.strictEqual("URL added successfully", response);
             adminDetailsMock.verify();
             adminDbInstance.verify();
             saveDocMock.verify();
@@ -534,7 +585,7 @@ describe("RssClient", () => {
                     "rev": "test_revision"
                 }));
                 let response = await RssClient.instance().addURLToUser(document, accessToken);
-                assert.strictEqual("URL added to Database", response);
+                assert.strictEqual("URL added successfully", response);
             } catch(err) {
                 assert.fail(err);
             } finally {

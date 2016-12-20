@@ -11,25 +11,16 @@ export function addRssUrl(url) {
             "Content-Type": "application/json"
         };
         ajax.post(headers, { "url": url }).then((response) => {
-            let result = JSON.stringify(response);
-            if (result.includes("URL added ") || response.indexOf("unexpected response from common db") >= 0) {
-                result = "URL added Successfully";
-            }else{
-                if (response.indexOf("unexpected response from the db") >= 0) {
-                    result = "URL is already exist";
-                }
-            }
-            return dispatch(handleMessages(result));
+            return dispatch(handleMessages(response));
         }).catch((error) => {
-            let message = null;
-            let result = JSON.stringify(error);
-            if (result.includes("is not a proper feed")) {
-                message = "Invalid RSS URL. Please check the URL";
-            }else{
-                message = result;
-            }
-            return dispatch(handleMessages(message));
+            return dispatch(handleMessages("Invalid RSS URL. Please check the URL"));
         });
+    };
+}
+
+export function invalidRssUrl() {
+    return (dispatch) => {
+        return dispatch(handleMessages("Please enter proper url."));
     };
 }
 

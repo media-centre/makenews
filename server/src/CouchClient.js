@@ -115,6 +115,8 @@ export default class CouchClient {
                 CouchClient.logger().debug("successful response from database.");
                 // resolve("successful response from database.");
                 resolve(response.body);
+            } else if(response.statusCode === HttpResponseHandler.codes.CONFLICT) {
+                reject({ "status": "conflict", "message": response.body });
             } else {
                 CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
                 reject("unexpected response from the db");
