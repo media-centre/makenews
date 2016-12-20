@@ -188,4 +188,89 @@ describe("SourceConfigurationActions", () => {
             expect(event.sources).to.deep.equal([{ "name": "something" }]);
         });
     });
+
+    describe("add all sources", () => {
+        let sandbox = null, appWindow = null, configuredSources = null, sources = null;
+        beforeEach("add all sources", () => {
+            appWindow = new AppWindow();
+            sandbox = sinon.sandbox.create();
+            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
+            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
+            sandbox.mock(UserSession).expects("instance").returns({
+                "continueSessionIfActive": () => {}
+            });
+
+            nock("http://localhost")
+                .put("/facebook/configureSource")
+                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            configuredSources = [{ "name": "something", "url": "432455", "id": "432455" }];
+            sources = [{ "name": "something", "id": "432455" }];
+        });
+
+        afterEach("add all sources", () => {
+            sandbox.restore();
+        });
+
+        it(`should dispatch ${WebConfigActions.WEB_ADD_SOURCE} for add all in web`, (done) => {
+
+            let sources = [{ "name": "something", "url": "432455" }];
+            let actions = [
+                {"type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources}
+            ];
+            let getStore = {
+                "sourceResults": {
+                    "data": sources
+                },
+                "currentSourceTab": "WEB"
+            };
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(sourceConfigActions.addAllSources());
+
+        });
+
+        it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} for add all in facebook profile`, (done) => {
+
+            let actions = [
+                {"type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources}
+            ];
+            let getStore = {
+                "sourceResults": {
+                    "data": sources
+                },
+                "currentSourceTab": "Profiles"
+            };
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(sourceConfigActions.addAllSources());
+        });
+
+        it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook profile`, (done) => {
+
+            let actions = [
+                {"type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources}
+            ];
+            let getStore = {
+                "sourceResults": {
+                    "data": sources
+                },
+                "currentSourceTab": "Pages"
+            };
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(sourceConfigActions.addAllSources());
+        });
+
+        it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook profile`, (done) => {
+
+            let actions = [
+                {"type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources}
+            ];
+            let getStore = {
+                "sourceResults": {
+                    "data": sources
+                },
+                "currentSourceTab": "Groups"
+            };
+            let store = mockStore(getStore, actions, done);
+            store.dispatch(sourceConfigActions.addAllSources());
+        });
+    });
 });
