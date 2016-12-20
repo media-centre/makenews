@@ -3,18 +3,24 @@ import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
 import StringUtil from "../../../common/src/util/StringUtil";
 import Logger from "../logging/Logger";
-import CouchClient from "../../src/CouchClient.js";
+import CouchClient from "../../src/CouchClient";
+import ApplicationConfig from "../config/ApplicationConfig";
+import AdminDbClient from "../db/AdminDbClient";
 
 export const RSS_TYPE = "rss";
-export const FACEBOOK_TYPE = "facebook";
+export const FACEBOOK_TYPE = "fb_page";
 export const TWITTER_TYPE = "twitter";
 
 export default class FetchFeedsFromAllSources {
     constructor(request, response) {
-        this.request = request;
         this.response = response;
         this.accesstoken = request.cookies.AuthSession;
+        this.facebookAcessToken = null;
+        //this.urlDocuments = request.body.data;
         console.log(1);
+        console.log("In fetch feeds");
+        console.log(this.accesstoken);
+        console.log(request.body);
     }
 
     static logger() {
@@ -22,48 +28,52 @@ export default class FetchFeedsFromAllSources {
     }
 
     fetchFeeds() {
-
         return new Promise((resolve, reject)=> {
-            if (this.isValidateRequestData()) {
+
+            console.log("Before If COndition");
+            //if (this.isValidateRequestData()) {
+                console.log("In If Condition");
                 this.fetchFeedsFromAllSources().then((feeds)=> {
 
                     FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
-                    console.log(feeds) 
+                    console.log(feeds)
                     resolve(feeds);
 
                 }).catch((err) => {
                     console.log(4);
-
+                    console.log("in fetch feeds error")
+                    console.log(err)
                     FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
                     reject(err);
                 });
-            } else {
-                console.log(5);
-
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
-                reject({ "error": "Invalid url data" });
-            }
+            //} else {
+            //    console.log(5);
+            //
+            //    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
+            //    reject({ "error": "Invalid url data" });
+            //}
         });
     }
 
     fetchFeedsFromAllSources() {
         return new Promise((resolve, reject)=> {
-            let allFeeds = [];
-            let urlDocuments = this._getUrlDocuments();
-            urlDocuments.forEach((item, index)=> {
-                this.fetchFeedsFromSource(item).then((feeds)=> {
-                    allFeeds = allFeeds.concat(feeds);
-                    this.saveFeedDocumentsToDb(feeds).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        reject(error);
+            let ZERO = 0;
+            this._getUrlDocuments().then((urlDocuments) => {
+                console.log(urlDocuments);
+                urlDocuments.forEach((item, index)=> {
+                    this.fetchFeedsFromSource(item).then((feeds)=> {
+                        this.saveFeedDocumentsToDb(feeds).then(response => {
+                            resolve(response);
+                        }).catch(error => {
+                            reject(error);
+                        });
+                        if (this.request.body.data.length - 1 === index) {  // eslint-disable-line no-magic-numbers
+                            FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
+                        }
+                    }).catch((err) => {
+                        FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
+                        reject(err);
                     });
-                    if (this.request.body.data.length - 1 === index) {  // eslint-disable-line no-magic-numbers
-                        FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
-                    }
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                    reject(err);
                 });
             });
         });
@@ -79,8 +89,7 @@ export default class FetchFeedsFromAllSources {
             }
         };
         let response = await couchClient.findDocuments(selector);
-        console.log(response);
-
+        return response.docs;
     }
 
     async fetchFeedsFromSource(item) {
@@ -90,22 +99,30 @@ export default class FetchFeedsFromAllSources {
         case RSS_TYPE:
             try {
                 console.log(6);
-
                 feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
                 return feeds;
             } catch (err) {
                 console.log(err);
-
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching rss feeds. Error: %s", err);
                 throw(err);
             }
 
         case FACEBOOK_TYPE:
             try {
+                if(!this.facebookAcessToken) {
+                    console.log("In If condition for facebook Access Token")
+                    this.facebookAcessToken = await this._getFacebookAccessToken();
+                    console.log(this.facebookAcessToken)
+                }
+                console.log("In Facebook Type")
+                console.log(this.facebookAcessToken);
                 console.log(10);
-                feeds = await FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item._id);
+                console.log("access token");
+                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
+                console.log("^^^^^^^^^^^^^^^^^^^^^^^^^")
+                console.log(feeds);
                 return feeds;
 
             } catch (err) {
@@ -127,6 +144,42 @@ export default class FetchFeedsFromAllSources {
         default:
             throw([]);
         }
+    }
+
+    async _getFacebookAccessToken() {
+        try{
+            let couchClient = await CouchClient.createInstance(this.accesstoken);
+            console.log("after couch clinet instance");
+            let userName = await couchClient.getUserName();
+            console.log("username", userName)
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            console.log("after admin details")
+            console.log(adminDetails.couchDbAdmin.username)
+            console.log(adminDetails.couchDbAdmin.password)
+            console.log(adminDetails.db)
+            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            console.log("after admin db client instance")
+            let selector = {
+                "selector": {
+                    "_id": {
+                        "$eq": userName + "_facebookToken"
+                    }
+                }
+            };
+            console.log("before db respnse");
+            let response = await dbInstance.findDocuments(selector);
+            //console.log(response);
+            let ZeroIndex = 0;
+            console.log("in facebook find documents ==> ")
+            return response.docs[ZeroIndex];
+
+        } catch(error) {
+            console.log("in find fb documents")
+            console.log(error)
+            throw error;
+        }
+
+
     }
 
     isValidateRequestData() {

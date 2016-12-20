@@ -160,10 +160,16 @@ export default class FacebookRequestHandler {
         let couchClient = await CouchClient.createInstance(authSession);
         try {
             let data = this._getFormattedSources(sourceType, sources);
-            await couchClient.saveBulkDocuments({ "docs": data });
+            console.log(data)
+            let response = await couchClient.saveBulkDocuments({ "docs": data });
+            console.log("^^^^^^^^^^^^^^^^");
+            let userName = await couchClient.getUserName();
+            console.log(userName);
+            console.log("^^^^^^^^^^^^^^^^^");
             return { "ok": true };
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error adding source. Error: ${error}`);
+            console.log("==========>", error);
             throw error;
         }
     }

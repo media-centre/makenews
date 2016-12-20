@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-
 import FetchFeedsFromAllSources from "../../src/fetchAllFeeds/FetchFeedsFromAllSources";
 import RssRequestHandler from "../../src/rss/RssRequestHandler";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
@@ -8,13 +7,12 @@ import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler";
 import LogTestHelper from "../helpers/LogTestHelper";
 import CouchClient from "../../src/CouchClient.js";
 import CryptUtil from "../../src/util/CryptUtil";
-
-
-
+import ApplicationConfig from "../../src/config/ApplicationConfig";
+import AdminDbClient from "../../src/db/AdminDbClient";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe("FetchFeedsFromAllSources", () => {
+describe.only("FetchFeedsFromAllSources", () => {
 
     const indexZero = 0;
     let sandbox = null;
@@ -51,14 +49,15 @@ describe("FetchFeedsFromAllSources", () => {
 
         let accessToken = null;
 
-        before("FetchFeedsFromAllSources", () =>{
+        before("FetchFeedsFromAllSources", () => {
             accessToken = "test_token";
         });
 
         it("should validate the invalid request data and throw error", () => {
 
             let response = {};
-            let fetchFeedsRequest = new FetchFeedsFromAllSources({ "cookies": {} }, response);
+            let request = { "cookies": {}, "body": { "data": [] } };
+            let fetchFeedsRequest = new FetchFeedsFromAllSources(request, response);
             assert.strictEqual(false, fetchFeedsRequest.isValidateRequestData());
 
         });
@@ -66,18 +65,20 @@ describe("FetchFeedsFromAllSources", () => {
         it("should send error response if there is an invalid data in the request body", (done) => {
 
             let requestBody = {
-                "data": [
-                    { "source": "facebook" },
-                    { "source": "twitter", "url": "http://www.twitter.com/testuser" },
-                    { "source": "rss", "url": "http://www.test.com/testfeeds" }
-                ],
+                "body": {
+                    "data": [
+                        { "sourceType": "facebook" },
+                        { "sourceType": "twitter", "_id": "http://www.twitter.com/testuser" },
+                        { "sourceType": "rss", "_id": "http://www.test.com/testfeeds" }
+                    ]
+                },
                 "facebookAccessToken": "test_token",
                 "cookies": { "AuthSession": "test_token" }
             };
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, {});
             fetchFeedsRequest.fetchFeeds().catch((errorResponse)=> {
-                assert.deepEqual({ "error": "Invalid url data" }, errorResponse);
+                assert.deepEqual({"error": "Invalid url data"}, errorResponse);
                 done();
             });
 
@@ -88,7 +89,10 @@ describe("FetchFeedsFromAllSources", () => {
             let requestData = {
                 "body": {
                     "data": [
-                        { "source": "rss", "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" }
+                        {
+                            "sourceType": "rss",
+                            "_id": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+                        }
                     ],
                     "facebookAccessToken": "test_token"
                 },
@@ -106,7 +110,10 @@ describe("FetchFeedsFromAllSources", () => {
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
-            fetchFeedsRequest.fetchFeedsFromSource({ "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms", "source": "rss" }).then((feeds)=> {
+            fetchFeedsRequest.fetchFeedsFromSource({
+                "_id": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
+                "sourceType": "rss"
+            }).then((feeds)=> {
                 assert.deepEqual(response, feeds);
                 fetchRssFeedRequestMock.verify();
 
@@ -119,11 +126,11 @@ describe("FetchFeedsFromAllSources", () => {
             let requestData = {
                 "body": {
                     "data": [
-                        { "source": "facebook", "url": "www.facebook.com/theHindu" }
+                        {"sourceType": "facebook", "_id": "www.facebook.com/theHindu"}
                     ],
                     "facebookAccessToken": "test_token"
                 },
-                "cookies": { "AuthSession": "test_token" }
+                "cookies": {"AuthSession": "test_token"}
             };
             let response = mockResponse();
 
@@ -137,7 +144,10 @@ describe("FetchFeedsFromAllSources", () => {
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
-            fetchFeedsRequest.fetchFeedsFromSource({ "url": "www.facebook.com/theHindu", "source": "facebook" }).then((feeds)=> {
+            fetchFeedsRequest.fetchFeedsFromSource({
+                "_id": "www.facebook.com/theHindu",
+                "sourceType": "facebook"
+            }).then((feeds)=> {
                 assert.deepEqual(response, feeds);
                 fetchFacebookFeedRequestMock.verify();
                 done();
@@ -149,7 +159,7 @@ describe("FetchFeedsFromAllSources", () => {
             let requestData = {
                 "body": {
                     "data": [
-                        { "source": "twitter", "url": "@TheHindu", "timestamp": "12344568" }
+                        { "sourceType": "twitter", "_id": "@TheHindu", "timestamp": "12344568" }
                     ],
                     "facebookAccessToken": "test_token"
                 },
@@ -161,10 +171,10 @@ describe("FetchFeedsFromAllSources", () => {
             let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
             twitterRequestHandlerMock.returns(twitterRequestHandlerInstance);
             let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandlerInstance).expects("fetchTweetsRequest");
-            fetchTwitterFeedRequestMock.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
+            fetchTwitterFeedRequestMock.withArgs(requestData.body.data[indexZero]._id).returns(Promise.resolve(response));
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
-            fetchFeedsRequest.fetchFeedsFromSource({ "url": "@TheHindu", "source": "twitter" }).then((feeds)=> {
+            fetchFeedsRequest.fetchFeedsFromSource({ "_id": "@TheHindu", "sourceType": "twitter" }).then((feeds)=> {
                 assert.deepEqual(response, feeds);
                 fetchTwitterFeedRequestMock.verify();
                 done();
@@ -176,13 +186,13 @@ describe("FetchFeedsFromAllSources", () => {
             let requestData = {
                 "body": {
                     "data": [
-                        { "source": "rss", "url": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" },
-                        { "source": "twitter", "url": "@TheHindu" },
-                        { "source": "facebook", "url": "http://www.facebook.com/thehindu" }
+                        {"sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"},
+                        {"sourceType": "twitter", "_id": "@TheHindu"},
+                        {"sourceType": "facebook", "_id": "http://www.facebook.com/thehindu"}
                     ],
                     "facebookAccessToken": "test_token"
                 },
-                "cookies": { "AuthSession": "test_token" }
+                "cookies": {"AuthSession": "test_token"}
 
             };
             let response = mockResponse();
@@ -220,22 +230,21 @@ describe("FetchFeedsFromAllSources", () => {
             let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
             rssRequestHandlerMock.returns(rssRequestHandlerInstance);
             let fetchRssFeedRequestMock = sandbox.mock(rssRequestHandlerInstance).expects("fetchBatchRssFeedsRequest");
-            fetchRssFeedRequestMock.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
+            fetchRssFeedRequestMock.withArgs(requestData.body.data[indexZero]._id).returns(Promise.resolve(response));
 
             let twitterRequestHandlerInstance = new TwitterRequestHandler();
             let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
             twitterRequestHandlerMock.returns(twitterRequestHandlerInstance);
             let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandlerInstance).expects("fetchTweetsRequest");
-            fetchTwitterFeedRequestMock.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
+            fetchTwitterFeedRequestMock.withArgs(requestData.body.data[indexZero]._id).returns(Promise.resolve(response));
 
             let facebookRequestHandlerInstance = new FacebookRequestHandler(accessToken);
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(requestData.body.facebookAccessToken).returns(facebookRequestHandlerInstance);
             let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("pagePosts");
-            fetchFacebookFeedRequestMock.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
+            fetchFacebookFeedRequestMock.withArgs(requestData.body.data[indexZero]._id).returns(Promise.resolve(response));
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
-
 
 
             fetchFeedsRequest.fetchFeedsFromAllSources().then((response)=> {
@@ -251,9 +260,9 @@ describe("FetchFeedsFromAllSources", () => {
     });
 
     it("should return success response after fetching documents and saving into the database", (done) => {
-        let rss = { "source": "rss", "url": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
-        let facebook = { "source": "twitter", "url": "@TheHindu" };
-        let twitter = { "source": "facebook", "url": "http://www.facebook.com/thehindu" }
+        let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
+        let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
+        let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
         let requestData = {
             "body": {
                 "data": [
@@ -299,14 +308,14 @@ describe("FetchFeedsFromAllSources", () => {
         let response = mockResponse();
 
         let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(requestData, response);
-        //let sourceMock = sandbox.mock(fetchFeedsFromAllSources).expects("fetchFeedsFromSource");
-        //sourceMock.returns(Promise.resolve(response));
+        //let sourceTypeMock = sandbox.mock(fetchFeedsFromAllSources).expects("fetchFeedsFromSource");
+        //sourceTypeMock.returns(Promise.resolve(response));
 
         let rssRequestHandlerInstance = new RssRequestHandler();
         let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
         rssRequestHandlerMock.returns(rssRequestHandlerInstance);
         let fetchRssFeedRequestMock = sandbox.mock(rssRequestHandlerInstance).expects("fetchBatchRssFeedsRequest");
-        fetchRssFeedRequestMock.withArgs(requestData.body.data[indexZero].url).returns(Promise.resolve(response));
+        fetchRssFeedRequestMock.withArgs(requestData.body.data[indexZero]._id).returns(Promise.resolve(response));
 
         let twitterRequestHandlerInstance = new TwitterRequestHandler();
         let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
@@ -327,7 +336,7 @@ describe("FetchFeedsFromAllSources", () => {
             console.log("**************")
             console.log(resp)
             assert.strictEqual(resp, "Successfully added feeds to Database");
-            //sourceMock.verify();
+            //sourceTypeMock.verify();
             //saveDocumentMock.verify();
             done();
         }).catch(error => {
@@ -342,9 +351,9 @@ describe("FetchFeedsFromAllSources", () => {
                     "name": "dbName"
                 }
             };
-            let rss = { "source": "rss", "url": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
-            let facebook = { "source": "twitter", "url": "@TheHindu" };
-            let twitter = { "source": "facebook", "url": "http://www.facebook.com/thehindu" }
+            let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
+            let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
             let requestData = {
                 "body": {
                     "data": [
@@ -377,15 +386,15 @@ describe("FetchFeedsFromAllSources", () => {
             }
         });
 
-        it("should return success message when there is no error", async () => {
+        it("should return success message when there is no error", async() => {
             let response = {
                 "userCtx": {
                     "name": "dbName"
                 }
             };
-            let rss = { "source": "rss", "url": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
-            let facebook = { "source": "twitter", "url": "@TheHindu" };
-            let twitter = { "source": "facebook", "url": "http://www.facebook.com/thehindu" }
+            let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
+            let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
             let requestData = {
                 "body": {
                     "data": [
@@ -422,15 +431,15 @@ describe("FetchFeedsFromAllSources", () => {
     });
 
     describe("GetUrlDocs", () => {
-        it.only("should get all url docs", () => {
+        it("should get all url docs", () => {
             let response = {
                 "userCtx": {
                     "name": "dbName"
                 }
             };
-            let rss = { "source": "rss", "url": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
-            let facebook = { "source": "twitter", "url": "@TheHindu" };
-            let twitter = { "source": "facebook", "url": "http://www.facebook.com/thehindu" }
+            let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
+            let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
             let requestData = {
                 "body": {
                     "data": [
@@ -448,6 +457,63 @@ describe("FetchFeedsFromAllSources", () => {
                 console.log(response);
             })
 
+        });
+    });
+
+    describe("GetFacebookAccessToken", () => {
+        let appConfigMock = null;
+        beforeEach("GetFacebookAcessToken", () => {
+            sandbox = sinon.sandbox.create();
+            let applicationConfigInstance = new ApplicationConfig();
+            sandbox.stub(ApplicationConfig, "instance").returns(applicationConfigInstance);
+            appConfigMock = sandbox.mock(applicationConfigInstance).expects("adminDetails").returns({
+                "couchDbAdmin": {
+                    "username": "test",
+                    "password": "test"
+                },
+                "db": "test"
+            });
+
+        });
+        afterEach("GetFacebookAccessToken", () => {
+            sandbox.restore();
+        });
+
+        it("should get the facebook acess token", async() => {
+            let adminDbClient = new AdminDbClient();
+            sandbox.mock(AdminDbClient).expects("instance").returns(adminDbClient);
+            let findDocumentsMock = sandbox.mock(adminDbClient).expects("findDocuments");
+            findDocumentsMock.returns(Promise.resolve({ "docs": [
+                {
+                    "_id": "test_facebookToken",
+                    "access_token": "test_token",
+                    "token_type": "bearer",
+                    "expires_in": 1234,
+                    "expired_after": 1234
+                }] }));
+
+            let couchdb = new CouchClient();
+            sandbox.mock(CouchClient).expects("createInstance").returns(couchdb);
+            let couchClientMock = sandbox.mock(couchdb).expects("getUserName").returns("test");
+            let request = { "cookies": { "AuthSession": "test_token" }, "body": { "data": [] } };
+            let response = {};
+            let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(request, response);
+            let token = await fetchFeedsFromAllSources._getFacebookAccessToken();
+            assert.strictEqual(token._id, "test_facebookToken");
+            assert.strictEqual(token.access_token, "test_token");
+            appConfigMock.verify();
+            couchClientMock.verify();
+        });
+
+        it("should throw error when couchclient throws an error", async() => {
+            try {
+                let request = { "cookies": { "AuthSession": "test_token" }, "body": { "data": [] } };
+                let response = {};
+                let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(request, response);
+                await fetchFeedsFromAllSources._getFacebookAccessToken();
+            } catch (error) {
+                assert.strictEqual(error, "unexpected response from the db");
+            }
         });
     });
 });

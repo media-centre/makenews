@@ -18,6 +18,8 @@ export default class FacebookAddConfigureRoute extends Route {
     async addConfiguredSource() {
         let sourceType = sourceTypes[this.type];
         if(R.any(StringUtil.isEmptyString)([sourceType, this.authSession])) {
+            console.log("authsession token")
+            console.log(this.authSession)
             RouteLogger.instance().warn("FacebookAddConfigureRoute:: invalid facebook feed route with url %s and user name %s.", this.url, this.userName);
             this._handleInvalidRoute();
         } else {

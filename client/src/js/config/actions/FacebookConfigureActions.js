@@ -24,6 +24,7 @@ export function facebookSourcesReceived(response) {
 
 export async function addToConfiguredSources(dispatch, sources, sourceType, eventType) {
     let configuredSource = sources.map(source => Object.assign({}, source, { "url": source.id }));
+    console.log(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`);
     let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`, {
         "method": "PUT",
         "headers": {
