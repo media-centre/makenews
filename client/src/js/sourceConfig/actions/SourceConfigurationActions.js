@@ -100,6 +100,11 @@ export function addAllSources() {
     return (dispatch, getState) => {
         let sourceType = getState().currentSourceTab;
         let sources = getState().sourceResults.data;
+        for(let index=0; index< sources.length; index++){
+            if(sources[index].added) {
+                sources.splice(index,1);
+            }
+        }
         dispatch(addSourceToConfigureList(sourceType, ...sources));
     };
 }
