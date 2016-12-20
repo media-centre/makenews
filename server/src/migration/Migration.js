@@ -7,6 +7,7 @@ import MigrationFile from "./MigrationFile";
 import CouchSession from "../CouchSession";
 import CouchClient from "../CouchClient";
 import Logger from "../logging/Logger";
+import ApplicationConfig from "../config/ApplicationConfig";
 
 export default class Migration {
 
@@ -43,17 +44,22 @@ export default class Migration {
                     allDbMigrationLogger.info("all dbs = %s", dbNames);
                     let finishedCount = 0, failedCount = 0;
                     dbNames.forEach(dbName => { //eslint-disable-line
-                        allDbMigrationLogger.info("%s migration started", dbName);
-                        let migrationInstance = Migration.instance(dbName, accessToken);
-                        migrationInstance.start().then(status => { //eslint-disable-line
-                            allDbMigrationLogger.info("%s migration completed", dbName);
+                        if(dbName === ApplicationConfig.instance().adminDetails().db) {
                             finishedCount += 1; // eslint-disable-line no-magic-numbers
                             resolveStatus(finishedCount, failedCount, dbNames.length);
-                        }).catch(error => { //eslint-disable-line
-                            allDbMigrationLogger.info("%s migration failed", dbName);
-                            failedCount += 1; // eslint-disable-line no-magic-numbers
-                            resolveStatus(finishedCount, failedCount, dbNames.length);
-                        });
+                        } else {
+                            allDbMigrationLogger.info("%s migration started", dbName);
+                            let migrationInstance = Migration.instance(dbName, accessToken);
+                            migrationInstance.start().then(status => { //eslint-disable-line
+                                allDbMigrationLogger.info("%s migration completed", dbName);
+                                finishedCount += 1; // eslint-disable-line no-magic-numbers
+                                resolveStatus(finishedCount, failedCount, dbNames.length);
+                            }).catch(error => { //eslint-disable-line
+                                allDbMigrationLogger.info("%s migration failed", dbName);
+                                failedCount += 1; // eslint-disable-line no-magic-numbers
+                                resolveStatus(finishedCount, failedCount, dbNames.length);
+                            });
+                        }
                     });
                 }).catch(error => {
                     reject(error);
