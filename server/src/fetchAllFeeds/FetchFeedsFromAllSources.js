@@ -73,6 +73,7 @@ export default class FetchFeedsFromAllSources {
                     }).catch((err) => {
                         FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
                         reject(err);
+
                     });
                 });
             });
@@ -120,6 +121,7 @@ export default class FetchFeedsFromAllSources {
                 console.log(10);
                 console.log("access token");
                 feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id);
+
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 console.log("^^^^^^^^^^^^^^^^^^^^^^^^^")
                 console.log(feeds);
@@ -159,6 +161,7 @@ export default class FetchFeedsFromAllSources {
             console.log(adminDetails.db)
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
             console.log("after admin db client instance")
+=
             let selector = {
                 "selector": {
                     "_id": {
