@@ -216,7 +216,7 @@ describe("CouchClient", () => {
         });
 
         it("should return message if response code is conflict", (done) => {
-            let result = { "status": "conflict", "message": "document already exist" }
+            let result = { "status": "conflict", "message": "document already exist" };
             let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
             nock("http://localhost:5984", {
                 "reqheaders": {
