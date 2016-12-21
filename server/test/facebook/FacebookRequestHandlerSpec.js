@@ -11,7 +11,6 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import { assert, expect } from "chai";
 import sinon from "sinon";
-import { sourceTypes } from "../../src/util/Constants";
 
 describe("FacebookRequestHandler", () => {
     let accessToken = null, appSecretKey = null, appSecretProof = null, appId = null;
@@ -282,81 +281,6 @@ describe("FacebookRequestHandler", () => {
                     expect(error).to.equal("error fetching facebook profiles");
                     done();
                 } catch(err) {
-                    done(err);
-                }
-            });
-        });
-    });
-
-    describe("Add Configured Sources", () => {
-        let sandbox = null, dbName = null, facebookRequestHandler = null, couchClient = null;
-        let documents = null, sources = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
-        beforeEach("Add Configured Sources", () => {
-            sandbox = sinon.sandbox.create();
-            dbName = "db_name";
-            sources = [{
-                "name": "Source Name",
-                "url": "http://source.url"
-            }, {
-                "name": "Source Name1",
-                "url": "http://source.url.in"
-            }, {
-                "name": "Source Name2",
-                "url": ""
-            }];
-
-            facebookRequestHandler = new FacebookRequestHandler("somethings");
-            couchClient = new CouchClient(dbName, accessToken);
-            sandbox.mock(CouchClient).expects("createInstance").returns(couchClient);
-            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
-        });
-
-        afterEach("Add Configured Sources", () => {
-            sandbox.restore();
-        });
-
-        it("should format the sources to put them in database", () => {
-            let [first, second] = sources;
-            documents = [{
-                "_id": first.url,
-                "name": first.name,
-                "docType": "configuredSource",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
-            }, {
-                "_id": second.url,
-                "name": second.name,
-                "docType": "configuredSource",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
-            }];
-
-            expect(facebookRequestHandler._getFormattedSources(sourceType, sources)).to.deep.equal(documents);
-        });
-
-        it("should add the source to configured list", (done) => {
-            let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
-            bulkDocksMock.returns({ "ok": true });
-
-            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).then(data => {
-                try {
-                    bulkDocksMock.verify();
-                    expect(data).to.deep.equal({ "ok": true });
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
-        });
-
-        it("should reject with error when database gives an error", (done) => {
-            let errorMessage = "unexpected response from the db";
-            sandbox.stub(couchClient, "saveBulkDocuments").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).catch(error => {
-                try {
-                    expect(error).to.equal(errorMessage);
-                    done();
-                } catch (err) {
                     done(err);
                 }
             });

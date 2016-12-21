@@ -3,7 +3,6 @@ import FacebookBatchPosts from "./helpers/FacebookBatchPosts";
 import FacebookSetAccessTokenRoute from "./helpers/FacebookSetAccessTokenRoute";
 import RouteLogger from "./RouteLogger";
 import FacebookSourceRoute from "./helpers/FacebookSourceRoute";
-import FacebookAddConfigureRoute from "./helpers/FacebookAddConfigureRoute";
 
 export default (app) => {
     app.get("/facebook-posts", (request, response, next) => {
@@ -25,9 +24,5 @@ export default (app) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-sources request received. url = %s", request.url);
         new FacebookSourceRoute(request, response, next).searchSources();
     });
-    
-    app.put("/facebook/configureSource", (request, response, next) => {
-        RouteLogger.instance().info("FacebookRoutes:: /facebook/configureSource request received. url = %s", request.url);
-        new FacebookAddConfigureRoute(request, response, next).addConfiguredSource();
-    });
 };
+

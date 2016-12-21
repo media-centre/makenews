@@ -41,7 +41,7 @@ export const clearSources = () => {
 };
 
 export function getConfiguredSources() {
-    let ajaxClient = AjaxClient.instance("/configuredSources", false);
+    let ajaxClient = AjaxClient.instance("/configure-sources", false);
     return async dispatch => {
         let sources = null;
         try {
@@ -80,7 +80,7 @@ export function addSourceToConfigureList(sourceType, ...sources) {
 }
 
 async function addToConfiguredSources(dispatch, sources, sourceType, eventType) {
-    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/facebook/configureSource`, {
+    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/configure-sources`, {
         "method": "PUT",
         "headers": {
             "Accept": "application/json",
