@@ -7,7 +7,6 @@ import { Link } from "react-router";
 
 export class FacebookTabs extends Component {
     _tabHandler(tab) {
-        this.props.dispatch(sourceConfigActions.clearSources());
         this.props.dispatch(sourceConfigActions.switchSourceTab(tab));
     }
 
