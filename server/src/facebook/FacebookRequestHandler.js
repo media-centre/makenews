@@ -25,12 +25,12 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    async pagePosts(webUrl, options = {}) {
+    async pagePosts(webUrl, type, options = {}) {
         let facebookClientInstance = this.facebookClient();
         try {
             console.log(12)
             let pageId = await facebookClientInstance.getFacebookId(webUrl);
-            let feeds = await facebookClientInstance.pagePosts(pageId, this._getAllOptions(options));
+            let feeds = await facebookClientInstance.pagePosts(pageId, type, this._getAllOptions(options));
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
             return feeds;
 

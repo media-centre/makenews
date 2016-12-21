@@ -8,7 +8,8 @@ import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
 
 export const RSS_TYPE = "rss";
-export const FACEBOOK_TYPE = "fb_page";
+export const FACEBOOK_PAGE = "fb_page";
+export const FACEBOOK_GROUP = "fb_group";
 export const TWITTER_TYPE = "twitter";
 
 export default class FetchFeedsFromAllSources {
@@ -94,7 +95,8 @@ export default class FetchFeedsFromAllSources {
     }
 
     async fetchFeedsFromSource(item) {
-        let feeds = null;
+        let feeds = null; let type = "posts";
+
         switch (item.sourceType) {
 
         case RSS_TYPE:
@@ -109,7 +111,8 @@ export default class FetchFeedsFromAllSources {
                 throw(err);
             }
 
-        case FACEBOOK_TYPE:
+        case FACEBOOK_GROUP: type = "feed";
+        case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
             try {
                 if(!this.facebookAcessToken) {
                     console.log("In If condition for facebook Access Token")
@@ -120,7 +123,7 @@ export default class FetchFeedsFromAllSources {
                 console.log(this.facebookAcessToken);
                 console.log(10);
                 console.log("access token");
-                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id);
+                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id, type);
 
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 console.log("^^^^^^^^^^^^^^^^^^^^^^^^^")
@@ -160,8 +163,7 @@ export default class FetchFeedsFromAllSources {
             console.log(adminDetails.couchDbAdmin.password)
             console.log(adminDetails.db)
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
-            console.log("after admin db client instance")
-=
+            console.log("after admin db client instance");
             let selector = {
                 "selector": {
                     "_id": {
@@ -174,7 +176,7 @@ export default class FetchFeedsFromAllSources {
             //console.log(response);
             let ZeroIndex = 0;
             console.log("in facebook find documents ==> ")
-            return response.docs[ZeroIndex];
+            return response.docs[ZeroIndex].access_token;
 
         } catch(error) {
             console.log("in find fb documents")

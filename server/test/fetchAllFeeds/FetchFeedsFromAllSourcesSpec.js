@@ -45,7 +45,7 @@ describe.only("FetchFeedsFromAllSources", () => {
         sandbox.restore();
     });
 
-    describe("FetchFeedsFromAllSources", () => {
+    describe.only("FetchFeedsFromAllSources", () => {
 
         let accessToken = null;
 
@@ -262,7 +262,7 @@ describe.only("FetchFeedsFromAllSources", () => {
     it("should return success response after fetching documents and saving into the database", (done) => {
         let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
         let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
-        let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
+        let twitter = { "sourceType": "fb_page", "_id": "http://www.facebook.com/thehindu" }
         let requestData = {
             "body": {
                 "data": [
@@ -284,7 +284,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             "type": "twitter"
         }, {
             "title": "test title 03",
-            "type": "facebook"
+            "type": "fb_page"
         }, {
             "title": "test title 01",
             "type": "rss"
@@ -293,7 +293,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             "type": "twitter"
         }, {
             "title": "test title 03",
-            "type": "facebook"
+            "type": "fb_page"
         }, {
             "title": "test title 01",
             "type": "rss"
@@ -302,7 +302,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             "type": "twitter"
         }, {
             "title": "test title 03",
-            "type": "facebook"
+            "type": "fb_page"
         }];
 
         let response = mockResponse();

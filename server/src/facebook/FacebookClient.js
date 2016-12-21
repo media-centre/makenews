@@ -58,17 +58,21 @@ export default class FacebookClient {
 
 
 
-    pagePosts(pageId, parameters = {}) {
+    pagePosts(pageId, type, parameters = {}) {
         return new Promise((resolve, reject) => {
+            console.log("page id")
+            console.log(pageId)
             if (StringUtil.isEmptyString(pageId)) {
                 reject({
                     "message": "page id cannot be empty",
                     "type": "InvalidArgument"
                 });
             } else {
+                console.log("in facebook URL")
+                console.log(this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false))
                 this._addDefaultParameters(parameters);
                 request.get({
-                    "url": this.facebookParameters.url + "/" + pageId + "/posts?" + new HttpRequestUtil().queryString(parameters, false),
+                    "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false),
                     "timeout": this.facebookParameters.timeOut
                 }, (error, response, body) => {
                     if (NodeErrorHandler.noError(error)) {
