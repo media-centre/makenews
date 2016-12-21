@@ -36,8 +36,8 @@ describe("SourceConfigurationActions", () => {
             sandbox.mock(UserSession).expects("instance").returns({
                 "continueSessionIfActive": () => {}
             });
-            let ajaxClient = AjaxClient.instance("/configuredSources", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/configuredSources", false).returns(ajaxClient);
+            let ajaxClient = AjaxClient.instance("/configure-sources", false);
+            sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources", false).returns(ajaxClient);
             sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
 
             let store = mockStore({}, [{ "type": sourceConfigActions.GOT_CONFIGURED_SOURCES, "sources": sources }], done);
@@ -124,7 +124,7 @@ describe("SourceConfigurationActions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configureSource")
+                .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }], done);
@@ -141,7 +141,7 @@ describe("SourceConfigurationActions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configureSource")
+                .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }], done);
@@ -158,7 +158,7 @@ describe("SourceConfigurationActions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configureSource")
+                .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }], done);
@@ -175,7 +175,7 @@ describe("SourceConfigurationActions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configureSource")
+                .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
             let store = mockStore({}, [{ "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }], done);
@@ -201,7 +201,7 @@ describe("SourceConfigurationActions", () => {
             });
 
             nock("http://localhost")
-                .put("/facebook/configureSource")
+                .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
             configuredSources = [{ "name": "something", "url": "432455", "id": "432455" }];
             sources = [{ "name": "something", "id": "432455" }];
@@ -213,9 +213,9 @@ describe("SourceConfigurationActions", () => {
 
         it(`should dispatch ${WebConfigActions.WEB_ADD_SOURCE} for add all in web`, (done) => {
 
-            let sources = [{ "name": "something", "url": "432455" }];
+            sources = [{ "name": "something", "url": "432455" }];
             let actions = [
-                {"type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources}
+                { "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }
             ];
             let getStore = {
                 "sourceResults": {
@@ -231,7 +231,7 @@ describe("SourceConfigurationActions", () => {
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} for add all in facebook profile`, (done) => {
 
             let actions = [
-                {"type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources}
+                { "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }
             ];
             let getStore = {
                 "sourceResults": {
@@ -246,7 +246,7 @@ describe("SourceConfigurationActions", () => {
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook page`, (done) => {
 
             let actions = [
-                {"type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources}
+                { "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }
             ];
             let getStore = {
                 "sourceResults": {
@@ -261,7 +261,7 @@ describe("SourceConfigurationActions", () => {
         it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook group`, (done) => {
 
             let actions = [
-                {"type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources}
+                { "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }
             ];
             let getStore = {
                 "sourceResults": {
