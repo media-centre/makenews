@@ -14,6 +14,7 @@ export const TWITTER_TYPE = "twitter";
 
 export default class FetchFeedsFromAllSources {
     constructor(request, response) {
+        this.request = request;
         this.response = response;
         this.accesstoken = request.cookies.AuthSession;
         this.facebookAcessToken = null;
@@ -21,7 +22,6 @@ export default class FetchFeedsFromAllSources {
         console.log(1);
         console.log("In fetch feeds");
         console.log(this.accesstoken);
-        console.log(request.body);
     }
 
     static logger() {
@@ -30,9 +30,8 @@ export default class FetchFeedsFromAllSources {
 
     fetchFeeds() {
         return new Promise((resolve, reject)=> {
-
             console.log("Before If COndition");
-            //if (this.isValidateRequestData()) {
+            if (this.isValidateRequestData()) {
                 console.log("In If Condition");
                 this.fetchFeedsFromAllSources().then((feeds)=> {
 
@@ -47,20 +46,18 @@ export default class FetchFeedsFromAllSources {
                     FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
                     reject(err);
                 });
-            //} else {
-            //    console.log(5);
-            //
-            //    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
-            //    reject({ "error": "Invalid url data" });
-            //}
+            } else {
+               console.log(5);
+
+               FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
+               reject({ "error": "Invalid url data" });
+            }
         });
     }
 
     fetchFeedsFromAllSources() {
         return new Promise((resolve, reject)=> {
-            let ZERO = 0;
             this._getUrlDocuments().then((urlDocuments) => {
-                console.log(urlDocuments);
                 urlDocuments.forEach((item, index)=> {
                     this.fetchFeedsFromSource(item).then((feeds)=> {
                         this.saveFeedDocumentsToDb(feeds).then(response => {
@@ -68,7 +65,7 @@ export default class FetchFeedsFromAllSources {
                         }).catch(error => {
                             reject(error);
                         });
-                        if (this.request.body.data.length - 1 === index) {  // eslint-disable-line no-magic-numbers
+                        if (urlDocuments.length - 1 === index) {  // eslint-disable-line no-magic-numbers
                             FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
                         }
                     }).catch((err) => {
@@ -96,9 +93,7 @@ export default class FetchFeedsFromAllSources {
 
     async fetchFeedsFromSource(item) {
         let feeds = null; let type = "posts";
-
         switch (item.sourceType) {
-
         case RSS_TYPE:
             try {
                 console.log(6);
@@ -114,6 +109,7 @@ export default class FetchFeedsFromAllSources {
         case FACEBOOK_GROUP: type = "feed";
         case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
             try {
+
                 if(!this.facebookAcessToken) {
                     console.log("In If condition for facebook Access Token")
                     this.facebookAcessToken = await this._getFacebookAccessToken();
@@ -153,17 +149,13 @@ export default class FetchFeedsFromAllSources {
 
     async _getFacebookAccessToken() {
         try{
+            console.log("sddlskjdskljdlksd hello world")
             let couchClient = await CouchClient.createInstance(this.accesstoken);
-            console.log("after couch clinet instance");
+            console.log("After coucclient instance");
             let userName = await couchClient.getUserName();
-            console.log("username", userName)
+            console.log("username", userName);
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            console.log("after admin details")
-            console.log(adminDetails.couchDbAdmin.username)
-            console.log(adminDetails.couchDbAdmin.password)
-            console.log(adminDetails.db)
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
-            console.log("after admin db client instance");
             let selector = {
                 "selector": {
                     "_id": {
@@ -188,11 +180,11 @@ export default class FetchFeedsFromAllSources {
     }
 
     isValidateRequestData() {
-        if (!this.request.body || !this.request.body.data || this.request.body.data.length === 0) {      // eslint-disable-line no-magic-numbers
+        if (!this.accesstoken) {  // eslint-disable-line no-magic-numbers
             return false;
         }
         let errorItems = this.request.body.data.filter((item) => {                                      //eslint-disable-line consistent-return
-            if (StringUtil.isEmptyString(item.source) || StringUtil.isEmptyString(item.url)) {
+            if (StringUtil.isEmptyString(item.sourceType) || StringUtil.isEmptyString(item._id)) {
                 return item;
             }
         });
