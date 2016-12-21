@@ -20,7 +20,7 @@ export default class SourceConfigRequestHandler {
         let data = await couchClient.findDocuments({
             "selector": {
                 "docType": {
-                    "$eq": "configuredSource"
+                    "$eq": "source"
                 }
             },
             "limit": 1000
@@ -33,7 +33,7 @@ export default class SourceConfigRequestHandler {
         let formatSources = source => ({
             "_id": source.url,
             "name": source.name,
-            "docType": "configuredSource",
+            "docType": "source",
             "sourceType": sourceType,
             "latestFeedTimeStamp": date
         });

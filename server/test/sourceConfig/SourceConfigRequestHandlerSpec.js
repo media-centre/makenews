@@ -14,7 +14,7 @@ describe("SourceConfigRequestHandler", () => {
             body = {
                 "selector": {
                     "docType": {
-                        "$eq": "configuredSource"
+                        "$eq": "source"
                     }
                 },
                 "limit": 1000
@@ -125,13 +125,13 @@ describe("SourceConfigRequestHandler", () => {
             documents = [{
                 "_id": first.url,
                 "name": first.name,
-                "docType": "configuredSource",
+                "docType": "source",
                 "sourceType": sourceType,
                 "latestFeedTimeStamp": currentTime
             }, {
                 "_id": second.url,
                 "name": second.name,
-                "docType": "configuredSource",
+                "docType": "source",
                 "sourceType": sourceType,
                 "latestFeedTimeStamp": currentTime
             }];
