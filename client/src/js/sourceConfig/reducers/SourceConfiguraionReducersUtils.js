@@ -4,8 +4,8 @@ function _addSourceProps(source, propertyToCompare) {
 }
 
 export function markSourcesAsAdded(sources, sourcesToConfigure, propertyToCompare) {
-    if(sources.length === sourcesToConfigure.length) {
-        return sourcesToConfigure.map(source => {
+    if(sourcesToConfigure.length > 1) { //eslint-disable-line no-magic-numbers
+        return sources.map(source => {
             if(!source.added) {
                 _addSourceProps(source, propertyToCompare);
             }

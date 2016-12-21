@@ -3,7 +3,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import { getConfiguredSources, TWITTER, WEB } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
 
-export class ConfiguredSources extends Component {
+class ConfiguredSources extends Component {
     
     componentDidMount() {
         this.props.dispatch(getConfiguredSources());

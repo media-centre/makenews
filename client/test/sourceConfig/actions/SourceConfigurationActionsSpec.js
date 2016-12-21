@@ -243,7 +243,7 @@ describe("SourceConfigurationActions", () => {
             store.dispatch(sourceConfigActions.addAllSources());
         });
 
-        it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook profile`, (done) => {
+        it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook page`, (done) => {
 
             let actions = [
                 {"type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources}
@@ -258,7 +258,7 @@ describe("SourceConfigurationActions", () => {
             store.dispatch(sourceConfigActions.addAllSources());
         });
 
-        it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook profile`, (done) => {
+        it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook group`, (done) => {
 
             let actions = [
                 {"type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources}

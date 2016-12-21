@@ -20,28 +20,24 @@ export class ConfigureSourcesPage extends Component {
     }
 
     sourceTab(params, dispatch) {
+        dispatch(SourceConfigActions.clearSources());
         switch (params.sourceType) {
         case "twitter": {
-            dispatch(SourceConfigActions.clearSources());
             dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.TWITTER));
             break;
         }
         case "facebook": {
             if(params.sourceSubType === "groups") {
-                dispatch(SourceConfigActions.clearSources());
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
             } else if(params.sourceSubType === "pages") {
-                dispatch(SourceConfigActions.clearSources());
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
             } else {
-                dispatch(SourceConfigActions.clearSources());
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
             }
             break;
         }
         case "web":
         default: {
-            dispatch(SourceConfigActions.clearSources());
             dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.WEB));
         }
         }

@@ -11,20 +11,22 @@ import sinon from "sinon";
 describe("Configured Sources", () => {
 
     describe("display configured sources", () => {
-
-        it("should call configured source groups with twitter when current tab is twitter", () => {
+        it("should render twitter sources when the current source tab is TWITTER", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "TWITTER",
                 "configuredSources": { "twitter": [{"name": "hello"}, {"name": "test"}]},
             }), applyMiddleware(thunkMiddleware));
-            let ConfiguredSources = TestUtils.renderIntoDocument(
+
+            let configuredSources = TestUtils.renderIntoDocument(
                 <Provider store={store}>
                     <ConfiguredSources />
                 </Provider>
             );
-            let ConfiguredSourcesDOM = ReactDOM.findDOMNode(ConfiguredSources);
-            let inputBox = ConfiguredSourcesDOM.querySelectorAll(".source-name");
-            expect(inputBox.length).to.equal(2);
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let source = configuredSourcesDOM.querySelectorAll(".source-name");
+            let sourcesHeading = configuredSourcesDOM.querySelector(".configured-sources__group__heading");
+            expect(sourcesHeading.textContent).to.equal("Twitter");
+            expect(source.length).to.equal(2);
         });
     });
 });

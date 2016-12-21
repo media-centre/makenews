@@ -3,6 +3,7 @@ import * as FbActions from "./../../config/actions/FacebookConfigureActions";
 import * as WebConfigActions from "./../../config/actions/WebConfigureActions";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
+import R from "ramda"; //eslint-disable-line id-length
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
@@ -100,12 +101,8 @@ export function addAllSources() {
     return (dispatch, getState) => {
         let sourceType = getState().currentSourceTab;
         let sources = getState().sourceResults.data;
-        for(let index=0; index< sources.length; index++){
-            if(sources[index].added) {
-                sources.splice(index,1);
-            }
-        }
-        dispatch(addSourceToConfigureList(sourceType, ...sources));
+        let unConfiguredSources = R.reject(source => source.added, sources);
+        dispatch(addSourceToConfigureList(sourceType, ...unConfiguredSources));
     };
 }
 
