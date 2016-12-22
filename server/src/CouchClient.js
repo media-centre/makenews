@@ -114,18 +114,17 @@ export default class CouchClient {
 
     handleResponse(error, response, resolve, reject) {
         if (NodeErrorHandler.noError(error)) {
-
             if (new HttpResponseHandler(response.statusCode).success()) {
                 CouchClient.logger().debug("successful response from database.");
                 resolve(response.body);
             } else if(response.statusCode === HttpResponseHandler.codes.CONFLICT) {
                 reject({ "status": "conflict", "message": response.body });
             } else {
-                CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
+                CouchClient.logger().debug(`unexpected response from the db with status ${response.statusCode} and Error: ${JSON.stringify(response.body)}`);
                 reject("unexpected response from the db");
             }
         } else {
-            CouchClient.logger().debug("Error from database. Error: %s", error);
+            CouchClient.logger().debug(`Error from database. Error: ${JSON.stringify(error)}`);
             reject(error);
         }
     }

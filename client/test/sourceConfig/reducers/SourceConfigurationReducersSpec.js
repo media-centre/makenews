@@ -40,23 +40,23 @@ describe("SourceConfigurationReducers", () => {
             state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
         });
         it("should add a profile to the state when asked for adding a profile", () => {
-            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "name": "Profile1" }] };
-            expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }]);
+            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "name": "Profile1", "id": "12345" }] };
+            expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a page to the state when asked for adding a page", () => {
-            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "name": "Page1" }] };
-            expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1" }]);
+            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "name": "Page1", "id": "12345" }] };
+            expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a group to the state when asked for adding a group", () => {
-            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1" }] };
-            expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1" }]);
+            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1", "id": "12345" }] };
+            expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a web url to the state when asked for adding a web source", () => {
-            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "http://website.url" }] };
-            expect(configuredSources(state, action).web).to.deep.equal([{ "name": "http://website.url" }]);
+            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "url": "http://website.url" }] };
+            expect(configuredSources(state, action).web).to.deep.equal([{ "name": "website", "url": "http://website.url", "_id": "http://website.url" }]);
         });
 
         it("should return updated state with configured profiles", () => {
