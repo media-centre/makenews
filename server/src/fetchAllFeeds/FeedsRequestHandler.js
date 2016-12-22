@@ -5,12 +5,15 @@ export default class FeedsRequestHandler {
         return new FeedsRequestHandler();
     }
 
-    async fetchFeeds(authSession, lastIndex) {
+    async fetchFeeds(authSession, lastIndex, sourceType) {
         let couchClient = await CouchClient.createInstance(authSession);
         let selector = {
             "selector": {
                 "docType": {
                     "$eq": "feed"
+                },
+                "sourceType": {
+                    "$eq": sourceType
                 },
                 "pubDate": {
                     "$gt": null

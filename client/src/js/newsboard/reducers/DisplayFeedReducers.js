@@ -1,4 +1,4 @@
-import { PAGINATED_FETCHED_FEEDS } from "../actions/DisplayFeedActions";
+import { PAGINATED_FETCHED_FEEDS, NEWSBOARD_CURRENT_TAB, RSS } from "./../actions/DisplayFeedActions";
 import { List } from "immutable";
 
 export function fetchedFeeds(state = [], action = {}) {
@@ -9,3 +9,12 @@ export function fetchedFeeds(state = [], action = {}) {
         return state;
     }
 }
+
+export const newsBoardCurrentSourceTab = (state = RSS, action = {}) => {
+    switch(action.type) {
+    case NEWSBOARD_CURRENT_TAB: {
+        return action.currentTab;
+    }
+    default: return state;
+    }
+};

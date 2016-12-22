@@ -11,7 +11,6 @@ import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
 import FacebookConfigure from "./config/components/FacebookConfigure";
-import DisplayFeeds from "../js/newsboard/components/DisplayFeeds";
 import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
 import WriteAStory from "./storyboard/components/WriteAStory";
@@ -31,7 +30,6 @@ export function renderRoutes() {
                     <Route path="/configure/category/:categoryId/:categoryName" component={CategoryPage}/>
                 </Route>
                 <Route path="/newsboard" component={ScanNews} />
-                <Route path="/newsboard/trending" component={DisplayFeeds} />
                 <Route path="/storyBoard" component={WriteAStory} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />

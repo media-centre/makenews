@@ -5,7 +5,7 @@ import sinon from "sinon";
 import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 
-describe("FeedsRequestHandler", () => {
+describe.only("FeedsRequestHandler", () => {
     let feed = null;
     let authSession = null;
     let feedsRequestHandler = null;
@@ -32,6 +32,9 @@ describe("FeedsRequestHandler", () => {
             "selector": {
                 "docType": {
                     "$eq": "feed"
+                },
+                "sourceType": {
+                    "$eq": "web"
                 },
                 "pubDate": {
                     "$gt": null

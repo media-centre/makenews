@@ -38,7 +38,7 @@ export class DisplayFeeds extends Component {
 
     getMoreFeeds() {
         if (this.state.hasMoreFeeds) {
-            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, (result) => {
+            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, this.props.sourceType, (result) => {
                 let skip = result.docsLenght === 0 ? this.state.lastIndex : (this.state.lastIndex + result.docsLenght); //eslint-disable-line no-magic-numbers
                 this.setState({ "lastIndex": skip, "hasMoreFeeds": result.hasMoreFeeds });
             }));
@@ -65,12 +65,16 @@ export class DisplayFeeds extends Component {
 }
 
 function mapToStore(store) {
-    return { "feeds": store.fetchedFeeds };
+    return {
+        "feeds": store.fetchedFeeds,
+        "sourceType": store.newsBoardCurrentSourceTab
+    };
 }
 
 DisplayFeeds.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "feeds": PropTypes.array.isRequired
+    "feeds": PropTypes.array.isRequired,
+    "sourceType": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(DisplayFeeds);
