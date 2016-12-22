@@ -5,14 +5,14 @@ import getHtmlContent from "../../utils/HtmContent";
 export default class Feed extends Component {
     getMedia() {
         let media = null;
-        //let { videos, images } = this.props.feed;
-        //let [video] = videos;
-        //let [image] = images;
-        //if(video) {
-        //    media = <i className="fa fa-youtube-play" />;
-        //} else if (image) {
-        //    media = <img src={image.url}/>;
-        //}
+        let { videos, images } = this.props.feed;
+        let [video] = videos;
+        let [image] = images;
+        if (video) {
+            media = <i className="fa fa-youtube-play"/>;
+        } else if (image) {
+            media = <img src={image.url}/>;
+        }
         return media;
     }
     render() {

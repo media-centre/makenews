@@ -13,8 +13,6 @@ export default class CouchClient {
 
     async getUserDbName() {
         let userName = await this.getUserName();
-        console.log("***************")
-        console.log(userName)
         return CryptUtil.dbNameHash(userName);
     }
     
@@ -73,7 +71,6 @@ export default class CouchClient {
     }
 
     post(path, body, customHeaders = {}) {
-        console.log("in post" + path)
         return new Promise((resolve, reject) => {
             request.post({
                 "uri": this.dbUrl + path,
@@ -120,7 +117,6 @@ export default class CouchClient {
 
             if (new HttpResponseHandler(response.statusCode).success()) {
                 CouchClient.logger().debug("successful response from database.");
-                // resolve("successful response from database.");
                 resolve(response.body);
             } else {
                 CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);

@@ -4,7 +4,6 @@ import FetchFeedsFromAllSources from "../../src/fetchAllFeeds/FetchFeedsFromAllS
 import RssRequestHandler from "../../src/rss/RssRequestHandler";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
 import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler";
-import LogTestHelper from "../helpers/LogTestHelper";
 import CouchClient from "../../src/CouchClient.js";
 import CryptUtil from "../../src/util/CryptUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
@@ -12,11 +11,9 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import { assert } from "chai";
 import sinon from "sinon";
 
-describe.only("FetchFeedsFromAllSources", () => {
-
+describe("FetchFeedsFromAllSources", () => {
     const indexZero = 0;
     let sandbox = null;
-
     function mockResponse() {
         let response = [
             {
@@ -63,14 +60,7 @@ describe.only("FetchFeedsFromAllSources", () => {
         it("should send error response if there is an invalid data in the request body", (done) => {
 
             let requestBody = {
-                "body": {
-                    "data": [
-                        { "sourceType": "facebook" },
-                        { "sourceType": "twitter", "_id": "http://www.twitter.com/testuser" },
-                        { "sourceType": "rss", "_id": "http://www.test.com/testfeeds" }
-                    ]
-                },
-                "cookies": { "AuthSession": "test_token" }
+                "cookies": { "AuthSession": null }
             };
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, {});
@@ -265,7 +255,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             };
             let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
             let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
-            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" };
             let requestData = {
                 "body": {
                     "data": [
@@ -306,7 +296,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             };
             let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
             let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
-            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" };
             let requestData = {
                 "body": {
                     "data": [
@@ -351,7 +341,7 @@ describe.only("FetchFeedsFromAllSources", () => {
             };
             let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
             let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
-            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }
+            let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" };
             let requestData = {
                 "cookies": { "AuthSession": "test_token" }
 

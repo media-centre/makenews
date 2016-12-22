@@ -2,16 +2,11 @@ import { assert } from "chai";
 import sinon from "sinon";
 import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 import RssClient from "../../src/rss/RssClient";
-import CouchClient from "../../src/CouchClient";
 
 describe("RssBatchFeedsFetch", () => {
-    let rssBatchFeedsFetch = null;
-    let rssClientMock = null;
-    let url = null;
-    let feed = null;
-    let couchClientMock = null;
-    let accessToken = null;
+    let rssBatchFeedsFetch = null, rssClientMock = null, url = null, feed = null, accessToken = null, sandbox = null;
     beforeEach("rssBatchFeedsFetch", () => {
+        sandbox = sinon.sandbox.create();
         rssBatchFeedsFetch = new RssBatchFeedsFetch();
         rssClientMock = new RssClient();
         url = "www.example.com";
@@ -27,14 +22,16 @@ describe("RssBatchFeedsFetch", () => {
             "status": "valid"
         }] };
         accessToken = "accessToken";
-        couchClientMock = new CouchClient(null, accessToken);
+    });
+
+    afterEach("rssBatchFeedsFetch afterEach", () => {
+        sandbox.restore();
     });
 
     describe("fetchBatchFeeds", () => {
-
         it("should thorw feeds not found when get rss data thrown an error", async() => {
-            sinon.mock(RssClient).expects("instance").returns(rssClientMock);
-            sinon.mock(rssClientMock).expects("getRssData").returns(Promise.reject("feeds not found"));
+            sandbox.mock(RssClient).expects("instance").returns(rssClientMock);
+            sandbox.mock(rssClientMock).expects("getRssData").returns(Promise.reject("feeds not found"));
 
             try {
                 await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
@@ -44,23 +41,15 @@ describe("RssBatchFeedsFetch", () => {
         });
 
         it("should throw not stored in db error when store in db thrown an error", async() => {
-            sinon.mock(RssClient).expects("instance").returns(rssClientMock);
-            sinon.mock(rssClientMock).expects("getRssData").returns(Promise.resolve(feed));
+            sandbox.mock(RssClient).expects("instance").returns(rssClientMock);
+            sandbox.mock(rssClientMock).expects("getRssData").returns(Promise.resolve(feed));
 
             try {
                 let response = await rssBatchFeedsFetch.fetchBatchFeeds(url, accessToken);
-                console.log(response)
                 assert.deepEqual(response, feed.items);
             } catch(error) {
                 assert.equal(error, "not able to store in db");
             }
         });
-
-
-        afterEach("rssBatchFeedsFetch afterEach", () => {
-            RssClient.instance.restore();
-            rssClientMock.getRssData.restore();
-        });
     });
-
 });

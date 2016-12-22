@@ -57,8 +57,13 @@ export class DisplayFeeds extends Component {
         this.setState({ "activeIndex": index });
     }
 
+    refreshFeeds() {
+        DisplayFeedActions.fetchFeedsFromSources();
+    }
+
     render() {
         return (<div className="configured-feeds-container">
+            <button onClick={this.refreshFeeds()} className="refresh-button">{"Refresh"}</button>
             {this.feedsDisplay()}
         </div>);
     }

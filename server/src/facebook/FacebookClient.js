@@ -56,20 +56,14 @@ export default class FacebookClient {
         });
     }
 
-
-
     pagePosts(pageId, type, parameters = {}) {
         return new Promise((resolve, reject) => {
-            console.log("page id")
-            console.log(pageId)
             if (StringUtil.isEmptyString(pageId)) {
                 reject({
                     "message": "page id cannot be empty",
                     "type": "InvalidArgument"
                 });
             } else {
-                console.log("in facebook URL")
-                console.log(this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false))
                 this._addDefaultParameters(parameters);
                 request.get({
                     "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false),
@@ -79,7 +73,7 @@ export default class FacebookClient {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
-                            feedResponse = FacebookParser.parsePosts(feedResponse.data)
+                            feedResponse = FacebookParser.parsePosts(feedResponse.data);
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);

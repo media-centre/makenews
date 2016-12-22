@@ -10,10 +10,6 @@ export function displayFeedsByPage(pageIndex, callback = () => {}) {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        let ajaxFetch = AjaxClient.instance("/fetch-all-feeds-from-all-sources", true);
-        ajaxFetch.post(headers, { "facebookAccessToken": "EAACQgZBvNveQBACSHsOYuZBgqCVtx9TL9qSn3zAmSy8htC4e4ZCpOwigCJPIfUUdnreTuPNqXsQ9ZCfio84pdzYNcDupEGROpf6ZCjK6LFdRdgHU1g6L3ZAdgOdIuJeimxAvMufUiqY3ZCZCP72hkk8A9yliN78rj5sZD" }).then(() => {
-
-        })
         ajax.post(headers, { "lastIndex": pageIndex }).then((feeds) => {
             let result = {
                 "docsLenght": 0
@@ -29,6 +25,15 @@ export function displayFeedsByPage(pageIndex, callback = () => {}) {
             dispatch(paginatedFeeds([]));
         });
     };
+}
+
+export async function fetchFeedsFromSources() {
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+    let ajaxFetch = AjaxClient.instance("/fetch-all-feeds-from-all-sources", true);
+    await ajaxFetch.post(headers, {});
 }
 
 export function paginatedFeeds(feeds) {

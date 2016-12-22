@@ -28,17 +28,15 @@ export default class FacebookRequestHandler {
     async pagePosts(webUrl, type, options = {}) {
         let facebookClientInstance = this.facebookClient();
         try {
-            console.log(12)
             let pageId = await facebookClientInstance.getFacebookId(webUrl);
             let feeds = await facebookClientInstance.pagePosts(pageId, type, this._getAllOptions(options));
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
             return feeds;
 
         } catch (error) {
-            console.log(13)
             FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-            throw ("error fetching facebook feeds of web url = " + webUrl);
-
+            let err = "error fetching facebook feeds of web url = " + webUrl;
+            throw (err);
         }
 
     }
@@ -160,16 +158,11 @@ export default class FacebookRequestHandler {
         let couchClient = await CouchClient.createInstance(authSession);
         try {
             let data = this._getFormattedSources(sourceType, sources);
-            console.log(data)
-            let response = await couchClient.saveBulkDocuments({ "docs": data });
-            console.log("^^^^^^^^^^^^^^^^");
-            let userName = await couchClient.getUserName();
-            console.log(userName);
-            console.log("^^^^^^^^^^^^^^^^^");
+            await couchClient.saveBulkDocuments({ "docs": data });
+            await couchClient.getUserName();
             return { "ok": true };
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error adding source. Error: ${error}`);
-            console.log("==========>", error);
             throw error;
         }
     }

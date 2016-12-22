@@ -15,22 +15,17 @@ export default class AdminDbClient extends CouchClient {
     }
 
     static instance(userName, password, db) {
-        console.log(11)
         return new Promise((resolve, reject) => {
             if(AdminDbClient.isSessionExpired(userName)) {
-                console.log(12)
                 AdminDbClient.logger().debug("AdminDbClient:: session expired for %s. Attempting to get token.", userName);
                 CouchSession.login(userName, password).then((token) => {
                     AdminDbClient.logger().debug("AdminDbClient:: received token.");
                     resolve(AdminDbClient.createInstance(token, db, userName));
                 }).catch((error) => {
-                    console.log(13)
-                    console.log(error)
                     AdminDbClient.logger().error("AdminDbClient:: login failed for %s", userName);
                     reject(error);
                 });
             } else {
-                console.log(14)
                 resolve(AdminDbClient.getDbInstance(userName).instance);
             }
         });

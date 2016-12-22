@@ -17,9 +17,10 @@ export default class FacebookParser {
         return feedDocuments;
 
     }
-    static parsePost( post) {
+    static parsePost(post) {
         var facebookRegex = /^https:\/\/www\.facebook\.com/;
         var postId = null;
+        var noIndex = -1;
         postId = post.id.split("_");
         let feedDocument = {
             "_id": post.id,
@@ -29,15 +30,19 @@ export default class FacebookParser {
             "sourceType": "facebook",
             "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),          //eslint-disable-line no-magic-numbers
             "description": post.message || "",
-            "pubDate": post.created_time ,
-            "tags": []
+            "pubDate": post.created_time,
+            "tags": [],
+            "images": [],
+            "videos": []
         };
 
         if(StringUtil.validString(post.picture)) {
-            feedDocument.images = [];
             post.url = post.picture;
             feedDocument.images[0] = post;                      //eslint-disable-line no-magic-numbers
-            // feedDocument.url = post.picture;
+        }
+        if(StringUtil.validString(post.link) && post.link.indexOf("/videos/") !== noIndex) {
+            post.url = post.link;
+            feedDocument.videos[0] = post;                      //eslint-disable-line no-magic-numbers
         }
 
         return feedDocument;

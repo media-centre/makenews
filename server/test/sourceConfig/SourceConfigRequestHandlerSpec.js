@@ -12,7 +12,7 @@ describe("SourceConfigRequestHandler", () => {
         body = {
             "selector": {
                 "docType": {
-                    "$eq": "configuredSource"
+                    "$eq": "source"
                 }
             },
             "limit": 1000
