@@ -7,7 +7,8 @@ import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import CouchClient from "../CouchClient";
 
-const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8, NOT_FOUND_INDEX = -1, LIMIT_VALUE = 50;
+const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
+const NOT_FOUND_INDEX = -1, LIMIT_VALUE = 25;
 
 export default class RssClient {
 
@@ -22,8 +23,7 @@ export default class RssClient {
     async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
 
         try {
-            let feeds = await this.getRssData(url);
-            return feeds;
+            return await this.getRssData(url);
         } catch (error) {
             if (error.message === FEEDS_NOT_FOUND) {
                 let root = cheerio.load(error.data);
@@ -153,17 +153,21 @@ export default class RssClient {
     }
 
     async addURL(url, accessToken) {
+        let success = null;
         try {
             let response = await this.fetchRssFeeds(url);
             let name = response.meta.title;
             let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-            await this.addUrlToCommon(document);
-            await this.addURLToUser(document, accessToken);
+            success = await this.addUrlToCommon(document);
+            success = await this.addURLToUser(document, accessToken);
         } catch (error) {
             RssClient.logger().error("RssClient:: Error while adding document %j.", error);
+            if(error.status === "conflict") {
+                success = "URL already exist";
+            }
             throw error;
         }
-        return "URL added to Database";
+        return success;
     }
 
     async addUrlToCommon(document) {
@@ -174,15 +178,31 @@ export default class RssClient {
             await dbInstance.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
         } catch (error) {
+            if(error.status !== "conflict") {
+                RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+                throw error; //eslint-disable-line no-throw-literal
+            }
+        }
+        return "URL added successfully";
+    }
+
+    async addURLToUser(document, accessToken) {
+        try {
+            let couchClient = await CouchClient.createInstance(accessToken);
+            await couchClient.saveDocument(encodeURIComponent(document.url), document);
+            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
+        } catch (error) {
+            if(error.status === "conflict") {
+                return "URL already exist";
+            }
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
             throw error;
         }
-        return "URL added to Database";
+        return "URL added successfully";
     }
 
-    async searchURL(key, offsetValue) {
+    async searchURL(key, offset) {
         let document = null;
-        let skipValue = offsetValue * LIMIT_VALUE;
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
             let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
@@ -199,29 +219,22 @@ export default class RssClient {
                     }
                 },
                 "limit": LIMIT_VALUE,
-                "skip": skipValue
+                "skip": offset,
+                "fields": ["name", "url"]
             };
-            document = await dbInstance.findDocuments(selector);
+            let response = await dbInstance.findDocuments(selector);
+
+            document = Object.assign({}, response);
+            document.paging = { "offset": (offset + LIMIT_VALUE) };
+            
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
-        }catch (error) {
+        } catch (error) {
             RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
             this.handleRequestError(key, error);
         }
         return document;
     }
-
-    async addURLToUser(document, accessToken) {
-        try {
-            let couchClient = await CouchClient.createInstance(accessToken);
-            await couchClient.saveDocument(encodeURIComponent(document.url), document);
-            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
-        } catch (error) {
-            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-            throw error;
-        }
-        return "URL added to Database";
-    }
-
+    
     handleUrlError(url, error) {
         let errorMessage = { "message": url + " is not a proper feed" };
         RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);

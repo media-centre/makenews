@@ -14,7 +14,8 @@ describe("Source URL component", () => {
                 "data": {
                     "url": "https://facebook.com/user.png"
                 }
-            }
+            },
+            "url": "http://some.url"
         };
         sourceRendered = TestUtils.renderIntoDocument(
             <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
@@ -22,25 +23,28 @@ describe("Source URL component", () => {
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
     });
 
-    it("should have url name", () => {
+    it("should have source name", () => {
         expect(sourceDOM.textContent).to.equal("Source Url");
+    });
+
+    it("should not have source url if currentSourceType is not WEB", () => {
+        let sourceUrl = sourceDOM.querySelectorAll(".source__url");
+        expect(sourceUrl).to.have.lengthOf(0); // eslint-disable-line no-magic-numbers
+    });
+
+    it("should have source url if currentSourceType is WEB", () => {
+        sourceRendered = TestUtils.renderIntoDocument(
+            <Source source={source} dispatch={()=>{}} currentSourceType="WEB" />
+        );
+        sourceDOM = ReactDOM.findDOMNode(sourceRendered);
+
+        let sourceUrl = sourceDOM.querySelectorAll(".source__url");
+        expect(sourceUrl).to.have.lengthOf(1); // eslint-disable-line no-magic-numbers
     });
     
     it("should have user icon with the give source", () => {
         let [image] = sourceDOM.querySelectorAll("img");
         expect(image.src).to.equal(source.picture.data.url);
-    });
-
-    it("should have default icon when image is not provided", () => {
-        source = {
-            "name": "Source Url"
-        };
-        sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
-        );
-        sourceDOM = ReactDOM.findDOMNode(sourceRendered);
-        let [image] = sourceDOM.querySelectorAll("img");
-        expect(image.src).to.equal("./images/default-source-icon.jpg");
     });
 
     it("should have add button in the source when it's not added to configured list", () =>{

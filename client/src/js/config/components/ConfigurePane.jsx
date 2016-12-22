@@ -2,8 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
-import { getSourcesOf } from "./../actions/FacebookConfigureActions";
-import { clearSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 
 export class ConfigurePane extends Component {
@@ -17,8 +16,9 @@ export class ConfigurePane extends Component {
     fetchSources() {
         let value = this.refs.searchSources.value;
         if(!StringUtils.isEmptyString(value)) {
-            this.props.dispatch(clearSources());
-            this.props.dispatch(getSourcesOf(this.props.currentTab, value));
+            this.props.dispatch(SourceConfigActions.clearSources());
+            this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
+            this.props.dispatch(SourceConfigActions.getSources(this.props.currentTab, value));
         }
     }
 
@@ -31,7 +31,7 @@ export class ConfigurePane extends Component {
                     <img src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              <SourcePane dispatch={this.props.dispatch}/>
+              <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
           </div>
         );
     }
@@ -39,7 +39,7 @@ export class ConfigurePane extends Component {
 
 function mapToStore(state) {
     return {
-        "currentTab": state.facebookCurrentSourceTab
+        "currentTab": state.currentSourceTab
     };
 }
 

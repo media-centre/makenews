@@ -1,0 +1,17 @@
+.sources-nav {
+  padding-left: 20%;
+  background-color: $background-color;
+
+  &__item {
+    display: inline-block;
+    padding: 20px 10px;
+    cursor: pointer;
+    color: $primary-color;
+    opacity: .5;
+    font-weight: 400;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+}

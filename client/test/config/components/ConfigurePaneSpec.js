@@ -5,7 +5,7 @@ import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
-import * as FBActions from "./../../../src/js/config/actions/FacebookConfigureActions";
+import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import sinon from "sinon";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
@@ -22,7 +22,7 @@ describe("Configure Pane", () => {
             store = {
                 "getState": ()=>{
                     return { "state": {
-                        "facebookCurrentSourceTab": []
+                        "currentSourceTab": []
                     }
                     };
                 }
@@ -72,9 +72,10 @@ describe("Configure Pane", () => {
         beforeEach("search input box", () => {
             currentTab = "Profiles";
             store = createStore(() => ({
-                "facebookCurrentSourceTab": currentTab,
-                "facebookSources": { "data": [] },
-                "hasMoreSourceResults": false
+                "currentSourceTab": currentTab,
+                "sourceResults": { "data": [] },
+                "hasMoreSourceResults": false,
+                "sourceSearchKeyword": "Bla"
             }), applyMiddleware(thunkMiddleware));
 
             sandbox = sinon.sandbox.create();
@@ -85,7 +86,7 @@ describe("Configure Pane", () => {
         });
 
         it("should not dispatch if the enter key is not pressed", () => {
-            getSourceMock = sandbox.mock(FBActions).expects("getSourcesOf")
+            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
                 .never();
 
             configurePane = TestUtils.renderIntoDocument(
@@ -103,7 +104,7 @@ describe("Configure Pane", () => {
         });
 
         it("should not dispatch if there is no value in input box", () => {
-            getSourceMock = sandbox.mock(FBActions).expects("getSourcesOf")
+            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
                 .never();
 
             configurePane = TestUtils.renderIntoDocument(
@@ -121,7 +122,7 @@ describe("Configure Pane", () => {
         });
 
         it("should dispatch the getSources with the search value", () => {
-            getSourceMock = sandbox.mock(FBActions).expects("getSourcesOf")
+            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
                 .once().withArgs(currentTab).returns({
                     "type": ""
                 });

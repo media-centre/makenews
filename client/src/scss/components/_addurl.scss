@@ -1,0 +1,53 @@
+.addurl {
+  margin-top: 15%;
+  margin-left: 35%;
+  height: 180px;
+  width: 30%;
+
+  &-helpmessage {
+    background-color: $primary-color-bold;
+    width: 100%;
+    height: 60px;
+
+    img {
+      padding: 13px;
+      width: 30px;
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .text {
+      width: 70%;
+      color: white;
+      font-size: $extra-small-font-size;
+    }
+  }
+  &-inputcontainer {
+    background-color: $primary-color;
+    width: 100%;
+    height: 120px;
+    div {
+      display: inline-block;
+
+    }
+  }
+
+  .addurl-input {
+    margin-top: 10%;
+    width: 80%;
+    input {
+      width: 80%;
+      margin-left: 8%;
+      opacity: 0.37;
+      border: 0;
+      border-bottom: 2px solid white;
+      background-color: $primary-color;
+      color: #ffffff;
+      font-size: $medium-font-size;
+      line-height: 24px;
+    }
+  }
+}

@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from "react";
 import Sources from "./Sources";
 import FacebookTabs from "./FacebookTabs";
-import { addAllSources } from "./../actions/FacebookConfigureActions";
+import { WEB, TWITTER, addAllSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class SourcePane extends Component {
 
     render() {
         return (
             <div className="sources-suggestions">
-                <FacebookTabs />
+                {!(R.contains(this.props.currentTab, [WEB, TWITTER])) && <FacebookTabs />}
                 <button className="add-all" onClick= {() => {
                     this.props.dispatch(addAllSources());
                 }}
@@ -23,5 +24,6 @@ export default class SourcePane extends Component {
 }
 
 SourcePane.propTypes = {
+    "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired
 };

@@ -1,9 +1,12 @@
 import { FacebookTabs } from "../../../src/js/config/components/FacebookTabs";
 import React from "react";
+import { Router, Route, Link } from "react-router";
+import History from "./../../../src/js/History";
 import TestUtils from "react-addons-test-utils";
-import * as FBActions from "./../../../src/js/config/actions/FacebookConfigureActions";
 import { expect } from "chai";
 import sinon from "sinon";
+import { PROFILES } from "./../../../src/js/config/actions/FacebookConfigureActions";
+import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("Facebook Tabs", () => {
     let nav = null, store = null;
@@ -36,12 +39,42 @@ describe("Facebook Tabs", () => {
         expect(firstTab.props.className).to.have.string("active");
     });
 
+    it("should have proper links to profiles, pages, groups", () => {
+        nav = TestUtils.renderIntoDocument(
+            <Router history={History.getHistory()}>
+                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab={PROFILES}/>)} />
+            </Router>
+        );
+        let [profiles, pages, groups] = TestUtils.scryRenderedComponentsWithType(nav, Link);
+        expect(profiles.props.to).to.equal("/configure/facebook/profiles");
+        expect(pages.props.to).to.equal("/configure/facebook/pages");
+        expect(groups.props.to).to.equal("/configure/facebook/groups");
+    });
+
     it("should dispatch facebookSourceTabSwitch on clicking Pages tab", () => {
         let sandbox = sinon.sandbox.create();
-        let fbSourceTabSwitch = sandbox.mock(FBActions).expects("facebookSourceTabSwitch").withArgs("Pages");
-        nav = TestUtils.renderIntoDocument(<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>);
-        let [, secondTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
-        TestUtils.Simulate.click(secondTab);
+        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("Pages");
+        nav = TestUtils.renderIntoDocument(
+            <Router history={History.getHistory()}>
+                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>)} />
+            </Router>
+        );
+        let [, pagesLink] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
+        TestUtils.Simulate.click(pagesLink);
+        fbSourceTabSwitch.verify();
+        sandbox.restore();
+    });
+
+    it("should dispatch facebookSourceTabSwitch on clicking groups tab", () => {
+        let sandbox = sinon.sandbox.create();
+        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("Groups");
+        nav = TestUtils.renderIntoDocument(
+            <Router history={History.getHistory()}>
+                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Groups"/>)} />
+            </Router>
+        );
+        let [, , groupsTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
+        TestUtils.Simulate.click(groupsTab);
         fbSourceTabSwitch.verify();
         sandbox.restore();
     });

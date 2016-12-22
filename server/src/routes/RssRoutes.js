@@ -19,7 +19,7 @@ export default (app) => {
         new AddURLDocumentRoute(request, response, next).handle();
     });
 
-    app.get("/search-all-urls", (request, response, next) => {
+    app.get("/web-sources", (request, response, next) => {
         RouteLogger.instance().info("WebURLS:: /search-all-urls request received. url = %s", request.url);
         new SearchURLsRoute(request, response, next).handle();
     });

@@ -1,4 +1,3 @@
-
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 import FacebookClient from "../../src/facebook/FacebookClient";
@@ -11,7 +10,6 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import { assert, expect } from "chai";
 import sinon from "sinon";
-import { sourceTypes } from "../../src/util/Constants";
 
 describe("FacebookRequestHandler", () => {
     let accessToken = null, appSecretKey = null, appSecretProof = null, appId = null;
@@ -290,7 +288,7 @@ describe("FacebookRequestHandler", () => {
 
     describe("Add Configured Sources", () => {
         let sandbox = null, dbName = null, facebookRequestHandler = null, couchClient = null;
-        let documents = null, sources = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
+        let documents = null, sources = null, currentTime = 123456, sourceType = "fb_page";
         beforeEach("Add Configured Sources", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";

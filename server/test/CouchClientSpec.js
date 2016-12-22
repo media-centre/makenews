@@ -215,6 +215,30 @@ describe("CouchClient", () => {
             });
         });
 
+        it("should return message if response code is conflict", (done) => {
+            let result = { "status": "conflict", "message": "document already exist" };
+            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .put("/" + dbName + "/schema_info", documentObj)
+                .reply(HttpResponseHandler.codes.CONFLICT, result);
+
+            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+            let couchClientInstance = new CouchClient(dbName, accessToken);
+            couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
+                assert.strictEqual("conflict", error.status);
+                nodeErrorHandlerMock.verify();
+                NodeErrorHandler.noError.restore();
+                done();
+            });
+        });
+
     });
 
     describe("getDocument", () => {
