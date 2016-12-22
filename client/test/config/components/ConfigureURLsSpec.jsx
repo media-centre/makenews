@@ -4,7 +4,7 @@ import TestUtils from "react-addons-test-utils";
 import { Link } from "react-router";
 import { assert } from "chai";
 
-describe("ConfigureURLs", () => {
+describe.only("ConfigureURLs", () => {
     it("should have a nav with class sources-nav", () => {
         let renderer = TestUtils.createRenderer();
         renderer.render(

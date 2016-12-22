@@ -14,9 +14,16 @@ export class ConfigureURLs extends Component {
         return (
             <div>
                 <nav className="sources-nav">
-                    <Link to="/configure/web" className={this.props.params.sourceType === "web" ? "sources-nav__item active" : "sources-nav__item"}>Web</Link>
-                    <Link to="/configure/facebook/profiles" className={this.props.params.sourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>Facebook</Link>
-                    <Link to="/configure/twitter" className={this.props.params.sourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>Twitter</Link>
+                    <Link to="/configure/web" className={this.props.params.sourceType === "web" ? "sources-nav__item active" : "sources-nav__item"}>
+                        <i className="fa fa-globe" />
+                        Web URLs
+                    </Link>
+                    <Link to="/configure/facebook/profiles" className={this.props.params.sourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>
+                        <i className="fa fa-facebook-square" />Facebook
+                    </Link>
+                    <Link to="/configure/twitter" className={this.props.params.sourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>
+                        <i className="fa fa-twitter" />Twitter
+                    </Link>
                 </nav>
                 { this.props.children }
             </div>
