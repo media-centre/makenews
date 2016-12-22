@@ -14,6 +14,7 @@ import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -37,7 +38,8 @@ const contentDiscoveryApp = combineReducers({
     sourceResults,
     sourceSearchKeyword,
     currentSourceTab,
-    currentHeaderTab
+    currentHeaderTab,
+    newsBoardCurrentSourceTab
 });
 
 export default contentDiscoveryApp;
