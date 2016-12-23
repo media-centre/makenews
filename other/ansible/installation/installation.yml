@@ -12,10 +12,8 @@
   roles:
     - PreInstallationTasks
     - couchdb-dump
-    - Ansibles.build-essential
     - ANXS.build-essential
-    - Ansibles.erlang
-    - guillaumededrie.couchdb
+    - couchdb2.0
     - gotansible.nodejs
     - PostInstallationTasks
     - goagent

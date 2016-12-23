@@ -19,20 +19,15 @@
 
 - name: Compile and install CouchDB
   shell:
-    ./configure --prefix=/usr/local --with-js-lib=/usr/lib --with-js-include=/usr/include/mozjs --enable-init && make && make install
+    ./configure --disable-docs && make release
     chdir={{ couchdb_tmp_dir }}{{ couchdb_file_tag }}
   sudo: true
 
-- name: Link CouchDB exec prog
-  sudo: true
-  file: src=/usr/local/etc/init.d/couchdb dest=/etc/init.d/couchdb state=link
+- name: Copy couchdb to /opt
+  command: cp -R {{ couchdb_tmp_dir }}{{ couchdb_file_tag }}/rel/couchdb /opt/
 
-- name: Create or update CouchDB directories
-  sudo: true
-  file: path={{ item }} state=directory recurse=yes owner=couchdb group=couchdb mode=0770
-  with_items:
-    - /usr/local/etc/couchdb
-    - /usr/local/lib/couchdb
-    - /usr/local/var/lib/couchdb
-    - /usr/local/var/log/couchdb
-    - /usr/local/var/run/couchdb
+- name: Copy couchdb service file to etc/init.d
+  copy: src=couchdb dest=/etc/init.d/couchdb owner=couchdb group=couchdb mode=0755
+
+- name: Add couchdb service to startup
+  shell: update-rc.d couchdb defaults

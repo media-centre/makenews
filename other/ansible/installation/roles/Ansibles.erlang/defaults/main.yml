@@ -1,4 +1,4 @@
 # file: erlang/defaults/main.yml
 
-erlang_version: "R14B01"
+erlang_version: "17.0"
 erlang_build_flags: ""
