@@ -32,7 +32,7 @@ export async function fetchFeedsFromSources() {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    let ajaxFetch = AjaxClient.instance("/fetch-all-feeds-from-all-sources", true);
+    let ajaxFetch = AjaxClient.instance("/fetch-feeds", true);
     await ajaxFetch.post(headers, {});
 }
 

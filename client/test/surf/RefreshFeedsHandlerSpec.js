@@ -695,9 +695,9 @@ describe("RefreshFeedsHandler", () => {
         };
         let categoryDbMock = sandbox.stub(SourceDb, "fetchSourceConfigurationBySourceType");
         categoryDbMock.returns(Promise.resolve(urls));
-        let ajaxMock = new AjaxClient("/fetch-all-feeds-from-all-sources");
+        let ajaxMock = new AjaxClient("/fetch-feeds");
         let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-        ajaxInstanceMock.withArgs("/fetch-all-feeds-from-all-sources").returns(ajaxMock);
+        ajaxInstanceMock.withArgs("/fetch-feeds").returns(ajaxMock);
         let ajaxPostMock = sandbox.mock(ajaxMock).expects("post");
         ajaxPostMock.withExactArgs({}, postData).returns(Promise.reject("request error"));
 

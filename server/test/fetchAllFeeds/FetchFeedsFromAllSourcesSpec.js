@@ -8,7 +8,8 @@ import CouchClient from "../../src/CouchClient.js";
 import CryptUtil from "../../src/util/CryptUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import AdminDbClient from "../../src/db/AdminDbClient";
-import { assert } from "chai";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import { assert, expect } from "chai";
 import sinon from "sinon";
 
 describe("FetchFeedsFromAllSources", () => {
@@ -32,6 +33,19 @@ describe("FetchFeedsFromAllSources", () => {
         return response;
     }
 
+    function mockFailureResponse(done, expectedValues) {
+        let response = {
+            "status": (status) => {
+                expect(status).to.equal(expectedValues.status);
+            },
+            "json": (jsonData) => {
+                expect(jsonData).to.deep.equal(expectedValues.json);
+                done();
+            }
+        };
+        return response;
+    }
+
     beforeEach("FetchFeedsFromAllSources", () => {
         sandbox = sinon.sandbox.create();
     });
@@ -47,23 +61,16 @@ describe("FetchFeedsFromAllSources", () => {
         before("FetchFeedsFromAllSources", () => {
             accessToken = "test_token";
         });
-
-        it("should validate the invalid request data and throw error", () => {
-
-            let response = {};
-            let request = { "cookies": {}, "body": { "data": [] } };
-            let fetchFeedsRequest = new FetchFeedsFromAllSources(request, response);
-            assert.strictEqual(false, fetchFeedsRequest.isValidateRequestData());
-
-        });
-
+        
         it("should send error response if there is an invalid data in the request body", (done) => {
+
 
             let requestBody = {
                 "cookies": { "AuthSession": null }
             };
+            let response = mockFailureResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
 
-            let fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, {});
+            let fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, response);
             fetchFeedsRequest.fetchFeeds().catch((errorResponse)=> {
                 assert.deepEqual({ "error": "Invalid url data" }, errorResponse);
                 done();
@@ -316,7 +323,7 @@ describe("FetchFeedsFromAllSources", () => {
             try {
                 sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
                 sinon.stub(couchClientMock, "get").returns(Promise.resolve(response));
-                sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("successfully stored in db"));
+                sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("Successfully added feeds to Database"));
                 sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
                 let res = await fetchFeedsFromAllSources.saveFeedDocumentsToDb(feeds);
                 assert.equal(res, "Successfully added feeds to Database");

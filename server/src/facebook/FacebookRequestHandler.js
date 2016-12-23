@@ -40,22 +40,6 @@ export default class FacebookRequestHandler {
         }
 
     }
-        //return new Promise((resolve, reject) => {
-        //    let facebookClientInstance = this.facebookClient();
-        //    facebookClientInstance.getFacebookId(webUrl).then(pageId => {
-        //        facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-        //            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
-        //            resolve(feeds.data);
-        //        }).catch(error => {
-        //            FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
-        //            reject("error fetching facebook feeds of web url = " + webUrl);
-        //        });
-        //    }).catch(error => {
-        //        FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-        //        reject("error fetching facebook feeds of web url = " + webUrl);
-        //    });
-        //});
-    //}
 
     saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {
         dbInstance.saveDocument(tokenDocumentId, document).then(() => {

@@ -5,15 +5,16 @@ import Logger from "../logging/Logger";
 import CouchClient from "../../src/CouchClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
+import Route from "../routes/helpers/Route";
 
 export const RSS_TYPE = "rss";
 export const FACEBOOK_PAGE = "fb_page";
 export const FACEBOOK_GROUP = "fb_group";
 export const TWITTER_TYPE = "twitter";
 
-export default class FetchFeedsFromAllSources {
-    constructor(request, response) {
-        this.response = response;
+export default class FetchFeedsFromAllSources extends Route {
+    constructor(request, response, next) {
+        super(request, response, next);
         this.accesstoken = request.cookies.AuthSession;
         this.facebookAcessToken = null;
     }
@@ -23,45 +24,29 @@ export default class FetchFeedsFromAllSources {
     }
 
     fetchFeeds() {
-        return new Promise((resolve, reject)=> {
-            if (this.isValidateRequestData()) {
-                this.fetchFeedsFromAllSources().then((feeds)=> {
-                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
-                    resolve(feeds);
+        if (this.accesstoken) {
+            this.fetchFeedsFromAllSources().then((response)=> {
+                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
+                this._handleSuccess(response);
 
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                    reject(err);
-                });
-            } else {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
-                reject({ "error": "Invalid url data" });
-            }
-        });
-    }
-
-    fetchFeedsFromAllSources() {
-        return new Promise((resolve, reject)=> {
-            this._getUrlDocuments().then((urlDocuments) => {
-                urlDocuments.forEach((item, index)=> {
-                    this.fetchFeedsFromSource(item).then((feeds)=> {
-                        this.saveFeedDocumentsToDb(feeds).then(response => {
-                            resolve(response);
-                        }).catch(error => {
-                            reject(error);
-                        });
-                        if (urlDocuments.length - 1 === index) {  // eslint-disable-line no-magic-numbers
-                            FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
-                        }
-                    }).catch((err) => {
-                        FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                        reject(err);
-
-                    });
-                });
+            }).catch((err) => {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
+                this._handleBadRequest();
             });
-        });
+        } else {
+            FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Authentication failed");
+            this._handleBadRequest();
+        }
     }
+
+    async fetchFeedsFromAllSources() {
+        let urlDocuments = await this._getUrlDocuments();
+        let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchFeedsFromSource(url));
+        let feedArrays = await Promise.all(mapUrlDocs);
+        let feeds = feedArrays.reduce((acc, feedsArray) => acc.concat(feedsArray), []);
+        return await this.saveFeedDocumentsToDb(feeds);
+    }
+
 
     async _getUrlDocuments() {
         let couchClient = await CouchClient.createInstance(this.accesstoken);
@@ -83,10 +68,10 @@ export default class FetchFeedsFromAllSources {
         case RSS_TYPE:
             try {
                 feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
-                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
+                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
                 return feeds;
             } catch (err) {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching rss feeds. Error: %s", err);
+                FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
                 throw(err);
             }
         case FACEBOOK_GROUP: type = "feed";
@@ -140,25 +125,9 @@ export default class FetchFeedsFromAllSources {
 
     }
 
-    isValidateRequestData() {
-        if (!this.accesstoken) {
-            return false;
-        }
-        return true;
-        // let errorItems = this.request.body.data.filter((item) => {
-        //     if (StringUtil.isEmptyString(item.sourceType) || StringUtil.isEmptyString(item._id)) {
-        //         return item;
-        //     }
-        // });
-        // return errorItems.length <= 0;
-    }
-
     async saveFeedDocumentsToDb(feeds) {
-        let SUCCESS_MESSAGE = "Successfully added feeds to Database";
         let couchClient = await CouchClient.createInstance(this.accesstoken);
         let feedObject = { "docs": feeds };
-        await couchClient.saveBulkDocuments(feedObject);
-        return SUCCESS_MESSAGE;
-
+        return await couchClient.saveBulkDocuments(feedObject);
     }
 }
