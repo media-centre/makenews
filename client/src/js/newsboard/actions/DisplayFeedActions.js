@@ -2,43 +2,45 @@ import AjaxClient from "../../../js/utils/AjaxClient";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWSBOARD_CURRENT_TAB = "NEWSBOARD_CURRENT_TAB";
+export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const TRENDING = "trending";
-export const RSS = "rss";
+export const WEB = "web";
 export const FACEBOOK = "facebook";
 export const TWITTER = "twitter";
-const FEEDS_LENGTH_ZERO = 0;
+
+export const paginatedFeeds = feeds => ({
+    "type": PAGINATED_FETCHED_FEEDS, feeds
+});
+
+export const newsBoardTabSwitch = currentTab => ({
+    "type": NEWSBOARD_CURRENT_TAB, currentTab
+});
+
+export const clearFeeds = () => ({
+    "type": CLEAR_NEWS_BOARD_FEEDS
+});
 
 export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
-    return dispatch => {
-        let ajax = AjaxClient.instance("/fetch-all-feeds", true);
-        const headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        };
-        ajax.post(headers, { "lastIndex": pageIndex, "sourceType": sourceType }).then((feeds) => {
+    let ajax = AjaxClient.instance("/fetch-all-feeds", true);
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+    return async dispatch => {
+        try {
+            let feeds = await ajax.post(headers, { "offset": pageIndex, sourceType });
             let result = {
-                "docsLenght": 0
+                "docsLength": 0
             };
-            if (feeds.docs.length > FEEDS_LENGTH_ZERO) {
+            if (feeds.docs.length > 0) { //eslint-disable-line no-magic-numbers
                 dispatch(paginatedFeeds(feeds.docs));
-                result.docsLenght = feeds.docs.length;
+                result.docsLength = feeds.docs.length;
             }
             let defaultPageSize = 25;
             result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
-            callback(result);  //eslint-disable-line callback-return
-        }).catch(() => {
+            callback(result); //eslint-disable-line callback-return
+        } catch(err) {
             dispatch(paginatedFeeds([]));
-        });
-    };
-}
-
-export function paginatedFeeds(feeds) {
-    return { "type": PAGINATED_FETCHED_FEEDS, feeds };
-}
-
-export function newsBoardTabSwitch(currentTab) {
-    return {
-        "type": NEWSBOARD_CURRENT_TAB,
-        currentTab
+        }
     };
 }

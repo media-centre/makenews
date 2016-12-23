@@ -1,24 +1,46 @@
 .news-board-container {
   width: 34%;
+  position: relative;
+  float: none;
+  clear: both;
+
   .source-type-bar {
-    width: 15%;
-    float: left;
+    padding: 20px 5px;
+    position: fixed;
+    height: 100%;
+    width: 54px;
+    box-sizing: border-box;
+    background-color: $dark-background-color;
 
     .news-board-tab {
-      width: 100%;
+      padding: 10px;
+      width: 1.5em;
+      height: 1.5em;
+      text-align: center;
+      margin-bottom: 10px;
+      cursor: pointer;
 
-      .news-board-tab-image {
-        width: 40%;
-        margin: 30%;
+      &.active {
+        background-color: #fff;
+        border-radius: 100%;
+
+        .icon {
+          color: $secondary-color;
+        }
+      }
+
+      .icon {
+        font-size: 1.5em;
+        color: $primary-color-light;
       }
     }
   }
   .configured-feeds-container {
     background-color: $background-color;
-    width: 85%;
     height: 100vh;
-    overflow-y: scroll;
-    float: left;
+    margin-left: 54px;
+    overflow-y: auto;
+    border-right: 2px solid lighten($primary-color, 35%);
 
     .feed, .feed-highlight {
       min-height: 105px;

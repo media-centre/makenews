@@ -5,7 +5,7 @@ export default class FeedsRequestHandler {
         return new FeedsRequestHandler();
     }
 
-    async fetchFeeds(authSession, lastIndex, sourceType) {
+    async fetchFeeds(authSession, offset, sourceType) {
         let couchClient = await CouchClient.createInstance(authSession);
         let selector = {
             "selector": {
@@ -21,7 +21,7 @@ export default class FeedsRequestHandler {
             },
             "fields": ["title", "description", "sourceType", "tags", "pubDate", "videos", "images"],
             "sort": [{ "pubDate": "desc" }],
-            "skip": lastIndex
+            "skip": offset
         };
         return await couchClient.findDocuments(selector);
     }

@@ -10,22 +10,27 @@ export class NewsBoardTab extends Component {
     }
 
     render() {
-        return (<div>
-            <div className="news-board-tab" >
-                <img className="news-board-tab-image" src={`./../../images/${this.props.image}`} onClick={() => { this.displayFeeds(this.props.sourceType); }} />
+        return (
+            <div className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
+                onClick={() => { this.displayFeeds(this.props.sourceType); }}
+            >
+                <i className={`icon fa fa-${this.props.sourceIcon}`} />
             </div>
-        </div>);
+        );
     }
 }
 
 function mapToStore(store) {
-    return { store };
+    return {
+        "currentNewsBoard": store.newsBoardCurrentSourceTab
+    };
 }
 
 NewsBoardTab.propTypes = {
-    "image": PropTypes.string.isRequired,
+    "sourceIcon": PropTypes.string.isRequired,
     "sourceType": PropTypes.string.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "currentNewsBoard": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(NewsBoardTab);

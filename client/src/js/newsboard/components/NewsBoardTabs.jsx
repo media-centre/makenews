@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import NewsBoardTab from "./NewsBoardTab";
-import { TRENDING, RSS, FACEBOOK, TWITTER } from "./../actions/DisplayFeedActions";
+import { WEB, FACEBOOK, TWITTER } from "./../actions/DisplayFeedActions";
 
 export default class NewsBoardTabs extends Component {
     render() {
         return (
             <div className="source-type-bar">
-                <NewsBoardTab image="trending-icon.png" sourceType={RSS}/>
-                <NewsBoardTab image="web-icon.png" sourceType={RSS}/>
-                <NewsBoardTab image="facebook-icon.png" sourceType={FACEBOOK}/>
-                <NewsBoardTab image="twitter-icon.png" sourceType={TWITTER}/>
+                <NewsBoardTab sourceIcon="line-chart" sourceType={WEB}/>
+                <NewsBoardTab sourceIcon="globe" sourceType={WEB}/>
+                <NewsBoardTab sourceIcon="facebook-square" sourceType={FACEBOOK}/>
+                <NewsBoardTab sourceIcon="twitter" sourceType={TWITTER}/>
             </div>
         );
     }

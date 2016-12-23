@@ -14,7 +14,6 @@ describe("Route", () => {
         it("should validate the invalid request data and throw error", () => {
             let route = new Route({}, response);
             assert.strictEqual(false, route.isValidRequestData());
-
         });
 
         it("should return false if id is not present in the request body", () => {
@@ -62,6 +61,28 @@ describe("Route", () => {
 
             let route = new Route({ "body": requestBody }, response, next);
             assert.strictEqual(true, route.isValidRequestData());
+        });
+    });
+
+    describe("validate Number", () => {
+        let route = null;
+        beforeEach("validate Number", () => {
+            route = new Route({}, {});
+        });
+        it("should return zero if the input string can not be parsed to Integer", () => {
+            assert.strictEqual(route.validateNumber("a"), 0); //eslint-disable-line no-magic-numbers
+        });
+
+        it("should return zero if the input is a negative number", () => {
+            assert.strictEqual(route.validateNumber("-1"), 0); //eslint-disable-line no-magic-numbers
+        });
+
+        it("should return the converted integer if it's a valid integer", () => {
+            assert.strictEqual(route.validateNumber("4"), 4); //eslint-disable-line no-magic-numbers
+        });
+
+        it("should return the converted floor of the integer if it's a valid float", () => {
+            assert.strictEqual(route.validateNumber("4.9"), 4); //eslint-disable-line no-magic-numbers
         });
     });
 });

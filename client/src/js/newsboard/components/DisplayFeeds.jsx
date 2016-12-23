@@ -3,20 +3,28 @@ import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import { connect } from "react-redux";
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
-// const MAX_FEEDS_PER_REQUEST = 25;
-
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "activeIndex": 0, "lastIndex": 0, "hasMoreFeeds": true };
+        this.state = { "activeIndex": 0, "lastIndex": 0 };
+        this.hasMoreFeeds = true;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
     }
 
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         ReactDOM.findDOMNode(this).addEventListener("scroll", this.getFeedsCallBack.bind(this));
-        this.getMoreFeeds();
+        this.getMoreFeeds(this.props.sourceType);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(this.props.sourceType !== nextProps.sourceType) {
+            this.hasMoreFeeds = true;
+            this.getMoreFeeds(nextProps.sourceType);
+            let data = DisplayFeedActions.clearFeeds();
+            this.props.dispatch(data);
+        }
     }
 
     componentWillUnmount() {
@@ -29,28 +37,20 @@ export class DisplayFeeds extends Component {
             this.timer = setTimeout(() => {
                 this.timer = null;
                 if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
-                    this.getMoreFeeds();
+                    this.getMoreFeeds(this.props.sourceType);
                 }
             }, scrollTimeInterval);
-
         }
     }
 
-    getMoreFeeds() {
-        if (this.state.hasMoreFeeds) {
-            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, this.props.sourceType, (result) => {
-                let skip = result.docsLenght === 0 ? this.state.lastIndex : (this.state.lastIndex + result.docsLenght); //eslint-disable-line no-magic-numbers
-                this.setState({ "lastIndex": skip, "hasMoreFeeds": result.hasMoreFeeds });
+    getMoreFeeds(sourceType) {
+        if (this.hasMoreFeeds) {
+            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, sourceType, (result) => {
+                let skip = result.docsLength ? this.state.lastIndex : (this.state.lastIndex + result.docsLength);
+                this.hasMoreFeeds = result.hasMoreFeeds;
+                this.setState({ "lastIndex": skip });
             }));
         }
-    }
-
-    feedsDisplay() {
-        let active = this.state.activeIndex;
-        return this.props.feeds.map((feed, index) => {
-            return (<Feed feed={feed} key={index} active={index === active} onToggle={this.handleToggle.bind(this, index)}/>);
-
-        });
     }
 
     handleToggle(index) {
@@ -58,9 +58,12 @@ export class DisplayFeeds extends Component {
     }
 
     render() {
-        return (<div className="configured-feeds-container">
-            {this.feedsDisplay()}
-        </div>);
+        return (
+            <div className="configured-feeds-container">
+                {this.props.feeds.map((feed, index) =>
+                    <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
+            </div>
+        );
     }
 }
 
