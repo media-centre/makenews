@@ -110,7 +110,7 @@ describe("FacebookPostsRoute", () => {
             sinon.stub(facebookAccessToken, "getAccessToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerPagePostsMock = sinon.mock(facebookRequestHandler).expects("pagePosts");
-            facebookRequestHandlerPagePostsMock.withArgs(webUrl, { "since": "2015-12-21T21:47:11.000Z" }).returns(Promise.resolve(posts));
+            facebookRequestHandlerPagePostsMock.withArgs(webUrl, "posts", { "since": "2015-12-21T21:47:11.000Z" }).returns(Promise.resolve(posts));
 
             let response = {
                 "status": (status) => {

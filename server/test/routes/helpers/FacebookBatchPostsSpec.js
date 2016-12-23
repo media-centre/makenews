@@ -81,8 +81,8 @@ describe("FacebookBatchPosts", () => {
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
             let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "pagePosts");
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
-            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url, { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url, "posts", { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
+            fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url, "posts", { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
 
             let next = {};
             new FacebookBatchPosts(requestData, response, next).handle();

@@ -10,13 +10,4 @@ export default class RssBatchFeedsFetch {
         let feeds = await rssClient.getRssData(url);
         return feeds.items;
     }
-
-    //async saveFeedDocumentsToDb(feeds, accesstoken) {
-    //    let SUCCESS_MESSAGE = "Successfully added feeds to Database";
-    //    let couchClient = await CouchClient.createInstance(accesstoken);
-    //    let feedObject = { "docs": feeds.items };
-    //    await couchClient.saveBulkDocuments(feedObject);
-    //    return SUCCESS_MESSAGE;
-    //
-    //}
 }
