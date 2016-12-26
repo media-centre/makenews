@@ -1,4 +1,4 @@
-
+/* eslint no-magic-numbers:0 */
  import AddUrl from "./../../../src/js/config/components/AddUrl";
  import * as AddUrlActions from "./../../../src/js/config/actions/AddUrlActions";
  import React from "react";
