@@ -21,9 +21,9 @@ describe("FacebookRoutesSpec", () => {
     describe("FacbookRoutes", () => {
         it("responds to /facebook-feeds with 401 if user is not logged in", (done) => {
             request(serverIp)
-            .post("/facebook-posts")
+            .get("/facebook-posts")
             .end((err, res) => {
-                assert.strictEqual(HttpResponseHandler.codes.UNAUTHORIZED, res.statusCode);
+                assert.strictEqual(res.statusCode, HttpResponseHandler.codes.UNAUTHORIZED);
                 done();
             });
         });
@@ -34,8 +34,8 @@ describe("FacebookRoutesSpec", () => {
                 .set("Cookie", accessToken)
                 .end((err, res) => {
                     assert.equal(HttpResponseHandler.codes.OK, res.statusCode);
-                    assert.strictEqual("test news 1", res.body.posts[0].message);
-                    assert.strictEqual("test news 2", res.body.posts[1].message);
+                    assert.strictEqual("test news 1", res.body.posts[0].description);
+                    assert.strictEqual("test news 2", res.body.posts[1].description);
                     done();
                 });
         });
@@ -78,22 +78,54 @@ describe("FacebookRoutesSpec", () => {
                 "posts": {
                     "95B3612A-B090-4185-93CC-49877FD97201": [
                         {
-                            "message": "ur1 1 message 1",
-                            "id": "163974433696568_647858557641482"
+                            "_id": "163974433696568_647858557641482",
+                            "description": "ur1 1 message 1",
+                            "docType": "feed",
+                            "images": [],
+                            "link": "https://www.facebook.com/163974433696568/posts/647858557641482",
+                            "sourceType": "facebook",
+                            "tags": [],
+                            "title": "",
+                            "type": "description",
+                            "videos": []
                         },
                         {
-                            "message": "ur1 1 message 2",
-                            "id": "163974433696568_647858557641482"
+                            "_id": "163974433696568_647858557641482",
+                            "description": "ur1 1 message 2",
+                            "docType": "feed",
+                            "images": [],
+                            "link": "https://www.facebook.com/163974433696568/posts/647858557641482",
+                            "sourceType": "facebook",
+                            "tags": [],
+                            "title": "",
+                            "type": "description",
+                            "videos": []
                         }
                     ],
                     "A524A8C4-B6F9-7932-921A-22E1B120D277": [
                         {
-                            "message": "ur1 2 message 1",
-                            "id": "163974433696568_657858557641482"
+                            "_id": "163974433696568_657858557641482",
+                            "description": "ur1 2 message 1",
+                            "docType": "feed",
+                            "images": [],
+                            "link": "https://www.facebook.com/163974433696568/posts/657858557641482",
+                            "sourceType": "facebook",
+                            "tags": [],
+                            "title": "",
+                            "type": "description",
+                            "videos": []
                         },
                         {
-                            "message": "ur1 2 message 2",
-                            "id": "163974433696568_657858557641482"
+                            "_id": "163974433696568_657858557641482",
+                            "description": "ur1 2 message 2",
+                            "docType": "feed",
+                            "images": [],
+                            "link": "https://www.facebook.com/163974433696568/posts/657858557641482",
+                            "sourceType": "facebook",
+                            "tags": [],
+                            "title": "",
+                            "type": "description",
+                            "videos": []
                         }
                     ]
                 }

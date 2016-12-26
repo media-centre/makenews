@@ -15,9 +15,8 @@ import {
     CLEAR_SOURCES,
     SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
-
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
-
+import R from "ramda"; //eslint-disable-line id-length
 
 export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {}) => {
     switch(action.type) {
@@ -46,16 +45,20 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
 export const configuredSources = (state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] }, action = {}) => {
     switch (action.type) {
     case FACEBOOK_ADD_PROFILE: {
-        return Object.assign({}, state, { "profiles": List(state.profiles).concat(action.sources).toArray() }); //eslint-disable-line new-cap
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        return Object.assign({}, state, { "profiles": List(state.profiles).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case FACEBOOK_ADD_PAGE: {
-        return Object.assign({}, state, { "pages": List(state.pages).concat(action.sources).toArray() }); //eslint-disable-line new-cap
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        return Object.assign({}, state, { "pages": List(state.pages).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case FACEBOOK_ADD_GROUP: {
-        return Object.assign({}, state, { "groups": List(state.groups).concat(action.sources).toArray() }); //eslint-disable-line new-cap
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        return Object.assign({}, state, { "groups": List(state.groups).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case WEB_ADD_SOURCE: {
-        return Object.assign({}, state, { "web": List(state.web).concat(action.sources).toArray() }); //eslint-disable-line new-cap
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.url }), action.sources);
+        return Object.assign({}, state, { "web": List(state.web).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case GOT_CONFIGURED_SOURCES: {
         return action.sources;

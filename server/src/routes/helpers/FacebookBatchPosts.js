@@ -41,7 +41,7 @@ export default class FacebookBatchPosts extends Route {
             if (item.timestamp) {
                 options.since = moment(item.timestamp).toISOString();
             }
-            facebookRequestHandler.pagePosts(item.url, options).then(feeds => {
+            facebookRequestHandler.pagePosts(item.url, "posts", options).then(feeds => {
                 allFeeds[item.id] = feeds;
                 counter += 1;  //eslint-disable-line no-magic-numbers
                 if (this.request.body.data.length === counter) {

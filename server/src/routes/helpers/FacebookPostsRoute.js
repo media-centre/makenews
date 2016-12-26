@@ -29,7 +29,7 @@ export default class FacebookPostsRoute extends Route {
     handle() {
         if (this.valid()) {
             FacebookAccessToken.instance().getAccessToken(this.userName).then((token) => {
-                FacebookRequestHandler.instance(token).pagePosts(this.webUrl, this.options).then(feeds => {
+                FacebookRequestHandler.instance(token).pagePosts(this.webUrl, "posts", this.options).then(feeds => {
                     RouteLogger.instance().debug("FacebookPostsRoute:: successfully fetched facebook feeds for url %s.", this.webUrl);
                     this._handleSuccess({ "posts": feeds });
                 }).catch(error => { //eslint-disable-line

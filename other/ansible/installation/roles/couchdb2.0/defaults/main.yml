@@ -1,0 +1,12 @@
+---
+# file: defaults/main.yml
+
+couchdb_version: "2.0.0"
+couchdb_version_installed: 0 # used to compare requested version and installed
+couchdb_install_method: "source" # can be "package"
+couchdb_file_tag: "apache-couchdb-{{ couchdb_version }}"
+couchdb_file_name: "{{couchdb_file_tag }}.tar.gz"
+couchdb_base_url: "http://apache.crihan.fr/dist/couchdb/source/{{ couchdb_version }}/"
+couchdb_tarball_url: "{{ couchdb_base_url }}{{ couchdb_file_name }}"
+couchdb_shasum_url: "https://www.apache.org/dist/couchdb/source/{{ couchdb_version }}/{{ couchdb_file_name }}.sha1"
+couchdb_tmp_dir: "/tmp/"

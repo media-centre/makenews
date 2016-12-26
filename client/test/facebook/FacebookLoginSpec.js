@@ -104,7 +104,6 @@ describe("FacebookLogin", () => {
 
         it("should call the callback with null when FB is not defined", () => {
             let callback = sinon.spy();
-
             facebookLogin.showLogin(callback);
 
             assert.isTrue(callback.called);

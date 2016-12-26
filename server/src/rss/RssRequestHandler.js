@@ -23,11 +23,11 @@ export default class RssRequestHandler {
         }
     }
 
-    async fetchBatchRssFeedsRequest(url, authSession) {
+    async fetchBatchRssFeedsRequest(url) {
         try {
-            let responseMessage = await this.rssBatchFeedsFetch().fetchBatchFeeds(url, authSession);
+            let feeds = await this.rssBatchFeedsFetch().fetchBatchFeeds(url);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-            return responseMessage;
+            return feeds;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             throw error;

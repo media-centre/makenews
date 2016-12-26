@@ -78,7 +78,7 @@ describe("RssRoutesSpec", () => {
                 });
         }).timeout(requestTime);
 
-        it("should return successful message when feeds saved for multiple rss urls", (done) => {
+        xit("should return successful message when feeds saved for multiple rss urls", (done) => {
             let expectedResponse = "sucessfully added feeds";
             request(serverIp)
                 .post("/fetch-all-rss")

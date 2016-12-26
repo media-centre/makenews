@@ -1,7 +1,7 @@
 ---
 # file: defaults/main.yml
 
-couchdb_version: "1.6.1"
+couchdb_version: "2.0.0"
 couchdb_version_installed: 0 # used to compare requested version and installed
 couchdb_install_method: "source" # can be "package"
 couchdb_file_tag: "apache-couchdb-{{ couchdb_version }}"

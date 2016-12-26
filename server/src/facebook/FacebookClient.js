@@ -7,7 +7,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
-
+import FacebookParser from "./FacebookParser.js";
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof, appId) {
@@ -56,7 +56,7 @@ export default class FacebookClient {
         });
     }
 
-    pagePosts(pageId, parameters = {}) {
+    pagePosts(pageId, type, parameters = {}) {
         return new Promise((resolve, reject) => {
             if (StringUtil.isEmptyString(pageId)) {
                 reject({
@@ -66,13 +66,14 @@ export default class FacebookClient {
             } else {
                 this._addDefaultParameters(parameters);
                 request.get({
-                    "url": this.facebookParameters.url + "/" + pageId + "/posts?" + new HttpRequestUtil().queryString(parameters, false),
+                    "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false),
                     "timeout": this.facebookParameters.timeOut
                 }, (error, response, body) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
+                            feedResponse = FacebookParser.parsePosts(feedResponse.data);
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);

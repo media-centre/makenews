@@ -27,6 +27,15 @@ export function displayFeedsByPage(pageIndex, callback = () => {}) {
     };
 }
 
+export async function fetchFeedsFromSources() {
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+    let ajaxFetch = AjaxClient.instance("/fetch-feeds", true);
+    await ajaxFetch.post(headers, {});
+}
+
 export function paginatedFeeds(feeds) {
     return { "type": PAGINATED_FETCHED_FEEDS, feeds };
 }

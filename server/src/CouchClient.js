@@ -12,9 +12,13 @@ export default class CouchClient {
     }
 
     async getUserDbName() {
-        let response = await this.get("/_session");
-        let userName = response.userCtx.name;
+        let userName = await this.getUserName();
         return CryptUtil.dbNameHash(userName);
+    }
+    
+    async getUserName() {
+        let response = await this.get("/_session");
+        return response.userCtx.name;
     }
 
     static logger() {
@@ -110,19 +114,17 @@ export default class CouchClient {
 
     handleResponse(error, response, resolve, reject) {
         if (NodeErrorHandler.noError(error)) {
-
             if (new HttpResponseHandler(response.statusCode).success()) {
                 CouchClient.logger().debug("successful response from database.");
-                // resolve("successful response from database.");
                 resolve(response.body);
             } else if(response.statusCode === HttpResponseHandler.codes.CONFLICT) {
                 reject({ "status": "conflict", "message": response.body });
             } else {
-                CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
+                CouchClient.logger().debug(`unexpected response from the db with status ${response.statusCode} and Error: ${JSON.stringify(response.body)}`);
                 reject("unexpected response from the db");
             }
         } else {
-            CouchClient.logger().debug("Error from database. Error: %s", error);
+            CouchClient.logger().debug(`Error from database. Error: ${JSON.stringify(error)}`);
             reject(error);
         }
     }

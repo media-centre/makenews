@@ -8,8 +8,8 @@ export default class Feed extends Component {
         let { videos, images } = this.props.feed;
         let [video] = videos;
         let [image] = images;
-        if(video) {
-            media = <i className="fa fa-youtube-play" />;
+        if (video) {
+            media = <i className="fa fa-youtube-play"/>;
         } else if (image) {
             media = <img src={image.url}/>;
         }

@@ -5,6 +5,7 @@ import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
+import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
@@ -24,22 +25,20 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pagePosts(webUrl, options = {}) {
-        return new Promise((resolve, reject) => {
-            let facebookClientInstance = this.facebookClient();
-            facebookClientInstance.getFacebookId(webUrl).then(pageId => {
-                facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-                    FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
-                    resolve(feeds.data);
-                }).catch(error => {
-                    FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
-                    reject("error fetching facebook feeds of web url = " + webUrl);
-                });
-            }).catch(error => {
-                FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-                reject("error fetching facebook feeds of web url = " + webUrl);
-            });
-        });
+    async pagePosts(webUrl, type, options = {}) {
+        let facebookClientInstance = this.facebookClient();
+        try {
+            let pageId = await facebookClientInstance.getFacebookId(webUrl);
+            let feeds = await facebookClientInstance.pagePosts(pageId, type, this._getAllOptions(options));
+            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
+            return feeds;
+
+        } catch (error) {
+            FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
+            let err = "error fetching facebook feeds of web url = " + webUrl;
+            throw (err);
+        }
+
     }
 
     saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {
@@ -120,6 +119,35 @@ export default class FacebookRequestHandler {
         } catch(error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${error}`);
             throw `error fetching facebook ${params.type}s`;  // eslint-disable-line no-throw-literal
+        }
+    }
+
+    _getFormattedSources(sourceType, sources) {
+        let date = DateUtil.getCurrentTime();
+        let formatSources = source => ({
+            "_id": source.url,
+            "name": source.name,
+            "docType": "source",
+            "sourceType": sourceType,
+            "latestFeedTimeStamp": date
+        });
+        let filterEmpty = source => !StringUtil.isEmptyString(source.url);
+        return R.pipe(
+                    R.filter(filterEmpty),
+                    R.map(formatSources)
+                )(sources);
+    }
+
+    async addConfiguredSource(sourceType, sources, authSession) {
+        let couchClient = await CouchClient.createInstance(authSession);
+        try {
+            let data = this._getFormattedSources(sourceType, sources);
+            await couchClient.saveBulkDocuments({ "docs": data });
+            await couchClient.getUserName();
+            return { "ok": true };
+        } catch (error) {
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error adding source. Error: ${error}`);
+            throw error;
         }
     }
 
