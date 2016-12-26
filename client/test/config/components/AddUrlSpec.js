@@ -9,7 +9,7 @@
  import { Provider } from "react-redux";
  import sinon from "sinon";
  import { expect } from "chai";
- describe.only("Add Url", () => {
+ describe("Add Url", () => {
      //let addUrlDom = null,
      let store = null;
      let sandbox = null;
@@ -29,8 +29,7 @@
      });
 
      it("should wrap with the proper class name", () => {
-         let addUrlClass = TestUtils.findRenderedDOMComponentWithClass(addUrlDom, "addurl");
-         console.log("======>", addUrlClass)
+         let addUrlClass = TestUtils.findRenderedDOMComponentWithClass(addUrlDom, "addurl").className;
          expect(addUrlClass).to.equal("addurl");
      });
 

@@ -122,7 +122,7 @@ describe("Configure Pane", () => {
         });
 
         it("should dispatch the getSources with the search value", () => {
-            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSoures")
+            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
                 .once().withArgs(currentTab).returns({
                     "type": ""
                 });
