@@ -22,3 +22,4 @@
     - nginx-hardening
     - ansible-os-hardening
     - ansible-ssh-hardening
+    - couchdb-lucene
