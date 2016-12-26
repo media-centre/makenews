@@ -28,7 +28,7 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
     };
     return async dispatch => {
         try {
-            let feeds = await ajax.post(headers, { "offset": pageIndex, sourceType });
+            let feeds = await ajax.post(headers, { "offset": pageIndex, "sourceType": handleSourceType(sourceType) });
             let result = {
                 "docsLength": 0
             };
@@ -43,4 +43,19 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
             dispatch(paginatedFeeds([]));
         }
     };
+}
+
+function handleSourceType(sourceType) {
+    switch (sourceType) {
+    case TRENDING:
+        return [WEB, FACEBOOK, TWITTER];
+    case WEB:
+        return [WEB];
+    case FACEBOOK:
+        return [FACEBOOK];
+    case TWITTER:
+        return [TWITTER];
+    default:
+        return [];
+    }
 }

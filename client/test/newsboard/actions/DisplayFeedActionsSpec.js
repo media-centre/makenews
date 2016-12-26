@@ -56,15 +56,14 @@ describe("DisplayFeedActions", () => {
         it("dispatch displayFetchedFeedAction action with feeds on successful fetch", (done) => {
             let sourceType = "twitter";
             let feeds = { "docs": [
-                { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },
-                { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed" }
+                { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
+                { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "sourceType": "twitter" }
             ] };
             let ajaxClientInstance = AjaxClient.instance("/fetch-all-feeds", true);
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("post")
-                .withArgs(headers, { offset, sourceType }).returns(Promise.resolve(feeds));
-
+                .withArgs(headers, { offset, "sourceType": ["twitter"] }).returns(Promise.resolve(feeds));
             let store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
             store.dispatch(displayFeedsByPage(offset, sourceType, (result) => {
                 try {

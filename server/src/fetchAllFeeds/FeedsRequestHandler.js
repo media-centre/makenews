@@ -13,7 +13,7 @@ export default class FeedsRequestHandler {
                     "$eq": "feed"
                 },
                 "sourceType": {
-                    "$eq": sourceType
+                    "$in": sourceType
                 },
                 "pubDate": {
                     "$gt": null

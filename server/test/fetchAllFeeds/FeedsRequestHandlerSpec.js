@@ -12,7 +12,7 @@ describe("FeedsRequestHandler", () => {
         let feedsRequestHandler = null;
         let couchClientInstanceMock = null;
         let dbName = "dbName", body = null;
-        let offset = null, sourceType = "web";
+        let offset = null, sourceType = ["web"];
         let sandbox = null;
 
         beforeEach("fetch feeds", () => {
@@ -32,7 +32,7 @@ describe("FeedsRequestHandler", () => {
                         "$eq": "feed"
                     },
                     "sourceType": {
-                        "$eq": sourceType
+                        "$in": sourceType
                     },
                     "pubDate": {
                         "$gt": null
