@@ -41,46 +41,83 @@ export default class FacebookRequestHandler {
 
     }
 
-    saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {
-        dbInstance.saveDocument(tokenDocumentId, document).then(() => {
+    async saveToken(dbInstance, tokenDocumentId, document) {
+        try {
+            await dbInstance.saveDocument(tokenDocumentId, document)
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully saved facebook token.");
-            resolve(document.expired_after);
-        }).catch(error => {
+            return document.expired_after;
+        } catch (error) {
             FacebookRequestHandler.logger().error("FacebookRequestHandler:: error while saving facebook long lived token. Error: %s", error);
-            reject("error while saving facebook long lived token.");
-        });
+            throw new Error("error while saving facebook long lived token.");
+        }
+
+
+        //     dbInstance.saveDocument(tokenDocumentId, document).then(() => {
+        //     FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully saved facebook token.");
+        //     resolve(document.expired_after);
+        // }).catch(error => {
+        //     FacebookRequestHandler.logger().error("FacebookRequestHandler:: error while saving facebook long lived token. Error: %s", error);
+        //     reject("error while saving facebook long lived token.");
+        // });
     }
 
-    setToken(userName) {
-        return new Promise((resolve, reject) => {
-            let facebookClientInstance = FacebookClient.instance(this.accessToken, this.appSecretKey(), this.appId());
-            let currentTime = DateUtil.getCurrentTime();
-            facebookClientInstance.getLongLivedToken().then(response => {
-                const milliSeconds = 1000;
-                response.expired_after = currentTime + (response.expires_in * milliSeconds); //eslint-disable-line camelcase
-                FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
-                const adminDetails = ApplicationConfig.instance().adminDetails();
-                AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
-                    let tokenDocumentId = userName + "_facebookToken";
-                    dbInstance.getDocument(tokenDocumentId).then((document) => { //eslint-disable-line max-nested-callbacks
-                        FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
-                        document.access_token = response.access_token; //eslint-disable-line camelcase
-                        document.token_type = response.token_type; //eslint-disable-line camelcase
-                        document.expires_in = response.expires_in; //eslint-disable-line camelcase
-                        document.expired_after = response.expired_after; //eslint-disable-line camelcase
-                        this.saveToken(dbInstance, tokenDocumentId, document, resolve, reject);
-                    }).catch(() => { //eslint-disable-line max-nested-callbacks
-                        FacebookRequestHandler.logger().debug("FacebookRequestHandler:: creating facebook token document.");
-                        this.saveToken(dbInstance, tokenDocumentId, response, resolve, reject);
-                    });
-                });
-            }).catch(error => {
-                FacebookRequestHandler.logger().error("FacebookRequestHandler:: error getting long lived token. Error: %s", error);
-                reject("error getting long lived token with token " + this.accessToken);
-            });
-        });
+    async setToken(authSession) {
+        // return new Promise((resolve, reject) => {
+        //     let facebookClientInstance = FacebookClient.instance(this.accessToken, this.appSecretKey(), this.appId());
+        //     let currentTime = DateUtil.getCurrentTime();
+        //     facebookClientInstance.getLongLivedToken().then(response => {
+        //         const milliSeconds = 1000;
+        //         response.expired_after = currentTime + (response.expires_in * milliSeconds); //eslint-disable-line camelcase
+        //         FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
+        //         const adminDetails = ApplicationConfig.instance().adminDetails();
+        //         AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
+        //             let tokenDocumentId = userName + "_facebookToken";
+        //             dbInstance.getDocument(tokenDocumentId).then((document) => { //eslint-disable-line max-nested-callbacks
+        //                 FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
+        //                 document.access_token = response.access_token; //eslint-disable-line camelcase
+        //                 document.token_type = response.token_type; //eslint-disable-line camelcase
+        //                 document.expires_in = response.expires_in; //eslint-disable-line camelcase
+        //                 document.expired_after = response.expired_after; //eslint-disable-line camelcase
+        //                 this.saveToken(dbInstance, tokenDocumentId, document, resolve, reject);
+        //             }).catch(() => { //eslint-disable-line max-nested-callbacks
+        //                 FacebookRequestHandler.logger().debug("FacebookRequestHandler:: creating facebook token document.");
+        //                 this.saveToken(dbInstance, tokenDocumentId, response, resolve, reject);
+        //             });
+        //         });
+        //     }).catch(error => {
+        //         FacebookRequestHandler.logger().error("FacebookRequestHandler:: error getting long lived token. Error: %s", error);
+        //         reject("error getting long lived token with token " + this.accessToken);
+        //     });
+        // });
+        let facebookClientInstance = FacebookClient.instance(this.accessToken, this.appSecretKey(), this.appId());
+        let currentTime = DateUtil.getCurrentTime();
+        try {
+            let longLivedToken = await facebookClientInstance.getLongLivedToken();
+            const milliSeconds = 1000;
+            longLivedToken.expired_after = currentTime + (longLivedToken.expires_in * milliSeconds); //eslint-disable-line camelcase
+            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            let adminDbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+            let couchClient = await CouchClient.createInstance(authSession);
+            let userName = await couchClient.getUserName();
+            let tokenDocumentId = userName + "_facebookToken";
+            try {
+                let document = await adminDbInstance.getDocument(tokenDocumentId);
+                FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
+                document.access_token = longLivedToken.access_token; //eslint-disable-line camelcase
+                document.token_type = longLivedToken.token_type; //eslint-disable-line camelcase
+                document.expires_in = longLivedToken.expires_in; //eslint-disable-line camelcase
+                document.expired_after = longLivedToken.expired_after; //eslint-disable-line camelcase
+                return await this.saveToken(adminDbInstance, tokenDocumentId, document);
+            } catch(err) {
+                FacebookRequestHandler.logger().debug("FacebookRequestHandler:: creating facebook token document.");
+                return await this.saveToken(adminDbInstance, tokenDocumentId, longLivedToken);
+            }
+        } catch(error) {
+            throw new Error(`error getting long lived token with token ${this.accessToken}`);
+        }
     }
-    
+
     fetchProfiles() {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = this.facebookClient();
@@ -96,7 +133,7 @@ export default class FacebookRequestHandler {
 
     _getPagingParams(path) {
         let queryParams = { };
-        
+
         if(path && path.next) {
             let queryStrings = path.next.split("?")[1]; // eslint-disable-line no-magic-numbers
             let vars = queryStrings.split("&");
@@ -133,9 +170,9 @@ export default class FacebookRequestHandler {
         });
         let filterEmpty = source => !StringUtil.isEmptyString(source.url);
         return R.pipe(
-                    R.filter(filterEmpty),
-                    R.map(formatSources)
-                )(sources);
+            R.filter(filterEmpty),
+            R.map(formatSources)
+        )(sources);
     }
 
     async addConfiguredSource(sourceType, sources, authSession) {

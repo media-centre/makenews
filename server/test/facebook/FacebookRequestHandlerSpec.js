@@ -116,7 +116,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
             requiredFields = "link,message,picture,name,caption,place,privacy,created_time";
-            optionsJson = { "fields": requiredFields, "limit":100 }; //eslint-disable-line
+            optionsJson = {"fields": requiredFields, "limit": 100}; //eslint-disable-line
         });
 
         afterEach("pagePosts", () => {
@@ -162,7 +162,7 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("setToken", () => {
-        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486, tokenDocId = "test_facebookToken", milliSeconds = 1000;
+        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486, milliSeconds = 1000;
 
         beforeEach("setToken", () => {
             sandbox = sinon.sandbox.create();
@@ -179,61 +179,69 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should create document for long lived token if there is no document", (done) => {
-            const expiresIn = 12345;
+        it("should create document for long lived token if there is no document", async() => {
+            const expiresIn = 12345, expiredAfter = 12468486;
+            let userName = "user-name";
             const tokenResponse = { "expires_in": expiresIn };
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
             let couchClient = new CouchClient();
-            let getDocStub = sinon.stub(couchClient, "getDocument");
-            getDocStub.withArgs(tokenDocId).returns(Promise.reject("error"));
-            let saveDocStub = sinon.stub(couchClient, "saveDocument");
-            saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
-            facebookRequestHandler.setToken("test").then(response => {
-                assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
-                facebookClientPagePostsMock.verify();
-                adminDbMock.verify();
-                assert(getDocStub.called);
-                assert(saveDocStub.called);
-                done();
-            });
+            let adminDbClient = new AdminDbClient();
+            sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
+            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
+            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(userName));
+            sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.reject("error occured while getting the document"));
+            sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
+            try {
+                let response = await facebookRequestHandler.setToken("test");
+                assert.equal(response, currentTime + (tokenResponse.expires_in * milliSeconds));
+            } catch (error) {
+                assert.fail(error);
+            }
         });
 
-        it("should update document for long lived token if document is there", (done) => {
+        it("should update document for long lived token if document is there", async() => {
             const expiresIn = 12345;
-            const tokenResponse = { "access_token": "test1222",
-                "token_type": "bearer",
-                "expires_in": expiresIn };
+            let userName = "user-name";
+            let document = {
+                "access_token": "accessToken",
+                "token_type": "tokenType",
+                "expires_in": expiresIn,
+                "expired_after": 345
+            };
+            let tokenResponse = {
+                "access_token": "accessToken",
+                "token_type": "tokenType",
+                "expires_in": expiresIn,
+                "expired_after": 345
+            };
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
+            let expiredAfter = 345;
             let couchClient = new CouchClient();
-            let getDocStub = sinon.stub(couchClient, "getDocument");
-            getDocStub.withArgs(tokenDocId).returns(Promise.resolve({ "_id": "facebookToken",
-                "_rev": "1aa",
-                "access_token": "test11",
-                "token_type": "bearer",
-                "expires_in": "123" }));
-            let saveDocStub = sinon.stub(couchClient, "saveDocument");
-            saveDocStub.withArgs(tokenDocId, tokenResponse).returns(Promise.resolve("save doc"));
-
-            let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
-            facebookRequestHandler.setToken("test").then(response => {
-                assert.strictEqual((expiresIn * milliSeconds) + currentTime, response);
-                facebookClientPagePostsMock.verify();
-                adminDbMock.verify();
-                done();
-            });
+            let adminDbClient = new AdminDbClient();
+            sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
+            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
+            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(userName));
+            sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.resolve(document));
+            sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
+            try {
+                let response = await facebookRequestHandler.setToken("test");
+                assert.equal(response, expiredAfter);
+            } catch (error) {
+                assert.fail(error);
+            }
         });
 
-        it("should throw error if long lived token not fetched", (done) => {
+        it("should throw error if long lived token not fetched", async () => {
             facebookClientPagePostsMock.returns(Promise.reject("error"));
-            facebookRequestHandler.setToken("test").catch(error => {
-                assert.strictEqual(error, "error getting long lived token with token " + accessToken);
-                facebookClientPagePostsMock.verify();
-                done();
-            });
+            try {
+                await facebookRequestHandler.setToken("test");
+                assert.fail();
+            } catch(error) {
+                assert.deepEqual(error, new Error("error getting long lived token with token " + accessToken));
+            }
         });
     });
-    
+
     describe("fetchProfiles", () => {
         let sandbox = null, facebookClient = null, facebookRequestHandler = null;
         beforeEach("", () => {
@@ -248,16 +256,18 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should get the facebook profiles", (done) => {
-            let profiles = { "data": [{
-                "id": "7dsEdsA8",
-                "name": "Maha Arjun",
-                "picture": {
-                    "data": {
-                        "is_silhouette": false,
-                        "url": "https://scontent.xx.fbcdn.net/v/t1.0-1/c0.19.50.50/p50x50/14595563172_n.jpg"
+            let profiles = {
+                "data": [{
+                    "id": "7dsEdsA8",
+                    "name": "Maha Arjun",
+                    "picture": {
+                        "data": {
+                            "is_silhouette": false,
+                            "url": "https://scontent.xx.fbcdn.net/v/t1.0-1/c0.19.50.50/p50x50/14595563172_n.jpg"
+                        }
                     }
-                }
-            }] };
+                }]
+            };
 
             sandbox.stub(facebookClient, "fetchProfiles").returns(Promise.resolve(profiles));
 
@@ -266,7 +276,7 @@ describe("FacebookRequestHandler", () => {
                     expect(profilesData).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
                     assert.strictEqual(profilesData, profiles.data);
                     done();
-                } catch(error) {
+                } catch (error) {
                     done(error);
                 }
             });
@@ -279,7 +289,7 @@ describe("FacebookRequestHandler", () => {
                 try {
                     expect(error).to.equal("error fetching facebook profiles");
                     done();
-                } catch(err) {
+                } catch (err) {
                     done(err);
                 }
             });
@@ -335,13 +345,14 @@ describe("FacebookRequestHandler", () => {
         it("should add the source to configured list", (done) => {
             let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
             let userNameMock = sandbox.mock(couchClient).expects("getUserName").returns("dummy");
-            bulkDocksMock.returns({ "ok": true });
+            let success = { "ok": true };
+            bulkDocksMock.returns(success);
 
             facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).then(data => {
                 try {
                     bulkDocksMock.verify();
                     userNameMock.verify();
-                    expect(data).to.deep.equal({ "ok": true });
+                    expect(data).to.deep.equal(success);
                     done();
                 } catch (err) {
                     done(err);
@@ -385,17 +396,18 @@ describe("FacebookRequestHandler", () => {
                 try {
                     expect(error).to.equal("error fetching facebook pages");
                     done();
-                } catch(err) {
+                } catch (err) {
                     done(err);
                 }
             });
         });
 
         it("should get facebook pages", (done) => {
-            let pages = { "data": [
-                { "name": "The Hindu", "id": "163974433696568" },
-                { "name": "The Hindu Business Line", "id": "60573550946" },
-                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
+            let pages = {
+                "data": [
+                    { "name": "The Hindu", "id": "163974433696568" },
+                    { "name": "The Hindu Business Line", "id": "60573550946" },
+                    { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
                 "paging": {
                     "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
                 }
@@ -425,7 +437,7 @@ describe("FacebookRequestHandler", () => {
                     expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
                     expect(pagesData).to.deep.equal(result);
                     done();
-                } catch(error) {
+                } catch (error) {
                     done(error);
                 }
             });

@@ -12,6 +12,7 @@ import { assert } from "chai";
 describe("FacebookSetAccessTokenRoute", () => {
     describe("handle", () => {
         let accessToken = null, facebookRequestHandler = null, facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null, next = null, userName = "test1";
+        let authSession = "authSession";
         beforeEach("handle", () => {
             accessToken = "test_access_token";
             sandbox = sinon.sandbox.create();
@@ -20,8 +21,10 @@ describe("FacebookSetAccessTokenRoute", () => {
             facebookRequestHandlerInstanceMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             request1 = {
                 "body": {
-                    "accessToken": accessToken,
-                    "userName": userName
+                    "accessToken": accessToken
+                },
+                "cookies": {
+                    "AuthSession": authSession
                 }
             };
             next = {};
@@ -47,7 +50,7 @@ describe("FacebookSetAccessTokenRoute", () => {
                 }
             };
 
-            facebookRequestHandlerStub.withArgs(userName).returns(Promise.resolve(expiresAfter));
+            facebookRequestHandlerStub.withArgs(authSession).returns(Promise.resolve(expiresAfter));
 
             new FacebookSetAccessTokenRoute(request1, response, next).handle();
         });
@@ -56,7 +59,7 @@ describe("FacebookSetAccessTokenRoute", () => {
 
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
             let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
-            facebookRequestHandlerStub.withArgs(userName).returns(Promise.reject("error"));
+            facebookRequestHandlerStub.withArgs(authSession).returns(Promise.reject("error"));
 
             let response = {
                 "status": (status) => {
@@ -87,11 +90,14 @@ describe("FacebookSetAccessTokenRoute", () => {
             new FacebookSetAccessTokenRoute({
                 "body": {
 
+                },
+                "cookies": {
+                    "AuthSession": null
                 }
             }, response, next).handle();
         });
 
-        it("should reject the request if user name is missing", (done) => {
+        it("should reject the request if authSession is missing", (done) => {
             let response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
@@ -105,6 +111,9 @@ describe("FacebookSetAccessTokenRoute", () => {
             let facebookAccessTokenRoute = new FacebookSetAccessTokenRoute({
                 "body": {
                     "accessToken": accessToken
+                },
+                "cookies": {
+
                 }
             }, response, next);
             facebookAccessTokenRoute.handle();

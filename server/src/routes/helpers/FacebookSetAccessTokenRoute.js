@@ -8,23 +8,19 @@ export default class FacebookSetAccessTokenRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.accessToken = this.request.body.accessToken;
-        this.userName = this.request.body.userName;
+        this.authSession = this.request.cookies.AuthSession;
     }
 
-    valid() {
-        if(StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.userName)) {
-            return false;
-        }
-        return true;
+    inValid() {
+        return (StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.authSession));
     }
 
     handle() {   //eslint-disable-line consistent-return
-        if(!this.valid()) {
+        if(this.inValid()) {
             return this._handleInvalidRoute();
         }
-
         let facebookReqHan = FacebookRequestHandler.instance(this.accessToken);
-        facebookReqHan.setToken(this.userName).then(expiresAfter => {
+        facebookReqHan.setToken(this.authSession).then(expiresAfter => {
             RouteLogger.instance().debug("FacebookSetAccessTokenRoute:: successfully fetched facebook long lived token.");
             this._handleSuccess({ "expires_after": expiresAfter });
         }).catch(error => {
