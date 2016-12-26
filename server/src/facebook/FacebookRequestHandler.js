@@ -43,7 +43,7 @@ export default class FacebookRequestHandler {
 
     async saveToken(dbInstance, tokenDocumentId, document) {
         try {
-            await dbInstance.saveDocument(tokenDocumentId, document)
+            await dbInstance.saveDocument(tokenDocumentId, document);
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully saved facebook token.");
             return document.expired_after;
         } catch (error) {

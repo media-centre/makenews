@@ -461,4 +461,37 @@ describe("FacebookRequestHandler", () => {
                 .to.deep.equal(result);
         });
     });
+
+    describe("saveToken", () => {
+        let facebookRequestHandler = null, couchClient = null, tokenDocument = null, documentId = null, sandbox = null;
+        beforeEach("saveToken", () => {
+            sandbox = sinon.sandbox.create();
+            facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            documentId = "test_token_id";
+            tokenDocument = {
+                "access_token": accessToken,
+                "token_type": "tokenType",
+                "expires_in": 12,
+                "expired_after": 123
+            };
+            couchClient = new CouchClient();
+        });
+        afterEach("saveToken", () => {
+            sandbox.restore();
+        });
+        it("should throw an error if saveDocument is not successfull", async () => {
+            sandbox.mock(couchClient).expects("saveDocument").returns(Promise.reject("Unexpected Repsonse from db"));
+            try {
+                await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
+            } catch(error) {
+                assert.deepEqual(new Error("error while saving facebook long lived token."), error);
+            }
+        });
+
+        it("should return expired_after when saveDocument is successfull", async () => {
+            sandbox.mock(couchClient).expects("saveDocument").returns(Promise.resolve("successfully saved"));
+            let response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
+            assert.equal(tokenDocument.expired_after, response);
+        });
+    });
 });
