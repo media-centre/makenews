@@ -1,10 +1,10 @@
 import {
     PAGINATED_FETCHED_FEEDS,
     NEWSBOARD_CURRENT_TAB,
-    WEB,
     CLEAR_NEWS_BOARD_FEEDS
 } from "./../actions/DisplayFeedActions";
 import { List } from "immutable";
+import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export function fetchedFeeds(state = [], action = {}) {
     switch (action.type) {
@@ -17,7 +17,7 @@ export function fetchedFeeds(state = [], action = {}) {
     }
 }
 
-export const newsBoardCurrentSourceTab = (state = WEB, action = {}) => {
+export const newsBoardCurrentSourceTab = (state = newsBoardSourceTypes.trending, action = {}) => {
     switch(action.type) {
     case NEWSBOARD_CURRENT_TAB: {
         return action.currentTab;

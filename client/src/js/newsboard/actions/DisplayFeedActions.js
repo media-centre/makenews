@@ -1,12 +1,10 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
+import { newsBoardSourceTypes } from "./../../utils/Constants";
+import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWSBOARD_CURRENT_TAB = "NEWSBOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
-export const TRENDING = "trending";
-export const WEB = "web";
-export const FACEBOOK = "facebook";
-export const TWITTER = "twitter";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -47,14 +45,14 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
 
 function handleSourceType(sourceType) {
     switch (sourceType) {
-    case TRENDING:
-        return [WEB, FACEBOOK, TWITTER];
-    case WEB:
-        return [WEB];
-    case FACEBOOK:
-        return [FACEBOOK];
-    case TWITTER:
-        return [TWITTER];
+    case newsBoardSourceTypes.trending:
+        return [newsBoardSourceTypes.web, newsBoardSourceTypes.facebook, newsBoardSourceTypes.twitter];
+    case newsBoardSourceTypes.web:
+        return [newsBoardSourceTypes.web];
+    case newsBoardSourceTypes.facebook:
+        return [newsBoardSourceTypes.facebook];
+    case newsBoardSourceTypes.twitter:
+        return [newsBoardSourceTypes.twitter];
     default:
         return [];
     }
