@@ -44,33 +44,42 @@ export default class FacebookLogin {
     }
 
     showLogin(callback) {
+        console.log("show loging")
         if (FB) {
             FB.login((response) => {
+                console.log("in if condition");
+                console.log("res", response);
                 if (response.authResponse) {
                     return (callback(response.authResponse));
                 }
                 return (callback(null, response));
             }, { "scope": "public_profile, email, user_friends, user_likes, user_photos, user_posts, user_actions.news, user_actions.video" });
+        } else {
+            return callback(null, "");
         }
-        return callback(null, "");
     }
 
+
     login() {
+        console.log("In login method");
         return new Promise((resolve, reject) => {
-            if(this.tokenExpired) {
-                this.showLogin((response, error) => {
-                    if(response) {
-                        FacebookRequestHandler.setToken(response.accessToken);
-                        this.tokenExpired = false;
-                        resolve(true);
-                    } else {
-                        reject(error);
-                    }
-                });
-            } else {
-                resolve(true);
-            }
-            resolve(true);
+            // if(this.tokenExpired) {
+            this.showLogin((response, error) => {
+                if(response) {
+                    FacebookRequestHandler.setToken(response.accessToken).then(res => {
+                        resolve(res);
+                    }).catch(err => {
+                        reject(err);
+                    });
+                } else {
+                    reject(error);
+                }
+            });
+            // } else {
+            //     resolve(true);
+            // }
+            console.log("end of the method");
+            // resolve(true);
         });
     }
 
@@ -80,7 +89,9 @@ export default class FacebookLogin {
 
     static isTokenExpired() {
         return new Promise((resolve) => {
+            console.log("aslksdklsdakldsakl")
             UserInfo.getUserDocument().then((document) => {
+                console.log(document)
                 if (!document.facebookExpiredAfter) {
                     resolve(true);
                 }

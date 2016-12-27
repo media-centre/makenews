@@ -132,7 +132,7 @@ describe("FacebookClient", () => {
                 "Accept": "application/json",
                 "Content-type": "application/json"
             };
-            ajaxPostMock.withArgs(headers, { "accessToken": accessToken, "userName": userName }).returns(Promise.resolve("12345"));
+            ajaxPostMock.withArgs(headers, { "accessToken": accessToken }).returns(Promise.resolve("12345"));
 
             let facebookClient = new FacebookClient(accessToken);
             facebookClient.setLongLivedToken();

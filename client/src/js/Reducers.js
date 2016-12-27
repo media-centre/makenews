@@ -13,6 +13,7 @@ import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -35,7 +36,8 @@ const contentDiscoveryApp = combineReducers({
     sourceResults,
     sourceSearchKeyword,
     currentSourceTab,
-    currentHeaderTab
+    currentHeaderTab,
+    tokenExpiresTime
 });
 
 export default contentDiscoveryApp;

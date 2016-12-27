@@ -29,15 +29,15 @@ export default class FacebookClient {
         });
     }
 
-    setLongLivedToken() {
+    async setLongLivedToken() {
         const headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
         };
         let ajaxClient = AjaxClient.instance("/facebook-set-token");
-        ajaxClient.post(headers, { "accessToken": this.accessToken, "userName": LoginPage.getUserName() }).then(response => {
-            UserInfo.createOrUpdateUserDocument({ "facebookExpiredAfter": response.expires_after });
-        });
+        let response = await ajaxClient.post(headers, { "accessToken": this.accessToken });
+            // UserInfo.createOrUpdateUserDocument({ "facebookExpiredAfter": response.expires_after });
+        return response.expires_after;
     }
 
     fetchBatchPosts(postData, skipSessionTimer) {

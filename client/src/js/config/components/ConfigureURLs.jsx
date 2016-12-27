@@ -1,13 +1,37 @@
 /* eslint react/jsx-no-literals:0 */
 import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
+import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
 import { Link } from "react-router";
+import { updateTokenExpireTime } from "./../../facebook/FaceBookAction";
 
 export class ConfigureURLs extends Component {
 
     componentWillMount() {
         this.props.dispatch(setCurrentHeaderTab("Configure"));
+
+    }
+
+    _showFBLogin() {
+        console.log("in compoenent champesta print avvakapote ", this.props.FBExpiresTime.expiresTime);
+        if(!this.props.FBExpiresTime.expiresTime || FacebookLogin.getCurrentTime() > this.props.FBExpiresTime.expiresTime) {
+        FacebookLogin.getInstance().then(facebookInstance => {
+            facebookInstance.login().then(expires_after => {
+                    console.log("After facebook Login");
+                    console.log("Expire after ", expires_after);
+                    this.props.dispatch(updateTokenExpireTime(expires_after));//ggfhjkl
+                    console.log("after dispatch function");
+                    console.log(this.props.tokenExpiresTime);
+                    console.log("&&&&&&&&&&&&&&&&&&&");
+                }).catch(err => {
+                    console.log("error in config url", err);
+                });
+        });
+        } else {
+            console.log("IN ELSE CONDITION")
+        }
+
     }
 
     render() {
@@ -25,6 +49,7 @@ export class ConfigureURLs extends Component {
                         <i className="fa fa-twitter" />Twitter
                     </Link>
                 </nav>
+                <div className="next-button" onClick={() => this._showFBLogin()}>{"Next"}</div>
                 { this.props.children }
             </div>
         );
@@ -34,10 +59,15 @@ export class ConfigureURLs extends Component {
 ConfigureURLs.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "children": PropTypes.node.isRequired,
-    "params": PropTypes.object.isRequired
+    "params": PropTypes.object.isRequired,
+    "FBExpiresTime": PropTypes.object
 };
 
 function select(store) {
+    console.log("In store vlues")
+    console.log(store.FBExpiresTime.expiresTime);
+    console.log(store)
+    console.log("%%%%%%%%%%%%%%%%%%%%")
     return store;
 }
 

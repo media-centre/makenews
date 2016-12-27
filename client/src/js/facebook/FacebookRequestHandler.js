@@ -1,6 +1,5 @@
 /* eslint no-unused-vars:0 */
 
-
 import FacebookClient from "./FacebookClient";
 
 export default class FacebookRequestHandler {
@@ -16,9 +15,9 @@ export default class FacebookRequestHandler {
         });
     }
 
-    static setToken(accessToken) {
+    static async setToken(accessToken) {
         let facebookClient = FacebookClient.instance(accessToken);
-        facebookClient.setLongLivedToken();
+        return await facebookClient.setLongLivedToken();
     }
 
     static getBatchPosts(postData, skipSessionTimer) {
