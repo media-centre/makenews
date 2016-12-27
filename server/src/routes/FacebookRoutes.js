@@ -1,6 +1,6 @@
 import FacebookPostsRoute from "./helpers/FacebookPostsRoute";
 import FacebookBatchPosts from "./helpers/FacebookBatchPosts";
-import FacebookSetAccessTokenRoute from "./helpers/FacebookSetAccessTokenRoute";
+import FacebookAccessTokenRoute from "./helpers/FacebookAccessTokenRoute";
 import RouteLogger from "./RouteLogger";
 import FacebookSourceRoute from "./helpers/FacebookSourceRoute";
 
@@ -12,7 +12,7 @@ export default (app) => {
 
     app.post("/facebook-set-token", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-set-token request received. url = %s", request.url);
-        new FacebookSetAccessTokenRoute(request, response, next).handle();
+        new FacebookAccessTokenRoute(request, response, next).handle();
     });
 
     app.post("/facebook-batch-posts", (request, response, next) => {
@@ -23,6 +23,12 @@ export default (app) => {
     app.post("/facebook-sources", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-sources request received. url = %s", request.url);
         new FacebookSourceRoute(request, response, next).searchSources();
+    });
+
+
+    app.post("/facebook-token-expire-time", (request, response, next) => {
+        RouteLogger.instance().info("FacebookRoutes:: /facebook-token-expire-time request received. url = %s", request.url);
+        new FacebookAccessTokenRoute(request, response, next).getExpiredTime();
     });
 };
 

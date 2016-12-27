@@ -96,11 +96,8 @@ export default class FacebookRequestHandler {
             const milliSeconds = 1000;
             longLivedToken.expired_after = currentTime + (longLivedToken.expires_in * milliSeconds); //eslint-disable-line camelcase
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            let adminDbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-            let couchClient = await CouchClient.createInstance(authSession);
-            let userName = await couchClient.getUserName();
-            let tokenDocumentId = userName + "_facebookToken";
+            let adminDbInstance = await this._getAdminDBInstance();
+            let tokenDocumentId = await this._getUserDocumentId(authSession);
             try {
                 let document = await adminDbInstance.getDocument(tokenDocumentId);
                 FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
@@ -118,6 +115,38 @@ export default class FacebookRequestHandler {
         }
     }
 
+    async getExpiredTime(authSession) {
+        let ZERO = 0;
+        try {
+            let adminDbInstance = await this._getAdminDBInstance();
+            let tokenDocumentId = await this._getUserDocumentId(authSession);
+            let document = await adminDbInstance.getDocument(tokenDocumentId);
+            return document.expired_after;
+        } catch (error) {
+            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: error while getting the user document ${error}. `);
+            return ZERO;
+        }
+    }
+
+    async _getAdminDBInstance() {
+        try {
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            return await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+        } catch(error) {
+            throw new Error(error);
+        }
+    }
+    
+    async _getUserDocumentId(authSession) {
+        try {
+            let couchClient = await CouchClient.createInstance(authSession);
+            let userName = await couchClient.getUserName();
+            return userName + "_facebookToken";
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+    
     fetchProfiles() {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = this.facebookClient();
