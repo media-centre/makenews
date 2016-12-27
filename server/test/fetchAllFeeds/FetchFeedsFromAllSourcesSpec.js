@@ -134,10 +134,8 @@ describe("FetchFeedsFromAllSources", () => {
             let applicationConfigInstance = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfigInstance);
             sandbox.mock(applicationConfigInstance).expects("adminDetails").returns({
-                "couchDbAdmin": {
-                    "username": "test",
-                    "password": "test"
-                },
+                "username": "test",
+                "password": "test",
                 "db": "test"
             });
             let adminDbClient = new AdminDbClient();
@@ -208,10 +206,8 @@ describe("FetchFeedsFromAllSources", () => {
         let applicationConfigInstance = new ApplicationConfig();
         sandbox.stub(ApplicationConfig, "instance").returns(applicationConfigInstance);
         sandbox.mock(applicationConfigInstance).expects("adminDetails").returns({
-            "couchDbAdmin": {
-                "username": "test",
-                "password": "test"
-            },
+            "username": "test",
+            "password": "test",
             "db": "test"
         });
         let selector = {
@@ -379,10 +375,8 @@ describe("FetchFeedsFromAllSources", () => {
             let applicationConfigInstance = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfigInstance);
             appConfigMock = sandbox.mock(applicationConfigInstance).expects("adminDetails").returns({
-                "couchDbAdmin": {
-                    "username": "test",
-                    "password": "test"
-                },
+                "username": "test",
+                "password": "test",
                 "db": "test"
             });
 

@@ -510,10 +510,8 @@ describe("RssClient", () => {
             let applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             adminDetailsMock = sandbox.mock(applicationConfig).expects("adminDetails").returns({
-                "couchDbAdmin": {
-                    "username": "adminUser",
-                    "password": "adminPwd"
-                },
+                "username": "adminUser",
+                "password": "adminPwd",
                 "db": "adminDb"
             });
             couchClient = new CouchClient();
@@ -617,10 +615,8 @@ describe("RssClient", () => {
             let applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             sandbox.stub(applicationConfig, "adminDetails").returns({
-                "couchDbAdmin": {
-                    "username": "adminUser",
-                    "password": "adminPwd"
-                },
+                "username": "adminUser",
+                "password": "adminPwd",
                 "db": "adminDb"
             });
             couchClient = new CouchClient();

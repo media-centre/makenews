@@ -173,7 +173,7 @@ export default class RssClient {
     async addUrlToCommon(document) {
         const adminDetails = ApplicationConfig.instance().adminDetails();
         let dbInstance = await
-            AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
         try {
             await dbInstance.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
@@ -205,7 +205,7 @@ export default class RssClient {
         let document = null;
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
             let selector = {
                 "selector": {
                     "name": {
