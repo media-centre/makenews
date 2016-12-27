@@ -11,9 +11,10 @@ import LogTestHelper from "../../helpers/LogTestHelper";
 describe("FetchAllConfiguredFeedsRoute", () => {
     describe("fetchFeeds", () => {
         let authSession = null, fetchRequestHandlerInstance = null, feeds = null, request = null, response = null;
-        let offset = 0, sandbox = null;
+        let offset = 0, sandbox = null, sourceType = null;
 
         beforeEach("fetch feeds", () => {
+            sourceType = "web";
             authSession = "authSession";
             fetchRequestHandlerInstance = new FetchRequestHandler();
             feeds = {
@@ -41,7 +42,8 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                     "authSession": authSession
                 },
                 "body": {
-                    "offset": offset
+                    "offset": offset,
+                    "sourceType": sourceType
                 }
             };
             sandbox = sinon.sandbox.create();
@@ -75,12 +77,42 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                     "authSession": {}
                 },
                 "body": {
-                    "offset": offset
+                    "offset": offset,
+                    "sourceType": sourceType
                 }
             };
             await new FetchAllConfiguredFeedsRoute(request, response, {}).fetchFeeds();
             assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
             assert.deepEqual(response.json(), { "message": "bad request" });
+        });
+    });
+
+    describe("validate Source Type", () => {
+        let fetchAllConfiguredFeedsRoute = null, sourceType = null, request = null, response = null;
+        beforeEach("validate Source Type", () => {
+            sourceType = "web";
+            response = mockResponse();
+            request = {
+                "cookies": {
+                    "authSession": {}
+                },
+                "body": {
+                    "offset": 0,
+                    "sourceType": sourceType
+                }
+            };
+            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
+        });
+
+        it("should return the value if source type is exist in predefined sources", () => {
+            assert.deepEqual(fetchAllConfiguredFeedsRoute.valid(), [sourceType]);
+        });
+
+        it("should return false if source type is empty", () => {
+            request.body.sourceType = "";
+            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
+
+            assert.isFalse(fetchAllConfiguredFeedsRoute.valid());
         });
     });
 });

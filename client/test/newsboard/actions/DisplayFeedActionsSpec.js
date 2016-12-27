@@ -63,7 +63,7 @@ describe("DisplayFeedActions", () => {
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("post")
-                .withArgs(headers, { offset, "sourceType": ["twitter"] }).returns(Promise.resolve(feeds));
+                .withArgs(headers, { offset, "sourceType": sourceType }).returns(Promise.resolve(feeds));
             let store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
             store.dispatch(displayFeedsByPage(offset, sourceType, (result) => {
                 try {

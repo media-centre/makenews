@@ -45,14 +45,14 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
 function handleSourceType(sourceType) {
     switch (sourceType) {
     case newsBoardSourceTypes.trending:
-        return [newsBoardSourceTypes.web, newsBoardSourceTypes.facebook, newsBoardSourceTypes.twitter];
+        return newsBoardSourceTypes.trending;
     case newsBoardSourceTypes.web:
-        return [newsBoardSourceTypes.web];
+        return newsBoardSourceTypes.web;
     case newsBoardSourceTypes.facebook:
-        return [newsBoardSourceTypes.facebook];
+        return newsBoardSourceTypes.facebook;
     case newsBoardSourceTypes.twitter:
-        return [newsBoardSourceTypes.twitter];
+        return newsBoardSourceTypes.twitter;
     default:
-        return [];
+        return "";
     }
 }
