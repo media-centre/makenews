@@ -22,21 +22,11 @@ export default class FacebookSetAccessTokenRoute extends Route {
         let facebookReqHandler = FacebookRequestHandler.instance(this.accessToken);
         try {
             let expiresAfter = await facebookReqHandler.setToken(this.authSession);
-            RouteLogger.instance().debug("FacebookAccessTokenRoute:: successfully fetched facebook long lived token.");
+            RouteLogger.instance().debug("FacebookSetAccessTokenRoute:: successfully fetched facebook long lived token.");
             this._handleSuccess({ "expires_after": expiresAfter });
         } catch(error) {
-            RouteLogger.instance().error("FacebookAccessTokenRoute:: error fetching facebook long lived token. Error: %s", error);
+            RouteLogger.instance().error("FacebookSetAccessTokenRoute:: error fetching facebook long lived token. Error: %s", error);
             this._handleFailure(error);
         }
-    }
-
-    async getExpiredTime() {  //eslint-disable-line consistent-return
-        if(this.inValid()) {
-            return this._handleInvalidRoute();
-        }
-        let facebookReqHandler = FacebookRequestHandler.instance(this.accessToken);
-        let expiredAfter = await facebookReqHandler.getExpiredTime(this.authSession);
-        RouteLogger.instance().debug("FacebookAccessTokenRoute:: successfully fetched Expires time for facebook token.");
-        this._handleSuccess({ "expires_after": expiredAfter });
     }
 }

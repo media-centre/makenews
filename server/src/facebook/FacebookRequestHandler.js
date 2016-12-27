@@ -13,7 +13,7 @@ export default class FacebookRequestHandler {
     static instance(accessToken) {
         return new FacebookRequestHandler(accessToken);
     }
-
+    
     static logger() {
         return Logger.instance("Facebook");
     }
@@ -114,20 +114,7 @@ export default class FacebookRequestHandler {
             throw new Error(`error getting long lived token with token ${this.accessToken}`);
         }
     }
-
-    async getExpiredTime(authSession) {
-        let ZERO = 0;
-        try {
-            let adminDbInstance = await this._getAdminDBInstance();
-            let tokenDocumentId = await this._getUserDocumentId(authSession);
-            let document = await adminDbInstance.getDocument(tokenDocumentId);
-            return document.expired_after;
-        } catch (error) {
-            FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: error while getting the user document ${error}. `);
-            return ZERO;
-        }
-    }
-
+    
     async _getAdminDBInstance() {
         try {
             const adminDetails = ApplicationConfig.instance().adminDetails();

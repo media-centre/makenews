@@ -4,18 +4,17 @@ import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
 import { Link } from "react-router";
-import { updateTokenExpireTime } from "./../../facebook/FaceBookAction";
+import { updateTokenExpireTime, getExpiresTime } from "./../../facebook/FaceBookAction";
 
 export class ConfigureURLs extends Component {
 
     componentWillMount() {
         this.props.dispatch(setCurrentHeaderTab("Configure"));
-
+        this.props.dispatch(getExpiresTime());
     }
 
     _showFBLogin() {
-        console.log("in compoenent champesta print avvakapote ", this.props.FBExpiresTime.expiresTime);
-        if(!this.props.FBExpiresTime.expiresTime || FacebookLogin.getCurrentTime() > this.props.FBExpiresTime.expiresTime) {
+        if(FacebookLogin.getCurrentTime() > this.props.tokenExpiresTime.expiresTime) {
         FacebookLogin.getInstance().then(facebookInstance => {
             facebookInstance.login().then(expires_after => {
                     console.log("After facebook Login");
@@ -60,12 +59,12 @@ ConfigureURLs.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "children": PropTypes.node.isRequired,
     "params": PropTypes.object.isRequired,
-    "FBExpiresTime": PropTypes.object
+    "tokenExpiresTime": PropTypes.object
 };
 
 function select(store) {
     console.log("In store vlues")
-    console.log(store.FBExpiresTime.expiresTime);
+    console.log(store.tokenExpiresTime.expiresTime);
     console.log(store)
     console.log("%%%%%%%%%%%%%%%%%%%%")
     return store;
