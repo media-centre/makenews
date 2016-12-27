@@ -11,3 +11,4 @@ logs/
 url2/
 server/logs/
 .vagrant/
+server/config/application.json
