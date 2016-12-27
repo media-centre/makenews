@@ -50,11 +50,12 @@ describe("FacebookClient", () => {
                     [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
                             { "message": "test news 2", "id": "163974433696568_957850670975603" }]
                 });
+            let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, userParameters).then((feeds) => {
+            facebookClient.pagePosts(pageId, type, userParameters).then((feeds) => {
                 try {
-                    assert.strictEqual("test news 1", feeds.data[0].message);
-                    assert.strictEqual("test news 2", feeds.data[1].message);
+                    assert.strictEqual("test news 1", feeds[0].description);
+                    assert.strictEqual("test news 2", feeds[1].description);
                     nodeErrorHandlerMock.verify();
                     NodeErrorHandler.noError.restore();
                     done();
@@ -80,9 +81,9 @@ describe("FacebookClient", () => {
                     }
                 }
                 );
-
+            let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, userParameters).catch((error) => {
+            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => {
                 assert.strictEqual("OAuthException", error.type);
                 assert.strictEqual("Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.", error.message);
                 nodeErrorHandlerMock.verify();
@@ -105,9 +106,9 @@ describe("FacebookClient", () => {
                     "port": 443
                 }
                 );
-
+            let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, userParameters).catch((error) => {
+            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => {
                 assert.strictEqual("ETIMEDOUT", error.code);
                 assert.strictEqual("ETIMEDOUT", error.errno);
                 nodeErrorHandlerMock.verify();
@@ -126,9 +127,9 @@ describe("FacebookClient", () => {
                         { "message": "test news 2", "id": "163974433696568_957850670975603" }]
                 });
 
-
+            let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, userParameters).catch((error) => { //eslint-disable-line
+            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => { //eslint-disable-line
                 done();
             });
         });

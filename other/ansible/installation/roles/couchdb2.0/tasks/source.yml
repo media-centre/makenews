@@ -1,0 +1,33 @@
+---
+# file: tasks/source.yml
+
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Setup CouchDB user
+  user: name=couchdb state=present system=yes
+  sudo: true
+
+- name: Download CouchDB
+  get_url: url={{ couchdb_tarball_url }} dest={{ couchdb_tmp_dir }}{{ couchdb_file_name }}
+
+- name: Verify SHASUM of CouchDB downloaded
+  shell: curl {{ couchdb_shasum_url }} | grep {{ couchdb_file_name }} | sha1sum -c chdir={{ couchdb_tmp_dir }}
+
+- name: Unpack CouchDB
+  command: tar -xvzf apache-couchdb-{{ couchdb_version }}.tar.gz chdir={{ couchdb_tmp_dir }}
+
+- name: Compile and install CouchDB
+  shell:
+    ./configure --disable-docs && make release
+    chdir={{ couchdb_tmp_dir }}{{ couchdb_file_tag }}
+  sudo: true
+
+- name: Copy couchdb to /opt
+  command: cp -R {{ couchdb_tmp_dir }}{{ couchdb_file_tag }}/rel/couchdb /opt/
+
+- name: Copy couchdb service file to etc/init.d
+  copy: src=couchdb dest=/etc/init.d/couchdb owner=couchdb group=couchdb mode=0755
+
+- name: Add couchdb service to startup
+  shell: update-rc.d couchdb defaults

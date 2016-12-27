@@ -1,4 +1,3 @@
-
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 import FacebookClient from "../../src/facebook/FacebookClient";
@@ -129,9 +128,9 @@ describe("FacebookRequestHandler", () => {
 
         it("should return the page posts for a given facebook web url", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.resolve(feeds));
-            facebookRequestHandler.pagePosts(facebookWebUrl).then(actualFeeds => {
-                assert.strictEqual(5, actualFeeds.length); //eslint-disable-line
+            facebookClientPagePostsMock.withArgs(pageId, "posts", optionsJson).returns(Promise.resolve(feeds));
+            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").then(actualFeeds => {
+                assert.strictEqual(5, actualFeeds.data.length); //eslint-disable-line
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
@@ -140,8 +139,8 @@ describe("FacebookRequestHandler", () => {
 
         it("should reject with error if there is error while fetching facebook id", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
-            facebookClientPagePostsMock.withArgs(pageId, optionsJson).never();
-            facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
+            facebookClientPagePostsMock.withArgs(pageId, "posts", optionsJson).never();
+            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").catch(error => {
                 assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
@@ -151,8 +150,8 @@ describe("FacebookRequestHandler", () => {
 
         it("should reject with error if there is error while fetching facebook feeds", (done) => {
             facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withArgs(pageId, optionsJson).returns(Promise.reject("error"));
-            facebookRequestHandler.pagePosts(facebookWebUrl).catch(error => {
+            facebookClientPagePostsMock.withExactArgs(pageId, "posts", optionsJson).returns(Promise.reject("error"));
+            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").catch(error => {
                 assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
                 facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();

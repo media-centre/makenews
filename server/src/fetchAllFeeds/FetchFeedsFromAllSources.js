@@ -1,17 +1,22 @@
 import RssRequestHandler from "../rss/RssRequestHandler";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
-import StringUtil from "../../../common/src/util/StringUtil";
 import Logger from "../logging/Logger";
+import CouchClient from "../../src/CouchClient";
+import ApplicationConfig from "../config/ApplicationConfig";
+import AdminDbClient from "../db/AdminDbClient";
+import Route from "../routes/helpers/Route";
 
 export const RSS_TYPE = "rss";
-export const FACEBOOK_TYPE = "facebook";
+export const FACEBOOK_PAGE = "fb_page";
+export const FACEBOOK_GROUP = "fb_group";
 export const TWITTER_TYPE = "twitter";
 
-export default class FetchFeedsFromAllSources {
-    constructor(request, response) {
-        this.request = request;
-        this.response = response;
+export default class FetchFeedsFromAllSources extends Route {
+    constructor(request, response, next) {
+        super(request, response, next);
+        this.accesstoken = request.cookies.AuthSession;
+        this.facebookAcessToken = null;
     }
 
     static logger() {
@@ -19,89 +24,110 @@ export default class FetchFeedsFromAllSources {
     }
 
     fetchFeeds() {
-        return new Promise((resolve, reject)=> {
-            if(this.isValidateRequestData()) {
-                this.fetchFeedsFromAllSources().then((feeds)=> {
-                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
-                    resolve(feeds);
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                    reject(err);
-                });
-            } else {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Invalid url data.");
-                reject({ "error": "Invalid url data" });
-            }
-        });
-    }
+        if (this.accesstoken) {
+            this.fetchFeedsFromAllSources().then((response)=> {
+                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
+                this._handleSuccess(response);
 
-    fetchFeedsFromAllSources() {
-        return new Promise((resolve, reject)=> {
-            let allFeeds = [];
-            this.request.body.data.forEach((item, index)=> {
-                this.fetchFeedsFromSource(item).then((feeds)=> {
-                    allFeeds = allFeeds.concat(feeds);
-                    if(this.request.body.data.length - 1 === index) {  // eslint-disable-line no-magic-numbers
-                        FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds from all sources.");
-                        resolve(allFeeds);
-                    }
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                    reject(err);
-                });
+            }).catch((err) => {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
+                this._handleBadRequest();
             });
-        });
-    }
-
-    fetchFeedsFromSource(item) {
-        return new Promise((resolve, reject)=> {
-            switch(item.source) {
-            case RSS_TYPE:
-                RssRequestHandler.instance().fetchRssFeedRequest(item.url).then((feeds)=> {
-                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched rss feeds from all sources.");
-                    resolve(feeds);
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching rss feeds. Error: %s", err);
-                    reject(err);
-                });
-                break;
-
-            case FACEBOOK_TYPE:
-                FacebookRequestHandler.instance(this.request.body.facebookAccessToken).pagePosts(item.url).then((feeds)=> {
-                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
-                    resolve(feeds);
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
-                    reject(err);
-                });
-                break;
-
-            case TWITTER_TYPE:
-                TwitterRequestHandler.instance().fetchTweetsRequest(item.url).then((feeds)=> {
-                    FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
-                    resolve(feeds);
-                }).catch((err) => {
-                    FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
-                    reject(err);
-                });
-                break;
-
-            default: reject([]);
-            }
-        });
-    }
-
-    isValidateRequestData() {
-        if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) {      // eslint-disable-line no-magic-numbers
-            return false;
+        } else {
+            FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Authentication failed");
+            this._handleBadRequest();
         }
-        let errorItems = this.request.body.data.filter((item) => {                                      //eslint-disable-line consistent-return
-            if(StringUtil.isEmptyString(item.source) || StringUtil.isEmptyString(item.url)) {
-                return item;
+    }
+
+    async fetchFeedsFromAllSources() {
+        let urlDocuments = await this._getUrlDocuments();
+        let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchFeedsFromSource(url));
+        let feedArrays = await Promise.all(mapUrlDocs);
+        let feeds = feedArrays.reduce((acc, feedsArray) => acc.concat(feedsArray), []);
+        return await this.saveFeedDocumentsToDb(feeds);
+    }
+
+
+    async _getUrlDocuments() {
+        let couchClient = await CouchClient.createInstance(this.accesstoken);
+        let selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                }
             }
-        });
+        };
+        let response = await couchClient.findDocuments(selector);
+        return response.docs;
+    }
 
-        return errorItems.length <= 0;             // eslint-disable-line no-magic-numbers
+    async fetchFeedsFromSource(item) {
+        let feeds = null; let type = "posts";
+        let emptyObject = [];
+        switch (item.sourceType) {
+        case RSS_TYPE:
+            try {
+                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
+                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
+                return feeds;
+            } catch (err) {
+                FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
+                throw(err);
+            }
+        case FACEBOOK_GROUP: type = "feed";
+        case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
+            try {
+                if(!this.facebookAcessToken) {
+                    this.facebookAcessToken = await this._getFacebookAccessToken();
+                }
+                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id, type);
+                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
+                return feeds;
+            } catch (err) {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
+                throw(err);
+            }
+        case TWITTER_TYPE:
+            try {
+                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id);
+                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
+                return feeds;
+            } catch (err) {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
+                throw(err);
+            }
+        default:
+            throw(emptyObject);
+        }
+    }
 
+    async _getFacebookAccessToken() {
+        try{
+            let couchClient = await CouchClient.createInstance(this.accesstoken);
+            let userName = await couchClient.getUserName();
+            const adminDetails = ApplicationConfig.instance().adminDetails();
+            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+            let selector = {
+                "selector": {
+                    "_id": {
+                        "$eq": userName + "_facebookToken"
+                    }
+                }
+            };
+            let response = await dbInstance.findDocuments(selector);
+            let ZeroIndex = 0;
+            return response.docs[ZeroIndex].access_token;
+
+        } catch(error) {
+            throw error;
+        }
+
+
+    }
+
+    async saveFeedDocumentsToDb(feeds) {
+        let couchClient = await CouchClient.createInstance(this.accesstoken);
+        let feedObject = { "docs": feeds };
+        return await couchClient.saveBulkDocuments(feedObject);
     }
 }

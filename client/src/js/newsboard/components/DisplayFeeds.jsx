@@ -57,9 +57,14 @@ export class DisplayFeeds extends Component {
         this.setState({ "activeIndex": index });
     }
 
+    refreshFeeds() {
+        DisplayFeedActions.fetchFeedsFromSources();
+    }
+
     render() {
         return (
             <div className="configured-feeds-container">
+                <button onClick={this.refreshFeeds()} className="refresh-button">{"Refresh"}</button>
                 {this.props.feeds.map((feed, index) =>
                     <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
             </div>

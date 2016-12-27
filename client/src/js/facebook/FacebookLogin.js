@@ -70,6 +70,7 @@ export default class FacebookLogin {
             } else {
                 resolve(true);
             }
+            resolve(true);
         });
     }
 

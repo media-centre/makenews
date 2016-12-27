@@ -24,22 +24,20 @@ export default class FacebookRequestHandler {
         this.accessToken = accessToken;
     }
 
-    pagePosts(webUrl, options = {}) {
-        return new Promise((resolve, reject) => {
-            let facebookClientInstance = this.facebookClient();
-            facebookClientInstance.getFacebookId(webUrl).then(pageId => {
-                facebookClientInstance.pagePosts(pageId, this._getAllOptions(options)).then(feeds => {
-                    FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
-                    resolve(feeds.data);
-                }).catch(error => {
-                    FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook feeds of web url = %s. Error: %j", webUrl, error);
-                    reject("error fetching facebook feeds of web url = " + webUrl);
-                });
-            }).catch(error => {
-                FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
-                reject("error fetching facebook feeds of web url = " + webUrl);
-            });
-        });
+    async pagePosts(webUrl, type, options = {}) {
+        let facebookClientInstance = this.facebookClient();
+        try {
+            let pageId = await facebookClientInstance.getFacebookId(webUrl);
+            let feeds = await facebookClientInstance.pagePosts(pageId, type, this._getAllOptions(options));
+            FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched feeds for url: %s.", webUrl);
+            return feeds;
+
+        } catch (error) {
+            FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", webUrl, error);
+            let err = "error fetching facebook feeds of web url = " + webUrl;
+            throw (err);
+        }
+
     }
 
     saveToken(dbInstance, tokenDocumentId, document, resolve, reject) {

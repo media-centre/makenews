@@ -1,6 +1,4 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0*/
-
-
 import RssFeedsRoute from "../../../src/routes/helpers/RssFeedsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import LogTestHelper from "../../helpers/LogTestHelper";

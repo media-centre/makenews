@@ -24,7 +24,6 @@ export default class TwitterFeedsRoute extends Route {
             RouteLogger.instance().warn("TwitterFeedsRoute:: invalid twitter feed route with url %s and user name %s.", this.url, this.userName);
             return this._handleInvalidRoute();
         }
-
         let twitterRequestHandler = TwitterRequestHandler.instance();
         twitterRequestHandler.fetchTweetsRequest(this.url, this.userName).then(feeds => {
             RouteLogger.instance().debug("TwitterFeedsRoute:: successfully fetched twitter feeds for url %s.", this.url);

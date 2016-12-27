@@ -1,0 +1,6 @@
+---
+# file: tasks/package.yml
+
+- name: Install CouchDB from package manager
+  apt: pkg=couchdb={{ couchdb_version }} state=present
+  when: ansible_os_family == "Debian"

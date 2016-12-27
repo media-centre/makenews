@@ -620,7 +620,7 @@ describe("PouchClient", () => {
                 });
             });
         });
-        it("should fetch surf filter document", async () => {
+        xit("should fetch surf filter document", async () => {
             let docs = await PouchClient.fetchDocuments("category/surfFilter", {
                 "include_docs": true
             });
