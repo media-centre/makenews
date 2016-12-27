@@ -12,7 +12,7 @@ export default class FetchFeedsIndex {
             Migration.logger(this.dbName).info("FetchFeedsIndex::up - started");
             let nameIdIndex = {
                 "index": {
-                    "fields": ["pubDate", "docType"]
+                    "fields": ["pubDate", "docType", "sourceType"]
                 },
                 "name": "pubDate"
             };

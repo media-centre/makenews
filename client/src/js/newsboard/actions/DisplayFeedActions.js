@@ -1,6 +1,5 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
-import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWSBOARD_CURRENT_TAB = "NEWSBOARD_CURRENT_TAB";
