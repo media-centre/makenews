@@ -1,5 +1,4 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
-import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWSBOARD_CURRENT_TAB = "NEWSBOARD_CURRENT_TAB";
@@ -25,7 +24,7 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
     };
     return async dispatch => {
         try {
-            let feeds = await ajax.post(headers, { "offset": pageIndex, "sourceType": handleSourceType(sourceType) });
+            let feeds = await ajax.post(headers, { "offset": pageIndex, "sourceType": sourceType });
             let result = {
                 "docsLength": 0
             };
@@ -42,17 +41,3 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
     };
 }
 
-function handleSourceType(sourceType) {
-    switch (sourceType) {
-    case newsBoardSourceTypes.trending:
-        return newsBoardSourceTypes.trending;
-    case newsBoardSourceTypes.web:
-        return newsBoardSourceTypes.web;
-    case newsBoardSourceTypes.facebook:
-        return newsBoardSourceTypes.facebook;
-    case newsBoardSourceTypes.twitter:
-        return newsBoardSourceTypes.twitter;
-    default:
-        return "";
-    }
-}
