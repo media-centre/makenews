@@ -1,6 +1,7 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import * as FbActions from "./../../config/actions/FacebookConfigureActions";
 import * as WebConfigActions from "./../../config/actions/WebConfigureActions";
+import * as TwitterConfigureActions from "./../../config/actions/TwitterConfigureActions";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
 import R from "ramda"; //eslint-disable-line id-length
@@ -134,6 +135,9 @@ export function getSources(sourceType, keyword, params) {
     }
     case WEB: {
         return WebConfigActions.fetchWebSources(keyword, params);
+    }
+    case TWITTER: {
+        return TwitterConfigureActions.fetchTwitterSources(keyword);
     }
     default: {
         return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);
