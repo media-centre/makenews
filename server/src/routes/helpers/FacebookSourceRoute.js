@@ -20,7 +20,7 @@ export default class FacebookSourceRoute extends Route {
         if(this.checkInvalidParameters(this.userName, this.type, this.keyword) ||
             R.not(fbSourceTypesToFetch[this.type])) {
             RouteLogger.instance().warn(`FacebookSourceRoute:: invalid facebook search route with user name ${this.userName}, type ${this.type} and keyword ${this.keyword}.`);
-            this._handleInvalidRoute();
+            this._handleInvalidRequest({ "message": "missing parameters" });
         } else {
             await this._getSources();
         }

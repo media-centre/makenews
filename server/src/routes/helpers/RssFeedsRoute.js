@@ -10,17 +10,10 @@ export default class RssFeedsRoute extends Route {
         this.url = this.request.query.url;
     }
 
-    valid() {
-        if(StringUtil.isEmptyString(this.url)) {
-            return false;
-        }
-        return true;
-    }
-
     handle() { //eslint-disable-line consistent-return
-        if(!this.valid()) {
+        if(StringUtil.isEmptyString(this.url)) {
             RouteLogger.instance().warn("RssFeedsRoute:: invalid rss feed url %s.", this.url);
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "invalid url" });
         }
 
         let rssRequestHandler = RssRequestHandler.instance();

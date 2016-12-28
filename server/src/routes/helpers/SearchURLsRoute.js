@@ -19,7 +19,7 @@ export default class SearchURLsRoute extends Route {
     async handle() {
         if (StringUtils.isEmptyString(this.keyword)) {
             RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.keyword);
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "keyword missing" });
         }
 
         let rssRequestHandler = RssRequestHandler.instance();

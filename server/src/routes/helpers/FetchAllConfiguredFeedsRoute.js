@@ -24,7 +24,7 @@ export default class FetchAllConfiguredFeeds extends Route {
                 RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
                 this._handleSuccess(feeds);
             } else {
-                this._handleInvalidRoute();
+                this._handleInvalidRequest({ "message": "invalid sourceType" });
             }
         } catch (error) {
             RouteLogger.instance().debug(`FeedsRequestHandler:: failed to fetch the feeds . Error: ${JSON.stringify(error)}`);

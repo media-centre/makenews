@@ -11,13 +11,13 @@ export default class FacebookSetAccessTokenRoute extends Route {
         this.authSession = this.request.cookies.AuthSession;
     }
 
-    inValid() {
-        return (StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.authSession));
-    }
+    // inValid() {
+    //     return (StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.authSession));
+    // }
 
     async handle() {   //eslint-disable-line consistent-return
-        if (this.inValid()) {
-            return this._handleInvalidRoute();
+        if (StringUtil.isEmptyString(this.accessToken)) {
+            return this._handleInvalidRequest();
         }
         let facebookReqHandler = FacebookRequestHandler.instance(this.accessToken);
         try {

@@ -13,16 +13,14 @@ export default class TwitterFeedsRoute extends Route {
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.url) || StringUtil.isEmptyString(this.userName)) {
-            return false;
-        }
-        return true;
+        return !(StringUtil.isEmptyString(this.url) || StringUtil.isEmptyString(this.userName));
+
     }
 
     handle() {          //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("TwitterFeedsRoute:: invalid twitter feed route with url %s and user name %s.", this.url, this.userName);
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "missing parameters" });
         }
         let twitterRequestHandler = TwitterRequestHandler.instance();
         twitterRequestHandler.fetchTweetsRequest(this.url, this.userName).then(feeds => {

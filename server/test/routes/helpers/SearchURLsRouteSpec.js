@@ -36,7 +36,7 @@ describe("Search Urls Route", () => {
                 "key": ""
             }
         };
-        let response = mockResponse({ "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+        let response = mockResponse({ "status": HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, "json": { "message": "keyword missing" } });
 
         await new SearchURLsRoute(request, response, {}).handle();
     });

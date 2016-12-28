@@ -133,7 +133,7 @@ describe("FacebookPostsRoute", () => {
         it("should reject the request if web url is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line
@@ -176,7 +176,7 @@ describe("FacebookPostsRoute", () => {
         it("should reject the request if since date is invalid", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line
@@ -197,7 +197,7 @@ describe("FacebookPostsRoute", () => {
         it("should reject the request if user name is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line

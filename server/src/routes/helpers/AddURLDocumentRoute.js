@@ -19,7 +19,7 @@ export default class AddURLDocumentRoute extends Route {
         try {
             if (this.inValid()) {
                 RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
-                return this._handleInvalidRoute();
+                return this._handleInvalidRequest({ "message": "missing parameters" });
             }
             let rssRequestHandler = RssRequestHandler.instance();
             response = await rssRequestHandler.addURL(this.url, this.accessToken);

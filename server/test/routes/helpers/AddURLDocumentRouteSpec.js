@@ -17,8 +17,8 @@ describe("Add URL Document Route", () => {
         };
         let response = mockResponse();
         await new AddURLDocumentRoute(request, response, {}).handle();
-        assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
-        assert.deepEqual(response.json(), { "message": "bad request" });
+        assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+        assert.deepEqual(response.json(), { "message": "missing parameters" });
 
     });
 
@@ -33,8 +33,8 @@ describe("Add URL Document Route", () => {
         };
         let response = mockResponse();
         await new AddURLDocumentRoute(request, response, {}).handle();
-        assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
-        assert.deepEqual(response.json(), { "message": "bad request" });
+        assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+        assert.deepEqual(response.json(), { "message": "missing parameters" });
     });
 
 

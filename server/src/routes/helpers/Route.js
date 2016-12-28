@@ -58,7 +58,7 @@ export default class Route {
     }
 
     _handleInvalidRequest(error) {
-        this.response.status(HttpResponseHandler.codes.BAD_REQUEST);
+        this.response.status(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
         this.response.json(error);
     }
 

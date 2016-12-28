@@ -79,7 +79,7 @@ describe("FacebookSetAccessTokenRoute", () => {
         it("should reject the request if access token is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line
@@ -95,28 +95,6 @@ describe("FacebookSetAccessTokenRoute", () => {
                     "AuthSession": null
                 }
             }, response, next).handle();
-        });
-
-        it("should reject the request if authSession is missing", (done) => {
-            let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                    done();
-                },
-                "json": (json) => { //eslint-disable-line
-
-                }
-            };
-
-            let facebookAccessTokenRoute = new FacebookSetAccessTokenRoute({
-                "body": {
-                    "accessToken": accessToken
-                },
-                "cookies": {
-
-                }
-            }, response, next);
-            facebookAccessTokenRoute.handle();
         });
     });
 

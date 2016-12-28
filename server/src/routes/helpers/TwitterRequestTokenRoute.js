@@ -20,7 +20,7 @@ export default class TwitterRequestTokenRoute extends Route {
     }
     handle() {                //eslint-disable-line consistent-return
         if(!this.isValid()) {
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "missing username" });
         }
         TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl, "userName": this.userName }).then((instance) => {
             RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user '%s'.", this.userName);
