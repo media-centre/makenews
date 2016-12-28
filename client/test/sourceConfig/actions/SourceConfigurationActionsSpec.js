@@ -5,6 +5,7 @@ import mockStore from "../../helper/ActionHelper";
 import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import * as WebConfigActions from "./../../../src/js/config/actions/WebConfigureActions";
 import * as FbActions from "./../../../src/js/config/actions/FacebookConfigureActions";
+import * as TwitterConfigureActions from "./../../../src/js/config/actions/TwitterConfigureActions";
 import sinon from "sinon";
 import AppWindow from "../../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
@@ -68,7 +69,7 @@ describe("SourceConfigurationActions", () => {
         });
     });
 
-    describe("getSources", () => {
+    describe.only("getSources", () => {
         let sandbox = null;
         let keyword = "bla";
         beforeEach("", () => {
@@ -98,6 +99,12 @@ describe("SourceConfigurationActions", () => {
                 .withArgs(keyword, "profile", FbActions.PROFILES, {});
             sourceConfigActions.getSources(FbActions.PROFILES, keyword, {});
             fetchFacebookPagesMock.verify();
+        });
+
+        it("should delegate to fetchTwitterSources", () => {
+            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources");
+            sourceConfigActions.getSources("TWITTER", keyword, {});
+            fetchTwitterSourcesMock.verify();
         });
     });
 
