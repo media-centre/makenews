@@ -5,21 +5,20 @@ import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigu
 import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
 import { PAGES, PROFILES, GROUPS } from "./../actions/FacebookConfigureActions";
-import { updateTokenExpireTime, getExpiresTime } from "./../../facebook/FaceBookAction";
+import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FaceBookAction";
 
 export class ConfigureSourcesPage extends Component {
 
     componentDidMount() {
         this.sourceTab(this.props.params, this.props.dispatch);
-        this.props.dispatch(getExpiresTime());
+        this.props.dispatch(getTokenExpireTime());
+        
+        /* TODO: Move FacebookLogin Instance to Facebook Related Conditions*/ //eslint-disable-line no-warning-comments,no-inline-comments
         this.facebookLogin = FacebookLogin.instance();
     }
 
     componentWillReceiveProps(nextProps) {
         this.sourceTab(nextProps.params, nextProps.dispatch);
-        if (nextProps.params.sourceType !== this.props.params.sourceType) {
-            this._showFBLogin(nextProps.params.sourceType);
-        }
     }
 
     shouldComponentUpdate(nextProps) {
@@ -27,8 +26,8 @@ export class ConfigureSourcesPage extends Component {
             (nextProps.expireTime !== this.props.expireTime);
     }
 
-    _showFBLogin(sourceType) {
-        if (sourceType === "facebook" && FacebookLogin.getCurrentTime() > this.props.expireTime) {
+    _showFBLogin() {
+        if (FacebookLogin.getCurrentTime() > this.props.expireTime) {
             this.facebookLogin.login().then(expiresAfter => {
                 this.props.dispatch(updateTokenExpireTime(expiresAfter));
             });
@@ -44,6 +43,7 @@ export class ConfigureSourcesPage extends Component {
             break;
         }
         case "facebook": {
+            this._showFBLogin();
             if(params.sourceSubType === "groups") {
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
             } else if(params.sourceSubType === "pages") {
@@ -60,24 +60,12 @@ export class ConfigureSourcesPage extends Component {
         }
     }
 
-    _render() {
+    render() {
         let sourceType = this.props.params.sourceType;
         let ZERO = 0;
-        if(sourceType === "facebook" && this.props.expireTime === ZERO) {
-            return (
-                <div className="configure-container">{"Please login to facebook"}</div>);
-        }
-
-        return (
-            <div className="configure-container">
-                <ConfiguredSources />
-                <ConfigurePane />
-            </div>
-        );
-    }
-
-    render() {
-        return this._render();
+        let fbTokenExpired = sourceType === "facebook" && this.props.expireTime === ZERO;
+        return (fbTokenExpired ? <div className="configure-container">{ "Please login to facebook" }</div>
+            : <div className="configure-container"><ConfiguredSources /><ConfigurePane /></div>);
     }
 }
 

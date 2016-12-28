@@ -8,7 +8,7 @@ export function updateTokenExpireTime(expireTime) { //eslint-disable-line
     };
 }
 
-export function getExpiresTime() { //eslint-disable-line
+export function getTokenExpireTime() { //eslint-disable-line
     return dispatch => {
         let ajaxClient = AjaxClient.instance("/facebook-token-expire-time");
         ajaxClient.get().then(response => {

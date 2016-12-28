@@ -6,11 +6,11 @@ import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 
-describe("FacebookTokenDocument", () => {
+describe("FacebookTokenDocumentRoute", () => {
     describe("getExpiredTime", () => {
         let facebookTokenDocument = null, facebookTokenDocumentInstanceMock = null, sandbox = null, request1 = null, next = null;
         let authSession = "authSession";
-        beforeEach("getExpiresTime", () => {
+        beforeEach("getTokenExpireTime", () => {
             sandbox = sinon.sandbox.create();
             sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
             facebookTokenDocument = new FacebookTokenDocument();
@@ -23,7 +23,7 @@ describe("FacebookTokenDocument", () => {
             next = {};
         });
 
-        afterEach("getExpiresTime", () => {
+        afterEach("getTokenExpireTime", () => {
             sandbox.restore();
         });
 
@@ -44,23 +44,7 @@ describe("FacebookTokenDocument", () => {
             };
 
             facebookTokenDocumentStub.withArgs(authSession).returns(Promise.resolve(expiresAfter));
-
             new FacebookTokenDocumentRoute(request1, response, next).getExpiredTime();
-        });
-
-        it("should reject the request if authSession is missing", (done) => {
-            let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                    done();
-                },
-                "json": (json) => { //eslint-disable-line
-
-                }
-            };
-
-            let facebookAccessTokenRoute = new FacebookTokenDocumentRoute({ "cookies": {} }, response, next);
-            facebookAccessTokenRoute.getExpiredTime();
         });
     });
 });

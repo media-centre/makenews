@@ -4,8 +4,8 @@ import CryptUtil from "../../src/util/CryptUtil";
 import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
-import AdminDbClient from "../db/AdminDbClient";
 import CouchClient from "../CouchClient";
+import { getUserDocumentId, getAdminDBInstance } from "../facebook/FacebookTokenDocument";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
@@ -60,8 +60,8 @@ export default class FacebookRequestHandler {
             const milliSeconds = 1000;
             longLivedToken.expired_after = currentTime + (longLivedToken.expires_in * milliSeconds); //eslint-disable-line camelcase
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
-            let adminDbInstance = await this._getAdminDBInstance();
-            let tokenDocumentId = await this._getUserDocumentId(authSession);
+            let adminDbInstance = await getAdminDBInstance();
+            let tokenDocumentId = await getUserDocumentId(authSession);
             try {
                 let document = await adminDbInstance.getDocument(tokenDocumentId);
                 FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
@@ -76,25 +76,6 @@ export default class FacebookRequestHandler {
             }
         } catch(error) {
             throw new Error(`error getting long lived token with token ${this.accessToken}`);
-        }
-    }
-    
-    async _getAdminDBInstance() {
-        try {
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            return await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-        } catch(error) {
-            throw new Error(error);
-        }
-    }
-    
-    async _getUserDocumentId(authSession) {
-        try {
-            let couchClient = await CouchClient.createInstance(authSession);
-            let userName = await couchClient.getUserName();
-            return userName + "_facebookToken";
-        } catch (error) {
-            throw new Error(error);
         }
     }
     

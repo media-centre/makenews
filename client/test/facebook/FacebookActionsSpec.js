@@ -1,4 +1,4 @@
-import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME, getExpiresTime } from "../../src/js/facebook/FaceBookAction";
+import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME, getTokenExpireTime } from "../../src/js/facebook/FaceBookAction";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
 import sinon from "sinon";
@@ -18,7 +18,7 @@ describe("FacebookActions", () => {
         });
     });
     
-    describe("getExpiresTime", () => {
+    describe("getTokenExpireTime", () => {
         let sandbox = null, ajaxClient = null, ajaxGetmock = null;
         beforeEach("getExpireTime", () => {
             sandbox = sinon.sandbox.create();
@@ -34,7 +34,7 @@ describe("FacebookActions", () => {
             let expireTime = 12345;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
             let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
-            store.dispatch(getExpiresTime());
+            store.dispatch(getTokenExpireTime());
             ajaxGetmock.verify();
         });
 
@@ -42,7 +42,7 @@ describe("FacebookActions", () => {
             let expireTime = 0;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
             let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
-            store.dispatch(getExpiresTime());
+            store.dispatch(getTokenExpireTime());
             ajaxGetmock.verify();
         });
     });
