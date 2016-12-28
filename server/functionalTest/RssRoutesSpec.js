@@ -25,7 +25,7 @@ describe("RssRoutesSpec", () => {
                 .query("url=")
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, res.statusCode);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, res.statusCode);
                     done();
                 });
         });
