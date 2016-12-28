@@ -37,7 +37,7 @@ describe("FacebookTokenDocument", () => {
                     return response;
                 },
                 "json": (json) => {
-                    assert.deepEqual(json, { "expires_after": expiresAfter });
+                    assert.deepEqual(json, { "expireTime": expiresAfter });
                     facebookTokenDocumentInstanceMock.verify();
                     done();
                 }

@@ -67,7 +67,6 @@ describe("FacebookTokenDocument", () => {
                 adminDbMock.verify();
                 getDocumentMock.verify();
             } catch(error) {
-                console.log("In catch");
                 assert.fail(error);
             }
         });

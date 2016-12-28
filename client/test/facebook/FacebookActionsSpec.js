@@ -1,14 +1,49 @@
-import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME } from "../../src/js/facebook/FaceBookAction";
+import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME, getExpiresTime } from "../../src/js/facebook/FaceBookAction";
+import AjaxClient from "../../src/js/utils/AjaxClient";
+import mockStore from "../helper/ActionHelper";
+import sinon from "sinon";
 import { assert } from "chai";
+
 describe("FacebookActions", () => {
-    it("it should return the action type and expires_after value", () => {
-        let expiresAfter = 1234;
-        let action = {
-            "type": FACEBOOK_EXPIRE_TIME,
-            "expires_after": expiresAfter
-        };
-        let result = updateTokenExpireTime(expiresAfter);
-        assert.strictEqual(result.type, action.type);
-        assert.strictEqual(result.expires_after, action.expires_after);
+    describe("upDateTokenExpireTime", () => {
+        it("it should return the action type and expires_after value", () => {
+            let expireTime = 1234;
+            let action = {
+                "type": FACEBOOK_EXPIRE_TIME,
+                "expireTime": expireTime
+            };
+            let result = updateTokenExpireTime(expireTime);
+            assert.strictEqual(result.type, action.type);
+            assert.strictEqual(result.expireTime, action.expireTime);
+        });
+    });
+    
+    describe("getExpiresTime", () => {
+        let sandbox = null, ajaxClient = null, ajaxGetmock = null;
+        beforeEach("getExpireTime", () => {
+            sandbox = sinon.sandbox.create();
+            ajaxClient = new AjaxClient("/facebook-token-expire-time", false);
+            sandbox.stub(AjaxClient, "instance").returns(ajaxClient);
+        });
+
+        afterEach("getExpireTime", () => {
+            sandbox.restore();
+        });
+
+        it("should get the expires time from the server", (done) => {
+            let expireTime = 12345;
+            ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
+            let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
+            store.dispatch(getExpiresTime());
+            ajaxGetmock.verify();
+        });
+
+        it("should get the expires time as ZERO when token is not available in the server", (done) => {
+            let expireTime = 0;
+            ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
+            let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
+            store.dispatch(getExpiresTime());
+            ajaxGetmock.verify();
+        });
     });
 });

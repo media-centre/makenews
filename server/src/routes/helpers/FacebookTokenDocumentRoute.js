@@ -17,6 +17,6 @@ export default class FacebookSetAccessTokenRoute extends Route {
         let facebookTokenDocument = FacebookTokenDocument.instance();
         let expiredAfter = await facebookTokenDocument.getExpiredTime(this.authSession);
         RouteLogger.instance().debug("FacebookSetAccessTokenRoute:: successfully fetched Expires time for facebook token.");
-        this._handleSuccess({ "expires_after": expiredAfter });
+        this._handleSuccess({ "expireTime": expiredAfter });
     }
 }

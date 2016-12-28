@@ -10,8 +10,7 @@ export default class FacebookLogin {
         return new FacebookLogin();
     }
 
-    constructor(tokenExpired) {
-        this.tokenExpired = tokenExpired;
+    constructor() {
         this.initialize();
     }
 
@@ -19,19 +18,13 @@ export default class FacebookLogin {
         this.loadSDK(document, "script", "facebook-jssdk");
 
         window.fbAsyncInit = () => {
-            FB.init({ "appId": new AppWindow().get("facebookAppId"),
+            FB.init({
+                "appId": new AppWindow().get("facebookAppId"),
                 "cookie": true,
                 "xfbml": true,
                 "version": "v2.8"
             });
         };
-    }
-    static getInstance() {
-        return new Promise((resolve) => {
-            FacebookLogin.isTokenExpired().then(isExpired => {
-                resolve(new FacebookLogin(isExpired));
-            });
-        });
     }
 
     loadSDK(document, source, id) {
@@ -43,12 +36,9 @@ export default class FacebookLogin {
         }
     }
 
-    showLogin(callback) {
-        console.log("show loging")
+    showLogin(callback) { //eslint-disable-line
         if (FB) {
             FB.login((response) => {
-                console.log("in if condition");
-                console.log("res", response);
                 if (response.authResponse) {
                     return (callback(response.authResponse));
                 }
@@ -61,9 +51,7 @@ export default class FacebookLogin {
 
 
     login() {
-        console.log("In login method");
         return new Promise((resolve, reject) => {
-            // if(this.tokenExpired) {
             this.showLogin((response, error) => {
                 if(response) {
                     FacebookRequestHandler.setToken(response.accessToken).then(res => {
@@ -75,11 +63,6 @@ export default class FacebookLogin {
                     reject(error);
                 }
             });
-            // } else {
-            //     resolve(true);
-            // }
-            console.log("end of the method");
-            // resolve(true);
         });
     }
 
@@ -89,9 +72,7 @@ export default class FacebookLogin {
 
     static isTokenExpired() {
         return new Promise((resolve) => {
-            console.log("aslksdklsdakldsakl")
             UserInfo.getUserDocument().then((document) => {
-                console.log(document)
                 if (!document.facebookExpiredAfter) {
                     resolve(true);
                 }

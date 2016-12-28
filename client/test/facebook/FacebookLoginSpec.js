@@ -68,10 +68,10 @@ describe("FacebookLogin", () => {
             sandbox.restore();
         });
 
-        it("should resolve true if user has already logged in", () => {
+        xit("should resolve true if user has already logged in", () => {
             facebookLogin = FacebookLogin.instance();
             return facebookLogin.login().then(isLoggedIn => {
-                // assert.isTrue(isLoggedIn);
+                assert.isTrue(isLoggedIn);
             });
         });
 
