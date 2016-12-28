@@ -152,7 +152,7 @@ describe("RssFeedsRoute", () => {
                 "url": ""
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, "json": { "message": "invalid url" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.handle();
     });
@@ -162,7 +162,7 @@ describe("RssFeedsRoute", () => {
             "query": {
             }
         };
-        let response = mockResponse(done, { "status": HttpResponseHandler.codes.BAD_REQUEST, "json": { "message": "bad request" } });
+        let response = mockResponse(done, { "status": HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, "json": { "message": "invalid url" } });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);
         rssRouteHelper.handle();
     });

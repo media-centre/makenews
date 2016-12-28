@@ -20,7 +20,7 @@ export default class TwitterBatchFeedsRoute extends Route {
     handle() {       //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("TwitterBatchFeedsRoute:: invalid twitter feed batch request for user %s.", this.userName);
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "missing parameters" });
         }
 
         let allFeeds = {};

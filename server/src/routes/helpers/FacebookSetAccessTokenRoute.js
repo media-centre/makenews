@@ -12,15 +12,13 @@ export default class FacebookSetAccessTokenRoute extends Route {
     }
 
     valid() {
-        if(StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.userName)) {
-            return false;
-        }
-        return true;
+        return !(StringUtil.isEmptyString(this.accessToken) || StringUtil.isEmptyString(this.userName));
+
     }
 
     handle() {   //eslint-disable-line consistent-return
         if(!this.valid()) {
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "missing parameters" });
         }
 
         let facebookReqHan = FacebookRequestHandler.instance(this.accessToken);

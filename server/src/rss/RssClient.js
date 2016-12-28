@@ -223,7 +223,6 @@ export default class RssClient {
                 "fields": ["name", "url"]
             };
             let response = await dbInstance.findDocuments(selector);
-
             document = Object.assign({}, response);
             document.paging = { "offset": (offset + LIMIT_VALUE) };
             

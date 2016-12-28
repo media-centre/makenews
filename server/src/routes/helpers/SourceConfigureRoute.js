@@ -21,7 +21,7 @@ export default class SourceConfigureRoute extends Route {
     _checkRequiredParams(params) {
         if(R.any(StringUtil.isEmptyString)(params)) {
             RouteLogger.instance().warn("SourceConfigureRoute:: invalid route");
-            this._handleInvalidRoute();
+            this._handleInvalidRequest("authentication failed");
         }
     }
 
@@ -40,7 +40,7 @@ export default class SourceConfigureRoute extends Route {
         let sourceType = sourceTypes[this.type];
         if(R.any(StringUtil.isEmptyString)([sourceType, this.authSession])) {
             RouteLogger.instance().warn(`SourceConfigureRoute:: invalid sourceType ${this.type} or authentication failed`);
-            this._handleInvalidRoute();
+            this._handleInvalidRequest({ "message": "invalid Source Type" });
         } else {
             try {
                 let status = await SourceConfigRequestHandler.instance().addConfiguredSource(sourceType, this.sources, this.authSession);

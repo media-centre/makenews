@@ -20,7 +20,7 @@ export default class FacebookBatchPosts extends Route {
     handle() {  //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("FacebookBatchPosts:: invalid facebook feed batch request for user %s.", this.userName);
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "missing parameters" });
         }
 
         FacebookAccessToken.instance().getAccessToken(this.userName).then((accessToken) => {

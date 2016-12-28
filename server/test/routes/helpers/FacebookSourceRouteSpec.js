@@ -10,7 +10,6 @@ import { fbSourceTypesToFetch } from "../../../src/util/Constants";
 import mockResponse from "../../helpers/MockResponse";
 
 describe("FacebookSourceRoutes", () => {
-//
     let sandbox = sinon.sandbox.create();
 
     before("FacebookSourceRoutes", () => {
@@ -38,7 +37,7 @@ describe("FacebookSourceRoutes", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);
@@ -62,7 +61,7 @@ describe("FacebookSourceRoutes", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);
@@ -80,7 +79,7 @@ describe("FacebookSourceRoutes", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);
@@ -98,7 +97,7 @@ describe("FacebookSourceRoutes", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);

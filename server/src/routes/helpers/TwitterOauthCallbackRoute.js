@@ -20,7 +20,7 @@ export default class TwitterOauthCallbackRoute extends Route {
 
     handle() {                     //eslint-disable-line consistent-return
         if(!this.valid()) {
-            return this._handleInvalidRoute();
+            return this._handleInvalidRequest({ "message": "authentication failed" });
         }
         TwitterLogin.instance({ "previouslyFetchedOauthToken": this.oauth_token }).then((twitterLoginInstance) => {
             twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier).then((clientRedirectUrl) => {

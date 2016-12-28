@@ -54,8 +54,8 @@ describe("TwitterFeedsRoute", () => {
 
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
             await Promise.resolve(twitterFeedRoute.handle());
-            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
-            assert.deepEqual(response.json(), { "message": "bad request" });
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+            assert.deepEqual(response.json(), { "message": "missing parameters" });
             twitterFeedRoute.handle();
         });
 
@@ -68,8 +68,8 @@ describe("TwitterFeedsRoute", () => {
             let response = mockResponse();
             let twitterFeedRoute = new TwitterFeedsRoute(request, response);
             await Promise.resolve(twitterFeedRoute.handle());
-            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
-            assert.deepEqual(response.json(), { "message": "bad request" });
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+            assert.deepEqual(response.json(), { "message": "missing parameters" });
             twitterFeedRoute.handle();
         });
 

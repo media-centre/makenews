@@ -76,7 +76,7 @@ describe("FacebookSetAccessTokenRoute", () => {
         it("should reject the request if access token is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line
@@ -94,7 +94,7 @@ describe("FacebookSetAccessTokenRoute", () => {
         it("should reject the request if user name is missing", (done) => {
             let response = {
                 "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                    assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();
                 },
                 "json": (json) => { //eslint-disable-line

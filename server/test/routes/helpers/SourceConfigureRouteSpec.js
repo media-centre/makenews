@@ -25,7 +25,7 @@ describe("SourceConfigureRoute", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch (error) {
                         done(error);
@@ -137,7 +137,7 @@ describe("SourceConfigureRoute", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);
@@ -157,7 +157,7 @@ describe("SourceConfigureRoute", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);
@@ -177,7 +177,7 @@ describe("SourceConfigureRoute", () => {
             let response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
+                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                         done();
                     } catch(error) {
                         done(error);

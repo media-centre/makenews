@@ -41,7 +41,7 @@ export default class FacebookPostsRoute extends Route {
                 this._handleBadRequest();
             });
         } else {
-            this._handleInvalidRoute();
+            this._handleInvalidRequest({ "message": "invalid parameters" });
         }
     }
 }
