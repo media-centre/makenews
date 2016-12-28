@@ -5,7 +5,7 @@ import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigu
 import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
 import { PAGES, PROFILES, GROUPS } from "./../actions/FacebookConfigureActions";
-import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FaceBookAction";
+import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FacebookAction";
 
 export class ConfigureSourcesPage extends Component {
 
