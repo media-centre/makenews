@@ -59,7 +59,7 @@ describe("DisplayFeedActions", () => {
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
                 { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "sourceType": "twitter" }
             ] };
-            let ajaxClientInstance = AjaxClient.instance("/fetch-all-feeds", true);
+            let ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("post")
@@ -78,7 +78,7 @@ describe("DisplayFeedActions", () => {
         });
 
         it("dispatch displayFetchedFeedAction action with no feeds on successful fetch", (done) => {
-            let ajaxClientInstance = AjaxClient.instance("/fetch-all-feeds", true);
+            let ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
             let ajaxClientMock = sinon.mock(AjaxClient);
             ajaxClientMock.expects("instance").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance);

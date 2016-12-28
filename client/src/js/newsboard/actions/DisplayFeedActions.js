@@ -17,7 +17,7 @@ export const clearFeeds = () => ({
 });
 
 export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
-    let ajax = AjaxClient.instance("/fetch-all-feeds", true);
+    let ajax = AjaxClient.instance("/get-feeds", true);
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
