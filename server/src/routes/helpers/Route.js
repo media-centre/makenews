@@ -20,6 +20,12 @@ export default class Route {
         return R.any(StringUtil.isEmptyString)(params);
     }
 
+    validateNumber(numberString) {
+        let ZERO = 0;
+        let safeNumber = Number.parseInt(numberString, 10);
+        return (Number.isInteger(safeNumber) && safeNumber >= ZERO) ? safeNumber : ZERO;
+    }
+
     isValidRequestData() {
         if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) { //eslint-disable-line no-magic-numbers
             return false;

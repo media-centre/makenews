@@ -1,0 +1,17 @@
+sudo: true
+os:
+    - linux
+    - osx
+
+services:
+    - docker
+
+before_install:
+    - test/travis/before_install.sh
+
+script:
+    - test/travis/script.sh
+
+notifications:
+    webhooks: https://galaxy.ansible.com/api/v1/notifications/
+

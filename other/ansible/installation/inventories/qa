@@ -1,5 +1,5 @@
 [web]
-188.166.166.121
+qa.contentdiscovery.in
 [web:vars]
-nginx_domain=188.166.166.121
+nginx_domain=qa.contentdiscovery.in
 project_environment=ci_qa

@@ -2,12 +2,6 @@
 - name: install PM2 npm module
   npm: name=pm2 global=yes
 
-- name: copy the default couchdb configurations
-  copy: src=local.ini dest=/usr/local/etc/couchdb/local.ini owner=root group=root mode=0777
-
-- name: restart couchdb
-  service: name=couchdb state=restarted
-
 - name: perform the couchdb admin related tasks
   shell: /etc/ContentDiscovery/couchdb_tasks.sh
 

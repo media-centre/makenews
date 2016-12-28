@@ -5,12 +5,15 @@ export default class FeedsRequestHandler {
         return new FeedsRequestHandler();
     }
 
-    async fetchFeeds(authSession, lastIndex) {
+    async fetchFeeds(authSession, offset, sourceType) {
         let couchClient = await CouchClient.createInstance(authSession);
         let selector = {
             "selector": {
                 "docType": {
                     "$eq": "feed"
+                },
+                "sourceType": {
+                    "$in": sourceType
                 },
                 "pubDate": {
                     "$gt": null
@@ -18,7 +21,7 @@ export default class FeedsRequestHandler {
             },
             "fields": ["title", "description", "sourceType", "tags", "pubDate", "videos", "images"],
             "sort": [{ "pubDate": "desc" }],
-            "skip": lastIndex
+            "skip": offset
         };
         return await couchClient.findDocuments(selector);
     }

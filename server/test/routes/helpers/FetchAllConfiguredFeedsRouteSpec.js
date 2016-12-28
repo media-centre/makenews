@@ -3,47 +3,57 @@ import FetchAllConfiguredFeedsRoute from "../../../src/routes/helpers/FetchAllCo
 import FetchRequestHandler from "../../../src/fetchAllFeeds/FeedsRequestHandler";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import mockResponse from "../../helpers/MockResponse";
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import sinon from "sinon";
+import Logger from "../../../src/logging/Logger";
+import LogTestHelper from "../../helpers/LogTestHelper";
 
 describe("FetchAllConfiguredFeedsRoute", () => {
-    let authSession = null, fetchRequestHandlerInstance = null, feeds = null, request = null, response = null;
-    let lastIndex = 0;
-
-    beforeEach("FetchAllConfiguredFeedsRoute", () => {
-        authSession = "authSession";
-        fetchRequestHandlerInstance = new FetchRequestHandler();
-        feeds = {
-            "docs": [{
-                "_id": "1",
-                "docType": "feed",
-                "sourceType": "web",
-                "name": "url1 test",
-                "url": "http://www.thehindu.com/news/international/?service",
-                "title": "title",
-                "description": "description"
-            },
-            {
-                "_id": "2",
-                "docType": "feed",
-                "sourceType": "web",
-                "name": "url test",
-                "url": "http://www.thehindu.com/sport/?service",
-                "title": "title",
-                "description": "description"
-            }]
-        };
-        request = {
-            "cookies": {
-                "authSession": authSession
-            },
-            "body": {
-                "lastIndex": lastIndex
-            }
-        };
-    });
-
     describe("fetchFeeds", () => {
+        let authSession = null, fetchRequestHandlerInstance = null, feeds = null, request = null, response = null;
+        let offset = 0, sandbox = null, sourceType = null;
+
+        beforeEach("fetch feeds", () => {
+            sourceType = "web";
+            authSession = "authSession";
+            fetchRequestHandlerInstance = new FetchRequestHandler();
+            feeds = {
+                "docs": [{
+                    "_id": "1",
+                    "docType": "feed",
+                    "sourceType": "web",
+                    "name": "url1 test",
+                    "url": "http://www.thehindu.com/news/international/?service",
+                    "title": "title",
+                    "description": "description"
+                },
+                {
+                    "_id": "2",
+                    "docType": "feed",
+                    "sourceType": "web",
+                    "name": "url test",
+                    "url": "http://www.thehindu.com/sport/?service",
+                    "title": "title",
+                    "description": "description"
+                }]
+            };
+            request = {
+                "cookies": {
+                    "authSession": authSession
+                },
+                "body": {
+                    "offset": offset,
+                    "sourceType": sourceType
+                }
+            };
+            sandbox = sinon.sandbox.create();
+            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
+        });
+
+        afterEach("fetch feeds", () => {
+            sandbox.restore();
+        });
+
         it("should return feeds for correct response", async () => {
 
             sinon.mock(FetchRequestHandler).expects("instance").returns(fetchRequestHandlerInstance);
@@ -67,7 +77,8 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                     "authSession": {}
                 },
                 "body": {
-                    "lastIndex": lastIndex
+                    "offset": offset,
+                    "sourceType": sourceType
                 }
             };
             await new FetchAllConfiguredFeedsRoute(request, response, {}).fetchFeeds();
@@ -76,36 +87,32 @@ describe("FetchAllConfiguredFeedsRoute", () => {
         });
     });
 
-    describe("Last Index", () => {
-        let fetchAllConfiguredFeedsRoute = null;
-
-        beforeEach("Last Index", () => {
+    describe("validate Source Type", () => {
+        let fetchAllConfiguredFeedsRoute = null, sourceType = null, request = null, response = null;
+        beforeEach("validate Source Type", () => {
+            sourceType = "web";
             response = mockResponse();
-            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
-        });
-
-        it("index should return zero if it is not a number", () => {
-            lastIndex = "test";
-            expect(fetchAllConfiguredFeedsRoute.index()).to.equal(0);
-        });
-
-        it("index should return zero if it is a negative number", () => {
-            lastIndex = -1;
-            expect(fetchAllConfiguredFeedsRoute.index()).to.equal(0);
-        });
-
-        it("index should return index", () => {
             request = {
                 "cookies": {
-                    "authSession": authSession
+                    "authSession": {}
                 },
                 "body": {
-                    "lastIndex": 2
+                    "offset": 0,
+                    "sourceType": sourceType
                 }
             };
             fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
+        });
 
-            expect(fetchAllConfiguredFeedsRoute.index()).to.equal(2);
+        it("should return the value if source type is exist in predefined sources", () => {
+            assert.deepEqual(fetchAllConfiguredFeedsRoute.valid(), [sourceType]);
+        });
+
+        it("should return false if source type is empty", () => {
+            request.body.sourceType = "";
+            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
+
+            assert.isFalse(fetchAllConfiguredFeedsRoute.valid());
         });
     });
 });

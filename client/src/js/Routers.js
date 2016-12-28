@@ -10,7 +10,6 @@ import Help from "./help/Help";
 import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
-import DisplayFeeds from "../js/newsboard/components/DisplayFeeds";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
 import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
@@ -28,9 +27,6 @@ export function renderRoutes() {
                     <Route path="/configure/addurl" component={AddUrl} />
                     <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
                 </Route>
-
-                <Route path="/newsboard" component={ScanNews} />
-                <Route path="/newsboard/trending" component={DisplayFeeds} />
 
                 <Route path="/old-configure/categories" component={AllCategories} />
                 <Route path="/old-configure/category/:categoryId/:categoryName" component={CategoryPage}/>

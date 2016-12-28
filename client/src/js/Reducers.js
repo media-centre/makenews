@@ -11,6 +11,7 @@ import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
+import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
@@ -37,7 +38,8 @@ const contentDiscoveryApp = combineReducers({
     sourceSearchKeyword,
     currentSourceTab,
     currentHeaderTab,
-    tokenExpiresTime
+    tokenExpiresTime,
+    newsBoardCurrentSourceTab
 });
 
 export default contentDiscoveryApp;

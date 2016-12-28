@@ -40,5 +40,4 @@ describe("DisplayFeeds", () => {
         let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Feed);
         expect(renderedSources).to.have.lengthOf(2);  //eslint-disable-line no-magic-numbers
     });
-
 });

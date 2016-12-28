@@ -1,0 +1,18 @@
+- unarchive:
+    src: "{{ lucene_file_name }}"
+    dest: "{{ lucene_download_dir }}"
+
+- name: replace local.ini of couchdb
+  copy: src=local.ini dest=/opt/couchdb/etc/local.ini owner=couchdb group=couchdb mode=0755
+
+- name: restart CouchDB
+  service: name=couchdb enabled=yes state=restarted
+
+- name: Copy couchdb-lucene service file to etc/init.d
+  copy: src=lucene dest=/etc/init.d/lucene owner=couchdb group=couchdb mode=0755
+
+- name: Add couchdb-lucene service to startup
+  shell: update-rc.d lucene defaults
+
+- name: start couchdb-lucene
+  service: name=lucene enabled=yes state=started

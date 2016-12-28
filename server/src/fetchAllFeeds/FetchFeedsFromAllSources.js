@@ -106,7 +106,7 @@ export default class FetchFeedsFromAllSources extends Route {
             let couchClient = await CouchClient.createInstance(this.accesstoken);
             let userName = await couchClient.getUserName();
             const adminDetails = ApplicationConfig.instance().adminDetails();
-            let dbInstance = await AdminDbClient.instance(adminDetails.couchDbAdmin.username, adminDetails.couchDbAdmin.password, adminDetails.db);
+            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
             let selector = {
                 "selector": {
                     "_id": {

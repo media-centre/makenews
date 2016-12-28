@@ -1,0 +1,41 @@
+---
+# nginx/meta/main.yml
+
+galaxy_info:
+    author: williamyeh
+    description: Oracle JDK 7/8 for CentOS/Debian/Ubuntu/Suse/MacOSX
+    license: Apache
+
+    min_ansible_version: 2.0.0
+
+    platforms:
+        - name: Ubuntu
+          versions:
+              - precise
+              - trusty
+        - name: Debian
+          versions:
+              - wheezy
+              - jessie
+        - name: EL
+          versions:
+              - 6
+              - 7
+        - name: opensuse
+          versions:
+              - all
+        - name: SLES
+          versions:
+              - all
+        - name: Darwin
+          versions:
+              - all
+
+    galaxy_tags:
+        - development
+        - system
+        - java
+        - jdk
+        - jvm
+
+dependencies: []

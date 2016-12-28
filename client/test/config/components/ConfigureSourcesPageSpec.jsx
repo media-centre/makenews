@@ -144,5 +144,21 @@ describe("ConfigureSourcesPage", () => {
             let configurePane = findAllWithType(result, ConfigurePane);
             expect(configurePane).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
+
+        it("should not have ConfiguredSources component if sourceType is facebook and expireTime is ZERO", () => {
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime = {0}/>);
+            result = renderer.getRenderOutput();
+            let configuredSources = findAllWithType(result, ConfiguredSources);
+            expect(configuredSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
+        });
+
+        it("should not have ConfiguredSources component if sourceType is facebook and expireTime is ZERO", () => {
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime = {0}/>);
+            result = renderer.getRenderOutput();
+            let configuredSources = findAllWithType(result, ConfigurePane);
+            expect(configuredSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
+        });
     });
 });

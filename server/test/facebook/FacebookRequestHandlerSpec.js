@@ -1,5 +1,4 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
 import FacebookClient from "../../src/facebook/FacebookClient";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
 import CryptUtil from "../../src/util/CryptUtil";

@@ -42,8 +42,8 @@ console.log("usage:: node dist/server/src/createUser.js");
 
 let appConfig = new ApplicationConfig();
 
-let adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().couchDbAdmin.username;
-let adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().couchDbAdmin.password;
+let adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().username;
+let adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().password;
 
 console.log("User creation started.");
 AdminDbClient.instance(adminUserName, adminPassword, argv.user_name).then(dbInstance => {
