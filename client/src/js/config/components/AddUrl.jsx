@@ -37,8 +37,8 @@ export class AddUrl extends Component {
                 <div className="addurl-inputcontainer">
                     <div className="addurl-input">
                         <input type="text" ref="url" onKeyDown={(event) => this._onKeyDownInputBox(event)} className="addurlinput"/>
-                    </div>
                     <div className="addurl-icon"><img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/></div>
+                        </div>
                 </div>
                 <div><h1>{this.props.message}</h1></div>
             </div>

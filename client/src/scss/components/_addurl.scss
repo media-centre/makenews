@@ -36,18 +36,28 @@
   }
 
   .addurl-input {
+    margin-left: 8%;
     margin-top: 10%;
-    width: 80%;
+    width: 84%;
+    border-bottom: 2px solid $primary-color-light;
+    float: left;
+
     input {
-      width: 80%;
-      margin-left: 8%;
-      opacity: 0.37;
+      width: 85%;
       border: 0;
-      border-bottom: 2px solid white;
-      background-color: $primary-color;
+      background-color: #63527A;
       color: #ffffff;
-      font-size: $medium-font-size;
+      font-size: 16px;
       line-height: 24px;
+    }
+
+    .addurl-icon {
+      float: right;
+      margin-top: 2%;
+
+      img{
+        width: 70%;
+      }
     }
   }
 }
