@@ -1,4 +1,4 @@
-import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME, getTokenExpireTime } from "../../src/js/facebook/FaceBookAction";
+import { updateTokenExpireTime, FACEBOOK_EXPIRE_TIME, getTokenExpireTime } from "../../src/js/facebook/FacebookAction";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
 import sinon from "sinon";

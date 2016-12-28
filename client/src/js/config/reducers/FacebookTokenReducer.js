@@ -1,4 +1,4 @@
-import { FACEBOOK_EXPIRE_TIME } from "../../facebook/FaceBookAction";
+import { FACEBOOK_EXPIRE_TIME } from "../../facebook/FacebookAction";
 
 export function tokenExpiresTime(state = { "expireTime": 0 }, action = {}) {
     switch(action.type) {
