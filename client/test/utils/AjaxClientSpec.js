@@ -9,15 +9,9 @@ import nock from "nock";
 import sinon from "sinon";
 
 describe("AjaxClient", function() {
-    let userSessionMock = null, sandbox = null, userSession = null, requests = [];
+    let userSessionMock = null, sandbox = null, userSession = null;
     beforeEach("beforeEach", () => {
         sandbox = sinon.sandbox.create();
-        this.xhr = sinon.useFakeXMLHttpRequest();
-
-        this.xhr.onCreate = function(xhr) {
-            requests.push(xhr);
-        };
-
         userSession = new UserSession();
         sandbox.stub(UserSession, "instance").returns(userSession);
         userSessionMock = sandbox.mock(userSession).expects("continueSessionIfActive");
@@ -28,8 +22,6 @@ describe("AjaxClient", function() {
     });
 
     afterEach("afterEach", () => {
-        this.xhr.restore();
-        requests = [];
         sandbox.restore();
         AppWindow.instance.restore();
     });
