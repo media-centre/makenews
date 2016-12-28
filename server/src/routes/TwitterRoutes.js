@@ -27,5 +27,4 @@ export default (app) => {
         RouteLogger.instance().info("TwitterRoutes:: /twitter-token request received. url = %s", request.url);
         new TwitterTokenRoute(request, response, next).handle();
     });
-    
 };
