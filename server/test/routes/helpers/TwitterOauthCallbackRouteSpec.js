@@ -22,13 +22,16 @@ describe("TwitterOauthCallbackRoute", () => {
         it("should return the clientCallbackUrl on success", async () => {
             let twitterLogin = new TwitterLogin();
             let oauthToken = "oauth_token", oauthVerifier = "oauth_verifier", clientRedirectUrl = "clientRedirectUrl";
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "previouslyFetchedOauthToken": oauthToken }).returns(Promise.resolve(twitterLogin));
+            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "previouslyFetchedOauthToken": oauthToken, "accessToken": "test_token" }).returns(Promise.resolve(twitterLogin));
             let accessTokenFromTwitterMock = sandbox.mock(twitterLogin).expects("accessTokenFromTwitter").withArgs(oauthVerifier).returns(Promise.resolve(clientRedirectUrl));
             let response = { "redirect": () => {} };
             let request = {
                 "query": {
                     "oauth_token": oauthToken,
                     "oauth_verifier": oauthVerifier
+                },
+                "cookies": {
+                    "AuthSession": "test_token"
                 }
             };
             let responseMock = sandbox.mock(response);

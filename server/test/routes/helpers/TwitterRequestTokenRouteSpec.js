@@ -21,7 +21,7 @@ describe("TwitterRequestTokenRouteSpec", () => {
             let token = "token", expectedUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + token;
             let clientCallbackUrl = "clientUrl", serverCallbackUrl = "serverUrl";
             twitterLogin.oauthToken = token;
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "Maharjun" }).returns(Promise.resolve(twitterLogin));
+            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).returns(Promise.resolve(twitterLogin));
             let response = { "status": () => {}, "json": () => {} };
             let request = {
                 "query": {

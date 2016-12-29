@@ -28,31 +28,27 @@ describe("TwitterLogin", () => {
         });
     });
 
-    it("should return instance with same oauthTokenSecret, serverCallbackUrl, clientCallbackUrl, userName for a oauthToken", (done) => {
+    it("should return instance with same oauthTokenSecret, serverCallbackUrl, clientCallbackUrl for a oauthToken", (done) => {
         let oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
-        let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl", userName = "Maharjun";
+        let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
         oauthMock.returns({ "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => { callback(null, oauthToken, oauthTokenSecret); } });
-        let twitterLogin1 = TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": userName });
+        let twitterLogin1 = TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl });
         twitterLogin1.then(() => {
             //second request
             let twitterLogin2 = TwitterLogin.instance({ "previouslyFetchedOauthToken": oauthToken });
             twitterLogin2.then(twitterInstance => {
                 assert.strictEqual(twitterInstance.oauthTokenSecret, oauthTokenSecret);
                 assert.strictEqual(twitterInstance.clientCallbackUrl, clientCallbackUrl);
-                assert.strictEqual(twitterInstance.userName, userName);
                 done();
             });
         });
     });
 
     describe("accessTokenFromTwitter", () => {
-
-        let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
-        let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
-
-        it("should get the access_token from twitter and update twitterDoc for user", (done) => {
+        it("should get the access_token from twitter and update twitterDoc for user", async () => {
             let oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
-
+            let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl", authSession = "test_token";
+            let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
             oauthMock.returns(
                 {
                     "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => { callback(null, oauthToken, oauthTokenSecret); },
@@ -64,49 +60,60 @@ describe("TwitterLogin", () => {
                 "oauthAccessToken": "oldAccessToken",
                 "oauthAccessTokenSecret": "oldSecret"
             }));
+            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
+            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve("userName"));
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
             saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
 
-            TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "userName" }).then((firstInstance) => {
-                let twitterLoginPromise = TwitterLogin.instance({ "previouslyFetchedOauthToken": firstInstance.oauthToken });
-                twitterLoginPromise.then((instance) => {
-                    instance.accessTokenFromTwitter(oauthVerifier).then((clientRedirectUrl) => {
-                        assert.strictEqual(clientRedirectUrl, clientCallbackUrl);
-                        saveDocStub.verify();
-                        adminDbMock.verify();
-                        done();
-                    });
-                });
-            });
+            let firstInstance = await TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl });
+            let twitterLoginPromise = await TwitterLogin.instance({ "previouslyFetchedOauthToken": firstInstance.oauthToken, "accessToken": authSession });
+            let instance = await twitterLoginPromise;
+            let clientRedirectUrl = await instance.accessTokenFromTwitter(oauthVerifier);
+            assert.strictEqual(clientRedirectUrl, clientCallbackUrl);
+            saveDocStub.verify();
+            adminDbMock.verify();
         });
 
-        it("should get the access_token from twitter and create twitterDoc for user", (done) => {
+        it("should get the access_token from twitter and create twitterDoc for user", async () => {
             let oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
-
+            let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
+            let authSession = "test_token";
+            let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
             oauthMock.returns(
                 {
-                    "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => { callback(null, oauthToken, oauthTokenSecret); },
-                    "getOAuthAccessToken": (authToken, oauthTokenSecret, oauthVerifier, callback) => { callback(null, oauthAccessToken, oauthAccessTokenSecret, []); }
+                    "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => {
+                        callback(null, oauthToken, oauthTokenSecret);
+                    },
+                    "getOAuthAccessToken": (authToken, oauthTokenSecret, oauthVerifier, callback) => {
+                        callback(null, oauthAccessToken, oauthAccessTokenSecret, []);
+                    }
                 });
             let couchClient = new CouchClient();
             let getDocStub = sinon.stub(couchClient, "getDocument");
             getDocStub.withArgs(twitterDocId).returns(Promise.reject());
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
-            saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
+            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
+            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve("userName"));
+            saveDocStub.withArgs(twitterDocId, {
+                "oauthAccessToken": oauthAccessToken,
+                "oauthAccessTokenSecret": oauthAccessTokenSecret
+            }).returns(Promise.resolve());
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
 
-            TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl, "userName": "userName" }).then((firstInstance) => {
-                let twitterLoginPromise = TwitterLogin.instance({ "previouslyFetchedOauthToken": firstInstance.oauthToken });
-                twitterLoginPromise.then((instance) => {
-                    instance.accessTokenFromTwitter(oauthVerifier).then((clientRedirectUrl) => {
-                        assert.strictEqual(clientRedirectUrl, clientCallbackUrl);
-                        saveDocStub.verify();
-                        adminDbMock.verify();
-                        done();
-                    });
-                });
+            let firstInstance = await TwitterLogin.instance({
+                "serverCallbackUrl": serverCallbackUrl,
+                "clientCallbackUrl": clientCallbackUrl
             });
+            let twitterLoginPromise = TwitterLogin.instance({
+                "previouslyFetchedOauthToken": firstInstance.oauthToken,
+                "accessToken": "test_token"
+            });
+            let instance = await twitterLoginPromise;
+            let clientRedirectUrl = await instance.accessTokenFromTwitter(oauthVerifier);
+            assert.strictEqual(clientRedirectUrl, clientCallbackUrl);
+            saveDocStub.verify();
+            adminDbMock.verify();
         });
     });
 });

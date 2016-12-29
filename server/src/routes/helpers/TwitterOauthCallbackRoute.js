@@ -8,6 +8,7 @@ export default class TwitterOauthCallbackRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.oauth_token = this.request.query.oauth_token; //eslint-disable-line
+        this.accessToken = this.request.cookies.AuthSession;
     }
 
     valid() {
@@ -22,7 +23,7 @@ export default class TwitterOauthCallbackRoute extends Route {
         if(!this.valid()) {
             return this._handleInvalidRequest({ "message": "authentication failed" });
         }
-        TwitterLogin.instance({ "previouslyFetchedOauthToken": this.oauth_token }).then((twitterLoginInstance) => {
+        TwitterLogin.instance({ "previouslyFetchedOauthToken": this.oauth_token, "accessToken": this.accessToken }).then((twitterLoginInstance) => {
             twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier).then((clientRedirectUrl) => {
                 RouteLogger.instance().debug("TwitterOauthCallbackRoute:: OAuth token fetched successfully.");
                 this._handleSuccess(clientRedirectUrl);
