@@ -153,13 +153,23 @@
     .source {
       background: $dark-background-color;
       padding: 10px;
-      margin: 10px;
+      margin: .5%;
       width: 31.433333%;
       height: 70px;
       display: inline-block;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
+
+      @media (min-width: 1400px) {
+        width: 24%;
+        margin: .5%;
+      }
+
+      @media (max-width: 996px) {
+        width: 49%;
+        margin: .5%;
+      }
 
       &.added {
         background-color: $primary-color;
@@ -196,7 +206,7 @@
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
-        width: 70%;
+        width: 80%;
         position: relative;
         display: inline-table;
       }
