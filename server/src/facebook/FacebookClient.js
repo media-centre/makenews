@@ -4,7 +4,7 @@ import request from "request";
 import fetch from "isomorphic-fetch";
 import NodeErrorHandler from "../NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
-import HttpRequestUtil from "../../../common/src/util/HttpRequestUtil";
+import { constructQueryString } from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
 import FacebookParser from "./FacebookParser.js";
@@ -34,7 +34,7 @@ export default class FacebookClient {
             let parameters = {};
             this._addDefaultParameters(parameters);
             request.get({
-                "url": pageUrl + "&" + new HttpRequestUtil().queryString(parameters, false),
+                "url": pageUrl + "&" + constructQueryString(parameters, false),
                 "timeout": this.facebookParameters.timeOut
             }, (error, response, body) => {
                 if (NodeErrorHandler.noError(error)) {
@@ -66,7 +66,7 @@ export default class FacebookClient {
             } else {
                 this._addDefaultParameters(parameters);
                 request.get({
-                    "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + new HttpRequestUtil().queryString(parameters, false),
+                    "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + constructQueryString(parameters, false),
                     "timeout": this.facebookParameters.timeOut
                 }, (error, response, body) => {
                     if (NodeErrorHandler.noError(error)) {
@@ -93,7 +93,7 @@ export default class FacebookClient {
         return new Promise((resolve, reject) => {
             this._addDefaultParameters(parameters);
             request.get({
-                "url": `${this.facebookParameters.url}/me/taggable_friends?${new HttpRequestUtil().queryString(parameters, false)}`
+                "url": `${this.facebookParameters.url}/me/taggable_friends?${constructQueryString(parameters, false)}`
             }, (error, response, body) => {
                 let err = NodeErrorHandler.noError(error);
                 if (err) {
@@ -120,7 +120,7 @@ export default class FacebookClient {
         this._addDefaultParameters(params);
         let response = null;
         try {
-            response = await fetch(`${this.facebookParameters.url}/search?${new HttpRequestUtil().queryString(params, false)}`);
+            response = await fetch(`${this.facebookParameters.url}/search?${constructQueryString(params, false)}`);
         } catch(err) {
             FacebookClient.logger().error(`FacebookClient:: Error fetching ${parameters.type}s for ${parameters.q}. Error ${err}`);
             throw err;
