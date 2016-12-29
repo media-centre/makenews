@@ -1,5 +1,4 @@
 /* eslint consistent-this:0*/
-import StringUtil from "../../../../common/src/util/StringUtil";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 import ApplicationConfig from "../../config/ApplicationConfig";
@@ -11,19 +10,11 @@ export default class TwitterRequestTokenRoute extends Route {
         super(request, response, next);
         this.serverCallbackUrl = this.request.query.serverCallbackUrl;
         this.clientCallbackUrl = this.request.query.clientCallbackUrl;
-        this.userName = this.request.query.userName;
     }
-
-    isValid() {
-        RouteLogger.instance().error("TwitterRequestTokenRoute:: user name is empty");
-        return StringUtil.validNonEmptyString(this.userName);
-    }
-    handle() {                //eslint-disable-line consistent-return
-        if(!this.isValid()) {
-            return this._handleInvalidRequest({ "message": "missing username" });
-        }
-        TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl, "userName": this.userName }).then((instance) => {
-            RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user '%s'.", this.userName);
+    
+    handle() {
+        TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl }).then((instance) => {
+            RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user.");
             this._handleSuccess({ "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
         });
     }

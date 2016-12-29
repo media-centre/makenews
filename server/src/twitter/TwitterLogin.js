@@ -1,16 +1,17 @@
 import ApplicationConfig from "../../src/config/ApplicationConfig";
-import AdminDbClient from "../db/AdminDbClient";
+import { getUserDocumentId, getAdminDBInstance } from "../facebook/FacebookTokenDocument";
+import { TWITTER_DOCUMENT_ID } from "./TwitterToken";
 import Logger from "../logging/Logger";
 import OAuth from "oauth";
 
 let oauthTokenMap = {};
 export default class TwitterLogin {
-    constructor(oauthToken, oauthTokenSecret, clientCallbackUrl, userName) {
-        this.userName = userName;
+    constructor(oauthToken, oauthTokenSecret, clientCallbackUrl, accessToken) {
         this.oauthToken = oauthToken;
         this.oauthTokenSecret = oauthTokenSecret;
         this.clientCallbackUrl = clientCallbackUrl;
         this.oauth = TwitterLogin.createOAuthInstance();
+        this.accessToken = accessToken;
     }
 
     static logger() {
@@ -22,12 +23,12 @@ export default class TwitterLogin {
             if(options.previouslyFetchedOauthToken) {
                 TwitterLogin.logger().debug("TwitterLogin:: returning existing twitter login instance with auth token");
                 let tokenInfo = oauthTokenMap[options.previouslyFetchedOauthToken];
-                let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, tokenInfo.userName);
+                let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, options.accessToken);
                 resolve(twitterInstance);
             } else {
                 new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl).then(instance => {
                     TwitterLogin.logger().debug("TwitterLogin:: creating twitter login instance.");
-                    oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl, "userName": options.userName };
+                    oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl };
                     resolve(instance);
                 });
             }
@@ -71,31 +72,24 @@ export default class TwitterLogin {
             });
         });
     }
-
-    saveToken(oauthAccessToken, oauthAccessTokenSecret) {
-        let tokenDocumentId = this.userName + "_twitterToken";
+    
+    async saveToken(oauthAccessToken, oauthAccessTokenSecret) {
+        let tokenDocumentId = await getUserDocumentId(this.accessToken, TWITTER_DOCUMENT_ID);
         let document = {
             "oauthAccessToken": oauthAccessToken,
             "oauthAccessTokenSecret": oauthAccessTokenSecret
         };
-        return new Promise((resolve) => {
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
-                dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => {
-                    TwitterLogin.logger().debug("TwitterLogin:: successfully fetched existing twitter token from db.");
-                    dbInstance.saveDocument(tokenDocumentId, Object.assign({}, fetchedDocument, document)).then(() => { //eslint-disable-line max-nested-callbacks
-                        TwitterLogin.logger().debug("TwitterLogin:: successfully saved twitter token.");
-                        resolve();
-                    });
-                }).catch(() => {
-                    TwitterLogin.logger().debug("TwitterLogin:: creating twitter token document.");
-                    dbInstance.saveDocument(tokenDocumentId, document).then(() => { //eslint-disable-line max-nested-callbacks
-                        TwitterLogin.logger().debug("TwitterLogin:: successfully saved twitter token.");
-                        resolve();
-                    });
-                });
-            });
-        });
+        let adminDbInstance = await getAdminDBInstance();
+        try {
+            let tokenDocument = await adminDbInstance.getDocument(tokenDocumentId);
+            TwitterLogin.logger().debug("TwitterLogin:: successfully fetched existing twitter token from db.");
+            await adminDbInstance.saveDocument(tokenDocumentId, Object.assign({}, tokenDocument, document));
+            return;
+        } catch (error) {
+            TwitterLogin.logger().debug("TwitterLogin:: creating twitter token document.");
+            await adminDbInstance.saveDocument(tokenDocumentId, document);
+            return;
+        }
     }
 
     getOauthToken() {

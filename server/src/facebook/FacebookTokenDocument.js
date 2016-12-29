@@ -2,6 +2,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
 import Logger from "../logging/Logger";
 import { userDetails } from "../Factory";
+export const FACEBOOK_DOCUMENT_ID = "_facebookToken";
 
 export default class FacebookTokenDocument {
 
@@ -17,7 +18,7 @@ export default class FacebookTokenDocument {
         let ZERO = 0;
         try {
             let adminDbInstance = await getAdminDBInstance();
-            let tokenDocumentId = await getUserDocumentId(authSession);
+            let tokenDocumentId = await getUserDocumentId(authSession, FACEBOOK_DOCUMENT_ID);
             let document = await adminDbInstance.getDocument(tokenDocumentId);
             return document.expired_after;
         } catch (error) {
@@ -33,7 +34,7 @@ export async function getAdminDBInstance() {
     return await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
 }
 
-export async function getUserDocumentId(authSession) {
+export async function getUserDocumentId(authSession, id) {
     let { userName } = userDetails.getUser(authSession);
-    return userName + "_facebookToken";
+    return `${userName}${id}`;
 }

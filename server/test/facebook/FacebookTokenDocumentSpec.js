@@ -116,8 +116,9 @@ describe("FacebookTokenDocument", () => {
         it("should get the user document for given user authSession", async () => {
             let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
             userDetailsMock.withArgs(authSession).returns({ userName });
+            let facebookId = "_facebookToken";
 
-            let documentId = await getUserDocumentId(authSession);
+            let documentId = await getUserDocumentId(authSession, facebookId);
             assert.equal(documentId, userName + "_facebookToken");
         });
     });
