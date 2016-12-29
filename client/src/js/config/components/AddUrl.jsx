@@ -32,7 +32,8 @@ export class AddUrl extends Component {
                 <div className="addurl-helpmessage">
                     <span className="image"><img src="./../../../images/warning-icon.png"/></span>
                     <span className="text">
-                        Sorry we are unable to find what your looking for.Please enter the rss feed link below to add a new web news source.</span>
+                        Sorry we are unable to find what your looking for.<br/>
+                        Please enter the rss feed link below to add a new web news source.</span>
                 </div>
                 <div className="addurl-inputcontainer">
                     <div className="addurl-input">

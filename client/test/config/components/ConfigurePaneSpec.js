@@ -4,6 +4,7 @@ import ConfigurePaneConnected, { ConfigurePane } from "../../../src/js/config/co
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
+import AddUrl from "../../../src/js/config/components/AddUrl";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import sinon from "sinon";
@@ -20,16 +21,19 @@ describe("Configure Pane", () => {
         beforeEach("Configure Pane", () => {
             dispatch = () => {};
             store = {
-                "getState": ()=>{
-                    return { "state": {
-                        "currentSourceTab": []
-                    }
+                "getState": ()=> {
+                    return {
+                        "currentSourceTab": "",
+                        "sourceResults": {
+                            "data": []
+                        },
+                        "hasMoreSourceResults": false
                     };
                 }
             };
             currentTab = "Profiles";
             renderer = TestUtils.createRenderer();
-            configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} />);
+            configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }}/>);
         });
 
         it("wraps with a <div> with a proper class name", function() {
@@ -56,7 +60,15 @@ describe("Configure Pane", () => {
             expect(img.props.src).to.equal("./images/search-icon.png");
         });
 
-        it("should have SourcePane", () => {
+        it("should have AddUrl if there are no sources", () => {
+            let result = renderer.getRenderOutput();
+            let renderedSources = findAllWithType(result, AddUrl);
+            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+        });
+
+        it("should have SourcePane if there are sources", () => {
+            renderer = TestUtils.createRenderer();
+            configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": ["Hindu"] }}/>);
             let result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, SourcePane);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers

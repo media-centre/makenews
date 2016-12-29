@@ -1,8 +1,7 @@
 .addurl {
   margin-top: 15%;
-  margin-left: 35%;
-  height: 180px;
-  width: 30%;
+  margin-left: 20%;
+  margin-right: 20%;
 
   &-helpmessage {
     background-color: $primary-color-bold;
@@ -22,7 +21,7 @@
     .text {
       width: 70%;
       color: white;
-      font-size: $extra-small-font-size;
+      font-size: $small-font-size;
     }
   }
   &-inputcontainer {
@@ -36,24 +35,24 @@
   }
 
   .addurl-input {
-    margin-left: 8%;
-    margin-top: 10%;
-    width: 84%;
+    margin: 6% 10% 0% 10%;
+    width: 80%;
     border-bottom: 2px solid $primary-color-light;
     float: left;
 
     input {
-      width: 85%;
+      width: 88%;
       border: 0;
       background-color: #63527A;
       color: #ffffff;
       font-size: 16px;
       line-height: 24px;
+      margin: 0% 2% 0% 1%;
     }
 
     .addurl-icon {
       float: right;
-      margin-top: 2%;
+      margin-top: 1%;
 
       img{
         width: 70%;

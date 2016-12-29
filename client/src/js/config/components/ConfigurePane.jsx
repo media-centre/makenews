@@ -4,6 +4,7 @@ import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
+import AddUrl from "./AddUrl";
 
 export class ConfigurePane extends Component {
     checkEnterKey(event) {
@@ -31,7 +32,10 @@ export class ConfigurePane extends Component {
                     <img src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
+              { this.props.sources.data.length || this.props.hasMoreSourceResults
+                  ? <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
+                  : <AddUrl/>
+              }
           </div>
         );
     }
@@ -39,13 +43,17 @@ export class ConfigurePane extends Component {
 
 function mapToStore(state) {
     return {
-        "currentTab": state.currentSourceTab
+        "currentTab": state.currentSourceTab,
+        "hasMoreSourceResults": state.hasMoreSourceResults,
+        "sources": state.sourceResults
     };
 }
 
 ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "hasMoreSourceResults": PropTypes.bool.isRequired,
+    "sources": PropTypes.object.isRequired
 };
 
 export default connect(mapToStore)(ConfigurePane);
