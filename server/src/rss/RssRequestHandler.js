@@ -46,10 +46,10 @@ export default class RssRequestHandler {
     async searchUrl(key, offSetValue) {
         try {
             let document = await this.rssClient().searchURL(key, offSetValue);
-            RssRequestHandler.logger().debug("RssRquestHandler:: Successfully fetched for given selector");
+            RssRequestHandler.logger().debug("RssRequestHandler:: Successfully fetched for given selector");
             return document;
-        }catch (error) {
-            RssRequestHandler.logger().error("RssRequestHandler:: Error while fething documents for selector. Error: %j", error);
+        } catch (error) {
+            RssRequestHandler.logger().error("RssRequestHandler:: Error while fetching documents for selector. Error: %j", error);
             throw error;
         }
     }

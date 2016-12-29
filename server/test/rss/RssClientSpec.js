@@ -9,7 +9,9 @@ import nock from "nock";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
+import * as LuceneClient from "../../src/LuceneClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -118,9 +120,9 @@ describe("RssClient", () => {
             getrssMock.returns(Promise.reject(error));
 
             try {
-                await rssClientMock.getFeedsFromRssUrl("http://www.example.com", url);
+                await rssClientMock.getFeedsFromRssUrl("www.error.com", url);
             } catch (err) {
-                assert.deepEqual(err, { "message": "Request failed for " + url });
+                assert.deepEqual(err, { "message": `Request failed for url: ${url}, error: ${JSON.stringify(error)}` });
             } finally {
                 rssClientMock.getRssData.restore();
             }
@@ -335,10 +337,11 @@ describe("RssClient", () => {
 
     describe("handleRequestError", () => {
         it("should throw request failed for url error when handle_request_error is called", async() => {
+            let errorMessage = { "error": "error message" };
             try {
-                rssClientMock.handleRequestError(url);
+                rssClientMock.handleRequestError(url, errorMessage);
             } catch (err) {
-                assert.deepEqual(err, { "message": "Request failed for " + url });
+                assert.deepEqual(err, { "message": `Request failed for url: ${url}, error: ${JSON.stringify(errorMessage)}` });
             }
         });
     });
@@ -608,121 +611,155 @@ describe("RssClient", () => {
     });
 
     describe("Search URLS", () => {
-        let couchClient = null;
         let limit = 25;
         beforeEach("RssClient", () => {
             sandbox = sinon.sandbox.create();
             let applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             sandbox.stub(applicationConfig, "adminDetails").returns({
-                "username": "adminUser",
-                "password": "adminPwd",
+                // "username": "adminUser",
+                // "password": "adminPwd",
                 "db": "adminDb"
             });
-            couchClient = new CouchClient();
-            sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
+            sandbox.stub(applicationConfig, "searchEngineUrl").returns({
+                "db": "http://188.166.166.121:5986/_fti/local"
+            });
+            // sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
         });
 
         afterEach("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should return the default URL Documents", async () => {
-            let key = "the";
-            let offSet = 100;
-            let body = { "selector": {
-                "name": { "$regex": key },
-                "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } },
-                "limit": limit,
-                "skip": offSet,
-                "fields": ["name", "url"] };
-            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
+        it("should return the searched URL Documents", async () => {
+            let key = "The Hindu";
+            let offset = 100;
+
+            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
             let response = {
-                "docs": [{
-                    "name": "the url1 test",
-                    "url": "http://www.thehindu.com/news/international/?service=rss"
-                },
+                "rows": [
                     {
-                        "name": "the url test",
-                        "url": "http://www.thehindu.com/sport/?service=rss"
-                    }]
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss"
+                        }
+                    },
+                    {
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/news/international/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - International",
+                            "url": "http://www.thehindu.com/news/international/?service=rss"
+                        }
+                    }
+                ]
             };
 
-            let expectedOutput = Object.assign({}, response);
-            expectedOutput.paging = { "offset": (offSet + limit) };
+            let expectedOutput = {
+                "docs": [
+                    { "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss" },
+                    {
+                        "name": "The Hindu - International",
+                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                    }
+                ],
+                "paging": { "offset": (offset + limit) }
+            };
 
-            searchUrlMock.withArgs(body).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, offSet);
-            searchUrlMock.verify();
+            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}*`, limit, offset };
+            searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
+            let document = await rssClient.searchURL(key, offset);
+            searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should return empty document if No documents found for the key", async() => {
-            let key = "asldkfjkldsafj";
-            let ZERO = 0;
+            let key = "The Hindu";
             let offset = 100;
-            let body = { "selector": { "name": { "$regex": key },
-                "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } },
-                "limit": limit,
-                "skip": offset,
-                "fields": ["name", "url"] };
+
+            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
-            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
-            searchUrlMock.withArgs(body).returns(Promise.resolve({ "docs": [] }));
-            let response = await rssClient.searchURL(key, offset);
-            assert.strictEqual(ZERO, response.docs.length);
-            searchUrlMock.verify();
+            let response = {
+                "rows": [
+
+                ]
+            };
+
+            let expectedOutput = {
+                "docs": [
+
+                ],
+                "paging": { "offset": (offset + limit) }
+            };
+
+            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}*`, limit, offset };
+            searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
+            let document = await rssClient.searchURL(key, offset);
+            searchDocumentsMock.verify();
+            assert.deepEqual(document, expectedOutput);
         });
 
         it("should return all documents when they enter for empty string", async() => {
             let key = "";
-            let offset = 50;
-            let body = { "selector": { "name": { "$regex": key },
-                "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } },
-                "limit": limit,
-                "skip": offset,
-                "fields": ["name", "url"] };
+            let offset = 100;
+
+            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
-            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
             let response = {
-                "docs": [{
-                    "name": "the url1 test",
-                    "url": "http://www.thehindu.com/news/international/?service=rss"
-                },
+                "rows": [
                     {
-                        "name": "url test",
-                        "url": "http://www.hindu.com/sport/?service=rss"
-                    }]
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss"
+                        }
+                    },
+                    {
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/news/international/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - International",
+                            "url": "http://www.thehindu.com/news/international/?service=rss"
+                        }
+                    }
+                ]
             };
 
-            let expectedOutput = Object.assign({}, response);
-            expectedOutput.paging = { "offset": (offset + limit) };
+            let expectedOutput = {
+                "docs": [
+                    { "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss" },
+                    {
+                        "name": "The Hindu - International",
+                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                    }
+                ],
+                "paging": { "offset": (offset + limit) }
+            };
 
-            searchUrlMock.withArgs(body).returns(Promise.resolve(response));
+            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": "name:*/*", limit, offset };
+            searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             let document = await rssClient.searchURL(key, offset);
+            searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
-            searchUrlMock.verify();
         });
 
         it("should reject with an error when couchdb throws an error", async() => {
-            let key = "error";
-            let offset = 50;
-            let body = { "selector": { "name": { "$regex": key },
-                "docType": { "$eq": "source" }, "sourceType": { "$eq": "web" } },
-                "limit": limit,
-                "skip": offset,
-                "fields": ["name", "url"] };
+            let key = "The Hindu";
+            let offset = 100;
+
+            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
-            let searchUrlMock = sinon.mock(couchClient).expects("findDocuments");
-            searchUrlMock.withArgs(body).returns(Promise.reject("Unexpected Repsonse from DB"));
-            try {
-                await rssClient.searchURL(key, offset);
-                assert.fail();
-            } catch(err) {
-                assert.strictEqual(err.message, "Request failed for error");
-                searchUrlMock.verify();
-            }
+
+            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}*`, limit, offset };
+            searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.reject("Unexpected Repsonse from DB"));
+
+            await isRejected(rssClient.searchURL(key, offset), { "message": `Request failed for url: ${key}, error: "Unexpected Repsonse from DB"` });
         });
     });
 });

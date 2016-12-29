@@ -13,6 +13,7 @@ describe("ApplicationConfig", () => {
                     "serverIpAddress": "http://localhost",
                     "serverPort": 5000,
                     "couchDbUrl": "http://localhost:5984",
+                    "searchEngineUrl": "http://searchEngine.url",
                     "userDbPrefix": "test_prefix",
                     "adminDetails": {
                         "username": "admin",
@@ -46,7 +47,15 @@ describe("ApplicationConfig", () => {
 
         it("should return db URL from application configuration file", ()=> {
 
-            assert.strictEqual("http://localhost:5984", applicationConfig.dbUrl());
+            assert.strictEqual(applicationConfig.dbUrl(), "http://localhost:5984");
+        });
+    });
+
+    describe("searchEngineUrl", () => {
+
+        it("should return searchEngine URL from application configuration file", ()=> {
+
+            assert.strictEqual(applicationConfig.searchEngineUrl(), "http://searchEngine.url");
         });
     });
 
@@ -60,9 +69,9 @@ describe("ApplicationConfig", () => {
 
         it("should return admin details from application configuration file", ()=> {
             let adminDetails = new ApplicationConfig().adminDetails();
-            assert.strictEqual("admin", adminDetails.username);
-            assert.strictEqual("admin", adminDetails.password);
-            assert.strictEqual("admin", adminDetails.db);
+            assert.strictEqual(adminDetails.username, "admin");
+            assert.strictEqual(adminDetails.password, "admin");
+            assert.strictEqual(adminDetails.db, "admin");
         });
     });
 
@@ -71,9 +80,9 @@ describe("ApplicationConfig", () => {
 
             let facebookConfig = applicationConfig.facebook();
 
-            assert.strictEqual("https://graph.facebook.com/v2.8", facebookConfig.url);
-            assert.strictEqual("appSecretKey", facebookConfig.appSecretKey);
-            assert.equal(10000, facebookConfig.timeOut);
+            assert.strictEqual(facebookConfig.url, "https://graph.facebook.com/v2.8");
+            assert.strictEqual(facebookConfig.appSecretKey, "appSecretKey");
+            assert.equal(facebookConfig.timeOut, 10000);
         });
     });
 
@@ -81,23 +90,23 @@ describe("ApplicationConfig", () => {
         it("should return twitter url from application configuration file", ()=> {
 
             let twitterConfig = applicationConfig.twitter();
-            assert.strictEqual("https://api.twitter.com/1.1", twitterConfig.url);
-            assert.strictEqual("BearerToken", twitterConfig.bearerToken);
-            assert.equal(10000, twitterConfig.timeOut);
+            assert.strictEqual(twitterConfig.url, "https://api.twitter.com/1.1");
+            assert.strictEqual(twitterConfig.bearerToken, "BearerToken");
+            assert.equal(twitterConfig.timeOut, 10000);
         });
     });
 
     describe("serverIpAddress", () => {
         it("should return the server ip address from the application configuration file", ()=> {
             let serverIpAddress = applicationConfig.serverIpAddress();
-            assert.strictEqual("http://localhost", serverIpAddress);
+            assert.strictEqual(serverIpAddress, "http://localhost");
         });
     });
 
     describe("serverPort", () => {
         it("should return the server port from the application configuration file", ()=> {
             let serverPort = applicationConfig.serverPort();
-            assert.strictEqual(5000, serverPort);
+            assert.strictEqual(serverPort, 5000);
         });
     });
 });

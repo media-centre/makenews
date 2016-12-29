@@ -6,6 +6,8 @@ import cheerio from "cheerio";
 import AdminDbClient from "../db/AdminDbClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import CouchClient from "../CouchClient";
+import { searchDocuments } from "../LuceneClient";
+import R from "ramda"; //eslint-disable-line id-length
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
 const NOT_FOUND_INDEX = -1, LIMIT_VALUE = 25;
@@ -201,37 +203,26 @@ export default class RssClient {
         return "URL added successfully";
     }
 
-    async searchURL(key, offset) {
-        let document = null;
+    async searchURL(keyword, offset) {
+        let result = { };
+        let queryString = keyword === "" ? "*/*" : `${keyword}*`;
         try {
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-            let selector = {
-                "selector": {
-                    "name": {
-                        "$regex": key
-                    },
-                    "docType": {
-                        "$eq": "source"
-                    },
-                    "sourceType": {
-                        "$eq": "web"
-                    }
-                },
+            let query = {
+                "q": `name:${queryString}`,
                 "limit": LIMIT_VALUE,
-                "skip": offset,
-                "fields": ["name", "url"]
+                offset
             };
-            let response = await dbInstance.findDocuments(selector);
-            document = Object.assign({}, response);
-            document.paging = { "offset": (offset + LIMIT_VALUE) };
-            
+            let dbName = ApplicationConfig.instance().adminDetails().db;
+            let response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
+
+            result.docs = R.map(row => row.fields)(response.rows);
+            result.paging = { "offset": (offset + LIMIT_VALUE) };
+        
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
         } catch (error) {
-            RssClient.logger().error("RssClient:: request failed for entered key. Error: %j.", error);
-            this.handleRequestError(key, error);
+            this.handleRequestError(keyword, error);
         }
-        return document;
+        return result;
     }
     
     handleUrlError(url, error) {
@@ -241,10 +232,8 @@ export default class RssClient {
     }
 
     handleRequestError(url, error) {
-        let errorMessage = { "message": "Request failed for " + url };
-        RssClient.logger().error("RssClient:: Request failed for %s. Error: %s", url, JSON.stringify(error));
+        let errorMessage = { "message": `Request failed for url: ${url}, error: ${JSON.stringify(error)}` };
+        RssClient.logger().error(`RssClient:: Request failed for ${url}. Error: ${JSON.stringify(error)}`);
         throw errorMessage;
     }
 }
-
-

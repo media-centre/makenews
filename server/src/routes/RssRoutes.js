@@ -20,7 +20,7 @@ export default (app) => {
     });
 
     app.get("/web-sources", (request, response, next) => {
-        RouteLogger.instance().info("WebURLS:: /search-all-urls request received. url = %s", request.url);
+        RouteLogger.instance().info(`WebURLS:: /search-all-urls request received. url = ${request.url}`);
         new SearchURLsRoute(request, response, next).handle();
     });
 };

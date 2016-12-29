@@ -25,10 +25,10 @@ export default class SearchURLsRoute extends Route {
         let rssRequestHandler = RssRequestHandler.instance();
         try {
             let feeds = await rssRequestHandler.searchUrl(this.keyword, this.offsetValue());
-            RouteLogger.instance().debug("SearchURLsRoute:: successfully searched for the url %s .", this.keyword);
+            RouteLogger.instance().debug(`SearchURLsRoute:: successfully searched for the url ${this.keyword}.`);
             return this._handleSuccess(feeds);
         } catch (error) {
-            RouteLogger.instance().debug("SearchURLsRoute:: failed to search for url  %s. Error: %s", this.keyword, error);
+            RouteLogger.instance().debug(`SearchURLsRoute:: failed to search for keyword ${this.keyword}. Error: ${JSON.stringify(error)}`);
             throw this._handleBadRequest();
         }
     }

@@ -14,6 +14,10 @@ export default class ApplicationConfig {
         return this.environmentConfig.get("couchDbUrl");
     }
 
+    searchEngineUrl() {
+        return this.environmentConfig.get("searchEngineUrl");
+    }
+
     adminDetails() {
         return this.environmentConfig.get("adminDetails");
     }
