@@ -1,6 +1,7 @@
 /* eslint no-magic-numbers:0 */
  import AddUrl from "./../../../src/js/config/components/AddUrl";
  import * as AddUrlActions from "./../../../src/js/config/actions/AddUrlActions";
+ import Toast from "../../../src/js/utils/custom_templates/Toast";
  import React from "react";
  import ReactDOM from "react-dom";
  import TestUtils from "react-addons-test-utils";
@@ -9,6 +10,7 @@
  import { Provider } from "react-redux";
  import sinon from "sinon";
  import { expect } from "chai";
+
  describe("Add Url", () => {
      //let addUrlDom = null,
      let store = null;
@@ -17,7 +19,7 @@
 
      beforeEach("Add Url", () => {
          sandbox = sinon.sandbox.create();
-         let message = "added";
+         let message = "";
          store = createStore(() => ({
              "addUrlMessage": message
          }), applyMiddleware(thunkMiddleware));
@@ -28,7 +30,7 @@
          sandbox.restore();
      });
 
-     it("should wrap with the proper class name", () => {
+     it("should wrap with the proper class name when there is no response message", () => {
          let addUrlClass = TestUtils.findRenderedDOMComponentWithClass(addUrlDom, "addurl").className;
          expect(addUrlClass).to.equal("addurl");
      });
@@ -76,5 +78,29 @@
 
          addRSSUrlMock.verify();
      });
+
+     it("should display only message if the response is success", () => {
+         let message = "Addded successfully";
+         store = createStore(() => ({
+             "addUrlMessage": message
+         }), applyMiddleware(thunkMiddleware));
+         addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
+
+         let divTag = TestUtils.scryRenderedDOMComponentsWithTag(addUrlDom, "div");
+         let divClassName = TestUtils.scryRenderedDOMComponentsWithClass(addUrlDom, "add-url-message");
+         expect(divTag.length).to.equal(1);
+         expect(divClassName.length).to.equal(1);
+     });
+
+     it("should call show when the response is Please enter proper url", () => {
+         let message = "Please enter proper url.";
+         store = createStore(() => ({
+             "addUrlMessage": message
+         }), applyMiddleware(thunkMiddleware));
+         let showMock = sandbox.mock(Toast).expects("show").withExactArgs(message);
+         addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
+         showMock.verify();
+     });
+
  });
 

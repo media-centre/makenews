@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { handleMessages } from "../actions/AddUrlActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 import AddUrl from "./AddUrl";
 
@@ -17,10 +18,12 @@ export class ConfigurePane extends Component {
     fetchSources() {
         let value = this.refs.searchSources.value;
         if(!StringUtils.isEmptyString(value)) {
+            this.props.dispatch(handleMessages(""));
             this.props.dispatch(SourceConfigActions.clearSources());
             this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
             this.props.dispatch(SourceConfigActions.getSources(this.props.currentTab, value));
         }
+        this.refs.searchSources.value = "";
     }
 
     render() {

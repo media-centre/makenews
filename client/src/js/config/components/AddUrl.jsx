@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import * as AddUrlActions from "../actions/AddUrlActions";
 import { connect } from "react-redux";
+import Toast from "../../utils/custom_templates/Toast";
 
 export class AddUrl extends Component {
 
@@ -12,7 +13,7 @@ export class AddUrl extends Component {
 
     _addUrl() {
         let url = this.refs.url.value.trim();
-        if(url.match(this.urlRegex)) {
+        if (url.match(this.urlRegex)) {
             this.props.dispatch(AddUrlActions.addRssUrl(url));
         } else {
             this.props.dispatch(AddUrlActions.invalidRssUrl());
@@ -27,23 +28,27 @@ export class AddUrl extends Component {
     }
 
     render() {
-        return (
-            <div className="addurl">
-                <div className="addurl-helpmessage">
-                    <span className="image"><img src="./../../../images/warning-icon.png"/></span>
-                    <span className="text">
+        let errors = ["Please enter proper url.", "Invalid RSS URL. Please check the URL", "bad request"];
+        if (errors.indexOf(this.props.message) >= 0 || !this.props.message) {        //eslint-disable-line no-magic-numbers
+            return (
+                <div className="addurl">
+                    <div className="addurl-helpmessage">
+                        <span className="image"><img src="./../../../images/warning-icon.png"/></span>
+                        <span className="text">
                         Sorry we are unable to find what your looking for.<br/>
                         Please enter the rss feed link below to add a new web news source.</span>
-                </div>
-                <div className="addurl-inputcontainer">
-                    <div className="addurl-input">
-                        <input type="text" ref="url" onKeyDown={(event) => this._onKeyDownInputBox(event)} className="addurlinput"/>
-                    <div className="addurl-icon"><img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/></div>
+                    </div>
+                    <div className="addurl-inputcontainer">
+                        <div className="addurl-input">
+                            <input type="text" ref="url" onKeyDown={(event) => this._onKeyDownInputBox(event)} className="addurlinput"/>
+                            <div className="addurl-icon"><img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/></div>
                         </div>
+                    </div>
+                    { this.props.message && Toast.show(this.props.message) }
                 </div>
-                <div><h1>{this.props.message}</h1></div>
-            </div>
-        );
+            );
+        }
+        return (<div className="add-url-message">{Toast.show(this.props.message)}</div>);
     }
 }
 
