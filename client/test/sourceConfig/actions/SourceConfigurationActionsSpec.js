@@ -69,7 +69,7 @@ describe("SourceConfigurationActions", () => {
         });
     });
 
-    describe.only("getSources", () => {
+    describe("getSources", () => {
         let sandbox = null;
         let keyword = "bla";
         beforeEach("", () => {

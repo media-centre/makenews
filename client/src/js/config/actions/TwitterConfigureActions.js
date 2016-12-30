@@ -1,7 +1,7 @@
-export function fetchTwitterSources(keyword, params = {}) {
-    let ajaxClient = AjaxClient.instance("/twitter-sources");
-
-    return async (dispatch) => {
-
-    };
+export function fetchTwitterSources() {
+    //let ajaxClient = AjaxClient.instance("/twitter-sources");
+    //
+    //return async (dispatch) => {
+    //
+    //};
 }
