@@ -7,10 +7,8 @@ let oauthTokenMap = {};
 export default class TwitterLogin {
     constructor(oauthToken, oauthTokenSecret, clientCallbackUrl, userName) {
         this.userName = userName;
-        //this.oauthToken = oauthToken;
-        //this.oauthTokenSecret = oauthTokenSecret;
-        this.oauthToken = "4858648693-rZMefoq2jUGXiPhktXV12QUsSGdnYPfO7Ik1jth";
-        this.oauthTokenSecret = "wGadn7VNQBm6FRRfLAuJFWJ1Hcbfn6lNIRtkUgCXvo4Ht";
+        this.oauthToken = oauthToken;
+        this.oauthTokenSecret = oauthTokenSecret;
         this.clientCallbackUrl = clientCallbackUrl;
         this.oauth = TwitterLogin.createOAuthInstance();
     }

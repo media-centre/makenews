@@ -3,15 +3,12 @@
     "serverIpAddress": "localhost",
     "serverPort": 5000,
     "couchDbUrl": "http://localhost:5984",
+    "searchEngineUrl": "http://188.166.166.121:5984/_fti/local",
     "userDbPrefix": "db_",
     "adminDetails": {
-      "username": "common",
-      "password": "common",
-      "db": "common",
-      "couchDbAdmin": {
-        "username": "admin",
-        "password": "admin"
-      }
+      "username": "admin",
+      "password": "admin",
+      "db": "common"
     },
     "facebook": {
       "url": "https://graph.facebook.com/v2.8",
