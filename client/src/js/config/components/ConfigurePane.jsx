@@ -23,7 +23,6 @@ export class ConfigurePane extends Component {
             this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
             this.props.dispatch(SourceConfigActions.getSources(this.props.currentTab, value));
         }
-        this.refs.searchSources.value = "";
     }
 
     render() {

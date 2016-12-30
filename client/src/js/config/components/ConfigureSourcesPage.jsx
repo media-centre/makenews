@@ -46,10 +46,13 @@ export class ConfigureSourcesPage extends Component {
             this._showFBLogin();
             if(params.sourceSubType === "groups") {
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
+                dispatch(SourceConfigActions.getSources(GROUPS, this.props.keyword));
             } else if(params.sourceSubType === "pages") {
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
+                dispatch(SourceConfigActions.getSources(PAGES, this.props.keyword));
             } else {
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
+                dispatch(SourceConfigActions.getSources(PROFILES, this.props.keyword));
             }
             break;
         }
@@ -72,12 +75,14 @@ export class ConfigureSourcesPage extends Component {
 ConfigureSourcesPage.propTypes = {
     "params": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "expireTime": PropTypes.number
+    "expireTime": PropTypes.number,
+    "keyword": PropTypes.string
 };
 
 let mapToStore = (store) => ({
     "currentSourceTab": store.currentSourceTab,
-    "expireTime": store.tokenExpiresTime.expireTime
+    "expireTime": store.tokenExpiresTime.expireTime,
+    "keyword": store.sourceSearchKeyword
 });
 
 export default connect(mapToStore)(ConfigureSourcesPage);
