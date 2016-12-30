@@ -4,31 +4,32 @@ import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 
-export default class TwitterFeedsRoute extends Route {
+export default class TwitterFollowersRoute extends Route {
 
     constructor(request, response, next) {
         super(request, response, next);
-        this.url = this.request.query.url;
         this.userName = this.request.query.userName;
     }
 
-    isInvalid() {
-        return (StringUtil.isEmptyString(this.url) || StringUtil.isEmptyString(this.userName));
+    valid() {
+        return !StringUtil.isEmptyString(this.userName);
+
     }
 
-    handle() {          //eslint-disable-line consistent-return
-        if(this.isInvalid()) {
+    async handle() {    //eslint-disable-line consistent-return
+        if(!this.valid()) {
             RouteLogger.instance().warn("TwitterFeedsRoute:: invalid twitter feed route with url %s and user name %s.", this.url, this.userName);
-            return this._handleInvalidRequest({ "message": "missing parameters" });
+            return this._handleInvalidRoute();
         }
         let twitterRequestHandler = TwitterRequestHandler.instance();
-        twitterRequestHandler.fetchTweetsRequest(this.url, this.userName).then(feeds => {
+        try {
+            let data = await twitterRequestHandler.fetchFollowersRequest(this.userName);
             RouteLogger.instance().debug("TwitterFeedsRoute:: successfully fetched twitter feeds for url %s.", this.url);
-            this._handleSuccess(feeds);
-        }).catch(error => { //eslint-disable-line
+            this._handleSuccess(data);
+        } catch(error){ //eslint-disable-line
             RouteLogger.instance().debug("TwitterFeedsRoute:: fetching twitter feeds failed for url %s. Error: %s", this.url, error);
             this._handleBadRequest();
-        });
+        }
     }
 }
 

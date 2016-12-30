@@ -22,6 +22,18 @@ export default class TwitterRequestHandler {
         });
     }
 
+    async fetchFollowersRequest(userName) {
+
+        try {
+            let followers = await this.twitterClient().fetchFollowers(userName);
+            TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched followers for user");
+            return followers;
+        } catch (error) {
+            TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching followers list of the twitter user");
+            throw(error);
+        }
+    }
+
     twitterClient() {
         return TwitterClient.instance();
     }

@@ -46,21 +46,22 @@ export default class TwitterClient {
         });
     }
 
-    getAccessTokenAndSecret(userName) {
-        return new Promise((resolve, reject) => {
-            let tokenDocumentId = userName + "_twitterToken";
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db).then((dbInstance) => {
-                dbInstance.getDocument(tokenDocumentId).then((fetchedDocument) => { //eslint-disable-line max-nested-callbacks
-                    TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter access token for user %s.", userName);
-                    resolve([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
-                }).catch(() => { //eslint-disable-line max-nested-callbacks
-                    TwitterClient.logger().error("TwitterClient:: access token not found for user %s.", userName);
-                    reject("Not authenticated with twitter");
-                });
-            });
-        });
+    async getAccessTokenAndSecret(userName) {
+        let tokenDocumentId = userName + "_twitterToken";
+        const adminDetails = ApplicationConfig.instance().adminDetails();
+        try {
+            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+            let fetchedDocument = await dbInstance.getDocument(tokenDocumentId);
+            TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter access token for user %s.", userName);
+            return ([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
+
+        } catch (error) {
+            TwitterClient.logger().error("TwitterClient:: access token not found for user %s.", userName);
+            let err = "Not authenticated with twitter";
+            throw err;
+        }
     }
+
 
     _baseUrl() {
         return ApplicationConfig.instance().twitter().url;
@@ -69,5 +70,29 @@ export default class TwitterClient {
     _getTwitterTimestampFormat(timestamp) {
         let dateObj = new Date(timestamp);
         return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
+    }
+
+    async fetchFollowers(userName) {
+        return new Promise((resolve, reject) => {
+            this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
+                let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
+                let oauth = TwitterLogin.createOAuthInstance();
+                let followersApi = "/followers/list.json";
+                let url = "https://api.twitter.com/1.1";
+                let getFollowers = `${url}${followersApi}`;
+                oauth.get(getFollowers, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+                    if (error) {
+                        let errorInfo = JSON.parse(error);
+                        TwitterClient.logger().error("TwitterClient:: error fetching twitter followers for %s.", url, errorInfo);
+                        reject(errorInfo);
+                    }
+                    let tweetData = JSON.parse(data);
+                    TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followers");
+                    resolve(tweetData);
+                });
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }
