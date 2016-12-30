@@ -15,6 +15,7 @@ import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReduc
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword }
     from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
+import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -39,7 +40,8 @@ const contentDiscoveryApp = combineReducers({
     currentSourceTab,
     currentHeaderTab,
     tokenExpiresTime,
-    newsBoardCurrentSourceTab
+    newsBoardCurrentSourceTab,
+    twitterTokenInfo
 });
 
 export default contentDiscoveryApp;

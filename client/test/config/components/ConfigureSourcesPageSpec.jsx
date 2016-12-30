@@ -9,7 +9,7 @@ import ConfigurePane from "./../../../src/js/config/components/ConfigurePane";
 import { expect } from "chai";
 
 describe("ConfigureSourcesPage", () => {
-
+    let ZERO = 0, ONE = 1;
     describe("switchSourceTab", () => {
         let sandbox = null, renderer = null, keyword = null;
 
@@ -141,36 +141,47 @@ describe("ConfigureSourcesPage", () => {
     describe("children", () => {
         let renderer = TestUtils.createRenderer();
         let result = null;
-        beforeEach("children", () => {
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}}/>);
-            result = renderer.getRenderOutput();
-        });
 
         it("should have ConfiguredSources component", () => {
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}}/>);
+            result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfiguredSources);
-            expect(configuredSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+            expect(configuredSources).to.have.lengthOf(ONE);
         });
 
         it("should have ConfigurePage component", () => {
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}}/>);
+            result = renderer.getRenderOutput();
             let configurePane = findAllWithType(result, ConfigurePane);
-            expect(configurePane).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+            expect(configurePane).to.have.lengthOf(ONE);
         });
 
         it("should not have ConfiguredSources component if sourceType is facebook and expireTime is ZERO", () => {
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime = {0}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime={ZERO}/>);
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfiguredSources);
-            expect(configuredSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
+            expect(configuredSources).to.have.lengthOf(ZERO);
         });
 
-        it("should not have ConfiguredSources component if sourceType is facebook and expireTime is ZERO", () => {
+
+        it("should not have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is False", () => {
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime = {0}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}} twitterAuthenticated={false}/>);
+            result = renderer.getRenderOutput();
+            let configuredSources = findAllWithType(result, ConfiguredSources);
+            expect(configuredSources).to.have.lengthOf(ZERO);
+        });
+
+        it("should have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is true", () => {
+            renderer = TestUtils.createRenderer();
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}} twitterAuthenticated={true}/>); //eslint-disable-line
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfigurePane);
-            expect(configuredSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
+            expect(configuredSources).to.have.lengthOf(ONE);
         });
     });
 });

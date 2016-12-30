@@ -6,13 +6,16 @@ import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
 import { PAGES, PROFILES, GROUPS } from "./../actions/FacebookConfigureActions";
 import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FacebookAction";
+import { twitterAuthentication, twitterTokenInformation } from "./../../twitter/TwitterTokenActions";
+import TwitterLogin from "./../../twitter/TwitterLogin";
 
 export class ConfigureSourcesPage extends Component {
 
     componentDidMount() {
         this.sourceTab(this.props.params, this.props.keyword, this.props.dispatch);
         this.props.dispatch(getTokenExpireTime());
-        
+        this.props.dispatch(twitterAuthentication());
+
         /* TODO: Move FacebookLogin Instance to Facebook Related Conditions*/ //eslint-disable-line no-warning-comments,no-inline-comments
         this.facebookLogin = FacebookLogin.instance();
     }
@@ -34,11 +37,19 @@ export class ConfigureSourcesPage extends Component {
         }
 
     }
+    _showTwitterLogin() {
+        if(!this.props.twitterAuthenticated) {
+            TwitterLogin.instance().login().then((authenticated) => {
+                this.props.dispatch(twitterTokenInformation(authenticated));
+            });
+        }
+    }
 
     sourceTab(params, keyword, dispatch) {
         dispatch(SourceConfigActions.clearSources());
         switch (params.sourceType) {
         case "twitter": {
+            this._showTwitterLogin();
             dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.TWITTER));
             break;
         }
@@ -63,11 +74,22 @@ export class ConfigureSourcesPage extends Component {
         }
     }
 
-    render() {
+    getSourceType() {
         let sourceType = this.props.params.sourceType;
         let ZERO = 0;
         let fbTokenExpired = sourceType === "facebook" && this.props.expireTime === ZERO;
-        return (fbTokenExpired ? <div className="configure-container">{ "Please login to facebook" }</div>
+        let twitterExpired = sourceType === "twitter" && !this.props.twitterAuthenticated;
+        if(fbTokenExpired) {
+            return "facebook";
+        } else if(twitterExpired) {
+            return "twitter";
+        }
+        return false;
+    }
+
+    render() {
+        let sourceType = this.getSourceType();
+        return (sourceType ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
             : <div className="configure-container"><ConfiguredSources /><ConfigurePane /></div>);
     }
 }
@@ -76,13 +98,15 @@ ConfigureSourcesPage.propTypes = {
     "params": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "expireTime": PropTypes.number,
-    "keyword": PropTypes.string
+    "keyword": PropTypes.string,
+    "twitterAuthenticated": PropTypes.bool
 };
 
 let mapToStore = (store) => ({
     "currentSourceTab": store.currentSourceTab,
     "expireTime": store.tokenExpiresTime.expireTime,
-    "keyword": store.sourceSearchKeyword
+    "keyword": store.sourceSearchKeyword,
+    "twitterAuthenticated": store.twitterTokenInfo.twitterAuthenticated
 });
 
 export default connect(mapToStore)(ConfigureSourcesPage);
