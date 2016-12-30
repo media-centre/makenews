@@ -19,6 +19,5 @@ export default class CryptUtil {
     
     static dbNameHash(dbName) {
         return `${ApplicationConfig.instance().userDbPrefix()}${crypto.createHmac("sha256", dbName).digest("hex")}`;
-
     }
 }

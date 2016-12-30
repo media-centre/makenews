@@ -19,17 +19,16 @@ describe("RssURLSearchIndex", () => {
         sandbox.restore();
     });
 
-    it("should give successResponse for cerating index", async() => {
+    it("should give successResponse for creating index", async() => {
         let response = {
             "result": "created",
             "id": "_design/b508cf6095783f0e83e50554ee572df5460fea3b",
             "name": "rssUrlSearch"
         };
 
-        let couchInstance = new CouchClient(dbName, accessToken);
+        let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
-          .withArgs(dbName, accessToken)
-          .returns(couchInstance);
+          .withArgs(accessToken, dbName).returns(couchInstance);
         let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
           .withArgs(indexDoc)
           .returns(response);
@@ -41,10 +40,9 @@ describe("RssURLSearchIndex", () => {
     });
 
     it("should throw error if index creation failed", async() => {
-        let couchInstance = new CouchClient(dbName, accessToken);
+        let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
-          .withArgs(dbName, accessToken)
-          .returns(couchInstance);
+          .withArgs(accessToken, dbName).returns(couchInstance);
         let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
           .withArgs(indexDoc)
           .throws(new Error("failed"));

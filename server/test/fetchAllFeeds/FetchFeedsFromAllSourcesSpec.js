@@ -9,6 +9,7 @@ import CryptUtil from "../../src/util/CryptUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import { userDetails } from "./../../src/Factory";
 import { assert, expect } from "chai";
 import sinon from "sinon";
 
@@ -151,7 +152,7 @@ describe("FetchFeedsFromAllSources", () => {
                 }] }));
 
             let couchdb = new CouchClient();
-            sandbox.mock(CouchClient).expects("createInstance").returns(couchdb);
+            sandbox.mock(CouchClient).expects("instance").returns(couchdb);
             sandbox.mock(couchdb).expects("getUserName").returns("test");
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
@@ -229,7 +230,7 @@ describe("FetchFeedsFromAllSources", () => {
                 "expired_after": 1234
             }] }));
         let couchClientInstance = new CouchClient();
-        sandbox.stub(CouchClient, "createInstance").withArgs("test_token").returns(couchClientInstance);
+        sandbox.stub(CouchClient, "instance").withArgs("test_token").returns(couchClientInstance);
         sandbox.mock(couchClientInstance).expects("findDocuments").withArgs(selector).returns({ "docs": [facebook] });
         sandbox.mock(couchClientInstance).expects("getUserName").returns(Promise.resolve("test"));
 
@@ -273,10 +274,10 @@ describe("FetchFeedsFromAllSources", () => {
             };
             let dbName = "dbName";
             let feeds = { "items": ["feed items"] };
-            let couchClientMock = new CouchClient(null, "accessToken");
+            let couchClientMock = new CouchClient("accessToken");
             let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(requestData, response);
             try {
-                sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
+                sinon.mock(CouchClient).expects("instance").returns(couchClientMock);
                 sinon.mock(couchClientMock).expects("get").returns(Promise.resolve(response));
                 sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
                 sinon.mock(couchClientMock).expects("saveBulkDocuments").returns(Promise.reject("failed to store in db"));
@@ -284,7 +285,7 @@ describe("FetchFeedsFromAllSources", () => {
             } catch (error) {
                 assert.equal(error, "failed to store in db");
             } finally {
-                CouchClient.createInstance.restore();
+                CouchClient.instance.restore();
                 couchClientMock.get.restore();
                 CryptUtil.dbNameHash.restore();
                 couchClientMock.saveBulkDocuments.restore();
@@ -315,9 +316,9 @@ describe("FetchFeedsFromAllSources", () => {
             let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(requestData, response);
             let dbName = "dbName";
             let feeds = { "items": ["feed items"] };
-            let couchClientMock = new CouchClient(null, "accessToken");
+            let couchClientMock = new CouchClient("accessToken");
             try {
-                sinon.mock(CouchClient).expects("createInstance").returns(couchClientMock);
+                sinon.mock(CouchClient).expects("instance").returns(couchClientMock);
                 sinon.stub(couchClientMock, "get").returns(Promise.resolve(response));
                 sinon.stub(couchClientMock, "saveBulkDocuments").returns(Promise.resolve("Successfully added feeds to Database"));
                 sinon.mock(CryptUtil).expects("dbNameHash").withArgs(response.userCtx.name).returns(dbName);
@@ -326,7 +327,7 @@ describe("FetchFeedsFromAllSources", () => {
             } catch (error) {
                 assert.fail();
             } finally {
-                CouchClient.createInstance.restore();
+                CouchClient.instance.restore();
                 couchClientMock.get.restore();
                 CryptUtil.dbNameHash.restore();
                 couchClientMock.saveBulkDocuments.restore();
@@ -385,7 +386,7 @@ describe("FetchFeedsFromAllSources", () => {
             sandbox.restore();
         });
 
-        it("should get the facebook acess token", async() => {
+        it("should get the facebook access token", async() => {
             let adminDbClient = new AdminDbClient();
             sandbox.mock(AdminDbClient).expects("instance").returns(adminDbClient);
             let findDocumentsMock = sandbox.mock(adminDbClient).expects("findDocuments");
@@ -398,32 +399,15 @@ describe("FetchFeedsFromAllSources", () => {
                     "expired_after": 1234
                 }] }));
 
-            let couchdb = new CouchClient();
-            sandbox.mock(CouchClient).expects("createInstance").returns(couchdb);
-            let couchClientMock = sandbox.mock(couchdb).expects("getUserName").returns(Promise.resolve("test"));
+            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs("test_token").returns({ "userName": "test" });
             let request = { "cookies": { "AuthSession": "test_token" }, "body": { "data": [] } };
             let response = {};
             let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(request, response);
             let token = await fetchFeedsFromAllSources._getFacebookAccessToken();
             assert.strictEqual(token, "test_token");
             appConfigMock.verify();
-            couchClientMock.verify();
-        });
-
-        it("should throw error when couchclient throws an error", async() => {
-            let couchClientMock = null;
-            try {
-                let couchdb = new CouchClient();
-                sandbox.mock(CouchClient).expects("createInstance").returns(couchdb);
-                couchClientMock = sandbox.mock(couchdb).expects("getUserName").returns(Promise.reject("unexpected response from the db"));
-                let request = { "cookies": { "AuthSession": "test_token" }, "body": { "data": [] } };
-                let response = {};
-                let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(request, response);
-                await fetchFeedsFromAllSources._getFacebookAccessToken();
-            } catch (error) {
-                assert.strictEqual(error, "unexpected response from the db");
-                couchClientMock.verify();
-            }
+            userDetailsMock.verify();
         });
     });
 });

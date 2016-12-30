@@ -129,9 +129,9 @@ describe("SchemaInfo", () => {
             let schemaVersionDocument = {
                 "lastMigratedDocumentTimeStamp": schemaVersion
             };
-            let couchClient = new CouchClient(dbName, accessToken);
+            let couchClient = new CouchClient(accessToken, dbName);
             let couchClientInstanceStub = sinon.stub(CouchClient, "instance");
-            couchClientInstanceStub.withArgs(dbName, accessToken).returns(couchClient);
+            couchClientInstanceStub.withArgs(accessToken, dbName).returns(couchClient);
 
             let couchClientSaveDocMock = sinon.mock(couchClient).expects("saveDocument");
             couchClientSaveDocMock.withArgs(documentId, schemaVersionDocument).returns(Promise.resolve({
@@ -167,9 +167,9 @@ describe("SchemaInfo", () => {
                 "_rev": "3-1caeea709ad7a00fcb0ca372f03809e0",
                 "lastMigratedDocumentTimeStamp": schemaVersion
             };
-            let couchClient = new CouchClient(dbName, accessToken);
+            let couchClient = new CouchClient(accessToken, dbName);
             let couchClientInstanceStub = sinon.stub(CouchClient, "instance");
-            couchClientInstanceStub.withArgs(dbName, accessToken).returns(couchClient);
+            couchClientInstanceStub.withArgs(accessToken, dbName).returns(couchClient);
 
             let couchClientSaveDocMock = sinon.mock(couchClient).expects("saveDocument");
             couchClientSaveDocMock.withArgs(documentId, schemaVersionDocument).returns(Promise.resolve({ "ok": true, "id": "schema_info", "rev": "1-917fa2381192822767f010b95b45325b" }));
@@ -201,9 +201,9 @@ describe("SchemaInfo", () => {
                 "_rev": "3-1caeea709ad7a00fcb0ca372f03809e0",
                 "lastMigratedDocumentTimeStamp": schemaVersion
             };
-            let couchClient = new CouchClient(dbName, accessToken);
+            let couchClient = new CouchClient(accessToken, dbName);
             let couchClientInstanceStub = sinon.stub(CouchClient, "instance");
-            couchClientInstanceStub.withArgs(dbName, accessToken).returns(couchClient);
+            couchClientInstanceStub.withArgs(accessToken, dbName).returns(couchClient);
 
             let couchClientSaveDocMock = sinon.mock(couchClient).expects("saveDocument");
             couchClientSaveDocMock.withArgs(documentId, schemaVersionDocument).returns(Promise.reject("Error"));

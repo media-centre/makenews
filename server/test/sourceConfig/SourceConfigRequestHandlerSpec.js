@@ -20,8 +20,8 @@ describe("SourceConfigRequestHandler", () => {
                 "limit": 1000
             };
             sourceRequestHandler = new SourceConfigRequestHandler();
-            couchClient = new CouchClient(dbName, "accessToken");
-            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
+            couchClient = new CouchClient("accessToken", dbName);
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
         });
 
         afterEach("SourceConfigRequestHandler", () => {
@@ -110,8 +110,8 @@ describe("SourceConfigRequestHandler", () => {
             }];
 
             sourceRequestHandler = new SourceConfigRequestHandler();
-            couchClient = new CouchClient(dbName, authSession);
-            sandbox.mock(CouchClient).expects("createInstance")
+            couchClient = new CouchClient(authSession, dbName);
+            sandbox.mock(CouchClient).expects("instance")
                 .withArgs(authSession).returns(couchClient);
             sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
         });

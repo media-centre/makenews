@@ -1,21 +1,15 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "./config/ApplicationConfig";
+import { userDetails } from "./Factory";
 import NodeErrorHandler from "./NodeErrorHandler";
 import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
-import CryptUtil from "./util/CryptUtil";
 
-let dbInstanceMap = new Map();
 export default class CouchClient {
-    static instance(dbName, accessToken, dbUrl = null) {
-        return new CouchClient(dbName, accessToken, dbUrl);
+    static instance(accessToken, dbName, dbUrl = null) {
+        return new CouchClient(accessToken, dbName, dbUrl);
     }
 
-    async getUserDbName() {
-        let userName = await this.getUserName();
-        return CryptUtil.dbNameHash(userName);
-    }
-    
     async getUserName() {
         let response = await this.get("/_session");
         return response.userCtx.name;
@@ -25,10 +19,10 @@ export default class CouchClient {
         return Logger.instance(logCategories.DATABASE);
     }
 
-    constructor(dbName, accessToken, dbUrl) {
+    constructor(accessToken, dbName, dbUrl) {
         this.accessToken = accessToken;
         this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
-        this.dbName = dbName;
+        this.dbName = dbName || userDetails.getUser(accessToken).dbName;
     }
 
     static async createInstance(accessToken) {
@@ -36,13 +30,8 @@ export default class CouchClient {
         if(!instance) {
             instance = new CouchClient(null, accessToken);
             instance.dbName = await instance.getUserDbName();
-            dbInstanceMap.set(accessToken, instance);
         }
         return instance;
-    }
-
-    static getDbInstance(accessToken) {
-        return dbInstanceMap.get(accessToken);
     }
 
     saveDocument(documentId, documentObj, customHeaders = {}) {

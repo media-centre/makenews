@@ -11,6 +11,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import * as LuceneClient from "../../src/LuceneClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
+import { userDetails } from "./../../src/Factory";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("RssClient", () => {
@@ -560,13 +561,17 @@ describe("RssClient", () => {
     
     describe("addURLToUser", () => {
         let couchClient = null, accessToken = "access token";
+        let userDetailsMock = null;
 
         beforeEach("addURLToUser", () => {
             accessToken = "test_token";
             sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient(null, accessToken);
-            sandbox.mock(CouchClient).expects("createInstance").withArgs(accessToken).returns(Promise.resolve(couchClient));
-            //sandbox.stub(couchClient, "getUserDbName").returns("test");
+            userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs(accessToken).returns({ "dbName": "dbName" });
+
+            couchClient = new CouchClient(accessToken);
+            sandbox.mock(CouchClient).expects("instance")
+                .withArgs(accessToken).returns(couchClient);
 
         });
 
@@ -576,20 +581,23 @@ describe("RssClient", () => {
 
         it("should save the document", async () => {
             let saveDocMock = null;
+
+            url = "http://www.test.com/rss";
+            let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
+            saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
+                "ok": "true",
+                "id": "test_name",
+                "rev": "test_revision"
+            }));
+
             try {
-                url = "http://www.test.com/rss";
-                let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
-                saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-                saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
-                    "ok": "true",
-                    "id": "test_name",
-                    "rev": "test_revision"
-                }));
                 let response = await RssClient.instance().addURLToUser(document, accessToken);
                 assert.strictEqual("URL added successfully", response);
             } catch(err) {
                 assert.fail(err);
             } finally {
+                userDetailsMock.verify();
                 saveDocMock.verify();
             }
         });

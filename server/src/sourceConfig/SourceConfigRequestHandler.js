@@ -9,14 +9,14 @@ export default class SourceConfigRequestHandler {
     }
 
     async addConfiguredSource(sourceType, sources, authSession) {
-        let couchClient = await CouchClient.createInstance(authSession);
+        let couchClient = CouchClient.instance(authSession);
         let data = this._getFormattedSources(sourceType, sources);
         await couchClient.saveBulkDocuments({ "docs": data });
         return { "ok": true };
     }
 
     async fetchConfiguredSources(authSession) {
-        let couchClient = await CouchClient.createInstance(authSession);
+        let couchClient = CouchClient.instance(authSession);
         let data = await couchClient.findDocuments({
             "selector": {
                 "docType": {

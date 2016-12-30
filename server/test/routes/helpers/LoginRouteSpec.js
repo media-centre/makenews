@@ -7,21 +7,26 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
 import LogTestHelper from "../../helpers/LogTestHelper";
 import Logger from "../../../src/logging/Logger";
+import { userDetails } from "../../../src/Factory";
 import { assert } from "chai";
 import sinon from "sinon";
 
 describe("LoginRoute", () => {
-    let request = null, response = null, userName = null, password = null;
-    before("LoginRoute", () => {
+    let request = null, response = null, userName = null, password = null,
+        sandbox = sinon.sandbox.create();
+    beforeEach("LoginRoute", () => {
         userName = "test_user_name";
         password = "test_password";
-        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
+        sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
-    after("LoginRoute", () => {
-        Logger.instance.restore();
+
+    afterEach("LoginRoute", () => {
+        sandbox.restore();
     });
+
     describe("handle", () => {
-        let token = null, authSessionCookie = null, next = null, userReqGetAuthSessionCookieMock = null, userRequest = null;
+        let token = null, authSessionCookie = null, next = null,
+            userReqGetAuthSessionCookieMock = null, userRequest = null;
         beforeEach("handle", () => {
             request = {
                 "body": {
@@ -32,16 +37,12 @@ describe("LoginRoute", () => {
             token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
             authSessionCookie = "AuthSession=" + token + "; Version=1; Path=/; HttpOnly";
             userRequest = new UserRequest(userName, password);
-            sinon.stub(UserRequest, "instance").withArgs(userName, password).returns(userRequest);
-            userReqGetAuthSessionCookieMock = sinon.mock(userRequest).expects("getAuthSessionCookie");
-        });
-
-        afterEach("handle", () => {
-            userRequest.getAuthSessionCookie.restore();
-            UserRequest.instance.restore();
+            sandbox.stub(UserRequest, "instance").withArgs(userName, password).returns(userRequest);
+            userReqGetAuthSessionCookieMock = sandbox.mock(userRequest).expects("getAuthSessionCookie");
         });
 
         it("should respond with authsession cookie and json data if login is successful", (done) => {
+            let updateUserMock = sandbox.mock(userDetails).expects("updateUser");
             response = {
                 "status": (statusCode) => {
                     assert.equal(HttpResponseHandler.codes.OK, statusCode);
@@ -61,7 +62,7 @@ describe("LoginRoute", () => {
                             }
                         }, data);
                     userReqGetAuthSessionCookieMock.verify();
-                    EnvironmentConfig.instance.restore();
+                    updateUserMock.verify();
                     done();
                 }
             };
@@ -75,10 +76,10 @@ describe("LoginRoute", () => {
                     };
                 }
             };
-            sinon.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
+            sandbox.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
-
+            updateUserMock.withArgs(token, userName).returns("db_test");
             let loginRoute = new LoginRoute(request, response, next);
             loginRoute.handle();
         });

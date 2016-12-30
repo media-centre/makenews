@@ -137,11 +137,10 @@ export default class FacebookRequestHandler {
     }
 
     async addConfiguredSource(sourceType, sources, authSession) {
-        let couchClient = await CouchClient.createInstance(authSession);
+        let couchClient = CouchClient.instance(authSession);
         try {
             let data = this._getFormattedSources(sourceType, sources);
             await couchClient.saveBulkDocuments({ "docs": data });
-            await couchClient.getUserName();
             return { "ok": true };
         } catch (error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error adding source. Error: ${error}`);

@@ -4,6 +4,7 @@ import ClientConfig from "../../../src/config/ClientConfig";
 import RouteLogger from "../RouteLogger";
 import Route from "./Route";
 import StringUtil from "../../../../common/src/util/StringUtil";
+import { userDetails } from "../../Factory";
 
 export default class LoginRoute extends Route {
     constructor(request, response, next) {
@@ -29,8 +30,8 @@ export default class LoginRoute extends Route {
             let userRequest = UserRequest.instance(this.userName, this.password);
             userRequest.getAuthSessionCookie().then(authSessionCookie => {
                 this._handleLoginSuccess(authSessionCookie);
-            }).catch(error => { //eslint-disable-line
-                RouteLogger.instance().error("LoginRoute::handle Failed while fetching auth session cookie");
+            }).catch(error => {
+                RouteLogger.instance().error(`LoginRoute::handle Failed while fetching auth session cookie, Error: ${JSON.stringify(error)}`);
                 this._handleFailure({ "message": "unauthorized" });
             });
         } catch(error) {
@@ -41,6 +42,9 @@ export default class LoginRoute extends Route {
 
     _handleLoginSuccess(authSessionCookie) {
         let dbJson = ClientConfig.instance().db();
+        let [authSession] = authSessionCookie.split(";");
+        let [, token] = authSession.split("=");
+        userDetails.updateUser(token, this.userName);
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
             .json({ "userName": this.userName, "dbParameters": dbJson });

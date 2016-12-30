@@ -16,7 +16,8 @@ export default class IndexDocument {
                 },
                 "name": "rssUrlSearch"
             };
-            return await CouchClient.instance(this.dbName, this.accessToken).createIndex(nameIdIndex);
+            const couchClient = CouchClient.instance(this.accessToken, this.dbName);
+            return await couchClient.createIndex(nameIdIndex);
         } catch (error) {
             Migration.logger(this.dbName).error("RssURLSearchIndex::up - error %j", error);
             throw error;

@@ -153,7 +153,7 @@ describe("CouchSessionSpec", () => {
         beforeEach("updatePassword", () => {
             sandbox = sinon.sandbox.create();
             token = "12345678";
-            couchClient = new CouchClient("_users", token);
+            couchClient = new CouchClient(token, "_users");
             sandbox.stub(CouchClient, "instance").returns(couchClient);
             username = "test";
             newPassword = "new_password";

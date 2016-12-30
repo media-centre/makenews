@@ -5,6 +5,7 @@ import FacebookTokenDocument, { getAdminDBInstance, getUserDocumentId } from "..
 import LogTestHelper from "../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
+import { userDetails } from "./../../src/Factory";
 
 describe("FacebookTokenDocument", () => {
     describe("GetTokenExpiresTime", () => {
@@ -26,7 +27,7 @@ describe("FacebookTokenDocument", () => {
             adminDbMock = sandbox.mock(AdminDbClient).expects("instance").withExactArgs(adminDetails.username, adminDetails.password, adminDetails.db);
             adminDbMock.returns(Promise.resolve(adminDbInstance));
             let couchClient = new CouchClient();
-            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
+            sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClient);
             sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(adminDetails.username));
             sandbox.stub(FacebookTokenDocument, "logger").returns(LogTestHelper.instance());
         });
@@ -105,7 +106,7 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("GetUserDocument", () => {
-        let sandbox = null, authSession = "Test_session", username = "test";
+        let sandbox = null, authSession = "Test_session", userName = "test";
         beforeEach("GetUserDocument", () => {
             sandbox = sinon.sandbox.create();
         });
@@ -113,11 +114,11 @@ describe("FacebookTokenDocument", () => {
             sandbox.restore();
         });
         it("should get the user document for given user authSession", async () => {
-            let couchClient = new CouchClient();
-            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
-            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(username));
+            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs(authSession).returns({ userName });
+
             let documentId = await getUserDocumentId(authSession);
-            assert.equal(documentId, username + "_facebookToken");
+            assert.equal(documentId, userName + "_facebookToken");
         });
     });
 });

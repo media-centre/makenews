@@ -6,6 +6,7 @@ import CouchClient from "../../src/CouchClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
 import Route from "../routes/helpers/Route";
+import { userDetails } from "./../Factory";
 
 export const RSS_TYPE = "rss";
 export const FACEBOOK_PAGE = "fb_page";
@@ -49,7 +50,7 @@ export default class FetchFeedsFromAllSources extends Route {
 
 
     async _getUrlDocuments() {
-        let couchClient = await CouchClient.createInstance(this.accesstoken);
+        let couchClient = CouchClient.instance(this.accesstoken);
         let selector = {
             "selector": {
                 "docType": {
@@ -102,31 +103,23 @@ export default class FetchFeedsFromAllSources extends Route {
     }
 
     async _getFacebookAccessToken() {
-        try{
-            let couchClient = await CouchClient.createInstance(this.accesstoken);
-            let userName = await couchClient.getUserName();
-            const adminDetails = ApplicationConfig.instance().adminDetails();
-            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-            let selector = {
-                "selector": {
-                    "_id": {
-                        "$eq": userName + "_facebookToken"
-                    }
+        let { userName } = userDetails.getUser(this.accesstoken);
+        const adminDetails = ApplicationConfig.instance().adminDetails();
+        let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+        let selector = {
+            "selector": {
+                "_id": {
+                    "$eq": userName + "_facebookToken"
                 }
-            };
-            let response = await dbInstance.findDocuments(selector);
-            let ZeroIndex = 0;
-            return response.docs[ZeroIndex].access_token;
-
-        } catch(error) {
-            throw error;
-        }
-
-
+            }
+        };
+        let response = await dbInstance.findDocuments(selector);
+        const [tokenDoc] = response.docs;
+        return tokenDoc.access_token;
     }
 
     async saveFeedDocumentsToDb(feeds) {
-        let couchClient = await CouchClient.createInstance(this.accesstoken);
+        let couchClient = CouchClient.instance(this.accesstoken);
         let feedObject = { "docs": feeds };
         return await couchClient.saveBulkDocuments(feedObject);
     }

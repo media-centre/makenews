@@ -6,7 +6,7 @@ export default class FeedsRequestHandler {
     }
 
     async fetchFeeds(authSession, offset, sourceType) {
-        let couchClient = await CouchClient.createInstance(authSession);
+        let couchClient = CouchClient.instance(authSession);
         let selector = {
             "selector": {
                 "docType": {

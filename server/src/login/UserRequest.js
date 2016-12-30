@@ -47,19 +47,6 @@ export default class UserRequest {
 
     }
 
-    getUserName(token) {
-        return new Promise((resolve, reject) => {
-            CouchSession.authenticate(token)
-            .then((userName) => {
-                UserRequest.logger().info("UserRequest:getUserName userName = %s", userName);
-                resolve(userName);
-            }).catch(error => { //eslint-disable-line
-                UserRequest.logger().error("UserRequest:getUserName fatal error %s", error);
-                reject("can not get the user name");
-            });
-        });
-    }
-
     extractToken(authSessionCookie) {
         return authSessionCookie.split("=")[1].split(";")[0];       // eslint-disable-line no-magic-numbers
     }

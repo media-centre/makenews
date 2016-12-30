@@ -1,7 +1,7 @@
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
-import CouchClient from "../CouchClient";
 import Logger from "../logging/Logger";
+import { userDetails } from "../Factory";
 
 export default class FacebookTokenDocument {
 
@@ -34,7 +34,6 @@ export async function getAdminDBInstance() {
 }
 
 export async function getUserDocumentId(authSession) {
-    let couchClient = await CouchClient.createInstance(authSession);
-    let userName = await couchClient.getUserName();
+    let { userName } = userDetails.getUser(authSession);
     return userName + "_facebookToken";
 }

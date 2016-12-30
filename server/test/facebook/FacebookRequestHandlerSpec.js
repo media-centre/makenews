@@ -7,6 +7,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
+import { userDetails } from "../../src/Factory";
 import { assert, expect } from "chai";
 import sinon from "sinon";
 
@@ -24,7 +25,7 @@ describe("FacebookRequestHandler", () => {
         FacebookRequestHandler.logger.restore();
     });
 
-    describe("constructor", () => {
+    describe("CouchClient", () => {
         it("should throw error if the access token is empty", () => {
             let facebookRequestHandlerFunc = () => {
                 return new FacebookRequestHandler(null);
@@ -179,14 +180,11 @@ describe("FacebookRequestHandler", () => {
 
         it("should create document for long lived token if there is no document", async() => {
             const expiresIn = 12345, expiredAfter = 12468486;
-            let userName = "user-name";
             const tokenResponse = { "expires_in": expiresIn };
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
-            let couchClient = new CouchClient();
             let adminDbClient = new AdminDbClient();
             sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
-            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
-            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(userName));
+            sandbox.mock(userDetails).expects("getUser").returns({ "userName": "userName" });
             sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.reject("error occured while getting the document"));
             sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
             try {
@@ -199,7 +197,6 @@ describe("FacebookRequestHandler", () => {
 
         it("should update document for long lived token if document is there", async() => {
             const expiresIn = 12345;
-            let userName = "user-name";
             let document = {
                 "access_token": "accessToken",
                 "token_type": "tokenType",
@@ -217,8 +214,7 @@ describe("FacebookRequestHandler", () => {
             let couchClient = new CouchClient();
             let adminDbClient = new AdminDbClient();
             sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
-            sandbox.mock(CouchClient).expects("createInstance").returns(Promise.resolve(couchClient));
-            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(userName));
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
             sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.resolve(document));
             sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
             try {
@@ -295,11 +291,10 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("Add Configured Sources", () => {
-        let sandbox = null, dbName = null, facebookRequestHandler = null, couchClient = null;
+        let sandbox = null, facebookRequestHandler = null, couchClient = null;
         let documents = null, sources = null, currentTime = 123456, sourceType = "fb_page";
         beforeEach("Add Configured Sources", () => {
             sandbox = sinon.sandbox.create();
-            dbName = "db_name";
             sources = [{
                 "name": "Source Name",
                 "url": "http://source.url"
@@ -312,8 +307,9 @@ describe("FacebookRequestHandler", () => {
             }];
 
             facebookRequestHandler = new FacebookRequestHandler("somethings");
-            couchClient = new CouchClient(dbName, accessToken);
-            sandbox.mock(CouchClient).expects("createInstance").returns(couchClient);
+            sandbox.stub(userDetails, "getUser").withArgs(accessToken).returns({ "dbName": "dbName" });
+            couchClient = new CouchClient(accessToken);
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
             sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
         });
 
@@ -342,14 +338,12 @@ describe("FacebookRequestHandler", () => {
 
         it("should add the source to configured list", (done) => {
             let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
-            let userNameMock = sandbox.mock(couchClient).expects("getUserName").returns("dummy");
             let success = { "ok": true };
             bulkDocksMock.returns(success);
 
             facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).then(data => {
                 try {
                     bulkDocksMock.verify();
-                    userNameMock.verify();
                     expect(data).to.deep.equal(success);
                     done();
                 } catch (err) {
@@ -477,8 +471,8 @@ describe("FacebookRequestHandler", () => {
         afterEach("saveToken", () => {
             sandbox.restore();
         });
-        it("should throw an error if saveDocument is not successfull", async () => {
-            sandbox.mock(couchClient).expects("saveDocument").returns(Promise.reject("Unexpected Repsonse from db"));
+        it("should throw an error if saveDocument is not successful", async () => {
+            sandbox.mock(couchClient).expects("saveDocument").returns(Promise.reject("Unexpected Response from db"));
             try {
                 await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             } catch(error) {
@@ -486,7 +480,7 @@ describe("FacebookRequestHandler", () => {
             }
         });
 
-        it("should return expired_after when saveDocument is successfull", async () => {
+        it("should return expired_after when saveDocument is successful", async () => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.resolve("successfully saved"));
             let response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             assert.equal(tokenDocument.expired_after, response);

@@ -8,6 +8,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 export default class ChangePasswordRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
+        /*TODO: read this from user Map*/ //eslint-disable-line
         this.userName = this.request.body.userName;
         this.currentPassword = this.request.body.currentPassword;
         this.newPassword = this.request.body.newPassword;

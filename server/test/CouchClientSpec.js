@@ -8,7 +8,6 @@ import sinon from "sinon";
 
 import { assert } from "chai";
 import nock from "nock";
-import CryptUtil from "../src/util/CryptUtil";
 
 describe("CouchClient", () => {
     let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
@@ -64,7 +63,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.findDocuments(body).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -95,7 +94,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.createIndex(indexDoc).then((actualResponse) => {
                 assert.deepEqual(actualResponse, response);
                 nodeErrorHandlerMock.verify();
@@ -127,7 +126,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -153,7 +152,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj, headers).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -183,7 +182,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
@@ -206,7 +205,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("unexpected response from the db", error);
                 nodeErrorHandlerMock.verify();
@@ -230,7 +229,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("conflict", error.status);
                 nodeErrorHandlerMock.verify();
@@ -259,7 +258,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
@@ -286,7 +285,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId, headers).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
@@ -310,7 +309,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).catch((error) => {
                 assert.strictEqual(error, "unexpected response from the db");
                 nodeErrorHandlerMock.verify();
@@ -334,7 +333,7 @@ describe("CouchClient", () => {
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let couchClientInstance = new CouchClient(dbName, accessToken);
+            let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).catch((error) => {
                 assert.deepEqual(error, new Error("error message"));
                 nodeErrorHandlerMock.verify();
@@ -358,45 +357,5 @@ describe("CouchClient", () => {
         });
     });
 
-    describe("getUserDbName", () => {
-        it("should fetch the dbname", async () => {
-            nock("http://localhost:5984")
-                .get("/_session")
-                .reply(HttpResponseHandler.codes.OK, { "userCtx": { "name": "userName" } });
-
-            let cryptUtilMock = sinon.mock(CryptUtil).expects("dbNameHash").withArgs("userName");
-            cryptUtilMock.returns("dbName");
-            let couchClientMock = new CouchClient("dbName", "accessToken");
-            try {
-                let dbNameResponse = await couchClientMock.getUserDbName();
-                assert.equal(dbNameResponse, "dbName");
-            }catch(error) {
-                assert.fail(error);
-            }finally {
-                CryptUtil.dbNameHash.restore();
-            }
-
-        });
-    });
-
-    describe("createInstance", () => {
-        it("should create an instance with the new dbname", async () => {
-            nock("http://localhost:5984")
-                .get("/_session")
-                .reply(HttpResponseHandler.codes.OK, { "userCtx": { "name": "userName" } });
-            let cryptUtilMock = sinon.mock(CryptUtil).expects("dbNameHash").withArgs("userName");
-            cryptUtilMock.returns("dbName");
-            try {
-                let instance = await CouchClient.createInstance("access_token");
-                assert.equal(CouchClient.getDbInstance("access_token"), instance);
-            }catch(error) {
-                assert.fail(error);
-            }finally {
-                CryptUtil.dbNameHash.restore();
-            }
-
-        });
-
-    });
 });
 

@@ -16,7 +16,7 @@ export default class FetchFeedsIndex {
                 },
                 "name": "pubDate"
             };
-            return await CouchClient.instance(this.dbName, this.accessToken).createIndex(nameIdIndex);
+            return await CouchClient.instance(this.accessToken, this.dbName).createIndex(nameIdIndex);
         } catch (error) {
             Migration.logger(this.dbName).error("FetchFeedsIndex::up - error %j", error);
             throw error;

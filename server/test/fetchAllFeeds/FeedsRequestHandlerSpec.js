@@ -42,7 +42,7 @@ describe("FeedsRequestHandler", () => {
                 "skip": 0,
                 "sort": [{ "pubDate": "desc" }]
             };
-            couchClientInstanceMock = new CouchClient(dbName, authSession);
+            couchClientInstanceMock = new CouchClient(authSession, dbName);
             sandbox = sinon.sandbox.create();
         });
 
@@ -51,7 +51,7 @@ describe("FeedsRequestHandler", () => {
         });
 
         it("should throw an unexpected response from db", async () => {
-            sandbox.mock(CouchClient).expects("createInstance")
+            sandbox.mock(CouchClient).expects("instance")
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(body).returns(Promise.reject("unexpected response from db"));
@@ -59,7 +59,7 @@ describe("FeedsRequestHandler", () => {
         });
 
         it("should fetch feeds from the db", async () => {
-            sandbox.mock(CouchClient).expects("createInstance")
+            sandbox.mock(CouchClient).expects("instance")
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(body).returns(Promise.resolve(feed));

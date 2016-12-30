@@ -7,7 +7,7 @@ let dbInstanceMap = new Map();
 export default class AdminDbClient extends CouchClient {
 
     constructor(userName, token) {
-        super(userName, token);
+        super(token, userName);
     }
 
     static logger() {

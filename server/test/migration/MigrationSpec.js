@@ -187,7 +187,7 @@ describe("Migration", () => {
         it("should migrate all dbs", (done) => {
             let couchSessionLoginMock = sinon.mock(CouchSession).expects("login");
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.resolve(accessCookieHeader));
-            let couchClient = new CouchClient(dbName, accessToken);
+            let couchClient = new CouchClient(accessToken, dbName);
             sinon.stub(CouchClient, "instance").returns(couchClient);
             let couchClientGetAllDbs = sinon.mock(CouchClient).expects("getAllDbs");
             couchClientGetAllDbs.returns(Promise.resolve(["test1"]));

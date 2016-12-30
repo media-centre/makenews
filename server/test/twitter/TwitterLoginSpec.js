@@ -46,16 +46,19 @@ describe("TwitterLogin", () => {
     });
 
     describe("accessTokenFromTwitter", () => {
+
+        let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
+        let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
+
         it("should get the access_token from twitter and update twitterDoc for user", (done) => {
             let oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
-            let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
-            let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
+
             oauthMock.returns(
                 {
                     "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => { callback(null, oauthToken, oauthTokenSecret); },
                     "getOAuthAccessToken": (authToken, oauthTokenSecret, oauthVerifier, callback) => { callback(null, oauthAccessToken, oauthAccessTokenSecret, []); }
                 });
-            let couchClient = new CouchClient();
+            let couchClient = new CouchClient("access_token");
             let getDocStub = sinon.stub(couchClient, "getDocument");
             getDocStub.withArgs(twitterDocId).returns(Promise.resolve({
                 "oauthAccessToken": "oldAccessToken",
@@ -80,8 +83,7 @@ describe("TwitterLogin", () => {
 
         it("should get the access_token from twitter and create twitterDoc for user", (done) => {
             let oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
-            let oauthToken = "token", oauthTokenSecret = "secret", serverCallbackUrl = "serverUrl", clientCallbackUrl = "clientUrl";
-            let oauthVerifier = "oauth_verifier", oauthAccessToken = "oauthAccessToken", oauthAccessTokenSecret = "oauthAccessTokenSecret", twitterDocId = "userName_twitterToken";
+
             oauthMock.returns(
                 {
                     "getOAuthRequestToken": ({ "oauth_callback": serverCallbackUrl }, callback) => { callback(null, oauthToken, oauthTokenSecret); },

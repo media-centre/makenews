@@ -3,12 +3,20 @@
 
 import LogoutRoute from "../../../src/routes/helpers/LogoutRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import { userDetails } from "../../../src/Factory";
 import { expect } from "chai";
+import sinon from "sinon";
 
 describe("LogoutRoute", () => {
+    let sandbox = sinon.sandbox.create();
+    afterEach("LogoutRoute", () => {
+        sandbox.restore();
+    });
+
     describe("handle", () => {
         it("should return response with empty AuthSession cookie", () => {
             const cookie = "AuthSession=;Version=1; Path=/; HttpOnly";
+            let userDetailsMock = sandbox.mock(userDetails).expects("removeUser");
             let response = {
                 "status": (data) => {
                     expect(HttpResponseHandler.codes.OK).to.equal(data);
@@ -21,10 +29,12 @@ describe("LogoutRoute", () => {
                 },
                 "json": (data) => {
                     expect(data).to.deep.equal({ "message": "logout successful" });
+                    userDetailsMock.verify();
                 }
             };
-            let request = {};
+            let request = { "cookies": { "AuthSession": "token1" } };
             let next = {};
+            userDetailsMock.withArgs("token1");
             new LogoutRoute(request, response, next).handle();
         });
     });

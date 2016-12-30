@@ -36,7 +36,7 @@ describe("AdminDbClient", () => {
             sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));
 
             AdminDbClient.instance("adminUser", "adminPwd", "adminDb").then((response) => {
-                assert.deepEqual(response, new CouchClient("adminDb", "Token1-2"));
+                assert.deepEqual(response, new CouchClient("Token1-2", "adminDb"));
                 done();
             });
         });
@@ -46,7 +46,7 @@ describe("AdminDbClient", () => {
             sandbox.stub(CouchSession, "login").returns(Promise.resolve("AuthSession=Token1-2; Version=1; Path=/; HttpOnly"));
 
             AdminDbClient.instance("adminUser", "adminPwd", "adminDb").then((response) => {
-                assert.deepEqual(response, new CouchClient("adminDb", "Token1-2"));
+                assert.deepEqual(response, new CouchClient("Token1-2", "adminDb"));
                 done();
             });
         });
