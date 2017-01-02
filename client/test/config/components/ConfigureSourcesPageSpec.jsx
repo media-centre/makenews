@@ -19,7 +19,7 @@ describe("ConfigureSourcesPage", () => {
             renderer = TestUtils.createRenderer();
             /* we have to render it twice inorder to trigger componentwillreviceprops because of shallow rendering*/ // eslint-disable-line
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}} keyword = { keyword }/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}} keyword = {keyword}/>
             );
         });
 

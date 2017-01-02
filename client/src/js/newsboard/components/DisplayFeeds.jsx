@@ -14,21 +14,22 @@ export class DisplayFeeds extends Component {
 
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
-        ReactDOM.findDOMNode(this).addEventListener("scroll", this.getFeedsCallBack.bind(this));
+        this.dom = ReactDOM.findDOMNode(this);
+        this.dom.addEventListener("scroll", this.getFeedsCallBack.bind(this));
         this.getMoreFeeds(this.props.sourceType);
     }
 
     componentWillReceiveProps(nextProps) {
         if(this.props.sourceType !== nextProps.sourceType) {
             this.hasMoreFeeds = true;
+            this.setState({ "activeIndex": 0, "lastIndex": 0 });
             this.getMoreFeeds(nextProps.sourceType);
-            let data = DisplayFeedActions.clearFeeds();
-            this.props.dispatch(data);
+            this.props.dispatch(DisplayFeedActions.clearFeeds());
         }
     }
 
     componentWillUnmount() {
-        ReactDOM.findDOMNode(this).removeEventListener("scroll", this.getFeedsCallBack);
+        this.dom.removeEventListener("scroll", this.getFeedsCallBack);
     }
 
     getFeedsCallBack() {
@@ -36,7 +37,7 @@ export class DisplayFeeds extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
+                if (this.dom.scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }, scrollTimeInterval);
@@ -46,7 +47,7 @@ export class DisplayFeeds extends Component {
     getMoreFeeds(sourceType) {
         if (this.hasMoreFeeds) {
             this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, sourceType, (result) => {
-                let skip = result.docsLength ? this.state.lastIndex : (this.state.lastIndex + result.docsLength);
+                let skip = result.docsLength ? (this.state.lastIndex + result.docsLength) : this.state.lastIndex;
                 this.hasMoreFeeds = result.hasMoreFeeds;
                 this.setState({ "lastIndex": skip });
             }));
@@ -57,14 +58,10 @@ export class DisplayFeeds extends Component {
         this.setState({ "activeIndex": index });
     }
 
-    refreshFeeds() {
-        DisplayFeedActions.fetchFeedsFromSources();
-    }
-
     render() {
         return (
             <div className="configured-feeds-container">
-                <button onClick={this.refreshFeeds()} className="refresh-button">{"Refresh"}</button>
+                <button onClick={DisplayFeedActions.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 {this.props.feeds.map((feed, index) =>
                     <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
             </div>

@@ -35,7 +35,7 @@ export default class RssParser {
                         "pubDate": feed.pubDate,
                         "enclosures": feed.enclosures,
                         "docType": "feed",
-                        "sourceType": "rss",
+                        "sourceType": "web",
                         "sourceUrl": url,
                         "tags": [meta.title],
                         "images": []

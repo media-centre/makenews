@@ -10,7 +10,7 @@ import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/Face
 export class ConfigureSourcesPage extends Component {
 
     componentDidMount() {
-        this.sourceTab(this.props.params, this.props.dispatch);
+        this.sourceTab(this.props.params, this.props.keyword, this.props.dispatch);
         this.props.dispatch(getTokenExpireTime());
         
         /* TODO: Move FacebookLogin Instance to Facebook Related Conditions*/ //eslint-disable-line no-warning-comments,no-inline-comments
@@ -18,7 +18,7 @@ export class ConfigureSourcesPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.sourceTab(nextProps.params, nextProps.dispatch);
+        this.sourceTab(nextProps.params, nextProps.keyword, nextProps.dispatch);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -35,7 +35,7 @@ export class ConfigureSourcesPage extends Component {
 
     }
 
-    sourceTab(params, dispatch) {
+    sourceTab(params, keyword, dispatch) {
         dispatch(SourceConfigActions.clearSources());
         switch (params.sourceType) {
         case "twitter": {
@@ -46,13 +46,13 @@ export class ConfigureSourcesPage extends Component {
             this._showFBLogin();
             if(params.sourceSubType === "groups") {
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
-                dispatch(SourceConfigActions.getSources(GROUPS, this.props.keyword));
+                dispatch(SourceConfigActions.getSources(GROUPS, keyword));
             } else if(params.sourceSubType === "pages") {
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
-                dispatch(SourceConfigActions.getSources(PAGES, this.props.keyword));
+                dispatch(SourceConfigActions.getSources(PAGES, keyword));
             } else {
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
-                dispatch(SourceConfigActions.getSources(PROFILES, this.props.keyword));
+                dispatch(SourceConfigActions.getSources(PROFILES, keyword));
             }
             break;
         }

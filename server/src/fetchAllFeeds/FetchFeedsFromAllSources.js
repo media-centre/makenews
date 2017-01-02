@@ -8,7 +8,7 @@ import AdminDbClient from "../db/AdminDbClient";
 import Route from "../routes/helpers/Route";
 import { userDetails } from "./../Factory";
 
-export const RSS_TYPE = "rss";
+export const WEB = "web";
 export const FACEBOOK_PAGE = "fb_page";
 export const FACEBOOK_GROUP = "fb_group";
 export const TWITTER_TYPE = "twitter";
@@ -44,7 +44,7 @@ export default class FetchFeedsFromAllSources extends Route {
         let urlDocuments = await this._getUrlDocuments();
         let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchFeedsFromSource(url));
         let feedArrays = await Promise.all(mapUrlDocs);
-        let feeds = feedArrays.reduce((acc, feedsArray) => acc.concat(feedsArray), []);
+        let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
         return await this.saveFeedDocumentsToDb(feeds);
     }
 
@@ -64,16 +64,16 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeedsFromSource(item) {
         let feeds = null; let type = "posts";
-        let emptyObject = [];
+        let emptyArray = [];
         switch (item.sourceType) {
-        case RSS_TYPE:
+        case WEB:
             try {
-                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
-                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
+                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item.url);
+                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item.url}`);
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
-                throw(err);
+                return emptyArray;
             }
         case FACEBOOK_GROUP: type = "feed";
         case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
@@ -86,7 +86,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
-                throw(err);
+                return emptyArray;
             }
         case TWITTER_TYPE:
             try {
@@ -95,10 +95,10 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
-                throw(err);
+                return emptyArray;
             }
         default:
-            throw(emptyObject);
+            return emptyArray;
         }
     }
 

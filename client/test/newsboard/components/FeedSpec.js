@@ -8,8 +8,8 @@ describe("Feed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
     beforeEach("Feed", () => {
         feed = {
-            "images": [false],
-            "videos": [false],
+            "images": ["image url"],
+            "videos": ["image url"],
             "title": "Some Title",
             "description": "Some Description",
             "sourceType": "rss",
@@ -30,11 +30,11 @@ describe("Feed", () => {
 
     it("should have image ", () => {
         let img = feedDom.props.children[0].props;
-
+        feed.videos = [];
         feed.images[0] = false;
         feedDom = renderer.render(<Feed active={active} feed={feed} onToggle={onToggle}/>);
         img = feedDom.props.children[0].props;
-        expect(img.className).to.equals("feed-content-withOutEnclosure");
+        expect(img.className).to.equals("feed-content-withEnclosure");
     });
 
     it("should have title ", () => {

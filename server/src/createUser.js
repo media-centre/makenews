@@ -12,7 +12,7 @@ let migrateDb = (dbName, token) => {
     migrationInstance.start().then(() => {
         console.log("migration complete.");
     }).catch(error => {
-        console.log("error while migrating db.", error);
+        console.log("error while migrating db.", JSON.stringify(error));
     });
 };
 
@@ -22,7 +22,7 @@ let setPermissions = (dbInstance, userName, dbName) => {
         console.log("user permissions are set to database");
         migrateDb(dbName, dbInstance.accessToken);
     }).catch(error => {
-        console.log(`set permissions failed with error ${error}`);
+        console.log(`set permissions failed with error ${JSON.stringify(error)}`);
     });
 };
 
@@ -32,7 +32,7 @@ let createDb = (dbInstance, userName, dbName) => {
         console.log("created user db.");
         setPermissions(dbInstance, userName, dbName);
     }).catch(error => {
-        console.log(`database creation failed with error ${error}`);
+        console.log(`database creation failed with error ${JSON.stringify(error)}`);
     });
 };
 
@@ -54,7 +54,7 @@ AdminDbClient.instance(adminUserName, adminPassword, argv.user_name).then(dbInst
         console.log(`created user: ${userName} with password: ${password}`);
         createDb(dbInstance, userName, dbName);
     }).catch(error => {
-        console.log(`user creation failed with error ${error}`);
+        console.log(`user creation failed with error ${JSON.stringify(error)}`);
     });
 
 });

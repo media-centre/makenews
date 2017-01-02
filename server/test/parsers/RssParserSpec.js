@@ -87,7 +87,7 @@ describe("RssParser", () => {
                 "pubDate": null,
                 "enclosures": [],
                 "docType": "feed",
-                "sourceType": "rss",
+                "sourceType": "web",
                 "sourceUrl": url,
                 "tags": [null],
                 "images": []
@@ -100,7 +100,7 @@ describe("RssParser", () => {
                     "pubDate": null,
                     "enclosures": [],
                     "docType": "feed",
-                    "sourceType": "rss",
+                    "sourceType": "web",
                     "sourceUrl": url,
                     "tags": [null],
                     "images": []

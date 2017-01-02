@@ -73,7 +73,7 @@ describe("FetchFeedsFromAllSources", () => {
 
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, response);
             fetchFeedsRequest.fetchFeeds().catch((errorResponse)=> {
-                assert.deepEqual({ "error": "Invalid url data" }, errorResponse);
+                assert.deepEqual({ "error": "bad request" }, errorResponse);
                 done();
             });
 
@@ -86,7 +86,7 @@ describe("FetchFeedsFromAllSources", () => {
                     "data": [
                         {
                             "sourceType": "rss",
-                            "_id": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
+                            "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"
                         }
                     ],
                     "facebookAccessToken": "test_token"
@@ -106,8 +106,8 @@ describe("FetchFeedsFromAllSources", () => {
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
             fetchFeedsRequest.fetchFeedsFromSource({
-                "_id": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                "sourceType": "rss"
+                "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
+                "sourceType": "web"
             }).then((feeds)=> {
                 assert.deepEqual(response, feeds);
                 fetchRssFeedRequestMock.verify();

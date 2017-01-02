@@ -4,12 +4,10 @@ import getHtmlContent from "../../utils/HtmContent";
 
 export default class Feed extends Component {
     getMedia() {
-        let [video] = this.props.feed.videos;
-        let [image] = this.props.feed.images;
-        if(video) {
+        if(this.props.feed.videos && this.props.feed.videos.length) {
             return <i className="fa fa-youtube-play" />;
-        } else if (image) {
-            return <img src={image.url}/>;
+        } else if (this.props.feed.images && this.props.feed.images.length) {
+            return <img src={this.props.feed.images[0].url}/>; //eslint-disable-line no-magic-numbers
         }
         return null;
     }
@@ -17,7 +15,7 @@ export default class Feed extends Component {
         let feed = this.props.feed;
         return (
             <div className={this.props.active ? "feed-highlight" : "feed"} onClick={this.props.selectFeedHandler}>
-                <div className={this.getMedia() ? "feed-content-withEnclosure " : "feed-content-withOutEnclosure"}>
+                <div className={this.getMedia() ? "feed-content-withEnclosure" : "feed-content-withOutEnclosure"}>
                     <div className="feed-title">{feed.title}</div>
                     <div className="feed-description">{getHtmlContent(feed.description)}</div>
                 </div>
