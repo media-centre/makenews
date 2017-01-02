@@ -73,6 +73,10 @@ export function addSourceToConfigureList(sourceType, ...sources) {
         let configuredSources = Object.assign([], sources);
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "web", WebConfigActions.WEB_ADD_SOURCE);
     }
+    case TWITTER: {
+        let configuredSources = Object.assign([], sources);
+        return dispatch => addToConfiguredSources(dispatch, configuredSources, "twitter", TwitterConfigureActions.TWITTER_ADD_SOURCE);
+    }
     default: {
         return {
             "type": FbActions.FACEBOOK_ADD_PROFILE,
@@ -135,7 +139,7 @@ export function getSources(sourceType, keyword, params) {
         return WebConfigActions.fetchWebSources(keyword, params);
     }
     case TWITTER: {
-        return TwitterConfigureActions.fetchTwitterSources(keyword);
+        return TwitterConfigureActions.fetchTwitterSources(keyword, params);
     }
     default: {
         return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);
