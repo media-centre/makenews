@@ -1,4 +1,5 @@
 import TwitterClient from "./TwitterClient";
+import CouchClient from "../CouchClient";
 import Logger from "../logging/Logger";
 
 export default class TwitterRequestHandler {
@@ -22,9 +23,9 @@ export default class TwitterRequestHandler {
         });
     }
 
-    async fetchFollowersRequest(userName) {
-
+    async fetchFollowersRequest(authSession) {
         try {
+            let userName = await this.getUserName(authSession);
             let followers = await this.twitterClient().fetchFollowers(userName);
             TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched followers for user");
             return followers;
@@ -32,6 +33,12 @@ export default class TwitterRequestHandler {
             TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching followers list of the twitter user");
             throw(error);
         }
+    }
+
+    async getUserName(authSession) {
+        let couchClient = await CouchClient.createInstance(authSession);
+        let userName = await couchClient.getUserName();
+        return userName;
     }
 
     twitterClient() {
