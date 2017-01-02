@@ -68,8 +68,6 @@ export class ConfigureSourcesPage extends Component {
             } else if(params.sourceSubType === "pages") {
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
                 dispatch(SourceConfigActions.getSources(PAGES, keyword));
-            } else if(params.sourceSubType === "profiles") {
-                dispatch(SourceConfigActions.switchSourceTab(PROFILES));
             } else {
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
                 dispatch(SourceConfigActions.getSources(PROFILES, keyword));
