@@ -5,6 +5,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import LogTestHelper from "../helpers/LogTestHelper";
+import { userDetails } from "./../../src/Factory";
 import { assert } from "chai";
 import sinon from "sinon";
 
@@ -60,8 +61,9 @@ describe("TwitterLogin", () => {
                 "oauthAccessToken": "oldAccessToken",
                 "oauthAccessTokenSecret": "oldSecret"
             }));
-            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
-            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve("userName"));
+            let userName = "userName";
+            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs(authSession).returns({ userName });
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
             saveDocStub.withArgs(twitterDocId, { "oauthAccessToken": oauthAccessToken, "oauthAccessTokenSecret": oauthAccessTokenSecret }).returns(Promise.resolve());
             let adminDbMock = sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(couchClient));
@@ -93,8 +95,9 @@ describe("TwitterLogin", () => {
             let getDocStub = sinon.stub(couchClient, "getDocument");
             getDocStub.withArgs(twitterDocId).returns(Promise.reject());
             let saveDocStub = sinon.mock(couchClient).expects("saveDocument");
-            sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
-            sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve("userName"));
+            let userName = "userName";
+            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs(authSession).returns({ userName });
             saveDocStub.withArgs(twitterDocId, {
                 "oauthAccessToken": oauthAccessToken,
                 "oauthAccessTokenSecret": oauthAccessTokenSecret
