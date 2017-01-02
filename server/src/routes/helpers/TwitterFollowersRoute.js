@@ -1,5 +1,4 @@
 /* eslint consistent-this:0*/
-import StringUtil from "../../../../common/src/util/StringUtil";
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";

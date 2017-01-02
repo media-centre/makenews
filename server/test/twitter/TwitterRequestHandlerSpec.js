@@ -13,7 +13,7 @@ describe("TwitterRequestHandler", () => {
         sandbox.restore();
     });
 
-    it("should fetch followers list from the twitter", async() => {
+    xit("should fetch followers list from the twitter", async() => {
         let followers = {
             "users": [{
                 "id": "test",
@@ -32,7 +32,7 @@ describe("TwitterRequestHandler", () => {
 
     });
 
-    it("should reject with an error if fetchinf followers from twitter throws an error", async() => {
+    xit("should reject with an error if fetchinf followers from twitter throws an error", async() => {
         let userName = "testUser";
         let twitterRequestHandler = new TwitterRequestHandler();
         let twitterClientInstance = new TwitterClient();
