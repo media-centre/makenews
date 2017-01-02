@@ -25,6 +25,9 @@ describe("TwitterFollowersRoute", () => {
         let request = {
             "cookies": {
                 "AuthSession": "Authsession"
+            },
+            "query": {
+                "keyword":"test"
             }
         };
         let data = {
@@ -48,7 +51,10 @@ describe("TwitterFollowersRoute", () => {
 
         let request = {
             "cookies": {
-                "AuthSession": ""
+                "AuthSession": "Authsession"
+            },
+            "query": {
+                "keyword":"test"
             }
         };
         let twitterRequestHandlerInstance = new TwitterRequestHandler();

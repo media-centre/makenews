@@ -189,6 +189,23 @@ describe("SourceConfigurationActions", () => {
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.WEB, ...sources));
         });
 
+        it(`should dispatch ${TwitterConfigureActions.TWITTER_ADD_SOURCE} when requested for adding group`, (done) => {
+            let appWindow = new AppWindow();
+            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
+            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
+
+            sandbox.mock(UserSession).expects("instance").returns({
+                "continueSessionIfActive": () => {}
+            });
+
+            nock("http://localhost")
+                .put("/configure-sources")
+                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+
+            let store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": sources }], done);
+            store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.TWITTER, ...sources));
+        });
+
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} by default`, () => {
             let event = sourceConfigActions.addSourceToConfigureList("", { "name": "something" });
             expect(event.type).to.equal(FbActions.FACEBOOK_ADD_PROFILE);
