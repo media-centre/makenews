@@ -1,4 +1,4 @@
-export default function mockResponse() {
+export function mockResponse() {
     let responseStatus = null, responseJson = null;
     return {
         "status": (status) => {

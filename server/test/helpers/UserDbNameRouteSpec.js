@@ -1,30 +1,14 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
-import Logger from "../../src/logging/Logger";
-import LogTestHelper from "./LogTestHelper";
 import UserDbNameRoute from "../../src/routes/helpers/UserDbNameRoute";
-import sinon from "sinon";
 import { assert } from "chai";
 
 
 describe("UserDbNameRoute", () => {
-    let sandbox = null, request = null, username = null;
-    beforeEach("UserDbNameRoute", () => {
-        sandbox = sinon.sandbox.create();
-        sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
-    });
-
-    afterEach("UserDbNameRoute", () => {
-        sandbox.restore();
-    });
+    let request = null, username = null;
 
     describe("handle", () => {
-        beforeEach("handle", () => {
-        });
-
-        afterEach("handle", () => {
-        });
 
         describe("invalid", () => {
             it("should respond with bad request for empty user name", (done) =>{

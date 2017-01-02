@@ -1,11 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0*/
 import RssFeedsRoute from "../../../src/routes/helpers/RssFeedsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import LogTestHelper from "../../helpers/LogTestHelper";
-import Logger from "../../../src/logging/Logger";
 import { expect } from "chai";
 import nock from "nock";
-import sinon from "sinon";
 import ramda from "ramda";
 
 describe("RssFeedsRoute", () => {
@@ -44,13 +41,6 @@ describe("RssFeedsRoute", () => {
     }
 
     let next = {};
-    before("RssFeedsRoute", () => {
-        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
-    });
-
-    after("RssFeedsRoute", () => {
-        Logger.instance.restore();
-    });
 
     it("should return invalid if the url doesn't return feeds", (done) => {
         let data = `<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">

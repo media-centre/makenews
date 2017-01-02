@@ -1,5 +1,6 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import StringUtil from "../../../../common/src/util/StringUtil";
+import RouteLogger from "../RouteLogger";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class Route {
@@ -13,7 +14,27 @@ export default class Route {
         this.next = next;
     }
 
-    handle() {
+    async process() {
+        let routeClass = this.constructor.name;
+        let routeParams = this.request.query || this.request.body || "";
+        let message = this.validate();
+        if(message) {
+            RouteLogger.instance().warn(`${routeClass}:: validation failed for parameters: [${routeParams}] with message: [${message}]`);
+            this._handleInvalidRequest({ message });
+        } else {
+            try {
+                let response = await this.handle();
+                this._handleSuccess(response);
+                RouteLogger.instance().debug(`${routeClass}:: request processing completed successfully`);
+            } catch (err) {
+                this._handleError(err);
+                RouteLogger.instance().warn(`${routeClass}:: request with parameters: [${routeParams}]  failed with error: [${err}]`);
+            }
+        }
+    }
+
+    validate(...params) {
+        return R.any(StringUtil.isEmptyString)(params) ? "missing parameters" : "";
     }
 
     checkInvalidParameters(...params) {
@@ -65,5 +86,10 @@ export default class Route {
     _handleSuccess(json) {
         this.response.status(HttpResponseHandler.codes.OK);
         this.response.json(json);
+    }
+
+    _handleError(message) {
+        this.response.status(HttpResponseHandler.codes.BAD_REQUEST);
+        this.response.json({ message });
     }
 }

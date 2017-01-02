@@ -2,16 +2,14 @@
 import FetchAllConfiguredFeedsRoute from "../../../src/routes/helpers/FetchAllConfiguredFeedsRoute";
 import FetchRequestHandler from "../../../src/fetchAllFeeds/FeedsRequestHandler";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 import { assert } from "chai";
 import sinon from "sinon";
-import Logger from "../../../src/logging/Logger";
-import LogTestHelper from "../../helpers/LogTestHelper";
 
 describe("FetchAllConfiguredFeedsRoute", () => {
     describe("fetchFeeds", () => {
         let authSession = null, fetchRequestHandlerInstance = null, feeds = null, request = null, response = null;
-        let offset = 0, sandbox = null, sourceType = null;
+        let offset = 0, sourceType = null;
 
         beforeEach("fetch feeds", () => {
             sourceType = "web";
@@ -46,12 +44,6 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                     "sourceType": sourceType
                 }
             };
-            sandbox = sinon.sandbox.create();
-            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
-        });
-
-        afterEach("fetch feeds", () => {
-            sandbox.restore();
         });
 
         it("should return feeds for correct response", async () => {

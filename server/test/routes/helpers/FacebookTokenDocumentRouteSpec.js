@@ -1,8 +1,6 @@
 import FacebookTokenDocumentRoute from "../../../src/routes/helpers/FacebookTokenDocumentRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import FacebookTokenDocument from "../../../src/facebook/FacebookTokenDocument";
-import Logger from "../../../src/logging/Logger";
-import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -12,7 +10,6 @@ describe("FacebookTokenDocumentRoute", () => {
         let authSession = "authSession";
         beforeEach("getTokenExpireTime", () => {
             sandbox = sinon.sandbox.create();
-            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
             facebookTokenDocument = new FacebookTokenDocument();
             facebookTokenDocumentInstanceMock = sandbox.mock(FacebookTokenDocument).expects("instance");
             request1 = {
