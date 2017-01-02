@@ -12,15 +12,18 @@ import {
     NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
+    TWITTER,
     CLEAR_SOURCES,
     SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
+import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 
 export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES:
+    case TWITTER_GOT_SOURCE_RESULTS:
     case WEB_GOT_SOURCE_RESULTS: {
         return Object.assign({}, state, { "data": List(state.data).concat(action.sources.data).toArray(), "nextPage": action.sources.paging }); //eslint-disable-line new-cap
     }
@@ -32,6 +35,10 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
 
     case WEB_ADD_SOURCE: {
         return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "url") });
+    }
+
+    case TWITTER_ADD_SOURCE: {
+        return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "id") });
     }
         
     case CLEAR_SOURCES: {
@@ -59,6 +66,10 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     case WEB_ADD_SOURCE: {
         let sources = R.map(source => Object.assign({}, source, { "_id": source.url }), action.sources);
         return Object.assign({}, state, { "web": List(state.web).concat(sources).toArray() }); //eslint-disable-line new-cap
+    }
+    case TWITTER_ADD_SOURCE: {
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        return Object.assign({}, state, { "twitter": List(state.twitter).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case GOT_CONFIGURED_SOURCES: {
         return action.sources;
