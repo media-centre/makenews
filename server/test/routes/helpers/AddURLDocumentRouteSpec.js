@@ -1,7 +1,7 @@
 import AddURLDocumentRoute from "../../../src/routes/helpers/AddURLDocumentRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 import sinon from "sinon";
 import { assert } from "chai";
 

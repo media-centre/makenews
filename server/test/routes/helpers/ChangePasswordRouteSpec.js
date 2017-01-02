@@ -1,8 +1,6 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import Logger from "../../../src/logging/Logger";
-import LogTestHelper from "../../helpers/LogTestHelper";
 import ChangePasswordRoute from "../../../src/routes/helpers/ChangePasswordRoute";
 import UserRequest from "../../../src/login/UserRequest";
 import sinon from "sinon";
@@ -15,7 +13,6 @@ describe("ChangePasswordRoute", () => {
         currentPassword = "current_password";
         newPassword = "new_password";
         sandbox = sinon.sandbox.create();
-        sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     afterEach("ChangePasswordRoute", () => {

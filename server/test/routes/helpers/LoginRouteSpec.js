@@ -5,8 +5,6 @@ import LoginRoute from "../../../src/routes/helpers/LoginRoute";
 import UserRequest from "../../../src/login/UserRequest";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
-import LogTestHelper from "../../helpers/LogTestHelper";
-import Logger from "../../../src/logging/Logger";
 import { userDetails } from "../../../src/Factory";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -17,7 +15,6 @@ describe("LoginRoute", () => {
     beforeEach("LoginRoute", () => {
         userName = "test_user_name";
         password = "test_password";
-        sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     afterEach("LoginRoute", () => {

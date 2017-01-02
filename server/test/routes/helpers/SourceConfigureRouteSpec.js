@@ -3,19 +3,13 @@ import SourceConfigureRoute from "../../../src/routes/helpers/SourceConfigureRou
 import { assert } from "chai";
 import { sourceTypes } from "../../../src/util/Constants";
 import sinon from "sinon";
-import Logger from "../../../src/logging/Logger";
-import LogTestHelper from "../../helpers/LogTestHelper";
 import SourceConfigRequestHandler from "../../../src/sourceConfig/SourceConfigRequestHandler";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 
 describe("SourceConfigureRoute", () => {
 
     describe("fetch Configured Sources", () => {
         let sandbox = sinon.sandbox.create();
-
-        beforeEach("SourceConfigureRoute", () => {
-            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
-        });
 
         afterEach("SourceConfigureRoute", () => {
             sandbox.restore();
@@ -101,10 +95,6 @@ describe("SourceConfigureRoute", () => {
     describe("add configure source", () => {
         let sandbox = sinon.sandbox.create();
         let sourceType = "fb-profile";
-
-        beforeEach("add configure source", () => {
-            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
-        });
 
         afterEach("add configure source", () => {
             sandbox.restore();

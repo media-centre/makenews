@@ -4,8 +4,6 @@
 import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import CryptUtil from "../../src/util/CryptUtil";
-import LogTestHelper from "../helpers/LogTestHelper";
-import Logger from "../../src/logging/Logger";
 import { expect } from "chai";
 import nock from "nock";
 import restRequest from "request";
@@ -13,13 +11,6 @@ import sinon from "sinon";
 
 describe("RssParser", () => {
     let sandbox = null;
-    before("RssParser", () => {
-        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
-    });
-
-    after("RssParser", () => {
-        Logger.instance.restore();
-    });
 
     beforeEach("RssParser", () => {
         sandbox = sinon.sandbox.create();

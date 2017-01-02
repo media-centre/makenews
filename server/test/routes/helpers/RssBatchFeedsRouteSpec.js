@@ -2,10 +2,8 @@
 
 
 import RssBatchFeedsRoute from "../../../src/routes/helpers/RssBatchFeedsRoute";
-import Logger from "../../../src/logging/Logger";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import RssRequestHandler from "../../../src/rss/RssRequestHandler";
-import LogTestHelper from "../../helpers/LogTestHelper";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -22,14 +20,6 @@ describe("RssBatchFeedsRoute", () => {
         };
         return response;
     }
-
-    before("TwitterRouteHelper", () => {
-        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
-    });
-
-    after("TwitterRouteHelper", () => {
-        Logger.instance.restore();
-    });
 
     describe("feedsForAllUrls", () => {
         const zero = 0, one = 1;

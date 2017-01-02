@@ -15,8 +15,13 @@ let LOG_FILE = "defaultLog.log";
 
 export default class Logger {
 
-    constructor(logger) {
-        this.logger = logger;
+    constructor(logger, categoryName) {
+        Logger.initialize();
+        if(logger) {
+            this.logger = logger;
+        } else if(categoryName) {
+            this.logger = winston.loggers.get(categoryName);
+        }
     }
 
     static initialize() {
@@ -57,11 +62,7 @@ export default class Logger {
     }
 
     static instance(categoryName) {
-        Logger.initialize();
-        if(categoryName) {
-            return new Logger(winston.loggers.get(categoryName));
-        }
-        return new Logger();
+        return new Logger(null, categoryName);
     }
 
     static _getDefaultCategoryLogger() {

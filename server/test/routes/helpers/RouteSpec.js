@@ -2,6 +2,8 @@
 
 
 import Route from "../../../src/routes/helpers/Route";
+import { mockResponse } from "../../helpers/MockResponse";
+import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import { assert } from "chai";
 
 describe("Route", () => {
@@ -83,6 +85,80 @@ describe("Route", () => {
 
         it("should return the converted floor of the integer if it's a valid float", () => {
             assert.strictEqual(route.validateNumber("4.9"), 4); //eslint-disable-line no-magic-numbers
+        });
+    });
+
+    describe("process", () => {
+        it("call handle invalid request if validate gives message", () => {
+
+            let MyRoute = class MyRoute extends Route {
+                constructor(request, response, next) {
+                    super(request, response, next);
+                }
+                validate() {
+                    return "invalid request";
+                }
+            };
+            let response = mockResponse();
+            new MyRoute({}, response).process();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+            assert.deepEqual(response.json(), { "message": "invalid request" });
+        });
+
+        it("call handle invalid request if default validate gives message", () => {
+
+            let MyRoute = class MyRoute extends Route {
+                constructor(request, response, next) {
+                    super(request, response, next);
+                }
+                validate() {
+                    let id = "test", name = "";
+                    return super.validate(id, name) || "invalid custom parameters";
+                }
+            };
+            let response = mockResponse();
+            new MyRoute({}, response).process();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
+            assert.deepEqual(response.json(), { "message": "missing parameters" });
+        });
+
+        it("call handle failure if handle throws error", () => {
+
+            let MyRoute = class MyRoute extends Route {
+                constructor(request, response, next) {
+                    super(request, response, next);
+                }
+                validate() {
+                    return false;
+                }
+                handle() {
+                    let error = "processing failed";
+                    throw error;
+                }
+            };
+            let response = mockResponse();
+            new MyRoute({}, response).process();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+            assert.deepEqual(response.json(), { "message": "processing failed" });
+        });
+
+        it("update response if handle success", async () => {
+
+            let MyRoute = class MyRoute extends Route {
+                constructor(request, response, next) {
+                    super(request, response, next);
+                }
+                validate() {
+                    return false;
+                }
+                async handle() {
+                    return { "feeds": [] };
+                }
+            };
+            let response = mockResponse();
+            await new MyRoute({}, response).process();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
+            assert.deepEqual(response.json(), { "feeds": [] });
         });
     });
 });

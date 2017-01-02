@@ -23,7 +23,7 @@ export default (app) => {
 
     app.post("/facebook-sources", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-sources request received. url = %s", request.url);
-        new FacebookSourceRoute(request, response, next).searchSources();
+        new FacebookSourceRoute(request, response, next).process();
     });
 
 

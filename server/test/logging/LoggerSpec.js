@@ -25,7 +25,7 @@ describe("Logger", () => {
             sandBox.stub(Logger, "_readLogConfig");
             defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
             defaultCategoryLogger.returns(null);
-            assertFileLogger(Logger.instance(), "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
+            assertFileLogger(new Logger(), "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
 
         });
 
@@ -45,13 +45,13 @@ describe("Logger", () => {
             JsonStub.returns(myJson);
             defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
             defaultCategoryLogger.returns(null);
-            const logger = Logger.instance();
+            const logger = new Logger();
             assertFileLogger(logger, "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
         });
 
         it("default category logger should be returned if logging.json is read", () => {
             loggerStub.returns(false);
-            assertFileLogger(Logger.instance(), "unitTest.log", defaultDirPath, logLevel.LOG_ERROR);
+            assertFileLogger(new Logger(), "unitTest.log", defaultDirPath, logLevel.LOG_ERROR);
         });
 
         it("category logger should be returned when instance is called with category name", () => {
@@ -76,7 +76,7 @@ describe("Logger", () => {
             JsonStub.returns(myJson);
             loggerStub.returns(false);
 
-            let logger = Logger.instance("test3");
+            let logger = new Logger(null, "test3");
             assertFileLogger(logger, "test3.log", "/var/logs", logLevel.LOG_INFO);
         });
 

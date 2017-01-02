@@ -1,14 +1,11 @@
 /*eslint max-nested-callbacks:0*/
 import { assert } from "chai";
 import TwitterFeedsRoute from "../../../src/routes/helpers/TwitterFeedsRoute";
-import TwitterClient from "../../../src/twitter/TwitterClient";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler";
 import ApplicationConfig from "../../../src/config/ApplicationConfig";
-import LogTestHelper from "../../helpers/LogTestHelper";
-import Logger from "../../../src/logging/Logger";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import sinon from "sinon";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 
 describe("TwitterFeedsRoute", () => {
     let applicationConfig = null;
@@ -16,7 +13,6 @@ describe("TwitterFeedsRoute", () => {
     before("TwitterFeedsRoute", () => {
         applicationConfig = new ApplicationConfig();
         sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
-        sinon.stub(TwitterClient, "logger").returns(LogTestHelper.instance());
         sinon.stub(applicationConfig, "twitter").returns({
             "url": "https://api.twitter.com/1.1",
             "authenticateUrl": "https://api.twitter.com/oauth/authenticate",
@@ -24,14 +20,11 @@ describe("TwitterFeedsRoute", () => {
             "consumerSecret": "consimerSecret",
             "timeOut": 10000
         });
-        sinon.stub(Logger, "instance").returns(LogTestHelper.instance());
     });
 
     after("TwitterFeedsRoute", () => {
         ApplicationConfig.instance.restore();
-        TwitterClient.logger.restore();
         applicationConfig.twitter.restore();
-        Logger.instance.restore();
     });
 
     describe("handle", () => {
