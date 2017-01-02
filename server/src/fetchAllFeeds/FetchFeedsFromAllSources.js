@@ -72,7 +72,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
-                throw(err);
+                return [];
             }
         case FACEBOOK_GROUP: type = "feed";
         case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
@@ -85,7 +85,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
-                throw(err);
+                return [];
             }
         case TWITTER_TYPE:
             try {
@@ -94,10 +94,10 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
-                throw(err);
+                return [];
             }
         default:
-            throw(emptyObject);
+            return [];
         }
     }
 
