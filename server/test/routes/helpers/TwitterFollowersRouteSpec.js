@@ -19,7 +19,7 @@ describe("TwitterFollowersRoute", () => {
         sandbox.restore();
     });
 
-    xit("should return the followers data from the twitter user", async()=> {
+    it("should return the followers data from the twitter user", async()=> {
         let response = mockResponse();
 
         let request = {
@@ -36,21 +36,24 @@ describe("TwitterFollowersRoute", () => {
         };
         let twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
-        sandbox.mock(twitterRequestHandlerInstance).expects("fetchFollowersRequest").withArgs("AuthSession").returns(Promise.resolve(data));
+        sandbox.mock(twitterRequestHandlerInstance).expects("fetchFollowersRequest").withArgs("Authsession").returns(Promise.resolve(data));
 
         await new TwitterFollowersRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
         assert.deepEqual(response.json(), data);
     });
 
-    xit("should return bad request if the if fetch followers reject with an error", async() => {
+    it("should return bad request if the if fetch followers reject with an error", async() => {
         let response = mockResponse();
 
         let request = {
-            "query": {
-                "userName": ""
+            "cookies": {
+                "AuthSession": ""
             }
         };
+        let twitterRequestHandlerInstance = new TwitterRequestHandler();
+        sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
+        sandbox.mock(twitterRequestHandlerInstance).expects("fetchFollowersRequest").returns(Promise.reject("error"));
 
         await new TwitterFollowersRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
