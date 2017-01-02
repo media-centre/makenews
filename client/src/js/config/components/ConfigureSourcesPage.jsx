@@ -25,8 +25,10 @@ export class ConfigureSourcesPage extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return (nextProps.params.sourceType !== this.props.params.sourceType) ||
-            (nextProps.expireTime !== this.props.expireTime);
+        this.result = (nextProps.params.sourceType !== this.props.params.sourceType) ||
+            (nextProps.expireTime !== this.props.expireTime) ||
+            (nextProps.twitterAuthenticated !== this.props.twitterAuthenticated);
+        return this.result;
     }
 
     _showFBLogin() {
@@ -46,21 +48,28 @@ export class ConfigureSourcesPage extends Component {
     }
 
     sourceTab(params, keyword, dispatch) {
+        let ZERO = 0;
         dispatch(SourceConfigActions.clearSources());
         switch (params.sourceType) {
         case "twitter": {
-            this._showTwitterLogin();
+            if(this.result) {
+                this._showTwitterLogin();
+            }
             dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.TWITTER));
             break;
         }
         case "facebook": {
-            this._showFBLogin();
+            if(this.result && this.props.expireTime === ZERO) {
+                this._showFBLogin();
+            }
             if(params.sourceSubType === "groups") {
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
                 dispatch(SourceConfigActions.getSources(GROUPS, keyword));
             } else if(params.sourceSubType === "pages") {
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
                 dispatch(SourceConfigActions.getSources(PAGES, keyword));
+            } else if(params.sourceSubType === "profiles") {
+                dispatch(SourceConfigActions.switchSourceTab(PROFILES));
             } else {
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
                 dispatch(SourceConfigActions.getSources(PROFILES, keyword));
