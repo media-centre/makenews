@@ -7,7 +7,7 @@ import LogTestHelper from "../../helpers/LogTestHelper";
 import mockResponse from "../../helpers/MockResponse";
 import sinon from "sinon";
 
-xdescribe("TwitterFollowersRoute", () => {
+describe("TwitterFollowersRoute", () => {
 
     let sandbox = null;
     beforeEach("TwitterFollowersRoute", () => {
@@ -19,7 +19,7 @@ xdescribe("TwitterFollowersRoute", () => {
         sandbox.restore();
     });
 
-    it("should return the followers data from the twitter user", async()=> {
+    xit("should return the followers data from the twitter user", async()=> {
         let response = mockResponse();
 
         let request = {
@@ -43,7 +43,7 @@ xdescribe("TwitterFollowersRoute", () => {
         assert.deepEqual(response.json(), data);
     });
 
-    it("should return bad request if the if fetch followers reject with an error", async() => {
+    xit("should return bad request if the if fetch followers reject with an error", async() => {
         let response = mockResponse();
 
         let request = {
