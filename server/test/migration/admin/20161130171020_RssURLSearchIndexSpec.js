@@ -1,4 +1,4 @@
-import RssURLSearchIndex from "../../../src/migration/admin/20161130171020_RssURLSearchIndex";
+import RssURLSearchIndex from "../../../src/migration/admin/20170103161414_RssURLSearchIndex";
 import CouchClient from "../../../src/CouchClient";
 import chai, { assert } from "chai";
 import chaiAsPromised from "chai-as-promised";
@@ -9,10 +9,13 @@ chai.use(chaiAsPromised);
 describe("RssURLSearchIndex", () => {
     let accessToken = "testToken", dbName = "testDb", sandbox = sinon.sandbox.create();
     let indexDoc = {
-        "index": {
-            "fields": ["sourceType", "docType", "name"]
-        },
-        "name": "rssUrlSearch"
+        "_id": "_design/webUrlSearch",
+        "fulltext": {
+            "by_name": {
+                "index":
+                    "function(doc) { if(doc.sourceType === 'web') { var ret=new Document(); ret.add(doc.name, {'field':'name', 'store': 'yes'}); ret.add(doc._id, {'field':'url', 'store': 'yes'}); return ret; } }"
+            }
+        }
     };
 
     afterEach("RssURLSearchIndex", () => {
@@ -21,16 +24,16 @@ describe("RssURLSearchIndex", () => {
 
     it("should give successResponse for creating index", async() => {
         let response = {
-            "result": "created",
-            "id": "_design/b508cf6095783f0e83e50554ee572df5460fea3b",
-            "name": "rssUrlSearch"
+            "ok": "true",
+            "_id": "_design/webUrlSearch",
+            "_rev": "test_revision"
         };
 
         let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
           .withArgs(accessToken, dbName).returns(couchInstance);
-        let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
-          .withArgs(indexDoc)
+        let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
+          .withArgs("_design/webUrlSearch", indexDoc)
           .returns(response);
 
 
@@ -43,8 +46,8 @@ describe("RssURLSearchIndex", () => {
         let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
           .withArgs(accessToken, dbName).returns(couchInstance);
-        let createIndexMock = sandbox.mock(couchInstance).expects("createIndex")
-          .withArgs(indexDoc)
+        let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
+          .withArgs("_design/webUrlSearch", indexDoc)
           .throws(new Error("failed"));
 
         let indexDocument = new RssURLSearchIndex(dbName, accessToken);

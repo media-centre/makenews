@@ -1,6 +1,6 @@
 /*eslint no-unused-vars:0*/
 import RssURLDocuments from "./admin/20161114174315_RssURLDocuments";
-import RssURLSearchIndex from "./admin/20161130171020_RssURLSearchIndex";
+import RssURLSearchIndex from "./admin/20170103161414_RssURLSearchIndex";
 import FetchFeedsIndex from "./db/20161212122859_FetchFeedsIndex";
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
