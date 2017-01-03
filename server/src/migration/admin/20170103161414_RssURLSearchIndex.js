@@ -10,14 +10,17 @@ export default class IndexDocument {
     async up() {
         try {
             Migration.logger(this.dbName).info("RssURLSearchIndex::up - started");
-            let nameIdIndex = {
-                "index": {
-                    "fields": ["sourceType", "docType", "name"]
-                },
-                "name": "rssUrlSearch"
+            let indexDoc = {
+                "_id": "_design/webUrlSearch",
+                "fulltext": {
+                    "by_name": {
+                        "index":
+                            "function(doc) { if(doc.sourceType === 'web') { var ret=new Document(); ret.add(doc.name, {'field':'name', 'store': 'yes'}); ret.add(doc._id, {'field':'url', 'store': 'yes'}); return ret; } }"
+                    }
+                }
             };
             const couchClient = CouchClient.instance(this.accessToken, this.dbName);
-            return await couchClient.createIndex(nameIdIndex);
+            return await couchClient.saveDocument("_design/webUrlSearch", indexDoc);
         } catch (error) {
             Migration.logger(this.dbName).error("RssURLSearchIndex::up - error %j", error);
             throw error;
