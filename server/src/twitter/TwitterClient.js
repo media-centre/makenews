@@ -72,15 +72,15 @@ export default class TwitterClient {
         return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
     }
 
-    async fetchFollowers(userName, keyword) {
+    async fetchFollowers(userName, keyword, page = 1) { //eslint-disable-line no-magic-numbers
         return new Promise((resolve, reject) => {
             this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
                 let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
                 let oauth = TwitterLogin.createOAuthInstance();
                 let followersApi = "/friends/list.json";
-                let followersWithKeyApi = "/users/search.json?q=" + keyword;
+                let followersWithKeyApi = `/users/search.json?q=${keyword}&page=${page}`;
                 let url = "https://api.twitter.com/1.1";
-                let getFollowers = keyword ? `${url}${followersWithKeyApi}` :`${url}${followersApi}`;
+                let getFollowers = keyword ? `${url}${followersWithKeyApi}` : `${url}${followersApi}`;
                 oauth.get(getFollowers, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                     if (error) {
                         let errorInfo = JSON.parse(error);
@@ -88,9 +88,9 @@ export default class TwitterClient {
                         reject(errorInfo);
                     }
                     let tweetData = JSON.parse(data);
-                    console.log("tweetData", tweetData)
+                    let resultData = { "docs": tweetData, "paging": { "page": page + 1 } }; //eslint-disable-line no-magic-numbers
                     TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followers");
-                    resolve(tweetData);
+                    resolve(resultData);
                 });
             }).catch(error => {
                 reject(error);
