@@ -154,16 +154,17 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
 
-        it("should return the sucess response for correct URL Document", async() => {
+        it("should return name and url for correct URL Document", async() => {
             let url = "http://www.newsclick.in";
+            let name = "NewsClick";
             let accessToken = "tes_token";
             let rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.resolve({ "message": "URL added to Database" }));
+            sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.resolve({ name, url }));
             let rssRequestHandler = new RssRequestHandler();
             try {
                 let response = await rssRequestHandler.addURL(url, accessToken);
-                assert.strictEqual("URL added to Database", response.message);
+                assert.deepEqual({ name, url }, response);
             }catch (error) {
                 assert.fail(error);
             }

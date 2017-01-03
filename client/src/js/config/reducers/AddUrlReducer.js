@@ -1,9 +1,10 @@
-import { MESSAGE } from "./../actions/AddUrlActions";
-export const addUrlMessage = (state = "", action = {}) => {
+import { RSS_ADD_URL_STATUS } from "./../actions/AddUrlActions";
+
+export function addUrlMessage(state = { "message": "", "added": false }, action = {}) {
     switch (action.type) {
-    case MESSAGE: {
-        return action.message;
+    case RSS_ADD_URL_STATUS: {
+        return action.status;
     }
     default: return state;
     }
-};
+}

@@ -1,7 +1,9 @@
 /* eslint no-unused-vars:0 no-magic-numbers:0*/
 import AjaxClient from "./../../utils/AjaxClient";
+import { WEB_ADD_SOURCE } from "./WebConfigureActions";
 
-export const MESSAGE = "MESSAGE";
+
+export const RSS_ADD_URL_STATUS = "RSS_ADD_URL_STATUS";
 
 export function addRssUrl(url) {
     return (dispatch) => {
@@ -11,22 +13,22 @@ export function addRssUrl(url) {
             "Content-Type": "application/json"
         };
         ajax.post(headers, { "url": url }).then((response) => {
-            return dispatch(handleMessages(response));
+            dispatch({
+                "type": WEB_ADD_SOURCE,
+                "sources": [response]
+            });
+            return dispatch(handleMessages("Added successfully", true));
         }).catch((error) => {
-            return dispatch(handleMessages("Invalid RSS URL. Please check the URL"));
+            return dispatch(handleMessages(error.message, false));
         });
     };
 }
 
-export function invalidRssUrl() {
-    return (dispatch) => {
-        return dispatch(handleMessages("Please enter proper url."));
-    };
-}
+export const invalidRssUrl = () => handleMessages("Please enter proper url.", false);
 
-export function handleMessages(message) {
+export function handleMessages(message, added) {
     return {
-        "type": MESSAGE,
-        message
+        "type": RSS_ADD_URL_STATUS,
+        "status": { message, added }
     };
 }

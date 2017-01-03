@@ -28,15 +28,15 @@ export class AddUrl extends Component {
     }
 
     render() {
-        let errors = ["Please enter proper url.", "Invalid RSS URL. Please check the URL", "bad request"];
-        if (errors.indexOf(this.props.message) >= 0 || !this.props.message) {        //eslint-disable-line no-magic-numbers
+        if (!this.props.addUrlStatus.added) {        //eslint-disable-line no-magic-numbers
             return (
                 <div className="addurl">
                     <div className="addurl-helpmessage">
                         <span className="image"><img src="./../../../images/warning-icon.png"/></span>
                         <span className="text">
-                        Sorry we are unable to find what your looking for.<br/>
-                        Please enter the rss feed link below to add a new web news source.</span>
+                            Sorry we are unable to find what your looking for.<br/>
+                            Please enter the rss feed link below to add a new web news source.
+                        </span>
                     </div>
                     <div className="addurl-inputcontainer">
                         <div className="addurl-input">
@@ -44,23 +44,23 @@ export class AddUrl extends Component {
                             <div className="addurl-icon"><img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/></div>
                         </div>
                     </div>
-                    { this.props.message && Toast.show(this.props.message) }
+                    { this.props.addUrlStatus.message && Toast.show(this.props.addUrlStatus.message) }
                 </div>
             );
         }
-        return (<div className="add-url-message">{Toast.show(this.props.message)}</div>);
+        return (<div className="add-url-message">{Toast.show(this.props.addUrlStatus.message)}</div>);
     }
 }
 
 function mapToStore(store) {
     return {
-        "message": store.addUrlMessage
+        "addUrlStatus": store.addUrlMessage
     };
 }
 
 AddUrl.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "message": PropTypes.string.isRequired
+    "addUrlStatus": PropTypes.object
 };
 
 export default connect(mapToStore)(AddUrl);

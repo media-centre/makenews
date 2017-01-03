@@ -1,4 +1,4 @@
-import { addRssUrl, invalidRssUrl, MESSAGE } from "./../../src/js/config/actions/AddUrlActions";
+import { addRssUrl, invalidRssUrl, RSS_ADD_URL_STATUS } from "./../../src/js/config/actions/AddUrlActions";
 import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "./../helper/ActionHelper";
 import { assert } from "chai";
@@ -25,30 +25,33 @@ describe("AddUrl Actions", () => {
     });
 
     it("should return successful message", (done) => {
-        message = "URL added Successfully";
+        let name = "NewsClick Economy";
         url = "http://newsclick.in/taxonomy/term/economy/feed";
+        message = "Added successfully";
+        let added = true;
 
-        postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.resolve(message));
+        postMock.expects("post").withArgs(headers, { url })
+            .returns(Promise.resolve({ url, name }));
 
-        let action = [{ "type": MESSAGE, message }];
+        let action = [{ "type": "WEB_ADD_SOURCE", "sources": [{ name, url }] },
+            { "type": RSS_ADD_URL_STATUS, "status": { message, added } }];
         let store = mockStore([], action, done);
-        store.dispatch(addRssUrl(url, (result) => {
-            assert.deepEqual(result, message);
+        store.dispatch(addRssUrl(url, () => {
             ajaxClientMock.verify();
             postMock.verify();
         }));
     });
 
-    it("should return already exist message if url is exist in databse", (done) => {
+    it("should return already exist message if url is exist in database", (done) => {
         message = "URL already exist";
         url = "http://newsclick.in/taxonomy/term/economy/feed";
+        let added = false;
+        postMock.expects("post").withArgs(headers, { "url": url })
+            .returns(Promise.reject({ message }));
 
-        postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.resolve(message));
-
-        let action = [{ "type": MESSAGE, message }];
+        let action = [{ "type": RSS_ADD_URL_STATUS, "status": { message, added } }];
         let store = mockStore([], action, done);
-        store.dispatch(addRssUrl(url, (result) => {
-            assert.deepEqual(result, message);
+        store.dispatch(addRssUrl(url, () => {
             ajaxClientMock.verify();
             postMock.verify();
         }));
@@ -57,13 +60,13 @@ describe("AddUrl Actions", () => {
     it("should return invalid message if url is invalid", (done) => {
         message = "Invalid RSS URL. Please check the URL";
         url = "http://x.com";
+        let added = false;
 
-        postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.reject(message));
+        postMock.expects("post").withArgs(headers, { "url": url }).returns(Promise.reject({ message }));
 
-        let action = [{ "type": MESSAGE, message }];
+        let action = [{ "type": RSS_ADD_URL_STATUS, "status": { message, added } }];
         let store = mockStore([], action, done);
-        store.dispatch(addRssUrl(url, (result) => {
-            assert.deepEqual(result, message);
+        store.dispatch(addRssUrl(url, () => {
             ajaxClientMock.verify();
             postMock.verify();
         }));
@@ -72,13 +75,10 @@ describe("AddUrl Actions", () => {
     describe("invalid RssUrl", () => {
         it("should return message", () => {
             message = "Please enter proper url.";
-            let action = [{ "type": MESSAGE, message }];
+            let added = false;
+            let action = { "type": RSS_ADD_URL_STATUS, "status": { message, added } };
 
-            let store = mockStore([], action);
-
-            store.dispatch(invalidRssUrl(url, (result) => {
-                assert.deepEqual(result, message);
-            }));
+            assert.deepEqual(invalidRssUrl(), action);
         });
     });
 });
