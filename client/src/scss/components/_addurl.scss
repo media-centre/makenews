@@ -35,7 +35,7 @@
   }
 
   .addurl-input {
-    margin: 6% 10% 0% 10%;
+    margin: 6% 10% 0 10%;
     width: 80%;
     border-bottom: 2px solid $primary-color-light;
     float: left;
@@ -46,13 +46,10 @@
       background-color: #63527A;
       color: #ffffff;
       font-size: 16px;
-      line-height: 24px;
-      margin: 0% 2% 0% 1%;
     }
 
     .addurl-icon {
       float: right;
-      margin-top: 1%;
 
       img{
         width: 70%;

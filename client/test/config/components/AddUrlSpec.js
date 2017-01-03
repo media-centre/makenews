@@ -19,9 +19,9 @@
 
      beforeEach("Add Url", () => {
          sandbox = sinon.sandbox.create();
-         let message = "";
+         let addUrlStatus = { "message": "", "added": false };
          store = createStore(() => ({
-             "addUrlMessage": message
+             "addUrlMessage": addUrlStatus
          }), applyMiddleware(thunkMiddleware));
          addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
      });
@@ -36,9 +36,8 @@
      });
 
      it("should dispatch addRSSUrl with url input ", () => {
-         let addRSSUrlMock = sandbox.mock(AddUrlActions).expects("addRssUrl").once().withArgs("http://www.test.com").returns({
-             "type": ""
-         });
+         let addRSSUrlMock = sandbox.mock(AddUrlActions).expects("addRssUrl").once()
+             .withArgs("http://www.test.com").returns({ "type": "" });
          let addurlDOMNode = ReactDOM.findDOMNode(addUrlDom);
          let inputbox = addurlDOMNode.querySelectorAll(".addurlinput")[0];
          inputbox.value = "http://www.test.com";
@@ -80,9 +79,9 @@
      });
 
      it("should display only message if the response is success", () => {
-         let message = "Addded successfully";
+         let addUrlStatus = { "message": "Addded successfully", "added": true };
          store = createStore(() => ({
-             "addUrlMessage": message
+             "addUrlMessage": addUrlStatus
          }), applyMiddleware(thunkMiddleware));
          addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
 
@@ -93,11 +92,11 @@
      });
 
      it("should call show when the response is Please enter proper url", () => {
-         let message = "Please enter proper url.";
+         let addUrlStatus = { "message": "Please enter proper url", "added": false };
          store = createStore(() => ({
-             "addUrlMessage": message
+             "addUrlMessage": addUrlStatus
          }), applyMiddleware(thunkMiddleware));
-         let showMock = sandbox.mock(Toast).expects("show").withExactArgs(message);
+         let showMock = sandbox.mock(Toast).expects("show").withExactArgs(addUrlStatus.message);
          addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
          showMock.verify();
      });

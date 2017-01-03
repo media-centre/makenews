@@ -155,21 +155,12 @@ export default class RssClient {
     }
 
     async addURL(url, accessToken) {
-        let success = null;
-        try {
-            let response = await this.fetchRssFeeds(url);
-            let name = response.meta.title;
-            let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-            success = await this.addUrlToCommon(document);
-            success = await this.addURLToUser(document, accessToken);
-        } catch (error) {
-            RssClient.logger().error("RssClient:: Error while adding document %j.", error);
-            if(error.status === "conflict") {
-                success = "URL already exist";
-            }
-            throw error;
-        }
-        return success;
+        let response = await this.fetchRssFeeds(url);
+        let name = response.meta.title;
+        let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+        await this.addUrlToCommon(document);
+        await this.addURLToUser(document, accessToken);
+        return { name, url };
     }
 
     async addUrlToCommon(document) {
@@ -182,25 +173,23 @@ export default class RssClient {
         } catch (error) {
             if(error.status !== "conflict") {
                 RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-                throw error; //eslint-disable-line no-throw-literal
+                throw "Unable to add the url"; //eslint-disable-line no-throw-literal
             }
         }
-        return "URL added successfully";
     }
 
     async addURLToUser(document, accessToken) {
+        let couchClient = CouchClient.instance(accessToken);
         try {
-            let couchClient = CouchClient.instance(accessToken);
             await couchClient.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to user database.");
         } catch (error) {
-            if(error.status === "conflict") {
-                return "URL already exist";
-            }
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-            throw error;
+            if(error.status === "conflict") {
+                throw "URL already exist"; //eslint-disable-line no-throw-literal
+            }
+            throw "Unable to add the url"; //eslint-disable-line no-throw-literal
         }
-        return "URL added successfully";
     }
 
     async searchURL(keyword, offset) {

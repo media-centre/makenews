@@ -41,9 +41,9 @@ export class ConfigurePane extends Component {
                     <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              { this.props.sources.data.length || this.props.hasMoreSourceResults
-                  ? <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
-                  : <AddUrl/>
+              { this.props.searchKeyword && !this.props.sources.data.length
+                  ? <AddUrl/>
+                  : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
               }
           </div>
         );
@@ -53,7 +53,7 @@ export class ConfigurePane extends Component {
 function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
-        "hasMoreSourceResults": state.hasMoreSourceResults,
+        "searchKeyword": state.sourceSearchKeyword,
         "sources": state.sourceResults
     };
 }
@@ -61,7 +61,7 @@ function mapToStore(state) {
 ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "hasMoreSourceResults": PropTypes.bool.isRequired,
+    "searchKeyword": PropTypes.string.isRequired,
     "sources": PropTypes.object.isRequired
 };
 

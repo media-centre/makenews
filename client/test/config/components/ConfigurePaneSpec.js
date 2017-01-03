@@ -33,7 +33,9 @@ describe("Configure Pane", () => {
             };
             currentTab = "Profiles";
             renderer = TestUtils.createRenderer();
-            configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }}/>);
+            configurePaneDOM = renderer.render(
+                <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search"/>
+            );
         });
 
         it("wraps with a <div> with a proper class name", function() {
@@ -83,6 +85,7 @@ describe("Configure Pane", () => {
 
         beforeEach("search input box", () => {
             currentTab = "Profiles";
+            let addUrlStatus = { "message": "", "added": false };
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },

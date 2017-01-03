@@ -371,7 +371,7 @@ describe("RssClient", () => {
             let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added to Database"));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.resolve("URL added to Database"));
             let response = await rssClient.addURL(url, accessToken);
-            assert.strictEqual("URL added to Database", response);
+            assert.deepEqual(response, { name, url });
             fetchRssFeedsMock.verify();
             addURLtoCommonMock.verify();
             addURLtoUserMock.verify();
@@ -535,8 +535,7 @@ describe("RssClient", () => {
                 "id": "test_name",
                 "rev": "test_revision"
             }));
-            let response = await RssClient.instance().addUrlToCommon(document);
-            assert.strictEqual("URL added successfully", response);
+            await RssClient.instance().addUrlToCommon(document);
             adminDetailsMock.verify();
             adminDbInstance.verify();
             saveDocMock.verify();
@@ -551,7 +550,7 @@ describe("RssClient", () => {
                 await RssClient.instance().addUrlToCommon(document);
                 assert.fail("expected error");
             } catch (err) {
-                assert.strictEqual("unexpected response from common db", err);
+                assert.strictEqual("Unable to add the url", err);
             }
             adminDetailsMock.verify();
             adminDbInstance.verify();
@@ -592,8 +591,7 @@ describe("RssClient", () => {
             }));
 
             try {
-                let response = await RssClient.instance().addURLToUser(document, accessToken);
-                assert.strictEqual("URL added successfully", response);
+                await RssClient.instance().addURLToUser(document, accessToken);
             } catch(err) {
                 assert.fail(err);
             } finally {
@@ -611,7 +609,7 @@ describe("RssClient", () => {
                 await RssClient.instance().addURLToUser(document, accessToken);
                 assert.fail("expected error");
             } catch (err) {
-                assert.strictEqual("unexpected response from the db", err);
+                assert.strictEqual("Unable to add the url", err);
             } finally {
                 saveDocMock.verify();
             }
