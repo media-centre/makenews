@@ -8,20 +8,20 @@ export const TWITTER_ADD_SOURCE = "TWITTER_ADD_SOURCE";
 export function gotTwitterSourceResults(sources) {
     return {
         "type": TWITTER_GOT_SOURCE_RESULTS,
-        "sources": { "data": sources, "paging": sources.paging }
+        "sources": { "data": sources.docs, "paging": sources.paging }
     };
 }
 
-export function fetchTwitterSources(keyword , params = {}) {
-    let ajaxClient = AjaxClient.instance("/twitter-followers");
 
+export function fetchTwitterSources(keyword, params = {}) {
+    let ajaxClient = AjaxClient.instance("/twitter-followers");
     return async (dispatch, getState) => {
         try {
             let data = await ajaxClient.get({ keyword, ...params });
-            if(data.length) {
+            if(data.docs.length) {
                 let configuredSources = getState().configuredSources.twitter;
-                const cmp = (first, second) => first.url === second._id;
-                intersectionWith(cmp, data, configuredSources);
+                const cmp = (first, second) => first.id === second._id;
+                intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotTwitterSourceResults(data));
                 dispatch(hasMoreSourceResults());
             } else {

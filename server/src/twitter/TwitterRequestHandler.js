@@ -23,10 +23,10 @@ export default class TwitterRequestHandler {
         });
     }
 
-    async fetchFollowersRequest(authSession, keyword) {
+    async fetchFollowersRequest(authSession, keyword, page) {
         try {
             let userName = await this.getUserName(authSession);
-            let followers = await this.twitterClient().fetchFollowers(userName, keyword);
+            let followers = await this.twitterClient().fetchFollowers(userName, keyword, page);
             TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched followers for user");
             return followers;
         } catch (error) {
@@ -38,7 +38,6 @@ export default class TwitterRequestHandler {
     async getUserName(authSession) {
         let couchClient = await CouchClient.createInstance(authSession);
         let userName = await couchClient.getUserName();
-        console.log("dbUserName",userName)
         return userName;
     }
 
