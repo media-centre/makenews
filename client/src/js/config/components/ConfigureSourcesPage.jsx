@@ -4,7 +4,6 @@ import ConfigurePane from "./ConfigurePane";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
-import { PAGES, PROFILES, GROUPS } from "./../actions/FacebookConfigureActions";
 import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FacebookAction";
 import { twitterAuthentication, twitterTokenInformation } from "./../../twitter/TwitterTokenActions";
 import TwitterLogin from "./../../twitter/TwitterLogin";
@@ -51,38 +50,21 @@ export class ConfigureSourcesPage extends Component {
     }
 
     showLoginPrompt(sourceType) {
-        return (sourceType === "facebook" && new Date().getTime() > this.props.expireTime) ||
-            (sourceType === "twitter" && !this.props.twitterAuthenticated);
+        if(sourceType === "facebook" && new Date().getTime() > this.props.expireTime) {
+            return this._showFBLogin;
+        } else if (sourceType === "twitter" && !this.props.twitterAuthenticated) {
+            return this._showTwitterLogin;
+        }
+        return null;
     }
 
     sourceTab(params, dispatch) {
         dispatch(SourceConfigActions.clearSources());
-        switch (params.sourceType) {
-        case "twitter": {
-            if(this.showLoginPrompt(params.sourceType)) {
-                this._showTwitterLogin();
-            }
-            dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.TWITTER));
-            break;
+        let loginFunc = this.showLoginPrompt();
+        if(loginFunc) {
+            loginFunc();
         }
-        case "facebook": {
-            if(this.showLoginPrompt(params.sourceType)) {
-                this._showFBLogin();
-            }
-            if(params.sourceSubType === "groups") {
-                dispatch(SourceConfigActions.switchSourceTab(GROUPS));
-            } else if(params.sourceSubType === "pages") {
-                dispatch(SourceConfigActions.switchSourceTab(PAGES));
-            } else {
-                dispatch(SourceConfigActions.switchSourceTab(PROFILES));
-            }
-            break;
-        }
-        case "web":
-        default: {
-            dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.WEB));
-        }
-        }
+        dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
     }
 
     render() {

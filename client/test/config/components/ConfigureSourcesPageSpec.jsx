@@ -28,37 +28,9 @@ describe("ConfigureSourcesPage", () => {
             sandbox.restore();
         });
 
-        it("should dispatch switchSourceTab with WEB if configure sourceType is not in the desired list", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("WEB");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
-
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "something" }} dispatch={()=>{}}/>
-            );
-
-            clearSourceMock.verify();
-            switchTabsMock.verify();
-        });
-
-        it("should dispatch switchSourceTab with TWITTER if configure sourceType is twitter", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("TWITTER");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
-
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}}/>
-            );
-
-            clearSourceMock.verify();
-            switchTabsMock.verify();
-        });
-
         it("should dispatch switchSourceTab with WEB if configure sourceType is web", () => {
             let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("WEB");
+                .expects("switchSourceTab").withArgs("web");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
 
@@ -70,56 +42,14 @@ describe("ConfigureSourcesPage", () => {
             switchTabsMock.verify();
         });
 
-        it("should dispatch switchSourceTab with PROFILES if configure sourceType is facebook and subType is not the desired one", () => {
+        it("should dispatch switchSourceTab with PROFILES if configure sourceType is facebook and subType is PROFILE", () => {
             let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("Profiles");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
-
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "something" }} dispatch={()=>{}}/>
-            );
-
-            clearSourceMock.verify();
-            switchTabsMock.verify();
-        });
-
-        it("should dispatch switchSourceTab with PROFILES if configure sourceType is profiles", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("Profiles");
+                .expects("switchSourceTab").withArgs("profiles");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
 
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}}/>
-            );
-
-            clearSourceMock.verify();
-            switchTabsMock.verify();
-        });
-
-        it("should dispatch switchSourceTab with PAGES, getSources with PAGES and keyword if configure sourceType is pages", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("Pages");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
-
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "pages" }} dispatch={()=>{}}/>
-            );
-
-            clearSourceMock.verify();
-            switchTabsMock.verify();
-        });
-
-        it("should dispatch switchSourceTab with GROUPS and getSources with GROUPS and keyword if configure sourceType is groups", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("Groups");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
-
-            renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();

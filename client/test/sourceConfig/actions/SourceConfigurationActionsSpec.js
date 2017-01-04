@@ -221,7 +221,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "WEB"
+                "currentSourceTab": "web"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -237,7 +237,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Profiles"
+                "currentSourceTab": "profiles"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -252,7 +252,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Pages"
+                "currentSourceTab": "pages"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -267,7 +267,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Groups"
+                "currentSourceTab": "groups"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());

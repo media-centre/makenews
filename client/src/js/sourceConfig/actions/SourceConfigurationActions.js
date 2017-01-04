@@ -10,8 +10,8 @@ export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
 export const NO_MORE_SOURCE_RESULTS = "NO_MORE_SOURCE_RESULTS";
 export const CLEAR_SOURCES = "CLEAR_SOURCES";
 export const CHANGE_CURRENT_SOURCE_TAB = "CHANGE_CURRENT_SOURCE_TAB";
-export const WEB = "WEB";
-export const TWITTER = "TWITTER";
+export const WEB = "web";
+export const TWITTER = "twitter";
 export const SOURCE_SEARCH_KEYWORD = "SOURCE_SEARCH_KEYWORD";
 
 export function configuredSourcesReceived(sources) {

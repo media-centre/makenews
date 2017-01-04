@@ -12,7 +12,7 @@ describe("Configured Sources", () => {
     describe("display configured sources", () => {
         it("should render twitter sources when the current source tab is TWITTER", () => {
             let store = createStore(() => ({
-                "currentSourceTab": "TWITTER",
+                "currentSourceTab": "twitter",
                 "configuredSources": { "twitter": [{ "name": "hello" }, { "name": "test" }] }
             }), applyMiddleware(thunkMiddleware));
 

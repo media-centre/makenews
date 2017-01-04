@@ -7,9 +7,9 @@ export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
 export const FACEBOOK_ADD_PAGE = "FACEBOOK_ADD_PAGE";
 export const FACEBOOK_ADD_GROUP = "FACEBOOK_ADD_GROUP";
-export const PROFILES = "Profiles";
-export const PAGES = "Pages";
-export const GROUPS = "Groups";
+export const PROFILES = "profiles";
+export const PAGES = "pages";
+export const GROUPS = "groups";
 
 export function facebookSourcesReceived(response) {
     return {
