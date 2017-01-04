@@ -2,8 +2,6 @@
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import TwitterTokenRoute from "../../../src/routes/helpers/TwitterTokenRoute";
 import TwitterToken from "../../../src/twitter/TwitterToken";
-import Logger from "../../../src/logging/Logger";
-import LogTestHelper from "../../helpers/LogTestHelper";
 import sinon from "sinon";
 
 describe("TwitterTokenRoute", () => {
@@ -11,7 +9,6 @@ describe("TwitterTokenRoute", () => {
         let sandbox = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
-            sandbox.stub(Logger, "instance").returns(LogTestHelper.instance());
         });
 
         afterEach("afterEach", () => {
