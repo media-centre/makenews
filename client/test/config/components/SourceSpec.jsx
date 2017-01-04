@@ -34,7 +34,7 @@ describe("Source URL component", () => {
 
     it("should have source url if currentSourceType is WEB", () => {
         sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="WEB" />
+            <Source source={source} dispatch={()=>{}} currentSourceType="web" />
         );
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
 

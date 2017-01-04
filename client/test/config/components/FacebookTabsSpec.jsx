@@ -14,12 +14,12 @@ describe("Facebook Tabs", () => {
     beforeEach("Facebook Tabs", () => {
         store = { "getState": () => {
             return {
-                "facebookCurrentSourceTab": "Profiles"
+                "facebookCurrentSourceTab": "profiles"
             };
         } };
 
         let renderer = TestUtils.createRenderer();
-        nav = renderer.render(<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>);
+        nav = renderer.render(<FacebookTabs dispatch={() => {}} store={store} currentTab="profiles"/>);
     });
 
     it("should have nav tabs to switch between facebook sources", () => {
@@ -27,8 +27,8 @@ describe("Facebook Tabs", () => {
 
         let tabLinks = nav.props.children;
         expect(tabLinks).to.have.lengthOf(3); //eslint-disable-line no-magic-numbers
-
         let [firstTab, secondTab, thirdTab] = tabLinks;
+        console.log("==> ", firstTab.props.children, secondTab.props.children, thirdTab.props.children);
         expect(firstTab.props.children).to.equal("Profiles");
         expect(secondTab.props.children).to.equal("Pages");
         expect(thirdTab.props.children).to.equal("Groups");
@@ -53,7 +53,7 @@ describe("Facebook Tabs", () => {
 
     it("should dispatch facebookSourceTabSwitch on clicking Pages tab", () => {
         let sandbox = sinon.sandbox.create();
-        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("Pages");
+        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("pages");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
                 <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>)} />
@@ -67,7 +67,7 @@ describe("Facebook Tabs", () => {
 
     it("should dispatch facebookSourceTabSwitch on clicking groups tab", () => {
         let sandbox = sinon.sandbox.create();
-        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("Groups");
+        let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("groups");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
                 <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Groups"/>)} />

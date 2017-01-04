@@ -51,7 +51,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} }).returns(Promise.resolve(sources));
 
             let actions = [
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "Profiles" },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "profiles" },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
