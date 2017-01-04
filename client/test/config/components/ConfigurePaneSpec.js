@@ -87,7 +87,8 @@ describe("Configure Pane", () => {
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },
                 "hasMoreSourceResults": false,
-                "sourceSearchKeyword": "Bla"
+                "sourceSearchKeyword": "something",
+                "addUrlMessage": "something"
             }), applyMiddleware(thunkMiddleware));
 
             sandbox = sinon.sandbox.create();
