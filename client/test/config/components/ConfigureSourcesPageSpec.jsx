@@ -1,4 +1,5 @@
 import { ConfigureSourcesPage } from "./../../../src/js/config/components/ConfigureSourcesPage";
+import FacebookLogin from "./../../../src/js/facebook/FacebookLogin";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import sinon from "sinon";
@@ -11,15 +12,15 @@ import { expect } from "chai";
 describe("ConfigureSourcesPage", () => {
     let ZERO = 0, ONE = 1;
     describe("switchSourceTab", () => {
-        let sandbox = null, renderer = null, keyword = null;
+        let sandbox = null, renderer = null;
 
         beforeEach("switchSourceTab", () => {
-            keyword = "search";
             sandbox = sinon.sandbox.create();
+            sandbox.stub(FacebookLogin, "instance").returns({});
             renderer = TestUtils.createRenderer();
             /* we have to render it twice inorder to trigger componentwillreviceprops because of shallow rendering*/ // eslint-disable-line
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}} keyword = {keyword}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}} />
             );
         });
 
@@ -34,7 +35,7 @@ describe("ConfigureSourcesPage", () => {
                 .expects("clearSources");
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "something" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();
@@ -74,16 +75,13 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("Profiles");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
-            let getSourcesMock = sandbox.mock(SourceConfigActions)
-                .expects("getSources").withArgs("Profiles", keyword);
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "bla" }} dispatch={()=>{}} keyword = {keyword}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "something" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();
             switchTabsMock.verify();
-            getSourcesMock.verify();
         });
 
         it("should dispatch switchSourceTab with PROFILES if configure sourceType is profiles", () => {
@@ -91,16 +89,13 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("Profiles");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
-            let getSourcesMock = sandbox.mock(SourceConfigActions)
-                .expects("getSources").withArgs("Profiles", keyword);
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}} keyword = {keyword}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();
             switchTabsMock.verify();
-            getSourcesMock.verify();
         });
 
         it("should dispatch switchSourceTab with PAGES, getSources with PAGES and keyword if configure sourceType is pages", () => {
@@ -108,16 +103,13 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("Pages");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
-            let getSourcesMock = sandbox.mock(SourceConfigActions)
-                .expects("getSources").withArgs("Pages", keyword);
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "pages" }} dispatch={()=>{}} keyword = {keyword}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "pages" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();
             switchTabsMock.verify();
-            getSourcesMock.verify();
         });
 
         it("should dispatch switchSourceTab with GROUPS and getSources with GROUPS and keyword if configure sourceType is groups", () => {
@@ -125,22 +117,28 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("Groups");
             let clearSourceMock = sandbox.mock(SourceConfigActions)
                 .expects("clearSources");
-            let getSourcesMock = sandbox.mock(SourceConfigActions)
-                .expects("getSources").withArgs("Groups", keyword);
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={()=>{}} keyword={keyword}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={()=>{}}/>
             );
 
             clearSourceMock.verify();
             switchTabsMock.verify();
-            getSourcesMock.verify();
         });
     });
 
     describe("children", () => {
         let renderer = TestUtils.createRenderer();
-        let result = null;
+        let result = null, sandbox = null;
+
+        beforeEach("children", () => {
+            sandbox = sinon.sandbox.create();
+            sandbox.stub(FacebookLogin, "instance").returns({});
+        });
+
+        afterEach("children", () => {
+            sandbox.restore();
+        });
 
         it("should have ConfiguredSources component", () => {
             renderer.render(

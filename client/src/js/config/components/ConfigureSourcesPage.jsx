@@ -11,24 +11,27 @@ import TwitterLogin from "./../../twitter/TwitterLogin";
 
 export class ConfigureSourcesPage extends Component {
 
-    componentDidMount() {
-        this.sourceTab(this.props.params, this.props.keyword, this.props.dispatch);
-        this.props.dispatch(getTokenExpireTime());
-        this.props.dispatch(twitterAuthentication());
-
-        /* TODO: Move FacebookLogin Instance to Facebook Related Conditions*/ //eslint-disable-line no-warning-comments,no-inline-comments
+    constructor() {
+        super();
         this.facebookLogin = FacebookLogin.instance();
     }
 
+    componentDidMount() {
+        this.sourceTab(this.props.params, this.props.dispatch);
+        this.props.dispatch(getTokenExpireTime());
+        this.props.dispatch(twitterAuthentication());
+    }
+
     componentWillReceiveProps(nextProps) {
-        this.sourceTab(nextProps.params, nextProps.keyword, nextProps.dispatch);
+        if(nextProps.params.sourceType !== this.props.params.sourceType) {
+            this.sourceTab(nextProps.params, nextProps.dispatch);
+        }
     }
 
     shouldComponentUpdate(nextProps) {
-        this.result = (nextProps.params.sourceType !== this.props.params.sourceType) ||
-            (nextProps.expireTime !== this.props.expireTime) ||
-            (nextProps.twitterAuthenticated !== this.props.twitterAuthenticated);
-        return this.result;
+        return nextProps.params.sourceType !== this.props.params.sourceType ||
+            nextProps.expireTime !== this.props.expireTime ||
+            nextProps.twitterAuthenticated !== this.props.twitterAuthenticated;
     }
 
     _showFBLogin() {
@@ -47,30 +50,31 @@ export class ConfigureSourcesPage extends Component {
         }
     }
 
-    sourceTab(params, keyword, dispatch) {
-        let ZERO = 0;
+    showLoginPrompt(sourceType) {
+        return (sourceType === "facebook" && new Date().getTime() > this.props.expireTime) ||
+            (sourceType === "twitter" && !this.props.twitterAuthenticated);
+    }
+
+    sourceTab(params, dispatch) {
         dispatch(SourceConfigActions.clearSources());
         switch (params.sourceType) {
         case "twitter": {
-            if(this.result) {
+            if(this.showLoginPrompt(params.sourceType)) {
                 this._showTwitterLogin();
             }
             dispatch(SourceConfigActions.switchSourceTab(SourceConfigActions.TWITTER));
             break;
         }
         case "facebook": {
-            if(this.result && this.props.expireTime === ZERO) {
+            if(this.showLoginPrompt(params.sourceType)) {
                 this._showFBLogin();
             }
             if(params.sourceSubType === "groups") {
                 dispatch(SourceConfigActions.switchSourceTab(GROUPS));
-                dispatch(SourceConfigActions.getSources(GROUPS, keyword));
             } else if(params.sourceSubType === "pages") {
                 dispatch(SourceConfigActions.switchSourceTab(PAGES));
-                dispatch(SourceConfigActions.getSources(PAGES, keyword));
             } else {
                 dispatch(SourceConfigActions.switchSourceTab(PROFILES));
-                dispatch(SourceConfigActions.getSources(PROFILES, keyword));
             }
             break;
         }
@@ -81,22 +85,9 @@ export class ConfigureSourcesPage extends Component {
         }
     }
 
-    getSourceType() {
-        let sourceType = this.props.params.sourceType;
-        let ZERO = 0;
-        let fbTokenExpired = sourceType === "facebook" && this.props.expireTime === ZERO;
-        let twitterExpired = sourceType === "twitter" && !this.props.twitterAuthenticated;
-        if(fbTokenExpired) {
-            return "facebook";
-        } else if(twitterExpired) {
-            return "twitter";
-        }
-        return false;
-    }
-
     render() {
-        let sourceType = this.getSourceType();
-        return (sourceType ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
+        let sourceType = this.props.params.sourceType;
+        return (this.showLoginPrompt(sourceType) ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
             : <div className="configure-container"><ConfiguredSources /><ConfigurePane /></div>);
     }
 }
@@ -105,14 +96,12 @@ ConfigureSourcesPage.propTypes = {
     "params": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "expireTime": PropTypes.number,
-    "keyword": PropTypes.string,
     "twitterAuthenticated": PropTypes.bool
 };
 
 let mapToStore = (store) => ({
     "currentSourceTab": store.currentSourceTab,
     "expireTime": store.tokenExpiresTime.expireTime,
-    "keyword": store.sourceSearchKeyword,
     "twitterAuthenticated": store.twitterTokenInfo.twitterAuthenticated
 });
 
