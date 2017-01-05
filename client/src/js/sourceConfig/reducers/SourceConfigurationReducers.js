@@ -13,7 +13,8 @@ import {
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
     CLEAR_SOURCES,
-    SOURCE_SEARCH_KEYWORD
+    SOURCE_SEARCH_KEYWORD,
+    CONFIGURED_SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
@@ -92,6 +93,13 @@ export const currentSourceTab = (state = WEB, action = {}) => {
 
 export const sourceSearchKeyword = (keyword = "", action = {}) => {
     if(action.type === SOURCE_SEARCH_KEYWORD) {
+        return action.keyword;
+    }
+    return keyword;
+};
+
+export const searchInConfiguredSources = (keyword = "", action = {}) => {
+    if(action.type === CONFIGURED_SOURCE_SEARCH_KEYWORD) {
         return action.keyword;
     }
     return keyword;

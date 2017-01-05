@@ -9,7 +9,8 @@ import {
     sourceResults,
     configuredSources,
     hasMoreSourceResults,
-    currentSourceTab
+    currentSourceTab,
+    searchInConfiguredSources
 } from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
 import {
     GOT_CONFIGURED_SOURCES,
@@ -20,7 +21,7 @@ import {
     CLEAR_SOURCES
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 
 describe("SourceConfigurationReducers", () => {
 
@@ -161,6 +162,16 @@ describe("SourceConfigurationReducers", () => {
             let sources = sourceResults(state, action);
             expect(sources.data).to.deep.equal([]);
             expect(sources.nextPage).to.deep.equal({});
+        });
+    });
+
+    describe("searchInConfiguredSources", () => {
+        it("should return empty string when action type is not CONFIGURED_SOURCE_SEARCH_KEYWORD", () =>{
+            assert.equal(searchInConfiguredSources("key"), "key");
+        });
+
+        it("should return action keyword when action type is  CONFIGURED_SOURCE_SEARCH_KEYWORD", () =>{
+            assert.equal(searchInConfiguredSources("key", { "type": "CONFIGURED_SOURCE_SEARCH_KEYWORD", "keyword": "search" }), "search");
         });
     });
 });
