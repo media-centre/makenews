@@ -28,7 +28,6 @@ describe("Facebook Tabs", () => {
         let tabLinks = nav.props.children;
         expect(tabLinks).to.have.lengthOf(3); //eslint-disable-line no-magic-numbers
         let [firstTab, secondTab, thirdTab] = tabLinks;
-        console.log("==> ", firstTab.props.children, secondTab.props.children, thirdTab.props.children);
         expect(firstTab.props.children).to.equal("Profiles");
         expect(secondTab.props.children).to.equal("Pages");
         expect(thirdTab.props.children).to.equal("Groups");
