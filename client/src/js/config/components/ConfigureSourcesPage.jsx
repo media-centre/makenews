@@ -33,43 +33,42 @@ export class ConfigureSourcesPage extends Component {
             nextProps.twitterAuthenticated !== this.props.twitterAuthenticated;
     }
 
-    _showFBLogin() {
-        if (FacebookLogin.getCurrentTime() > this.props.expireTime) {
-            this.facebookLogin.login().then(expiresAfter => {
-                this.props.dispatch(updateTokenExpireTime(expiresAfter));
-            });
-        }
-
+    _showFBLogin(dispatch) {
+        this.facebookLogin.login().then(expiresAfter => {
+            this.isPopUpDisplayed = false;
+            dispatch(updateTokenExpireTime(expiresAfter));
+        });
     }
-    _showTwitterLogin() {
+    _showTwitterLogin(dispatch) {
         if(!this.props.twitterAuthenticated) {
             TwitterLogin.instance().login().then((authenticated) => {
-                this.props.dispatch(twitterTokenInformation(authenticated));
+                this.isPopUpDisplayed = false;
+                dispatch(twitterTokenInformation(authenticated));
             });
         }
     }
 
-    showLoginPrompt(sourceType) {
+    showLoginPrompt(sourceType, dispatch) {
         if(sourceType === "facebook" && new Date().getTime() > this.props.expireTime) {
-            return this._showFBLogin;
+            this._showFBLogin(dispatch);
         } else if (sourceType === "twitter" && !this.props.twitterAuthenticated) {
-            return this._showTwitterLogin;
+            this._showTwitterLogin(dispatch);
+        } else {
+            this.isPopUpDisplayed = false;
         }
-        return null;
     }
 
     sourceTab(params, dispatch) {
+        this.isPopUpDisplayed = true;
         dispatch(SourceConfigActions.clearSources());
-        let loginFunc = this.showLoginPrompt();
-        if(loginFunc) {
-            loginFunc();
-        }
+        let sourceType = params.sourceType;
+        this.showLoginPrompt(sourceType, dispatch);
         dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
     }
 
     render() {
         let sourceType = this.props.params.sourceType;
-        return (this.showLoginPrompt(sourceType) ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
+        return (this.isPopUpDisplayed ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
             : <div className="configure-container"><ConfiguredSources /><ConfigurePane /></div>);
     }
 }
