@@ -20,8 +20,8 @@ export class Sources extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
-                    this.props.dispatch(getSources(this.props.currentTab, this.props.sourceSearchKeyword, this.props.sources.nextPage));
+                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1 && this.props.sourceSearchKeyword) { //eslint-disable-line no-magic-numbers
+                    this.props.dispatch(getSources(this.props.currentTab, this.props.sourceSearchKeyword, this.props.sources.nextPage, this.props.sources.twitterPreFirstId));
                 }
             }, scrollTimeInterval);
         }

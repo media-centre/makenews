@@ -1,12 +1,20 @@
+/* eslint no-magic-numbers:0 */
 import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler";
 import TwitterClient from "../../src/twitter/TwitterClient";
+import { userDetails } from "../../src/Factory";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("TwitterRequestHandler", () => {
-    let sandbox = null;
+    let sandbox = null, userName = null, userObj = null, keyword = null, page = null, preFirstId = null;
     beforeEach("TwitterRequestHandler", () => {
         sandbox = sinon.sandbox.create();
+        userName = "testUser";
+        userObj = { "userName": userName };
+        keyword = "keyword";
+        page = 1;
+        preFirstId = 123;
+        sandbox.mock(userDetails).expects("getUser").returns(userObj);
     });
 
     afterEach("TwitterRequestHandler", () => {
@@ -21,26 +29,23 @@ describe("TwitterRequestHandler", () => {
                 "url": "https:/t.co/ijad"
             }]
         };
-        let userName = "testUser";
+
         let twitterRequestHandler = new TwitterRequestHandler();
         let twitterClientInstance = new TwitterClient();
         sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-        sandbox.mock(twitterClientInstance).expects("fetchFollowers").returns(Promise.resolve(followers));
-        sandbox.mock(twitterRequestHandler).expects("getUserName").returns(Promise.resolve("username"));
-        let data = await twitterRequestHandler.fetchFollowersRequest(userName);
+        sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(followers));
+        let data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
         assert.strictEqual(data, followers);
 
     });
 
     it("should reject with an error if fetchinf followers from twitter throws an error", async() => {
-        let userName = "testUser";
         let twitterRequestHandler = new TwitterRequestHandler();
         let twitterClientInstance = new TwitterClient();
-        sandbox.mock(twitterRequestHandler).expects("getUserName").returns(Promise.resolve("username"));
         sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-        sandbox.mock(twitterClientInstance).expects("fetchFollowers").returns(Promise.reject("Error"));
+        sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.reject("Error"));
         try{
-            await twitterRequestHandler.fetchFollowersRequest(userName);
+            await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
         } catch (error) {
             assert.strictEqual(error, "Error");
         }

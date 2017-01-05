@@ -1,17 +1,20 @@
+/* eslint no-magic-numbers:0 */
 import { assert } from "chai";
 import TwitterFollowersRoute from "../../../src/routes/helpers/TwitterFollowersRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler";
 import RouteLogger from "../../../src/routes/RouteLogger";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 import sinon from "sinon";
 
 describe("TwitterFollowersRoute", () => {
 
-    let sandbox = null;
+    let sandbox = null, pageNumber = null, twitterPreFirstId = null;
     beforeEach("TwitterFollowersRoute", () => {
         sandbox = sinon.sandbox.create();
+        pageNumber = 1;
+        twitterPreFirstId = 123;
         sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
     });
 
@@ -22,12 +25,15 @@ describe("TwitterFollowersRoute", () => {
     it("should return the followers data from the twitter user", async()=> {
         let response = mockResponse();
 
+
         let request = {
             "cookies": {
                 "AuthSession": "Authsession"
             },
             "query": {
-                "keyword":"test"
+                "keyword": "test",
+                "page": pageNumber,
+                "twitterPreFirstId": twitterPreFirstId
             }
         };
         let data = {
@@ -39,7 +45,7 @@ describe("TwitterFollowersRoute", () => {
         };
         let twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
-        sandbox.mock(twitterRequestHandlerInstance).expects("fetchFollowersRequest").withArgs("Authsession").returns(Promise.resolve(data));
+        sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest").withExactArgs("Authsession", "test", pageNumber, twitterPreFirstId).returns(Promise.resolve(data));
 
         await new TwitterFollowersRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
@@ -54,12 +60,15 @@ describe("TwitterFollowersRoute", () => {
                 "AuthSession": "Authsession"
             },
             "query": {
-                "keyword":"test"
+                "keyword": "test",
+                "page": pageNumber,
+                "twitterPreFirstId": twitterPreFirstId
             }
         };
         let twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
-        sandbox.mock(twitterRequestHandlerInstance).expects("fetchFollowersRequest").returns(Promise.reject("error"));
+        sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest")
+            .withExactArgs("auth session", "test", pageNumber, twitterPreFirstId).returns(Promise.reject("error"));
 
         await new TwitterFollowersRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);

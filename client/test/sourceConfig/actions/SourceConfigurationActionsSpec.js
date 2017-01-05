@@ -70,10 +70,11 @@ describe("SourceConfigurationActions", () => {
     });
 
     describe("getSources", () => {
-        let sandbox = null;
+        let sandbox = null, twitterPreFirstId = null;
         let keyword = "bla";
         beforeEach("", () => {
             sandbox = sinon.sandbox.create();
+            twitterPreFirstId = 0; //eslint-disable-line no-magic-numbers
         });
 
         afterEach("", () => {
@@ -82,28 +83,29 @@ describe("SourceConfigurationActions", () => {
 
         it("should delegate to fetchFacebookSources for pages if sourceType is pages", () => {
             let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
-                .withArgs(keyword, "page", FbActions.PAGES, {});
-            sourceConfigActions.getSources(FbActions.PAGES, keyword, {});
+                .withExactArgs(keyword, "page", FbActions.PAGES, {});
+            sourceConfigActions.getSources(FbActions.PAGES, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchFacebookSources for groups if sourceType is groups", () => {
             let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
-                .withArgs(keyword, "group", FbActions.GROUPS, {});
-            sourceConfigActions.getSources(FbActions.GROUPS, keyword, {});
+                .withExactArgs(keyword, "group", FbActions.GROUPS, {});
+            sourceConfigActions.getSources(FbActions.GROUPS, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchFacebookSources for profiles if sourceType is profiles", () => {
             let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
-                .withArgs(keyword, "profile", FbActions.PROFILES, {});
-            sourceConfigActions.getSources(FbActions.PROFILES, keyword, {});
+                .withExactArgs(keyword, "profile", FbActions.PROFILES, {});
+            sourceConfigActions.getSources(FbActions.PROFILES, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchTwitterSources", () => {
-            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources");
-            sourceConfigActions.getSources("TWITTER", keyword, {});
+            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources")
+                .withExactArgs(keyword, {}, twitterPreFirstId);
+            sourceConfigActions.getSources("TWITTER", keyword, {}, twitterPreFirstId);
             fetchTwitterSourcesMock.verify();
         });
     });

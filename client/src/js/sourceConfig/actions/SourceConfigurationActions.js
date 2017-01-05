@@ -126,7 +126,7 @@ export function searchSourceKeyword(keyword = "") {
     };
 }
 
-export function getSources(sourceType, keyword, params) {
+export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
     switch (sourceType) {
     case FbActions.PAGES: {
         return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);
@@ -141,7 +141,7 @@ export function getSources(sourceType, keyword, params) {
         return WebConfigActions.fetchWebSources(keyword, params);
     }
     case TWITTER: {
-        return TwitterConfigureActions.fetchTwitterSources(keyword, params);
+        return TwitterConfigureActions.fetchTwitterSources(keyword, params, twitterPreFirstId);
     }
     default: {
         return FbActions.fetchFacebookSources(keyword, "page", sourceType, params);

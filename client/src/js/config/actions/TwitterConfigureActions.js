@@ -8,16 +8,16 @@ export const TWITTER_ADD_SOURCE = "TWITTER_ADD_SOURCE";
 export function gotTwitterSourceResults(sources) {
     return {
         "type": TWITTER_GOT_SOURCE_RESULTS,
-        "sources": { "data": sources.docs, "paging": sources.paging }
+        "sources": { "data": sources.docs, "paging": sources.paging, "twitterPreFirstId": sources.twitterPreFirstId }
     };
 }
 
 
-export function fetchTwitterSources(keyword, params = {}) {
-    let ajaxClient = AjaxClient.instance("/twitter-followers");
+export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
+    let ajaxClient = AjaxClient.instance("/twitter-handles");
     return async (dispatch, getState) => {
         try {
-            let data = await ajaxClient.get({ keyword, ...params });
+            let data = await ajaxClient.get({ keyword, ...paging, twitterPreFirstId });
             if(data.docs.length) {
                 let configuredSources = getState().configuredSources.twitter;
                 const cmp = (first, second) => first.id === second._id;

@@ -72,28 +72,29 @@ export default class TwitterClient {
         return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
     }
 
-    async fetchFollowers(userName, keyword, page = 1) { //eslint-disable-line no-magic-numbers
+    async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
+        let tokenInfo = await this.getAccessTokenAndSecret(userName);
         return new Promise((resolve, reject) => {
-            this.getAccessTokenAndSecret(userName).then((tokenInfo) => {
-                let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
-                let oauth = TwitterLogin.createOAuthInstance();
-                let followersApi = "/friends/list.json";
-                let followersWithKeyApi = `/users/search.json?q=${keyword}&page=${page}`;
-                let url = "https://api.twitter.com/1.1";
-                let getFollowers = keyword ? `${url}${followersWithKeyApi}` : `${url}${followersApi}`;
-                oauth.get(getFollowers, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
-                    if (error) {
-                        let errorInfo = JSON.parse(error);
-                        TwitterClient.logger().error("TwitterClient:: error fetching twitter followers for %s.", url, errorInfo);
-                        reject(errorInfo);
-                    }
-                    let tweetData = JSON.parse(data);
-                    let resultData = { "docs": tweetData, "paging": { "page": page + 1 } }; //eslint-disable-line no-magic-numbers
-                    TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followers");
-                    resolve(resultData);
-                });
-            }).catch(error => {
-                reject(error);
+            let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
+            let oauth = TwitterLogin.createOAuthInstance();
+            let handlesApi = "/friends/list.json";
+            let handlesWithKeyApi = `/users/search.json?q=${keyword}&page=${page}`;
+            let getHandles = keyword ? `${this._baseUrl()}${handlesWithKeyApi}` : `${this._baseUrl()}${handlesApi}`;
+            oauth.get(getHandles, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+                if (error) {
+                    let errorInfo = JSON.stringify(error);
+                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter handles for ${getHandles}, Error: ${JSON.stringify(errorInfo)}`);
+                    reject(errorInfo);
+                }
+
+                let parseData = JSON.parse(data);
+                if(preFirstId === parseData[0].id_str) { //eslint-disable-line no-magic-numbers
+                    TwitterClient.logger().error(`TwitterClient:: no more results ${getHandles}`);
+                    resolve({ "docs": [] });
+                }
+                let resultData = { "docs": parseData, "paging": { "page": page + 1 }, "twitterPreFirstId": parseData[0].id }; //eslint-disable-line no-magic-numbers
+                TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
+                resolve(resultData);
             });
         });
     }

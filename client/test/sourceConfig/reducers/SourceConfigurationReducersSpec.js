@@ -20,6 +20,7 @@ import {
     CLEAR_SOURCES
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
+import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../../src/js/config/actions/TwitterConfigureActions";
 import { expect } from "chai";
 
 describe("SourceConfigurationReducers", () => {
@@ -57,6 +58,11 @@ describe("SourceConfigurationReducers", () => {
         it("should add a web url to the state when asked for adding a web source", () => {
             let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "url": "http://website.url" }] };
             expect(configuredSources(state, action).web).to.deep.equal([{ "name": "website", "url": "http://website.url", "_id": "http://website.url" }]);
+        });
+
+        it("should add a twitter handle to the state when asked for adding a twitter source", () => {
+            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "name": "twitter handle", "id": 123 }] };
+            expect(configuredSources(state, action).twitter).to.deep.equal([{ "name": "twitter handle", "id": 123, "_id": 123 }]);
         });
 
         it("should return updated state with configured profiles", () => {
@@ -112,6 +118,19 @@ describe("SourceConfigurationReducers", () => {
             expect(state.nextPage).to.deep.equal(sources.paging);
         });
 
+        it("should return the list of sources when it got the TWITTER sources", () => {
+            let twitterPreFirstId = 12345;
+            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }],
+                "paging": {},
+                "twitterPreFirstId": twitterPreFirstId
+            };
+            let action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources };
+            let state = sourceResults([], action);
+            expect(state.data).to.deep.equal(sources.data);
+            expect(state.nextPage).to.deep.equal(sources.paging);
+            expect(state.twitterPreFirstId).to.equal(twitterPreFirstId);
+        });
+
         it("should add the added=true property to the configured facebook profile", () => {
             let state = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
             let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
@@ -151,6 +170,17 @@ describe("SourceConfigurationReducers", () => {
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": "http://web.url", "added": true, "url": "http://web.url", "name": "Group" },
                     { "url": "http://web2.url", "name": "Group2" }]);
+        });
+
+        it("should add the added=true property to the configured twitter handle", () => {
+            let state = { "data": [{ "id": 123, "name": "india" }, { "id": 456, "name": "mera bharath" }],
+                "paging": {},
+                "twitterPreFirstId": 123
+            };
+            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "id": 123, "name": "india" }] };
+            expect(sourceResults(state, action).data).to.deep.equal(
+                [{ "_id": 123, "added": true, "id": 123, "name": "india" },
+                    { "id": 456, "name": "mera bharath" }]);
         });
 
         it(`should clear the sources and next page when ${CLEAR_SOURCES} is action is performed`, () => {

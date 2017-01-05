@@ -1,4 +1,3 @@
-/* eslint consistent-this:0*/
 import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
@@ -9,23 +8,24 @@ export default class TwitterFollowersRoute extends Route {
         super(request, response, next);
         this.keyword = this.request.query.keyword;
         this.page = this.request.query.page;
+        this.preFirstId = this.request.query.twitterPreFirstId;
         this.authSession = this.request.cookies.AuthSession;
     }
 
-    pageValue() {
+    pageNumber() {
         let ONE = 1;
         let page = Number.parseInt(this.page, 10);
         return (Number.isInteger(page) && page >= ONE) ? page : ONE;
     }
 
-    async handle() {    //eslint-disable-line consistent-return
+    async handle() {
         let twitterRequestHandler = TwitterRequestHandler.instance();
         try {
-            let data = await twitterRequestHandler.fetchFollowersRequest(this.authSession, this.keyword, this.pageValue());
-            RouteLogger.instance().debug("TwitterFeedsRoute:: successfully fetched twitter feeds for key");
+            let data = await twitterRequestHandler.fetchHandlesRequest(this.authSession, this.keyword, this.pageNumber(), this.preFirstId);
+            RouteLogger.instance().debug("TwitterHandlesRoute:: successfully fetched twitter feeds for key");
             this._handleSuccess(data);
-        } catch(error){ //eslint-disable-line
-            RouteLogger.instance().debug("TwitterFeedsRoute:: fetching twitter feeds failed for key", error);
+        } catch(error) {
+            RouteLogger.instance().debug(`TwitterHandlesRoute:: fetching twitter feeds failed for key ${JSON.stringify(error)}`);
             this._handleBadRequest();
         }
     }

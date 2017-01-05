@@ -12,7 +12,6 @@ import {
     NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
-    TWITTER,
     CLEAR_SOURCES,
     SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
@@ -25,7 +24,7 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
     case FACEBOOK_GOT_SOURCES:
     case TWITTER_GOT_SOURCE_RESULTS:
     case WEB_GOT_SOURCE_RESULTS: {
-        return Object.assign({}, state, { "data": List(state.data).concat(action.sources.data).toArray(), "nextPage": action.sources.paging }); //eslint-disable-line new-cap
+        return Object.assign({}, state, { "data": List(state.data).concat(action.sources.data).toArray(), "nextPage": action.sources.paging, "twitterPreFirstId": action.sources.twitterPreFirstId }); //eslint-disable-line new-cap
     }
     case FACEBOOK_ADD_PROFILE:
     case FACEBOOK_ADD_PAGE:
