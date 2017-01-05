@@ -8,6 +8,7 @@ import sinon from "sinon";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
+import Spinner from "./../../../src/js/utils/components/Spinner";
 
 describe("Sources", () => {
     let sources = null, sandbox = null;
@@ -44,10 +45,26 @@ describe("Sources", () => {
         expect(renderedSources).to.have.lengthOf(2); //eslint-disable-line no-magic-numbers
     });
 
-    it("should display a search for source message if there are no sources", () => {
+    it("should have spinner if isFetchingSources is true", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
-            "sourceResults": { "data": [] },
+            "sourceResults": { "data": [], "isFetchingSources": true },
+            "hasMoreSourceResults": false,
+            "sourceSearchKeyword": "Bla"
+        }), applyMiddleware(thunkMiddleware));
+        result = TestUtils.renderIntoDocument(
+            <Provider store={store}>
+                <Sources />
+            </Provider>);
+
+        let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Spinner);
+        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
+    });
+
+    it("should display a search for source message if there are no sources and isFetching is false", () => {
+        store = createStore(() => ({
+            "currentSourceTab": currentTab,
+            "sourceResults": { "data": [], "isFetchingSources": false },
             "hasMoreSourceResults": false,
             "sourceSearchKeyword": "Bla"
         }), applyMiddleware(thunkMiddleware));

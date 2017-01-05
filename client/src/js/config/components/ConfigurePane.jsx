@@ -41,10 +41,11 @@ export class ConfigurePane extends Component {
                     <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              { this.props.searchKeyword && !this.props.sources.data.length
+
+              { this.props.currentTab === SourceConfigActions.WEB && this.props.searchKeyword &&
+                !this.props.sources.data.length && !this.props.sources.isFetchingSources
                   ? <AddUrl/>
-                  : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
-              }
+                  : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/> }
           </div>
         );
     }
@@ -54,7 +55,8 @@ function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
         "searchKeyword": state.sourceSearchKeyword,
-        "sources": state.sourceResults
+        "sources": state.sourceResults,
+        "isFetchingSources": state.isFetchingSources
     };
 }
 

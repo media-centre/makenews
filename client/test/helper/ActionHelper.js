@@ -12,6 +12,7 @@ export default function mockStore(getState, expectedActions, done, verify = func
     }
 
     function mockStoreWithoutMiddleware() {
+        let failed = false;
         return {
             getState() {
                 return typeof getState === "function" ? getState() : getState;
@@ -22,13 +23,14 @@ export default function mockStore(getState, expectedActions, done, verify = func
 
                 try {
                     expect(action).to.deep.equal(expectedAction);
-                    if (done && !expectedActions.length) {
+                    if (done && !expectedActions.length && !failed) {
                         verify();
                         done();
                     }
                     return action;
                 } catch (error) {
                     done(error);
+                    failed = true;
                 }
             }
         };

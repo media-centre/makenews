@@ -1,5 +1,9 @@
 import AjaxClient from "./../../utils/AjaxClient";
-import { hasMoreSourceResults, noMoreSourceResults } from "../../sourceConfig/actions/SourceConfigurationActions";
+import {
+    hasMoreSourceResults,
+    noMoreSourceResults,
+    fetchingSources,
+    fetchingSourcesFailed } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const WEB_GOT_SOURCE_RESULTS = "WEB_GOT_SOURCE_RESULTS";
@@ -16,6 +20,7 @@ export function fetchWebSources(keyword, params = {}) {
     let ajaxClient = AjaxClient.instance("/web-sources");
 
     return async (dispatch, getState) => {
+        dispatch(fetchingSources);
         try {
             let data = await ajaxClient.get({ keyword, ...params });
             if(data.docs.length) {
@@ -26,9 +31,10 @@ export function fetchWebSources(keyword, params = {}) {
                 dispatch(hasMoreSourceResults());
             } else {
                 dispatch(noMoreSourceResults());
+                dispatch(fetchingSourcesFailed);
             }
-        } catch(err) { //eslint-disable-line no-empty
-            /* TODO: we can use this to stop the spinner or give a warning once request failed */ //eslint-disable-line
+        } catch(err) {
+            dispatch(fetchingSourcesFailed);
         }
     };
 }

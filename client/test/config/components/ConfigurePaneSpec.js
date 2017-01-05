@@ -31,7 +31,7 @@ describe("Configure Pane", () => {
                     };
                 }
             };
-            currentTab = "Profiles";
+            currentTab = SourceConfigActions.WEB;
             renderer = TestUtils.createRenderer();
             configurePaneDOM = renderer.render(
                 <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search"/>
