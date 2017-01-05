@@ -102,8 +102,9 @@ describe("SourceConfigurationActions", () => {
         });
 
         it("should delegate to fetchTwitterSources", () => {
-            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources");
-            sourceConfigActions.getSources("TWITTER", keyword, {});
+            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources")
+                .withArgs(keyword, {});
+            sourceConfigActions.getSources("twitter", keyword, {});  //eslint-disable-line no-magic-numbers
             fetchTwitterSourcesMock.verify();
         });
     });
