@@ -115,13 +115,6 @@ export function switchSourceTab(currentTab) {
     };
 }
 
-export function searchSourceKeyword(keyword = "") {
-    return {
-        "type": SOURCE_SEARCH_KEYWORD,
-        keyword
-    };
-}
-
 export const fetchingSources = { "type": FETCHING_SOURCE_RESULTS };
 
 export const fetchingSourcesFailed = { "type": FETCHING_SOURCE_RESULTS_FAILED };
