@@ -40,7 +40,7 @@ export class ConfigurePane extends Component {
                     <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-              { this.props.currentTab === SourceConfigActions.WEB && this.props.searchKeyword &&
+              { this.props.currentTab === SourceConfigActions.WEB &&
                 !this.props.sources.data.length && !this.props.sources.isFetchingSources
                   ? <AddUrl/>
                   : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/> }
