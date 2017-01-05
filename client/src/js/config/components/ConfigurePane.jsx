@@ -27,7 +27,6 @@ export class ConfigurePane extends Component {
         if(!StringUtils.isEmptyString(value)) {
             this.props.dispatch(handleMessages(""));
             this.props.dispatch(SourceConfigActions.clearSources());
-            this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
             this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
         }
     }
@@ -61,7 +60,6 @@ function mapToStore(state) {
 ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "searchKeyword": PropTypes.string.isRequired,
     "sources": PropTypes.object.isRequired
 };
 

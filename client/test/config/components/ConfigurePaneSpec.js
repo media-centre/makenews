@@ -85,7 +85,6 @@ describe("Configure Pane", () => {
 
         beforeEach("search input box", () => {
             currentTab = "Profiles";
-            let addUrlStatus = { "message": "", "added": false };
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },
