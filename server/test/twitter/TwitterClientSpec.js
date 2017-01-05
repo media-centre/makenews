@@ -20,11 +20,10 @@ describe("TwitterClient", () => {
             null,
             "HMAC-SHA1");
     });
-
     afterEach(() => {
         sandbox.restore();
     });
-    it("should fetch followers from the twitter user", () => {
+    it("should fetch handles from the twitter user", () => {
         let resultData = {
             "docs": [{
                 "id": 1277389,
@@ -33,12 +32,13 @@ describe("TwitterClient", () => {
             }],
             "paging": 4
         };
+
         sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
         sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
         sandbox.mock(oauth).expects("get").returns(Promise.resolve(resultData));
 
-        twitterClient.fetchHandles().then(followers => {
-            assert.deepEqual(followers, resultData);
+        twitterClient.fetchHandles().then(handles => {
+            assert.deepEqual(handles, resultData);
         });
 
     });

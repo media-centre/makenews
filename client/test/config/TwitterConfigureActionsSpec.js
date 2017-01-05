@@ -38,6 +38,7 @@ describe("TwitterConfigureActions", () => {
             assert.deepEqual(result.sources.data, data);
             assert.equal(result.sources.paging, pageNumber);
             assert.equal(result.sources.twitterPreFirstId, twitterPreFirstId);
+
         });
     });
 
@@ -47,7 +48,7 @@ describe("TwitterConfigureActions", () => {
 
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();
-            ajaxClient = new AjaxClient("/twitter-followers");
+            ajaxClient = new AjaxClient("/twitter-handles");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             twitterPreFirstId = 123; //eslint-disable-line no-magic-numbers
             paging = { "page": 2 };
@@ -97,7 +98,6 @@ describe("TwitterConfigureActions", () => {
                 "paging": paging,
                 "twitterPreFirstId": twitterPreFirstId
             };
-
             ajaxGetMock.returns(Promise.resolve(result));
 
             let gotWebSourcesActionObj = {
@@ -119,6 +119,7 @@ describe("TwitterConfigureActions", () => {
             };
             let store = mockStore(getStore, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
+
             ajaxGetMock.verify();
         });
 

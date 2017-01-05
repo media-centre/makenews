@@ -21,8 +21,8 @@ describe("TwitterRequestHandler", () => {
         sandbox.restore();
     });
 
-    it("should fetch followers list from the twitter", async() => {
-        let followers = {
+    it("should fetch handles list from the twitter", async() => {
+        let handles = {
             "users": [{
                 "id": "test",
                 "name": "testAccount",
@@ -33,13 +33,13 @@ describe("TwitterRequestHandler", () => {
         let twitterRequestHandler = new TwitterRequestHandler();
         let twitterClientInstance = new TwitterClient();
         sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-        sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(followers));
+        sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(handles));
         let data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
-        assert.strictEqual(data, followers);
+        assert.strictEqual(data, handles);
 
     });
 
-    it("should reject with an error if fetchinf followers from twitter throws an error", async() => {
+    it("should reject with an error if fetch handles from twitter throws an error", async() => {
         let twitterRequestHandler = new TwitterRequestHandler();
         let twitterClientInstance = new TwitterClient();
         sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);

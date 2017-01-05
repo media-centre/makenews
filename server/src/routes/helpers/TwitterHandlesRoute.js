@@ -2,7 +2,7 @@ import TwitterRequestHandler from "../../twitter/TwitterRequestHandler";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 
-export default class TwitterFollowersRoute extends Route {
+export default class TwitterHandlesRoute extends Route {
 
     constructor(request, response, next) {
         super(request, response, next);
@@ -26,6 +26,7 @@ export default class TwitterFollowersRoute extends Route {
             this._handleSuccess(data);
         } catch(error) {
             RouteLogger.instance().debug(`TwitterHandlesRoute:: fetching twitter feeds failed for key ${JSON.stringify(error)}`);
+
             this._handleBadRequest();
         }
     }

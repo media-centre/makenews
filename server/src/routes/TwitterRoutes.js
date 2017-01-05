@@ -2,7 +2,7 @@ import TwitterFeedsRoute from "./helpers/TwitterFeedsRoute";
 import TwitterBatchFeedsRoute from "./helpers/TwitterBatchFeedsRoute";
 import TwitterRequestTokenRoute from "./helpers/TwitterRequestTokenRoute";
 import TwitterOauthCallbackRoute from "./helpers/TwitterOauthCallbackRoute";
-import TwitterHandlesRoute from "./helpers/TwitterFollowersRoute";
+import TwitterHandlesRoute from "./helpers/TwitterHandlesRoute";
 import RouteLogger from "./RouteLogger";
 
 export default (app) => {
