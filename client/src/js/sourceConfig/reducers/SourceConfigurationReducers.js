@@ -14,7 +14,8 @@ import {
     WEB,
     CLEAR_SOURCES,
     FETCHING_SOURCE_RESULTS,
-    FETCHING_SOURCE_RESULTS_FAILED
+    FETCHING_SOURCE_RESULTS_FAILED,
+    CONFIGURED_SOURCE_SEARCH_KEYWORD
 } from "./../actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
@@ -117,4 +118,11 @@ export const currentSourceTab = (state = WEB, action = {}) => {
     }
     default: return state;
     }
+};
+
+export const searchInConfiguredSources = (keyword = "", action = {}) => {
+    if(action.type === CONFIGURED_SOURCE_SEARCH_KEYWORD) {
+        return action.keyword;
+    }
+    return keyword;
 };
