@@ -17,7 +17,9 @@ import {
     NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
-    CLEAR_SOURCES
+    CLEAR_SOURCES,
+    FETCHING_SOURCE_RESULTS,
+    FETCHING_SOURCE_RESULTS_FAILED
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
 import { expect } from "chai";
@@ -93,7 +95,7 @@ describe("SourceConfigurationReducers", () => {
 
     describe("Sources Results", () => {
         it("should return an empty list by default when asked sources", () => {
-            expect({ "data": [], "nextPage": {} }).to.deep.equal(sourceResults());
+            expect({ "data": [], "nextPage": {}, "isFetchingSources": false }).to.deep.equal(sourceResults());
         });
 
         it("should return the list of sources when it got the FACEBOOK sources", () => {
@@ -102,6 +104,7 @@ describe("SourceConfigurationReducers", () => {
             let state = sourceResults([], action);
             expect(state.data).to.deep.equal(sources.data);
             expect(state.nextPage).to.deep.equal(sources.paging);
+            expect(state.isFetchingSources).to.be.false; //eslint-disable-line no-unused-expressions
         });
 
         it("should return the list of sources when it got the WEB sources", () => {
@@ -110,6 +113,7 @@ describe("SourceConfigurationReducers", () => {
             let state = sourceResults([], action);
             expect(state.data).to.deep.equal(sources.data);
             expect(state.nextPage).to.deep.equal(sources.paging);
+            expect(state.isFetchingSources).to.be.false; //eslint-disable-line no-unused-expressions
         });
 
         it("should add the added=true property to the configured facebook profile", () => {
@@ -161,6 +165,16 @@ describe("SourceConfigurationReducers", () => {
             let sources = sourceResults(state, action);
             expect(sources.data).to.deep.equal([]);
             expect(sources.nextPage).to.deep.equal({});
+        });
+
+        it(`should return the isFetchingSources as true when ${FETCHING_SOURCE_RESULTS} action is performed`, () => {
+            const isFetching = sourceResults({}, { "type": FETCHING_SOURCE_RESULTS }).isFetchingSources;
+            expect(isFetching).to.be.true; // eslint-disable-line no-unused-expressions
+        });
+
+        it(`should return the isFetchingSources as false when ${FETCHING_SOURCE_RESULTS_FAILED} action is performed`, () => {
+            const isFetching = sourceResults({}, { "type": FETCHING_SOURCE_RESULTS_FAILED }).isFetchingSources;
+            expect(isFetching).to.be.false; // eslint-disable-line no-unused-expressions
         });
     });
 });

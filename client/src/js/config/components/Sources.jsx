@@ -3,6 +3,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import Source from "./Source";
 import { connect } from "react-redux";
 import { getSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import Spinner from "./../../utils/components/Spinner";
 
 export class Sources extends Component {
 
@@ -28,15 +29,20 @@ export class Sources extends Component {
     }
 
     render() {
+        const _renderSources = (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>;
+
         return (
             <div className="source-results">
-                { this.props.sources.data.length
-                    ? R.addIndex(R.map)(
-                        (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>,
-                        this.props.sources.data
-                    )
-                    : (<p>{"Enter a keyword in the input box to get some sources"}</p>)
+
+                { this.props.sources.data.length &&
+                    R.addIndex(R.map)(_renderSources, this.props.sources.data) || "" }
+
+                { !this.props.sources.data.length && !this.props.sources.isFetchingSources &&
+                    <p>{"Enter a keyword in the input box to get some sources"}</p>
                 }
+
+                { this.props.sources.isFetchingSources &&
+                    <Spinner /> }
             </div>
         );
     }

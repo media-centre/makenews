@@ -13,16 +13,22 @@ import {
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
     CLEAR_SOURCES,
-    SOURCE_SEARCH_KEYWORD
+    SOURCE_SEARCH_KEYWORD,
+    FETCHING_SOURCE_RESULTS,
+    FETCHING_SOURCE_RESULTS_FAILED
 } from "./../actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 
-export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {}) => {
+export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false }, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES:
     case WEB_GOT_SOURCE_RESULTS: {
-        return Object.assign({}, state, { "data": List(state.data).concat(action.sources.data).toArray(), "nextPage": action.sources.paging }); //eslint-disable-line new-cap
+        return Object.assign({}, state,
+            { "data": List(state.data).concat(action.sources.data).toArray(), //eslint-disable-line new-cap
+                "nextPage": action.sources.paging,
+                "isFetchingSources": false
+            });
     }
     case FACEBOOK_ADD_PROFILE:
     case FACEBOOK_ADD_PAGE:
@@ -30,12 +36,23 @@ export const sourceResults = (state = { "data": [], "nextPage": {} }, action = {
         return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "id") });
     }
 
+    case FETCHING_SOURCE_RESULTS: {
+        return Object.assign({}, state, { "isFetchingSources": true });
+    }
+
+    case FETCHING_SOURCE_RESULTS_FAILED: {
+        return Object.assign({}, state, { "isFetchingSources": false });
+    }
+
     case WEB_ADD_SOURCE: {
         return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "url") });
     }
         
     case CLEAR_SOURCES: {
-        return { "data": [], "nextPage": {} };
+        return Object.assign({}, state,
+            { "data": [],
+                "nextPage": {}
+            });
     }
 
     default: return state;
@@ -67,7 +84,7 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     }
 };
 
-export const hasMoreSourceResults = (state, action = {}) => {
+export const hasMoreSourceResults = (state = true, action = {}) => {
     switch (action.type) {
     case HAS_MORE_SOURCE_RESULTS: {
         return true;
@@ -76,7 +93,7 @@ export const hasMoreSourceResults = (state, action = {}) => {
         return false;
     }
     default: {
-        return true;
+        return state;
     }
     }
 };

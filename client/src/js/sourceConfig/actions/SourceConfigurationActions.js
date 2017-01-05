@@ -13,6 +13,8 @@ export const CHANGE_CURRENT_SOURCE_TAB = "CHANGE_CURRENT_SOURCE_TAB";
 export const WEB = "web";
 export const TWITTER = "twitter";
 export const SOURCE_SEARCH_KEYWORD = "SOURCE_SEARCH_KEYWORD";
+export const FETCHING_SOURCE_RESULTS = "FETCHING_SOURCE_RESULTS";
+export const FETCHING_SOURCE_RESULTS_FAILED = "FETCHING_SOURCE_RESULTS_FAILED";
 
 export function configuredSourcesReceived(sources) {
     return {
@@ -120,6 +122,10 @@ export function searchSourceKeyword(keyword = "") {
         keyword
     };
 }
+
+export const fetchingSources = { "type": FETCHING_SOURCE_RESULTS };
+
+export const fetchingSourcesFailed = { "type": FETCHING_SOURCE_RESULTS_FAILED };
 
 export function getSources(sourceType, keyword, params) {
     switch (sourceType) {
