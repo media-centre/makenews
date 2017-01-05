@@ -27,7 +27,6 @@ export class ConfigurePane extends Component {
         if(!StringUtils.isEmptyString(value)) {
             this.props.dispatch(handleMessages(""));
             this.props.dispatch(SourceConfigActions.clearSources());
-            this.props.dispatch(SourceConfigActions.searchSourceKeyword(value));
             this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
         }
     }
@@ -41,7 +40,6 @@ export class ConfigurePane extends Component {
                     <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
                   </span>
               </div>
-
               { this.props.currentTab === SourceConfigActions.WEB && this.props.searchKeyword &&
                 !this.props.sources.data.length && !this.props.sources.isFetchingSources
                   ? <AddUrl/>
@@ -54,7 +52,6 @@ export class ConfigurePane extends Component {
 function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
-        "searchKeyword": state.sourceSearchKeyword,
         "sources": state.sourceResults,
         "isFetchingSources": state.isFetchingSources
     };
@@ -63,7 +60,6 @@ function mapToStore(state) {
 ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "searchKeyword": PropTypes.string.isRequired,
     "sources": PropTypes.object.isRequired
 };
 

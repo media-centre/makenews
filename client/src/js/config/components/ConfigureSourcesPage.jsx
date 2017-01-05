@@ -50,16 +50,15 @@ export class ConfigureSourcesPage extends Component {
 
     showLoginPrompt(sourceType, dispatch) {
         if(sourceType === "facebook" && new Date().getTime() > this.props.expireTime) {
+            this.isPopUpDisplayed = true;
             this._showFBLogin(dispatch);
         } else if (sourceType === "twitter" && !this.props.twitterAuthenticated) {
+            this.isPopUpDisplayed = true;
             this._showTwitterLogin(dispatch);
-        } else {
-            this.isPopUpDisplayed = false;
         }
     }
 
     sourceTab(params, dispatch) {
-        this.isPopUpDisplayed = true;
         dispatch(SourceConfigActions.clearSources());
         let sourceType = params.sourceType;
         this.showLoginPrompt(sourceType, dispatch);

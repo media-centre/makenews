@@ -13,7 +13,6 @@ import {
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
     CLEAR_SOURCES,
-    SOURCE_SEARCH_KEYWORD,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
 } from "./../actions/SourceConfigurationActions";
@@ -105,11 +104,4 @@ export const currentSourceTab = (state = WEB, action = {}) => {
     }
     default: return state;
     }
-};
-
-export const sourceSearchKeyword = (keyword = "", action = {}) => {
-    if(action.type === SOURCE_SEARCH_KEYWORD) {
-        return action.keyword;
-    }
-    return keyword;
 };
