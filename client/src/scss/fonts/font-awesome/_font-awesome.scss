@@ -15,3 +15,7 @@
 @import "rotated-flipped";
 @import "stacked";
 @import "icons";
+
+.fa-web {
+  @extend .fa-globe;
+}

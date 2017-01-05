@@ -77,9 +77,11 @@ describe("FacebookRequestHandler", () => {
 
     });
 
-    describe("pagePosts", () => {
-        let facebookClientGetFacebookIdMock = null, facebookClient = null, facebookWebUrl = null, pageId = "12345", facebookRequestHandler = null, facebookClientPagePostsMock = null, feeds = null, requiredFields = null, optionsJson = null;
-        beforeEach("pagePosts", () => {
+    describe("fetchFeeds", () => {
+        let facebookClient = null, sourceId = null, facebookRequestHandler = null;
+        let facebookClientPagePostsMock = null, feeds = null, requiredFields = null;
+        let optionsJson = null;
+        beforeEach("fetchFeeds", () => {
             feeds = {
                 "data": [{
                     "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
@@ -109,50 +111,42 @@ describe("FacebookRequestHandler", () => {
             };
             facebookClient = new FacebookClient(accessToken, appSecretProof);
             sinon.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof).returns(facebookClient);
-            facebookClientGetFacebookIdMock = sinon.mock(facebookClient).expects("getFacebookId");
-            facebookClientPagePostsMock = sinon.mock(facebookClient).expects("pagePosts");
-            facebookWebUrl = "https://www.facebook.com/TestPage";
+            facebookClientPagePostsMock = sinon.mock(facebookClient).expects("fetchFeeds");
+            sourceId = "https://www.facebook.com/TestPage";
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
             requiredFields = "link,message,picture,name,caption,place,privacy,created_time";
             optionsJson = {"fields": requiredFields, "limit": 100}; //eslint-disable-line
         });
 
-        afterEach("pagePosts", () => {
+        afterEach("fetchFeeds", () => {
             FacebookClient.instance.restore();
-            facebookClient.getFacebookId.restore();
-            facebookClient.pagePosts.restore();
+            facebookClient.fetchFeeds.restore();
             facebookRequestHandler.appSecretProof.restore();
         });
 
         it("should return the page posts for a given facebook web url", (done) => {
-            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withArgs(pageId, "posts", optionsJson).returns(Promise.resolve(feeds));
-            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").then(actualFeeds => {
+            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.resolve(feeds));
+            facebookRequestHandler.fetchFeeds(sourceId, "posts").then(actualFeeds => {
                 assert.strictEqual(5, actualFeeds.data.length); //eslint-disable-line
-                facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
             });
         });
 
         it("should reject with error if there is error while fetching facebook id", (done) => {
-            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.reject("error"));
-            facebookClientPagePostsMock.withArgs(pageId, "posts", optionsJson).never();
-            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").catch(error => {
+            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).never();
+            facebookRequestHandler.fetchFeeds(sourceId, "posts").catch(error => {
                 assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
-                facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
             });
         });
 
         it("should reject with error if there is error while fetching facebook feeds", (done) => {
-            facebookClientGetFacebookIdMock.withArgs(facebookWebUrl).returns(Promise.resolve(pageId));
-            facebookClientPagePostsMock.withExactArgs(pageId, "posts", optionsJson).returns(Promise.reject("error"));
-            facebookRequestHandler.pagePosts(facebookWebUrl, "posts").catch(error => {
+            facebookClientPagePostsMock.withExactArgs(sourceId, "posts", optionsJson).returns(Promise.reject("error"));
+            facebookRequestHandler.fetchFeeds(sourceId, "posts").catch(error => {
                 assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
-                facebookClientGetFacebookIdMock.verify();
                 facebookClientPagePostsMock.verify();
                 done();
             });
@@ -282,82 +276,6 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler.fetchProfiles().catch(error => {
                 try {
                     expect(error).to.equal("error fetching facebook profiles");
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
-        });
-    });
-
-    describe("Add Configured Sources", () => {
-        let sandbox = null, facebookRequestHandler = null, couchClient = null;
-        let documents = null, sources = null, currentTime = 123456, sourceType = "fb_page";
-        beforeEach("Add Configured Sources", () => {
-            sandbox = sinon.sandbox.create();
-            sources = [{
-                "name": "Source Name",
-                "url": "http://source.url"
-            }, {
-                "name": "Source Name1",
-                "url": "http://source.url.in"
-            }, {
-                "name": "Source Name2",
-                "url": ""
-            }];
-
-            facebookRequestHandler = new FacebookRequestHandler("somethings");
-            sandbox.stub(userDetails, "getUser").withArgs(accessToken).returns({ "dbName": "dbName" });
-            couchClient = new CouchClient(accessToken);
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
-            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
-        });
-
-        afterEach("Add Configured Sources", () => {
-            sandbox.restore();
-        });
-
-        it("should format the sources to put them in database", () => {
-            let [first, second] = sources;
-            documents = [{
-                "_id": first.url,
-                "name": first.name,
-                "docType": "source",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
-            }, {
-                "_id": second.url,
-                "name": second.name,
-                "docType": "source",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
-            }];
-
-            expect(facebookRequestHandler._getFormattedSources(sourceType, sources)).to.deep.equal(documents);
-        });
-
-        it("should add the source to configured list", (done) => {
-            let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
-            let success = { "ok": true };
-            bulkDocksMock.returns(success);
-
-            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).then(data => {
-                try {
-                    bulkDocksMock.verify();
-                    expect(data).to.deep.equal(success);
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
-        });
-
-        it("should reject with error when database gives an error", (done) => {
-            let errorMessage = "unexpected response from the db";
-            sandbox.stub(couchClient, "saveBulkDocuments").returns(Promise.reject(errorMessage));
-            facebookRequestHandler.addConfiguredSource(sourceType, sources, accessToken).catch(error => {
-                try {
-                    expect(error).to.equal(errorMessage);
                     done();
                 } catch (err) {
                     done(err);

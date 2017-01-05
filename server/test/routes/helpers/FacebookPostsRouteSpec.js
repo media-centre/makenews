@@ -46,7 +46,7 @@ describe("FacebookPostsRoute", () => {
         it("should set the the facebook feeds on response", (done) => {
             sinon.stub(facebookAccessToken, "getAccessToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
+            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "fetchFeeds");
             let response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.OK, status);
@@ -69,7 +69,7 @@ describe("FacebookPostsRoute", () => {
         it("should set the error on the response in case if feeds can not be fetched from facebook", (done) => {
             sinon.stub(facebookAccessToken, "getAccessToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "pagePosts");
+            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "fetchFeeds");
             let error = { "message": "bad request" };
             let response = {
                 "status": (status) => {
@@ -102,7 +102,7 @@ describe("FacebookPostsRoute", () => {
 
             sinon.stub(facebookAccessToken, "getAccessToken").withArgs(userName).returns(Promise.resolve(accessToken));
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerPagePostsMock = sinon.mock(facebookRequestHandler).expects("pagePosts");
+            let facebookRequestHandlerPagePostsMock = sinon.mock(facebookRequestHandler).expects("fetchFeeds");
             facebookRequestHandlerPagePostsMock.withArgs(webUrl, "posts", { "since": "2015-12-21T21:47:11.000Z" }).returns(Promise.resolve(posts));
 
             let response = {

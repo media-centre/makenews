@@ -128,7 +128,7 @@ describe("FetchFeedsFromAllSources", () => {
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
-            let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("pagePosts");
+            let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("fetchFeeds");
             fetchFacebookFeedRequestMock.withExactArgs("www.facebook.com/theHindu", "posts").returns(Promise.resolve(response));
 
 
@@ -237,7 +237,7 @@ describe("FetchFeedsFromAllSources", () => {
         let facebookRequestHandlerInstance = new FacebookRequestHandler("test_token");
         let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
         facebookRequestHandlerMock.withArgs("test_token").returns(facebookRequestHandlerInstance);
-        let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("pagePosts");
+        let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("fetchFeeds");
         fetchFacebookFeedRequestMock.withArgs(facebook._id).returns(Promise.resolve(response));
 
         let saveDocumentMock = sandbox.mock(fetchFeedsFromAllSources).expects("saveFeedDocumentsToDb");

@@ -47,8 +47,7 @@ export default class FetchFeedsFromAllSources extends Route {
         let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
         return await this.saveFeedDocumentsToDb(feeds);
     }
-
-
+    
     async _getUrlDocuments() {
         let couchClient = CouchClient.instance(this.accesstoken);
         let selector = {
@@ -63,7 +62,7 @@ export default class FetchFeedsFromAllSources extends Route {
     }
 
     async fetchFeedsFromSource(item) {
-        let feeds = null; let type = "posts";
+        let feeds = null, type = "posts";
         let emptyArray = [];
         switch (item.sourceType) {
         case WEB:
@@ -81,7 +80,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 if(!this.facebookAcessToken) {
                     this.facebookAcessToken = await this._getFacebookAccessToken();
                 }
-                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).pagePosts(item._id, type);
+                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).fetchFeeds(item._id, type);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 return feeds;
             } catch (err) {

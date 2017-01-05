@@ -7,7 +7,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import { constructQueryString } from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
-import FacebookParser from "./FacebookParser.js";
+import { parseFacebookPosts } from "./FacebookFeedParser.js";
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof, appId) {
@@ -27,8 +27,7 @@ export default class FacebookClient {
         this.appId = appId;
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
-
-    //didn't find any call stack for this
+    
     pageNavigationFeeds(pageUrl) {
         return new Promise((resolve, reject) => {
             let parameters = {};
@@ -56,7 +55,7 @@ export default class FacebookClient {
         });
     }
 
-    pagePosts(pageId, type, parameters = {}) {
+    fetchFeeds(pageId, type, parameters = {}) {
         return new Promise((resolve, reject) => {
             if (StringUtil.isEmptyString(pageId)) {
                 reject({
@@ -73,7 +72,7 @@ export default class FacebookClient {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
-                            feedResponse = FacebookParser.parsePosts(feedResponse.data);
+                            feedResponse = parseFacebookPosts(feedResponse.data);
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);
@@ -135,7 +134,7 @@ export default class FacebookClient {
     }
 
     getFacebookId(facebookPageUrl) {
-        return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
+        return new Promise((resolve, reject) => {
             request.get({
                 "url": this.facebookParameters.url + "/" + facebookPageUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
                 "timeout": this.facebookParameters.timeOut
@@ -154,7 +153,6 @@ export default class FacebookClient {
                     FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error: %s", facebookPageUrl, JSON.stringify(error));
                     reject(error);
                 }
-
             });
         });
     }
