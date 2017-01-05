@@ -20,7 +20,7 @@ import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/W
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 
-export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false }, action = {}) => {
+export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false, "twitterPreFirstId": 0, "keyword": "" }, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES:
     case TWITTER_GOT_SOURCE_RESULTS:
@@ -30,7 +30,8 @@ export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingS
                 "data": List(state.data).concat(action.sources.data).toArray(), //eslint-disable-line new-cap
                 "nextPage": action.sources.paging,
                 "twitterPreFirstId": action.sources.twitterPreFirstId,
-                "isFetchingSources": false
+                "isFetchingSources": false,
+                "keyword": action.sources.keyword
             });
     }
     case FACEBOOK_ADD_PROFILE:

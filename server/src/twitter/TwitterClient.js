@@ -88,13 +88,19 @@ export default class TwitterClient {
                 }
 
                 let parseData = JSON.parse(data);
-                if(preFirstId === parseData[0].id_str) { //eslint-disable-line no-magic-numbers
-                    TwitterClient.logger().error(`TwitterClient:: no more results ${getHandles}`);
-                    resolve({ "docs": [] });
+                if(!parseData.length) {
+                    TwitterClient.logger().error(`TwitterClient:: no sources for ${getHandles}`);
+                    reject("no sources");
                 }
-                let resultData = { "docs": parseData, "paging": { "page": page + 1 }, "twitterPreFirstId": parseData[0].id }; //eslint-disable-line no-magic-numbers
-                TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
-                resolve(resultData);
+                if(parseData.length) {
+                    if (preFirstId === parseData[0].id_str) { //eslint-disable-line no-magic-numbers
+                        TwitterClient.logger().error(`TwitterClient:: no more results ${getHandles}`);
+                        resolve({ "docs": [] });
+                    }
+                    let resultData = { "docs": parseData, "paging": { "page": page + 1 }, "twitterPreFirstId": parseData[0].id }; //eslint-disable-line no-magic-numbers
+                    TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
+                    resolve(resultData);
+                }
             });
         });
     }

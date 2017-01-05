@@ -21,8 +21,8 @@ export class Sources extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1 && this.props.sourceSearchKeyword) { //eslint-disable-line no-magic-numbers
-                    this.props.dispatch(getSources(this.props.currentTab, this.props.sourceSearchKeyword, this.props.sources.nextPage, this.props.sources.twitterPreFirstId));
+                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
+                    this.props.dispatch(getSources(this.props.currentTab, this.props.sources.keyword, this.props.sources.nextPage, this.props.sources.twitterPreFirstId));
                 }
             }, scrollTimeInterval);
         }
@@ -52,8 +52,7 @@ function mapToStore(store) {
     return {
         "sources": store.sourceResults,
         "currentTab": store.currentSourceTab,
-        "hasMoreSourceResults": store.hasMoreSourceResults,
-        "sourceSearchKeyword": store.sourceSearchKeyword
+        "hasMoreSourceResults": store.hasMoreSourceResults
     };
 }
 
@@ -61,8 +60,7 @@ Sources.propTypes = {
     "sources": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "currentTab": PropTypes.string.isRequired,
-    "hasMoreSourceResults": PropTypes.bool.isRequired,
-    "sourceSearchKeyword": PropTypes.string.isRequired
+    "hasMoreSourceResults": PropTypes.bool.isRequired
 };
 
 export default connect(mapToStore)(Sources);

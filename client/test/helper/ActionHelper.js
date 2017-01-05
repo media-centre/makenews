@@ -25,12 +25,10 @@ export default function mockStore(getState, expectedActions, done, verify = func
                     expect(action).to.deep.equal(expectedAction);
                     if (done && !expectedActions.length && !failed) {
                         verify();
-                        console.log("done");
                         done();
                     }
                     return action;
                 } catch (error) {
-                        console.log("done with err");
                     done(error);
                     failed = true;
                 }
