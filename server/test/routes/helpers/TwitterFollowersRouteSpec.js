@@ -4,7 +4,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import TwitterRequestHandler from "../../../src/twitter/TwitterRequestHandler";
 import RouteLogger from "../../../src/routes/RouteLogger";
 import LogTestHelper from "../../helpers/LogTestHelper";
-import mockResponse from "../../helpers/MockResponse";
+import { mockResponse } from "../../helpers/MockResponse";
 import sinon from "sinon";
 
 describe("TwitterFollowersRoute", () => {
