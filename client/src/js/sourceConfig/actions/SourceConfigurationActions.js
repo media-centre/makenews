@@ -15,6 +15,7 @@ export const WEB = "web";
 export const TWITTER = "twitter";
 export const FETCHING_SOURCE_RESULTS = "FETCHING_SOURCE_RESULTS";
 export const FETCHING_SOURCE_RESULTS_FAILED = "FETCHING_SOURCE_RESULTS_FAILED";
+export const CONFIGURED_SOURCE_SEARCH_KEYWORD = "CONFIGURED_SOURCE_SEARCH_KEYWORD";
 
 export function configuredSourcesReceived(sources) {
     return {
@@ -123,6 +124,13 @@ export function switchSourceTab(currentTab) {
 export const fetchingSources = { "type": FETCHING_SOURCE_RESULTS };
 
 export const fetchingSourcesFailed = { "type": FETCHING_SOURCE_RESULTS_FAILED };
+
+export function searchInConfiguredSources(keyword = "") {
+    return {
+        "type": CONFIGURED_SOURCE_SEARCH_KEYWORD,
+        keyword
+    };
+}
 
 export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
     switch (sourceType) {
