@@ -61,12 +61,17 @@
       cursor: pointer;
       line-height: 24px;
       padding: 8px 13px 13px 16px;
+      clear: both;
+      float: none;
     }
 
     .feed-highlight {
       line-height: 24px;
       background-color: #FFFFFF;
       padding: 8px 13px 13px 16px;
+      clear: both;
+      float: none;
+
       .feed-title {
         overflow: hidden;
         display: -webkit-box;
@@ -103,17 +108,9 @@
       padding-top: 6%;
     }
 
-    .feed-content-withEnclosure {
-      width: 70%;
-      display: inline-block;
-    }
-    .feed-content-withOutEnclosure {
-      width: 100%;
-      display: inline-block;
-    }
     .feed-media {
       float: right;
-      width: 30%;
+      width: 110px;
     }
 
     .feed-source div {
@@ -124,41 +121,5 @@
       letter-spacing: 0;
       padding: 2px 5px;
     }
-
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

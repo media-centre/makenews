@@ -44,7 +44,6 @@ describe("TwitterHandlesRoute", () => {
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
         sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest").withExactArgs("Authsession", "test", pageNumber, twitterPreFirstId).returns(Promise.resolve(data));
 
-
         await new TwitterHandlesRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
         assert.deepEqual(response.json(), data);

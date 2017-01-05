@@ -77,7 +77,7 @@ describe("FacebookBatchPosts", () => {
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
-            let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "pagePosts");
+            let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "fetchFeeds");
             fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url, "posts", { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse1));
             fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url, "posts", { "since": "2016-01-10T10:58:18.000Z" }).returns(Promise.resolve(urlResponse2));
 
@@ -135,7 +135,7 @@ describe("FacebookBatchPosts", () => {
             let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
             facebookRequestHandlerMock.withArgs(accessToken).returns(facebookRequestHandlerInstance);
 
-            let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "pagePosts");
+            let fetchFacebookFeedRequestStub = sandbox.stub(facebookRequestHandlerInstance, "fetchFeeds");
             fetchFacebookFeedRequestStub.withArgs(requestData.body.data[zero].url).returns(Promise.resolve(urlResponse1));
             fetchFacebookFeedRequestStub.withArgs(requestData.body.data[one].url).returns(Promise.reject("error"));
 

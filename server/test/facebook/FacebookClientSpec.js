@@ -31,9 +31,9 @@ describe("FacebookClient", () => {
         FacebookClient.logger.restore();
     });
 
-    describe("pageFeeds", () => {
+    describe("fetchFeeds", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
-        before("pageFeeds", () => {
+        before("fetchFeeds", () => {
             userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time" };
             remainingUrl = "/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
             pageId = "12345678";
@@ -52,7 +52,7 @@ describe("FacebookClient", () => {
                 });
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, type, userParameters).then((feeds) => {
+            facebookClient.fetchFeeds(pageId, type, userParameters).then((feeds) => {
                 try {
                     assert.strictEqual("test news 1", feeds[0].description);
                     assert.strictEqual("test news 2", feeds[1].description);
@@ -83,7 +83,7 @@ describe("FacebookClient", () => {
                 );
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => {
+            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => {
                 assert.strictEqual("OAuthException", error.type);
                 assert.strictEqual("Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.", error.message);
                 nodeErrorHandlerMock.verify();
@@ -108,7 +108,7 @@ describe("FacebookClient", () => {
                 );
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => {
+            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => {
                 assert.strictEqual("ETIMEDOUT", error.code);
                 assert.strictEqual("ETIMEDOUT", error.errno);
                 nodeErrorHandlerMock.verify();
@@ -129,13 +129,12 @@ describe("FacebookClient", () => {
 
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(pageId, type, userParameters).catch((error) => { //eslint-disable-line
+            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => { //eslint-disable-line
                 done();
             });
         });
 
         it("should throw an error when access token is null", () => {
-
             let createFacebookClient = () => {
                 return new FacebookClient(null, appSecretProof);
             };
@@ -144,7 +143,6 @@ describe("FacebookClient", () => {
         });
 
         it("should throw an error when application secret proof is null", () => {
-
             let createFacebookClient = () => {
                 return new FacebookClient(accessToken, null);
             };
@@ -155,7 +153,7 @@ describe("FacebookClient", () => {
         it("should reject with error when page name is null", (done) => {
 
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pagePosts(null).catch((error) => {
+            facebookClient.fetchFeeds(null).catch((error) => {
                 assert.strictEqual("page id cannot be empty", error.message);
                 done();
             });
