@@ -12,7 +12,6 @@ export function gotTwitterSourceResults(sources) {
     };
 }
 
-
 export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
     let ajaxClient = AjaxClient.instance("/twitter-handles");
     return async (dispatch, getState) => {

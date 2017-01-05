@@ -11,9 +11,10 @@ export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
 export const NO_MORE_SOURCE_RESULTS = "NO_MORE_SOURCE_RESULTS";
 export const CLEAR_SOURCES = "CLEAR_SOURCES";
 export const CHANGE_CURRENT_SOURCE_TAB = "CHANGE_CURRENT_SOURCE_TAB";
-export const WEB = "WEB";
-export const TWITTER = "TWITTER";
-export const SOURCE_SEARCH_KEYWORD = "SOURCE_SEARCH_KEYWORD";
+export const WEB = "web";
+export const TWITTER = "twitter";
+export const FETCHING_SOURCE_RESULTS = "FETCHING_SOURCE_RESULTS";
+export const FETCHING_SOURCE_RESULTS_FAILED = "FETCHING_SOURCE_RESULTS_FAILED";
 
 export function configuredSourcesReceived(sources) {
     return {
@@ -119,12 +120,9 @@ export function switchSourceTab(currentTab) {
     };
 }
 
-export function searchSourceKeyword(keyword = "") {
-    return {
-        "type": SOURCE_SEARCH_KEYWORD,
-        keyword
-    };
-}
+export const fetchingSources = { "type": FETCHING_SOURCE_RESULTS };
+
+export const fetchingSourcesFailed = { "type": FETCHING_SOURCE_RESULTS_FAILED };
 
 export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
     switch (sourceType) {

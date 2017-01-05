@@ -1,4 +1,3 @@
-/* eslint no-magic-numbers:0 */
 import TwitterRequestHandler from "../../src/twitter/TwitterRequestHandler";
 import TwitterClient from "../../src/twitter/TwitterClient";
 import { userDetails } from "../../src/Factory";
@@ -12,8 +11,8 @@ describe("TwitterRequestHandler", () => {
         userName = "testUser";
         userObj = { "userName": userName };
         keyword = "keyword";
-        page = 1;
-        preFirstId = 123;
+        page = 1;  //eslint-disable-line no-magic-numbers
+        preFirstId = 123; //eslint-disable-line no-magic-numbers
         sandbox.mock(userDetails).expects("getUser").returns(userObj);
     });
 

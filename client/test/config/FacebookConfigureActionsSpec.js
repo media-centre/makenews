@@ -9,7 +9,9 @@ import mockStore from "../helper/ActionHelper";
 import {
     HAS_MORE_SOURCE_RESULTS,
     NO_MORE_SOURCE_RESULTS,
-    CHANGE_CURRENT_SOURCE_TAB
+    CHANGE_CURRENT_SOURCE_TAB,
+    FETCHING_SOURCE_RESULTS,
+    FETCHING_SOURCE_RESULTS_FAILED
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("Facebook Configure Actions", () => {
@@ -48,10 +50,12 @@ describe("Facebook Configure Actions", () => {
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post");
-            ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} }).returns(Promise.resolve(sources));
+            ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} })
+                .returns(Promise.resolve(sources));
 
             let actions = [
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "Profiles" },
+                { "type": FETCHING_SOURCE_RESULTS },
+                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "profiles" },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
             ];
@@ -72,6 +76,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.returns(Promise.resolve(sources));
 
             let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
@@ -94,6 +99,7 @@ describe("Facebook Configure Actions", () => {
                 "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
                 { "type": HAS_MORE_SOURCE_RESULTS }
@@ -123,8 +129,10 @@ describe("Facebook Configure Actions", () => {
                 "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
-                { "type": NO_MORE_SOURCE_RESULTS }
+                { "type": NO_MORE_SOURCE_RESULTS },
+                { "type": FETCHING_SOURCE_RESULTS_FAILED }
             ];
 
             const getStore = () => ({

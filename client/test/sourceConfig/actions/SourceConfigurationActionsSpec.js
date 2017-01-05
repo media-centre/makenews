@@ -105,7 +105,7 @@ describe("SourceConfigurationActions", () => {
         it("should delegate to fetchTwitterSources", () => {
             let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources")
                 .withExactArgs(keyword, {}, twitterPreFirstId);
-            sourceConfigActions.getSources("TWITTER", keyword, {}, twitterPreFirstId);
+            sourceConfigActions.getSources("twitter", keyword, {}, twitterPreFirstId);
             fetchTwitterSourcesMock.verify();
         });
     });
@@ -247,7 +247,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "WEB"
+                "currentSourceTab": "web"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -263,7 +263,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Profiles"
+                "currentSourceTab": "profiles"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -278,7 +278,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Pages"
+                "currentSourceTab": "pages"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
@@ -293,7 +293,7 @@ describe("SourceConfigurationActions", () => {
                 "sourceResults": {
                     "data": sources
                 },
-                "currentSourceTab": "Groups"
+                "currentSourceTab": "groups"
             };
             let store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());

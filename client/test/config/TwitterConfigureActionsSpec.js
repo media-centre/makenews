@@ -38,7 +38,6 @@ describe("TwitterConfigureActions", () => {
             assert.deepEqual(result.sources.data, data);
             assert.equal(result.sources.paging, pageNumber);
             assert.equal(result.sources.twitterPreFirstId, twitterPreFirstId);
-
         });
     });
 
@@ -119,7 +118,6 @@ describe("TwitterConfigureActions", () => {
             };
             let store = mockStore(getStore, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
-
             ajaxGetMock.verify();
         });
 

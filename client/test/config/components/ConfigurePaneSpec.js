@@ -31,7 +31,7 @@ describe("Configure Pane", () => {
                     };
                 }
             };
-            currentTab = "Profiles";
+            currentTab = SourceConfigActions.WEB;
             renderer = TestUtils.createRenderer();
             configurePaneDOM = renderer.render(
                 <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search"/>
@@ -85,13 +85,12 @@ describe("Configure Pane", () => {
 
         beforeEach("search input box", () => {
             currentTab = "Profiles";
-            let addUrlStatus = { "message": "", "added": false };
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },
                 "hasMoreSourceResults": false,
-                "sourceSearchKeyword": "Bla",
-                "addUrlMessage": addUrlStatus
+                "sourceSearchKeyword": "something",
+                "addUrlMessage": {}
             }), applyMiddleware(thunkMiddleware));
 
             sandbox = sinon.sandbox.create();

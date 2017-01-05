@@ -32,7 +32,6 @@ describe("TwitterClient", () => {
             }],
             "paging": 4
         };
-
         sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
         sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
         sandbox.mock(oauth).expects("get").returns(Promise.resolve(resultData));

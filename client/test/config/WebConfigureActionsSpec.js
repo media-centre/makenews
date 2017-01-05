@@ -3,7 +3,12 @@ import { assert } from "chai";
 import sinon from "sinon";
 import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
-import { HAS_MORE_SOURCE_RESULTS, NO_MORE_SOURCE_RESULTS } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import {
+    HAS_MORE_SOURCE_RESULTS,
+    NO_MORE_SOURCE_RESULTS,
+    FETCHING_SOURCE_RESULTS,
+    FETCHING_SOURCE_RESULTS_FAILED
+} from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("WebConfigureActions", () => {
 
@@ -64,7 +69,13 @@ describe("WebConfigureActions", () => {
                 "sources": { "data": result.docs, "paging": result.paging }
             };
 
-            let store = mockStore({ "configuredSources": { "web": [] } }, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
+                gotWebSourcesActionObj,
+                { "type": HAS_MORE_SOURCE_RESULTS }
+            ];
+
+            let store = mockStore({ "configuredSources": { "web": [] } }, actions, done);
             store.dispatch(fetchWebSources(keyword));
             ajaxGetMock.verify();
         });
@@ -107,7 +118,13 @@ describe("WebConfigureActions", () => {
                 }]
             } };
 
-            let store = mockStore(getStore, [gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
+                gotWebSourcesActionObj,
+                { "type": HAS_MORE_SOURCE_RESULTS }
+            ];
+
+            let store = mockStore(getStore, actions, done);
             store.dispatch(fetchWebSources(keyword));
             ajaxGetMock.verify();
         });
@@ -116,7 +133,13 @@ describe("WebConfigureActions", () => {
             let result = { "docs": [], "paging": { "offset": "25" } };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let store = mockStore({}, [{ "type": NO_MORE_SOURCE_RESULTS }], done);
+            let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
+                { "type": NO_MORE_SOURCE_RESULTS },
+                { "type": FETCHING_SOURCE_RESULTS_FAILED }
+            ];
+
+            let store = mockStore({}, actions, done);
             store.dispatch(fetchWebSources(keyword));
         });
     });

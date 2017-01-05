@@ -5,7 +5,7 @@ import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import CouchClient from "../CouchClient";
-import { getUserDocumentId, getAdminDBInstance } from "../facebook/FacebookTokenDocument";
+import { getUserDocumentId, getAdminDBInstance, FACEBOOK_DOCUMENT_ID } from "../facebook/FacebookTokenDocument";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookRequestHandler {
@@ -61,7 +61,7 @@ export default class FacebookRequestHandler {
             longLivedToken.expired_after = currentTime + (longLivedToken.expires_in * milliSeconds); //eslint-disable-line camelcase
             FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched long lived token from facebook.");
             let adminDbInstance = await getAdminDBInstance();
-            let tokenDocumentId = await getUserDocumentId(authSession);
+            let tokenDocumentId = await getUserDocumentId(authSession, FACEBOOK_DOCUMENT_ID);
             try {
                 let document = await adminDbInstance.getDocument(tokenDocumentId);
                 FacebookRequestHandler.logger().debug("FacebookRequestHandler:: successfully fetched existing long lived token from db.");
