@@ -16,10 +16,14 @@ export const PROFILES = "profiles";
 export const PAGES = "pages";
 export const GROUPS = "groups";
 
-export function facebookSourcesReceived(response) {
+export function facebookSourcesReceived(response, keyword) {
     return {
         "type": FACEBOOK_GOT_SOURCES,
-        "sources": response
+        "sources": {
+            "data": response.data,
+            "paging": response.paging,
+            "keyword": keyword
+        }
     };
 }
 
@@ -43,7 +47,7 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
-                dispatch(facebookSourcesReceived(response));
+                dispatch(facebookSourcesReceived(response, keyword));
                 dispatch(hasMoreSourceResults());
             } else {
                 dispatch(noMoreSourceResults());
