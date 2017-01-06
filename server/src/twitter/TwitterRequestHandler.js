@@ -14,10 +14,10 @@ export default class TwitterRequestHandler {
     fetchTweetsRequest(url, userName, timestamp) {
         return new Promise((resolve, reject) => {
             this.twitterClient().fetchTweets(url, userName, timestamp).then(tweets => {
-                TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched feeds for url: %s.", url);
+                TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched twitter handles for: %s.", url);
                 resolve(tweets);
             }).catch(error => {
-                TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching facebook feeds of web url = %s.", url, error);
+                TwitterRequestHandler.logger().error("TwitterRequestHandler:: error fetching twitter handle for  = %s.", url, error);
                 reject(error);
             });
         });

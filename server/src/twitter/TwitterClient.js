@@ -90,7 +90,7 @@ export default class TwitterClient {
                 let parseData = JSON.parse(data);
                 if(!parseData.length) {
                     TwitterClient.logger().error(`TwitterClient:: no sources for ${getHandles}`);
-                    reject("no sources");
+                    resolve({ "docs": [] });
                 }
                 if(parseData.length) {
                     if (preFirstId === parseData[0].id_str) { //eslint-disable-line no-magic-numbers

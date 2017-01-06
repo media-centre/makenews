@@ -26,7 +26,6 @@ export default class TwitterHandlesRoute extends Route {
             this._handleSuccess(data);
         } catch(error) {
             RouteLogger.instance().debug(`TwitterHandlesRoute:: fetching twitter feeds failed for key ${JSON.stringify(error)}`);
-
             this._handleBadRequest();
         }
     }

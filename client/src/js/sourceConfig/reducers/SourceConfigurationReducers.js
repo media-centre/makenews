@@ -20,7 +20,7 @@ import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/W
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 
-export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false, "twitterPreFirstId": 0, "keyword": "" }, action = {}) => {
+export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false, "twitterPreFirstId": 0, "keyword": "the hindu" }, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES:
     case TWITTER_GOT_SOURCE_RESULTS:
