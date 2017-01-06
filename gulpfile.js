@@ -136,6 +136,10 @@ gulp.task("functional:test", function() {
         .pipe(mocha({ "timeout": 3000 }));
 });
 
+gulp.task("functional:test:watch", () => {
+    gulp.watch(parameters.functional.serverSpecPath + "**/**/*.js", ["functional:test", "functional:eslint"]);
+});
+
 // -------------------------------common tasks -------------------------------------------
 gulp.task("common:copy-js", function() {
     gulp.src(parameters.common.srcPath + "/**/*.js")

@@ -20,9 +20,13 @@ export default class CouchSession {
                 "body": querystring.stringify({ "name": username, "password": password })
             },
             (error, response) => {
-                if(CouchSession.requestSuccessful(error, response)) {
-                    CouchSession.logger().debug("CouchSession:: login successful for user '%s'.", username);
-                    resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
+                if(NodeErrorHandler.noError(error)) {
+                    if(response.statusCode === HttpResponseHandler.codes.OK) {
+                        CouchSession.logger().debug("CouchSession:: login successful for user '%s'.", username);
+                        resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
+                    } else {
+                        reject(response.body);
+                    }
                 } else {
                     CouchSession.logger().error("CouchSession:: login unsuccessful for user '%s'. Error: %s", username, error);
                     reject(error);
