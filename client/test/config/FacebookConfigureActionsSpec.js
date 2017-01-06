@@ -17,9 +17,13 @@ import {
 describe("Facebook Configure Actions", () => {
     describe("fetch facebook sources", () => {
         it("should return type FACEBOOK_GOT_SOURCES action", () => {
-            let sources = [{ "name": "Profile1" }, { "name": "Profile2" }];
+            let response = {
+                "data": [{ "name": "Profile1" }, { "name": "Profile2" }],
+                "paging": {}
+            };
+            let sources = { "data": [{ "name": "Profile1" }, { "name": "Profile2" }], "paging": {}, "keyword": "keyword" };
             let facebookConfigureAction = { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources };
-            expect(facebookConfigureAction).to.deep.equal(FBActions.facebookSourcesReceived(sources));
+            expect(facebookConfigureAction).to.deep.equal(FBActions.facebookSourcesReceived(response, "keyword"));
         });
     });
 
@@ -45,13 +49,14 @@ describe("Facebook Configure Actions", () => {
 
         it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES}, ${HAS_MORE_SOURCE_RESULTS} action after getting fb profiles`, (done) => {
             let serverUrl = "/facebook-sources";
-            let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }] };
+            let response = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {} };
+            let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {}, "keyword": "testProfile" };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post");
             ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} })
-                .returns(Promise.resolve(sources));
+                .returns(Promise.resolve(response));
 
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
@@ -66,14 +71,16 @@ describe("Facebook Configure Actions", () => {
         it("fetch pages when requested source type is pages", (done) => {
             let serverUrl = "/facebook-sources";
             let pageName = "testPage";
-            let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }] };
+            let data = [{ "name": "testProfile" }, { "name": "testProfile2" }];
+            let response = { "data": data, "paging": {} };
+            let sources = { "data": data, "paging": {}, "keyword": pageName };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
                 "userName": userName, "keyword": pageName, "type": "page", "paging": {}
             });
-            ajaxClientMock.returns(Promise.resolve(sources));
+            ajaxClientMock.returns(Promise.resolve(response));
 
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
@@ -88,10 +95,18 @@ describe("Facebook Configure Actions", () => {
         it("should dispatch configured pages with added property", (done) => {
             let serverUrl = "/facebook-sources";
             let pageName = "testPage";
-            let fbResponse = { "data": [{ "id": 1, "name": "testProfile" },
-                { "id": 2, "name": "testProfile2" }] };
-            let sources = { "data": [{ "id": 1, "name": "testProfile", "added": true },
-                { "id": 2, "name": "testProfile2" }] };
+            let fbResponse = {
+                "data": [{ "id": 1, "name": "testProfile" },
+                    { "id": 2, "name": "testProfile2" }],
+                "paging": {}
+            };
+            let sources = {
+                "data":
+                [{ "id": 1, "name": "testProfile", "added": true },
+                { "id": 2, "name": "testProfile2" }],
+                "paging": {},
+                "keyword": pageName
+            };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
@@ -121,7 +136,7 @@ describe("Facebook Configure Actions", () => {
         it(`should dispatch ${NO_MORE_SOURCE_RESULTS} when the sources are empty`, (done) => {
             let serverUrl = "/facebook-sources";
             let pageName = "testPage";
-            let fbResponse = { "data": [] };
+            let fbResponse = { "data": [], "paging": {} };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);

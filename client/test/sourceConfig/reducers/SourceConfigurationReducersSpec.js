@@ -101,7 +101,7 @@ describe("SourceConfigurationReducers", () => {
 
     describe("Sources Results", () => {
         it("should return an empty list by default when asked sources", () => {
-            expect({ "data": [], "nextPage": {}, "twitterPreFirstId": 0, "isFetchingSources": false, "keyword": "the hindu" }).to.deep.equal(sourceResults());
+            expect({ "data": [], "nextPage": {}, "twitterPreFirstId": 0, "isFetchingSources": false, "keyword": "" }).to.deep.equal(sourceResults());
         });
 
         it("should return the list of sources when it got the FACEBOOK sources", () => {

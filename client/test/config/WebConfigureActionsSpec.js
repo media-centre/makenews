@@ -1,4 +1,8 @@
-import { gotWebSourceResults, WEB_GOT_SOURCE_RESULTS, fetchWebSources } from "./../../src/js/config/actions/WebConfigureActions";
+import {
+    gotWebSourceResults,
+    WEB_GOT_SOURCE_RESULTS,
+    fetchWebSources
+} from "./../../src/js/config/actions/WebConfigureActions";
 import { assert } from "chai";
 import sinon from "sinon";
 import AjaxClient from "./../../src/js/utils/AjaxClient";
@@ -66,7 +70,7 @@ describe("WebConfigureActions", () => {
 
             let gotWebSourcesActionObj = {
                 "type": WEB_GOT_SOURCE_RESULTS,
-                "sources": { "data": result.docs, "paging": result.paging }
+                "sources": { "data": result.docs, "paging": result.paging, "keyword": keyword }
             };
 
             let actions = [
@@ -107,7 +111,9 @@ describe("WebConfigureActions", () => {
                             "url": "http://www.thehindu.com/sport/?service=rss",
                             "added": true
                         }],
-                    "paging": result.paging }
+                    "paging": result.paging,
+                    "keyword": keyword
+                }
             };
 
             const getStore = { "configuredSources": {

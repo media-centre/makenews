@@ -1,6 +1,6 @@
 import TwitterClient from "../../src/twitter/TwitterClient";
 import sinon from "sinon";
-import OAuth from "OAuth";
+import OAuth from "oauth";
 import TwitterLogin from "../../src/twitter/TwitterLogin";
 import { assert } from "chai";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
