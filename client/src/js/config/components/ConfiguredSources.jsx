@@ -39,13 +39,13 @@ class ConfiguredSources extends Component {
     }
 
 
-    _configuredSourcesGroup(heading, sourceType, searchkey) {
-        if(searchkey) {
+    _configuredSourcesGroup(heading, sourceType, searchKey) {
+        if(searchKey) {
             return (
                 <div className="configured-sources__group open">
                     <h3 className="configured-sources__group__heading">{heading}</h3>
                     <ul className="configured-sources">
-                        { this._searchInRenderedSources(sourceType, searchkey) }
+                        { this._searchInRenderedSources(sourceType, searchKey) }
 
                     </ul>
                 </div>
@@ -67,11 +67,16 @@ class ConfiguredSources extends Component {
             return (
                 <aside className="configured-sources-container">
                     <h1>{ "My Sources" }</h1>
+
                     { this._configuredSourcesGroup("Twitter", "twitter", this.props.searchKeyword) }
-                    <input placeholder="search" className="search-configured-sources" ref="search" onChange={() => {
-                        this.searchInSources(event);
-                    }}
-                    />
+                    <div className="search-configured-sources">
+                        <input placeholder="search" ref="search" onKeyUp={() => {
+                            this.searchInSources();
+                        }}
+                        />
+                        <img className="image" src="./images/search-icon.png" alt="search" />
+                    </div>
+
                 </aside>
             );
         }
@@ -81,24 +86,32 @@ class ConfiguredSources extends Component {
                 <aside className="configured-sources-container">
                     <h1>{ "My Sources" }</h1>
                     { this._configuredSourcesGroup("Web", "web", this.props.searchKeyword) }
-                    <input placeholder="search" className="search-configured-sources" ref="search" onChange={() => {
-                        this.searchInSources(event);
+                    <div className="search-configured-sources">
+                    <input placeholder="search" ref="search" onKeyUp={() => {
+                        this.searchInSources();
                     }}
                     />
+                    <img className="image" src="./images/search-icon.png" alt="search" />
+                        </div>
+
                 </aside>
             );
         }
 
         return (
-            <aside className="configured-sources-container">
+        <aside className="configured-sources-container">
                 <h1>{ "My Sources" }</h1>
                 { this._configuredSourcesGroup("Facebook Profiles", "profiles", this.props.searchKeyword) }
                 { this._configuredSourcesGroup("Facebook Pages", "pages", this.props.searchKeyword) }
                 { this._configuredSourcesGroup("Facebook Groups", "groups", this.props.searchKeyword) }
-                <input placeholder="search" className="search-configured-sources" ref="search" onChange={() => {
-                    this.searchInSources(event);
-                }}
-                />
+                <div className="search-configured-sources">
+                    <input placeholder="search" ref="search" onKeyUp={() => {
+                        this.searchInSources();
+                    }}
+                    />
+                    <img className="image" src="./images/search-icon.png" alt="search" />
+                </div>
+
 
             </aside>
         );
