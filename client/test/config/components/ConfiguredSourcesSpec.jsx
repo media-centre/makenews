@@ -28,4 +28,61 @@ describe("Configured Sources", () => {
             expect(source.length).to.equal(2); //eslint-disable-line no-magic-numbers
         });
     });
+
+    describe("search in rendered sources", () => {
+        it("should return all matched sources of twitter with name matching the search key ", () => {
+            let store = createStore(() => ({
+                "currentSourceTab": "twitter",
+                "configuredSources": { "twitter": [{ "name": "hello" }, { "name": "test" }] },
+                "searchInConfiguredSources": "hello"
+            }), applyMiddleware(thunkMiddleware));
+
+            let configuredSources = TestUtils.renderIntoDocument(
+                <Provider store={store}>
+                    <ConfiguredSources />
+                </Provider>
+            );
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let source = configuredSourcesDOM.querySelectorAll(".source-name");
+            expect(source.length).to.equal(1); //eslint-disable-line no-magic-numbers
+
+        });
+
+
+        it("should return all matched sources of web with name matching the search key ", () => {
+            let store = createStore(() => ({
+                "currentSourceTab": "web",
+                "configuredSources": { "web": [{ "name": "helloWeb" }, { "name": "test" }] },
+                "searchInConfiguredSources": "hello"
+            }), applyMiddleware(thunkMiddleware));
+
+            let configuredSources = TestUtils.renderIntoDocument(
+                <Provider store={store}>
+                    <ConfiguredSources />
+                </Provider>
+            );
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let source = configuredSourcesDOM.querySelectorAll(".source-name");
+            expect(source.length).to.equal(1); //eslint-disable-line no-magic-numbers
+
+        });
+
+        it("should return all matched sources of web with name matching the search key ", () => {
+            let store = createStore(() => ({
+                "currentSourceTab": "facebook",
+                "configuredSources": { "profiles": [{ "name": "helloFb" }, { "name": "test" }], "pages": [{ "name": "helloFb" }, { "name": "test" }], "groups": [{ "name": "helloFb" }, { "name": "test" }] },
+                "searchInConfiguredSources": "hello"
+            }), applyMiddleware(thunkMiddleware));
+
+            let configuredSources = TestUtils.renderIntoDocument(
+                <Provider store={store}>
+                    <ConfiguredSources />
+                </Provider>
+            );
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let source = configuredSourcesDOM.querySelectorAll(".source-name");
+            expect(source.length).to.equal(3); //eslint-disable-line no-magic-numbers
+
+        });
+    });
 });
