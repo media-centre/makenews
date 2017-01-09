@@ -1,4 +1,5 @@
 import { fetchedFeeds, newsBoardCurrentSourceTab } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
+import { NEWS_BOARD_CURRENT_TAB } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import { expect } from "chai";
 
 describe("DisplayFeedReducer", () => {
@@ -26,7 +27,7 @@ describe("DisplayFeedReducer", () => {
     describe("NewsBoard Current Source Tab", () => {
 
         it("should return twitter as current tab when action type is newsboard current tab with tab as twitter", () => {
-            let action = { "type": "NEWSBOARD_CURRENT_TAB", "currentTab": "twitter" };
+            let action = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "twitter" };
             expect(newsBoardCurrentSourceTab([], action)).to.deep.equal("twitter");
         });
 

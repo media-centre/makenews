@@ -1,7 +1,7 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
-export const NEWSBOARD_CURRENT_TAB = "NEWSBOARD_CURRENT_TAB";
+export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 
 export const paginatedFeeds = feeds => ({
@@ -9,7 +9,7 @@ export const paginatedFeeds = feeds => ({
 });
 
 export const newsBoardTabSwitch = currentTab => ({
-    "type": NEWSBOARD_CURRENT_TAB, currentTab
+    "type": NEWS_BOARD_CURRENT_TAB, currentTab
 });
 
 export const clearFeeds = () => ({

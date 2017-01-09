@@ -5,7 +5,7 @@ import {
     newsBoardTabSwitch,
     CLEAR_NEWS_BOARD_FEEDS,
     PAGINATED_FETCHED_FEEDS,
-    NEWSBOARD_CURRENT_TAB
+    NEWS_BOARD_CURRENT_TAB
 } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -26,7 +26,7 @@ describe("DisplayFeedActions", () => {
 
     describe("newsBoardTabSwitch", () => {
         it("should return type NEWSBOARD_CURRENT_TAB action ", () => {
-            let newsBoardTabSwitchAction = { "type": NEWSBOARD_CURRENT_TAB, "currentTab": "web" };
+            let newsBoardTabSwitchAction = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "web" };
             assert.deepEqual(newsBoardTabSwitch("web"), newsBoardTabSwitchAction);
         });
     });

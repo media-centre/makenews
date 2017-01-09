@@ -7,8 +7,9 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "activeIndex": 0, "lastIndex": 0 };
+        this.state = { "activeIndex": 0 };
         this.hasMoreFeeds = true;
+        this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
     }
 
@@ -22,7 +23,8 @@ export class DisplayFeeds extends Component {
     componentWillReceiveProps(nextProps) {
         if(this.props.sourceType !== nextProps.sourceType) {
             this.hasMoreFeeds = true;
-            this.setState({ "activeIndex": 0, "lastIndex": 0 });
+            this.offset = 0;
+            this.setState({ "activeIndex": 0 });
             this.getMoreFeeds(nextProps.sourceType);
             this.props.dispatch(DisplayFeedActions.clearFeeds());
         }
@@ -47,10 +49,9 @@ export class DisplayFeeds extends Component {
 
     getMoreFeeds(sourceType) {
         if (this.hasMoreFeeds) {
-            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.state.lastIndex, sourceType, (result) => {
-                let skip = result.docsLength ? (this.state.lastIndex + result.docsLength) : this.state.lastIndex;
+            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, (result) => {
+                this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
                 this.hasMoreFeeds = result.hasMoreFeeds;
-                this.setState({ "lastIndex": skip });
             }));
         }
     }
