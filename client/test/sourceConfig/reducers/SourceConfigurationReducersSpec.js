@@ -218,4 +218,14 @@ describe("SourceConfigurationReducers", () => {
             assert.equal(searchInConfiguredSources("key", { "type": "CONFIGURED_SOURCE_SEARCH_KEYWORD", "keyword": "search" }), "search");
         });
     });
+
+    describe("searchInConfiguredSources", () => {
+        it("should return empty string when action type is not CONFIGURED_SOURCE_SEARCH_KEYWORD", () =>{
+            assert.equal(searchInConfiguredSources("key"), "key");
+        });
+
+        it("should return action keyword when action type is  CONFIGURED_SOURCE_SEARCH_KEYWORD", () =>{
+            assert.equal(searchInConfiguredSources("key", { "type": "CONFIGURED_SOURCE_SEARCH_KEYWORD", "keyword": "search" }), "search");
+        });
+    });
 });

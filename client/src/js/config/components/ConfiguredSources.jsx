@@ -30,7 +30,6 @@ class ConfiguredSources extends Component {
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
-
     _configuredSourcesGroup(heading, sourceType, searchKey) {
         return (
             <div className="configured-sources__group open">
@@ -40,7 +39,6 @@ class ConfiguredSources extends Component {
                 </ul>
             </div>
         );
-
     }
 
     _searchBar() {
@@ -59,7 +57,6 @@ class ConfiguredSources extends Component {
             return (
                 <aside className="configured-sources-container">
                     <h1>{ "My Sources" }</h1>
-
                     { this._configuredSourcesGroup("Twitter", "twitter", this.props.searchKeyword) }
                     { this._searchBar() }
                 </aside>
@@ -70,7 +67,6 @@ class ConfiguredSources extends Component {
             return (
                 <aside className="configured-sources-container">
                     <h1>{ "My Sources" }</h1>
-
                     { this._configuredSourcesGroup("Web", "web", this.props.searchKeyword) }
                     { this._searchBar() }
                 </aside>
@@ -84,7 +80,6 @@ class ConfiguredSources extends Component {
                     { this._configuredSourcesGroup("Facebook Pages", "pages", this.props.searchKeyword) }
                     { this._configuredSourcesGroup("Facebook Groups", "groups", this.props.searchKeyword) }
                     { this._searchBar() }
-
             </aside>
         );
     }
