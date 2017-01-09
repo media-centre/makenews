@@ -39,6 +39,7 @@ class ConfiguredSources extends Component {
                 </ul>
             </div>
         );
+
     }
 
     _searchBar() {
