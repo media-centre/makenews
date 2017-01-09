@@ -37,7 +37,8 @@ export class DisplayFeeds extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                if (this.dom.scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
+                const scrollTop = this.dom.scrollTop;
+                if (scrollTop && scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }, scrollTimeInterval);
