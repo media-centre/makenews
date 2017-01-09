@@ -13,7 +13,7 @@ describe("Configured Sources", () => {
         it("should render twitter sources when the current source tab is TWITTER", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "twitter",
-                "configuredSources": { "twitter": [{ "name": "hello" }, { "name": "test" }] }
+                "configuredSources": { "twitter": [{ "_id": "123", "name": "hello" }, { "_id": "1234", "name": "test" }] }
             }), applyMiddleware(thunkMiddleware));
 
             let configuredSources = TestUtils.renderIntoDocument(
@@ -33,10 +33,9 @@ describe("Configured Sources", () => {
         it("should return all matched sources of twitter with name matching the search key ", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "twitter",
-                "configuredSources": { "twitter": [{ "name": "hello" }, { "name": "test" }] },
+                "configuredSources": { "twitter": [{ "_id": "123", "name": "hello" }, { "_id": "1234", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
-
             let configuredSources = TestUtils.renderIntoDocument(
                 <Provider store={store}>
                     <ConfiguredSources />
@@ -45,14 +44,12 @@ describe("Configured Sources", () => {
             let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
             expect(source.length).to.equal(1); //eslint-disable-line no-magic-numbers
-
         });
-
 
         it("should return all matched sources of web with name matching the search key ", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "web",
-                "configuredSources": { "web": [{ "name": "helloWeb" }, { "name": "test" }] },
+                "configuredSources": { "web": [{ "_id": "123", "name": "helloWeb" }, { "_id": "1234", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
 
@@ -67,10 +64,11 @@ describe("Configured Sources", () => {
 
         });
 
-        it("should return all matched sources of web with name matching the search key ", () => {
+        it("should return all matched sources of facebook with name matching the search key ", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "facebook",
-                "configuredSources": { "profiles": [{ "name": "helloFb" }, { "name": "test" }], "pages": [{ "name": "helloFb" }, { "name": "test" }], "groups": [{ "name": "helloFb" }, { "name": "test" }] },
+                "configuredSources": { "profiles": [{ "_id": "123", "name": "helloFb" }, { "_id": "1234", "name": "test" }], "pages": [{ "_id": "1235", "name": "helloFb" }, { "_id": "1236", "name": "test" }],
+                    "groups": [{ "_id": "1237", "name": "helloFb" }, { "_id": "1238", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
 
