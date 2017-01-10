@@ -67,8 +67,8 @@ export default class FetchFeedsFromAllSources extends Route {
         switch (item.sourceType) {
         case WEB:
             try {
-                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item.url);
-                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item.url}`);
+                feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
+                FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
@@ -89,8 +89,9 @@ export default class FetchFeedsFromAllSources extends Route {
             }
         case TWITTER_TYPE:
             try {
-                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id);
+                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id, item.latestFeedTimeStamp, this.accesstoken);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
+
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);

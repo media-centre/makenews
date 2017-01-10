@@ -64,8 +64,8 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should add a twitter handle to the state when asked for adding a twitter source", () => {
-            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "name": "twitter handle", "id": 123 }] };
-            expect(configuredSources(state, action).twitter).to.deep.equal([{ "name": "twitter handle", "id": 123, "_id": 123 }]);
+            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "name": "twitter handle", "id_str": "123" }] };
+            expect(configuredSources(state, action).twitter).to.deep.equal([{ "name": "twitter handle", "_id": "123", "id_str": "123" }]);
         });
 
         it("should return updated state with configured profiles", () => {

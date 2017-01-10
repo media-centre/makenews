@@ -37,7 +37,9 @@ export default class SourceConfigRequestHandler {
             "sourceType": sourceType,
             "latestFeedTimeStamp": date
         });
-        let filterEmpty = source => !StringUtil.isEmptyString(source.url);
+        let filterEmpty = source => {
+            return !StringUtil.isEmptyString(source.url);
+        };
         return R.pipe(
             R.filter(filterEmpty),
             R.map(formatSources)

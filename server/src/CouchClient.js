@@ -27,7 +27,7 @@ export default class CouchClient {
 
     static async createInstance(accessToken) {
         let instance = CouchClient.getDbInstance(accessToken);
-        if(!instance) {
+        if (!instance) {
             instance = new CouchClient(null, accessToken);
             instance.dbName = await instance.getUserDbName();
         }
@@ -66,10 +66,9 @@ export default class CouchClient {
                 "headers": this._headers(customHeaders),
                 "body": body,
                 "json": true
-            },
-                (error, response) => {
-                    this.handleResponse(error, response, resolve, reject);
-                });
+            }, (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
         });
     }
 
@@ -80,10 +79,9 @@ export default class CouchClient {
                 "headers": this._headers(customHeaders),
                 "body": body || {},
                 "json": true
-            },
-                (error, response) => {
-                    this.handleResponse(error, response, resolve, reject);
-                });
+            }, (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
         });
     }
 
@@ -94,19 +92,18 @@ export default class CouchClient {
                 "headers": this._headers(customHeaders),
                 "data": data,
                 "json": true
-            },
-                (error, response) => {
-                    this.handleResponse(error, response, resolve, reject);
-                });
+            }, (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
         });
     }
 
     handleResponse(error, response, resolve, reject) {
         if (NodeErrorHandler.noError(error)) {
             if (new HttpResponseHandler(response.statusCode).success()) {
-                CouchClient.logger().debug("successful response from database.");
+                CouchClient.logger().debug("CouchClient:: successful response from database.");
                 resolve(response.body);
-            } else if(response.statusCode === HttpResponseHandler.codes.CONFLICT) {
+            } else if (response.statusCode === HttpResponseHandler.codes.CONFLICT) {
                 reject({ "status": "conflict", "message": response.body });
             } else {
                 CouchClient.logger().debug(`unexpected response from the db with status ${response.statusCode} and Error: ${JSON.stringify(response.body)}`);
@@ -127,7 +124,7 @@ export default class CouchClient {
                     if (NodeErrorHandler.noError(error)) {
                         if (response.statusCode === HttpResponseHandler.codes.OK) {
                             let userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
-                            CouchClient.logger().debug("successful response from database.");
+                            CouchClient.logger().debug("CouchClient:: successful response from database.");
                             resolve(userDbs);
                         } else {
                             CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);

@@ -193,6 +193,8 @@ describe("SourceConfigurationActions", () => {
 
         it(`should dispatch ${TwitterConfigureActions.TWITTER_ADD_SOURCE} when requested for adding group`, (done) => {
             let appWindow = new AppWindow();
+            sources = [{ "name": "something", "id_str": "432455" }];
+            configuredSources = [{ "name": "something", "id_str": "432455", "url": "432455" }];
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
 
@@ -204,7 +206,7 @@ describe("SourceConfigurationActions", () => {
                 .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
 
-            let store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": sources }], done);
+            let store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.TWITTER, ...sources));
         });
 

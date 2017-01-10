@@ -75,7 +75,7 @@ export function addSourceToConfigureList(sourceType, ...sources) {
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "web", WebConfigActions.WEB_ADD_SOURCE);
     }
     case TWITTER: {
-        let configuredSources = Object.assign([], sources);
+        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id_str }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "twitter", TwitterConfigureActions.TWITTER_ADD_SOURCE);
     }
     default: {

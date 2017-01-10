@@ -8,9 +8,7 @@ export default class Source extends Component {
             <div className={this.props.source.added ? "source added" : "source"}>
                 <div className="source__icon">
                     { this.props.source.picture &&
-                        <img src={this.props.source.picture.data.url} width="40px" height="40px"/> ||
-                    <img src={this.props.source.profile_image_url} width="40px" height="40px"/>
-
+                        <img src={this.props.source.picture.data.url} width="40px" height="40px"/>
                     }
                 </div>
                 <div className="source__details">

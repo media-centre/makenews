@@ -106,12 +106,11 @@ describe("FetchFeedsFromAllSources", () => {
             let fetchFeedsRequest = new FetchFeedsFromAllSources(requestData, response);
 
             fetchFeedsRequest.fetchFeedsFromSource({
-                "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
+                "_id": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
                 "sourceType": "web"
             }).then((feeds)=> {
                 assert.deepEqual(response, feeds);
                 fetchRssFeedRequestMock.verify();
-
                 done();
             });
         });

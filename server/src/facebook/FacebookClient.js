@@ -8,6 +8,7 @@ import { constructQueryString } from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
 import { parseFacebookPosts } from "./FacebookFeedParser.js";
+
 export default class FacebookClient {
 
     static instance(accessToken, appSecretProof, appId) {
