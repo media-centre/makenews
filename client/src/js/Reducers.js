@@ -12,7 +12,7 @@ import { fetchedFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { newsBoardCurrentSourceTab } from "./newsboard/reducers/DisplayFeedReducers";
-import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, sourceSearchKeyword, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 
@@ -35,7 +35,6 @@ const contentDiscoveryApp = combineReducers({
     fetchedFeeds,
     addUrlMessage,
     sourceResults,
-    sourceSearchKeyword,
     searchInConfiguredSources,
     currentSourceTab,
     currentHeaderTab,

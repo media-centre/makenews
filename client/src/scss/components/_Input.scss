@@ -1,0 +1,39 @@
+.input-box {
+  display: flex;
+  border-bottom: 2px solid $primary-color-light;
+  margin: 0 5px;
+  align-items: flex-end;
+
+  &:before,
+  &:after {
+    content: '';
+    display: inline-flex;
+    width: 2px;
+    height: 7px;
+    background-color: $primary-color-light;
+  }
+
+  .input-container {
+    padding: 0 10px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+  }
+
+  input {
+    flex-grow: 1;
+    border: 0;
+    padding: 6px 6px 6px 0;
+    background-color: transparent;
+
+    &:focus {
+      border: none;
+    }
+  }
+
+  .input-addon {
+    img {
+      width: 20px;
+    }
+  }
+}

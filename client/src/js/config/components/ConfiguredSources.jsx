@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
 import { getConfiguredSources, TWITTER, WEB, searchInConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
+import Input from "./../../utils/components/Input";
 
 class ConfiguredSources extends Component {
     
@@ -25,8 +26,8 @@ class ConfiguredSources extends Component {
         return R.map(configuredSourceDOM, R.prop(sourceType, this.props.sources));
     }
 
-    searchInSources() {
-        let value = this.refs.search.value;
+    searchInSources(event) {
+        let value = event.target.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
@@ -43,50 +44,47 @@ class ConfiguredSources extends Component {
     }
 
     _searchBar() {
-        return (
-            <div className="search-configured-sources">
-                <input placeholder="search" ref="search" onKeyUp={() => {
-                    this.searchInSources();
-                }}
-                />
-                <img className="image" src="./images/search-icon.png" alt="search"/>
-            </div>);
+        //eslint-disable-next-line brace-style
+        return <Input eventHandlers={{ "onKeyUp": (event) => { this.searchInSources(event); } }} placeholder="search" addonSrc="./images/search-icon.png"/>;
     }
 
     _displayConfiguredSources() {
         if(this.props.currentTab === TWITTER) {
             return (
-                <aside className="configured-sources-container">
+                <div className="configured-sources-block">
                     <h1>{ "My Sources" }</h1>
                     { this._configuredSourcesGroup("Twitter", "twitter", this.props.searchKeyword) }
-                    { this._searchBar() }
-                </aside>
+                </div>
             );
         }
 
         if(this.props.currentTab === WEB) {
             return (
-                <aside className="configured-sources-container">
+                <div className="configured-sources-block">
                     <h1>{ "My Sources" }</h1>
                     { this._configuredSourcesGroup("Web", "web", this.props.searchKeyword) }
-                    { this._searchBar() }
-                </aside>
+                </div>
             );
         }
 
         return (
-            <aside className="configured-sources-container">
-                    <h1>{ "My Sources" }</h1>
-                    { this._configuredSourcesGroup("Facebook Profiles", "profiles", this.props.searchKeyword) }
-                    { this._configuredSourcesGroup("Facebook Pages", "pages", this.props.searchKeyword) }
-                    { this._configuredSourcesGroup("Facebook Groups", "groups", this.props.searchKeyword) }
-                    { this._searchBar() }
-            </aside>
+            <div className="configured-sources-block">
+                <h1>{ "My Sources" }</h1>
+                { this._configuredSourcesGroup("Facebook Profiles", "profiles", this.props.searchKeyword) }
+                { this._configuredSourcesGroup("Facebook Pages", "pages", this.props.searchKeyword) }
+                { this._configuredSourcesGroup("Facebook Groups", "groups", this.props.searchKeyword) }
+            </div>
         );
     }
 
     render() {
-        return this._displayConfiguredSources();
+        return (
+            <aside className="configured-sources-container">
+                { this._displayConfiguredSources() }
+
+                { this._searchBar() }
+            </aside>
+        );
     }
 }
 
