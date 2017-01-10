@@ -7,16 +7,20 @@ import Spinner from "./../../utils/components/Spinner";
 
 export class Sources extends Component {
 
+    constructor() {
+        super();
+        this.getMoreFeeds = this._getMoreFeeds.bind(this);
+    }
     componentWillMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
-        document.addEventListener("scroll", this.getMoreFeeds.bind(this));
+        document.addEventListener("scroll", this.getMoreFeeds);
     }
 
     componentWillUnmount() {
         document.removeEventListener("scroll", this.getMoreFeeds);
     }
 
-    getMoreFeeds() {
+    _getMoreFeeds() {
         if(this.props.hasMoreSourceResults && !this.timer) {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {

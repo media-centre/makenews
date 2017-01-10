@@ -192,20 +192,20 @@ export default class RssClient {
         }
     }
 
-    async searchURL(keyword, offset) {
+    async searchURL(keyword, skip) {
         let result = { };
         let queryString = keyword === "" ? "*/*" : `${keyword}*`;
         try {
             let query = {
                 "q": `name:${queryString}`,
                 "limit": LIMIT_VALUE,
-                offset
+                skip
             };
             let dbName = ApplicationConfig.instance().adminDetails().db;
             let response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
 
             result.docs = R.map(row => row.fields)(response.rows);
-            result.paging = { "offset": (offset + LIMIT_VALUE) };
+            result.paging = { "offset": (skip + LIMIT_VALUE) };
         
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
         } catch (error) {

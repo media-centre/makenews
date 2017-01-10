@@ -639,7 +639,7 @@ describe("RssClient", () => {
 
         it("should return the searched URL Documents", async () => {
             let key = "The Hindu";
-            let offset = 100;
+            let skip = 100;
 
             let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
@@ -671,20 +671,20 @@ describe("RssClient", () => {
                         "url": "http://www.thehindu.com/news/international/?service=rss"
                     }
                 ],
-                "paging": { "offset": (offset + limit) }
+                "paging": { "offset": (skip + limit) }
             };
 
             let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, offset };
+                query = { "q": `name:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, offset);
+            let document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should return empty document if No documents found for the key", async() => {
             let key = "The Hindu";
-            let offset = 100;
+            let skip = 100;
 
             let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
@@ -698,20 +698,20 @@ describe("RssClient", () => {
                 "docs": [
 
                 ],
-                "paging": { "offset": (offset + limit) }
+                "paging": { "offset": (skip + limit) }
             };
 
             let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, offset };
+                query = { "q": `name:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, offset);
+            let document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should return all documents when they enter for empty string", async() => {
             let key = "";
-            let offset = 100;
+            let skip = 100;
 
             let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
@@ -743,29 +743,29 @@ describe("RssClient", () => {
                         "url": "http://www.thehindu.com/news/international/?service=rss"
                     }
                 ],
-                "paging": { "offset": (offset + limit) }
+                "paging": { "offset": (skip + limit) }
             };
 
             let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": "name:*/*", limit, offset };
+                query = { "q": "name:*/*", limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, offset);
+            let document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should reject with an error when couchdb throws an error", async() => {
             let key = "The Hindu";
-            let offset = 100;
+            let skip = 100;
 
             let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             let rssClient = RssClient.instance();
 
             let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, offset };
+                query = { "q": `name:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.reject("Unexpected Repsonse from DB"));
 
-            await isRejected(rssClient.searchURL(key, offset), { "message": `Request failed for url: ${key}, error: "Unexpected Repsonse from DB"` });
+            await isRejected(rssClient.searchURL(key, skip), { "message": `Request failed for url: ${key}, error: "Unexpected Repsonse from DB"` });
         });
     });
 });
