@@ -1,6 +1,6 @@
 {
   "name": "ContentDiscoveryWebServer",
-  "script" : "{{package_source_path}}/dist/server.js",
+  "script" : "/home/go/ContentDiscovery/dist/server.js",
   "watch": true,
   "max_restarts": 20,
   "watch":true,
