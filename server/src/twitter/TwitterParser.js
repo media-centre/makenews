@@ -7,8 +7,7 @@ export default class TwitterParser {
     parseHandle(handles) {
         return handles.map(handle => {
             return {
-                "id": handle.id,
-                "id_str": handle.id_str,
+                "id": handle.id_str,
                 "picture": {
                     "data": {
                         "url": handle.profile_image_url_https

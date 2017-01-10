@@ -94,7 +94,7 @@ export default class FetchFeedsFromAllSources extends Route {
 
                 return feeds;
             } catch (err) {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching twitter feeds. Error: %s", err);
+                FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching twitter feeds. Error: ${JSON.stringify(err)}`);
                 return emptyArray;
             }
         default:

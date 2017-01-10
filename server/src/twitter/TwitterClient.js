@@ -20,26 +20,26 @@ export default class TwitterClient {
         let type = url.startsWith("#") ? twitterTypes.TAG : twitterTypes.USER;
         let timestampQuery = timestamp ? encodeURIComponent("since:") + this._getTwitterTimestampFormat(timestamp) : "";
         let tokenInfo = await this.getAccessTokenAndSecret(userName);
+
         return new Promise((resolve, reject) => {
             let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
             let oauth = TwitterLogin.createOAuthInstance();
-            let searchUrl = type === twitterTypes.TAG ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`
-                : `${this._baseUrl()}${userApi}?user_id=${encodeURIComponent(url)}&${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
+
+            let queryParams = `${encodeURIComponent(url)}&${timestampQuery}&count=${encodeURIComponent(FEEDS_COUNT + searchParams)}`;
+            let searchUrl = type === twitterTypes.TAG
+                ? `${this._baseUrl()}${searchApi}?q=${queryParams}`
+                : `${this._baseUrl()}${userApi}?user_id=${queryParams}`;
+
             oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
                     const errorInfo = JSON.parse(data);
-                    TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s.", url, errorInfo);
+                    TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s.", url, error);
                     reject(errorInfo.message);
                 } else {
                     let tweetData = JSON.parse(data);
-                    let parsedTweets = [];
-                    let twitterParser = TwitterParser.instance();
+                    let parsedTweets = TwitterParser.instance().parseTweets(url, tweetData.statuses || tweetData);
+
                     TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
-                    if (type === twitterTypes.USER) {
-                        parsedTweets = twitterParser.parseTweets(url, tweetData);
-                    } else {
-                        parsedTweets = twitterParser.parseTweets(url, tweetData.statuses);
-                    }
                     resolve(parsedTweets);
                 }
             });
@@ -80,27 +80,31 @@ export default class TwitterClient {
             let handlesApi = "/friends/list.json";
             let handlesWithKeyApi = `/users/search.json?q=${keyword}&page=${page}`;
             let getHandles = keyword ? `${this._baseUrl()}${handlesWithKeyApi}` : `${this._baseUrl()}${handlesApi}`;
+
             oauth.get(getHandles, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
                     let errorInfo = JSON.parse(data);
                     TwitterClient.logger().error(`TwitterClient:: error fetching twitter handles for ${getHandles}, Error: ${JSON.stringify(error)}`);
                     reject(errorInfo.message);
                 }
-                let jsonParsedData = JSON.parse(data);
-                if(!jsonParsedData.length) {
-                    TwitterClient.logger().error(`TwitterClient:: no sources for ${getHandles}`);
-                    resolve({ "docs": [] });
-                }
 
-                if(jsonParsedData.length) {
+                let jsonParsedData = JSON.parse(data);
+                if (jsonParsedData.length) {
                     if (preFirstId === jsonParsedData[0].id_str) { //eslint-disable-line no-magic-numbers
                         TwitterClient.logger().error(`TwitterClient:: no more results ${getHandles}`);
                         resolve({ "docs": [] });
                     }
                     let parseData = TwitterParser.instance().parseHandle(jsonParsedData);
-                    let resultData = { "docs": parseData, "paging": { "page": page + 1 }, "twitterPreFirstId": parseData[0].id }; //eslint-disable-line no-magic-numbers
+                    let resultData = {
+                        "docs": parseData,
+                        "paging": { "page": page + 1 }, //eslint-disable-line no-magic-numbers
+                        "twitterPreFirstId": parseData[0].id //eslint-disable-line no-magic-numbers
+                    };
                     TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
                     resolve(resultData);
+                } else {
+                    TwitterClient.logger().error(`TwitterClient:: no sources for ${getHandles}`);
+                    resolve({ "docs": [] });
                 }
             });
         });

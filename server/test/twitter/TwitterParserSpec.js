@@ -8,7 +8,6 @@ describe("TwitterParser", () => {
         beforeEach("parseHandle", () => {
             handleFromTwitter = [
                 {
-                    "id": 123,
                     "id_str": "123",
                     "name": "india1",
                     "screen_name": "mera bharath1",
@@ -16,7 +15,6 @@ describe("TwitterParser", () => {
                     "profile_image_url_https": "https://pbs.twimg.com/profile_images/1718987370/cute-baby-girl-pics1_normal.jpg"
                 },
                 {
-                    "id": 456,
                     "id_str": "456",
                     "name": "india2",
                     "screen_name": "mera bharath2",
@@ -31,8 +29,7 @@ describe("TwitterParser", () => {
             let twitterParser = TwitterParser.instance();
             let expectedHandle = twitterParser.parseHandle(handleFromTwitter);
             let parsedHandle = [{
-                "id": 123,
-                "id_str": "123",
+                "id": "123",
                 "picture": {
                     "data": {
                         "url": "https://pbs.twimg.com/profile_images/1718987370/cute-baby-girl-pics1_normal.jpg"
@@ -40,8 +37,7 @@ describe("TwitterParser", () => {
                 },
                 "name": "india1"
             }, {
-                "id": 456,
-                "id_str": "456",
+                "id": "456",
                 "picture": {
                     "data": {
                         "url": "https://pbs.twimg.com/profile_images/1718987370/cute-baby-girl-pics1_normal.jpg"
@@ -67,7 +63,6 @@ describe("TwitterParser", () => {
                     "result_type": "recent"
                 },
                 "created_at": "Fri Dec 11 11:41:56",
-                "id": 123456,
                 "id_str": "123457",
                 "text": "Hindu twitter text - 123457",
                 "entities": {
@@ -98,7 +93,6 @@ describe("TwitterParser", () => {
                     "result_type": "recent"
                 },
                 "created_at": "Fri Dec 11 11:41:56",
-                "id": 123456,
                 "id_str": "123457",
                 "text": "Hindu twitter text - 123457",
                 "entities": {
@@ -130,7 +124,6 @@ describe("TwitterParser", () => {
                     "result_type": "recent"
                 },
                 "created_at": "Fri Dec 11 11:41:56",
-                "id": 123456,
                 "id_str": "123457",
                 "text": "Hindu twitter text - 123457",
                 "entities": {
@@ -170,7 +163,6 @@ describe("TwitterParser", () => {
                     "result_type": "recent"
                 },
                 "created_at": "Fri Dec 11 11:41:56",
-                "id": 123456,
                 "id_str": "123457",
                 "text": "Hindu twitter text - 123457",
                 "entities": {

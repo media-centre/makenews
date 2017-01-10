@@ -87,7 +87,7 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
         return Object.assign({}, state, { "web": List(state.web).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case TWITTER_ADD_SOURCE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id_str }), action.sources);
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "twitter": List(state.twitter).concat(sources).toArray() }); //eslint-disable-line new-cap
     }
     case GOT_CONFIGURED_SOURCES: {

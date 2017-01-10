@@ -37,19 +37,6 @@ describe("TwitterRequestHandler", () => {
             sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(handles));
             let data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
             assert.strictEqual(data, handles);
-
-        });
-
-        it("should reject with an error if fetch handles from twitter throws an error", async() => {
-            let twitterRequestHandler = new TwitterRequestHandler();
-            let twitterClientInstance = new TwitterClient();
-            sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-            sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.reject("Error"));
-            try {
-                await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
-            } catch (error) {
-                assert.strictEqual(error, "Error");
-            }
         });
     });
 
@@ -100,22 +87,6 @@ describe("TwitterRequestHandler", () => {
                 getUserMock.verify();
             } catch(error) {
                 assert.fail(error);
-            }
-        });
-
-        it("should reject with an error if fetch tweets from twitter throws an error", async() => {
-            let url = "123344";
-            let timeStamp = 12345678;
-
-            sandbox.mock(userDetails).expects("getUser").withExactArgs(authSesssion).returns(userName);
-            sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-            sandbox.mock(twitterClientInstance).expects("fetchTweets").withExactArgs(url, "userName", timeStamp).returns(Promise.reject("could not get tweets"));
-
-            try {
-                await twitterRequestHandler.fetchTweetsRequest(url, timeStamp, authSesssion);
-                assert.fail();
-            } catch(error) {
-                assert.equal(error, "could not get tweets");
             }
         });
     });
