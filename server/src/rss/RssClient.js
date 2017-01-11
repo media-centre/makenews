@@ -23,7 +23,6 @@ export default class RssClient {
     }
 
     async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
-
         try {
             return await this.getRssData(url);
         } catch (error) {
@@ -31,18 +30,14 @@ export default class RssClient {
                 let root = cheerio.load(error.data);
                 let rssLink = root("link[type ^= 'application/rss+xml']");
                 let rssUrl = rssLink.attr("href");
-                if (rssLink && rssLink.length !== 0) {  //eslint-disable-line no-magic-numbers
+                if (rssLink && rssLink.length) {
                     return await this.getFeedsFromRssUrl(rssUrl, url);
-
-                } else {  //eslint-disable-line no-else-return
-                    return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
                 }
+                return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
             } else {  //eslint-disable-line no-else-return
                 this.handleUrlError(url, error);
             }
-
         }
-
     }
 
     async getFeedsFromRssUrl(rssUrl, url) {
@@ -142,11 +137,11 @@ export default class RssClient {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
                         resolve(feeds);
                     }).catch(error => {
-                        RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
+                        RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}.`);
                         reject({ "message": FEEDS_NOT_FOUND, "data": data });
                     });
                 } else {
-                    RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", res.statusCode);
+                    RssClient.logger().error("RssClient:: %s returned invalid status code '%s'.", url, res.statusCode);
                     reject({ "message": "Bad status code" });
                 }
 
@@ -215,8 +210,8 @@ export default class RssClient {
     }
     
     handleUrlError(url, error) {
-        let errorMessage = { "message": url + " is not a proper feed" };
-        RssClient.logger().error("RssClient:: %s is not a proper feed url. Error: %s.", url, error);
+        let errorMessage = { "message": `${url} is not a proper feed` };
+        RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}`);
         throw errorMessage;
     }
 

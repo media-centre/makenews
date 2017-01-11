@@ -11,12 +11,13 @@ export class DisplayFeeds extends Component {
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
+        this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
     }
 
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.dom = ReactDOM.findDOMNode(this);
-        this.dom.addEventListener("scroll", this.getFeedsCallBack.bind(this));
+        this.dom.addEventListener("scroll", this.getFeedsCallBack);
         this.getMoreFeeds(this.props.sourceType);
     }
 

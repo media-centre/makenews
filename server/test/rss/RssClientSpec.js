@@ -180,7 +180,7 @@ describe("RssClient", () => {
             error = { "message": "feeds_not_found", "data": "<a href='/abc'></a>" };
         });
 
-        it("should return feeds when rss links are present ans no rss feeds", async() => {
+        it("should return feeds when rss links are present and no rss feeds", async() => {
             let getrssMock = sandbox.mock(rssClientMock).expects("getRssData").once();
             getrssMock.returns(Promise.resolve({ "data": "xyz" }));
             let links = new Set();

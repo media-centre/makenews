@@ -27,8 +27,10 @@ export default class RssParser {
             this.feedParser.on("readable", function() {
                 let meta = this.meta, feed = this.read();
                 while (feed) {
+                    let guid = CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid);
                     let feedObject = {
-                        "guid": CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid),
+                        "_id": guid,
+                        "guid": guid,
                         "title": feed.title,
                         "link": feed.link,
                         "description": feed.description,
@@ -40,7 +42,7 @@ export default class RssParser {
                         "tags": [meta.title],
                         "images": []
                     };
-                    if (feed.enclosures && feed.enclosures.length > 0) {                     //eslint-disable-line no-magic-numbers
+                    if (feed.enclosures && feed.enclosures.length) {
                         feed.enclosures.forEach((item, index) => {  //eslint-disable-line no-loop-func
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
                                 feedObject.images.push(feed.enclosures[index]);

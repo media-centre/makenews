@@ -23,7 +23,7 @@ export default class RssBatchFeedsRoute extends Route {
                 }).catch(() => {
                     if (this.request.body.data.length - 1 === counter) { //eslint-disable-line no-magic-numbers
                         RouteLogger.instance().debug("RssBatchFeedsRoute:: fetching rss feeds for url %s returned no feeds.", item.url);
-                        this._handleSuccess({ "message": "sucessfully added feeds" });
+                        this._handleSuccess({ "message": "successfully added feeds" });
                     }
                     counter += 1; //eslint-disable-line no-magic-numbers
                 });

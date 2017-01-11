@@ -1,78 +1,119 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0*/
+/* eslint max-nested-callbacks: [2, 5] max-len:0*/
 
 
 import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import CryptUtil from "../../src/util/CryptUtil";
+import { expect } from "chai";
 import nock from "nock";
-import { assert } from "chai";
-import request from "request";
+import restRequest from "request";
+import sinon from "sinon";
 
 describe("RssParser", () => {
+    let sandbox = null;
 
-    describe("parse", () => {
-        it("should return error when parser returns error", (done) => {
-            nock("http://mytest.com")
-                .get("/rss1")
-                .reply(HttpResponseHandler.codes.OK, { "data": "error" });
-            request.get({
-                "uri": "http://mytest.com/rss1"
-            },
-                (error, response) => {
-                    let rssParser = new RssParser(response);
-                    rssParser.parse().catch(err => {
-                        assert.strictEqual(err, "Not a feed");
-                        done();
-                    });
-                });
+    beforeEach("RssParser", () => {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("RssParser", () => {
+        sandbox.restore();
+    });
+
+    it("should reject if the url is not a feed", (done) => {
+        let data = `
+        <HTML>
+            <HEAD>
+                <meta http-equiv="content-type" content="text/html;charset=utf-8">
+                <TITLE>302 Moved</TITLE>
+            </HEAD>
+            <BODY>
+                <H1>302 Moved</H1>
+                The document has moved
+                <A HREF="http://www.google.co.in/?gfe_rd=cr&amp;ei=h91eVqj4N-my8wexop6oAg">here</A>.
+            </BODY>
+        </HTML>`;
+
+        nock("http://www.google.com")
+            .get("/users")
+            .reply(HttpResponseHandler.codes.OK, data);
+        let url = "http://www.google.com/users";
+
+        restRequest(url).on("response", function(res) {
+            let rssParser = new RssParser(res);
+            rssParser.parse().catch((error) => {
+                expect(error).to.eq("Not a feed");
+                done();
+            });
         });
+    });
 
-        it("should return feeds when parser able to parse the feed", (done) => {
-            nock("http://mytest.com")
-                .get("/rss2")
-                .reply(HttpResponseHandler.codes.OK, `<rss version="2.0">
-                <channel>
-                    <title>My Test</title>
+    it("should resolve with parsed items for proper url", (done) => {
+        let data = `<?xml version="1.0" encoding="utf-8" ?>
+                     <rss version="2.0" xml:base="http://www.nasa.gov/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/"> <channel>
                     <item>
-                        <title>
-                <![CDATA[Sensex surges 260 points, Nifty above 8,000 ]]>
-            </title>
-                        <author>
-                <![CDATA[PTI]]>
-            </author>
-                        <link>http://www.mytest.com/the_news</link>
-                        <description>
-                <![CDATA[
-            Sample description
-            ]]>
-            </description>
-                        <pubDate>
-                <![CDATA[Tue, 22 Nov 2016 10:14:51]]>
-            </pubDate>
+                     <title>NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell</title>
+                     <link>http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell</link>
+                     <description>The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:</description>
                     </item>
-            </channel></rss>`);
 
+                    <item>
+                     <title>NASA Television to Air Russian Spacewalk</title>
+                     <link>http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk</link>
+                     <description>NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.</description>
+                    </item>
+                    </channel>
+                    </rss>`;
+        let url = "http://www.nasa.com/images/?service=rss";
 
-            let requestToUrl = request.get({
-                "uri": "http://mytest.com/rss2"
+        nock("http://www.nasa.com/images")
+            .get("/?service=rss")
+            .reply(HttpResponseHandler.codes.OK, data);
+
+        let hmacStub = sandbox.stub(CryptUtil, "hmac");
+        hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell").returns("test-guid-1");
+        hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk").returns("test-guid-2");
+
+        let expectedFeeds = {
+            "items":
+            [{
+                "_id": "test-guid-1",
+                "guid": "test-guid-1",
+                "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
+                "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+                "pubDate": null,
+                "enclosures": [],
+                "docType": "feed",
+                "sourceType": "web",
+                "sourceUrl": url,
+                "tags": [null],
+                "images": []
+            },
+                {
+                    "_id": "test-guid-2",
+                    "guid": "test-guid-2",
+                    "title": "NASA Television to Air Russian Spacewalk",
+                    "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                    "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
+                    "pubDate": null,
+                    "enclosures": [],
+                    "docType": "feed",
+                    "sourceType": "web",
+                    "sourceUrl": url,
+                    "tags": [null],
+                    "images": []
+                }]
+        };
+
+        restRequest(url).on("response", function(res) {
+            let rssParser = new RssParser(res);
+            rssParser.parse(url).then((feedJson) => {
+                expect(feedJson.items).deep.equal(expectedFeeds.items);
+                done();
+            }).catch(err => {
+                done(err);
             });
-            let url = "http://www.mytest.com/the_news_source";
-
-            requestToUrl.on("response", function() {
-                let rssParser = new RssParser(this);
-                rssParser.parse(url).then(feed => {
-                    const zero = 0;
-                    let feedItem = feed.items[zero];
-                    assert.strictEqual(feedItem.title, "Sensex surges 260 points, Nifty above 8,000");
-                    assert.strictEqual(feedItem.description, "Sample description");
-                    assert.strictEqual(feedItem.link, "http://www.mytest.com/the_news");
-                    assert.equal(feedItem.pubDate.toString(), "Tue Nov 22 2016 10:14:51 GMT+0530 (IST)");
-                    assert.equal(feedItem.sourceUrl, "http://www.mytest.com/the_news_source");
-                    done();
-                }).catch(err => {
-                    done(err);
-                });
-            });
-
         });
     });
 });

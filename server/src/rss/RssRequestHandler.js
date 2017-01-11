@@ -1,6 +1,5 @@
 import RssClient from "./RssClient";
 import Logger from "../logging/Logger";
-import RssBatchFeedsFetch from "./RssBatchFeedsFetch";
 
 export default class RssRequestHandler {
 
@@ -25,18 +24,13 @@ export default class RssRequestHandler {
 
     async fetchBatchRssFeedsRequest(url) {
         try {
-            let feeds = await this.rssBatchFeedsFetch().fetchBatchFeeds(url);
+            let feeds = await this.rssClient().getRssData(url);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-            return feeds;
+            return feeds.items;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             throw error;
         }
-    }
-
-
-    rssBatchFeedsFetch() {
-        return RssBatchFeedsFetch.instance();
     }
 
     rssClient() {

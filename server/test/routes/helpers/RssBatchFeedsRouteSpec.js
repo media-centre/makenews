@@ -79,7 +79,7 @@ describe("RssBatchFeedsRoute", () => {
                 }
             };
 
-            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "message": "sucessfully added feeds" } });
+            let response = mockResponse(done, { "status": HttpResponseHandler.codes.OK, "json": { "message": "successfully added feeds" } });
             let rssRouteHelper = new RssBatchFeedsRoute(requestData, response);
 
             let sandbox = sinon.sandbox.create();

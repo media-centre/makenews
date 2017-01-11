@@ -4,7 +4,6 @@ import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
 import { assert, expect } from "chai";
 import RssClient from "../../src/rss/RssClient";
 import sinon from "sinon";
-import RssBatchFeedsFetch from "../../src/rss/RssBatchFeedsFetch";
 
 describe("Rss Request Handler", () => {
     describe("search Url", () => {
@@ -110,36 +109,57 @@ describe("Rss Request Handler", () => {
             });
         });
     });
+
     describe("fetchBatchRssFeedsRequest", ()=> {
-        let rssRequestHandler = null, response = null, rssBatchMock = null, rssClientMock = null, sandbox = null;
+        let rssRequestHandler = null, rssClient = null, rssClientMock = null, sandbox = null;
         beforeEach("fetchBatchRssFeedsRequest", () => {
             sandbox = sinon.sandbox.create();
             rssRequestHandler = new RssRequestHandler();
-            response = "successfully fetched feeds";
-            rssBatchMock = new RssBatchFeedsFetch();
-            rssClientMock = sandbox.mock(RssBatchFeedsFetch).expects("instance").returns(rssBatchMock);
+            rssClient = new RssClient();
+            rssClientMock = sandbox.mock(RssClient).expects("instance").returns(rssClient);
         });
-        it("should fetch rss feed for given url", () => {
+
+        afterEach("fetchBatchRssFeedsRequest", () => {
+            sandbox.restore();
+        });
+
+        it("should fetch rss feed for given url", async () => {
             let url = "www.example.com";
-            let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
-            rssClientPostMock.returns(response);
-            return Promise.resolve(rssRequestHandler.fetchBatchRssFeedsRequest(url, "auth_token")).then((res) => {
-                expect(res).to.eq(response);
-                rssClientMock.verify();
-                rssClientPostMock.verify();
-                sandbox.restore();
-            });
+            let response = {
+                "items":
+                [{
+                    "_id": "test-guid-1",
+                    "guid": "test-guid-1",
+                    "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
+                    "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+                    "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
+                    "pubDate": null,
+                    "enclosures": [],
+                    "docType": "feed",
+                    "sourceType": "web",
+                    "sourceUrl": url,
+                    "tags": [null],
+                    "images": []
+                }]
+            };
+            let rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
+            rssClientPostMock.withArgs(url).returns(response);
+
+            let feeds = await rssRequestHandler.fetchBatchRssFeedsRequest(url);
+
+            expect(feeds).to.deep.equal(response.items);
+            rssClientMock.verify();
+            rssClientPostMock.verify();
         });
 
         it("should return error rss feed for given url", () => {
             let url = "www.error.com";
-            let rssClientPostMock = sandbox.mock(rssBatchMock).expects("fetchBatchFeeds");
-            rssClientPostMock.returns(Promise.reject("error"));
+            let rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
+            rssClientPostMock.withArgs(url).returns(Promise.reject("error"));
             return rssRequestHandler.fetchBatchRssFeedsRequest(url, "auth_token").catch((error) => {
                 assert.strictEqual("error", error);
                 rssClientMock.verify();
                 rssClientPostMock.verify();
-                sandbox.restore();
             });
         });
     });
