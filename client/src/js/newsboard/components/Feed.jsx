@@ -14,15 +14,15 @@ export default class Feed extends Component {
     render() {
         let feed = this.props.feed;
         return (
-            <div className={this.props.active ? "feed-highlight" : "feed"} onClick={this.props.selectFeedHandler}>
-                <div className="feed-media">{this.getMedia()}</div>
+            <div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={this.props.selectFeedHandler}>
+                <div className="feed__media">{this.getMedia()}</div>
 
-                <div className="feed-content">
-                    <div className="feed-title">{feed.title}</div>
-                    <div className="feed-description">{getHtmlContent(feed.description)}</div>
+                <div className="feed__content">
+                    <div className="feed__title">{feed.title}</div>
+                    <div className="feed__description">{getHtmlContent(feed.description)}</div>
                 </div>
                 
-                <div className="feed-source">
+                <div className="feed__source">
                     <div className="source-type">
                         <i className={`fa fa-${feed.sourceType}`}/>
                     </div>

@@ -7,7 +7,7 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "activeIndex": 0 };
+        this.state = { "activeIndex": 0, "expandView": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -61,12 +61,22 @@ export class DisplayFeeds extends Component {
         this.setState({ "activeIndex": index });
     }
 
+    _toggleFeedsView() {
+        this.setState({ "expandFeedsView": !this.state.expandFeedsView });
+    }
+
     render() {
         return (
-            <div className="configured-feeds-container">
+            <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <button onClick={DisplayFeedActions.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
-                {this.props.feeds.map((feed, index) =>
-                    <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
+                <i onClick={() => {
+                    this._toggleFeedsView();
+                }} className="expand-icon"
+                />
+                <div className="feeds">
+                    {this.props.feeds.map((feed, index) =>
+                        <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
+                </div>
             </div>
         );
     }

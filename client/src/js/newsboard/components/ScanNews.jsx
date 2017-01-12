@@ -15,6 +15,9 @@ export class ScanNews extends Component {
             <div className="news-board-container">
                 <NewsBoardTabs />
                 <DisplayFeeds />
+                <div className="article">
+                    Article
+                </div>
             </div>
         );
     }

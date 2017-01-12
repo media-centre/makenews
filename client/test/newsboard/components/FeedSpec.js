@@ -48,7 +48,7 @@ describe("Feed", () => {
         let img = feedDom.props.children[1].props;
         let title = img.children[0].props;
 
-        expect(title.className).to.equals("feed-title");
+        expect(title.className).to.equals("feed__title");
         expect(title.children).to.equals("Some Title");
     });
 
@@ -56,14 +56,14 @@ describe("Feed", () => {
         let img = feedDom.props.children[1].props;
         let description = img.children[1].props;
 
-        expect(description.className).to.equals("feed-description");
+        expect(description.className).to.equals("feed__description");
         expect(description.children).to.equals("Some Description");
     });
 
     it("should have source ", () => {
         let source = feedDom.props.children[2].props;
 
-        expect(source.className).to.equals("feed-source");
+        expect(source.className).to.equals("feed__source");
         expect(source.children[0].props.className).to.equals("source-type");
         expect(source.children[1].props.className).to.equals("source");
         expect(source.children[1].props.children).to.deep.equals(["Hindu"]);
@@ -72,6 +72,6 @@ describe("Feed", () => {
 
     it("should have media ", () => {
         let media = feedDom.props.children[0].props;
-        expect(media.className).to.equals("feed-media");
+        expect(media.className).to.equals("feed__media");
     });
 });

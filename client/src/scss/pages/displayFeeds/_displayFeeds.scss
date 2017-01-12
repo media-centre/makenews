@@ -1,15 +1,12 @@
 .news-board-container {
-  width: 34%;
-  position: relative;
-  float: none;
-  clear: both;
+  display: flex;
 
   .source-type-bar {
     padding: 20px 5px;
     position: fixed;
     height: 100%;
-    width: 54px;
     box-sizing: border-box;
+    flex-basis: 54px;
     background-color: $dark-background-color;
 
     .news-board-tab {
@@ -36,15 +33,78 @@
     }
   }
   .configured-feeds-container {
+    $flex-basis-width: 420px;
+
     background-color: $background-color;
     height: 100vh;
     margin-left: 54px;
     overflow-y: auto;
+    flex-basis: $flex-basis-width;
     border-right: 2px solid lighten($primary-color, 35%);
 
-    .feed, .feed-highlight {
+    &.expand {
+      flex-basis: 2 * $flex-basis-width;
+
+      .feed {
+        flex-basis: 50%;
+
+        &:nth-child(odd) {
+          border-right: 1px solid lighten($primary-color, 35%);
+        }
+      }
+
+      .expand-icon {
+        left: 46 + (2 * $flex-basis-width);
+      }
+
+      @media (max-width: 1100px) {
+        flex-basis: $flex-basis-width;
+
+        .feed {
+          flex-basis: 100%;
+
+          &:nth-child(odd) {
+            border-right: 1px solid transparent;
+          }
+        }
+
+        .expand-icon {
+          left: 46 + $flex-basis-width;
+        }
+      }
+    }
+
+    .expand-icon {
+      cursor: pointer;
+      width: 19px;
+      height: 50px;
+      display: inline-block;
+      position: fixed;
+      top: 45vh;
+      left: 46 + $flex-basis-width;
+      background: url("./images/expand-icon.png") no-repeat;
+      background-size: contain;
+
+      @media (max-width: 1100px) {
+        display: none;
+      }
+    }
+
+    .feeds {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .feed {
       min-height: 105px;
-      .feed-description {
+      cursor: pointer;
+      line-height: 24px;
+      padding: 8px 13px 13px 16px;
+      clear: both;
+      float: none;
+      box-sizing: border-box;
+
+      &__description {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -55,71 +115,53 @@
         color: $primary-color-light;
         line-height: 18px;
       }
-    }
 
-    .feed {
-      cursor: pointer;
-      line-height: 24px;
-      padding: 8px 13px 13px 16px;
-      clear: both;
-      float: none;
-    }
-
-    .feed-highlight {
-      line-height: 24px;
-      background-color: #FFFFFF;
-      padding: 8px 13px 13px 16px;
-      clear: both;
-      float: none;
-
-      .feed-title {
+      &__title {
         overflow: hidden;
+        text-overflow: ellipsis;
         display: -webkit-box;
-        color: $secondary-color;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
+        font-family: "Lato", sans-serif;
+        font-size: 18px;
+        color: $primary-color;
+        line-height: 24px;
+      }
+
+      &__media img {
+        width: 100%;
+        height: 100%;
+        max-width: 230px;
+        max-height: 100px;
+        padding-top: 6%;
+      }
+
+      &__media {
+        float: right;
+        width: 110px;
+      }
+
+      &__source div {
+        display: inline-block;
+        font-family: "Lato", sans-serif;
+        font-size: 13px;
+        color: #917A99;
+        letter-spacing: 0;
+        padding: 2px 5px;
+      }
+
+      &--highlight {
+        background-color: #FFFFFF;
+
+        .feed__title {
+          color: $secondary-color;
+        }
       }
     }
+  }
 
-    .feed-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      font-family: "Lato", sans-serif;
-      font-size: 18px;
-      color: $primary-color;
-      line-height: 24px;
-    }
-
-    .feed-media i{
-      max-width: 230px;
-      max-height: 100px;
-      font-size: 880%;
-      font-weight: 500;
-    }
-
-    .feed-media img {
-      width: 100%;
-      height: 100%;
-      max-width: 230px;
-      max-height: 100px;
-      padding-top: 6%;
-    }
-
-    .feed-media {
-      float: right;
-      width: 110px;
-    }
-
-    .feed-source div {
-      display: inline-block;
-      font-family: "Lato", sans-serif;
-      font-size: 13px;
-      color: #917A99;
-      letter-spacing: 0;
-      padding: 2px 5px;
-    }
+  .article {
+    flex-grow: 1;
+    flex-basis: 0;
   }
 }

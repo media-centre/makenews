@@ -6,7 +6,7 @@ node_modules/
 localDb/
 remoteDb/
 coverage/
-.DS_Store/
+.DS_Store
 logs/
 url2/
 server/logs/
