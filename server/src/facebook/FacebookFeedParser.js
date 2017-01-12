@@ -1,3 +1,4 @@
+import DateUtil from "../util/DateUtil";
 export function parseFacebookPosts(posts = []) {
     return posts.map(post => _parsePost(post));
 }
@@ -14,7 +15,7 @@ function _parsePost(post) {
         "sourceType": "facebook",
         "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),          //eslint-disable-line no-magic-numbers
         "description": post.message || "",
-        "pubDate": post.created_time,
+        "pubDate": post.created_time ? DateUtil.getUTCDateAndTime(post.created_time) : null,
         "tags": [],
         "images": [],
         "videos": []

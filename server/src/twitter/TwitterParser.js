@@ -1,4 +1,4 @@
-import DateTimeUtil from "../../../client/src/js/utils/DateTimeUtil";
+import DateUtil from "../util/DateUtil";
 export default class TwitterParser {
     static instance() {
         return new TwitterParser();
@@ -36,7 +36,7 @@ export default class TwitterParser {
             "description": tweet.text,
             "title": "",
             "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
-            "pubDate": tweet.created_at ? DateTimeUtil.getUTCDateAndTime(tweet.created_at) : null,
+            "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": this.hashTags(tweet),
             "images": [],
             "videos": []
