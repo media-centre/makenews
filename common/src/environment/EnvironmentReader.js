@@ -13,24 +13,16 @@ export default class EnvironmentReader {
     }
 
     parseParameters(envFile, environment) {
-        this.addDefaultParameters(envFile.default);
-        this.overrideDefaultParameters(envFile[environment]);
+        this.parameters = this.addDefaultParameters(envFile.default);
+        this.parameters = this.overrideDefaultParameters(envFile[environment]);
     }
 
     addDefaultParameters(defaultParameters) {
-        for(let key in defaultParameters) {
-            if(defaultParameters.hasOwnProperty(key)) {
-                this.parameters[key] = defaultParameters[key];
-            }
-        }
+        return Object.assign({}, this.parameters, defaultParameters);
     }
 
     overrideDefaultParameters(environmentParameters) {
-        for(let key in environmentParameters) {
-            if(environmentParameters.hasOwnProperty(key)) {
-                this.parameters[key] = environmentParameters[key];
-            }
-        }
+        return Object.assign({}, this.parameters, environmentParameters);
     }
 
     get(parameterName) {

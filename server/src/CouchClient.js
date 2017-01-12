@@ -147,26 +147,12 @@ export default class CouchClient {
 
 
     _headers(customHeaders) {
-        let headers = {};
-        let defaultHeaders = this._defaultHeaders();
-        for (let key in defaultHeaders) {
-            if (defaultHeaders.hasOwnProperty(key)) {
-                headers[key] = defaultHeaders[key];
-            }
-        }
-        for (let key in customHeaders) {
-            if (customHeaders.hasOwnProperty(key)) {
-                headers[key] = customHeaders[key];
-            }
-        }
-        return headers;
-    }
-
-    _defaultHeaders() {
-        return {
+        const defaultHeaders = {
             "Cookie": "AuthSession=" + this.accessToken,
             "Content-Type": "application/json",
             "Accept": "application/json"
         };
+
+        return Object.assign({}, defaultHeaders, customHeaders);
     }
 }

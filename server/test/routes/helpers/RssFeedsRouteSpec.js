@@ -3,7 +3,6 @@ import RssFeedsRoute from "../../../src/routes/helpers/RssFeedsRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import { expect } from "chai";
 import nock from "nock";
-import ramda from "ramda";
 
 describe("RssFeedsRoute", () => {
     function mockResponse(done, expectedValues) {
@@ -26,15 +25,14 @@ describe("RssFeedsRoute", () => {
             },
             "json": (jsonData) => {
                 let items = jsonData.items;
-                if(items) {
+                try {
                     let expectedItems = expectedValues.json.items;
                     expect(items.length).to.eq(expectedItems.length);
-                    for(let index = 0; index < items.length; index = ramda.inc(index)) {
-                        expect(items[index].title).to.eq(expectedItems[index].title);
-                        expect(items[index].description).to.eq(expectedItems[index].description);
-                    }
+                    expect(items).to.deep.equals(expectedItems);
+                    done();
+                } catch(err) {
+                    done(err);
                 }
-                done();
             }
         };
         return response;
@@ -86,15 +84,18 @@ describe("RssFeedsRoute", () => {
         };
         let feedsJson = {
             "items":
-            [{
-                "guid": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
+            [{ "_id": "3615013b06f05ef83eabc6fadc023202324d59c5b8e3b940ca8363c749de531b",
+                "guid": "3615013b06f05ef83eabc6fadc023202324d59c5b8e3b940ca8363c749de531b",
                 "title": "NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell",
                 "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
                 "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
                 "pubDate": null,
                 "enclosures": [],
-                "image": {}
-            }]
+                "docType": "feed",
+                "sourceType": "web",
+                "sourceUrl": "http://www.thehindu.com/sport/cricket/?service=rss",
+                "tags": [null],
+                "images": [] }]
         };
         let response = mockSuccessResponse(done, { "status": HttpResponseHandler.codes.OK, "json": feedsJson });
         let rssRouteHelper = new RssFeedsRoute(request, response, next);

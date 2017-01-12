@@ -88,8 +88,7 @@ export default class RssClient {
                 return feeds;
             } catch (error) {
                 try {
-                    let feed = await this.crawlRssList(link, error, url);
-                    return feed;
+                    return await this.crawlRssList(link, error, url);
                 } catch (err) {
                     link = linksIterator.next().value;
                 }

@@ -94,10 +94,10 @@ export default class FacebookRequestHandler {
         if(path && path.next) {
             let queryStrings = path.next.split("?")[1]; // eslint-disable-line no-magic-numbers
             let vars = queryStrings.split("&");
-            for (let param of vars) {
+            vars.forEach(param => {
                 let pair = param.split("=");
                 queryParams[pair[0]] = pair[1]; // eslint-disable-line no-magic-numbers
-            }
+            });
         }
         delete queryParams.access_token;
         delete queryParams.fields;

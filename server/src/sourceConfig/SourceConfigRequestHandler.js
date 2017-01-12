@@ -54,11 +54,12 @@ export default class SourceConfigRequestHandler {
             "fb_profile": "profiles", "fb_page": "pages", "fb_group": "groups", "twitter": "twitter", "web": "web"
         };
 
-        for (let source of docs) {
+        docs.forEach(source => {
             if(source.sourceType) {
                 result[configSourceTypes[source.sourceType]].push(source);
             }
-        }
+        });
+
         return result;
     }
 }

@@ -74,7 +74,7 @@ describe("Environment", () => {
             };
             let env = new EnvironmentReader(envJson, "production");
             assert.strictEqual(env.get("key1"), "value 1");
-            assert.strictEqual(env.get("key3"), undefined);
+            assert.isUndefined(env.get("key3"));
         });
     });
 });

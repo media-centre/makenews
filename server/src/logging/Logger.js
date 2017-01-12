@@ -79,7 +79,7 @@ export default class Logger {
                     logDir = loggingConfig.dir;
                 }
                 Logger.createDir(logDir);
-                for (let loggerName of Object.keys(loggingConfig)) {
+                Object.keys(loggingConfig).forEach(loggerName => {
                     let categoryConfig = loggingConfig[loggerName];
                     if (categoryConfig.file) {
                         categoryConfig.file.dirname = logDir;
@@ -94,7 +94,8 @@ export default class Logger {
                     } catch(error) {
                         Logger._getDefaultLogger().error("Creating logger for %s failed with error %s", loggerName, error);
                     }
-                }
+                });
+                
                 categoriesInitialized = true;
             }
         }
