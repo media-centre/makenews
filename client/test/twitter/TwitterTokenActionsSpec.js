@@ -34,16 +34,20 @@ describe("Twitter Actions", () => {
             let twitterAuthenticated = true;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "twitterAuthenticated": twitterAuthenticated }));
             let store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
-            store.dispatch(twitterAuthentication());
-            ajaxGetmock.verify();
+            twitterAuthentication().then(func => {
+                store.dispatch(func);
+                ajaxGetmock.verify();
+            });
         });
 
         it("should get the twitter authentication as false from the server", (done) => {
             let twitterAuthenticated = false;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.reject({ "status": "badRequest" }));
             let store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
-            store.dispatch(twitterAuthentication());
-            ajaxGetmock.verify();
+            twitterAuthentication().then(func => {
+                store.dispatch(func);
+                ajaxGetmock.verify();
+            });
         });
     });
 });

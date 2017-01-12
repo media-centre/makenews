@@ -34,16 +34,20 @@ describe("FacebookActions", () => {
             let expireTime = 12345;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
             let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
-            store.dispatch(getTokenExpireTime());
-            ajaxGetmock.verify();
+            getTokenExpireTime().then(func => {
+                store.dispatch(func);
+                ajaxGetmock.verify();
+            });
         });
 
         it("should get the expires time as ZERO when token is not available in the server", (done) => {
             let expireTime = 0;
-            ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "expireTime": expireTime }));
+            ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.reject({ "status": "Bad Request" }));
             let store = mockStore([], [{ "type": FACEBOOK_EXPIRE_TIME, "expireTime": expireTime }], done);
-            store.dispatch(getTokenExpireTime());
-            ajaxGetmock.verify();
+            getTokenExpireTime().then(func => {
+                store.dispatch(func);
+                ajaxGetmock.verify();
+            });
         });
     });
 });

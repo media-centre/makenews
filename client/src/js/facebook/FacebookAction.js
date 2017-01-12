@@ -14,9 +14,10 @@ export async function getTokenExpireTime() { //eslint-disable-line
     try {
         let response = await ajaxClient.get();
         expireTime = response.expireTime;
-    } finally {
-        return dispatch => { //eslint-disable-line
-            dispatch(updateTokenExpireTime(expireTime));
-        };
+    } catch(err) {
+        //ignore error
     }
+    return dispatch => { //eslint-disable-line
+        dispatch(updateTokenExpireTime(expireTime));
+    };
 }

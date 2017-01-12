@@ -10,13 +10,14 @@ export function twitterTokenInformation(twitterAuthenticated) { //eslint-disable
 
 export async function twitterAuthentication() { //eslint-disable-line
     let ajaxClient = AjaxClient.instance("/twitter-token");
-    let expiryTime = 0;
+    let twitterAuthenticated = false;
     try {
-        let response = ajaxClient.get();
-        expiryTime = response.twitterAuthenticated;
-    } finally {
-        return dispatch => { //eslint-disable-line
-            dispatch(twitterTokenInformation(expiryTime));
-        };
+        let response = await ajaxClient.get();
+        twitterAuthenticated = response.twitterAuthenticated;
+    } catch(err) {
+        //ignore error
     }
+    return dispatch => {
+        dispatch(twitterTokenInformation(twitterAuthenticated));
+    };
 }
