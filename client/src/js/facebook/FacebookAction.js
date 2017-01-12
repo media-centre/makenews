@@ -8,14 +8,15 @@ export function updateTokenExpireTime(expireTime) { //eslint-disable-line
     };
 }
 
-export function getTokenExpireTime() { //eslint-disable-line
-    return dispatch => {
-        let ajaxClient = AjaxClient.instance("/facebook-token-expire-time");
-        ajaxClient.get().then(response => {
-            dispatch(updateTokenExpireTime(response.expireTime));
-        }).catch(error => { //eslint-disable-line
-            let ZERO = 0;
-            dispatch(updateTokenExpireTime(ZERO));
-        });
-    };
+export async function getTokenExpireTime() { //eslint-disable-line
+    let ajaxClient = AjaxClient.instance("/facebook-token-expire-time");
+    let expireTime = 0;
+    try {
+        let response = await ajaxClient.get();
+        expireTime = response.expireTime;
+    } finally {
+        return dispatch => { //eslint-disable-line
+            dispatch(updateTokenExpireTime(expireTime));
+        };
+    }
 }

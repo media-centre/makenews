@@ -8,13 +8,15 @@ export function twitterTokenInformation(twitterAuthenticated) { //eslint-disable
     };
 }
 
-export function twitterAuthentication() { //eslint-disable-line
-    return dispatch => {
-        let ajaxClient = AjaxClient.instance("/twitter-token");
-        ajaxClient.get().then(response => {
-            dispatch(twitterTokenInformation(response.twitterAuthenticated));
-        }).catch(error => { //eslint-disable-line
-            dispatch(twitterTokenInformation(false));
-        });
-    };
+export async function twitterAuthentication() { //eslint-disable-line
+    let ajaxClient = AjaxClient.instance("/twitter-token");
+    let expiryTime = 0;
+    try {
+        let response = ajaxClient.get();
+        expiryTime = response.twitterAuthenticated;
+    } finally {
+        return dispatch => { //eslint-disable-line
+            dispatch(twitterTokenInformation(expiryTime));
+        };
+    }
 }

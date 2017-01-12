@@ -15,10 +15,10 @@ export class ConfigureSourcesPage extends Component {
         this.facebookLogin = FacebookLogin.instance();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.props.dispatch(await getTokenExpireTime());
+        this.props.dispatch(await twitterAuthentication());
         this.sourceTab(this.props.params, this.props.dispatch);
-        this.props.dispatch(getTokenExpireTime());
-        this.props.dispatch(twitterAuthentication());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -52,7 +52,7 @@ export class ConfigureSourcesPage extends Component {
         if(sourceType === "facebook" && new Date().getTime() > this.props.expireTime) {
             this.isPopUpDisplayed = true;
             this._showFBLogin(dispatch);
-        } else if (sourceType === "twitter" && !this.props.twitterAuthenticated) {
+        } else if (sourceType === "twitter" && this.props.twitterAuthenticated === false) {
             this.isPopUpDisplayed = true;
             this._showTwitterLogin(dispatch);
         }
