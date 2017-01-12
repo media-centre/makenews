@@ -3,6 +3,7 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import TwitterToken from "../../src/twitter/TwitterToken";
 import LogTestHelper from "../helpers/LogTestHelper";
+import { userDetails } from "./../../src/Factory";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -18,6 +19,8 @@ describe("TwitterToken", () => {
                     "db": "test"
                 }
             };
+            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            userDetailsMock.withArgs(authSession).returns({ "username": "test" });
             let appConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(appConfig);
             appConfigMock = sandbox.mock(appConfig).expects("adminDetails");

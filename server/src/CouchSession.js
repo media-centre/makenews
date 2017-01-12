@@ -4,6 +4,7 @@ import StringUtil from "../../common/src/util/StringUtil";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import Logger, { logCategories } from "./logging/Logger";
 import CouchClient from "./CouchClient";
+import { userDetails } from "./Factory";
 import request from "request";
 import querystring from "querystring";
 
@@ -49,16 +50,28 @@ export default class CouchSession {
                     CouchSession.logger().debug("CouchSession:: authenticating user successful.");
                     if(StringUtil.validNonEmptyString(userJson.userCtx.name)) {
                         if(response.headers["set-cookie"]) {
-                            resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
+                            let [authSessionCookie] = response.headers["set-cookie"];
+                            let [authSession] = authSessionCookie.split(";");
+                            let [, newToken] = authSession.split("=");
+                            if(newToken !== token) { //eslint-disable-line max-depth
+                                userDetails.removeUser(token);
+                                userDetails.updateUser(newToken, userJson.userCtx.name);
+                            }
+                            resolve(newToken);
                         } else {
-                            resolve(authSessionToken);
+                            if(!userDetails.getUser(token)) { //eslint-disable-line max-depth
+                                userDetails.updateUser(token, userJson.userCtx.name);
+                            }
+                            resolve(token);
                         }
+                    } else {
+                        CouchSession.logger().error("CouchSession:: authentication failed.");
+                        reject("unauthenticated user");
                     }
-                    CouchSession.logger().error("CouchSession:: authentication failed.");
-                    reject("unauthenticated user");
+                } else {
+                    CouchSession.logger().error("CouchSession:: authentication failed. Error: %s", error);
+                    reject(error);
                 }
-                CouchSession.logger().error("CouchSession:: authentication failed. Error: %s", error);
-                reject(error);
             });
         });
     }

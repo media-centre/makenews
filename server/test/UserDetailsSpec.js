@@ -14,7 +14,7 @@ describe("UserDetails", () => {
     });
     it("getUser with no users", () => {
         let userDetails = new UserDetails();
-        assert.deepEqual(userDetails.getUser("token1"), {});
+        assert.isUndefined(userDetails.getUser("token1"));
     });
 
     it("getUser with single user", () => {
@@ -38,7 +38,7 @@ describe("UserDetails", () => {
 
     it("getUser with user doesn't exist", () => {
         let userDetails = new UserDetails();
-        assert.deepEqual(userDetails.getUser("token1"), {});
+        assert.isUndefined(userDetails.getUser("token1"));
     });
 
     it("removeUser", () => {
@@ -48,6 +48,6 @@ describe("UserDetails", () => {
         userDetails.updateUser("token1", userName);
         assert.deepEqual(userDetails.getUser("token1"), { userName, dbName });
         userDetails.removeUser("token1");
-        assert.deepEqual(userDetails.getUser("token1"), {});
+        assert.isUndefined(userDetails.getUser("token1"));
     });
 });

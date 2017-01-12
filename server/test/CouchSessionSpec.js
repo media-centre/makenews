@@ -81,7 +81,7 @@ describe("CouchSessionSpec", () => {
             .reply(HttpResponseHandler.codes.OK, {
                 "userCtx": { "name": "test_user", "roles": [] }
             }, {
-                "set-cookie": ["test_token"]
+                "set-cookie": ["AuthSession=test_token;"]
             });
 
             CouchSession.authenticate(token).then((newToken) => {
@@ -90,7 +90,7 @@ describe("CouchSessionSpec", () => {
             });
         });
 
-        it("should send the auth token if authCookie is present in couch response", (done) => {
+        it("should send the auth token if authCookie is present in couch response with existing token", (done) => {
             let token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }

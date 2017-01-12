@@ -35,7 +35,7 @@ export default class RenewSessionRoute extends Route {
 
     _handleSuccess(newAuthSessionCookie) {
         this.response.status(HttpResponseHandler.codes.OK)
-            .append("Set-Cookie", newAuthSessionCookie)
+            .append("Set-Cookie", `AuthSession=${newAuthSessionCookie}`)
             .json({ "message": "session renewed" });
     }
 

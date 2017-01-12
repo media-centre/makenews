@@ -12,7 +12,7 @@ export default class UserDetails {
     }
 
     getUser(token) {
-        return this.userDetailsMap.get(token) || {};
+        return this.userDetailsMap.get(token);
     }
 
     removeUser(token) {

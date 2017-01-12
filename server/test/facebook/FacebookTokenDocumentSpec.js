@@ -7,11 +7,21 @@ import sinon from "sinon";
 import { assert } from "chai";
 import { userDetails } from "./../../src/Factory";
 
+let sandbox = null, authSession = "test_authSession", userName = "test";
 describe("FacebookTokenDocument", () => {
+    beforeEach("FacebookTokenDocument", () => {
+        sandbox = sinon.sandbox.create();
+        let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+        userDetailsMock.withArgs(authSession).returns({ userName });
+    });
+
+    afterEach("FacebookTokenDocument", () => {
+        sandbox.restore();
+    });
+
     describe("GetTokenExpiresTime", () => {
-        let authSession = "test_authSession", adminDbMock = null, adminDbInstance = null, sandbox = null, appConfigMock = null;
+        let adminDbMock = null, adminDbInstance = null, appConfigMock = null;
         beforeEach("GetTokenExpiresTime", () => {
-            sandbox = sinon.sandbox.create();
             let adminDetails = {
                 "adminDetails": {
                     "username": "test",
@@ -30,9 +40,6 @@ describe("FacebookTokenDocument", () => {
             sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClient);
             sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(adminDetails.username));
             sandbox.stub(FacebookTokenDocument, "logger").returns(LogTestHelper.instance());
-        });
-        afterEach("GetExpiresTime", () => {
-            sandbox.restore();
         });
 
         it("should get the expires time when document is present in database", async() => {
@@ -74,10 +81,9 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("getAdminDBInstance", () => {
-        let sandbox = null, appConfigMock = null, adminDbInstance = null, adminDbMock = null, adminDetails = null;
+        let appConfigMock = null, adminDbInstance = null, adminDbMock = null, adminDetails = null;
 
         beforeEach("getAdminDBInstance", () => {
-            sandbox = sinon.sandbox.create();
             adminDetails = {
                 "adminDetails": {
                     "username": "test",
@@ -85,10 +91,6 @@ describe("FacebookTokenDocument", () => {
                     "db": "test"
                 }
             };
-        });
-
-        afterEach("getAdminDBInstance", () => {
-            sandbox.restore();
         });
 
         it("should get admin db instance", async () => {
@@ -106,18 +108,9 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("GetUserDocument", () => {
-        let sandbox = null, authSession = "Test_session", userName = "test";
-        beforeEach("GetUserDocument", () => {
-            sandbox = sinon.sandbox.create();
-        });
-        afterEach("GetUserDocument", () => {
-            sandbox.restore();
-        });
         it("should get the user document for given user authSession", async () => {
-            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
-            userDetailsMock.withArgs(authSession).returns({ userName });
-            let facebookId = "_facebookToken";
 
+            let facebookId = "_facebookToken";
             let documentId = await getUserDocumentId(authSession, facebookId);
             assert.equal(documentId, userName + "_facebookToken");
         });

@@ -211,6 +211,7 @@ describe("FacebookRequestHandler", () => {
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
             sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.resolve(document));
             sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
+            sandbox.mock(userDetails).expects("getUser").withArgs("test").returns({ "userName": "userName" });
             try {
                 let response = await facebookRequestHandler.setToken("test");
                 assert.equal(response, expiredAfter);

@@ -1,5 +1,3 @@
-
-
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import RenewSessionRoute from "../../../src/routes/helpers/RenewSessionRoute";
 import CouchSession from "../../../src/CouchSession";
@@ -79,7 +77,7 @@ describe("RenewSessionRoute", () => {
     });
 
     it("should return auth session cookie for success", (done) => {
-        let renewedCookie = "AuthSession=new token;Version=1; Path=/; HttpOnly";
+        let renewedCookie = "AuthSession=new token";
         let response = {
             "status": function(status) {
                 expect(HttpResponseHandler.codes.OK).to.equal(status);
@@ -95,7 +93,7 @@ describe("RenewSessionRoute", () => {
                 done();
             }
         };
-        couchSessionAuthenticateMock.withArgs(token).returns(Promise.resolve(renewedCookie));
+        couchSessionAuthenticateMock.withArgs(token).returns(Promise.resolve("new token"));
         let renewSessionHelper = new RenewSessionRoute(request, response, next);
         renewSessionHelper.handle();
         couchSessionAuthenticateMock.verify();

@@ -22,7 +22,14 @@ export default class CouchClient {
     constructor(accessToken, dbName, dbUrl) {
         this.accessToken = accessToken;
         this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
-        this.dbName = dbName || userDetails.getUser(accessToken).dbName;
+        if(dbName) {
+            this.dbName = dbName;
+        } else if(accessToken) {
+            let userInfo = userDetails.getUser(accessToken);
+            if(userInfo) {
+                this.dbName = userInfo.dbName;
+            }
+        }
     }
 
     static async createInstance(accessToken) {

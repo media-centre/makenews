@@ -23,7 +23,8 @@ export default class DefaultRoute extends Route {
             return this.next();
         } else if(this.authSessionCookie) {
             CouchSession.authenticate(this.authSessionCookie)
-                .then(() => {
+                .then((token) => {
+                    this.request.cookies.AuthSession = token;
                     this.next();
                 }).catch(() => {
                     this._handleFailure();
