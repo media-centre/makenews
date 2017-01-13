@@ -1,6 +1,5 @@
-import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
 import AppWindow from "../utils/AppWindow";
-import UserInfo from "../user/UserInfo";
+import AjaxClient from "../utils/AjaxClient";
 
 export default class TwitterLogin {
     static instance() {
@@ -43,16 +42,8 @@ export default class TwitterLogin {
         let appServerUrl = AppWindow.instance().get("serverUrl");
         let serverCallbackUrl = appServerUrl + "/twitter-oauth-callback";
         let clientCallbackUrl = appServerUrl + "/#/twitterSuccess";
-        return TwitterRequestHandler.requestToken(clientCallbackUrl, serverCallbackUrl);
-    }
-
-    static isAuthenticated() {
-        return new Promise((resolve) => {
-            UserInfo.getUserDocument().then((document) => {
-                resolve(document.twitterAuthenticated === true);
-            }).catch(() => {
-                resolve(false);
-            });
-        });
+        let ajaxClient = AjaxClient.instance("/twitter-request-token");
+        return ajaxClient.get({ "clientCallbackUrl": clientCallbackUrl,
+            "serverCallbackUrl": serverCallbackUrl });
     }
 }

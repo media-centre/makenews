@@ -78,23 +78,6 @@ window.mediaCenter.appEn = {
             },
             "configureTabName": "Configure"
         },
-        "surfPage": {
-            "noFeeds": "You don't have any feeds or no feeds for this filter",
-            "fetchingFeeds": "Fetching more feeds for you...",
-            "noMoreFeeds": "You have reached the end!! That's all we have",
-            "feeds": {
-                "parkedSuccess": "You have successfully parked the news item"
-            }
-        },
-        "parkPage": {
-            "noFeeds": "You don't have any parked items",
-            "fetchingFeeds": "Fetching parked feeds for you...",
-            "feeds": {
-                "unParkedSuccess": "You have successfully unparked the news item",
-                "deletedFeedConfirm": "This feed item will be permanently deleted. Do you want to continue?",
-                "feedDeletionSuccess": "You have successfully deleted the news item"
-            }
-        },
         "userProfile": {
             "passwordUpdateFailure": "Password update failed",
             "invalidCredentials": "Incorrect Current Password",
@@ -116,20 +99,6 @@ window.mediaCenter.appEn = {
         "applicationTour": {
             "description": "Find HELP in the above options",
             "gotItText": "Got It"
-        },
-        "headerStrings": {
-            "surfTab": {
-                "Name": "Surf"
-            },
-            "parkTab": {
-                "Name": "Park"
-            },
-            "configTab": {
-                "Name": "Configure"
-            },
-            "logoutButton": {
-                "Name": "Logout"
-            }
         },
         "mainHeaderStrings": {
             "newsBoard": {

@@ -1,9 +1,7 @@
-/*eslint max-len:[0,500] */
 import Login from "../components/Login";
 import Branding from "../components/Branding";
 import FeaturesHelp from "../components/FeaturesHelp";
 import { userLogin } from "../LoginActions";
-import Logo from "../../utils/components/Logo";
 import AppSessionStorage from "../../../js/utils/AppSessionStorage";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
@@ -28,7 +26,6 @@ export class LoginPage extends Component {
             <div>
                 <header className="app-header login">
                     <div className="clear-fix form-container">
-                        <Logo ref="logo"/>
                         <div id="login-form-container" className="login-form-container right m-block">
                             <Login ref="login" onLoginClick={(history, userName, password) => dispatch(userLogin(history, userName, password))} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
                         </div>

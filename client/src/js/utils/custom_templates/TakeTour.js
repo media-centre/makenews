@@ -1,5 +1,4 @@
 /* eslint react/jsx-wrap-multilines:0 */
-import UserInfo from "../../user/UserInfo";
 import Locale from "../Locale";
 
 export default class TakeTour {
@@ -34,25 +33,5 @@ export default class TakeTour {
     static close() {
         document.getElementById("take-tour-mask").classList.add("hide");
         document.body.style.overflow = "auto";
-        this.updateUserSeenTour();
-    }
-
-    static isTourRequired() {
-        return new Promise((resolve) => {
-            UserInfo.getUserDocument().then(userInfo => {
-                resolve(!userInfo.takenTour);
-            }).catch(error => {
-                let notFoundCode = 404;
-                if(error.status === notFoundCode && error.name === "not_found") {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
-        });
-    }
-
-    static updateUserSeenTour() {
-        return UserInfo.createOrUpdateUserDocument({ "takenTour": true });
     }
 }

@@ -1,5 +1,4 @@
 import AjaxClient from "./../../utils/AjaxClient";
-import LoginPage from "../../login/pages/LoginPage";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 import {
     hasMoreSourceResults,
@@ -37,7 +36,6 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
         dispatch(fetchingSources);
         try {
             let response = await ajaxClient.post(headers, {
-                "userName": LoginPage.getUserName(),
                 keyword,
                 type,
                 "paging": props

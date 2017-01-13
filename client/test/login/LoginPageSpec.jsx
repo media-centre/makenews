@@ -59,11 +59,6 @@ describe("login page component", () => {
         assert.strictEqual("invalid credentials", loginPage.props.login.errorMessage);
     });
 
-    it("should have logo image component", () => {
-        let logoDOM = ReactDOM.findDOMNode(loginPage.refs.logo);
-        assert.isNotNull(logoDOM);
-    });
-
     it("should have branding component", () => {
         assert.strictEqual("sample branding", loginPage.refs.branding.props.branding.text);
     });

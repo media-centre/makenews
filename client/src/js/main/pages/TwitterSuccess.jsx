@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import UserInfo from "../../user/UserInfo";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {
-        UserInfo.createOrUpdateUserDocument({ "twitterAuthenticated": true }).then(() => {
-            window.opener.mediaCenter.twitterLoginSucess = true;
-            window.close();
-        });
+        window.opener.mediaCenter.twitterLoginSucess = true;
+        window.close();
     }
 
     render() {

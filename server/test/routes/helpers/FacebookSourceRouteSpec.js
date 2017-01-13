@@ -4,6 +4,7 @@ import sinon from "sinon";
 import FacebookAccessToken from "../../../src/facebook/FacebookAccessToken";
 import FacebookRequestHandler from "../../../src/facebook/FacebookRequestHandler";
 import { fbSourceTypesToFetch } from "../../../src/util/Constants";
+import { userDetails } from "../../../src/Factory";
 import { isRejected } from "../../helpers/AsyncTestHelper";
 
 describe("FacebookSourceRoutes", () => {
@@ -17,21 +18,24 @@ describe("FacebookSourceRoutes", () => {
     describe("validate", () => {
         it("should reject the request if type is missing", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
-                "body": { "userName": "something" }
+                "body": { },
+                "cookies": { "AuthSession": "token" }
             }, {});
             assert.strictEqual(facebookRouteHelper.validate(), "missing parameters");
         });
 
         it("should reject the request if invalid type is passed", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
-                "body": { "userName": "something", "type": "mypage", "keyword": "filt" }
+                "body": { "type": "mypage", "keyword": "filt" },
+                "cookies": { "AuthSession": "token" }
             }, {});
             assert.strictEqual(facebookRouteHelper.validate(), "invalid type parameter mypage");
         });
         
         it("should reject the request if keyword is missing", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
-                "body": { "userName": "something", "type": "page" }
+                "body": { "type": "page" },
+                "cookies": { "AuthSession": "token" }
             }, {});
             assert.strictEqual(facebookRouteHelper.validate(), "missing parameters");
         });
@@ -45,14 +49,16 @@ describe("FacebookSourceRoutes", () => {
             facebookAccessToken = new FacebookAccessToken();
             facebookAccessTokenMock = sandbox.mock(FacebookAccessToken);
             facebookAccessTokenMock.expects("instance").returns(facebookAccessToken);
+            sandbox.stub(userDetails, "getUser").withArgs("token").returns({ "userName": "user" });
+
         });
         it("should reject the request if access token is missing", () => {
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
-                    "userName": "user",
                     "type": "user",
                     "keyword": "keyword"
-                }
+                },
+                "cookies": { "AuthSession": "token" }
             }, {});
 
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.reject("access token not there"));
@@ -63,11 +69,11 @@ describe("FacebookSourceRoutes", () => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
-                    "userName": "user",
                     "keyword": keyword,
                     "type": type,
                     "paging": "&offset=50"
-                }
+                },
+                "cookies": { "AuthSession": "token" }
             }, {});
 
             let accessToken = "token";
@@ -102,11 +108,11 @@ describe("FacebookSourceRoutes", () => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
-                    "userName": "user",
                     "keyword": keyword,
                     "type": "profile",
                     "paging": ""
-                }
+                },
+                "cookies": { "AuthSession": "token" }
             }, {});
 
             let accessToken = "token";
@@ -140,11 +146,11 @@ describe("FacebookSourceRoutes", () => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
-                    "userName": "user",
                     "keyword": keyword,
                     "type": fbSourceTypesToFetch.page,
                     "paging": ""
-                }
+                },
+                "cookies": { "AuthSession": "token" }
             }, {});
 
             let accessToken = "token";
@@ -174,11 +180,11 @@ describe("FacebookSourceRoutes", () => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
-                    "userName": "user",
                     "keyword": keyword,
                     "type": fbSourceTypesToFetch.group,
                     "paging": "&offset=50"
-                }
+                },
+                "cookies": { "AuthSession": "token" }
             }, {});
 
             let accessToken = "token";

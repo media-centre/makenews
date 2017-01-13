@@ -2,7 +2,6 @@ import * as FBActions from "../../src/js/config/actions/FacebookConfigureActions
 import { expect } from "chai";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import sinon from "sinon";
-import LoginPage from "../../src/js/login/pages/LoginPage";
 import "../helper/TestHelper";
 import UserSession from "../../src/js/user/UserSession";
 import mockStore from "../helper/ActionHelper";
@@ -28,19 +27,17 @@ describe("Facebook Configure Actions", () => {
     });
 
     describe("fetchFacebookSources", () => {
-        let sandbox = null, ajaxClient = null, ajaxClientMock = null, userName = null;
+        let sandbox = null, ajaxClient = null, ajaxClientMock = null;
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
 
         beforeEach("fetchFacebookSources", () => {
-            userName = "user";
             sandbox = sinon.sandbox.create();
             sandbox.mock(UserSession).expects("instance").returns({
                 "continueSessionIfActive": () => {}
             });
-            sandbox.mock(LoginPage).expects("getUserName").returns(userName);
         });
 
         afterEach("fetchFacebookSources", () => {
@@ -55,7 +52,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post");
-            ajaxClientMock.withArgs(headers, { "userName": userName, "keyword": "testProfile", "type": "profile", "paging": {} })
+            ajaxClientMock.withArgs(headers, { "keyword": "testProfile", "type": "profile", "paging": {} })
                 .returns(Promise.resolve(response));
 
             let actions = [
@@ -78,7 +75,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
-                "userName": userName, "keyword": pageName, "type": "page", "paging": {}
+                "keyword": pageName, "type": "page", "paging": {}
             });
             ajaxClientMock.returns(Promise.resolve(response));
 
@@ -111,7 +108,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
-                "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
+                "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
@@ -141,7 +138,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
-                "userName": userName, "keyword": pageName, "type": "page", "paging": {} });
+                "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },

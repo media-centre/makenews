@@ -1,7 +1,6 @@
 import LogoutActions from "../../src/js/login/LogoutActions";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
-import DbSession from "../../src/js/db/DbSession";
 import sinon from "sinon";
 
 describe("userLogout", () => {
@@ -11,12 +10,10 @@ describe("userLogout", () => {
         let appSessionStorage = new AppSessionStorage();
         let appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("clear");
         sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-        let dbSessionClearInstanceMock = sandbox.mock(DbSession).expects("clearInstance");
         ajaxGetMock.returns(Promise.resolve({ "message": "logout successful" }));
         LogoutActions.instance().logout();
         appSessionStorageClearMock.verify();
         ajaxGetMock.verify();
-        dbSessionClearInstanceMock.verify();
         sandbox.restore();
     });
 });

@@ -2,11 +2,6 @@
 
 import Locale from "../../utils/Locale";
 
-export function mainHeaderLocale(state = {}, action = {}) {
-    let appLocaleEn = Locale.applicationStrings();
-    return appLocaleEn.messages.headerStrings;
-}
-
 export function mainHeaderStrings(state = {}, action = {}) {
     let appLocaleEn = Locale.applicationStrings();
     return appLocaleEn.messages.mainHeaderStrings;

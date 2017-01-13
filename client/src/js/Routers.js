@@ -1,13 +1,9 @@
 /* eslint react/display-name:0 react/jsx-wrap-multilines:0*/
 import App from "./App";
 import LoginPage from "./login/pages/LoginPage";
-import AllCategories from "./config/components/AllCategories";
-import CategoryPage from "./config/components/Category";
 import TwitterSuccess from "./main/pages/TwitterSuccess";
 import UserSession from "./user/UserSession";
 import UserProfile from "./user/UserProfile";
-import Help from "./help/Help";
-import DbSession from "./db/DbSession";
 import React from "react";
 import { Route } from "react-router";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
@@ -28,14 +24,10 @@ export function renderRoutes() {
                     <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
                 </Route>
 
-                <Route path="/old-configure/categories" component={AllCategories} />
-                <Route path="/old-configure/category/:categoryId/:categoryName" component={CategoryPage}/>
-
                 <Route path="/newsBoard" component={ScanNews} />
                 <Route path="/storyBoard" component={WriteAStory} />
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />
-                <Route path="/help" component={Help} />
             </Route>
         </Route>
     );
@@ -44,9 +36,7 @@ export function renderRoutes() {
 
 function isLoggedIn(nextState, replaceState) {
     let userSession = UserSession.instance();
-    if(userSession.isActiveContinuously()) {
-        dbSync();
-    } else {
+    if(!userSession.isActiveContinuously()) {
         replaceState("/");
     }
 
@@ -58,8 +48,4 @@ function showLoginPage(nextState, replaceState) {
         userSession.setLastAccessedTime();
         replaceState("/configure/web");
     }
-}
-
-function dbSync() {
-    DbSession.instance();
 }
