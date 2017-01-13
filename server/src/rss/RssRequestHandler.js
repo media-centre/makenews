@@ -11,17 +11,6 @@ export default class RssRequestHandler {
         return Logger.instance();
     }
 
-    async fetchRssFeedRequest(url) {
-        try {
-            let feeds = await this.rssClient().fetchRssFeeds(url);
-            RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-            return feeds;
-        } catch (error) {
-            RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
-            throw error;
-        }
-    }
-
     async fetchBatchRssFeedsRequest(url) {
         try {
             let feeds = await this.rssClient().getRssData(url);
