@@ -55,6 +55,8 @@ export class ConfigureSourcesPage extends Component {
         } else if (sourceType === "twitter" && this.props.twitterAuthenticated === false) {
             this.isPopUpDisplayed = true;
             this._showTwitterLogin(dispatch);
+        } else {
+            this.isPopUpDisplayed = false;
         }
     }
 
