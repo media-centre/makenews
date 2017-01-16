@@ -64,4 +64,76 @@ describe("BookmarkRequestHandler", () => {
             }
         });
     });
+
+    describe("getFeeds", () => {
+        let sandbox = null, bookmarkRequestHandler = null, authSession = null, offSet = 1, couchClient = null, selector = null;
+        beforeEach("getFeeds", () => {
+            sandbox = sinon.sandbox.create();
+            selector = {
+                "selector": {
+                    "docType": {
+                        "$eq": "feed"
+                    },
+                    "bookmark": {
+                        "$eq": true
+                    }
+                },
+                "limit": 50
+            };
+            authSession = "test_session";
+            bookmarkRequestHandler = new BookmarkRequestHandler();
+            couchClient = new CouchClient();
+            sandbox.stub(CouchClient, "instance").returns(couchClient);
+        });
+        afterEach("getFeeds", () => {
+            sandbox.restore();
+        });
+
+        it("should get bookmarkedFeeds from the database", async () => {
+            let feeds = {
+                "docs": [
+                    {
+                        "_id": "1",
+                        "guid": "1",
+                        "title": "title1",
+                        "bookmark": true,
+                        "docType": "feed",
+                        "sourceType": "web"
+                    },
+                    {
+                        "_id": "2",
+                        "guid": "2",
+                        "title": "title2",
+                        "bookmark": true,
+                        "docType": "feed",
+                        "sourceType": "web"
+                    },
+                    {
+                        "_id": "3",
+                        "guid": "3",
+                        "title": "title3",
+                        "bookmark": true,
+                        "docType": "feed",
+                        "sourceType": "web"
+                    }
+                ]
+            };
+            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
+            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feeds));
+            let docs = await bookmarkRequestHandler.getFeeds(authSession, offSet);
+            assert.deepEqual(docs, feeds);
+            findDocumentsMock.verify();
+        });
+
+        it("should reject with error when database throws unexpected response", async () => {
+            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
+            findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
+            try{
+                await bookmarkRequestHandler.getFeeds(authSession, offSet);
+                findDocumentsMock.verify();
+            } catch(error) {
+                assert.strictEqual(error, "unexpected response from the db");
+            }
+        });
+    });
 });
