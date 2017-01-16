@@ -7,6 +7,7 @@ import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
 import Route from "../routes/helpers/Route";
 import { userDetails } from "./../Factory";
+import DateUtil from "./../util/DateUtil";
 
 export const WEB = "web";
 export const FACEBOOK_PAGE = "fb_page";
@@ -42,7 +43,7 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeedsFromAllSources() {
         let urlDocuments = await this._getUrlDocuments();
-        let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchFeedsFromSource(url));
+        let mapUrlDocs = urlDocuments.map(async (url) => await this.updateTimeStamp(url));
         let feedArrays = await Promise.all(mapUrlDocs);
         let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
         return await this.saveFeedDocumentsToDb(feeds);
@@ -61,12 +62,29 @@ export default class FetchFeedsFromAllSources extends Route {
         return response.docs;
     }
 
+    async updateTimeStamp(item) {
+        let emptyArray = [];
+        let currentTime = parseInt(DateUtil.getCurrentTime(), 10);
+        if(currentTime - parseInt(item.latestFeedTimeStamp, 10) > 300000) { //eslint-disable-line no-magic-numbers
+            try {
+                await this.fetchFeedsFromSource(item);
+                item.latestFeedTimestamp = currentTime;
+                let couchClient = CouchClient.instance(this.accesstoken);
+                couchClient.saveDocument(item._id, item);
+            }catch (err) {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
+                return emptyArray;
+            }
+        }
+    }
+
     async fetchFeedsFromSource(item) {
         let feeds = null, type = "posts";
         let emptyArray = [];
         switch (item.sourceType) {
         case WEB:
             try {
+                console.log("s=======>", item.name);
                 feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
                 return feeds;
@@ -74,10 +92,11 @@ export default class FetchFeedsFromAllSources extends Route {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
                 return emptyArray;
             }
-        case FACEBOOK_GROUP: type = "feed";
+        case FACEBOOK_GROUP:
+            type = "feed";
         case FACEBOOK_PAGE: //eslint-disable-line no-fallthrough
             try {
-                if(!this.facebookAcessToken) {
+                if (!this.facebookAcessToken) {
                     this.facebookAcessToken = await this._getFacebookAccessToken();
                 }
                 feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).fetchFeeds(item._id, type);
