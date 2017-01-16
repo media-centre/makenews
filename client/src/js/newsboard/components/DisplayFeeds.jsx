@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
+import AppWindow from "./../../utils/AppWindow";
 import { connect } from "react-redux";
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 
@@ -12,6 +13,10 @@ export class DisplayFeeds extends Component {
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
+    }
+
+    componentWillMount() {
+        this.autoRefresh();
     }
 
     componentDidMount() {
@@ -65,6 +70,15 @@ export class DisplayFeeds extends Component {
 
     _toggleFeedsView() {
         this.setState({ "expandFeedsView": !this.state.expandFeedsView });
+    }
+
+    autoRefresh() {
+        const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
+        if (!AppWindow.instance().get("autoRefreshTimer")) {
+            AppWindow.instance().set("autoRefreshTimer", setInterval(() => {
+                DisplayFeedActions.fetchFeedsFromSources();
+            }, AUTO_REFRESH_INTERVAL));
+        }
     }
 
     render() {
