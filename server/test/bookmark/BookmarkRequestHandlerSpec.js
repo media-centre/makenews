@@ -1,4 +1,4 @@
-import BookmarkRequestHandler from "../../src/bookmark/BookmarkRequestHandler";
+import { bookmarkTheDocument, getBookmarkedFeeds } from "../../src/bookmark/BookmarkRequestHandler";
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -6,10 +6,8 @@ import { assert } from "chai";
 describe("BookmarkRequestHandler", () => {
 
     describe("updateDocument", () => {
-        let bookmarkRequestHandler = null, sandbox = null, couchClient = null, authSession = null, dbName = null;
-
+        let sandbox = null, couchClient = null, authSession = null, dbName = null;
         beforeEach("updateDocument", () => {
-            bookmarkRequestHandler = BookmarkRequestHandler.instance();
             sandbox = sinon.sandbox.create();
             authSession = "authSession";
             dbName = "dbName";
@@ -20,8 +18,8 @@ describe("BookmarkRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return success response if update is successful", async () => {
-            let docId = "123";
+        it("should return success response by successfully updating the doc with given bookmark status", async () => {
+            let docId = "123", status = false;
             let documentObj = {
                 "_id": "123",
                 "rev": "abc",
@@ -29,21 +27,59 @@ describe("BookmarkRequestHandler", () => {
                 "sourceType": "web"
             };
 
-            documentObj.bookmark = true;
+            let modifiedObj = {
+                "_id": "123",
+                "rev": "abc",
+                "title": "new title",
+                "sourceType": "web",
+                "bookmark": status
+            };
+
             let response = { "ok": true, "_id": "id", "_rev": "new rev" };
 
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
-            sandbox.mock(couchClient).expects("getDocument").withExactArgs(docId).returns(documentObj);
-            sandbox.mock(couchClient).expects("saveDocument").withExactArgs(docId, documentObj).returns(Promise.resolve(response));
-            try {
-                let dbResponse = await bookmarkRequestHandler.updateDocument(authSession, docId);
-                assert.deepEqual(response, dbResponse);
-            } catch(error) {
-                assert.fail(error);
-            }
+            let getDocMock = sandbox.mock(couchClient).expects("getDocument").withExactArgs(docId).returns(documentObj);
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(docId, modifiedObj).returns(Promise.resolve(response));
+
+            let dbResponse = await bookmarkTheDocument(authSession, docId, status);
+            getDocMock.verify();
+            saveDocMock.verify();
+            assert.deepEqual(response, dbResponse);
         });
 
-        it("should throw error if updation is failed", async () => {
+        it("should toggle the status if no status is provided and return the success response", async () => {
+            let docId = "123";
+            let documentObj = {
+                "_id": "123",
+                "rev": "abc",
+                "title": "new title",
+                "sourceType": "web",
+                "bookmark": true
+            };
+
+            let modifiedObj = {
+                "_id": "123",
+                "rev": "abc",
+                "title": "new title",
+                "sourceType": "web",
+                "bookmark": false
+            };
+
+            let response = { "ok": true, "_id": "id", "_rev": "new rev" };
+
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+            let getDocMock = sandbox.mock(couchClient).expects("getDocument").withExactArgs(docId).returns(documentObj);
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(docId, modifiedObj).returns(Promise.resolve(response));
+
+            let dbResponse = await bookmarkTheDocument(authSession, docId);
+            getDocMock.verify();
+            saveDocMock.verify();
+            assert.deepEqual(response, dbResponse);
+        });
+
+        it("should throw error if updating is failed", async () => {
             let docId = "123";
             let documentObj = {
                 "_id": "123",
@@ -57,7 +93,7 @@ describe("BookmarkRequestHandler", () => {
             sandbox.mock(couchClient).expects("getDocument").withExactArgs(docId).returns(documentObj);
             sandbox.mock(couchClient).expects("saveDocument").withExactArgs(docId, documentObj).returns(Promise.reject(response));
             try {
-                await bookmarkRequestHandler.updateDocument(authSession, docId);
+                await bookmarkTheDocument(authSession, docId);
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(response, error);
@@ -66,7 +102,7 @@ describe("BookmarkRequestHandler", () => {
     });
 
     describe("getFeeds", () => {
-        let sandbox = null, bookmarkRequestHandler = null, authSession = null, offset = 50, couchClient = null, selector = null;
+        let sandbox = null, authSession = null, offset = 50, couchClient = null, selector = null;
         beforeEach("getFeeds", () => {
             sandbox = sinon.sandbox.create();
             selector = {
@@ -81,7 +117,6 @@ describe("BookmarkRequestHandler", () => {
                 "skip": 50
             };
             authSession = "test_session";
-            bookmarkRequestHandler = new BookmarkRequestHandler();
             couchClient = new CouchClient();
             sandbox.stub(CouchClient, "instance").returns(couchClient);
         });
@@ -120,7 +155,8 @@ describe("BookmarkRequestHandler", () => {
             };
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.resolve(feeds));
-            let docs = await bookmarkRequestHandler.getFeeds(authSession, offset);
+
+            let docs = await getBookmarkedFeeds(authSession, offset);
             assert.deepEqual(docs, feeds);
             findDocumentsMock.verify();
         });
@@ -129,7 +165,7 @@ describe("BookmarkRequestHandler", () => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
             try{
-                await bookmarkRequestHandler.getFeeds(authSession, offset);
+                await getBookmarkedFeeds(authSession, offset);
                 findDocumentsMock.verify();
             } catch(error) {
                 assert.strictEqual(error, "unexpected response from the db");

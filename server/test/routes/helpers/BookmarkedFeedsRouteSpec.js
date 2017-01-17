@@ -1,14 +1,13 @@
 import BookmarkedFeedsRoute from "../../../src/routes/helpers/BookmarkedFeedsRoute";
 import { mockResponse } from "./../../helpers/MockResponse";
-import BookmarkRequestHandler from "../../../src/bookmark/BookmarkRequestHandler";
+import * as BookmarkRequestHandler from "../../../src/bookmark/BookmarkRequestHandler";
 import sinon from "sinon";
 import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 describe("BookmarkedFeedsRoute", () => {
     let sandbox = null, response = null, request = null;
-    let bookmarkedFeedsRoute = null, bookmarkHandler = null, authSession = null, offset = 1;
-
+    let bookmarkedFeedsRoute = null, authSession = null, offset = 1;
     beforeEach("BookmarkedFeedsRoute", () => {
         authSession = "AuthSession";
         response = mockResponse();
@@ -22,8 +21,6 @@ describe("BookmarkedFeedsRoute", () => {
         };
         bookmarkedFeedsRoute = new BookmarkedFeedsRoute(request, response, {});
         sandbox = sinon.sandbox.create();
-        bookmarkHandler = BookmarkRequestHandler.instance();
-        sandbox.mock(BookmarkRequestHandler).expects("instance").returns(bookmarkHandler);
     });
 
     afterEach("BookmarkedFeedsRoute", () => {
@@ -59,12 +56,26 @@ describe("BookmarkedFeedsRoute", () => {
                 }
             ]
         };
-        sandbox.mock(bookmarkHandler).expects("getFeeds")
+        sandbox.mock(BookmarkRequestHandler).expects("getBookmarkedFeeds")
             .withExactArgs(authSession, offset)
             .returns(Promise.resolve(feeds));
 
         await bookmarkedFeedsRoute.getFeeds();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
         assert.deepEqual(response.json(), feeds);
+    });
+
+    it("should throw error if fetching bookmarked feeds is failed", async () => {
+        let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("getBookmarkedFeeds")
+            .withExactArgs(authSession, offset)
+            .returns(Promise.reject("error"));
+
+        try{
+            await bookmarkedFeedsRoute.getFeeds();
+            bookmarkHandlerMock.verify();
+            assert.fail();
+        } catch(error) {
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
+        }
     });
 });

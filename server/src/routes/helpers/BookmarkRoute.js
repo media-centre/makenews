@@ -1,18 +1,18 @@
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
-import BookmarkRequestHandler from "./../../bookmark/BookmarkRequestHandler";
+import { bookmarkTheDocument } from "./../../bookmark/BookmarkRequestHandler";
 
 export default class BookmarkRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.authSession = this.request.cookies.AuthSession;
         this.docId = this.request.body.docId;
+        this.status = this.request.body.status;
     }
 
     async bookmarkFeed() {
-        let bookmarkRequestHandler = BookmarkRequestHandler.instance();
         try {
-            let response = await bookmarkRequestHandler.updateDocument(this.authSession, this.docId);
+            let response = await bookmarkTheDocument(this.authSession, this.docId, this.status);
             RouteLogger.instance().debug(`BookmarkRoute:: successfully added bookmark field for the document ${this.docId}`);
             this._handleSuccess(response);
         } catch(error) {
