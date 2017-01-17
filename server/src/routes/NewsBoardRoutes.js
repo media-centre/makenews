@@ -9,13 +9,13 @@ export default (app) => {
         new FetchAllConfiguredFeeds(request, response).fetchFeeds();
     });
 
-    app.post("/bookmark", (request, response) => {
-        RouteLogger.instance().info("bookmarkRoute:: /bookmark request received. url = %s", request.url);
+    app.post("/bookmarks", (request, response) => {
+        RouteLogger.instance().info("bookmarkRoute:: POST /bookmark request received. url = %s", request.url);
         new BookmarkRoute(request, response).bookmarkFeed();
     });
 
-    app.get("/bookmarked-feeds", (request, response) => {
-        RouteLogger.instance().info("bookmarkedFeedsRoute:: /bookmarked-feeds request received. url = %s", request.url);
+    app.get("/bookmarks", (request, response) => {
+        RouteLogger.instance().info("bookmarkedFeedsRoute:: GET /bookmarks request received. url = %s", request.url);
         new BookmarkedFeedsRoute(request, response).getFeeds();
     });
 };

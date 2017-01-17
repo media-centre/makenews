@@ -42,9 +42,9 @@ export default class Route {
     }
 
     validateNumber(numberString) {
-        let ZERO = 0;
+        let defaultNumber = 0;
         let safeNumber = Number.parseInt(numberString, 10);
-        return (Number.isInteger(safeNumber) && safeNumber >= ZERO) ? safeNumber : ZERO;
+        return (Number.isInteger(safeNumber) && safeNumber >= defaultNumber) ? safeNumber : defaultNumber;
     }
 
     isValidRequestData() {

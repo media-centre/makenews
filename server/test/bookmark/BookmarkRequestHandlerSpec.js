@@ -66,7 +66,7 @@ describe("BookmarkRequestHandler", () => {
     });
 
     describe("getFeeds", () => {
-        let sandbox = null, bookmarkRequestHandler = null, authSession = null, offSet = 1, couchClient = null, selector = null;
+        let sandbox = null, bookmarkRequestHandler = null, authSession = null, offset = 50, couchClient = null, selector = null;
         beforeEach("getFeeds", () => {
             sandbox = sinon.sandbox.create();
             selector = {
@@ -78,7 +78,7 @@ describe("BookmarkRequestHandler", () => {
                         "$eq": true
                     }
                 },
-                "limit": 50
+                "skip": 50
             };
             authSession = "test_session";
             bookmarkRequestHandler = new BookmarkRequestHandler();
@@ -120,7 +120,7 @@ describe("BookmarkRequestHandler", () => {
             };
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.resolve(feeds));
-            let docs = await bookmarkRequestHandler.getFeeds(authSession, offSet);
+            let docs = await bookmarkRequestHandler.getFeeds(authSession, offset);
             assert.deepEqual(docs, feeds);
             findDocumentsMock.verify();
         });
@@ -129,7 +129,7 @@ describe("BookmarkRequestHandler", () => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
             try{
-                await bookmarkRequestHandler.getFeeds(authSession, offSet);
+                await bookmarkRequestHandler.getFeeds(authSession, offset);
                 findDocumentsMock.verify();
             } catch(error) {
                 assert.strictEqual(error, "unexpected response from the db");

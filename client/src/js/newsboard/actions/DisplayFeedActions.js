@@ -42,10 +42,10 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
 }
 
 export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
-    let ajax = AjaxClient.instance("/bookmarked-feeds", true);
+    let ajax = AjaxClient.instance("/bookmarks", true);
     return async dispatch => {
         try {
-            let feeds = await ajax.get({ "offSet": pageIndex });
+            let feeds = await ajax.get({ "offset": pageIndex });
             let result = {
                 "docsLength": 0
             };

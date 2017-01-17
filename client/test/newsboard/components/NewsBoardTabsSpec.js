@@ -15,7 +15,7 @@ describe("NewsBoardTabs", () => {
 
     it("should have tabs to switch between sources", () => {
         let renderedSources = findAllWithType(result, NewsBoardTab);
-        expect(renderedSources).to.have.lengthOf(4);  //eslint-disable-line no-magic-numbers
+        expect(renderedSources).to.have.lengthOf(5);  //eslint-disable-line no-magic-numbers
     });
 
     it("should have classname", () => {

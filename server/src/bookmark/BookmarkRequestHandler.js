@@ -12,9 +12,8 @@ export default class BookmarkRequestHandler {
         return await couchClient.saveDocument(docId, documentObj);
     }
 
-    async getFeeds(authSession, offSet) {
+    async getFeeds(authSession, offset) {
         let couchClient = CouchClient.instance(authSession);
-        let limitValue = offSet * 50; //eslint-disable-line no-magic-numbers
         let selector = {
             "selector": {
                 "docType": {
@@ -24,7 +23,7 @@ export default class BookmarkRequestHandler {
                     "$eq": true
                 }
             },
-            "limit": limitValue
+            "skip": offset
         };
         return await couchClient.findDocuments(selector);
     }

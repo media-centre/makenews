@@ -6,10 +6,10 @@ import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 describe("BookmarkedFeedsRoute", () => {
-    let sandbox = null, response = null, request = null, bookmarkedFeedsRoute = null, bookmarkHandler = null, authSession = null, offSet = null;
+    let sandbox = null, response = null, request = null;
+    let bookmarkedFeedsRoute = null, bookmarkHandler = null, authSession = null, offset = 1;
 
     beforeEach("BookmarkedFeedsRoute", () => {
-        offSet = 1; //eslint-disable-line no-magic-numbers
         authSession = "AuthSession";
         response = mockResponse();
         request = {
@@ -17,7 +17,7 @@ describe("BookmarkedFeedsRoute", () => {
                 "AuthSession": authSession
             },
             "query": {
-                "offSet": offSet
+                "offset": offset
             }
         };
         bookmarkedFeedsRoute = new BookmarkedFeedsRoute(request, response, {});
@@ -60,7 +60,7 @@ describe("BookmarkedFeedsRoute", () => {
             ]
         };
         sandbox.mock(bookmarkHandler).expects("getFeeds")
-            .withExactArgs(authSession, offSet)
+            .withExactArgs(authSession, offset)
             .returns(Promise.resolve(feeds));
 
         await bookmarkedFeedsRoute.getFeeds();
