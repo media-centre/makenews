@@ -2,10 +2,10 @@ import RssRequestHandler from "../rss/RssRequestHandler";
 import FacebookRequestHandler from "../facebook/FacebookRequestHandler";
 import TwitterRequestHandler from "../twitter/TwitterRequestHandler";
 import Logger from "../logging/Logger";
-import CouchClient from "../../src/CouchClient";
+import CouchClient from "./../../src/CouchClient";
 import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
-import Route from "../routes/helpers/Route";
+import Route from "./../routes/helpers/Route";
 import { userDetails } from "./../Factory";
 import DateUtil from "./../util/DateUtil";
 
@@ -43,7 +43,7 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeedsFromAllSources() {
         let urlDocuments = await this._getUrlDocuments();
-        let mapUrlDocs = urlDocuments.map(async (url) => await this.updateTimeStamp(url));
+        let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchAndUpdateTimeStamp(url));
         let feedArrays = await Promise.all(mapUrlDocs);
         let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
         return await this.saveFeedDocumentsToDb(feeds);
@@ -62,20 +62,22 @@ export default class FetchFeedsFromAllSources extends Route {
         return response.docs;
     }
 
-    async updateTimeStamp(item) {
-        let emptyArray = [];
+    async fetchAndUpdateTimeStamp(item) {
+        let feeds = [];
         let currentTime = parseInt(DateUtil.getCurrentTime(), 10);
-        if(currentTime - parseInt(item.latestFeedTimeStamp, 10) > 300000) { //eslint-disable-line no-magic-numbers
+        if(!item.latestFeedTimeStamp || currentTime - parseInt(item.latestFeedTimeStamp, 10) > 300000) { //eslint-disable-line no-magic-numbers
             try {
-                await this.fetchFeedsFromSource(item);
-                item.latestFeedTimestamp = currentTime;
                 let couchClient = CouchClient.instance(this.accesstoken);
-                couchClient.saveDocument(item._id, item);
+                item.latestFeedTimestamp = currentTime;
+                feeds = await this.fetchFeedsFromSource(item);
+                await couchClient.saveDocument(encodeURIComponent(item._id), item);
+                return feeds;
             }catch (err) {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
-                return emptyArray;
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
+                return feeds;
             }
         }
+        return feeds;
     }
 
     async fetchFeedsFromSource(item) {
@@ -84,7 +86,6 @@ export default class FetchFeedsFromAllSources extends Route {
         switch (item.sourceType) {
         case WEB:
             try {
-                console.log("s=======>", item.name);
                 feeds = await RssRequestHandler.instance().fetchBatchRssFeedsRequest(item._id);
                 FetchFeedsFromAllSources.logger().debug(`FetchFeedsFromAllSources:: successfully fetched rss feeds from:: ${item._id}`);
                 return feeds;
