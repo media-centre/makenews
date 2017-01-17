@@ -50,10 +50,17 @@ export class DisplayFeeds extends Component {
 
     getMoreFeeds(sourceType) {
         if (this.hasMoreFeeds) {
-            this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, (result) => {
-                this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
-                this.hasMoreFeeds = result.hasMoreFeeds;
-            }));
+            if(sourceType === "bookmark") {
+                this.props.dispatch(DisplayFeedActions.getBookmarkedFeeds(this.offset, (result) => {
+                    this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
+                    this.hasMoreFeeds = result.hasMoreFeeds;
+                }));
+            } else {
+                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, (result) => {
+                    this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
+                    this.hasMoreFeeds = result.hasMoreFeeds;
+                }));
+            }
         }
     }
 

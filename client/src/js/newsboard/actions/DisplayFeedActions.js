@@ -41,6 +41,27 @@ export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
     };
 }
 
+export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
+    let ajax = AjaxClient.instance("/bookmarked-feeds", true);
+    return async dispatch => {
+        try {
+            let feeds = await ajax.get({ "offSet": pageIndex });
+            let result = {
+                "docsLength": 0
+            };
+            if (feeds.docs.length > 0) { //eslint-disable-line no-magic-numbers
+                dispatch(paginatedFeeds(feeds.docs));
+                result.docsLength = feeds.docs.length;
+            }
+            let defaultPageSize = 25;
+            result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
+            callback(result); //eslint-disable-line callback-return
+        } catch(err) {
+            dispatch(paginatedFeeds([]));
+        }
+    };
+}
+
 
 export async function fetchFeedsFromSources() {
     const headers = {
