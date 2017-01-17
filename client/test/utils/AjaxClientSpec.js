@@ -105,12 +105,9 @@ describe("AjaxClient", function() {
                 .reply(HttpResponseHandler.codes.OK, {
                     "data": "success"
                 });
-            try {
-                let succesData = await ajax.get({ "url": "http://rssfedd.com" });
-                expect(succesData.data).to.eq("success");
-            } catch (err) {
-                assert.fail(err);
-            }
+
+            let succesData = await ajax.get({ "url": "http://rssfedd.com" });
+            expect(succesData.data).to.eq("success");
         });
 
         it("should do a get request with multiple query parameters to the url", async () => {

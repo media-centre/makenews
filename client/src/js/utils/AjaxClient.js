@@ -1,4 +1,3 @@
-/* eslint react/jsx-wrap-multilines:0*/
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import UserSession from "../user/UserSession";
 import AppWindow from "../utils/AppWindow";
@@ -27,11 +26,9 @@ export default class AjaxClient {
 
     async get(queryParams = {}) {
         let keys = Object.keys(queryParams);
-        if (keys.length !== 0) { //eslint-disable-line no-magic-numbers
+        if (keys.length) {
             this.url = this.url + "?";
-            let keyValues = keys.map(queryKey => {
-                return queryKey + "=" + encodeURIComponent(queryParams[queryKey]);
-            });
+            let keyValues = keys.map(queryKey => `${queryKey}=${encodeURIComponent(queryParams[queryKey])}`);
             this.url = this.url + keyValues.join("&");
         }
         return await this.request({
@@ -40,7 +37,7 @@ export default class AjaxClient {
         });
     }
 
-    async request(params) {  //eslint-disable-line consistent-return
+    async request(params) {
         let response = await fetch(this.url, params);
 
         let responseJson = await response.json();

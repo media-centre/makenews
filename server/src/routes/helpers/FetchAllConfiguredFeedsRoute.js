@@ -8,8 +8,8 @@ export default class FetchAllConfiguredFeeds extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.authSession = this.request.cookies.AuthSession;
-        this.offset = this.validateNumber(this.request.body.offset);
-        this.sourceType = this.request.body.sourceType;
+        this.offset = this.validateNumber(this.request.query.offset);
+        this.sourceType = this.request.query.sourceType;
     }
 
     valid() {

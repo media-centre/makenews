@@ -4,8 +4,8 @@ import BookmarkedFeedsRoute from "./helpers/BookmarkedFeedsRoute";
 import RouteLogger from "./RouteLogger";
 
 export default (app) => {
-    app.post("/get-feeds", (request, response) => {
-        RouteLogger.instance().info("fetchAllConfiguredFeedsRoute:: /get-feeds-from-all-sources request received. url = %s", request.url);
+    app.get("/feeds", (request, response) => {
+        RouteLogger.instance().info("fetchAllConfiguredFeedsRoute:: /feeds-from-all-sources request received. url = %s", request.url);
         new FetchAllConfiguredFeeds(request, response).fetchFeeds();
     });
 

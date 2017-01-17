@@ -17,39 +17,26 @@ export const clearFeeds = () => ({
 });
 
 export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
-    let ajax = AjaxClient.instance("/get-feeds", true);
-    const headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    };
-    return async dispatch => {
-        try {
-            let feeds = await ajax.post(headers, { "offset": pageIndex, "sourceType": sourceType });
-            let result = {
-                "docsLength": 0
-            };
-            if (feeds.docs.length > 0) { //eslint-disable-line no-magic-numbers
-                dispatch(paginatedFeeds(feeds.docs));
-                result.docsLength = feeds.docs.length;
-            }
-            let defaultPageSize = 25;
-            result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
-            callback(result); //eslint-disable-line callback-return
-        } catch(err) {
-            dispatch(paginatedFeeds([]));
-        }
-    };
+    let ajaxClient = AjaxClient.instance("/feeds", true);
+
+    return getFeeds(ajaxClient, { "offset": pageIndex, "sourceType": sourceType }, callback);
 }
+
 
 export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
-    let ajax = AjaxClient.instance("/bookmarks", true);
+    let ajaxClient = AjaxClient.instance("/bookmarks", true);
+
+    return getFeeds(ajaxClient, { "offset": pageIndex }, callback);
+}
+
+function getFeeds(ajaxClient, params, callback) {
     return async dispatch => {
         try {
-            let feeds = await ajax.get({ "offset": pageIndex });
+            let feeds = await ajaxClient.get(params);
             let result = {
                 "docsLength": 0
             };
-            if (feeds.docs.length > 0) { //eslint-disable-line no-magic-numbers
+            if (feeds.docs.length) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             }
@@ -61,7 +48,6 @@ export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
         }
     };
 }
-
 
 export async function fetchFeedsFromSources() {
     const headers = {

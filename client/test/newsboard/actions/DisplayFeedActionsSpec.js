@@ -39,14 +39,9 @@ describe("DisplayFeedActions", () => {
     });
 
     describe("displayFeedsByPage", () => {
-        let sandbox = null;
-        let headers = null, offset = 0;
+        let sandbox = null, offset = 0;
         beforeEach("displayFeedsByPage", () => {
             sandbox = sinon.sandbox.create();
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            };
         });
 
         afterEach("displayFeedsByPage", () => {
@@ -62,8 +57,8 @@ describe("DisplayFeedActions", () => {
             let ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("post")
-                .withArgs(headers, { offset, "sourceType": sourceType }).returns(Promise.resolve(feeds));
+            let postMock = sandbox.mock(ajaxClientInstance).expects("get")
+                .withArgs({ offset, "sourceType": sourceType }).returns(Promise.resolve(feeds));
             let store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
             store.dispatch(displayFeedsByPage(offset, sourceType, (result) => {
                 try {
@@ -82,7 +77,7 @@ describe("DisplayFeedActions", () => {
             let ajaxClientMock = sinon.mock(AjaxClient);
             ajaxClientMock.expects("instance").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance);
-            postMock.expects("post").returns(Promise.reject("error"));
+            postMock.expects("get").returns(Promise.reject("error"));
 
             let verifyMocks = () => {
                 ajaxClientMock.verify();

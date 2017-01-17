@@ -39,7 +39,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                 "cookies": {
                     "authSession": authSession
                 },
-                "body": {
+                "query": {
                     "offset": offset,
                     "sourceType": sourceType
                 }
@@ -68,7 +68,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                 "cookies": {
                     "authSession": {}
                 },
-                "body": {
+                "query": {
                     "offset": offset,
                     "sourceType": sourceType
                 }
@@ -88,7 +88,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                 "cookies": {
                     "authSession": {}
                 },
-                "body": {
+                "query": {
                     "offset": 0,
                     "sourceType": sourceType
                 }
@@ -101,7 +101,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
         });
 
         it("should return false if source type is empty", () => {
-            request.body.sourceType = "";
+            request.query.sourceType = "";
             fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
 
             assert.isFalse(fetchAllConfiguredFeedsRoute.valid());
