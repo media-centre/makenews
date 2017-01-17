@@ -73,7 +73,6 @@ export class DisplayFeeds extends Component {
     }
 
     autoRefresh() {
-        console.log("**********************")
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
         if (!AppWindow.instance().get("autoRefreshTimer")) {
             AppWindow.instance().set("autoRefreshTimer", setInterval(() => {

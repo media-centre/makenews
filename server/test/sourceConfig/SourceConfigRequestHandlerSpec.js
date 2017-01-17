@@ -126,14 +126,12 @@ describe("SourceConfigRequestHandler", () => {
                 "_id": first.url,
                 "name": first.name,
                 "docType": "source",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
+                "sourceType": sourceType
             }, {
                 "_id": second.url,
                 "name": second.name,
                 "docType": "source",
-                "sourceType": sourceType,
-                "latestFeedTimeStamp": currentTime
+                "sourceType": sourceType
             }];
 
             expect(sourceRequestHandler._getFormattedSources(sourceType, sources)).to.deep.equal(documents);

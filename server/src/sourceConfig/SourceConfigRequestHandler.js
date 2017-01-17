@@ -1,5 +1,4 @@
 import CouchClient from "../CouchClient";
-import DateUtil from "../../src/util/DateUtil";
 import StringUtil from "../../../common/src/util/StringUtil";
 import R from "ramda"; //eslint-disable-line id-length
 
@@ -29,13 +28,11 @@ export default class SourceConfigRequestHandler {
     }
 
     _getFormattedSources(sourceType, sources) {
-        let date = DateUtil.getCurrentTime();
         let formatSources = source => ({
             "_id": source.url,
             "name": source.name,
             "docType": "source",
-            "sourceType": sourceType,
-            "latestFeedTimeStamp": date
+            "sourceType": sourceType
         });
         let filterEmpty = source => {
             return !StringUtil.isEmptyString(source.url);
@@ -59,7 +56,6 @@ export default class SourceConfigRequestHandler {
                 result[configSourceTypes[source.sourceType]].push(source);
             }
         });
-
         return result;
     }
 }
