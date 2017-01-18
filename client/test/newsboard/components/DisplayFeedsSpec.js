@@ -14,11 +14,14 @@ describe("DisplayFeeds", () => {
             { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
             { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
         ];
+
+        let sources = { "data": [] };
         store = createStore(() => ({
             "fetchedFeeds": feeds,
             "selectedArticle": {
                 "_id": 1234
-            }
+            },
+            "sourceResults": sources
         }), applyMiddleware(thunkMiddleware));
 
         result = TestUtils.renderIntoDocument(
