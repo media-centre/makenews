@@ -25,18 +25,13 @@ export default class FetchFeedsFromAllSources extends Route {
         return Logger.instance();
     }
 
-    fetchFeeds() {
-        if (this.accesstoken) {
-            this.fetchFeedsFromAllSources().then((response)=> {
-                FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
-                this._handleSuccess(response);
-
-            }).catch((err) => {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                this._handleBadRequest();
-            });
-        } else {
-            FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: Authentication failed");
+    async fetchFeeds() {
+        try {
+            let response = await this.fetchFeedsFromAllSources();
+            FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
+            this._handleSuccess(response);
+        } catch(err) {
+            FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
             this._handleBadRequest();
         }
     }
@@ -74,7 +69,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             }catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                return feeds;
+                return [];
             }
         }
         return feeds;

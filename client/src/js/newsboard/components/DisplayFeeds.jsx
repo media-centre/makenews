@@ -16,7 +16,10 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillMount() {
-        this.autoRefresh();
+        if(this.props.sources.data.length) {
+            DisplayFeedActions.fetchFeedsFromSources();
+            this.autoRefresh();
+        }
     }
 
     componentDidMount() {
@@ -102,7 +105,8 @@ function mapToStore(store) {
     return {
         "feeds": store.fetchedFeeds,
         "sourceType": store.newsBoardCurrentSourceTab,
-        "articleToDisplay": store.selectedArticle._id
+        "articleToDisplay": store.selectedArticle._id,
+        "sources": store.sourceResults
     };
 }
 
@@ -110,7 +114,8 @@ DisplayFeeds.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired,
     "sourceType": PropTypes.string.isRequired,
-    "articleToDisplay": PropTypes.string
+    "articleToDisplay": PropTypes.string,
+    "sources": PropTypes.object.isRequired
 };
 
 export default connect(mapToStore)(DisplayFeeds);
