@@ -103,8 +103,7 @@ function mapToStore(store) {
     return {
         "feeds": store.fetchedFeeds,
         "sourceType": store.newsBoardCurrentSourceTab,
-        "articleToDisplay": store.selectedArticle._id,
-        "sources": store.configuredSources
+        "articleToDisplay": store.selectedArticle._id
     };
 }
 
@@ -112,8 +111,7 @@ DisplayFeeds.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired,
     "sourceType": PropTypes.string.isRequired,
-    "articleToDisplay": PropTypes.string,
-    "sources": PropTypes.object.isRequired
+    "articleToDisplay": PropTypes.string
 };
 
 export default connect(mapToStore)(DisplayFeeds);
