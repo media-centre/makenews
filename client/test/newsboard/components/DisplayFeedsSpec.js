@@ -6,28 +6,34 @@ import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
 import { expect } from "chai";
+import sinon from "sinon";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
+    let sandbox = sinon.sandbox.create();
     beforeEach("DisplayFeeds", () => {
         feeds = [
-            { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
-            { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
+            { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
+            { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
         ];
-
-        let sources = { "data": [] };
         store = createStore(() => ({
             "fetchedFeeds": feeds,
             "selectedArticle": {
-                "_id": 1234
+                "_id": "1234"
             },
-            "sourceResults": sources
+            "newsBoardCurrentSourceTab": "web"
         }), applyMiddleware(thunkMiddleware));
+
+        sandbox.useFakeTimers();
 
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
                 <DisplayFeeds />
             </Provider>);
+    });
+
+    afterEach("DisplayFeeds", () => {
+        sandbox.restore();
     });
 
     it("should render the feeds", () => {
