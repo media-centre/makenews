@@ -4,7 +4,7 @@ import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 
 describe("DisplayArticle", () => {
-    let feed = null, renderer = null, displayArticleDom = null, active = null, onToggle = null;
+    let feed = null, renderer = null, displayArticleDom = null, active = null;
     beforeEach("DisplayArticle", () => {
         feed = {
             "images": [{ "url": "image url" }],
@@ -16,8 +16,6 @@ describe("DisplayArticle", () => {
             "pubDate": "someDate"
         };
         active = false;
-        onToggle = () => {
-        };
         renderer = TestUtils.createRenderer();
         displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed}/>);
     });
