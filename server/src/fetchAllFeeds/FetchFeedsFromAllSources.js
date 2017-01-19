@@ -9,6 +9,7 @@ import Route from "./../routes/helpers/Route";
 import { userDetails } from "./../Factory";
 import DateUtil from "./../util/DateUtil";
 import { fetchFeedsTimeInterval } from "./../util/Constants";
+import R from "ramda"; //eslint-disable-line id-length
 
 export const WEB = "web";
 export const FACEBOOK_PAGE = "fb_page";
@@ -39,7 +40,13 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeedsFromAllSources() {
         let urlDocuments = await this._getUrlDocuments();
-        let mapUrlDocs = urlDocuments.map(async (url) => await this.fetchAndUpdateTimeStamp(url));
+        let mapUrlDocs = urlDocuments.map(async (url) => {
+            let feeds = await this.fetchFeedsFromSource(url);
+            if(!R.isEmpty(feeds)) {
+                await this.updateUrlTimeStamp(url);
+            }
+            return feeds;
+        });
         let feedArrays = await Promise.all(mapUrlDocs);
         let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
         return await this.saveFeedDocumentsToDb(feeds);
@@ -58,22 +65,18 @@ export default class FetchFeedsFromAllSources extends Route {
         return response.docs;
     }
 
-    async fetchAndUpdateTimeStamp(item) {
-        let feeds = [];
+    /*TODO: missing single responsibility */ //eslint-disable-line
+    async updateUrlTimeStamp(sourceUrlDoc) {
         let currentTime = parseInt(DateUtil.getCurrentTime(), 10);
-        if(!item.latestFeedTimeStamp || currentTime - parseInt(item.latestFeedTimeStamp, 10) > fetchFeedsTimeInterval[item.sourceType]) { //eslint-disable-line no-magic-numbers
+        if(!sourceUrlDoc.latestFeedTimeStamp || currentTime - parseInt(sourceUrlDoc.latestFeedTimeStamp, 10) > fetchFeedsTimeInterval[sourceUrlDoc.sourceType]) {
             try {
                 let couchClient = CouchClient.instance(this.accesstoken);
-                item.latestFeedTimestamp = currentTime;
-                feeds = await this.fetchFeedsFromSource(item);
-                await couchClient.saveDocument(encodeURIComponent(item._id), item);
-                return feeds;
-            }catch (err) {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching feeds. Error: %s", err);
-                return [];
+                sourceUrlDoc.latestFeedTimestamp = currentTime;
+                await couchClient.saveDocument(encodeURIComponent(sourceUrlDoc._id), sourceUrlDoc);
+            } catch (err) {
+                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error updating source url timestamp. Error: %s", err);
             }
         }
-        return feeds;
     }
 
     async fetchFeedsFromSource(item) {

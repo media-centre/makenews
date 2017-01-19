@@ -64,9 +64,11 @@ describe("FetchFeedsFromAllSources", () => {
     describe("fetchFeedsFromAllSources", () => {
         it("should call save the documents to db", async() => {
             let urlDocuments = [{ "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" }];
+            let fetchFeedsFromSourceMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromSource");
+            fetchFeedsFromSourceMock.returns(Promise.resolve(urlDocuments));
             let getUrlDocumentsMock = sandbox.mock(fetchFeedsRequest).expects("_getUrlDocuments");
             getUrlDocumentsMock.returns(Promise.resolve(urlDocuments));
-            let fetchAndUpdateTimeStampMock = sandbox.mock(fetchFeedsRequest).expects("fetchAndUpdateTimeStamp");
+            let fetchAndUpdateTimeStampMock = sandbox.mock(fetchFeedsRequest).expects("updateUrlTimeStamp");
             fetchAndUpdateTimeStampMock.returns(Promise.resolve([]));
             let saveDocumentMock = sandbox.mock(fetchFeedsRequest).expects("saveFeedDocumentsToDb");
             saveDocumentMock.returns(Promise.resolve("Successfully added feeds to Database"));
@@ -79,9 +81,9 @@ describe("FetchFeedsFromAllSources", () => {
         });
     });
 
-    describe("fetchAndUpdateTimeStamp", () => {
+    describe("updateUrlTimeStamp", () => {
         let urlDocuments = null, couchClient = null;
-        beforeEach("fetchAndUpdateTimeStamp", () => {
+        beforeEach("updateUrlTimeStamp", () => {
             urlDocuments = [{ "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" }];
             let fetchFeedsFromSourceMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromSource");
             fetchFeedsFromSourceMock.returns(Promise.resolve(urlDocuments));
@@ -91,10 +93,7 @@ describe("FetchFeedsFromAllSources", () => {
         it("should return feeds if timestamp updated successfully ", async () => {
             let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocumentMock.returns(Promise.resolve("success"));
-
-            let feeds = await fetchFeedsRequest.fetchAndUpdateTimeStamp(urlDocuments[0]); //eslint-disable-line no-magic-numbers
-
-            assert.deepEqual(feeds, urlDocuments);
+            await fetchFeedsRequest.updateUrlTimeStamp(urlDocuments[0]); //eslint-disable-line no-magic-numbers
             saveDocumentMock.verify();
         });
 
@@ -102,9 +101,8 @@ describe("FetchFeedsFromAllSources", () => {
             let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocumentMock.returns(Promise.reject("success"));
 
-            let feeds = await fetchFeedsRequest.fetchAndUpdateTimeStamp(urlDocuments[0]); //eslint-disable-line no-magic-numbers
+            await fetchFeedsRequest.updateUrlTimeStamp(urlDocuments[0]); //eslint-disable-line no-magic-numbers
 
-            assert.deepEqual(feeds, []);
             saveDocumentMock.verify();
         });
 
