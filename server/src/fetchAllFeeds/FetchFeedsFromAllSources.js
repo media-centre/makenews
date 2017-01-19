@@ -8,6 +8,7 @@ import AdminDbClient from "../db/AdminDbClient";
 import Route from "./../routes/helpers/Route";
 import { userDetails } from "./../Factory";
 import DateUtil from "./../util/DateUtil";
+import { fetchFeedsTimeInterval } from "./../util/Constants";
 
 export const WEB = "web";
 export const FACEBOOK_PAGE = "fb_page";
@@ -60,7 +61,7 @@ export default class FetchFeedsFromAllSources extends Route {
     async fetchAndUpdateTimeStamp(item) {
         let feeds = [];
         let currentTime = parseInt(DateUtil.getCurrentTime(), 10);
-        if(!item.latestFeedTimeStamp || currentTime - parseInt(item.latestFeedTimeStamp, 10) > 300000) { //eslint-disable-line no-magic-numbers
+        if(!item.latestFeedTimeStamp || currentTime - parseInt(item.latestFeedTimeStamp, 10) > fetchFeedsTimeInterval[item.sourceType]) { //eslint-disable-line no-magic-numbers
             try {
                 let couchClient = CouchClient.instance(this.accesstoken);
                 item.latestFeedTimestamp = currentTime;
@@ -106,7 +107,6 @@ export default class FetchFeedsFromAllSources extends Route {
             try {
                 feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id, item.latestFeedTimeStamp, this.accesstoken);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
-
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching twitter feeds. Error: ${JSON.stringify(err)}`);

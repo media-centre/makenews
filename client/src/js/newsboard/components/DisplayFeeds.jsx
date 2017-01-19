@@ -16,10 +16,8 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillMount() {
-        if(this.props.sources.data.length) {
-            DisplayFeedActions.fetchFeedsFromSources();
-            this.autoRefresh();
-        }
+        DisplayFeedActions.fetchFeedsFromSources();
+        this.autoRefresh();
     }
 
     componentDidMount() {
@@ -106,7 +104,7 @@ function mapToStore(store) {
         "feeds": store.fetchedFeeds,
         "sourceType": store.newsBoardCurrentSourceTab,
         "articleToDisplay": store.selectedArticle._id,
-        "sources": store.sourceResults
+        "sources": store.configuredSources
     };
 }
 
