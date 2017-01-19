@@ -3,9 +3,11 @@ import {
     clearFeeds,
     displayFeedsByPage,
     newsBoardTabSwitch,
+    displayArticle,
     CLEAR_NEWS_BOARD_FEEDS,
     PAGINATED_FETCHED_FEEDS,
-    NEWS_BOARD_CURRENT_TAB
+    NEWS_BOARD_CURRENT_TAB,
+    DISPLAY_ARTICLE
 } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -79,13 +81,18 @@ describe("DisplayFeedActions", () => {
             let postMock = sandbox.mock(ajaxClientInstance);
             postMock.expects("get").returns(Promise.reject("error"));
 
-            let verifyMocks = () => {
-                ajaxClientMock.verify();
-                postMock.verify();
-            };
-
-            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }], done, verifyMocks);
+            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }], done);
             store.dispatch(displayFeedsByPage(offset, "twitter"));
+
+            ajaxClientMock.verify();
+            postMock.verify();
+        });
+    });
+
+    describe("displayArticle", () => {
+        it("should dispatch the current selected article", () => {
+            let displayArticleAction = { "type": DISPLAY_ARTICLE, "article": { "_id": "id", "title": "title" } };
+            assert.deepEqual(displayArticle({ "_id": "id", "title": "title" }), displayArticleAction);
         });
     });
 });

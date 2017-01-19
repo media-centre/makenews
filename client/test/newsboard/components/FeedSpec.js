@@ -28,6 +28,15 @@ describe("Feed", () => {
         expect(feedDom.props.children.length).to.equals(3);
     });
 
+    it("should have a div with feed class", () => {
+        expect(feedDom.props.className).to.equals("feed");
+    });
+
+    it("should have a div with feed--highlight class when the active prop is true", () => {
+        feedDom = renderer.render(<Feed active feed={feed} onToggle={onToggle}/>);
+        expect(feedDom.props.className).to.equals("feed feed--highlight");
+    });
+
     it("should have image with the given url", () => {
         feed.videos = [];
         feedDom = renderer.render(<Feed active={active} feed={feed} onToggle={onToggle}/>);

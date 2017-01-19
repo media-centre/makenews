@@ -3,6 +3,7 @@ import AjaxClient from "../../../js/utils/AjaxClient";
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
+export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -16,20 +17,35 @@ export const clearFeeds = () => ({
     "type": CLEAR_NEWS_BOARD_FEEDS
 });
 
+export const displayArticle = (article) => ({
+    "type": DISPLAY_ARTICLE,
+    article
+});
+
 export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
     let ajaxClient = AjaxClient.instance("/feeds", true);
 
-    return getFeeds(ajaxClient, { "offset": pageIndex, "sourceType": sourceType }, callback);
+    return _getFeeds(ajaxClient, { "offset": pageIndex, "sourceType": sourceType }, callback);
 }
 
 
 export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
     let ajaxClient = AjaxClient.instance("/bookmarks", true);
 
-    return getFeeds(ajaxClient, { "offset": pageIndex }, callback);
+    return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
-function getFeeds(ajaxClient, params, callback) {
+
+export async function fetchFeedsFromSources() {
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+    let ajaxFetch = AjaxClient.instance("/fetch-feeds", true);
+    await ajaxFetch.post(headers, {});
+}
+
+function _getFeeds(ajaxClient, params, callback) {
     return async dispatch => {
         try {
             let feeds = await ajaxClient.get(params);
@@ -47,13 +63,4 @@ function getFeeds(ajaxClient, params, callback) {
             dispatch(paginatedFeeds([]));
         }
     };
-}
-
-export async function fetchFeedsFromSources() {
-    const headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    };
-    let ajaxFetch = AjaxClient.instance("/fetch-feeds", true);
-    await ajaxFetch.post(headers, {});
 }

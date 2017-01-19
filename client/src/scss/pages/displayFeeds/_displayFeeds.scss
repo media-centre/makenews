@@ -103,6 +103,7 @@
       clear: both;
       float: none;
       box-sizing: border-box;
+      flex-basis: 100%;
 
       &__description {
         overflow: hidden;

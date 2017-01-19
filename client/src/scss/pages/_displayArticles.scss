@@ -1,0 +1,24 @@
+.display-article {
+  flex: 1;
+
+  &__header {
+    padding: 14px 10px;
+    background: $dark-background-color;
+    text-align: right;
+
+    .bookmark {
+      color: $primary-color-light;
+      cursor: pointer;
+
+      &.active {
+        color: $primary-color;
+      }
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      vertical-align: sub;
+      margin-right: 4px;
+    }
+  }
+}

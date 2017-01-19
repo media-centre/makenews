@@ -1,6 +1,7 @@
 /* eslint react/jsx-no-literals:0 */
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import DisplayFeeds from "./DisplayFeeds";
+import DisplayArticle from "./DisplayArticle";
 import NewsBoardTabs from "./NewsBoardTabs";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
@@ -15,9 +16,7 @@ export class ScanNews extends Component {
             <div className="news-board-container">
                 <NewsBoardTabs />
                 <DisplayFeeds />
-                <div className="article">
-                    Article
-                </div>
+                <DisplayArticle />
             </div>
         );
     }

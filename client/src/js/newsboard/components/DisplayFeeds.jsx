@@ -7,7 +7,7 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "activeIndex": 0, "expandView": false };
+        this.state = { "expandView": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -25,7 +25,6 @@ export class DisplayFeeds extends Component {
         if(this.props.sourceType !== nextProps.sourceType) {
             this.hasMoreFeeds = true;
             this.offset = 0;
-            this.setState({ "activeIndex": 0 });
             this.getMoreFeeds(nextProps.sourceType);
             this.props.dispatch(DisplayFeedActions.clearFeeds());
         }
@@ -64,10 +63,6 @@ export class DisplayFeeds extends Component {
         }
     }
 
-    handleToggle(index) {
-        this.setState({ "activeIndex": index });
-    }
-
     _toggleFeedsView() {
         this.setState({ "expandFeedsView": !this.state.expandFeedsView });
     }
@@ -82,7 +77,7 @@ export class DisplayFeeds extends Component {
                 />
                 <div className="feeds">
                     {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={index === this.state.activeIndex} selectFeedHandler={this.handleToggle.bind(this, index)}/>)}
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay} dispatch={this.props.dispatch}/>)}
                 </div>
             </div>
         );
@@ -92,14 +87,16 @@ export class DisplayFeeds extends Component {
 function mapToStore(store) {
     return {
         "feeds": store.fetchedFeeds,
-        "sourceType": store.newsBoardCurrentSourceTab
+        "sourceType": store.newsBoardCurrentSourceTab,
+        "articleToDisplay": store.selectedArticle._id
     };
 }
 
 DisplayFeeds.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired,
-    "sourceType": PropTypes.string.isRequired
+    "sourceType": PropTypes.string.isRequired,
+    "articleToDisplay": PropTypes.string
 };
 
 export default connect(mapToStore)(DisplayFeeds);

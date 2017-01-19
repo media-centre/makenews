@@ -15,7 +15,10 @@ describe("DisplayFeeds", () => {
             { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
         ];
         store = createStore(() => ({
-            "fetchedFeeds": feeds
+            "fetchedFeeds": feeds,
+            "selectedArticle": {
+                "_id": 1234
+            }
         }), applyMiddleware(thunkMiddleware));
 
         result = TestUtils.renderIntoDocument(

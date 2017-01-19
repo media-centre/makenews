@@ -1,7 +1,8 @@
 .header {
   height: 64px;
   width: 100%;
-  background-color: $primary-color;
+  background-color: $primary-color-dark;
+  border-bottom: 4px solid $secondary-color;
 
   &__logo {
     width: 177px;

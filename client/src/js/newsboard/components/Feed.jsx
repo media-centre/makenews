@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
+import { displayArticle } from "./../actions/DisplayFeedActions";
 
 export default class Feed extends Component {
     getMedia() {
@@ -11,10 +12,12 @@ export default class Feed extends Component {
         }
         return null;
     }
+
     render() {
-        let feed = this.props.feed;
+        const feed = this.props.feed;
+        
         return (
-            <div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={this.props.selectFeedHandler}>
+            <div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={() => this.props.dispatch(displayArticle(feed))}>
                 <div className="feed__media">{this.getMedia()}</div>
 
                 <div className="feed__content">
@@ -37,5 +40,5 @@ export default class Feed extends Component {
 Feed.propTypes = {
     "active": PropTypes.bool,
     "feed": PropTypes.object.isRequired,
-    "selectFeedHandler": PropTypes.func
+    "dispatch": PropTypes.func
 };

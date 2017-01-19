@@ -1,5 +1,10 @@
-import { fetchedFeeds, newsBoardCurrentSourceTab } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
-import { NEWS_BOARD_CURRENT_TAB } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import {
+    fetchedFeeds,
+    newsBoardCurrentSourceTab,
+    selectedArticle
+} from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
+import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import { BOOKMARKED_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
 describe("DisplayFeedReducer", () => {
@@ -23,7 +28,38 @@ describe("DisplayFeedReducer", () => {
             let action = { "type": "PAGINATED_FETCHED_FEEDS", feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
+
+        it("should return feeds when action type is paginated fetched feeds", () => {
+            let state = [{
+                "_id": "123",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test.com/rss"
+            }, {
+                "_id": "1234",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test3.com/rss"
+            }];
+
+            let modifiedState = [{
+                "_id": "123",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test.com/rss",
+                "bookmark": true
+            }, {
+                "_id": "1234",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test3.com/rss"
+            }];
+
+            let action = { "type": BOOKMARKED_ARTICLE, "articleId": "123", "bookmarkStatus": true };
+            expect(fetchedFeeds(state, action)).to.deep.equal(modifiedState);
+        });
     });
+
     describe("NewsBoard Current Source Tab", () => {
 
         it("should return twitter as current tab when action type is newsboard current tab with tab as twitter", () => {
@@ -36,5 +72,22 @@ describe("DisplayFeedReducer", () => {
         });
     });
     
-    
+    describe("selectedArticle", () => {
+        it("should return empty object by default", () => {
+            expect(selectedArticle()).to.deep.equals({});
+        });
+
+        it("should return article when DISPLAY_ARTICLE is dispatched", () => {
+            const action = { "type": DISPLAY_ARTICLE, "article": { "_id": "id", "title": "title" } };
+            expect(selectedArticle({}, action)).to.deep.equals(action.article);
+        });
+
+        it("should update the bookmark status when it receives BOOKMARKED_ARTICLE", () => {
+            const action = { "type": BOOKMARKED_ARTICLE, "bookmarkStatus": true };
+            const bookmarkedArticle = {
+                "_id": "id", "title": "title", "bookmark": true
+            };
+            expect(selectedArticle({ "_id": "id", "title": "title" }, action)).to.deep.equals(bookmarkedArticle);
+        });
+    });
 });

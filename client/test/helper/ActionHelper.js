@@ -29,6 +29,7 @@ export default function mockStore(getState, expectedActions, done, verify = func
                     }
                     return action;
                 } catch (error) {
+                    verify();
                     done(error);
                     failed = true;
                 }
