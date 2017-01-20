@@ -115,7 +115,7 @@ describe("FacebookRequestHandler", () => {
             sourceId = "https://www.facebook.com/TestPage";
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            requiredFields = "link,message,picture,name,caption,place,privacy,created_time";
+            requiredFields = "link,message,picture,full_picture,name,caption,place,privacy,created_time";
             optionsJson = {"fields": requiredFields, "limit": 100}; //eslint-disable-line
         });
 
@@ -320,7 +320,7 @@ describe("FacebookRequestHandler", () => {
                     { "name": "The Hindu Business Line", "id": "60573550946" },
                     { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
                 "paging": {
-                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
+                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture,full_picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
                 }
             };
 

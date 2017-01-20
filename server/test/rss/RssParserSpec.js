@@ -55,6 +55,7 @@ describe("RssParser", () => {
                      <title>NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell</title>
                      <link>http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell</link>
                      <description>The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:</description>
+                     <enclosure url="http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r" length="300095" type="image/jpeg" />
                     </item>
 
                     <item>
@@ -83,12 +84,22 @@ describe("RssParser", () => {
                 "link": "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell",
                 "description": "The following is a statement from NASA Administrator Charles Bolden on the passing of NASA astronaut Edgar Mitchell:",
                 "pubDate": null,
-                "enclosures": [],
+                "enclosures": [{
+                    "length": "300095",
+                    "thumbnail": "http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r",
+                    "type": "image/jpeg",
+                    "url": "http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r"
+                }],
                 "docType": "feed",
                 "sourceType": "web",
                 "sourceUrl": url,
                 "tags": [null],
-                "images": []
+                "images": [{
+                    "length": "300095",
+                    "thumbnail": "http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r",
+                    "type": "image/jpeg",
+                    "url": "http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r"
+                }]
             },
                 {
                     "_id": "test-guid-2",

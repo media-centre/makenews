@@ -24,7 +24,7 @@ function _parsePost(post) {
 
     if(post.picture) {
         feedDocument.type = "image";
-        feedDocument.images[0] = { "url": post.picture }; //eslint-disable-line no-magic-numbers
+        feedDocument.images[0] = { "url": post.full_picture, "thumbnail": post.picture }; //eslint-disable-line no-magic-numbers
     }
 
     if(post.link && post.link.indexOf("/videos/") !== noIndex) {

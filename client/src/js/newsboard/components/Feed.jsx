@@ -8,7 +8,7 @@ export default class Feed extends Component {
         if(this.props.feed.videos && this.props.feed.videos.length) {
             return <img src={this.props.feed.videos[0].thumbnail}/>; //eslint-disable-line no-magic-numbers
         } else if (this.props.feed.images && this.props.feed.images.length) {
-            return <img src={this.props.feed.images[0].url}/>; //eslint-disable-line no-magic-numbers
+            return <img src={this.props.feed.images[0].thumbnail}/>; //eslint-disable-line no-magic-numbers
         }
         return null;
     }

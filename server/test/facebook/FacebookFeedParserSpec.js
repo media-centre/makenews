@@ -66,6 +66,7 @@ describe("FacebookFeedParser", () => {
                 "link": "https://www.facebook.com/DisneyPixar/photos/a.127437064077.102676.35245929077/10154988680249078/?type=3",
                 "message": "Destination: everywhere.",
                 "picture": "https://scontent.xx.fbcdn.net/v/t1.0-0/s130x130/15826130_10154988680249078_436498272897924830_n.jpg?oh=eb979257835ed17a5a0668dda02417c2&oe=591AE0D9",
+                "full_picture": "https://fullpicture.url/fullpicture.jpg",
                 "name": "Timeline Photos",
                 "privacy": {
                     "value": "",
@@ -89,7 +90,10 @@ describe("FacebookFeedParser", () => {
             "description": "Destination: everywhere.",
             "pubDate": "2017-01-05T02:30:02Z",
             "tags": [],
-            "images": [{ "url": "https://scontent.xx.fbcdn.net/v/t1.0-0/s130x130/15826130_10154988680249078_436498272897924830_n.jpg?oh=eb979257835ed17a5a0668dda02417c2&oe=591AE0D9" }],
+            "images": [{
+                "url": "https://fullpicture.url/fullpicture.jpg",
+                "thumbnail": "https://scontent.xx.fbcdn.net/v/t1.0-0/s130x130/15826130_10154988680249078_436498272897924830_n.jpg?oh=eb979257835ed17a5a0668dda02417c2&oe=591AE0D9"
+            }],
             "videos": []
         }];
 
@@ -101,6 +105,7 @@ describe("FacebookFeedParser", () => {
             "link": "https://www.facebook.com/DisneyPixar/videos/10154988196624078/",
             "message": "Dive into a sea of Easter eggs. It's National Trivia Day!",
             "picture": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742",
+            "full_picture": "https://full.picture/url.jpg",
             "name": "Disney•Pixar Easter Eggs",
             "privacy": {
                 "value": "",
@@ -123,7 +128,10 @@ describe("FacebookFeedParser", () => {
             "description": "Dive into a sea of Easter eggs. It's National Trivia Day!",
             "pubDate": "2017-01-04T23:01:54Z",
             "tags": [],
-            "images": [{ "url": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742" }],
+            "images": [{
+                "url": "https://full.picture/url.jpg",
+                "thumbnail": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742"
+            }],
             "videos": [{ "id": "10154988196624078", "thumbnail": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742" }]
         }];
 
