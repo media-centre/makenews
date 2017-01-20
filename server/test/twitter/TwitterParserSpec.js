@@ -74,8 +74,8 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "Hindu twitter text - 123457",
-                "title": "",
+                "description": "",
+                "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
@@ -86,7 +86,7 @@ describe("TwitterParser", () => {
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
-        it("should return tweets with the desired format of type imagecontent", ()=> {
+        it("should return tweets with the desired format of type image content", ()=> {
             let sourceId = "123";
             let actualTweet = [{
                 "metadata": {
@@ -105,12 +105,12 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "Hindu twitter text - 123457",
-                "title": "",
+                "description": "",
+                "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
-                "images": [{ "url": "https://www.test.com" }],
+                "images": [{ "url": "https://www.test.com", "thumbnail": "https://www.test.com:thumb" }],
                 "videos": []
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
@@ -137,17 +137,19 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "Hindu twitter text - 123457",
-                "title": "",
+                "description": "",
+                "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
                 "images": [
                     {
-                        "url": "https://www.test1.com"
+                        "url": "https://www.test1.com",
+                        "thumbnail": "https://www.test1.com:thumb"
                     },
                     {
-                        "url": "https://www.test2.com"
+                        "url": "https://www.test2.com",
+                        "thumbnail": "https://www.test2.com:thumb"
                     }
                 ],
                 "videos": []
@@ -180,25 +182,27 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "Hindu twitter text - 123457",
-                "title": "",
+                "description": "",
+                "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
                 "images": [
                     {
-                        "url": "https://www.test1.com"
+                        "url": "https://www.test1.com",
+                        "thumbnail": "https://www.test1.com:thumb"
                     },
                     {
-                        "url": "https://www.test2.com"
+                        "url": "https://www.test2.com",
+                        "thumbnail": "https://www.test2.com:thumb"
                     }
                 ],
                 "videos": [
                     {
-                        "thumbnail": "https://www.test1.com"
+                        "thumbnail": "https://www.test1.com:thumb"
                     },
                     {
-                        "thumbnail": "https://www.test2.com"
+                        "thumbnail": "https://www.test2.com:thumb"
                     }]
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);

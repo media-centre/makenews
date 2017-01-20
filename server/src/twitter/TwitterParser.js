@@ -33,8 +33,8 @@ export default class TwitterParser {
             "_id": tweet.id_str,
             "docType": "feed",
             "sourceType": "twitter",
-            "description": tweet.text,
-            "title": "",
+            "description": "",
+            "title": tweet.text,
             "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
             "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": this.hashTags(tweet),
@@ -42,18 +42,16 @@ export default class TwitterParser {
             "videos": []
         };
         let images = tweet.entities.media;
-        if(images && images.length > 0) { // eslint-disable-line no-magic-numbers
+        if(images) { // eslint-disable-line no-magic-numbers
             images.forEach(item => {
-                feedObj.images.push({ "url": item.media_url_https });
+                feedObj.images.push({ "url": item.media_url_https, "thumbnail": `${item.media_url_https}:thumb` });
             });
         }
 
         let videos = tweet.extended_entities ? tweet.extended_entities.media : [];
-        if(videos && videos.length > 0) { // eslint-disable-line no-magic-numbers
-            videos.forEach(item => {
-                feedObj.videos.push({ "thumbnail": item.media_url_https });
-            });
-        }
+        videos.forEach(item => {
+            feedObj.videos.push({ "thumbnail": `${item.media_url_https}:thumb` });
+        });
         return feedObj;
     }
 

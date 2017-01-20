@@ -8,7 +8,7 @@ describe("Feed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
     beforeEach("Feed", () => {
         feed = {
-            "images": [{ "url": "image url" }],
+            "images": [{ "url": "image url", "thumbnail": "image url" }],
             "videos": [{ "thumbnail": "video image url" }],
             "title": "Some Title",
             "description": "Some Description",

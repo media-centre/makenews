@@ -45,9 +45,11 @@ export default class RssParser {
                     if (feed.enclosures && feed.enclosures.length) {
                         feed.enclosures.forEach((item, index) => {  //eslint-disable-line no-loop-func
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
-                                feedObject.images.push(feed.enclosures[index]);
+                                let image = feed.enclosures[index];
+                                image.thumbnail = image.url;
+                                feedObject.images.push(image);
                             } else if (item.type.indexOf("video") !== NEGATIVE_INDEX) {
-                                feedObject.images.push({ "type": "video", "url": feed.image.url });
+                                feedObject.images.push({ "type": "video", "url": feed.image.url, "thumbnail": feed.image.url });
                             }
                         });
                     }
