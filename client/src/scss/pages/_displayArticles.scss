@@ -21,4 +21,31 @@
       margin-right: 4px;
     }
   }
+
+  .article {
+    padding: 2rem;
+
+    &__title {
+      font-size: 2rem;
+      color: $secondary-color;
+    }
+
+    &__details {
+      color: $primary-color-light;
+      margin-bottom: 2rem;
+      font-size: 0.8rem;
+    }
+
+    &__desc {
+      line-height: 1.5rem;
+    }
+
+    &__images {
+      text-align: center;
+      img {
+        margin: 1rem;
+        max-width: 100%;
+      }
+    }
+  }
 }

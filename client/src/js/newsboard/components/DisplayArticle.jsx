@@ -17,8 +17,24 @@ export class DisplayArticle extends Component {
                           </div>
                     }
                 </header>
-                <main>
-                    { this.props.article.description }
+                <main className="article">
+                    <h1 className="article__title">
+                        { this.props.article.title }
+                    </h1>
+                    <div className="article__details">
+                        <i className={`fa fa-${this.props.article.sourceType}`} />
+                        <span>{` | ${this.props.article.pubDate}`}</span>
+                        {
+                            this.props.article.tags &&
+                            this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)
+                        }
+                    </div>
+                    <div className="article__images">
+                        { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
+                    </div>
+                    <div className="article__desc">
+                        { this.props.article.description }
+                    </div>
                 </main>
             </article>
         );
