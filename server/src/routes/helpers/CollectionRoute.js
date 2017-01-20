@@ -24,4 +24,15 @@ export default class CollectionRoute extends Route {
             this._handleBadRequest();
         }
     }
+
+    async getCollection() {
+        try {
+            let response = await CollectionRequestHandler.instance().getCollection(this.authSession);
+            RouteLogger.instance().debug(`CollectionRoute:: successfully fetched all collection ${this.collection}`);
+            this._handleSuccess(response);
+        } catch(error) {
+            RouteLogger.instance().debug(`CollectionRoute:: Error in fetching the collection. Error  ${error}`);
+            this._handleBadRequest();
+        }
+    }
 }

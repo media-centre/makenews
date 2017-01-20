@@ -23,4 +23,16 @@ export default class CollectionRequestHandler {
         collection.feeds.push(docId);
         return couchClient.saveDocument(collectionName, collection);
     }
+
+    async getCollection(authSession) {
+        let selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "collection"
+                }
+            }
+        };
+        let couchClient = CouchClient.instance(authSession);
+        return await couchClient.findDocuments(selector);
+    }
 }
