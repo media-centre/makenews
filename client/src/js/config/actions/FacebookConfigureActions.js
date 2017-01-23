@@ -46,9 +46,9 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response, keyword));
-                dispatch(hasMoreSourceResults());
+                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults());
+                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed);
             }
         } catch (err) {

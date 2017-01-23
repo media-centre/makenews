@@ -28,9 +28,9 @@ export function fetchWebSources(keyword, params = {}) {
                 const cmp = (first, second) => first.url === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotWebSourceResults(data, keyword));
-                dispatch(hasMoreSourceResults());
+                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults());
+                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed);
             }
         } catch(err) {

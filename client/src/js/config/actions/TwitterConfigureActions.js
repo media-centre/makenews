@@ -29,9 +29,9 @@ export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0)
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotTwitterSourceResults(data, keyword));
-                dispatch(hasMoreSourceResults());
+                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults());
+                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed);
             }
         } catch(err) { //eslint-disable-line un-used-variable

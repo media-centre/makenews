@@ -31,28 +31,22 @@ describe("ConfigureSourcesPage", () => {
         it("should dispatch switchSourceTab with WEB if configure sourceType is web", () => {
             let switchTabsMock = sandbox.mock(SourceConfigActions)
                 .expects("switchSourceTab").withArgs("web");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
 
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "web" }} dispatch={()=>{}}/>
             );
 
-            clearSourceMock.verify();
             switchTabsMock.verify();
         });
 
         it("should dispatch switchSourceTab with PROFILES if configure sourceType is facebook and subType is PROFILE", () => {
             let switchTabsMock = sandbox.mock(SourceConfigActions)
                 .expects("switchSourceTab").withArgs("profiles");
-            let clearSourceMock = sandbox.mock(SourceConfigActions)
-                .expects("clearSources");
 
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}}/>
             );
 
-            clearSourceMock.verify();
             switchTabsMock.verify();
         });
     });
@@ -108,7 +102,6 @@ describe("ConfigureSourcesPage", () => {
         });
 
         it("should have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is true", () => {
-            renderer = TestUtils.createRenderer();
             renderer = TestUtils.createRenderer();
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}} twitterAuthenticated={true}/>); //eslint-disable-line
