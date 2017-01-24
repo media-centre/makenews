@@ -1,0 +1,21 @@
+import CouchClient from "../CouchClient";
+
+
+export default class StoryRequestHandler {
+    static instance() {
+        return new StoryRequestHandler();
+    }
+
+    async addStory(title, authSession) {
+        let document = { "title": title, "docType": "Story" };
+        let couchClient = CouchClient.instance(authSession);
+        try {
+            return await couchClient.updateDocument(document);
+        } catch (error) {
+            if(error.status === "conflict") {
+                throw "Story title already exist"; //eslint-disable-line no-throw-literal
+            }
+            throw "Unable to add the story"; //eslint-disable-line no-throw-literal
+        }
+    }
+}

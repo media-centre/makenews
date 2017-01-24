@@ -1,0 +1,70 @@
+.create-story-tab {
+  overflow: auto;
+  background-color: $dark-background-color;
+
+  .create-story-icon {
+    float: right;
+    cursor: pointer;
+    width: 170px;
+    padding: 10px;
+    height: 50px;
+    i {
+      color: #917fa9;
+    }
+    .icon {
+      padding: 10px;
+    }
+  }
+}
+
+.story-board-container {
+  background-color: #FAF5F5;
+  .story-cards {
+    li {
+      display: inline-block;
+    }
+  }
+  .story-card {
+    .add-card, .added-card {
+      margin: 30px;
+      height: 100px;
+      border-style: dashed;
+      width: 200px;
+      text-align: center;
+      i {
+        top: 37%;
+        position: relative;
+        font-size: initial;
+      }
+    }
+    .added-card {
+      border-style: groove;
+    }
+  }
+}
+
+.create-story-tab, .story-board-container {
+  a {
+    display: block;
+    color: #917fa9;
+  }
+}
+
+.story {
+  width: 100%;
+  height: 100%;
+}
+
+.story-card-title {
+  padding: 20px;
+  text-align: center;
+  .title-box {
+    width: 60%;
+    border-bottom-color: black;
+  }
+  .save-box {
+    font-weight: bold;
+    color: $secondary-color;
+  }
+
+}

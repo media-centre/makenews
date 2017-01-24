@@ -395,4 +395,3 @@ describe("CouchClient", () => {
         });
     });
 });
-

@@ -5,6 +5,7 @@ import twitterReaderRoutes from "./TwitterRoutes";
 import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes";
 import configurationRoutes from "./ConfigurationRoutes";
 import newsBoardRoutes from "./NewsBoardRoutes";
+import storyBoardRoute from "./storyBoardRoute";
 
 export default function(app) {
     authorizationRoutes(app);
@@ -14,4 +15,5 @@ export default function(app) {
     twitterReaderRoutes(app);
     fetchAllFeedsRoutes(app);
     newsBoardRoutes(app);
+    storyBoardRoute(app);
 }
