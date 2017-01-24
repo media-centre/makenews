@@ -19,7 +19,7 @@ export default class FeedsRequestHandler {
                     "$gt": null
                 }
             },
-            "fields": ["_id", "title", "description", "sourceType", "bookmark", "tags", "pubDate", "videos", "images"],
+            "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images"],
             "sort": [{ "pubDate": "desc" }],
             "skip": offset
         };

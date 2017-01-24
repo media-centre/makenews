@@ -1,7 +1,7 @@
 import Migration from "../Migration";
 import CouchClient from "../../CouchClient";
 
-export default class FetchFeedsIndex {
+export default class BookmarkIndex {
     constructor(dbName, accessToken) {
         this.dbName = dbName;
         this.accessToken = accessToken;
@@ -9,16 +9,16 @@ export default class FetchFeedsIndex {
 
     async up() {
         try {
-            Migration.logger(this.dbName).info("FetchFeedsIndex::up - started");
+            Migration.logger(this.dbName).info("BookmarkIndex::up - started");
             let nameIdIndex = {
                 "index": {
-                    "fields": ["pubDate", "docType", "sourceType", "bookmark"]
+                    "fields": ["bookmark"]
                 },
-                "name": "pubDate"
+                "name": "BookmarkIndex"
             };
             return await CouchClient.instance(this.accessToken, this.dbName).createIndex(nameIdIndex);
         } catch (error) {
-            Migration.logger(this.dbName).error("FetchFeedsIndex::up - error %j", error);
+            Migration.logger(this.dbName).error("BookmarkIndex::up - error %j", error);
             throw error;
         }
     }

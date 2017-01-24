@@ -20,6 +20,7 @@
     "isomorphic-fetch": "^2.2.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.15.2",
+    "node-readability": "^2.2.0",
     "oauth": "^0.9.14",
     "pouchdb": "^6.0.7",
     "ramda": "^0.22.1",
