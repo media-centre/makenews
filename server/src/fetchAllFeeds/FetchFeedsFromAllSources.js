@@ -71,7 +71,7 @@ export default class FetchFeedsFromAllSources extends Route {
         if(!sourceUrlDoc.latestFeedTimeStamp || currentTime - parseInt(sourceUrlDoc.latestFeedTimeStamp, 10) > fetchFeedsTimeInterval[sourceUrlDoc.sourceType]) {
             try {
                 let couchClient = CouchClient.instance(this.accesstoken);
-                sourceUrlDoc.latestFeedTimestamp = currentTime;
+                sourceUrlDoc.latestFeedTimeStamp = currentTime;
                 await couchClient.saveDocument(encodeURIComponent(sourceUrlDoc._id), sourceUrlDoc);
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error updating source url timestamp. Error: %s", err);
