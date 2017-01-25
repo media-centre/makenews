@@ -2,11 +2,17 @@ import FetchAllConfiguredFeeds from "./helpers/FetchAllConfiguredFeedsRoute";
 import BookmarkRoute from "./helpers/BookmarkRoute";
 import BookmarkedFeedsRoute from "./helpers/BookmarkedFeedsRoute";
 import RouteLogger from "./RouteLogger";
+import FetchArticleFromUrl from "./helpers/FetchArticleFromUrl";
 
 export default (app) => {
     app.get("/feeds", (request, response) => {
         RouteLogger.instance().info("fetchAllConfiguredFeedsRoute:: /feeds-from-all-sources request received. url = %s", request.url);
         new FetchAllConfiguredFeeds(request, response).fetchFeeds();
+    });
+
+    app.get("/article", (request, response) => {
+        RouteLogger.instance().info(`FetchArticleFromUrlRoute:: received url = ${request.url}`);
+        new FetchArticleFromUrl(request, response).process();
     });
 
     app.post("/bookmarks", (request, response) => {
