@@ -165,7 +165,7 @@ export default class RssClient {
             await dbInstance.saveDocument(encodeURIComponent(document.url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
         } catch (error) {
-            if(error.status !== "conflict") {
+            if(error.status !== HttpResponseHandler.codes.NOT_FOUND) {
                 RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
                 throw "Unable to add the url"; //eslint-disable-line no-throw-literal
             }
@@ -179,7 +179,7 @@ export default class RssClient {
             RssClient.logger().debug("RssClient:: successfully added Document to user database.");
         } catch (error) {
             RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-            if(error.status === "conflict") {
+            if(error.status === HttpResponseHandler.codes.NOT_FOUND) {
                 throw "URL already exist"; //eslint-disable-line no-throw-literal
             }
             throw "Unable to add the url"; //eslint-disable-line no-throw-literal

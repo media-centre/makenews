@@ -66,6 +66,11 @@ export default class CouchClient {
         return this.post(path, indexDoc, customHeaders);
     }
 
+    updateDocument(documentObj, customHeaders = {}) {
+        const path = "/" + this.dbName;
+        return this.post(path, documentObj, customHeaders);
+    }
+
     post(path, body, customHeaders = {}) {
         return new Promise((resolve, reject) => {
             request.post({
@@ -110,11 +115,9 @@ export default class CouchClient {
             if (new HttpResponseHandler(response.statusCode).success()) {
                 CouchClient.logger().debug("CouchClient:: successful response from database.");
                 resolve(response.body);
-            } else if (response.statusCode === HttpResponseHandler.codes.CONFLICT) {
-                reject({ "status": "conflict", "message": response.body });
             } else {
                 CouchClient.logger().debug(`unexpected response from the db with status ${response.statusCode} and Error: ${JSON.stringify(response.body)}`);
-                reject("unexpected response from the db");
+                reject({ "status": response.statusCode, "message": response.body });
             }
         } else {
             CouchClient.logger().debug(`Error from database. Error: ${JSON.stringify(error)}`);

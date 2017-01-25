@@ -13,7 +13,7 @@ describe("CollectionRequestHandler", () => {
             collectionName = "collection name";
             collectionRequestHandler = new CollectionRequestHandler();
             sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient("access token");
+            couchClient = new CouchClient(authSession);
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
         });
 
@@ -21,53 +21,33 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should create new collection when there is no docId", async() => {
-            let docObj = { "docType": "collection", "feeds": [] };
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument").withExactArgs(collectionName, docObj);
-            saveDocMock.returns(Promise.resolve({ "ok": true }));
+        it("should throw error if isNewCollection is true and collection id Exist", async () => {
+            let collectionDoc = [{ "_id": "collection id", "collection": "first collection" }];
+            let findDocMock = sandbox.mock(couchClient).expects("findDocuments")
+                .returns(Promise.resolve({ "docs": collectionDoc }));
 
             try {
-                let response = await collectionRequestHandler.updateCollection(authSession, undefined, collectionName); //eslint-disable-line no-undefined
-                assert.deepEqual(response, { "ok": true });
-                saveDocMock.verify();
-            } catch (error) {
+                let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName, true);
+                assert.deepEqual(response, { "message": "collection already exist" });
+                findDocMock.verify();
+            } catch(error) {
                 assert.fail(error);
             }
         });
 
-        it("should create collection if doesn't exist and add feed id to the doc", async() => {
-            let docObj = { "docType": "collection", "feeds": [docId] };
-            let getDocMock = sandbox.mock(couchClient).expects("getDocument")
-                .withExactArgs(collectionName)
-                .returns(Promise.resolve({ "error": "missing" }));
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument").withExactArgs(collectionName, docObj);
-            saveDocMock.returns(Promise.resolve({ "ok": true }));
+        it("should create doc when there is isCollection is false or no collectionId", async () => {
+            let createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
+                .returns(Promise.resolve({ "ok": true }));
+            let findDocMock = sandbox.mock(couchClient).expects("findDocuments")
+                .returns(Promise.resolve({ "docs": [] }));
 
             try {
-                let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName); //eslint-disable-line no-undefined
+                let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName, false);
                 assert.deepEqual(response, { "ok": true });
-                saveDocMock.verify();
-                getDocMock.verify();
-            } catch (error) {
-                assert.fail(error);
-            }
-        });
-
-        it("should add feed id to the doc if collection exist", async() => {
-            let docObj = { "docType": "collection", "feeds": [docId, "one more id"] };
-            let getDocMock = sandbox.mock(couchClient).expects("getDocument")
-                .withExactArgs(collectionName)
-                .returns(Promise.resolve({ "docType": "collection", "feeds": [docId] }));
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument").withExactArgs(collectionName, docObj);
-            saveDocMock.returns(Promise.resolve({ "ok": true }));
-
-            try {
-                let response = await collectionRequestHandler.updateCollection(authSession, "one more id", collectionName);
-                assert.deepEqual(response, { "ok": true });
-                saveDocMock.verify();
-                getDocMock.verify();
-            } catch (error) {
-                assert.fail(error);
+                createCollectionMock.verify();
+                findDocMock.verify();
+            } catch(error) {
+                assert.fail();
             }
         });
     });
@@ -101,6 +81,88 @@ describe("CollectionRequestHandler", () => {
             try {
                 let collections = await collectionRequestHandler.getCollection(authSession);
                 assert.strictEqual(collections, response);
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+    });
+
+    describe("createCollection", () => {
+        let sandbox = null, couchClient = null, collectionRequestHandler = null;
+        beforeEach("createCollection", () => {
+            collectionRequestHandler = new CollectionRequestHandler();
+            couchClient = new CouchClient("auth session");
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("createCollection", () => {
+            sandbox.restore();
+        });
+
+        it("should create collectionFeed doc when there is docId and collectionId", async () => {
+            let docId = "doc id";
+            let collectionName = "collection name";
+            let collectionId = 123;
+            let collectionFeedId = "doc id123";
+            let collectionFeedDoc = {
+                "docType": "collectionFeed",
+                "feedId": docId,
+                "collection": collectionName };
+
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(collectionFeedId, collectionFeedDoc)
+                .returns(Promise.resolve({ "ok": true }));
+
+            try {
+                let response = await collectionRequestHandler.createCollection(couchClient, docId, collectionName, collectionId);
+                assert.deepEqual(response, { "ok": true });
+                saveDocMock.verify();
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should create collectionDoc and collectionFeedDoc when there is docId and no collection Id", async () => {
+            let docId = "doc id";
+            let collectionName = "collection name";
+            let updateDocResponse = { "id": "docId" };
+            let collectionDoc = {
+                "docType": "collection",
+                "collection": collectionName };
+            let collectionFeedDoc = {
+                "docType": "collectionFeed",
+                "feedId": docId,
+                "collection": collectionName };
+            let feedCollectionId = "doc iddocId";
+
+            let updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
+                .withExactArgs(collectionDoc)
+                .returns(Promise.resolve(updateDocResponse));
+            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(feedCollectionId, collectionFeedDoc);
+
+            try {
+                let response = await collectionRequestHandler.createCollection(couchClient, docId, collectionName, 0); //eslint-disable-line no-magic-numbers
+                assert.deepEqual(response, { "ok": true });
+                updateDocMock.verify();
+                saveDocMock.verify();
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should create collectionDoc when there is no docId and collectionId", async () => {
+            let collectionName = "collection name";
+            let collectionDoc = {
+                "docType": "collection",
+                "collection": collectionName };
+
+            let updateDocMock = sandbox.mock(couchClient).expects("updateDocument").withExactArgs(collectionDoc);
+
+            try {
+                let response = await collectionRequestHandler.createCollection(couchClient, "", collectionName, 0); //eslint-disable-line no-magic-numbers
+                assert.deepEqual(response, { "ok": true });
+                updateDocMock.verify();
             } catch(error) {
                 assert.fail(error);
             }

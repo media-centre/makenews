@@ -545,7 +545,7 @@ describe("RssClient", () => {
             url = "http://www.test.com/rss";
             let document = { "name": "test_name", "url": url, "docType": "source", "sourceType": "web" };
             let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject("unexpected response from common db"));
+            saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": { "error": "unexpected response from db" } }));
             try {
                 await RssClient.instance().addUrlToCommon(document);
                 assert.fail("expected error");

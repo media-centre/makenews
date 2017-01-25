@@ -8,6 +8,7 @@ export default class CollectionRoute extends Route {
         this.authSession = this.request.cookies.AuthSession;
         this.docId = this.request.body.docId;
         this.collection = this.request.body.collection;
+        this.isNewCollection = this.request.body.isNewCollection;
     }
 
     async addToCollection() {
@@ -16,7 +17,7 @@ export default class CollectionRoute extends Route {
             if(!this.collection) {
                 this._handleBadRequest();
             }
-            response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.docId, this.collection);
+            response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.docId, this.collection, this.isNewCollection);
             RouteLogger.instance().debug(`CollectionRoute:: successfully added feed ${this.docId} to the collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {

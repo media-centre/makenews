@@ -19,7 +19,8 @@ describe("CollectionRoute", () => {
             request = {
                 "body": {
                     "docId": docId,
-                    "collection": collectionName
+                    "collection": collectionName,
+                    "isNewCollection": true
                 },
                 "cookies": {
                     "AuthSession": authSession
@@ -37,7 +38,7 @@ describe("CollectionRoute", () => {
         it("should return success response when collection is successfully updated", async() => {
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, docId, collectionName)
+                .withExactArgs(authSession, docId, collectionName, true)
                 .returns(Promise.resolve({ "ok": true }));
             try {
                 await collectionRoute.addToCollection();
@@ -69,7 +70,7 @@ describe("CollectionRoute", () => {
         it("should throw bad request when collection is not updated", async() => {
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, docId, collectionName)
+                .withExactArgs(authSession, docId, collectionName, true)
                 .returns(Promise.reject({ "error": "failed to update" }));
             try {
                 await collectionRoute.addToCollection();

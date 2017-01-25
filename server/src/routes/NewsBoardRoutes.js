@@ -25,7 +25,7 @@ export default (app) => {
         new CollectionRoute(request, response).addToCollection();
     });
 
-    app.get("/collection", (request, response) => {
+    app.get("/collections", (request, response) => {
         RouteLogger.instance().info("collectionRoute:: GET /collection request received. url = %s", request.url);
         new CollectionRoute(request, response).getCollection();
     });
