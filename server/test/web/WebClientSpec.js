@@ -40,12 +40,13 @@ describe("fetchArticleData", () => {
         await isRejected(fetchArticleData("some.url"), "not able to get the data");
     });
 
-    xit("should reject with error if we give invalid url", async () => {
+    it("should reject with error if we give invalid url", async () => {
         let url = "http://www.thehindu.com/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true";
         nock("http://www.thehindu.com")
             .get("/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true")
             .replyWithError({ "message": "something awful happened", "code": "AWFUL_ERROR" });
 
         await isRejected(fetchArticleData(url), { "message": "something awful happened", "code": "AWFUL_ERROR" });
+
     });
 });
