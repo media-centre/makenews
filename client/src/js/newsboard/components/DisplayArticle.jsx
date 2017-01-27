@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { bookmarkArticle } from "./../actions/DisplayArticleActions";
+import DisplayWebArticle from "./DisplayWebArticle";
 
 export class DisplayArticle extends Component {
     render() {
@@ -32,9 +33,14 @@ export class DisplayArticle extends Component {
                     <div className="article__images">
                         { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
                     </div>
-                    <div className="article__desc">
-                        { this.props.article.description }
-                    </div>
+                    {this.props.article.sourceType === "web"
+                        ? <div className="article__desc">
+                                <DisplayWebArticle />
+                          </div>
+                        : <div>
+                            { this.props.article.description }
+                          </div>}
+
                 </main>
             </article>
         );

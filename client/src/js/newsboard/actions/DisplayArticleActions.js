@@ -1,6 +1,7 @@
 import AjaxClient from "./../../utils/AjaxClient";
 
 export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
+export const WEB_ARTICLE = "WEB_ARTICLE";
 
 export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
     "type": BOOKMARKED_ARTICLE,
@@ -23,5 +24,30 @@ export function bookmarkArticle(article) {
         if(response.ok) {
             dispatch(bookmarkedArticleAction(article._id, !article.bookmark));
         }
+    };
+}
+
+export function displayWebArticle(url) {
+    let ajaxClient = AjaxClient.instance("/article", true);
+
+    return async dispatch => {
+        try {
+            let article = await ajaxClient.get({ "url": url });
+            dispatch(articleReceived(article.markup));
+        }catch (err) {
+            dispatch(fetchingArticleFailed);
+        }
+    };
+}
+
+export function articleReceived(article) {
+    return {
+        "type": WEB_ARTICLE,
+        article
+    };
+}
+export function fetchingArticleFailed() {
+    return {
+        "type": WEB_ARTICLE
     };
 }

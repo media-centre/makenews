@@ -11,7 +11,7 @@ describe("DisplayArticle", () => {
             "videos": [{ "thumbnail": "video image url" }],
             "title": "Some Title",
             "description": "Some Description",
-            "sourceType": "rss",
+            "sourceType": "web",
             "tags": ["Hindu"],
             "pubDate": "someDate"
         };
@@ -74,7 +74,6 @@ describe("DisplayArticle", () => {
         it("should have article description", () => {
             let [, , , description] = mainDOM.props.children;
             expect(description.type).to.equals("div");
-            expect(description.props.children).to.equals(feed.description);
             expect(description.props.className).to.equals("article__desc");
         });
     });
