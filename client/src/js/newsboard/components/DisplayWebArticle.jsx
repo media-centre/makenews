@@ -7,11 +7,11 @@ export class DisplayWebArticle extends Component {
         this.props.dispatch(displayWebArticle(this.props.selectedArticle.link));
     }
 
-    // componentShouldUpdate(nextProps) {
-    //     if(this.props.selectedArticle.link !== nextProps.selectedArticle.link) {
-    //         this.props.dispatch(displayWebArticle(nextProps.selectedArticle.link));
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        if(this.props.selectedArticle.link !== nextProps.selectedArticle.link) {
+            this.props.dispatch(displayWebArticle(nextProps.selectedArticle.link));
+        }
+    }
 
     render() {
         return (

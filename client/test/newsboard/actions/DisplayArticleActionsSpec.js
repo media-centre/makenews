@@ -1,4 +1,4 @@
-import { bookmarkArticle, bookmarkedArticleAction, BOOKMARKED_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
+import { bookmarkArticle, bookmarkedArticleAction, displayWebArticle, BOOKMARKED_ARTICLE, WEB_ARTICLE, FETCHING_ARTICLE_FAILED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import sinon from "sinon";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -39,6 +39,42 @@ describe("DisplayArticleActions", () => {
 
             let store = mockStore({}, [{ "type": "BOOKMARKED_ARTICLE", "articleId": article._id, "bookmarkStatus": true }], done);
             store.dispatch(bookmarkArticle(article));
+
+            postMock.verify();
+        });
+    });
+
+    describe("displayWebArticle", () => {
+        let sandbox = null;
+
+        beforeEach("displayWebArticle", () => {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("displayWebArticle", () => {
+            sandbox.restore();
+        });
+
+        it("should dispatch article Received action after successful fetching article", (done) => {
+            let article = "Some Article";
+            let response = { "markup": article };
+            let ajaxClientInstance = AjaxClient.instance("/article", true);
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
+            let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
+
+            let store = mockStore({}, [{ "type": WEB_ARTICLE, "article": article }], done);
+            store.dispatch(displayWebArticle("some url"));
+
+            postMock.verify();
+        });
+
+        it("should dispatch fetchingArticleFailed action ", async () => {
+            let ajaxClientInstance = AjaxClient.instance("/article", true);
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
+            let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
+
+            let store = mockStore({}, [{ "type": FETCHING_ARTICLE_FAILED }]);
+            store.dispatch(displayWebArticle("some url"));
 
             postMock.verify();
         });

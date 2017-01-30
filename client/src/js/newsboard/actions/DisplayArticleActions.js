@@ -2,6 +2,7 @@ import AjaxClient from "./../../utils/AjaxClient";
 
 export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
 export const WEB_ARTICLE = "WEB_ARTICLE";
+export const FETCHING_ARTICLE_FAILED = "FETCHING_ARTICLE_FAILED";
 
 export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
     "type": BOOKMARKED_ARTICLE,
@@ -48,6 +49,6 @@ export function articleReceived(article) {
 }
 export function fetchingArticleFailed() {
     return {
-        "type": WEB_ARTICLE
+        "type": FETCHING_ARTICLE_FAILED
     };
 }
