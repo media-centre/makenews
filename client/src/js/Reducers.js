@@ -1,4 +1,3 @@
-/* eslint react/jsx-wrap-multilines:0*/
 import { login, loginPageLocale } from "./login/LoginReducers";
 import { combineReducers } from "redux";
 import { mainHeaderStrings } from "./main/reducers/MainReducer";
@@ -9,7 +8,7 @@ import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle } from "./news
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
-import { selectedWebArticle } from "./newsboard/reducers/DisplayArticleReducer";
+import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -29,7 +28,7 @@ const contentDiscoveryApp = combineReducers({
     newsBoardCurrentSourceTab,
     twitterTokenInfo,
     selectedArticle,
-    selectedWebArticle
+    webArticleMarkup
 });
 
 export default contentDiscoveryApp;

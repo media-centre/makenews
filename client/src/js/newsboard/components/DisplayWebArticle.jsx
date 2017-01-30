@@ -1,23 +1,22 @@
+/* eslint react/no-danger:0 */
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { displayWebArticle } from "./../actions/DisplayArticleActions";
 
 export class DisplayWebArticle extends Component {
     componentWillMount() {
-        this.props.dispatch(displayWebArticle(this.props.selectedArticle.link));
+        this.props.dispatch(displayWebArticle(this.props.selectedArticle));
     }
 
     componentWillReceiveProps(nextProps) {
         if(this.props.selectedArticle.link !== nextProps.selectedArticle.link) {
-            this.props.dispatch(displayWebArticle(nextProps.selectedArticle.link));
+            this.props.dispatch(displayWebArticle(nextProps.selectedArticle));
         }
     }
 
     render() {
         return (
-            <div>
-                {this.props.article}
-            </div>
+            <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article }} />
         );
     }
 }
@@ -30,7 +29,7 @@ DisplayWebArticle.propTypes = {
 
 function mapToStore(store) {
     return {
-        "article": store.selectedWebArticle,
+        "article": store.webArticleMarkup,
         "selectedArticle": store.selectedArticle
     };
 }

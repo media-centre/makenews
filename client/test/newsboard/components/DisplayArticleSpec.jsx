@@ -1,7 +1,9 @@
 import { DisplayArticle } from "./../../../src/js/newsboard/components/DisplayArticle";
+import DisplayWebArticle from "./../../../src/js/newsboard/components/DisplayWebArticle";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
+import { findAllWithType } from "react-shallow-testutils";
 
 describe("DisplayArticle", () => {
     let feed = null, renderer = null, displayArticleDom = null, active = null;
@@ -11,7 +13,7 @@ describe("DisplayArticle", () => {
             "videos": [{ "thumbnail": "video image url" }],
             "title": "Some Title",
             "description": "Some Description",
-            "sourceType": "web",
+            "sourceType": "facebook",
             "tags": ["Hindu"],
             "pubDate": "someDate"
         };
@@ -73,8 +75,28 @@ describe("DisplayArticle", () => {
 
         it("should have article description", () => {
             let [, , , description] = mainDOM.props.children;
+
             expect(description.type).to.equals("div");
             expect(description.props.className).to.equals("article__desc");
+            expect(description.props.children).to.equals(feed.description);
+        });
+
+        it("should have DisplayWebArticle component", () => {
+            feed = {
+                "images": [{ "url": "image url" }],
+                "videos": [{ "thumbnail": "video image url" }],
+                "title": "Some Title",
+                "description": "Some Description",
+                "sourceType": "web",
+                "tags": ["Hindu"],
+                "pubDate": "someDate"
+            };
+
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}}/>);
+            let result = renderer.getRenderOutput();
+            let renderedSources = findAllWithType(result, DisplayWebArticle);
+
+            expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });
 });

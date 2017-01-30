@@ -2,7 +2,6 @@ import AjaxClient from "./../../utils/AjaxClient";
 
 export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
 export const WEB_ARTICLE = "WEB_ARTICLE";
-export const FETCHING_ARTICLE_FAILED = "FETCHING_ARTICLE_FAILED";
 
 export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
     "type": BOOKMARKED_ARTICLE,
@@ -28,15 +27,15 @@ export function bookmarkArticle(article) {
     };
 }
 
-export function displayWebArticle(url) {
+export function displayWebArticle(feed) {
     let ajaxClient = AjaxClient.instance("/article", true);
 
     return async dispatch => {
         try {
-            let article = await ajaxClient.get({ "url": url });
+            let article = await ajaxClient.get({ "url": feed.link });
             dispatch(articleReceived(article.markup));
-        }catch (err) {
-            dispatch(fetchingArticleFailed);
+        } catch (err) {
+            dispatch(articleReceived(feed.description));
         }
     };
 }
@@ -45,10 +44,5 @@ export function articleReceived(article) {
     return {
         "type": WEB_ARTICLE,
         article
-    };
-}
-export function fetchingArticleFailed() {
-    return {
-        "type": FETCHING_ARTICLE_FAILED
     };
 }

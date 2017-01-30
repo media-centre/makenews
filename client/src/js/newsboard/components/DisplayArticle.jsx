@@ -34,10 +34,8 @@ export class DisplayArticle extends Component {
                         { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
                     </div>
                     {this.props.article.sourceType === "web"
-                        ? <div className="article__desc">
-                                <DisplayWebArticle />
-                          </div>
-                        : <div>
+                        ? <DisplayWebArticle />
+                        : <div className="article__desc">
                             { this.props.article.description }
                           </div>}
 
