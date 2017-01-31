@@ -24,6 +24,15 @@ export default class AjaxClient {
         });
     }
 
+    async put(headers, data) {
+        return await this.request({
+            "method": "PUT",
+            "credentials": "same-origin",
+            "headers": headers,
+            "body": JSON.stringify(data)
+        });
+    }
+
     async get(queryParams = {}) {
         let keys = Object.keys(queryParams);
         if (keys.length) {

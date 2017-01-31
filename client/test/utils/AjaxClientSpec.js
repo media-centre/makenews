@@ -172,4 +172,58 @@ describe("AjaxClient", function() {
             }
         });
     });
+
+    describe("put", () => {
+        it("should put and return success promise on success", async () => {
+            let url = "/login";
+            let headers = {};
+            let data = { "username": "username", "password": "pwd" };
+            nock("http://localhost:5000")
+                .put(url)
+                .reply(HttpResponseHandler.codes.OK, { "data": "success" });
+            let ajax = new AjaxClient(url);
+            userSessionMock.verify();
+            try {
+                let succesData = await ajax.put(headers, data);
+                expect(succesData.data).to.eq("success");
+            } catch (err) {
+                assert.fail(err);
+            }
+        });
+
+        it("should put and return error promise on failure", async () => {
+            let url = "/login";
+            let headers = {};
+            let data = { "username": "ssds", "password": "sds" };
+            nock("http://localhost:5000")
+                .put(url)
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "error": "error" });
+            let ajax = new AjaxClient(url);
+            try {
+                await ajax.put(headers, data);
+                assert.fail();
+            } catch (errorData) {
+                expect(errorData.error).to.eq("error");
+            }
+        });
+
+        it("should logout if session expired", async () => {
+            let url = "/login";
+            let headers = {};
+            let data = { "username": "ssds", "password": "sds" };
+            nock("http://localhost:5000")
+                .put(url)
+                .reply(HttpResponseHandler.codes.UNAUTHORIZED, { "message": "session expired" });
+            let ajax = new AjaxClient(url);
+            let userSessionLogOutMock = sandbox.mock(userSession).expects("autoLogout");
+            try {
+                await ajax.put(headers, data);
+                assert.fail();
+            } catch (error) {
+                userSessionLogOutMock.verify();
+                expect(error.message).to.eq("session expired");
+            }
+        });
+    });
+
 });

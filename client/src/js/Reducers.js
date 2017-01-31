@@ -9,6 +9,7 @@ import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle } from "./news
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
+import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -27,7 +28,9 @@ const contentDiscoveryApp = combineReducers({
     tokenExpiresTime,
     newsBoardCurrentSourceTab,
     twitterTokenInfo,
-    selectedArticle
+    selectedArticle,
+    addToCollectionStatus,
+    addArticleToCollection
 });
 
 export default contentDiscoveryApp;

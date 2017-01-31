@@ -45,3 +45,4 @@ export const newsBoardCurrentSourceTab = (state = newsBoardSourceTypes.trending,
     default: return state;
     }
 };
+

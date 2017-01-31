@@ -3,7 +3,9 @@ import {
     newsBoardCurrentSourceTab,
     selectedArticle
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
-import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import { NEWS_BOARD_CURRENT_TAB,
+    DISPLAY_ARTICLE
+} from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import { BOOKMARKED_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 

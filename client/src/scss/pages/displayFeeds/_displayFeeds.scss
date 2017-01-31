@@ -91,7 +91,7 @@
     }
 
     .feeds {
-      //display: flex;
+      display: flex;
       flex-wrap: wrap;
     }
 
@@ -157,6 +157,72 @@
         .feed__title {
           color: $secondary-color;
         }
+      }
+    }
+
+  .configured-sources {
+    width: 100%;
+    padding: 0px;
+    marging: 0px;
+  }
+
+ .collection-name {
+      padding: 2% 0% 2% 6%;
+      font-family: "Lato", sans-serif;
+      font-size: 17px;
+      cursor: pointer;
+      color: $primary-color-light;
+      &:hover {
+        color: $secondary-color;
+        background-color: white;
+      }
+    }
+
+  .create_collection {
+      font-family: "Lato", sans-serif;
+      font-size: 17px;
+      color: $primary-color-light;
+      padding: 5% 0% 3% 8%;
+      cursor: pointer;
+    }
+
+    .new-collection-input-box {
+      width: 80%;
+      margin: 6%;
+      display: table;
+      border: none;
+      border-bottom: 2px solid $primary-color-light;
+    }
+
+    .save-collection {
+      background-color: $secondary-color;
+      color: white;
+      margin-right: 15px;
+    }
+
+    .cancel-collection {
+      color: $primary-color-light;
+      margin-right: 15px;
+    }
+    .collection-popup-overlay{
+      background-color: rgba(70, 65, 74, 0.6);
+      top: 68px;
+      position: fixed;
+      left: 0px;
+      height: 100%;
+      width: 100%;
+      &:target {
+        opacity: 1;
+      }
+      .new-collection {
+        text-align: right;
+        background-color: white;
+        position: absolute;
+        opacity: 1;
+        height: 150px;
+        left: 65px;
+        width: 395px;
+        top: 5%;
       }
     }
   }
