@@ -30,7 +30,6 @@ export default class FacebookSourceRoute extends Route {
             "type": fbSourceTypesToFetch[this.type]
         };
         let token = await FacebookAccessToken.instance().getAccessToken(userDetails.getUser(this.accessToken).userName);
-        let data = await FacebookRequestHandler.instance(token).fetchSourceUrls(params, this.paging);
-        return data;
+        return await FacebookRequestHandler.instance(token).fetchSourceUrls(params, this.paging);
     }
 }

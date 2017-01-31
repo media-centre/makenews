@@ -24,24 +24,11 @@ export function configuredSourcesReceived(sources) {
     };
 }
 
-export const noMoreSourceResults = () => {
-    return {
-        "type": NO_MORE_SOURCE_RESULTS
-    };
-};
+export const noMoreSourceResults = { "type": NO_MORE_SOURCE_RESULTS };
 
-export const hasMoreSourceResults = () => {
-    return {
-        "type": HAS_MORE_SOURCE_RESULTS
-    };
-};
+export const hasMoreSourceResults = { "type": HAS_MORE_SOURCE_RESULTS };
 
-
-export const clearSources = () => {
-    return {
-        "type": CLEAR_SOURCES
-    };
-};
+export const clearSources = { "type": CLEAR_SOURCES };
 
 export function getConfiguredSources() {
     let ajaxClient = AjaxClient.instance("/configure-sources", false);

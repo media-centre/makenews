@@ -10,6 +10,7 @@ import { expect, assert } from "chai";
 import sinon from "sinon";
 import * as DisplayArticleActions from "../../../src/js/newsboard/actions/DisplayArticleActions";
 
+
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
     let sandbox = sinon.sandbox.create();

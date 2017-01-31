@@ -163,7 +163,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get("/statuses/user_timeline.json?user_id=123&since%3A2017-1-9&count=100filter%3Aretweets")
+                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since:2017-1-9&user_id=123")
                 .reply(HttpResponseHanlder.codes.OK, twitterRespone);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -200,7 +200,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get("/search/tweets.json?q=%23dhoni&since%3A2017-1-9&count=100filter%3Aretweets")
+                .get("/search/tweets.json?q=%23dhoni&count=100&filter:retweets&since:2017-1-9")
                 .reply(HttpResponseHanlder.codes.OK, twitterRespone);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -222,7 +222,7 @@ describe("TwitterClient", () => {
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
             nock("https://api.twitter.com/1.1")
-                .get("/statuses/user_timeline.json?user_id=dhoni&since%3A2017-1-9&count=100filter%3Aretweets")
+                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since:2017-1-9&user_id=dhoni")
                 .reply(HttpResponseHanlder.codes.BAD_REQUEST, {
                     "message": "could not authenticate you"
                 });
