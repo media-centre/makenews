@@ -6,16 +6,69 @@ export default class StoryRequestHandler {
         return new StoryRequestHandler();
     }
 
-    async addStory(title, authSession) {
-        let document = { "title": title, "docType": "Story" };
+    async addStory(story, authSession) {
+        let document = this._getDocument(story);
         let couchClient = CouchClient.instance(authSession);
+        let docs = await this.getStoryWithTitle(story.title, authSession);
+        if (docs.docs.length > 0) {  //eslint-disable-line no-magic-numbers
+            let conflictMsg = "Story title already exist";
+            throw conflictMsg;
+        }
         try {
             return await couchClient.updateDocument(document);
         } catch (error) {
-            if(error.status === "conflict") {
-                throw "Story title already exist"; //eslint-disable-line no-throw-literal
+            let errorMsg = "Unable to add the story";
+            throw errorMsg;
+        }
+    }
+
+    _getDocument(story) {
+        if (story._id) {
+            story.docType = "story";
+            return story;
+        }
+        return { "title": story.title, "docType": "story" };
+
+    }
+
+    async getStoryWithTitle(title, authSession) {
+        let couchClient = CouchClient.instance(authSession);
+        let query = {
+            "selector": {
+                "docType": {
+                    "$eq": "story"
+                },
+                "title": {
+                    "$eq": title
+                }
             }
-            throw "Unable to add the story"; //eslint-disable-line no-throw-literal
+        };
+        return await couchClient.findDocuments(query);
+    }
+
+    async getStory(id, authSession) {
+        let couchClient = CouchClient.instance(authSession);
+        let query = {
+            "selector": {
+                "docType": {
+                    "$eq": "story"
+                }
+            },
+            "fields": ["title", "_id"]
+        };
+
+        if(id) {
+            query.selector._id = { "$eq": id };
+            query.fields.push("_rev");
+            let response = await couchClient.findDocuments(query);
+            let [document] = response.docs;
+            if(document) {
+                return document;
+            }
+            let notFoundMsg = "No document found";
+            throw notFoundMsg;
+        } else {
+            return await couchClient.findDocuments(query);
         }
     }
 }

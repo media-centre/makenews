@@ -1,69 +1,72 @@
 import AddStoryTitleRoute from "../../../src/routes/helpers/AddStoryTitleRoute";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import StoryRequestHandler from "../../../src/storyBoard/StoryRequestHandler";
-import { mockResponse } from "../../helpers/MockResponse";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("Add Story Document Route", () => {
-    it("should return bad request if title is not valid", async() => {
-        let request = {
-            "body": {
-                "title": ""
-            },
-            "cookies": {
-                "AuthSession": "test_session"
-            }
-        };
-        let response = mockResponse();
-        await new AddStoryTitleRoute(request, response, {}).handle();
-        assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
-        assert.deepEqual(response.json(), { "message": "missing parameters" });
-
+    let sandbox = null, storyRequestHandlerInstance = null;
+    beforeEach("AddStoryTitle", () => {
+        sandbox = sinon.sandbox.create();
+        storyRequestHandlerInstance = new StoryRequestHandler();
     });
-
-    it("should return bad request if AuthSession is empty", async() => {
-        let request = {
-            "body": {
-                "url": "test"
-            },
-            "cookies": {
-                "AuthSession": ""
-            }
-        };
-        let response = mockResponse();
-        await new AddStoryTitleRoute(request, response, {}).handle();
-        assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
-        assert.deepEqual(response.json(), { "message": "missing parameters" });
+    afterEach("AddStoryTitle", () => {
+        sandbox.restore();
     });
-
-
-    it("should add document for correct request", async() => {
-        let sandbox = sinon.sandbox.create();
-        let request = {
-            "body": {
-                "title": "http://test.com/rss"
-            },
-            "cookies": {
-                "AuthSession": "test_session"
-            }
-        };
+    it("should return success response for add story", async () => {
         let successObject = {
             "ok": true,
             "_id": "1234",
             "rev": "1234"
         };
-        let response = mockResponse();
-
-        let storyRequestHandlerInstance = new StoryRequestHandler();
-        sandbox.stub(StoryRequestHandler, "instance").returns(storyRequestHandlerInstance);
-        let requestHandlerMock = sandbox.mock(storyRequestHandlerInstance).expects("addStory");
-        requestHandlerMock.withArgs(request.body.title).returns(Promise.resolve(successObject));
-
-        await new AddStoryTitleRoute(request, response, {}).handle();
-        assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
-        assert.deepEqual(response.json(), successObject);
-        sandbox.restore();
+        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
+        sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.resolve(successObject));
+        let result = await new AddStoryTitleRoute({
+            "body": {
+                "title": "title1"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        }, {}).handle();
+        assert.deepEqual(result, successObject);
     });
 
+    it("should throw an error if the add story rejects with an error", async () => {
+        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
+        let mockobj = sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.reject("Unable to add the story"));
+        let addStory = new AddStoryTitleRoute({
+            "body": {
+                "title": "title1"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        }, {});
+        try {
+            await addStory.handle();
+        } catch(err) {
+            assert.equal(err, "Unable to add the story");
+        }
+        mockobj.verify();
+    });
+
+    it("should throw an error if story title already exists", async () => {
+        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
+        let mockobj = sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.reject("Story title already exist"));
+        let addStory = new AddStoryTitleRoute({
+            "body": {
+                "title": "title1"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        }, {});
+        //isRejected(addStory.handle(), "Story title  exist");
+        try {
+            await addStory.handle();
+        } catch(err) {
+            assert.equal(err, "Story title already exist");
+        }
+        mockobj.verify();
+    });
 });

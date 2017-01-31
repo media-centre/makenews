@@ -10,6 +10,7 @@ import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducer";
 import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
+import { addStory } from "./storyboard/reducers/StoryBoardReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -32,7 +33,8 @@ const contentDiscoveryApp = combineReducers({
     fetchingWebArticle,
     webArticleMarkup,
     addToCollectionStatus,
-    addArticleToCollection
+    addArticleToCollection,
+    addStory
 });
 
 export default contentDiscoveryApp;
