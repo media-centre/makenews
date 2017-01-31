@@ -2,6 +2,7 @@ import CollectionRequestHandler from "../../src/collection/CollectionRequestHand
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 
 describe("CollectionRequestHandler", () => {
     describe("updateCollection", () => {
@@ -28,7 +29,7 @@ describe("CollectionRequestHandler", () => {
 
             try {
                 let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName, true);
-                assert.deepEqual(response, { "message": "collection already exist" });
+                assert.deepEqual(response, { "message": "collection already exists with this name" });
                 findDocMock.verify();
             } catch(error) {
                 assert.fail(error);
@@ -48,41 +49,6 @@ describe("CollectionRequestHandler", () => {
                 findDocMock.verify();
             } catch(error) {
                 assert.fail();
-            }
-        });
-    });
-
-    describe("getCollection", () => {
-        let collectionRequestHandler = null, authSession = null;
-        let sandbox = null, couchClient = null;
-
-        beforeEach("getCollection", () => {
-            authSession = "auth session";
-            collectionRequestHandler = new CollectionRequestHandler();
-            sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient("access token");
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
-        });
-
-        afterEach("getCollection", () => {
-            sandbox.restore();
-        });
-        it("should get all collections", async () => {
-            let selector = {
-                "selector": {
-                    "docType": {
-                        "$eq": "collection"
-                    }
-                }
-            };
-            let response = { "docs": ["id1", "id2", "id3"] };
-            sandbox.mock(couchClient).expects("findDocuments")
-                .withExactArgs(selector).returns(Promise.resolve(response));
-            try {
-                let collections = await collectionRequestHandler.getCollection(authSession);
-                assert.strictEqual(collections, response);
-            } catch(error) {
-                assert.fail(error);
             }
         });
     });
@@ -163,6 +129,69 @@ describe("CollectionRequestHandler", () => {
                 let response = await collectionRequestHandler.createCollection(couchClient, "", collectionName, 0); //eslint-disable-line no-magic-numbers
                 assert.deepEqual(response, { "ok": true });
                 updateDocMock.verify();
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should return article already added when db throws conflict", async () => {
+            let docId = "doc id";
+            let collecitonId = "collection id";
+            let collecitonName = "collection name";
+            let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
+               .returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT, "message": "conflict" }));
+            try {
+                let response = await collectionRequestHandler.createCollection(couchClient, docId, collecitonName, collecitonId);
+                assert.deepEqual(response, { "message": "article already added to that collection" });
+                saveDocumentMock.verify();
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should throw error when there is error from db other than conflict", async () => {
+            let docId = "doc id";
+            let collecitonId = "collection id";
+            let collecitonName = "collection name";
+            let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
+               .returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" }));
+            try {
+                await collectionRequestHandler.createCollection(couchClient, docId, collecitonName, collecitonId);
+                assert.fail();
+            } catch(error) {
+                assert.deepEqual(error, { "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" });
+                saveDocumentMock.verify();
+            }
+        });
+    });
+
+    describe("getAllCollections", () => {
+        let collectionRequestHandler = null, authSession = null;
+        let sandbox = null, couchClient = null;
+
+        beforeEach("getAllCollections", () => {
+            authSession = "auth session";
+            collectionRequestHandler = new CollectionRequestHandler();
+            sandbox = sinon.sandbox.create();
+            couchClient = new CouchClient("access token");
+            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+        });
+
+        afterEach("getAllCollections", () => {
+            sandbox.restore();
+        });
+        it("should get all collections", async () => {
+            let allCollections = { "docs":
+                ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10", "id11", "id12", "id13", "id14", "id15", "id16", "id17", "id18", "id19", "id20", "id21", "id22", "id23", "id24", "id25", "id26", "id27"] };
+            let response = { "docs": ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10", "id11", "id12", "id13", "id14", "id15", "id16", "id17", "id18", "id19", "id20", "id21", "id22", "id23", "id24", "id25"] };
+
+            let finDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            finDocsMock.onFirstCall().returns(Promise.resolve(response))
+                .onSecondCall().returns(Promise.resolve({ "docs": ["id26", "id27"] }));
+
+            try {
+                let collections = await collectionRequestHandler.getAllCollections(authSession);
+                assert.deepEqual(collections, allCollections);
             } catch(error) {
                 assert.fail(error);
             }

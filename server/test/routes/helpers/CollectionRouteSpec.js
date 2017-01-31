@@ -82,11 +82,11 @@ describe("CollectionRoute", () => {
         });
     });
 
-    describe("getCollection", () => {
+    describe("getAllCollections", () => {
         let collectionRequestHandler = null, response = null, request = null, collectionName = null,
             authSession = "auth session", collectionRoute = null, sandbox = null;
 
-        beforeEach("getCollection", () => {
+        beforeEach("getAllCollections", () => {
             response = mockResponse();
             request = {
                 "body": {
@@ -106,12 +106,12 @@ describe("CollectionRoute", () => {
         });
 
         it("should return all collections", async () => {
-            let collection = ["first", "second"];
+            let collection = { "docs": ["first", "second"] };
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
-            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getCollection");
+            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.withExactArgs(authSession).returns(Promise.resolve(collection));
             try {
-                await collectionRoute.getCollection();
+                await collectionRoute.getAllCollections();
                 assert.strictEqual(response.json(), collection);
                 getCollectionsMock.verify();
             } catch(error) {
@@ -121,10 +121,10 @@ describe("CollectionRoute", () => {
 
         it("should throw error when fetching collection failed", async () => {
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
-            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getCollection");
+            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.reject({ "error": "unexpected response from db" }));
             try {
-                await collectionRoute.getCollection();
+                await collectionRoute.getAllCollections();
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);

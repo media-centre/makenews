@@ -26,9 +26,9 @@ export default class CollectionRoute extends Route {
         }
     }
 
-    async getCollection() {
+    async getAllCollections() {
         try {
-            let response = await CollectionRequestHandler.instance().getCollection(this.authSession);
+            let response = await CollectionRequestHandler.instance().getAllCollections(this.authSession);
             RouteLogger.instance().debug(`CollectionRoute:: successfully fetched all collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {
