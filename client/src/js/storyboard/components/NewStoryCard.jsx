@@ -15,7 +15,6 @@ export class NewStoryCard extends Component {
     }
 
     getFromDb() {
-        //call db and get data
         let ajax = AjaxClient.instance("/get-story");
         ajax.get({ "id": this.storyId }).then((response) =>{
             this.story = response;

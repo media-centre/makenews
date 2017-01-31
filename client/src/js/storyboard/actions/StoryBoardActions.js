@@ -9,7 +9,7 @@ export function addStory(story) {
     };
 }
 
-function setStoryTitle(story) {
+export function setStoryTitle(story) {
     return {
         "type": ADD_STORY_TITLE,
         story

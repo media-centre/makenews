@@ -7,7 +7,6 @@ import { Link } from "react-router";
 export class StoryBoardCards extends Component {
 
     componentDidMount() {
-        //call getStories API without id and dispatch all stories
         this.props.dispatch(StoryBoardActions.getStories());
     }
     componentWillUnmount() {
@@ -17,15 +16,15 @@ export class StoryBoardCards extends Component {
     _renderStoriesList() {
         let storiesArray = [];
         storiesArray.push(<li className="story-card" key="0">
-            <Link className="add-card" to="/storyBoard/newStory">
+            <Link ref="newStoryCard" className="add-card" to="/storyBoard/newStory">
                 <i className="fa fa-plus-circle" aria-hidden="true"/>
             </Link>
         </li>);
         this.props.stories.map((story, index) =>
             storiesArray.push(
                 <li key={index + 1} className="story-card">
-                    <Link to={"/storyBoard/newStory?storyId=" + story._id} className="added-card">
-                        <i>{story.title}</i>
+                    <Link ref={"story" + story._id} to={"/storyBoard/newStory?storyId=" + story._id} className="added-card">
+                        <i ref={"title" + story.title}>{story.title}</i>
                     </Link>
                 </li>
             )
@@ -37,7 +36,7 @@ export class StoryBoardCards extends Component {
         return (
             <div>
                 <div className="create-story-tab">
-                    <Link className="create-story-icon" to="/storyBoard/newStory">
+                    <Link ref="newStoryBar" className="create-story-icon" to="/storyBoard/newStory">
                         <i className="fa fa-folder icon" aria-hidden="true"/>
                         { "Create New Story" }
                     </Link>

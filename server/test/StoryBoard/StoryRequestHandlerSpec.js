@@ -50,6 +50,7 @@ describe("StoryRequestHandler", () => {
     describe("getStory", () => {
         let sandbox = null, authSession = null, result = null, dbName = "dbName", query = null, storyRequestHandler = null, couchClientInstanceMock = null;
         beforeEach("getStory", () => {
+            authSession = "Access Token";
             sandbox = sinon.sandbox.create();
             storyRequestHandler = new StoryRequestHandler();
             couchClientInstanceMock = new CouchClient(authSession, dbName);
@@ -134,7 +135,51 @@ describe("StoryRequestHandler", () => {
                 assert.deepEqual("No document found", error);
             }
         });
+    });
 
+    describe("getStoryWithTitle", () => {
+        let sandbox = null, authSession = null, result = null, dbName = "dbName", query = null, storyRequestHandler = null, couchClientInstanceMock = null;
+        beforeEach("getStoryWithTitle", () => {
+            authSession = "Access Token";
+            sandbox = sinon.sandbox.create();
+            storyRequestHandler = new StoryRequestHandler();
+            couchClientInstanceMock = new CouchClient(authSession, dbName);
+            query = {
+                "selector": {
+                    "docType": {
+                        "$eq": "story"
+                    },
+                    "title": {
+                        "$eq": "title"
+                    }
+                }
+            };
+        });
+
+        afterEach("getStoryWithTitle", () => {
+            sandbox.restore();
+        });
+
+        it("should return documents which have same title and doctype is story", async () => {
+            let title = "title";
+            result = { "docs": [{ "_id": "id", "title": title }] };
+            sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock);
+            sandbox.mock(couchClientInstanceMock).expects("findDocuments").withArgs(query).returns(Promise.resolve(result));
+            let expectedResult = await storyRequestHandler.getStoryWithTitle(title, authSession);
+            assert.strictEqual(result, expectedResult);
+        });
+
+        it("should reject with error if find documents reject with an error", async () => {
+            let title = "title";
+            result = { "docs": [{ "_id": "id", "title": title }] };
+            sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock);
+            sandbox.mock(couchClientInstanceMock).expects("findDocuments").withArgs(query).returns(Promise.resolve("error"));
+            try {
+                await storyRequestHandler.getStoryWithTitle(title, authSession);
+            } catch (error) {
+                assert.deepEqual("error", error);
+            }
+        });
     });
 
 });

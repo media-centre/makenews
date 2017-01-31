@@ -61,7 +61,6 @@ describe("Add Story Document Route", () => {
                 "AuthSession": "test_session"
             }
         }, {});
-        //isRejected(addStory.handle(), "Story title  exist");
         try {
             await addStory.handle();
         } catch(err) {
