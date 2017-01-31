@@ -1,4 +1,7 @@
-import { bookmarkArticle, bookmarkedArticleAction, displayWebArticle, BOOKMARKED_ARTICLE, WEB_ARTICLE, FETCHING_ARTICLE_FAILED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
+import { bookmarkArticle, bookmarkedArticleAction, displayWebArticle,
+    BOOKMARKED_ARTICLE, WEB_ARTICLE_RECEIVED, FETCHING_ARTICLE_FAILED,
+    WEB_ARTICLE_REQUESTED
+} from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import sinon from "sinon";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -31,7 +34,7 @@ describe("DisplayArticleActions", () => {
                 "Content-Type": "application/json"
             };
 
-            let ajaxClientInstance = AjaxClient.instance("/bookmarks", true);
+            let ajaxClientInstance = AjaxClient.instance("/bookmarks", false);
             sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("post")
@@ -58,22 +61,22 @@ describe("DisplayArticleActions", () => {
         it("should dispatch article Received action after successful fetching article", (done) => {
             let article = "Some Article";
             let response = { "markup": article };
-            let ajaxClientInstance = AjaxClient.instance("/article", true);
+            let ajaxClientInstance = AjaxClient.instance("/article", false);
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
 
-            let store = mockStore({}, [{ "type": WEB_ARTICLE, "article": article }], done);
+            let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, { "type": WEB_ARTICLE_RECEIVED, "article": article }], done);
             store.dispatch(displayWebArticle("some url"));
 
             postMock.verify();
         });
 
         it("should dispatch fetchingArticleFailed action ", async () => {
-            let ajaxClientInstance = AjaxClient.instance("/article", true);
+            let ajaxClientInstance = AjaxClient.instance("/article", false);
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
 
-            let store = mockStore({}, [{ "type": FETCHING_ARTICLE_FAILED }]);
+            let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, { "type": FETCHING_ARTICLE_FAILED }]);
             store.dispatch(displayWebArticle("some url"));
 
             postMock.verify();

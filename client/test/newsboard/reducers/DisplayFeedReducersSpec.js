@@ -1,10 +1,11 @@
 import {
     fetchedFeeds,
     newsBoardCurrentSourceTab,
-    selectedArticle
+    selectedArticle,
+    fetchingWebArticle
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
-import { BOOKMARKED_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
+import { BOOKMARKED_ARTICLE, WEB_ARTICLE_REQUESTED, WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
 describe("DisplayFeedReducer", () => {
@@ -88,6 +89,27 @@ describe("DisplayFeedReducer", () => {
                 "_id": "id", "title": "title", "bookmark": true
             };
             expect(selectedArticle({ "_id": "id", "title": "title" }, action)).to.deep.equals(bookmarkedArticle);
+        });
+
+        it("should clear description when WEB_ARTICLE_REQUESTED is dispatched", () => {
+            const action = { "type": WEB_ARTICLE_REQUESTED, "desc": "" };
+            expect(selectedArticle({}, action)).to.deep.equals({ "desc": "" });
+        });
+    });
+
+    describe("fetchingWebArticle", () => {
+        it("should return true when it is fetching the article", () => {
+            const action = { "type": WEB_ARTICLE_REQUESTED };
+            expect(fetchingWebArticle(false, action)).to.be.true; // eslint-disable-line no-unused-expressions
+        });
+
+        it("should return false when article is received", () => {
+            const action = { "type": WEB_ARTICLE_RECEIVED };
+            expect(fetchingWebArticle(false, action)).to.be.false; // eslint-disable-line no-unused-expressions
+        });
+
+        it("should return false as default", () => {
+            expect(fetchingWebArticle(false, {})).to.be.false; // eslint-disable-line no-unused-expressions
         });
     });
 });

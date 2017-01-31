@@ -21,7 +21,8 @@ describe("DisplayWebArticle", () => {
         };
         store = createStore(() => ({
             "webArticleMarkup": "<p>This is the body of the tag</p>",
-            "selectedArticle": currentArticle
+            "selectedArticle": currentArticle,
+            "fetchingWebArticle": false
         }), applyMiddleware(thunkMiddleWare));
     });
 

@@ -5,7 +5,9 @@ import {
     DISPLAY_ARTICLE
 } from "./../actions/DisplayFeedActions";
 import {
-    BOOKMARKED_ARTICLE
+    BOOKMARKED_ARTICLE,
+    WEB_ARTICLE_REQUESTED,
+    WEB_ARTICLE_RECEIVED
 } from "./../actions/DisplayArticleActions";
 import { List } from "immutable";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
@@ -32,6 +34,8 @@ export function selectedArticle(state = {}, action = {}) {
         return Object.assign({}, action.article);
     case BOOKMARKED_ARTICLE:
         return Object.assign({}, state, { "bookmark": action.bookmarkStatus });
+    case WEB_ARTICLE_REQUESTED:
+        return Object.assign({}, state, { "desc": "" });
     default:
         return state;
     }
@@ -45,3 +49,13 @@ export const newsBoardCurrentSourceTab = (state = newsBoardSourceTypes.trending,
     default: return state;
     }
 };
+
+export function fetchingWebArticle(state = false, action = {}) {
+    switch(action.type) {
+    case WEB_ARTICLE_REQUESTED:
+        return true;
+    case WEB_ARTICLE_RECEIVED:
+        return false;
+    default: return state;
+    }
+}

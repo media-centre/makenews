@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { displayWebArticle } from "./../actions/DisplayArticleActions";
+import Spinner from "./../../utils/components/Spinner";
 
 export class DisplayWebArticle extends Component {
     componentWillMount() {
@@ -16,7 +17,9 @@ export class DisplayWebArticle extends Component {
 
     render() {
         return (
-            <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article }} />
+            this.props.isFetchingArticle
+                ? <Spinner />
+                : <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article }}/>
         );
     }
 }
@@ -24,13 +27,15 @@ export class DisplayWebArticle extends Component {
 DisplayWebArticle.propTypes = {
     "article": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "selectedArticle": PropTypes.object.isRequired
+    "selectedArticle": PropTypes.object.isRequired,
+    "isFetchingArticle": PropTypes.object.isRequired
 };
 
 function mapToStore(store) {
     return {
         "article": store.webArticleMarkup,
-        "selectedArticle": store.selectedArticle
+        "selectedArticle": store.selectedArticle,
+        "isFetchingArticle": store.fetchingWebArticle
     };
 }
 
