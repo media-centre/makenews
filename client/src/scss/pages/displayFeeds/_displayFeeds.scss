@@ -36,7 +36,7 @@
     $flex-basis-width: 420px;
 
     background-color: $background-color;
-    height: 100vh;
+    height: calc(100vh - #{$main-header-height});
     margin-left: 54px;
     overflow-y: auto;
     flex-basis: $flex-basis-width;

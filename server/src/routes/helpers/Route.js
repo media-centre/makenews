@@ -28,7 +28,7 @@ export default class Route {
                 RouteLogger.instance().debug(`${routeClass}:: request processing completed successfully`);
             } catch (err) {
                 this._handleError(err);
-                RouteLogger.instance().warn(`${routeClass}:: request with parameters: [${routeParams}]  failed with error: [${err}]`);
+                RouteLogger.instance().warn(`${routeClass}:: request with parameters: [${JSON.stringify(routeParams)}]  failed with error: [${JSON.stringify(err)}]`);
             }
         }
     }

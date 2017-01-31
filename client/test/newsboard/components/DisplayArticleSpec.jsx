@@ -15,7 +15,7 @@ describe("DisplayArticle", () => {
             "description": "Some Description",
             "sourceType": "facebook",
             "tags": ["Hindu"],
-            "pubDate": "someDate"
+            "pubDate": "2017-01-31T06:58:27.000Z"
         };
         active = false;
         renderer = TestUtils.createRenderer();
@@ -55,7 +55,7 @@ describe("DisplayArticle", () => {
             expect(sourceTypeIcon.props.className).to.equals(`fa fa-${feed.sourceType}`);
 
             expect(pubDate.type).to.equals("span");
-            expect(pubDate.props.children).to.equals(` | ${feed.pubDate}`);
+            expect(pubDate.props.children).to.equals(" | Jan 31 2017, 12:28:27 PM IST");
 
             expect(tags[0].type).to.equals("span"); //eslint-disable-line no-magic-numbers
             expect(tags[0].props.children).to.equals(` | ${feed.tags[0]}`); //eslint-disable-line no-magic-numbers
@@ -89,7 +89,7 @@ describe("DisplayArticle", () => {
                 "description": "Some Description",
                 "sourceType": "web",
                 "tags": ["Hindu"],
-                "pubDate": "someDate"
+                "pubDate": "2017-01-31T06:58:27.000Z"
             };
 
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}}/>);

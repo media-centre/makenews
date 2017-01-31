@@ -1,5 +1,7 @@
 .display-article {
   flex: 1;
+  height: calc(100vh - #{$main-header-height});
+  overflow: auto;
 
   &__header {
     padding: 14px 10px;
@@ -38,6 +40,15 @@
 
     &__desc {
       line-height: 1.5rem;
+
+      img {
+        display: block;
+        margin: 1rem auto;
+      }
+
+      a {
+        color: $secondary-color;
+      }
     }
 
     &__images {

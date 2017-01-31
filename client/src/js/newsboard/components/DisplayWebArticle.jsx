@@ -15,11 +15,17 @@ export class DisplayWebArticle extends Component {
         }
     }
 
+    _renderDescription() {
+        return this.props.article.isHTML
+            ? <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article.markup }}/>
+            : <div className="article__desc">{this.props.selectedArticle.description}</div>;
+    }
+
     render() {
         return (
             this.props.isFetchingArticle
                 ? <Spinner />
-                : <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article }}/>
+                : this._renderDescription()
         );
     }
 }
@@ -28,7 +34,7 @@ DisplayWebArticle.propTypes = {
     "article": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "selectedArticle": PropTypes.object.isRequired,
-    "isFetchingArticle": PropTypes.object.isRequired
+    "isFetchingArticle": PropTypes.bool.isRequired
 };
 
 function mapToStore(store) {

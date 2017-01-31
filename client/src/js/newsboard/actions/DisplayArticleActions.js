@@ -11,7 +11,7 @@ export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
 });
 
 export function bookmarkArticle(article) {
-    let ajaxClient = AjaxClient.instance("/bookmarks", false);
+    let ajaxClient = AjaxClient.instance("/bookmarks");
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
@@ -29,13 +29,13 @@ export function bookmarkArticle(article) {
 }
 
 export function displayWebArticle(feed) {
-    let ajaxClient = AjaxClient.instance("/article", false);
+    let ajaxClient = AjaxClient.instance("/article");
 
     return async dispatch => {
         dispatch(webArticleRequested());
         try {
             let article = await ajaxClient.get({ "url": feed.link });
-            dispatch(articleReceived(article.markup));
+            dispatch(articleReceived(article.markup, true));
         } catch (err) {
             dispatch(articleReceived(feed.description));
         }
@@ -48,9 +48,10 @@ function webArticleRequested() {
     };
 }
 
-export function articleReceived(article) {
+export function articleReceived(article, isHTML = false) {
     return {
         "type": WEB_ARTICLE_RECEIVED,
-        article
+        article,
+        isHTML
     };
 }

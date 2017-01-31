@@ -1,8 +1,11 @@
 .header {
-  height: 64px;
+  height: $main-header-height;
   width: 100%;
   background-color: $primary-color-dark;
   border-bottom: 4px solid $secondary-color;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 
   &__logo {
     width: 177px;

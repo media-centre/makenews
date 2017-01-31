@@ -4,11 +4,11 @@ import { expect } from "chai";
 
 describe("DisplayArticleReducer", () => {
     it("should return article with type article", () => {
-        let action = { "type": WEB_ARTICLE_RECEIVED, "article": "some Article" };
-        expect(webArticleMarkup("", action)).to.be.equals("some Article");
+        let action = { "type": WEB_ARTICLE_RECEIVED, "article": "some Article", "isHTML": true };
+        expect(webArticleMarkup("", action)).to.deep.equals({ "markup": "some Article", "isHTML": true });
     });
 
     it("should return article empty string by default", () => {
-        expect(webArticleMarkup("", {})).to.be.equals("");
+        expect(webArticleMarkup({ "markup": "", "isHTML": false }, {})).to.deep.equals({ "markup": "", "isHTML": false });
     });
 });

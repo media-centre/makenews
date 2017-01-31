@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { bookmarkArticle } from "./../actions/DisplayArticleActions";
 import DisplayWebArticle from "./DisplayWebArticle";
+import DateTimeUtil from "../../utils/DateTimeUtil";
 
 export class DisplayArticle extends Component {
     render() {
@@ -24,7 +25,7 @@ export class DisplayArticle extends Component {
                     </h1>
                     <div className="article__details">
                         <i className={`fa fa-${this.props.article.sourceType}`} />
-                        <span>{` | ${this.props.article.pubDate}`}</span>
+                        <span>{` | ${DateTimeUtil.getLocalTime(this.props.article.pubDate)}`}</span>
                         {
                             this.props.article.tags &&
                             this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)
