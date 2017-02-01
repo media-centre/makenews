@@ -29,38 +29,49 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should get the configured Sources", (done) => {
-            let result = { "docs":
-            [{ "_id": "7535677770c76f0bf6045a0e1401ccf4",
-                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
-                "docType": "source",
-                "sourceType": sourceTypes.fb_profile,
-                "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
-            { "_id": "7535677770c76f0bf6045a0e1401ccf4",
-                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
-                "docType": "source",
-                "sourceType": sourceTypes.fb_page,
-                "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
-            { "_id": "7535677770c76f0bf6045a0e1401ccf4",
-                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
-                "docType": "source",
-                "sourceType": sourceTypes.fb_group,
-                "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
-            { "_id": "7535677770c76f0bf6045a0e1401ccf4",
-                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
-                "docType": "source",
-                "sourceType": "twitter",
-                "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" },
-            { "_id": "7535677770c76f0bf6045a0e1401ccf4",
-                "_rev": "1-23d11b676e21bca63e16d032a03b0826",
-                "docType": "source",
-                "sourceType": "web",
-                "url": "http://www.facebook.com/profile1",
-                "latestFeedTimestamp": "2016-11-21T01:57:48Z" }
-            ] };
+            let result = {
+                "docs": [{
+                    "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                    "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                    "docType": "source",
+                    "sourceType": sourceTypes.fb_profile,
+                    "url": "http://www.facebook.com/profile1",
+                    "latestFeedTimestamp": "2016-11-21T01:57:48Z"
+                },
+                    {
+                        "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                        "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                        "docType": "source",
+                        "sourceType": sourceTypes.fb_page,
+                        "url": "http://www.facebook.com/profile1",
+                        "latestFeedTimestamp": "2016-11-21T01:57:48Z"
+                    },
+                    {
+                        "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                        "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                        "docType": "source",
+                        "sourceType": sourceTypes.fb_group,
+                        "url": "http://www.facebook.com/profile1",
+                        "latestFeedTimestamp": "2016-11-21T01:57:48Z"
+                    },
+                    {
+                        "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                        "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                        "docType": "source",
+                        "sourceType": "twitter",
+                        "url": "http://www.facebook.com/profile1",
+                        "latestFeedTimestamp": "2016-11-21T01:57:48Z"
+                    },
+                    {
+                        "_id": "7535677770c76f0bf6045a0e1401ccf4",
+                        "_rev": "1-23d11b676e21bca63e16d032a03b0826",
+                        "docType": "source",
+                        "sourceType": "web",
+                        "url": "http://www.facebook.com/profile1",
+                        "latestFeedTimestamp": "2016-11-21T01:57:48Z"
+                    }
+                ]
+            };
 
             sandbox.stub(couchClient, "findDocuments").withArgs(body).returns(Promise.resolve(result));
 

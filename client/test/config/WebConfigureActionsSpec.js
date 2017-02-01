@@ -23,10 +23,10 @@ describe("WebConfigureActions", () => {
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
                 },
-                {
-                    "name": "The Hindu - Sport",
-                    "url": "http://www.thehindu.com/sport/?service=rss"
-                }],
+                    {
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss"
+                    }],
                 "paging": {
                     "offset": "25"
                 }
@@ -54,14 +54,15 @@ describe("WebConfigureActions", () => {
         });
 
         it(`should dispatch ${WEB_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources`, (done) => {
-            let result = { "docs": [{
-                "name": "The Hindu - International",
-                "url": "http://www.thehindu.com/news/international/?service=rss"
-            },
-            {
-                "name": "The Hindu - Sport",
-                "url": "http://www.thehindu.com/sport/?service=rss"
-            }],
+            let result = {
+                "docs": [{
+                    "name": "The Hindu - International",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                    {
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss"
+                    }],
                 "paging": {
                     "offset": "25"
                 }
@@ -85,14 +86,15 @@ describe("WebConfigureActions", () => {
         });
 
         it(`should dispatch ${WEB_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
-            let result = { "docs": [{
-                "name": "The Hindu - International",
-                "url": "http://www.thehindu.com/news/international/?service=rss"
-            },
-            {
-                "name": "The Hindu - Sport",
-                "url": "http://www.thehindu.com/sport/?service=rss"
-            }],
+            let result = {
+                "docs": [{
+                    "name": "The Hindu - International",
+                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                },
+                    {
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss"
+                    }],
                 "paging": {
                     "offset": "25"
                 }
@@ -106,11 +108,11 @@ describe("WebConfigureActions", () => {
                         "name": "The Hindu - International",
                         "url": "http://www.thehindu.com/news/international/?service=rss"
                     },
-                    {
-                        "name": "The Hindu - Sport",
-                        "url": "http://www.thehindu.com/sport/?service=rss",
-                        "added": true
-                    }],
+                        {
+                            "name": "The Hindu - Sport",
+                            "url": "http://www.thehindu.com/sport/?service=rss",
+                            "added": true
+                        }],
                     "paging": result.paging,
                     "keyword": keyword
                 }
