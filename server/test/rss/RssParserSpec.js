@@ -100,21 +100,20 @@ describe("RssParser", () => {
                     "type": "image/jpeg",
                     "url": "http://www.nasa.gov/sites/default/files/styles/1x1_cardfeed/public/thumbnails/image/football.jpg?itok=CSluCH4r"
                 }]
-            },
-                {
-                    "_id": "test-guid-2",
-                    "guid": "test-guid-2",
-                    "title": "NASA Television to Air Russian Spacewalk",
-                    "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
-                    "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
-                    "pubDate": null,
-                    "enclosures": [],
-                    "docType": "feed",
-                    "sourceType": "web",
-                    "sourceUrl": url,
-                    "tags": [null],
-                    "images": []
-                }]
+            }, {
+                "_id": "test-guid-2",
+                "guid": "test-guid-2",
+                "title": "NASA Television to Air Russian Spacewalk",
+                "link": "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk",
+                "description": "NASA Television will broadcast live coverage of a 5.5-hour spacewalk by two Russian cosmonauts aboard the International Space Station beginning at 7:30 a.m. EST Wednesday, Feb. 3.",
+                "pubDate": null,
+                "enclosures": [],
+                "docType": "feed",
+                "sourceType": "web",
+                "sourceUrl": url,
+                "tags": [null],
+                "images": []
+            }]
         };
 
         restRequest(url).on("response", function(res) {

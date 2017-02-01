@@ -22,11 +22,10 @@ describe("WebConfigureActions", () => {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
-                },
-                    {
-                        "name": "The Hindu - Sport",
-                        "url": "http://www.thehindu.com/sport/?service=rss"
-                    }],
+                }, {
+                    "name": "The Hindu - Sport",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }],
                 "paging": {
                     "offset": "25"
                 }
@@ -58,11 +57,10 @@ describe("WebConfigureActions", () => {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
-                },
-                    {
-                        "name": "The Hindu - Sport",
-                        "url": "http://www.thehindu.com/sport/?service=rss"
-                    }],
+                }, {
+                    "name": "The Hindu - Sport",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }],
                 "paging": {
                     "offset": "25"
                 }
@@ -90,11 +88,10 @@ describe("WebConfigureActions", () => {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
-                },
-                    {
-                        "name": "The Hindu - Sport",
-                        "url": "http://www.thehindu.com/sport/?service=rss"
-                    }],
+                }, {
+                    "name": "The Hindu - Sport",
+                    "url": "http://www.thehindu.com/sport/?service=rss"
+                }],
                 "paging": {
                     "offset": "25"
                 }
@@ -107,12 +104,11 @@ describe("WebConfigureActions", () => {
                     "data": [{
                         "name": "The Hindu - International",
                         "url": "http://www.thehindu.com/news/international/?service=rss"
-                    },
-                        {
-                            "name": "The Hindu - Sport",
-                            "url": "http://www.thehindu.com/sport/?service=rss",
-                            "added": true
-                        }],
+                    }, {
+                        "name": "The Hindu - Sport",
+                        "url": "http://www.thehindu.com/sport/?service=rss",
+                        "added": true
+                    }],
                     "paging": result.paging,
                     "keyword": keyword
                 }

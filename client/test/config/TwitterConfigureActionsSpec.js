@@ -24,12 +24,11 @@ describe("TwitterConfigureActions", () => {
                 "id": 8640348,
                 "name": "testUser",
                 "location": "andhra"
-            },
-                {
-                    "id": 8640347,
-                    "name": "testUser3",
-                    "location": "andhrapradesh"
-                }];
+            }, {
+                "id": 8640347,
+                "name": "testUser3",
+                "location": "andhrapradesh"
+            }];
             let sources = {
                 "docs": data,
                 "paging": pageNumber,

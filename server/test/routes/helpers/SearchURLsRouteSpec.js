@@ -57,14 +57,13 @@ describe("Search Urls Route", () => {
                 "sourceType": "web",
                 "name": "url1 test",
                 "url": "http://www.thehindu.com/news/international/?service"
-            },
-                {
-                    "_id": "2",
-                    "docType": "test",
-                    "sourceType": "web",
-                    "name": "url test",
-                    "url": "http://www.thehindu.com/sport/?service"
-                }]
+            }, {
+                "_id": "2",
+                "docType": "test",
+                "sourceType": "web",
+                "name": "url test",
+                "url": "http://www.thehindu.com/sport/?service"
+            }]
         };
         let requestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(requestHandlerInstance);
