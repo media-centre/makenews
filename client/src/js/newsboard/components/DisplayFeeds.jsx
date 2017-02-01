@@ -57,22 +57,18 @@ export class DisplayFeeds extends Component {
     }
 
     getMoreFeeds(sourceType) {
+        let callback = (result) => {
+            this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
+            this.hasMoreFeeds = result.hasMoreFeeds;
+        };
+
         if (this.hasMoreFeeds) {
             if(sourceType === "bookmark") {
-                this.props.dispatch(DisplayFeedActions.getBookmarkedFeeds(this.offset, (result) => {
-                    this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
-                    this.hasMoreFeeds = result.hasMoreFeeds;
-                }));
-            }else if(sourceType === "collections") {
-                this.props.dispatch(DisplayFeedActions.getAllCollections(this.offset, (result) => {
-                    this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
-                    this.hasMoreFeeds = result.hasMoreFeeds;
-                }));
+                this.props.dispatch(DisplayFeedActions.getBookmarkedFeeds(this.offset, callback));
+            } else if(sourceType === "collections") {
+                this.props.dispatch(DisplayFeedActions.getAllCollections(this.offset, callback));
             } else {
-                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, (result) => {
-                    this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
-                    this.hasMoreFeeds = result.hasMoreFeeds;
-                }));
+                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, callback));
             }
         }
     }
@@ -99,12 +95,13 @@ export class DisplayFeeds extends Component {
     }
 
     _renderCollections() {
-        let collectionsDOM = (collection) => <li className="collection-name" onClick={() => {
-            if(this.props.addArticleToCollection.id) {
-                this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
-            }
-        }} key={collection._id}
-                                             > { collection.collection }</li>;
+        let collectionsDOM = (collection) =>
+            <li className="collection-name" onClick={() => {
+                if(this.props.addArticleToCollection.id) {
+                    this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
+                }
+            }} key={collection._id}
+            > { collection.collection }</li>;
         return R.map(collectionsDOM, this.props.feeds);
     }
 
@@ -144,7 +141,7 @@ export class DisplayFeeds extends Component {
                 this.setState({ "showCollectionPopup": true });
             }}
             >
-            <i className="fa fa-plus-circle"/> Create new collection
+                <i className="fa fa-plus-circle"/> Create new collection
             </div>
 
             { this.state.showCollectionPopup ? this.showPopup() : null}

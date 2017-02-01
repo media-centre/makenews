@@ -16,6 +16,7 @@ export default class CollectionRoute extends Route {
         try {
             if(!this.collection) {
                 this._handleBadRequest();
+                return;
             }
             response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.docId, this.collection, this.isNewCollection);
             RouteLogger.instance().debug(`CollectionRoute:: successfully added feed ${this.docId} to the collection ${this.collection}`);

@@ -15,7 +15,7 @@ export default class CollectionRequestHandler {
         if(isNewCollection && collectionDocId) {
             return { "message": "collection already exists with this name" };
         }
-        return await this.createCollection(couchClient, docId, collectionName, collectionDocId);
+        return await this.createCollection(couchClient, docId, collectionName, collectionDocId); /* TODO:split the create collection and create intermediate doc*/ //eslint-disable-line
     }
 
     async createCollection(couchClient, docId, collectionName, collectionDocId) {
@@ -32,7 +32,7 @@ export default class CollectionRequestHandler {
                 feedCollectionId = docId + collectionDocId;
                 await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
             } else if (docId) {
-                let response = await couchClient.updateDocument(collectionDoc);
+                let response = await couchClient.updateDocument(collectionDoc); /* TODO: change the updateDoc to createDoc*/ //eslint-disable-line
                 feedCollectionId = docId + response.id;
                 await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
             } else {
@@ -65,12 +65,13 @@ export default class CollectionRequestHandler {
         let couchClient = CouchClient.instance(authSession);
         let allCollections = [];
         let skipValue = 0;
-        let collectionsDoc = { "docs": [] };
-        while(skipValue === 0 || collectionsDoc.docs.length === DOCS_PER_REQUEST) { //eslint-disable-line no-magic-numbers
+        let collectionsDoc = null;
+        do { //eslint-disable-line no-loops/no-loops
             collectionsDoc = await this.getCollectionQuery(couchClient, skipValue);
             allCollections = allCollections.concat(collectionsDoc.docs);
             skipValue += DOCS_PER_REQUEST;
-        }
+        } while(collectionsDoc.docs.length === DOCS_PER_REQUEST);
+
         return { "docs": allCollections };
     }
 
