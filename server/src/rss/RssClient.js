@@ -81,7 +81,8 @@ export default class RssClient {
     async getCrawledRssData(links, url) {  //eslint-disable-line consistent-return
         let linksIterator = links.values();
         let link = linksIterator.next().value;
-        while (link) {
+        /* TODO: remove the loop statement*/ //eslint-disable-line
+        while (link) { //eslint-disable-line no-loops/no-loops
             try {
                 let feeds = await this.getRssData(link, false);
                 feeds.url = link;

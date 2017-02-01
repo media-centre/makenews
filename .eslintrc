@@ -224,7 +224,10 @@
     "react/jsx-wrap-multilines": 2,
 
     //mocha
-    "mocha-no-only/mocha-no-only": 2
+    "mocha-no-only/mocha-no-only": 2,
+
+    //functional
+    "no-loops/no-loops": 2
   },
   "env": {
     "es6": true,
@@ -261,6 +264,7 @@
   "plugins": [
     "react",
     "import",
-    "mocha-no-only"
+    "mocha-no-only",
+    "no-loops"
   ]
 }

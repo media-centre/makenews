@@ -53,6 +53,7 @@
     "eslint": "^3.10.2",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-mocha-no-only": "0.0.4",
+    "eslint-plugin-no-loops": "^0.3.0",
     "eslint-plugin-react": "^6.7.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",

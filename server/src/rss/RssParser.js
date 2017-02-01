@@ -26,7 +26,8 @@ export default class RssParser {
 
             this.feedParser.on("readable", function() {
                 let meta = this.meta, feed = this.read();
-                while (feed) {
+                /* TODO: remove the loop statement*/ //eslint-disable-line
+                while (feed) { //eslint-disable-line no-loops/no-loops
                     let guid = CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid);
                     let feedObject = {
                         "_id": guid,
