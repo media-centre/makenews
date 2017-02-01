@@ -59,3 +59,4 @@ export function fetchingWebArticle(state = false, action = {}) {
     default: return state;
     }
 }
+

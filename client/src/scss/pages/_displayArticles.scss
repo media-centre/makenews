@@ -11,10 +11,18 @@
     .bookmark {
       color: $primary-color-light;
       cursor: pointer;
+      display: inline-block;
 
       &.active {
         color: $primary-color;
       }
+    }
+
+    .collection {
+      color: $primary-color-light;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 14px;
     }
 
     .icon {

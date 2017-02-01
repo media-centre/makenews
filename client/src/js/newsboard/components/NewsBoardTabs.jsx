@@ -11,6 +11,7 @@ export default class NewsBoardTabs extends Component {
                 <NewsBoardTab sourceIcon="facebook-square" sourceType={newsBoardSourceTypes.facebook}/>
                 <NewsBoardTab sourceIcon="twitter" sourceType={newsBoardSourceTypes.twitter}/>
                 <NewsBoardTab sourceIcon="bookmark" sourceType={newsBoardSourceTypes.bookmark}/>
+                <NewsBoardTab sourceIcon="folder" sourceType={newsBoardSourceTypes.collection}/>
             </div>
         );
     }

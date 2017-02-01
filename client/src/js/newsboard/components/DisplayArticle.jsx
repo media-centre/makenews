@@ -1,15 +1,26 @@
 /* eslint brace-style:0 */
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { bookmarkArticle } from "./../actions/DisplayArticleActions";
 import DisplayWebArticle from "./DisplayWebArticle";
 import DateTimeUtil from "../../utils/DateTimeUtil";
+import { bookmarkArticle, addArticleToCollection } from "./../actions/DisplayArticleActions";
+import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
+import { newsBoardSourceTypes } from "./../../utils/Constants";
+import Toast from "./../../utils/custom_templates/Toast";
 
 export class DisplayArticle extends Component {
     render() {
         return (
             <article className="display-article">
                 <header className="display-article__header">
+
+                    <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
+                        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab));
+                    }}
+                    >
+                        <i className="icon fa fa-folder-o"/> Add to collection
+                    </div>
+
                     { this.props.article.bookmark
                         ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article)); }}>
                              <i className="icon fa fa-bookmark"/> Bookmarked
@@ -41,6 +52,7 @@ export class DisplayArticle extends Component {
                           </div>}
 
                 </main>
+                { this.props.addToCollectionStatus.message && (<div className="add-to-collection-message">{Toast.show(this.props.addToCollectionStatus.message)}</div>)}
             </article>
         );
     }
@@ -48,11 +60,16 @@ export class DisplayArticle extends Component {
 
 DisplayArticle.propTypes = {
     "article": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
+    "addToCollectionStatus": PropTypes.object.isRequired
 };
 
 function mapToStore(store) {
-    return { "article": store.selectedArticle };
+    return { "article": store.selectedArticle,
+        "newsBoardCurrentSourceTab": store.newsBoardCurrentSourceTab,
+        "addToCollectionStatus": store.addToCollectionStatus
+    };
 }
 
 export default connect(mapToStore)(DisplayArticle);

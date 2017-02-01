@@ -4,6 +4,7 @@ export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
+export const NEW_COLLECTION = "NEW_COLLECTION";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -35,6 +36,11 @@ export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
+export function getAllCollections(pageIndex, callback = () => {}) {
+    let ajaxClient = AjaxClient.instance("/collections");
+
+    return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
+}
 
 export async function fetchFeedsFromSources() {
     const headers = {
