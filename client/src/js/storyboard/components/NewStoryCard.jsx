@@ -31,7 +31,6 @@ export class NewStoryCard extends Component {
     _addTitle() {
         let title = this.refs.title.value.trim();
         this.story.title = title;
-
         this._updateStory(this.story);
     }
 
@@ -53,7 +52,7 @@ export class NewStoryCard extends Component {
         return (
           <div className="story-card-title">
               <input ref="title" className="title-box" type="text" placeholder="please enter title of the story" onKeyDown={(event) => this._onKeyDownInputBox(event)}/>
-              <button type="submit" className="save-box" value="save" onClick={() => {
+              <button ref="saveButton"type="submit" className="save-box" value="save" onClick={() => {
                   this._addTitle();
               }}
               >{ "SAVE" }</button>
