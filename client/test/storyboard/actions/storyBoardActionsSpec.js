@@ -45,7 +45,7 @@ describe("StoryBoardActions", (done) => {
         it("should dispatch set story title action with id and title", () => {
             let action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id", "title": "title" } }];
             let response = { "docs": [{ "_id": "id", "title": "title" }, { "_id": "id2", "title": "title" }] };
-            let ajaxClientInstance = AjaxClient.instance("/get-story");
+            let ajaxClientInstance = AjaxClient.instance("/story");
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));

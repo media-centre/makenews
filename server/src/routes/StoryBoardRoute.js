@@ -8,8 +8,8 @@ export default (app) => {
         new AddStoryTitleRoute(request, response, next).process();
     });
 
-    app.get("/get-story", (request, response, next) => {
-        RouteLogger.instance().info("StoryBoardRoutes:: /get-story request received");
+    app.get("/story", (request, response, next) => {
+        RouteLogger.instance().info("StoryBoardRoutes:: /story request received");
         new GetStoryRoute(request, response, next).process();
     });
 };

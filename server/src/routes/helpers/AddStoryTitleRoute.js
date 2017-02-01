@@ -1,5 +1,5 @@
 import Route from "./Route";
-import StoryRequestHandler from "../../storyBoard/StoryRequestHandler";
+import { addStory } from "../../storyBoard/StoryRequestHandler";
 
 export default class AddStoryTitleRoute extends Route {
     constructor(request, response, next) {
@@ -13,7 +13,6 @@ export default class AddStoryTitleRoute extends Route {
     }
 
     async handle() {
-        let storyRequestHandler = StoryRequestHandler.instance();
-        return await storyRequestHandler.addStory(this.story, this.accessToken);
+        return await addStory(this.story, this.accessToken);
     }
 }

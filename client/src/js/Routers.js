@@ -27,9 +27,9 @@ export function renderRoutes() {
                 </Route>
 
                 <Route path="/newsBoard" component={ScanNews} />
-                <Route path="/storyBoard/" component={WriteAStory}>
+                <Route path="/storyBoard" component={WriteAStory}>
                     <Route path="/storyBoard/storyCards" component={StoryBoardCards} />
-                    <Route path="/storyBoard/newStory" component={NewStoryCard} />
+                    <Route path="/storyBoard/story" component={NewStoryCard} />
                 </Route>
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />

@@ -1,13 +1,12 @@
 import AddStoryTitleRoute from "../../../src/routes/helpers/AddStoryTitleRoute";
-import StoryRequestHandler from "../../../src/storyBoard/StoryRequestHandler";
+import * as storyRequestHandler from "../../../src/storyBoard/StoryRequestHandler";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("Add Story Document Route", () => {
-    let sandbox = null, storyRequestHandlerInstance = null;
+    let sandbox = null;
     beforeEach("AddStoryTitle", () => {
         sandbox = sinon.sandbox.create();
-        storyRequestHandlerInstance = new StoryRequestHandler();
     });
     afterEach("AddStoryTitle", () => {
         sandbox.restore();
@@ -18,8 +17,7 @@ describe("Add Story Document Route", () => {
             "_id": "1234",
             "rev": "1234"
         };
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.resolve(successObject));
+        sandbox.mock(storyRequestHandler).expects("addStory").returns(Promise.resolve(successObject));
         let result = await new AddStoryTitleRoute({
             "body": {
                 "title": "title1"
@@ -32,8 +30,7 @@ describe("Add Story Document Route", () => {
     });
 
     it("should throw an error if the add story rejects with an error", async () => {
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        let mockobj = sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.reject("Unable to add the story"));
+        let mockobj = sandbox.mock(storyRequestHandler).expects("addStory").returns(Promise.reject("Unable to add the story"));
         let addStory = new AddStoryTitleRoute({
             "body": {
                 "title": "title1"
@@ -51,8 +48,7 @@ describe("Add Story Document Route", () => {
     });
 
     it("should throw an error if story title already exists", async () => {
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        let mockobj = sandbox.mock(storyRequestHandlerInstance).expects("addStory").returns(Promise.reject("Story title already exist"));
+        let mockobj = sandbox.mock(storyRequestHandler).expects("addStory").returns(Promise.reject("Story title already exist"));
         let addStory = new AddStoryTitleRoute({
             "body": {
                 "title": "title1"

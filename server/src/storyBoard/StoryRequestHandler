@@ -1,74 +1,78 @@
 import CouchClient from "../CouchClient";
 
 
-export default class StoryRequestHandler {
-    static instance() {
-        return new StoryRequestHandler();
+export async function addStory(story, authSession) {
+    let document = _getDocument(story);
+    let couchClient = CouchClient.instance(authSession);
+    let docs = await getStoryWithTitle(story.title, authSession);
+    if (docs.docs.length) {
+        let conflictMsg = "Story title already exist";
+        throw conflictMsg;
     }
-
-    async addStory(story, authSession) {
-        let document = this._getDocument(story);
-        let couchClient = CouchClient.instance(authSession);
-        let docs = await this.getStoryWithTitle(story.title, authSession);
-        if (docs.docs.length > 0) {  //eslint-disable-line no-magic-numbers
-            let conflictMsg = "Story title already exist";
-            throw conflictMsg;
-        }
-        try {
-            return await couchClient.updateDocument(document);
-        } catch (error) {
-            let errorMsg = "Unable to add the story";
-            throw errorMsg;
-        }
+    try {
+        return await couchClient.updateDocument(document);
+    } catch (error) {
+        let errorMsg = "Unable to add the story";
+        throw errorMsg;
     }
+}
 
-    _getDocument(story) {
-        if (story._id) {
-            story.docType = "story";
-            return story;
-        }
-        return { "title": story.title, "docType": "story" };
-
+function _getDocument(story) {
+    if (story._id) {
+        story.docType = "story";
+        return story;
     }
+    return { "title": story.title, "docType": "story" };
 
-    async getStoryWithTitle(title, authSession) {
-        let couchClient = CouchClient.instance(authSession);
-        let query = {
-            "selector": {
-                "docType": {
-                    "$eq": "story"
-                },
-                "title": {
-                    "$eq": title
-                }
-            }
-        };
-        return await couchClient.findDocuments(query);
-    }
+}
 
-    async getStory(id, authSession) {
-        let couchClient = CouchClient.instance(authSession);
-        let query = {
-            "selector": {
-                "docType": {
-                    "$eq": "story"
-                }
+export async function getStoryWithTitle(title, authSession) {
+    let couchClient = CouchClient.instance(authSession);
+    let query = {
+        "selector": {
+            "docType": {
+                "$eq": "story"
             },
-            "fields": ["title", "_id"]
-        };
-
-        if(id) {
-            query.selector._id = { "$eq": id };
-            query.fields.push("_rev");
-            let response = await couchClient.findDocuments(query);
-            let [document] = response.docs;
-            if(document) {
-                return document;
+            "title": {
+                "$eq": title
             }
-            let notFoundMsg = "No document found";
-            throw notFoundMsg;
-        } else {
-            return await couchClient.findDocuments(query);
         }
+    };
+    return await couchClient.findDocuments(query);
+}
+
+export async function getStory(id, authSession) {
+    let couchClient = CouchClient.instance(authSession);
+    let query = {
+        "selector": {
+            "docType": {
+                "$eq": "story"
+            },
+            "_id": {
+                "$eq": id
+            }
+        },
+        "fields": ["title", "_id", "_rev"]
+    };
+
+    let response = await couchClient.findDocuments(query);
+    let [document] = response.docs;
+    if (document) {
+        return document;
     }
+    let notFoundMsg = "No document found";
+    throw notFoundMsg;
+}
+
+export async function getStories(authSession) {
+    let couchClient = CouchClient.instance(authSession);
+    let query = {
+        "selector": {
+            "docType": {
+                "$eq": "story"
+            }
+        },
+        "fields": ["title", "_id"]
+    };
+    return await couchClient.findDocuments(query);
 }

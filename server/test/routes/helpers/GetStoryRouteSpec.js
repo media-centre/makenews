@@ -1,13 +1,12 @@
 import GetStoryRoute from "../../../src/routes/helpers/GetStoryRoute";
-import StoryRequestHandler from "../../../src/storyBoard/StoryRequestHandler";
+import * as storyRequestHandler from "../../../src/storyBoard/StoryRequestHandler";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("Get Story Route", () => {
-    let sandbox = null, storyRequestHandlerInstance = null;
+    let sandbox = null;
     beforeEach("AddStoryTitle", () => {
         sandbox = sinon.sandbox.create();
-        storyRequestHandlerInstance = new StoryRequestHandler();
     });
     afterEach("GetStoryRoute", () => {
         sandbox.restore();
@@ -18,8 +17,7 @@ describe("Get Story Route", () => {
             "_id": "1234",
             "rev": "1234"
         };
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        sandbox.mock(storyRequestHandlerInstance).expects("getStory").returns(Promise.resolve(document));
+        sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.resolve(document));
         let result = await new GetStoryRoute({
             "query": {
                 "id": "id_1"
@@ -37,8 +35,7 @@ describe("Get Story Route", () => {
             "_id": "1234",
             "rev": "1234"
         } };
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        sandbox.mock(storyRequestHandlerInstance).expects("getStory").returns(Promise.resolve(documents));
+        sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.resolve(documents));
         let addStory = new GetStoryRoute({
             "query": {
                 "id": "id_2"
@@ -52,8 +49,7 @@ describe("Get Story Route", () => {
     });
 
     it("should throw an error if document does not exist", async () => {
-        sandbox.mock(StoryRequestHandler).expects("instance").returns(storyRequestHandlerInstance);
-        sandbox.mock(storyRequestHandlerInstance).expects("getStory").returns(Promise.reject("No document found"));
+        sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.reject("No document found"));
         let addStory = new GetStoryRoute({
             "query": {
                 "id": "id_1"

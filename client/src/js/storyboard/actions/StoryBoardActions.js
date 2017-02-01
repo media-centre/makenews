@@ -22,7 +22,7 @@ export const clearStories = () => ({
 
 export function getStories() {
     return (dispatch) => {
-        let ajax = AjaxClient.instance("/get-story");
+        let ajax = AjaxClient.instance("/story");
 
         ajax.get().then((response) => {
             response.docs.map((doc) => {

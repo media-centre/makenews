@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-//import * as StoryBoardActions from "../actions/StoryBoardActions";
 import AjaxClient from "../../utils/AjaxClient";
+import History from "../../History";
 import Toast from "../../utils/custom_templates/Toast";
 
 export class NewStoryCard extends Component {
@@ -10,15 +10,19 @@ export class NewStoryCard extends Component {
         this.storyId = decodeURIComponent(this.props.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent("storyId").replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
         this.story = {};
         if(this.storyId) {
-            this.story = this.getFromDb();
+            this.getFromDb();
         }
     }
 
     getFromDb() {
-        let ajax = AjaxClient.instance("/get-story");
+        let ajax = AjaxClient.instance("/story");
         ajax.get({ "id": this.storyId }).then((response) =>{
             this.story = response;
             this.refs.title.value = response.title;
+        }).catch(() =>{
+            Toast.show("You are trying to access the invalid story card.Please check the URL");
+            let history = History.getHistory();
+            history.push("/storyBoard/storyCards");
         });
     }
 
