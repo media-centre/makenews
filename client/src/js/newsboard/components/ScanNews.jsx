@@ -2,7 +2,9 @@
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import DisplayFeeds from "./DisplayFeeds";
 import DisplayArticle from "./DisplayArticle";
+import DisplayCollection from "./DisplayCollection";
 import NewsBoardTabs from "./NewsBoardTabs";
+import { newsBoardSourceTypes } from "./../../utils/Constants";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 
@@ -16,7 +18,7 @@ export class ScanNews extends Component {
             <div className="news-board-container">
                 <NewsBoardTabs />
                 <DisplayFeeds />
-                <DisplayArticle />
+                {this.props.currentTab === newsBoardSourceTypes.collection ? <DisplayCollection /> : <DisplayArticle />}
             </div>
         );
     }

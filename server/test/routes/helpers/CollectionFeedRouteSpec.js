@@ -4,6 +4,34 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("CollectionFeedsRoute", () => {
+    describe("validate", () => {
+        let offset = 0, collectionName = "test", authSession = "test_token";
+        it("should return error message of missing params if collection Name  is empty", () => {
+            let request = {
+                "cookies": { "AuthSession": authSession },
+                "query": {
+                    "collectionName": "",
+                    offset
+                }
+            };
+            let collectionFeed = new CollectionFeedsRoute(request, {});
+
+            expect(collectionFeed.validate()).to.equal("missing parameters");
+        });
+
+        it("should return error message of missing params if auth session is empty", () => {
+            let request = {
+                "cookies": { "AuthSession": "" },
+                "query": {
+                    collectionName,
+                    offset
+                }
+            };
+            let collectionFeed = new CollectionFeedsRoute(request, {});
+
+            expect(collectionFeed.validate()).to.equal("missing parameters");
+        });
+    });
 
     describe("handle", () => {
         let sandbox = null, authSession = "test_token", collectionName = "test", offset = 0;

@@ -1,7 +1,5 @@
 import Route from "./Route";
 import { getCollectedFeeds } from "./../../collection/CollectionFeedsRequestHandler";
-import StringUtil from "../../../../common/src/util/StringUtil";
-import R from "ramda"; //eslint-disable-line id-length
 
 export default class CollectionFeedsRoute extends Route {
     constructor(request, response, next) {
@@ -12,11 +10,10 @@ export default class CollectionFeedsRoute extends Route {
     }
 
     validate() {
-        return R.any(StringUtil.isEmptyString)([this.authSession, this.collectionName, this.offset]) ? "" : "missing parameters";
+        return super.validate(this.authSession, this.collectionName);
     }
 
     async handle() {
         return await getCollectedFeeds(this.authSession, this.collectionName, this.offset);
     }
 }
-

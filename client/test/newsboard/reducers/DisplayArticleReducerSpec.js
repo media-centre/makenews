@@ -1,4 +1,4 @@
-import { webArticleMarkup } from "./../../../src/js/newsboard/reducers/DisplayArticleReducer";
+import { webArticleMarkup } from "./../../../src/js/newsboard/reducers/DisplayArticleReducers";
 import { WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 

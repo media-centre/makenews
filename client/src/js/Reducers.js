@@ -8,9 +8,9 @@ import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle, fetchingWebAr
 import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
-import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducer";
-import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { addStory } from "./storyboard/reducers/StoryBoardReducer";
+import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
+import { addToCollectionStatus, addArticleToCollection, displayCollection } from "./newsboard/reducers/DisplayArticleReducers";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -34,7 +34,8 @@ const contentDiscoveryApp = combineReducers({
     webArticleMarkup,
     addToCollectionStatus,
     addArticleToCollection,
-    addStory
+    addStory,
+    displayCollection
 });
 
 export default contentDiscoveryApp;

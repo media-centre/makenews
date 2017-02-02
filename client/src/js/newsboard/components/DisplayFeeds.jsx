@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import R from "ramda"; //eslint-disable-line id-length
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
+import { displayCollectionFeeds } from "../actions/DisplayCollectionActions";
 import StringUtil from "../../../../../common/src/util/StringUtil";
 
 export class DisplayFeeds extends Component {
@@ -97,6 +98,7 @@ export class DisplayFeeds extends Component {
     _renderCollections() {
         let collectionsDOM = (collection) =>
             <li className="collection-name" onClick={() => {
+                this.props.dispatch(displayCollectionFeeds(collection.collection));
                 if(this.props.addArticleToCollection.id) {
                     this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
                 }
