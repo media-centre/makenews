@@ -4,6 +4,7 @@ import RssURLSearchIndex from "./admin/20170103161414_RssURLSearchIndex";
 import FetchFeedsIndex from "./db/20170124122859_FetchFeedsIndex";
 import BookmarkIndex from "./db/20170124122859_BookmarkIndex";
 import TitleIndex from "./db/20170202122859_TitleIndex";
+import CollectionIndex from "./db/20170201122859_CollectionIndex";
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
 import CouchSession from "../CouchSession";
@@ -113,6 +114,8 @@ export default class Migration {
             return new BookmarkIndex(this.dbName, this.accessToken);
         case "TitleIndex" :
             return new TitleIndex(this.dbName, this.accessToken);
+        case "CollectionIndex" :
+            return new CollectionIndex(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
