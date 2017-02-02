@@ -92,7 +92,7 @@ describe("RssParser", () => {
                 }],
                 "docType": "feed",
                 "sourceType": "web",
-                "sourceUrl": url,
+                "sourceId": url,
                 "tags": [null],
                 "images": [{
                     "length": "300095",
@@ -110,7 +110,7 @@ describe("RssParser", () => {
                 "enclosures": [],
                 "docType": "feed",
                 "sourceType": "web",
-                "sourceUrl": url,
+                "sourceId": url,
                 "tags": [null],
                 "images": []
             }]

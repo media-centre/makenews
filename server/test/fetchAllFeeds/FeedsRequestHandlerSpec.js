@@ -38,7 +38,7 @@ describe("FeedsRequestHandler", () => {
                         "$gt": null
                     }
                 },
-                "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images"],
+                "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
                 "sort": [{ "pubDate": "desc" }]
             };
@@ -64,6 +64,67 @@ describe("FeedsRequestHandler", () => {
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(body).returns(Promise.resolve(feed));
             let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, sourceType);
+
+            assert.deepEqual(expectedFeeds, feed);
+        });
+
+
+        it("should fetch feeds from the db for an array of filtered sources", async () => {
+            let sources = ["A7AE6BD7-0B65-01EF-AE07-DAE4727754E3"];
+            let query = {
+                "selector": {
+                    "docType": {
+                        "$eq": "feed"
+                    },
+                    "sourceType": {
+                        "$in": sourceType
+                    },
+                    "pubDate": {
+                        "$gt": null
+                    },
+                    "sourceId": {
+                        "$in": sources
+                    }
+                },
+                "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
+                "skip": 0,
+                "sort": [{ "pubDate": "desc" }]
+            };
+            sandbox.mock(CouchClient).expects("instance")
+                .withArgs(authSession).returns(couchClientInstanceMock);
+            sandbox.mock(couchClientInstanceMock).expects("findDocuments")
+                .withArgs(query).returns(Promise.resolve(feed));
+            let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, sourceType, sources);
+
+            assert.deepEqual(expectedFeeds, feed);
+        });
+
+        it("should fetch feeds from the db for a single filter source", async () => {
+            let sources = "A7AE6BD7-0B65-01EF-AE07-DAE4727754E3";
+            let query = {
+                "selector": {
+                    "docType": {
+                        "$eq": "feed"
+                    },
+                    "sourceType": {
+                        "$in": sourceType
+                    },
+                    "pubDate": {
+                        "$gt": null
+                    },
+                    "sourceId": {
+                        "$eq": sources
+                    }
+                },
+                "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
+                "skip": 0,
+                "sort": [{ "pubDate": "desc" }]
+            };
+            sandbox.mock(CouchClient).expects("instance")
+                .withArgs(authSession).returns(couchClientInstanceMock);
+            sandbox.mock(couchClientInstanceMock).expects("findDocuments")
+                .withArgs(query).returns(Promise.resolve(feed));
+            let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, sourceType, sources);
 
             assert.deepEqual(expectedFeeds, feed);
         });

@@ -10,6 +10,7 @@ export default class FetchAllConfiguredFeeds extends Route {
         this.authSession = this.request.cookies.AuthSession;
         this.offset = this.validateNumber(this.request.query.offset);
         this.sourceType = this.request.query.sourceType;
+        this.sources = this.request.query.source;
     }
 
     valid() {
@@ -20,7 +21,7 @@ export default class FetchAllConfiguredFeeds extends Route {
         try {
             let feedsRequestHandler = FeedsRequestHandler.instance();
             if(this.valid()) {
-                let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, newsBoardSourceTypes[this.sourceType]);
+                let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, newsBoardSourceTypes[this.sourceType], this.sources);
                 RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
                 this._handleSuccess(feeds);
             } else {

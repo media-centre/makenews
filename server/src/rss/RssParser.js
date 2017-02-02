@@ -39,7 +39,7 @@ export default class RssParser {
                         "enclosures": feed.enclosures,
                         "docType": "feed",
                         "sourceType": "web",
-                        "sourceUrl": url,
+                        "sourceId": url,
                         "tags": [meta.title],
                         "images": []
                     };

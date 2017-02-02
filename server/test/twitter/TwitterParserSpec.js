@@ -80,7 +80,8 @@ describe("TwitterParser", () => {
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
                 "images": [],
-                "videos": []
+                "videos": [],
+                "sourceId": sourceId
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
@@ -111,7 +112,8 @@ describe("TwitterParser", () => {
                 "pubDate": "2001-12-11T06:11:56Z",
                 "tags": ["tag1", "tag2"],
                 "images": [{ "url": "https://www.test.com", "thumbnail": "https://www.test.com:thumb" }],
-                "videos": []
+                "videos": [],
+                "sourceId": sourceId
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
@@ -152,7 +154,8 @@ describe("TwitterParser", () => {
                         "thumbnail": "https://www.test2.com:thumb"
                     }
                 ],
-                "videos": []
+                "videos": [],
+                "sourceId": sourceId
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
@@ -203,7 +206,8 @@ describe("TwitterParser", () => {
                     },
                     {
                         "thumbnail": "https://www.test2.com:thumb"
-                    }]
+                    }],
+                "sourceId": sourceId
             }];
             let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);

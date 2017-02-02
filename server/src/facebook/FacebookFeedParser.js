@@ -1,9 +1,9 @@
 import DateUtil from "../util/DateUtil";
-export function parseFacebookPosts(posts = []) {
-    return posts.map(post => _parsePost(post));
+export function parseFacebookPosts(sourceId, posts = []) {
+    return posts.map(post => _parsePost(sourceId, post));
 }
 
-function _parsePost(post) {
+function _parsePost(sourceId, post) {
     const noIndex = -1;
     let facebookRegex = /^https:\/\/www\.facebook\.com/;
     let postId = post.id.split("_");
@@ -18,7 +18,8 @@ function _parsePost(post) {
         "pubDate": post.created_time ? DateUtil.getUTCDateAndTime(post.created_time) : null,
         "tags": [],
         "images": [],
-        "videos": []
+        "videos": [],
+        "sourceId": sourceId
     };
 
 

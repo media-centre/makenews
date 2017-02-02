@@ -39,7 +39,8 @@ export default class TwitterParser {
             "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": this.hashTags(tweet),
             "images": [],
-            "videos": []
+            "videos": [],
+            "sourceId": sourceId
         };
         let images = tweet.entities.media;
         if(images) { // eslint-disable-line no-magic-numbers

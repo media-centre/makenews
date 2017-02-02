@@ -73,7 +73,7 @@ export default class FacebookClient {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
-                            feedResponse = parseFacebookPosts(feedResponse.data);
+                            feedResponse = parseFacebookPosts(pageId, feedResponse.data);
                             resolve(feedResponse);
                         } else {
                             let errorInfo = JSON.parse(body);
