@@ -46,6 +46,8 @@ export class NewStoryCard extends Component {
         };
         ajax.post(headers, story).then((response) => {
             Toast.show("Title added successfully");
+            let history = History.getHistory();
+            history.push("/storyBoard/story?storyId=" + response.id);
             return response;
         }).catch(() => {
             Toast.show("EITHER you entered/saved title more than once OR Story title already exists.");
