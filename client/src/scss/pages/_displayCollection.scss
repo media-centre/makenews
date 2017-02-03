@@ -1,4 +1,52 @@
 .display-collection {
   flex: 1;
   height: calc(100vh - #{$main-header-height});
+  overflow: auto;
+
+  .collection-feeds {
+    display: flex;
+    flex-wrap: wrap;
+
+    .collection-feed {
+      flex-basis: 50%;
+      cursor: pointer;
+      line-height: 24px;
+      padding: 8px 13px 13px 16px;
+      box-sizing: border-box;
+      background-color: $background-color;
+      border-bottom: 1px solid $dark-background-color;
+
+      &:nth-child(odd) {
+        border-right: 1px solid $dark-background-color;
+      }
+
+      &__title {
+        padding:9px;
+        font-size: $mid-font-size;
+        color: $secondary-color;
+      }
+
+      &__source {
+        padding:9px;
+        color: $primary-color-light;
+
+        div {
+          display: inline-block;
+        }
+        .source, .source-type {
+          padding-right: 10px;
+        }
+      }
+
+      &__description {
+        padding:9px;
+        color: $primary-color;
+        font-size: $medium-font-size;
+      }
+    }
+
+    .active {
+      background-color: #ffffff;
+    }
+  }
 }

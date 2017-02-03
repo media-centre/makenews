@@ -3,10 +3,20 @@ import { connect } from "react-redux";
 import Collection from "./Collection";
 
 export class DisplayCollection extends Component {
+    constructor() {
+        super();
+        this.state = { "activeIndex": 0 };
+    }
+    toggleFeed(index) {
+        this.setState({ "activeIndex": index });
+    }
     render() {
         return (<div className="display-collection">
-            {this.props.feeds.map((feed, index) =>
-                <Collection feed={feed} key={index} />)}
+
+            <div className="collection-feeds">
+                {this.props.feeds.map((feed, index) =>
+                <Collection feed={feed} key={index} active={index === this.state.activeIndex} toggle = {this.toggleFeed.bind(this, index)}/>)}
+            </div>
         </div>);
     }
 }

@@ -8,7 +8,7 @@ export function displayCollectionFeeds(collectionName) {
     return async dispatch => {
         try {
             let feeds = await ajaxClient.get({ "collectionName": collectionName });
-            dispatch(collectionFeeds(feeds.docs));
+            dispatch(collectionFeeds(feeds));
         } catch (err) {
             dispatch(noCollectionFeeds());
         }
