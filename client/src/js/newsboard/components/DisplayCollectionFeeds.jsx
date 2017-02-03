@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import Collection from "./Collection";
+import Collection from "./CollectionFeed";
 
-export class DisplayCollection extends Component {
+export class DisplayCollectionFeeds extends Component {
     constructor() {
         super();
         this.state = { "activeIndex": 0 };
@@ -21,11 +21,11 @@ export class DisplayCollection extends Component {
     }
 }
 
-DisplayCollection.propTypes = {
+DisplayCollectionFeeds.propTypes = {
     "feeds": PropTypes.array.isRequired
 };
 
 function mapToStore(store) {
     return { "feeds": store.displayCollection };
 }
-export default connect(mapToStore)(DisplayCollection);
+export default connect(mapToStore)(DisplayCollectionFeeds);

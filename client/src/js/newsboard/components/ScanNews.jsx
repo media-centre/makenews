@@ -2,7 +2,7 @@
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import DisplayFeeds from "./DisplayFeeds";
 import DisplayArticle from "./DisplayArticle";
-import DisplayCollection from "./DisplayCollection";
+import DisplayCollection from "./DisplayCollectionFeeds";
 import NewsBoardTabs from "./NewsBoardTabs";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 import React, { Component, PropTypes } from "react";

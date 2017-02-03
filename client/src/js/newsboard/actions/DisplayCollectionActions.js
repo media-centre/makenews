@@ -15,14 +15,14 @@ export function displayCollectionFeeds(collectionName) {
     };
 }
 
-export function collectionFeeds(feeds) {
+function collectionFeeds(feeds) {
     return {
         "type": COLLECTION_FEEDS,
         feeds
     };
 }
 
-export function noCollectionFeeds() {
+function noCollectionFeeds() {
     return {
         "type": NO_COLLECTION_FEEDS
     };

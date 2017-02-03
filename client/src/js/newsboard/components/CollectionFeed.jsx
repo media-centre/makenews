@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
 
-export default class Collection extends Component {
+export default class CollectionFeed extends Component {
     render() {
         const feed = this.props.feed;
         return (<div className={this.props.active ? "collection-feed active" : "collection-feed"} onClick={this.props.toggle}>
@@ -23,7 +23,7 @@ export default class Collection extends Component {
     }
 }
 
-Collection.propTypes = {
+CollectionFeed.propTypes = {
     "feed": PropTypes.object.isRequired,
     "active": PropTypes.bool,
     "toggle": PropTypes.func
