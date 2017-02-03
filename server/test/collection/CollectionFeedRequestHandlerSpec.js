@@ -32,25 +32,111 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database", async () => {
-            let feeds = {
+            let feedIDs = {
                 "docs": [
                     {
-                        "_id": "b9c4a434f0e4aa72f7cf55f21ac1c18218a22d896dbfcd39fec7e55e9cbefd7352853c9656edcb45308bf0476e000678",
+                        "_id": "id",
                         "docType": "collectionFeed",
-                        "feedId": "b9c4a434f0e4aa72f7cf55f21ac1c18218a22d896dbfcd39fec7e55e9cbefd73",
+                        "feedId": "feedId",
+                        "collection": collection
+                    },
+                    {
+                        "_id": "id2",
+                        "docType": "collectionFeed",
+                        "feedId": "feedId2",
                         "collection": collection
                     }
                 ]
             };
+
+            let feeds = [
+                {
+                    "_id": "id",
+                    "title": "title",
+                    "description": "description"
+                },
+                {
+                    "_id": "id2",
+                    "title": "title2",
+                    "description": "description2"
+                }
+            ];
+
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
-            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feeds));
+            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feedIDs));
+
+            let getDocsMock = sandbox.mock(couchClient);
+
+            let getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
+                "_id": "id",
+                "title": "title",
+                "description": "description"
+            }));
+
+            let getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.resolve({
+                "_id": "id2",
+                "title": "title2",
+                "description": "description2"
+            }));
 
             let docs = await getCollectedFeeds(authSession, collection, offset);
             assert.deepEqual(docs, feeds);
             findDocumentsMock.verify();
+            getFirstFeedMock.verify();
+            getSecondFeedMock.verify();
         });
 
-        it("should reject with error when database throws unexpected response", async () => {
+        it("should get Collection Feeds from the database when one of the promise is rejected", async () => {
+            let feedIDs = {
+                "docs": [
+                    {
+                        "_id": "id",
+                        "docType": "collectionFeed",
+                        "feedId": "feedId",
+                        "collection": collection
+                    },
+                    {
+                        "_id": "id2",
+                        "docType": "collectionFeed",
+                        "feedId": "feedId2",
+                        "collection": collection
+                    }
+                ]
+            };
+
+            let feeds = [
+                {
+                    "_id": "id",
+                    "title": "title",
+                    "description": "description"
+                }
+            ];
+
+            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
+            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feedIDs));
+
+            let getDocsMock = sandbox.mock(couchClient);
+
+            let getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
+                "_id": "id",
+                "title": "title",
+                "description": "description"
+            }));
+
+            let getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.reject({
+                "_id": "id2",
+                "title": "title2",
+                "description": "description2"
+            }));
+
+            let docs = await getCollectedFeeds(authSession, collection, offset);
+            assert.deepEqual(docs, feeds);
+            findDocumentsMock.verify();
+            getFirstFeedMock.verify();
+            getSecondFeedMock.verify();
+        });
+
+        it("should reject with error when database throws unexpected response while getting feedIds", async () => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
             try{

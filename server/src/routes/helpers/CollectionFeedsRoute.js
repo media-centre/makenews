@@ -14,6 +14,7 @@ export default class CollectionFeedsRoute extends Route {
     }
 
     async handle() {
-        return await getCollectedFeeds(this.authSession, this.collectionName, this.offset);
+        let feeds = await getCollectedFeeds(this.authSession, this.collectionName, this.offset);
+        return feeds;
     }
 }
