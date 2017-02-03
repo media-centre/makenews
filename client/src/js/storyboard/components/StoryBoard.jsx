@@ -1,4 +1,3 @@
-/* eslint react/jsx-no-literals:0 */
 import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
@@ -18,12 +17,10 @@ export class WriteAStory extends Component {
     }
 }
 
-
 WriteAStory.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "children": PropTypes.node
 };
-
 
 function select(store) {
     return store;

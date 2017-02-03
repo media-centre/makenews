@@ -9,11 +9,11 @@ import { Route } from "react-router";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
 import Header from "./header/components/MainHeader";
 import ScanNews from "./newsboard/components/ScanNews";
-import WriteAStory from "./storyboard/components/WriteAStory";
+import StoryBoard from "./storyboard/components/StoryBoard";
 import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 import AddUrl from "./../js/config/components/AddUrl";
 import StoryBoardCards from "./storyboard/components/StoryBoardCards";
-import NewStoryCard from "./storyboard/components/NewStoryCard";
+import WriteStory from "./storyboard/components/WriteStory";
 
 export function renderRoutes() {
     return (
@@ -27,9 +27,9 @@ export function renderRoutes() {
                 </Route>
 
                 <Route path="/newsBoard" component={ScanNews} />
-                <Route path="/storyBoard" component={WriteAStory}>
+                <Route path="/storyBoard" component={StoryBoard}>
                     <Route path="/storyBoard/storyCards" component={StoryBoardCards} />
-                    <Route path="/storyBoard/story" component={NewStoryCard} />
+                    <Route path="/storyBoard/story" component={WriteStory} />
                 </Route>
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />

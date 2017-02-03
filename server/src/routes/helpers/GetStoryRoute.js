@@ -1,5 +1,5 @@
 import Route from "./Route";
-import { getStory, getStories } from "../../storyBoard/StoryRequestHandler";
+import { getStory } from "../../storyBoard/StoryRequestHandler";
 
 export default class GetStoryRoute extends Route {
     constructor(request, response, next) {
@@ -8,10 +8,11 @@ export default class GetStoryRoute extends Route {
         this.accessToken = this.request.cookies.AuthSession;
     }
 
+    validate() {
+        return super.validate(this.id);
+    }
+    
     async handle() {
-        if(this.id) {
-            return await getStory(this.id, this.accessToken);
-        }
-        return await getStories(this.accessToken);
+        return await getStory(this.id, this.accessToken);
     }
 }

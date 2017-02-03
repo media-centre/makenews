@@ -4,7 +4,7 @@ import AjaxClient from "../../utils/AjaxClient";
 import History from "../../History";
 import Toast from "../../utils/custom_templates/Toast";
 
-export class NewStoryCard extends Component {
+export class WriteStory extends Component {
 
     componentDidMount() {
         this.storyId = decodeURIComponent(this.props.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent("storyId").replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -16,10 +16,10 @@ export class NewStoryCard extends Component {
 
     getFromDb() {
         let ajax = AjaxClient.instance("/story");
-        ajax.get({ "id": this.storyId }).then((response) =>{
+        ajax.get({ "id": this.storyId }).then((response) => {
             this.story = response;
             this.refs.title.value = response.title;
-        }).catch(() =>{
+        }).catch(() => {
             Toast.show("You are trying to access the invalid story card.Please check the URL");
             let history = History.getHistory();
             history.push("/storyBoard/storyCards");
@@ -33,9 +33,8 @@ export class NewStoryCard extends Component {
         }
     }
     _addTitle() {
-        let title = this.refs.title.value.trim();
-        this.story.title = title;
-        this._updateStory(this.story);
+        this.story.title = this.refs.title.value.trim();
+        this._updateStory(this.story.title);
     }
 
     _updateStory(story) {
@@ -44,7 +43,7 @@ export class NewStoryCard extends Component {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        ajax.post(headers, story).then((response) => {
+        ajax.put(headers, { "title": story }).then((response) => {
             Toast.show("Title added successfully");
             let history = History.getHistory();
             history.push("/storyBoard/story?storyId=" + response.id);
@@ -56,18 +55,20 @@ export class NewStoryCard extends Component {
 
     render() {
         return (
-          <div className="story-card-title">
-              <input ref="title" className="title-box" type="text" placeholder="please enter title of the story" onKeyDown={(event) => this._onKeyDownInputBox(event)}/>
-              <button ref="saveButton"type="submit" className="save-box" value="save" onClick={() => {
-                  this._addTitle();
-              }}
-              >{ "SAVE" }</button>
-          </div>
+            <div>
+                <div className="story-card-title">
+                  <input ref="title" className="title-box" type="text" placeholder="please enter title of the story" onKeyDown={(event) => this._onKeyDownInputBox(event)}/>
+                  <button ref="saveButton"type="submit" className="save-box" value="save" onClick={() => {
+                      this._addTitle();
+                  }}
+                  >{ "SAVE" }</button>
+                </div>
+            </div>
         );
     }
 }
 
-NewStoryCard.propTypes = {
+WriteStory.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "location": PropTypes.object
 };
@@ -76,5 +77,4 @@ NewStoryCard.propTypes = {
 function select(store) {
     return store;
 }
-export default connect(select)(NewStoryCard);
-
+export default connect(select)(WriteStory);

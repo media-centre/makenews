@@ -5,12 +5,37 @@ import { assert } from "chai";
 
 describe("Get Story Route", () => {
     let sandbox = null;
-    beforeEach("AddStoryTitle", () => {
+    beforeEach("GetStoryRoute", () => {
         sandbox = sinon.sandbox.create();
     });
     afterEach("GetStoryRoute", () => {
         sandbox.restore();
     });
+
+    it("should validate id", async () => {
+        let result = await new GetStoryRoute({
+            "query": {
+                "id": "id_1"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        }, {}).validate();
+
+        assert.equal(result, "");
+    });
+
+    it("should validate id and give a message if id is not there", async () => {
+        let result = await new GetStoryRoute({
+            "query": { },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        }, {}).validate();
+
+        assert.equal(result, "missing parameters");
+    });
+
     it("should return single document", async () => {
         let document = {
             "title": "title2",
@@ -27,25 +52,6 @@ describe("Get Story Route", () => {
             }
         }, {}).handle();
         assert.deepEqual(result, document);
-    });
-
-    it("should return array of documents", async () => {
-        let documents = { "docs": {
-            "title": "title2",
-            "_id": "1234",
-            "rev": "1234"
-        } };
-        sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.resolve(documents));
-        let addStory = new GetStoryRoute({
-            "query": {
-                "id": "id_2"
-            },
-            "cookies": {
-                "AuthSession": "test_session"
-            }
-        }, {});
-        let result = await addStory.handle();
-        assert.deepEqual(documents, result);
     });
 
     it("should throw an error if document does not exist", async () => {

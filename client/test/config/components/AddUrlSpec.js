@@ -12,7 +12,6 @@
  import { expect } from "chai";
 
  describe("Add Url", () => {
-     //let addUrlDom = null,
      let store = null;
      let sandbox = null;
      let addUrlDom = null;
@@ -91,7 +90,7 @@
          expect(divClassName.length).to.equal(1);
      });
 
-     it("should call show when the response is Please enter proper url", () => {
+     it("should display the Toast when the response is Please enter proper url", () => {
          let addUrlStatus = { "message": "Please enter proper url", "added": false };
          store = createStore(() => ({
              "addUrlMessage": addUrlStatus

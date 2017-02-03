@@ -10,7 +10,7 @@ export class StoryBoardCards extends Component {
         this.props.dispatch(StoryBoardActions.getStories());
     }
     componentWillUnmount() {
-        this.props.dispatch(StoryBoardActions.clearStories());
+        this.props.dispatch(StoryBoardActions.clearStories);
     }
 
     _renderStoriesList() {
@@ -59,7 +59,7 @@ StoryBoardCards.propTypes = {
 
 function mapToStore(store) {
     return {
-        "stories": store.addStory
+        "stories": store.stories
     };
 }
 export default connect(mapToStore)(StoryBoardCards);

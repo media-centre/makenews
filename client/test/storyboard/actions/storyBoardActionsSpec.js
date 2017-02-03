@@ -9,13 +9,6 @@ describe("StoryBoardActions", (done) => {
         "_id": "id",
         "title": "title"
     };
-    describe("addStory", () => {
-        it("dispatch setStoryTitle action with story", () => {
-            let action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": story }];
-            let store = mockStore([], action, done);
-            store.dispatch(StoryBoardActions.addStory(story));
-        });
-    });
 
     describe("setStoryTitle", () => {
         it("should return an action type of ADD_STORY_TITLE and story with title and id", () => {
@@ -28,8 +21,7 @@ describe("StoryBoardActions", (done) => {
     describe("clearStories", () => {
         it("should return an action type of CLEAR_STORIES", () => {
             let action = { "type": StoryBoardActions.CLEAR_STORIES };
-            let expectedAction = StoryBoardActions.clearStories();
-            assert.deepEqual(action, expectedAction);
+            assert.deepEqual(action, StoryBoardActions.clearStories);
         });
     });
 

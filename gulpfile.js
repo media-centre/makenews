@@ -114,7 +114,7 @@ gulp.task("client:eslint", ["client:src-eslint", "client:test-eslint"]);
 gulp.task("client:checkin-ready", ["client:eslint", "client:test"]);
 
 gulp.task("client:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.client.testPath + "/**/**/**/*.jsx  " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.client.testPath + "/**/**/**/*.jsx  " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -176,7 +176,7 @@ gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
 gulp.task("common:checkin-ready", ["common:eslint", "common:test"]);
 
 gulp.task("common:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.common.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.common.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -246,7 +246,7 @@ gulp.task("server:test-eslint", function() {
 gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint"]);
 gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
 gulp.task("server:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -310,7 +310,7 @@ gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint", "functio
 gulp.task("checkin-ready", ["common:checkin-ready", "client:checkin-ready", "server:checkin-ready"]);
 
 gulp.task("test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel/register -R spec " +
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " +
     parameters.server.testPath + "/**/**/**/**/**/*.js " +
     parameters.common.testPath + "/**/**/**/**/**/*.js " +
     parameters.client.testPath + "/**/**/**/**/**/*.js " + parameters.client.testPath + "/**/**/**/**/**/*.jsx ", (err, stdout, stderr) => {
