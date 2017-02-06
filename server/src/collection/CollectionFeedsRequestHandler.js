@@ -2,13 +2,12 @@ import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
 
 export async function getCollectedFeeds(authSession, collectionName, offset) {
-    let feedIds = await getFeedIds(authSession, collectionName, offset);
-    return await getFeeds(authSession, feedIds.docs);
+    const couchClient = CouchClient.instance(authSession);
+    let feedIds = await getFeedIds(couchClient, collectionName, offset);
+    return await getFeeds(couchClient, feedIds.docs);
 }
 
-async function getFeeds(authSession, feedIds) {
-    let couchClient = CouchClient.instance(authSession);
-
+async function getFeeds(couchClient, feedIds) {
     let feedPromises = feedIds.map(async (collection) => {
         try {
             return await couchClient.getDocument(collection.feedId);
@@ -20,8 +19,7 @@ async function getFeeds(authSession, feedIds) {
     return R.reject(R.isEmpty, feeds);
 }
 
-async function getFeedIds(authSession, collectionName, offset) {
-    let couchClient = CouchClient.instance(authSession);
+async function getFeedIds(couchClient, collectionName, offset) {
     let selector = {
         "selector": {
             "docType": {

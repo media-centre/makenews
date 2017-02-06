@@ -66,7 +66,8 @@ DisplayArticle.propTypes = {
 };
 
 function mapToStore(store) {
-    return { "article": store.selectedArticle,
+    return {
+        "article": store.selectedArticle,
         "newsBoardCurrentSourceTab": store.newsBoardCurrentSourceTab,
         "addToCollectionStatus": store.addToCollectionStatus
     };

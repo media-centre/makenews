@@ -7,11 +7,11 @@ import mockStore from "../../helper/ActionHelper";
 import sinon from "sinon";
 
 describe("DisplayCollectionAction", () => {
-    let sandbox = null, collectionName = null;
+    let sandbox = null, collection = null;
     let ajaxClientInstance = null;
 
     beforeEach("DisplayCollectionAction", () => {
-        collectionName = "test";
+        collection = "test";
         sandbox = sinon.sandbox.create();
 
         ajaxClientInstance = AjaxClient.instance("/collectionFeeds");
@@ -26,20 +26,20 @@ describe("DisplayCollectionAction", () => {
         let feeds = [{ "_id": "id", "title": "someTitle" }];
 
         let getMock = sandbox.mock(ajaxClientInstance).expects("get")
-            .withArgs({ "collectionName": collectionName }).returns(Promise.resolve(feeds));
+            .withArgs({ "collection": collection }).returns(Promise.resolve(feeds));
 
         let store = mockStore([], [{ "type": COLLECTION_FEEDS, feeds }], done);
-        store.dispatch(displayCollectionFeeds(collectionName));
+        store.dispatch(displayCollectionFeeds(collection));
 
         getMock.verify();
     });
 
     it("should dispatch no colletion feeds when failed to fetch the feeds", (done) => {
         let getMock = sandbox.mock(ajaxClientInstance).expects("get")
-            .withArgs({ "collectionName": collectionName }).returns(Promise.reject("error"));
+            .withArgs({ "collection": collection }).returns(Promise.reject("error"));
 
         let store = mockStore([], [{ "type": NO_COLLECTION_FEEDS }], done);
-        store.dispatch(displayCollectionFeeds(collectionName));
+        store.dispatch(displayCollectionFeeds(collection));
 
         getMock.verify();
     });

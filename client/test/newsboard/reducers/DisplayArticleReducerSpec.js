@@ -1,7 +1,6 @@
-import { webArticleMarkup, displayCollection } from "./../../../src/js/newsboard/reducers/DisplayArticleReducers";
+import { webArticleMarkup } from "./../../../src/js/newsboard/reducers/DisplayArticleReducers";
 import { WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
-import { COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 describe("DisplayArticleReducer", () => {
 
@@ -13,20 +12,6 @@ describe("DisplayArticleReducer", () => {
 
         it("should return article empty string by default", () => {
             expect(webArticleMarkup({ "markup": "", "isHTML": false }, {})).to.deep.equals({ "markup": "", "isHTML": false });
-        });
-    });
-
-    describe("displayCollection", () => {
-
-        it("should return feeds with type collection feeds", () => {
-            let feeds = [{ "_id": "id", "title": "someTitle" }];
-            let action = { "type": COLLECTION_FEEDS, "feeds": feeds };
-
-            assert.deepEqual(displayCollection([], action), feeds);
-        });
-
-        it("should return empty array by default", () => {
-            assert.deepEqual(displayCollection(), []);
         });
     });
 });

@@ -37,8 +37,8 @@ export default (app) => {
         new CollectionRoute(request, response).getAllCollections();
     });
 
-    app.get("/collectionFeeds", (request, response) => {
-        RouteLogger.instance().info("collectionFeedsRoute:: GET /collectionFeeds request received url = %s", request.url);
+    app.get("/collection-feeds", (request, response) => {
+        RouteLogger.instance().info("collectionFeedsRoute:: GET /collection-feeds request received url = %s", request.url);
         new CollectionFeedsRoute(request, response).process();
     });
 };
