@@ -3,7 +3,7 @@ import { COLLECTION_FEEDS, COLLECTION_NAME } from "./../actions/DisplayCollectio
 export function displayCollection(state = [], action = {}) {
     switch(action.type) {
     case COLLECTION_FEEDS: {
-        return Object.assign([], action.feeds);
+        return Object.assign([], state.concat(action.feeds)); //eslint-disable-line new-cap
     }
     default: return state;
     }

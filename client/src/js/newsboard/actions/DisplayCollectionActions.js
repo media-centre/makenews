@@ -5,22 +5,25 @@ export const COLLECTION_NAME = "COLLECTION_NAME";
 
 const noCollectionFeeds = { "type": NO_COLLECTION_FEEDS };
 
-export function displayCollectionFeeds(collection) {
+export function displayCollectionFeeds(offset, collection, callback) {
     let ajaxClient = AjaxClient.instance("/collection-feeds");
 
     return async dispatch => {
         try {
-            let feeds = await ajaxClient.get({ collection });
-            dispatch(collectionFeeds(feeds));
+            let feeds = await ajaxClient.get({ collection, offset });
+            let result = {
+                "docsLength": 0
+            };
+            if (feeds.length) {
+                dispatch(collectionFeeds(feeds));
+                result.docsLength = feeds.length;
+            }
+            let defaultPageSize = 25;
+            result.hasMoreFeeds = feeds.length === defaultPageSize;
+            callback(result); //eslint-disable-line callback-return
         } catch (err) {
             dispatch(noCollectionFeeds);
         }
-    };
-}
-
-export function setCollectionName(collectionName) {
-    return dispatch => {
-        dispatch(currentCollection(collectionName));
     };
 }
 
@@ -31,7 +34,7 @@ function collectionFeeds(feeds) {
     };
 }
 
-function currentCollection(collection) {
+export function setCollectionName(collection) {
     return {
         "type": COLLECTION_NAME,
         collection
