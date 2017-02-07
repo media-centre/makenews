@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import ReactDOM from "react-dom";
 import CollectionFeed from "./CollectionFeed";
-import { displayCollectionFeeds } from "./../actions/DisplayCollectionActions";
+import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -11,6 +11,10 @@ export class DisplayCollectionFeeds extends Component {
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
+    }
+
+    componentWillMount() {
+        this.props.dispatch(clearFeeds());
     }
 
     componentDidMount() {
@@ -23,6 +27,7 @@ export class DisplayCollectionFeeds extends Component {
         if(this.props.collectionName !== nextProps.collectionName) {
             this.hasMoreFeeds = true;
             this.offset = 0;
+            this.props.dispatch(clearFeeds());
             this.getMoreFeedsCallback(nextProps.collectionName);
         }
     }

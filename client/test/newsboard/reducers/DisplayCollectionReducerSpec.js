@@ -1,5 +1,5 @@
 import { displayCollection, currentCollection } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
-import { COLLECTION_FEEDS, COLLECTION_NAME } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+import { COLLECTION_FEEDS, COLLECTION_NAME, CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { assert } from "chai";
 
 describe("DisplayCollectionReducer", () => {
@@ -11,6 +11,12 @@ describe("DisplayCollectionReducer", () => {
             let action = { "type": COLLECTION_FEEDS, "feeds": feeds };
 
             assert.deepEqual(displayCollection([], action), feeds);
+        });
+
+        it("should return feeds with type collection feeds", () => {
+            let action = { "type": CLEAR_COLLECTION_FEEDS };
+
+            assert.deepEqual(displayCollection([], action), []);
         });
 
         it("should return empty array by default", () => {
