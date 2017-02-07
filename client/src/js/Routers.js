@@ -14,6 +14,7 @@ import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 import AddUrl from "./../js/config/components/AddUrl";
 import StoryBoardCards from "./storyboard/components/StoryBoardCards";
 import WriteStory from "./storyboard/components/WriteStory";
+import EditStory from "./storyboard/components/EditStory";
 
 export function renderRoutes() {
     return (
@@ -27,9 +28,10 @@ export function renderRoutes() {
                 </Route>
 
                 <Route path="/newsBoard" component={ScanNews} />
-                <Route path="/storyBoard" component={StoryBoard}>
-                    <Route path="/storyBoard/storyCards" component={StoryBoardCards} />
-                    <Route path="/storyBoard/story" component={WriteStory} />
+                <Route path="/story-board" component={StoryBoard}>
+                    <Route path="/story-board/stories" component={StoryBoardCards} />
+                    <Route path="/story-board/story" component={WriteStory} />
+                    <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
                 </Route>
                 <Route path="/twitterSuccess" component={TwitterSuccess} />
                 <Route path="/profile" component={UserProfile} />

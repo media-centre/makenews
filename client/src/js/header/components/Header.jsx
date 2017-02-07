@@ -8,7 +8,7 @@ export default class Header extends Component {
         return(
             <div>
                 <HeaderTab url="/newsBoard" name={this.props.mainHeaderStrings.newsBoard.Name} currentHeaderTab={this.props.currentHeaderTab}/>
-                <HeaderTab url="/storyBoard/storyCards" name={this.props.mainHeaderStrings.storyBoard.Name} currentHeaderTab={this.props.currentHeaderTab}/>
+                <HeaderTab url="/story-board/storyCards" name={this.props.mainHeaderStrings.storyBoard.Name} currentHeaderTab={this.props.currentHeaderTab}/>
                 <div className = "header-tabs-right">
                     <ConfigureTab url="/configure/web" name={this.props.mainHeaderStrings.configure.Name} currentHeaderTab={this.props.currentHeaderTab}/>
                     <UserProfileTab/>

@@ -1,18 +1,14 @@
 @import "../utils/_variable";
 
 html, body {
-  margin: 0px;
+  margin: 0;
   font-family: $font-family;
   font-size: $medium-font-size;
   font-weight: 100;
 }
 ul {
-  margin: 0px;
-  padding: 0px;
-}
-
-li {
- list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .left {
@@ -38,10 +34,10 @@ li {
 }
 
 .bottom-box-shadow {
-  -webkit-box-shadow: 0px 1px 4px #403E3E;
-  -moz-box-shadow: 0px 1px 4px #403E3E;
-  -ms-box-shadow: 0px 1px 4px #403E3E;
-  box-shadow: 0px 1px 4px #403E3E;
+  -webkit-box-shadow: 0 1px 4px #403E3E;
+  -moz-box-shadow: 0 1px 4px #403E3E;
+  -ms-box-shadow: 0 1px 4px #403E3E;
+  box-shadow: 0 1px 4px #403E3E;
 }
 
 img {
@@ -176,9 +172,9 @@ button {
 
 .fixed-header {
   position: fixed;
-  left: 0px;
-  right: 0px;
-  top: 0px;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 
 .v-center {

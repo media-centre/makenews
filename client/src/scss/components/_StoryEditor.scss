@@ -1,0 +1,23 @@
+@import "./../../../../node_modules/draft-js/dist/Draft";
+
+.story-editor-container {
+  .story-editor {
+
+    padding: 2rem;
+
+    &__controls {
+      background: $dark-background-color;
+      padding: 5px;
+
+      .icon {
+        font-size: 1.2rem;
+        padding: 10px;
+        color: $primary-color-light;
+
+        &.active {
+          color: $primary-color-dark;
+        }
+      }
+    }
+  }
+}

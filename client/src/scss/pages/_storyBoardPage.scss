@@ -68,5 +68,21 @@
     font-weight: bold;
     color: $secondary-color;
   }
+}
 
+.story-board {
+  display: flex;
+
+  .collections {
+    border-right: 1px solid $primary-color-light;
+    flex-basis: 420px;
+    box-sizing: border-box;
+    height: calc(100vh - #{$main-header-height});
+    background: $background-color;
+  }
+
+  .story-editor-container {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
 }

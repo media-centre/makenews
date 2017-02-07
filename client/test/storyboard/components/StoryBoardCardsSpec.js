@@ -23,9 +23,9 @@ describe("StoryBoardCards", () => {
         assert.strictEqual("title1", storyTitle);
     });
 
-    it("should have the storycard link to /storyBoard/story?storyId with storyId", () => {
-        assert.strictEqual("/storyBoard/story?storyId=id1", storyBoardCards.refs.storyid1.props.to);
-        assert.strictEqual("/storyBoard/story?storyId=id2", storyBoardCards.refs.storyid2.props.to);
+    it("should have the storycard link to /story-board/story/edit/id1 with storyId", () => {
+        assert.strictEqual("/story-board/story/edit/id1", storyBoardCards.refs.storyid1.props.to);
+        assert.strictEqual("/story-board/story/edit/id2", storyBoardCards.refs.storyid2.props.to);
     });
 
     it("should display the title of the stories", () => {
@@ -34,8 +34,8 @@ describe("StoryBoardCards", () => {
     });
 
     it("should have the new story card link to /storyBoard/newStory", () => {
-        assert.strictEqual("/storyBoard/story", storyBoardCards.refs.newStoryCard.props.to);
-        assert.strictEqual("/storyBoard/story", storyBoardCards.refs.newStoryBar.props.to);
+        assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryCard.props.to);
+        assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryBar.props.to);
     });
 
     it("should display the CreateNewStory", () => {
