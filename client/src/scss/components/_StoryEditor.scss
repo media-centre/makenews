@@ -19,5 +19,12 @@
         }
       }
     }
+
+    .editor {
+      &__link {
+        color: $secondary-color;
+        text-decoration: underline;
+      }
+    }
   }
 }

@@ -1,14 +1,23 @@
 import React, { Component } from "react";
-import { Editor, EditorState, RichUtils } from "draft-js";
+import { Editor, EditorState, RichUtils, CompositeDecorator } from "draft-js";
 
 export default class StoryEditor extends Component {
 
     constructor() {
         super();
-        this.state = { "editorState": EditorState.createEmpty() };
+
+        const decorator = new CompositeDecorator([
+            {
+                "strategy": this._findLinkEntities,
+                "component": this.Link
+            }
+        ]);
+
+        this.state = { "editorState": EditorState.createEmpty(decorator), "showUrlInput": false };
         this._updateEditor = this._updateEditor.bind(this);
         this._handleKeyCommand = this._handleKeyCommand.bind(this);
         this._onTab = this._onTab.bind(this);
+        this._handleEnter = this._handleEnter.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +62,58 @@ export default class StoryEditor extends Component {
         this._focusEditor();
     }
 
+
+    Link(props) {
+        const { url } = props.contentState.getEntity(props.entityKey).getData();
+        return (<a href={url} className="editor__link" target="_blank" rel="noopener noreferrer">{ props.children }</a>);
+    }
+
+    _findLinkEntities(contentBlock, callback, contentState) {
+        contentBlock.findEntityRanges(
+            (character) => {
+                const entityKey = character.getEntity();
+                return (
+                    entityKey !== null &&
+                    contentState.getEntity(entityKey).getType() === "LINK"
+                );
+            },
+            callback
+        );
+    }
+
+    _handleEnter(event) {
+        const ENTER = 13;
+        if (event.keyCode === ENTER) {
+            this._addLink(this.refs.url.value);
+        }
+    }
+
+    _addLink(url) {
+        const { editorState } = this.state;
+        const contentState = editorState.getCurrentContent();
+        const contentStateWithEntity = contentState.createEntity(
+            "LINK",
+            "MUTABLE",
+            { url }
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { "currentContent": contentStateWithEntity });
+        this.setState({
+            "editorState": RichUtils.toggleLink(
+                newEditorState,
+                newEditorState.getSelection(),
+                entityKey
+            ),
+            "showURLInput": false
+        }, () => {
+            setTimeout(() => this.refs.editor.focus());
+        });
+    }
+
+    _showLinkPrompt() {
+        this.setState({ "showUrlInput": true });
+    }
+
     _onTab(event) {
         const maxDepth = 4;
         const state = this.state.editorState;
@@ -83,6 +144,11 @@ export default class StoryEditor extends Component {
                         this._toggleBlockStyle("unordered-list-item");
                     }}
                     />
+                    <i className="icon fa fa-chain" onMouseDown = {() => {
+                        this._showLinkPrompt();
+                    }}
+                    />
+                    { this.state.showUrlInput && <input ref="url" placeholder="Enter Url" onKeyDown={this._handleEnter}/> }
                 </div>
                 <div className="story-editor">
                     <Editor
