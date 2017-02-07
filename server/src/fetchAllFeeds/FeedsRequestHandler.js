@@ -5,15 +5,12 @@ export default class FeedsRequestHandler {
         return new FeedsRequestHandler();
     }
 
-    async fetchFeeds(authSession, offset, sourceType, sources) {
+    async fetchFeeds(authSession, offset, filter) {
         let couchClient = CouchClient.instance(authSession);
         let selector = {
             "selector": {
                 "docType": {
                     "$eq": "feed"
-                },
-                "sourceType": {
-                    "$in": sourceType
                 },
                 "pubDate": {
                     "$gt": null
@@ -23,15 +20,25 @@ export default class FeedsRequestHandler {
             "sort": [{ "pubDate": "desc" }],
             "skip": offset
         };
-        if(sources) {
-            let operator = "$eq";
-            if(sources instanceof Array) {
-                operator = "$in";
-            }
-            selector.selector.sourceId = {};
-            selector.selector.sourceId[operator] = sources;
-
+        if(filter && filter.sources) {
+            let sourceFilters = [];
+            this.prepareSourceFilter("web", filter.sources, sourceFilters);
+            this.prepareSourceFilter("facebook", filter.sources, sourceFilters);
+            this.prepareSourceFilter("twitter", filter.sources, sourceFilters);
+            selector.selector.$or = sourceFilters;
         }
         return await couchClient.findDocuments(selector);
+    }
+
+    prepareSourceFilter(sourceType, sources = {}, sourceFilters) {
+        var sourceIds = sources[sourceType];
+        if(sourceIds) {
+            let sourceFilter = { "sourceType": { "$eq": sourceType } };
+            let [sourceId] = sourceIds;
+            if(sourceId) {
+                sourceFilter.sourceId = { "$in": sourceIds };
+            }
+            sourceFilters.push(sourceFilter);
+        }
     }
 }

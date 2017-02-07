@@ -40,8 +40,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
                     "authSession": authSession
                 },
                 "query": {
-                    "offset": offset,
-                    "sourceType": sourceType
+                    "offset": offset
                 }
             };
         });
@@ -76,35 +75,6 @@ describe("FetchAllConfiguredFeedsRoute", () => {
             await new FetchAllConfiguredFeedsRoute(request, response, {}).fetchFeeds();
             assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);
             assert.deepEqual(response.json(), { "message": "bad request" });
-        });
-    });
-
-    describe("validate Source Type", () => {
-        let fetchAllConfiguredFeedsRoute = null, sourceType = null, request = null, response = null;
-        beforeEach("validate Source Type", () => {
-            sourceType = "web";
-            response = mockResponse();
-            request = {
-                "cookies": {
-                    "authSession": {}
-                },
-                "query": {
-                    "offset": 0,
-                    "sourceType": sourceType
-                }
-            };
-            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
-        });
-
-        it("should return the value if source type is exist in predefined sources", () => {
-            assert.deepEqual(fetchAllConfiguredFeedsRoute.valid(), [sourceType]);
-        });
-
-        it("should return false if source type is empty", () => {
-            request.query.sourceType = "";
-            fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
-
-            assert.isFalse(fetchAllConfiguredFeedsRoute.valid());
         });
     });
 });

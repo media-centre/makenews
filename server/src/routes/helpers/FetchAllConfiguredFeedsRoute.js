@@ -9,24 +9,17 @@ export default class FetchAllConfiguredFeeds extends Route {
         super(request, response, next);
         this.authSession = this.request.cookies.AuthSession;
         this.offset = this.validateNumber(this.request.query.offset);
-        this.sourceType = this.request.query.sourceType;
-        this.sources = this.request.query.source;
-    }
-
-    valid() {
-        return !StringUtil.isEmptyString(this.sourceType) && newsBoardSourceTypes[this.sourceType];
+        if(this.request.query.filter) {
+            this.filter = JSON.parse(this.request.query.filter);
+        }
     }
 
     async fetchFeeds() {
         try {
             let feedsRequestHandler = FeedsRequestHandler.instance();
-            if(this.valid()) {
-                let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, newsBoardSourceTypes[this.sourceType], this.sources);
-                RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
-                this._handleSuccess(feeds);
-            } else {
-                this._handleInvalidRequest({ "message": "invalid sourceType" });
-            }
+            let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, this.filter);
+            RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
+            this._handleSuccess(feeds);
         } catch (error) {
             RouteLogger.instance().debug(`FeedsRequestHandler:: failed to fetch the feeds . Error: ${JSON.stringify(error)}`);
             this._handleBadRequest();
