@@ -13,6 +13,7 @@ import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reduc
 import { stories } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
 import { setLastAccestime } from "./utils/SessionReducer";
+import { currentFilter, currentFilterSource } from "./newsboard/filter/FilterReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -39,7 +40,9 @@ const contentDiscoveryApp = combineReducers({
     displayCollection,
     currentCollection,
     stories,
-    setLastAccestime
+    setLastAccestime,
+    currentFilter,
+    currentFilterSource
 });
 
 export default contentDiscoveryApp;

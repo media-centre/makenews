@@ -5,7 +5,7 @@ import { newsBoardSourceTypes } from "./../../utils/Constants";
 export default class NewsBoardTabs extends Component {
     render() {
         return (
-            <div className="source-type-bar">
+            <div>
                 <NewsBoardTab sourceIcon="line-chart" sourceType={newsBoardSourceTypes.trending}/>
                 <NewsBoardTab sourceIcon="globe" sourceType={newsBoardSourceTypes.web}/>
                 <NewsBoardTab sourceIcon="facebook-square" sourceType={newsBoardSourceTypes.facebook}/>

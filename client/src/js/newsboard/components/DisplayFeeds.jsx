@@ -68,7 +68,14 @@ export class DisplayFeeds extends Component {
             } else if(sourceType === "collections") {
                 this.props.dispatch(DisplayFeedActions.getAllCollections(this.offset, callback));
             } else {
-                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, sourceType, callback));
+                let filter = {};
+                if(sourceType === "trending") {
+                    filter.sources = this.props.currentFilterSource;
+                } else {
+                    filter.sources = {};
+                    filter.sources[sourceType] = this.props.currentFilterSource[sourceType];
+                }
+                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, callback, filter));
             }
         }
     }
@@ -181,7 +188,8 @@ function mapToStore(store) {
         "feeds": store.fetchedFeeds,
         "sourceType": store.newsBoardCurrentSourceTab,
         "articleToDisplay": store.selectedArticle._id,
-        "addArticleToCollection": store.addArticleToCollection
+        "addArticleToCollection": store.addArticleToCollection,
+        "currentFilterSource": store.currentFilterSource
     };
 }
 
@@ -190,7 +198,9 @@ DisplayFeeds.propTypes = {
     "feeds": PropTypes.array.isRequired,
     "sourceType": PropTypes.string.isRequired,
     "articleToDisplay": PropTypes.string,
-    "addArticleToCollection": PropTypes.object
+    "addArticleToCollection": PropTypes.object,
+    "currentFilterSource": PropTypes.object
+
 };
 
 export default connect(mapToStore)(DisplayFeeds);

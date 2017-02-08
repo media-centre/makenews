@@ -2,9 +2,7 @@
   display: flex;
 
   .source-type-bar {
-    padding: 20px 5px;
-    position: fixed;
-    height: 100%;
+    padding: 0 5px 20px;
     box-sizing: border-box;
     flex-basis: 54px;
     background-color: $dark-background-color;
@@ -31,13 +29,25 @@
         color: $primary-color-light;
       }
     }
+
+    .source-filter.news-board-tab {
+      padding: 10px;
+      width: 1.5em;
+      height: 1.5em;
+      text-align: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+
+      &.hidden {
+        visibility: hidden;
+      }
+    }
   }
   .configured-feeds-container {
     $flex-basis-width: 420px;
 
     background-color: $background-color;
     height: calc(100vh - #{$main-header-height});
-    margin-left: 54px;
     overflow-y: auto;
     flex-basis: $flex-basis-width;
     border-right: 2px solid lighten($primary-color, 35%);

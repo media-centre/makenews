@@ -5,11 +5,14 @@ import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
 
 class ConfiguredSources extends Component {
-    
-    componentDidMount() {
-        this.props.dispatch(getConfiguredSources());
-        this.props.dispatch(searchInConfiguredSources(""));
 
+    constructor() {
+        super();
+        this.sourcesObject = new Sources();
+    }
+
+    componentDidMount() {
+        this.sourcesObject.init();
     }
 
     _renderSources(sourceType, searchKey) {
@@ -81,7 +84,6 @@ class ConfiguredSources extends Component {
         return (
             <aside className="configured-sources-container">
                 { this._displayConfiguredSources() }
-
                 { this._searchBar() }
             </aside>
         );
@@ -102,5 +104,12 @@ ConfiguredSources.propTypes = {
     "searchKeyword": PropTypes.string,
     "currentTab": PropTypes.string.isRequired
 };
+
+export class Sources {
+    init() {
+        this.props.dispatch(getConfiguredSources());
+        this.props.dispatch(searchInConfiguredSources(""));
+    }
+}
 
 export default connect(mapToStore)(ConfiguredSources);

@@ -4,7 +4,6 @@ export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
-export const NEW_COLLECTION = "NEW_COLLECTION";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -23,10 +22,9 @@ export const displayArticle = (article) => ({
     article
 });
 
-export function displayFeedsByPage(pageIndex, sourceType, callback = () => {}) {
-    let ajaxClient = AjaxClient.instance("/feeds", true);
-
-    return _getFeeds(ajaxClient, { "offset": pageIndex, "sourceType": sourceType }, callback);
+export function displayFeedsByPage(pageIndex, callback = () => {}, filter = {}) {
+    let ajaxClient = AjaxClient.instance("/feeds");
+    return _getFeeds(ajaxClient, { "offset": pageIndex, "filter": JSON.stringify(filter) }, callback);
 }
 
 
@@ -62,7 +60,7 @@ function _getFeeds(ajaxClient, params, callback) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             }
-            let defaultPageSize = 25;
+            const defaultPageSize = 25;
             result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
             callback(result); //eslint-disable-line callback-return
         } catch(err) {
