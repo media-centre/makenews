@@ -5,7 +5,7 @@ export default class StoryEditor extends Component {
 
     constructor() {
         super();
-        this.state = { "editorContent": "something" };
+        this.state = { "editorContent": "" };
         this._onChange = this._onChange.bind(this);
     }
 
@@ -15,7 +15,7 @@ export default class StoryEditor extends Component {
 
     render() {
         return (
-            <ReactQuill className = "story-editor-container" value={this.state.editorContent} onChange={this._onChange} theme="snow"/>
+            <ReactQuill className = "story-editor-container" placeholder = "Write a story" value={this.state.editorContent} onChange={this._onChange} theme="snow"/>
         );
     }
 }

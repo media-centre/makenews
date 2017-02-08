@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import StoryEditor from "./StoryEditor";
 
 export default class EditStory extends Component {
@@ -13,7 +13,3 @@ export default class EditStory extends Component {
         );
     }
 }
-
-EditStory.propTypes = {
-    "params": PropTypes.object.isRequired
-};

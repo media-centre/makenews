@@ -29,7 +29,7 @@
 @import "components/SourcesTab";
 @import "components/spinner";
 @import "components/Input";
-@import "components/StoryEditor";
+@import "../../../node_modules/react-quill/node_modules/quill/dist/quill.snow";
 
 //responsive css
 @import "layouts/responsive/mobile";
