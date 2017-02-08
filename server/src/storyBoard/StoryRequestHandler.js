@@ -57,3 +57,8 @@ export async function getStories(authSession) {
     };
     return await couchClient.findDocuments(query);
 }
+
+export async function saveStory(story, authSession) {
+    let couchInstance = CouchClient.instance(authSession);
+    return await couchInstance.updateDocument(story);
+}

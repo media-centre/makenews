@@ -9,7 +9,10 @@ export default class AddStoryTitleRoute extends Route {
     }
 
     validate() {
-        return super.validate(this.story);
+        if(super.validate(this.story.title) && super.validate(this.story.body)) {
+            return "";
+        }
+        return "cannot save empty story";
     }
 
     async handle() {
