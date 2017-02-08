@@ -15,7 +15,7 @@ export default class CollectionFeed extends Component {
     render() {
         const feed = this.props.feed;
         return (
-            <div className={this.props.active ? "collection-feed active" : "collection-feed"} onClick={this.props.toggle}>
+            <div className="collection-feed">
                 <div className="collection-feed__title">{feed.title}</div>
 
                 <div className="collection-feed__source">
@@ -36,7 +36,5 @@ export default class CollectionFeed extends Component {
 
 CollectionFeed.propTypes = {
     "feed": PropTypes.object.isRequired,
-    "active": PropTypes.bool,
-    "toggle": PropTypes.func,
     "dispatch": PropTypes.func
 };

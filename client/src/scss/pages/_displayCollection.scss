@@ -48,10 +48,9 @@
         color: $secondary-color;
         border: 0;
       }
-    }
-
-    .active {
-      background-color: #ffffff;
+      &:hover{
+        background-color: #ffffff;
+      }
     }
   }
 

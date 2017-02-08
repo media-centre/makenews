@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import AppWindow from "./../../utils/AppWindow";
 import { connect } from "react-redux";
-import R from "ramda"; //eslint-disable-line id-length
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import { setCollectionName } from "../actions/DisplayCollectionActions";
@@ -12,7 +11,7 @@ import StringUtil from "../../../../../common/src/util/StringUtil";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "index": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -95,16 +94,20 @@ export class DisplayFeeds extends Component {
         }
     }
 
+    onItemClick(index) {
+        this.setState({ "index": index });
+    }
+
     _renderCollections() {
-        let collectionsDOM = (collection) =>
-            <li className="collection-name" onClick={() => {
+        return this.props.feeds.map((collection, index) =>
+            <li className={this.state.index === index ? "collection-name active" : "collection-name"} onClick={() => {
+                this.onItemClick(index);
                 this.props.dispatch(setCollectionName(collection.collection));
                 if(this.props.addArticleToCollection.id) {
                     this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
                 }
             }} key={collection._id}
-            > { collection.collection }</li>;
-        return R.map(collectionsDOM, this.props.feeds);
+            > { collection.collection }</li>);
     }
 
     showPopup() {

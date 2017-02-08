@@ -162,8 +162,8 @@
 
   .configured-sources {
     width: 100%;
-    padding: 0px;
-    marging: 0px;
+    padding: 0;
+    margin: 0;
   }
 
  .collection-name {
@@ -172,10 +172,11 @@
       font-size: 17px;
       cursor: pointer;
       color: $primary-color-light;
-      &:hover {
-        color: $secondary-color;
-        background-color: white;
-      }
+    }
+
+    .active{
+      background-color: white;
+      color: $secondary-color;
     }
 
   .create_collection {

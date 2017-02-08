@@ -27,12 +27,6 @@ describe("CollectionFeed", () => {
         expect(feedDom.props.className).to.equals("collection-feed");
     });
 
-    it("should have a div with feed--highlight class when the active prop is true", () => {
-        feedDom = renderer.render(<CollectionFeed active feed={feed} toggle={onToggle}/>);
-        expect(feedDom.props.className).to.equals("collection-feed active");
-    });
-
-
     it("should have title ", () => {
         let title = feedDom.props.children[0].props;
 
