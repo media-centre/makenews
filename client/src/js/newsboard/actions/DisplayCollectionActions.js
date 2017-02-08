@@ -3,6 +3,7 @@ export const COLLECTION_FEEDS = "COLLECTION_FEEDS";
 export const NO_COLLECTION_FEEDS = "NO_COLLECTION_FEEDS";
 export const COLLECTION_NAME = "COLLECTION_NAME";
 export const CLEAR_COLLECTION_FEEDS = "CLEAR_COLLECTION_FEEDS";
+export const READ_MORE = "READ_MORE";
 
 const noCollectionFeeds = { "type": NO_COLLECTION_FEEDS };
 
@@ -39,6 +40,13 @@ export function setCollectionName(collection) {
     return {
         "type": COLLECTION_NAME,
         collection
+    };
+}
+
+export function setReadMore(readMore) {
+    return {
+        "type": READ_MORE,
+        readMore
     };
 }
 

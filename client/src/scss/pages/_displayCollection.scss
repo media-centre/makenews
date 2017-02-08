@@ -43,10 +43,21 @@
         color: $primary-color;
         font-size: $medium-font-size;
       }
+      &__readmore {
+        float: right;
+        color: $secondary-color;
+        border: 0;
+      }
     }
 
     .active {
       background-color: #ffffff;
     }
+  }
+
+  .collection-header {
+    padding: 14px 10px;
+    background: $dark-background-color;
+    height: 31px;
   }
 }

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import DisplayWebArticle from "./DisplayWebArticle";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import { bookmarkArticle, addArticleToCollection } from "./../actions/DisplayArticleActions";
+import { setReadMore } from "./../actions/DisplayCollectionActions";
 import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 import Toast from "./../../utils/custom_templates/Toast";
@@ -12,8 +13,10 @@ export class DisplayArticle extends Component {
     render() {
         return (
             <article className="display-article">
-                <header className="display-article__header">
+                {this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
+                    ? <header className="display-article__header back"> <button className="back__button" onClick={() => { this.props.dispatch(setReadMore(false)); }}><i className="icon fa fa-arrow-left" aria-hidden="true"/> Back</button> </header>
 
+                    : <header className="display-article__header">
                     <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
                         this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab));
                     }}
@@ -29,7 +32,7 @@ export class DisplayArticle extends Component {
                              <i className="icon fa fa-bookmark"/> Bookmark
                           </div>
                     }
-                </header>
+                </header>}
                 <main className="article">
                     <h1 className="article__title">
                         { this.props.article.title }

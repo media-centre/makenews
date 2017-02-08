@@ -31,7 +31,7 @@ export class DisplayWebArticle extends Component {
 }
 
 DisplayWebArticle.propTypes = {
-    "article": PropTypes.string.isRequired,
+    "article": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "selectedArticle": PropTypes.object.isRequired,
     "isFetchingArticle": PropTypes.bool.isRequired

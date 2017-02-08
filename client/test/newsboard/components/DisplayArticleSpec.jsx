@@ -111,6 +111,7 @@ describe("DisplayArticle", () => {
 
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
+
     });
 
     describe("headerTag", () => {
@@ -207,6 +208,31 @@ describe("DisplayArticle", () => {
             TestUtils.Simulate.click(bookmarkClick);
 
             bookmarkMock.verify();
+        });
+
+        it("should have back button when source Type collection", () => {
+            feed = {
+                "images": [{ "url": "image url" }],
+                "videos": [{ "thumbnail": "video image url" }],
+                "title": "Some Title",
+                "description": "Some Description",
+                "sourceType": "web",
+                "tags": ["Hindu"],
+                "pubDate": "2017-01-31T06:58:27.000Z"
+            };
+
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }}/>);
+            let mainDOM = displayArticleDom.props.children[0]; //eslint-disable-line no-magic-numbers
+            let backButton = mainDOM.props.children[1]; //eslint-disable-line no-magic-numbers
+            let arrowIcon = backButton.props.children[0]; //eslint-disable-line no-magic-numbers
+
+            expect(mainDOM.type).to.be.equal("header");
+            expect(mainDOM.props.className).to.be.equal("display-article__header back");
+
+            expect(backButton.type).to.be.equal("button");
+            expect(backButton.props.className).to.be.equal("back__button");
+            expect(arrowIcon.type).to.be.equal("i");
+            expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
         });
     });
 

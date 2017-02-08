@@ -2,10 +2,12 @@ import {
     displayCollectionFeeds,
     setCollectionName,
     clearFeeds,
+    setReadMore,
     COLLECTION_FEEDS,
     NO_COLLECTION_FEEDS,
     COLLECTION_NAME,
-    CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+    CLEAR_COLLECTION_FEEDS,
+    READ_MORE } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import sinon from "sinon";
@@ -66,12 +68,12 @@ describe("DisplayCollectionAction", () => {
         });
     });
 
-    describe("setCollection Name", () => {
-        it("should set collection Name", () => {
-            collection = "test";
-            let result = setCollectionName(collection);
-            assert.strictEqual(result.type, COLLECTION_NAME);
-            assert.strictEqual(result.collection, collection);
+    describe("setReadMore", () => {
+        it("should set readmore", () => {
+            let readMore = true;
+            let result = setReadMore(readMore);
+            assert.strictEqual(result.type, READ_MORE);
+            assert.strictEqual(result.readMore, readMore);
         });
     });
 
@@ -81,4 +83,5 @@ describe("DisplayCollectionAction", () => {
             assert.strictEqual(result.type, CLEAR_COLLECTION_FEEDS);
         });
     });
+
 });

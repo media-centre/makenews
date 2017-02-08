@@ -8,11 +8,11 @@ describe("CollectionFeed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
     beforeEach("Feed", () => {
         feed = {
-            "images": [{ "url": "image url", "thumbnail": "image url" }],
-            "videos": [{ "thumbnail": "video image url" }],
+            "images": [],
+            "videos": [],
             "title": "Some Title",
             "description": "Some Description",
-            "sourceType": "rss",
+            "sourceType": "web",
             "tags": "Hindu",
             "pubDate": "someDate"
         };
@@ -21,11 +21,6 @@ describe("CollectionFeed", () => {
         };
         renderer = TestUtils.createRenderer();
         feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-    });
-
-    it("should have three children ", () => {
-        expect(feedDom.type).to.equals("div");
-        expect(feedDom.props.children.length).to.equals(3);
     });
 
     it("should have a div with feed class", () => {
@@ -60,6 +55,51 @@ describe("CollectionFeed", () => {
 
         expect(description.className).to.equals("collection-feed__description");
         expect(description.children).to.equals("Some Description");
+    });
+
+    describe("Read more Button", () => {
+        beforeEach("Read more Button", ()=> {
+            feed = {
+                "images": [],
+                "videos": [],
+                "title": "Some Title",
+                "description": "Some Description",
+                "sourceType": "facebook",
+                "tags": "Hindu",
+                "pubDate": "someDate"
+            };
+            active = 0;
+            onToggle = () => {
+            };
+            renderer = TestUtils.createRenderer();
+        });
+
+        it("should be visible when source type is web", ()=> {
+            feed.sourceType = "web";
+            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
+            let readMore = feedDom.props.children[3];
+
+            expect(readMore.type).to.equals("button");
+            expect(readMore.props.className).to.equals("collection-feed__readmore");
+        });
+
+        it("should be visible when when article contain video", ()=> {
+            feed.videos = [{ "thumbnail": "video image url" }];
+            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
+            let readMore = feedDom.props.children[3];
+
+            expect(readMore.type).to.equals("button");
+            expect(readMore.props.className).to.equals("collection-feed__readmore");
+        });
+
+        it("should be visible when when article contain image", ()=> {
+            feed.images = [{ "url": "image url", "thumbnail": "image url" }];
+            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
+            let readMore = feedDom.props.children[3];
+
+            expect(readMore.type).to.equals("button");
+            expect(readMore.props.className).to.equals("collection-feed__readmore");
+        });
     });
 
 });

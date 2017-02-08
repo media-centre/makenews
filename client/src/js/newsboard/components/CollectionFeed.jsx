@@ -1,8 +1,17 @@
+/* eslint brace-style:0 */
 import React, { Component, PropTypes } from "react";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
+import { displayArticle } from "./../actions/DisplayFeedActions";
+import { setReadMore } from "./../actions/DisplayCollectionActions";
 
 export default class CollectionFeed extends Component {
+
+    _displayArticle() {
+        this.props.dispatch(displayArticle(this.props.feed));
+        this.props.dispatch(setReadMore(true));
+    }
+
     render() {
         const feed = this.props.feed;
         return (
@@ -18,6 +27,9 @@ export default class CollectionFeed extends Component {
                 </div>
 
                 <div className="collection-feed__description">{getHtmlContent(feed.description)}</div>
+
+                {feed.sourceType === "web" || feed.videos.length || feed.images.length
+                    ? <button className="collection-feed__readmore" onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
             </div>);
     }
 }
@@ -25,5 +37,6 @@ export default class CollectionFeed extends Component {
 CollectionFeed.propTypes = {
     "feed": PropTypes.object.isRequired,
     "active": PropTypes.bool,
-    "toggle": PropTypes.func
+    "toggle": PropTypes.func,
+    "dispatch": PropTypes.func
 };

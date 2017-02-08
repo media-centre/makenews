@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import ReactDOM from "react-dom";
+import DisplayArticle from "./DisplayArticle";
 import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
 
@@ -65,11 +66,13 @@ export class DisplayCollectionFeeds extends Component {
 
     render() {
         return (
-            <div className="display-collection">
+            this.props.readMore ? <DisplayArticle />
+                : <div className="display-collection">
+                <header className="collection-header" />
                 <div className="collection-feeds">
                     {
                         this.props.feeds.map((feed, index) =>
-                            <CollectionFeed feed={feed} key={index} active={index === this.state.activeIndex} toggle = {this.toggleFeed.bind(this, index)}/>)
+                            <CollectionFeed feed={feed} key={index} active={index === this.state.activeIndex} toggle = {this.toggleFeed.bind(this, index)} dispatch={this.props.dispatch}/>)
                     }
                 </div>
             </div>
@@ -78,6 +81,7 @@ export class DisplayCollectionFeeds extends Component {
 }
 
 DisplayCollectionFeeds.propTypes = {
+    "readMore": PropTypes.bool.isRequired,
     "collectionName": PropTypes.string.isRequired,
     "feeds": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired
@@ -86,7 +90,8 @@ DisplayCollectionFeeds.propTypes = {
 function mapToStore(store) {
     return {
         "feeds": store.displayCollection,
-        "collectionName": store.currentCollection
+        "collectionName": store.currentCollection,
+        "readMore": store.readMore
     };
 }
 export default connect(mapToStore)(DisplayCollectionFeeds);

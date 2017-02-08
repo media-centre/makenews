@@ -3,6 +3,18 @@
   height: calc(100vh - #{$main-header-height});
   overflow: auto;
 
+  .back {
+    text-align: left;
+    &__button {
+      color: $primary-color;
+      font-size: $mid-font-size;
+      border: 0
+    }
+    .icon{
+      vertical-align: text-bottom;
+    }
+  }
+
   &__header {
     padding: 14px 10px;
     background: $dark-background-color;

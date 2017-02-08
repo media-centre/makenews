@@ -1,5 +1,5 @@
-import { displayCollection, currentCollection } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
-import { COLLECTION_FEEDS, COLLECTION_NAME, CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+import { displayCollection, currentCollection, readMore } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
+import { COLLECTION_FEEDS, COLLECTION_NAME, CLEAR_COLLECTION_FEEDS, READ_MORE } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { assert } from "chai";
 
 describe("DisplayCollectionReducer", () => {
@@ -35,6 +35,20 @@ describe("DisplayCollectionReducer", () => {
 
         it("should return empty string by default", () => {
             assert.deepEqual(currentCollection(), "");
+        });
+    });
+
+    describe("readMore", () => {
+
+        it("should return feeds with type collection name", () => {
+            let readmore = true;
+            let action = { "type": READ_MORE, "readMore": readmore };
+
+            assert.deepEqual(readMore("", action), readmore);
+        });
+
+        it("should return false by default", () => {
+            assert.deepEqual(readMore(), false);
         });
     });
 });
