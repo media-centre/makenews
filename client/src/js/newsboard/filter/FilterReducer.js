@@ -14,11 +14,10 @@ export const currentFilter = (state = "", action = { }) => {
     }
 };
 
-export const currentFilterSource = (state = { "web": [], "facebook": [], "twitter": []}, action = {}) => {
+export const currentFilterSource = (state = { "web": [], "facebook": [], "twitter": [] }, action = {}) => {
     switch(action.type) {
-
     case FILTERED_SOURCES: {
-        return action.sources;
+        return Object.assign({}, action.sources);
     }
     default: return state;
     }

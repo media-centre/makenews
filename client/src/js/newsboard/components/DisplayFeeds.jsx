@@ -28,6 +28,7 @@ export class DisplayFeeds extends Component {
         this.dom = ReactDOM.findDOMNode(this);
         this.dom.addEventListener("scroll", this.getFeedsCallBack);
         this.getMoreFeeds(this.props.sourceType);
+        this.props.dispatch(DisplayFeedActions.clearFeeds());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -37,6 +38,7 @@ export class DisplayFeeds extends Component {
             this.getMoreFeeds(nextProps.sourceType);
             this.props.dispatch(DisplayFeedActions.clearFeeds());
         }
+
     }
 
     componentWillUnmount() {
