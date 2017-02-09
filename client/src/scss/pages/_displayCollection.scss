@@ -1,3 +1,6 @@
+.collections {
+  flex: 1;
+}
 .display-collection {
   flex: 1;
   height: calc(100vh - #{$main-header-height});

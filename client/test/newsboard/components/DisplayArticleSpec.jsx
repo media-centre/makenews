@@ -22,12 +22,13 @@ describe("DisplayArticle", () => {
             "sourceType": "facebook",
             "tags": ["Hindu"],
             "pubDate": "2017-01-31T06:58:27.000Z",
-            "bookmark": false
+            "bookmark": false,
+            "_id": "123"
         };
         active = false;
         sandbox = sinon.sandbox.create();
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} addToCollectionStatus={{ "message": "" }}/>);
+        displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
     });
 
     afterEach("DisplayArticle", () => {
@@ -36,6 +37,11 @@ describe("DisplayArticle", () => {
 
     it("should have a div with feed class", () => {
         expect(displayArticleDom.props.className).to.equals("display-article");
+    });
+
+    it("should not render if article is not passed", () => {
+        let noArticleDom = renderer.render(<DisplayArticle active={active} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
+        expect(noArticleDom).to.be.a("null");
     });
 
     describe("main tag", () => {
@@ -102,7 +108,8 @@ describe("DisplayArticle", () => {
                 "description": "Some Description",
                 "sourceType": "web",
                 "tags": ["Hindu"],
-                "pubDate": "2017-01-31T06:58:27.000Z"
+                "pubDate": "2017-01-31T06:58:27.000Z",
+                "_id": 123
             };
 
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} addToCollectionStatus = {"message"} dispatch={()=>{}}/>);
@@ -218,13 +225,14 @@ describe("DisplayArticle", () => {
                 "description": "Some Description",
                 "sourceType": "web",
                 "tags": ["Hindu"],
-                "pubDate": "2017-01-31T06:58:27.000Z"
+                "pubDate": "2017-01-31T06:58:27.000Z",
+                "_id": 123
             };
 
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }}/>);
-            let mainDOM = displayArticleDom.props.children[0]; //eslint-disable-line no-magic-numbers
-            let backButton = mainDOM.props.children[1]; //eslint-disable-line no-magic-numbers
-            let arrowIcon = backButton.props.children[0]; //eslint-disable-line no-magic-numbers
+            let [mainDOM] = displayArticleDom.props.children;
+            let backButton = mainDOM.props.children;
+            let [arrowIcon] = backButton.props.children; //eslint-disable-line no-magic-numbers
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("display-article__header back");

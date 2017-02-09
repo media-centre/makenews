@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import DisplayArticle from "./DisplayArticle";
 import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
-import { setReadMore } from "./../actions/DisplayCollectionActions";
+import { displayArticle } from "./../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 
 export class DisplayCollectionFeeds extends Component {
@@ -23,6 +23,7 @@ export class DisplayCollectionFeeds extends Component {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.dom = ReactDOM.findDOMNode(this);
         this.dom.addEventListener("scroll", this.getMoreFeeds);
+        this.props.dispatch(displayArticle());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -30,14 +31,12 @@ export class DisplayCollectionFeeds extends Component {
             this.hasMoreFeeds = true;
             this.offset = 0;
             this.props.dispatch(clearFeeds());
-            this.props.dispatch(setReadMore(false));
             this.getMoreFeedsCallback(nextProps.collectionName);
         }
     }
 
     componentWillUnmount() {
         this.dom.removeEventListener("scroll", this.getMoreFeeds);
-        this.props.dispatch(setReadMore(false));
         this.props.dispatch(clearFeeds());
     }
 
@@ -66,14 +65,16 @@ export class DisplayCollectionFeeds extends Component {
 
     render() {
         return (
-            this.props.readMore ? <DisplayArticle />
-                : <div className="display-collection">
-                <header className="collection-header" />
-                <div className="collection-feeds">
-                    {
-                        this.props.feeds.map((feed, index) =>
-                            <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch}/>)
-                    }
+            <div className="collections">
+                <DisplayArticle collection={this.refs.collection}/>
+                <div ref="collection" className="display-collection">
+                    <header className="collection-header" />
+                    <div className="collection-feeds">
+                        {
+                            this.props.feeds.map((feed, index) =>
+                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch}/>)
+                        }
+                    </div>
                 </div>
             </div>
         );
@@ -81,7 +82,6 @@ export class DisplayCollectionFeeds extends Component {
 }
 
 DisplayCollectionFeeds.propTypes = {
-    "readMore": PropTypes.bool.isRequired,
     "collectionName": PropTypes.string.isRequired,
     "feeds": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired
@@ -90,8 +90,7 @@ DisplayCollectionFeeds.propTypes = {
 function mapToStore(store) {
     return {
         "feeds": store.displayCollection,
-        "collectionName": store.currentCollection,
-        "readMore": store.readMore
+        "collectionName": store.currentCollection
     };
 }
 export default connect(mapToStore)(DisplayCollectionFeeds);

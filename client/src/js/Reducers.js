@@ -11,7 +11,7 @@ import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { stories } from "./storyboard/reducers/StoryBoardReducer";
-import { displayCollection, currentCollection, readMore } from "./newsboard/reducers/DisplayCollectionReducer";
+import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -37,8 +37,7 @@ const contentDiscoveryApp = combineReducers({
     addArticleToCollection,
     displayCollection,
     currentCollection,
-    stories,
-    readMore
+    stories
 });
 
 export default contentDiscoveryApp;

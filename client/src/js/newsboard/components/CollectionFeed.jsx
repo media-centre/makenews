@@ -3,17 +3,17 @@ import React, { Component, PropTypes } from "react";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
-import { setReadMore } from "./../actions/DisplayCollectionActions";
 
 export default class CollectionFeed extends Component {
 
     _displayArticle() {
         this.props.dispatch(displayArticle(this.props.feed));
-        this.props.dispatch(setReadMore(true));
     }
 
     render() {
         const feed = this.props.feed;
+        let [video] = feed.videos || [];
+        let [image] = feed.images;
         return (
             <div className="collection-feed">
                 <div className="collection-feed__title">{feed.title}</div>
@@ -28,7 +28,7 @@ export default class CollectionFeed extends Component {
 
                 <div className="collection-feed__description">{getHtmlContent(feed.description)}</div>
 
-                {feed.sourceType === "web" || feed.videos.length || feed.images.length
+                {feed.sourceType === "web" || video || image
                     ? <button className="collection-feed__readmore" onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
             </div>);
     }

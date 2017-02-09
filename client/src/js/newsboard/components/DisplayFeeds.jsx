@@ -11,7 +11,7 @@ import StringUtil from "../../../../../common/src/util/StringUtil";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false, "index": false };
+        this.state = { "expandView": false, "showCollectionPopup": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -94,14 +94,14 @@ export class DisplayFeeds extends Component {
         }
     }
 
-    onItemClick(index) {
-        this.setState({ "index": index });
-    }
-
     _renderCollections() {
-        return this.props.feeds.map((collection, index) =>
-            <li className={this.state.index === index ? "collection-name active" : "collection-name"} onClick={() => {
-                this.onItemClick(index);
+        return this.props.feeds.map(collection =>
+            <li className="collection-name" onClick={(event) => {
+                event.target.className = "collection-name active";
+                if(this.lastElement) {
+                    this.lastElement.className = "collection-name";
+                }
+                this.lastElement = event.target;
                 this.props.dispatch(setCollectionName(collection.collection));
                 if(this.props.addArticleToCollection.id) {
                     this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
