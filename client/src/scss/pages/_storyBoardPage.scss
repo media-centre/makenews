@@ -84,10 +84,11 @@
   .story-editor-container {
     flex-basis: 0;
     flex-grow: 1;
-    padding: 10px;
+
     .ql-snow.ql-toolbar {
       background-color: $dark-background-color;
-      padding-left: 15%;
+      text-align: center;
+      padding: 15px;
     }
   }
 }
