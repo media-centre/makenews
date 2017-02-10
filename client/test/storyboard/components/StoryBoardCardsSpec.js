@@ -33,7 +33,7 @@ describe("StoryBoardCards", () => {
         assert.strictEqual("title2", storyBoardCards.refs.titletitle2.innerHTML);
     });
 
-    it("should have the new story card link to /storyBoard/newStory", () => {
+    it("should have the new story card link to /story-board/story", () => {
         assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryCard.props.to);
         assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryBar.props.to);
     });

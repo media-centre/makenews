@@ -5,7 +5,7 @@ import { findAllWithType } from "react-shallow-testutils";
 import { assert } from "chai";
 import ReactQuill from "react-quill";
 
-describe("StoryEditor", () => {
+xdescribe("StoryEditor", () => {
     let renderer = null, renderedOutput = null;
 
     beforeEach("StoryEditor", () => {

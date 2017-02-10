@@ -15,7 +15,9 @@ export default class StoryEditor extends Component {
 
     render() {
         return (
-            <ReactQuill className = "story-editor-container" placeholder = "Write a story" value={this.state.editorContent} onChange={this._onChange} theme="snow"/>
+            <div className="story-editor-container">
+            <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.editorContent} onChange={this._onChange} theme="snow"/>
+            </div>
         );
     }
 }

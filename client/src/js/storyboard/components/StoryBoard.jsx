@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
 
-export class WriteAStory extends Component {
+export class StoryBoard extends Component {
 
     componentWillMount() {
         this.props.dispatch(setCurrentHeaderTab("Write a Story"));
@@ -17,7 +17,7 @@ export class WriteAStory extends Component {
     }
 }
 
-WriteAStory.propTypes = {
+StoryBoard.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "children": PropTypes.node
 };
@@ -25,5 +25,5 @@ WriteAStory.propTypes = {
 function select(store) {
     return store;
 }
-export default connect(select)(WriteAStory);
+export default connect(select)(StoryBoard);
 

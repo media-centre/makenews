@@ -4,7 +4,7 @@ import AjaxClient from "../../../src/js/utils/AjaxClient";
 import sinon from "sinon";
 import { assert } from "chai";
 
-describe("StoryBoardActions", (done) => {
+describe("StoryBoardActions", () => {
     let story = {
         "_id": "id",
         "title": "title"
@@ -34,17 +34,47 @@ describe("StoryBoardActions", (done) => {
         afterEach("getStories", () => {
             sandbox.restore();
         });
-        it("should dispatch set story title action with id and title", () => {
-            let action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id", "title": "title" } }];
+        it("should dispatch set story title action with id and title", (done) => {
+            let action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id", "title": "title" } },
+                { "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id2", "title": "title" } }];
             let response = { "docs": [{ "_id": "id", "title": "title" }, { "_id": "id2", "title": "title" }] };
-            let ajaxClientInstance = AjaxClient.instance("/story");
+            let ajaxClientInstance = AjaxClient.instance("/stories");
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
+            let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
             let store = mockStore([], action, done);
             store.dispatch(StoryBoardActions.getStories());
             ajaxClientMock.verify();
-            postMock.verify();
+            getMock.verify();
+        });
+    });
+
+    describe("getStory", () => {
+        let ajaxInstance = null, sandbox = null;
+        beforeEach("getStory", () => {
+            sandbox = sinon.sandbox.create();
+            ajaxInstance = AjaxClient.instance("/story");
+            sandbox.mock(AjaxClient).expects("instance")
+                .withExactArgs("/story").returns(ajaxInstance);
+        });
+
+        afterEach("getStory", () => {
+            sandbox.restore();
+        });
+
+        it("should return success response", (done) => {
+            let document = {
+                "id": "1234",
+                "rev": "1234",
+                "title": "title",
+                "body": "body"
+            };
+
+            let getMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.resolve(document));
+            let action = [{ "type": StoryBoardActions.STORY, "story": document }];
+            let store = mockStore([], action, done);
+            store.dispatch(StoryBoardActions.getStory(document.id));
+            getMock.verify();
         });
     });
 });

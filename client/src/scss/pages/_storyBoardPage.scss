@@ -58,16 +58,6 @@
 .story-card-title {
   padding: 20px;
   text-align: center;
-  .title-box {
-    width: 60%;
-    border-bottom-color: black;
-    color: $secondary-color;
-    font-size: 25px;
-  }
-  .save-box {
-    font-weight: bold;
-    color: $secondary-color;
-  }
 }
 
 .story-board {
@@ -81,14 +71,36 @@
     background: $background-color;
   }
 
-  .story-editor-container {
+  .editor-container {
     flex-basis: 0;
     flex-grow: 1;
+  }
 
+  .story-title {
+    height: 30px;
+    color: $secondary-color;
+    font-size: larger;
+    margin: 5px;
+    border: 0;
+    width: 70%;
+    border-bottom: $primary-color-light 1px solid;
+  }
+
+  .story-save {
+    font-weight: bold;
+    color: $secondary-color;
+  }
+
+  .story-editor {
     .ql-snow.ql-toolbar {
       background-color: $dark-background-color;
       text-align: center;
       padding: 15px;
     }
+
+    .quill-contents {
+      min-height: 300px;
+    }
   }
 }
+

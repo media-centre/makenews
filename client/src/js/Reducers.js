@@ -10,7 +10,7 @@ import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
-import { stories } from "./storyboard/reducers/StoryBoardReducer";
+import { stories, story } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
 import { setLastAccestime } from "./utils/SessionReducer";
 import { currentFilter, currentFilterSource } from "./newsboard/filter/FilterReducer";
@@ -42,7 +42,8 @@ const contentDiscoveryApp = combineReducers({
     stories,
     setLastAccestime,
     currentFilter,
-    currentFilterSource
+    currentFilterSource,
+    story
 });
 
 export default contentDiscoveryApp;

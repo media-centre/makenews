@@ -177,14 +177,18 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("saveStory", () => {
-        let couchClientInstance = null, authSession = null, sandbox = null;
+        let couchClientInstance = null, authSession = null, sandbox = null, story = null;
 
         beforeEach("saveStory", () => {
             authSession = "auth session";
             sandbox = sinon.sandbox.create();
             couchClientInstance = new CouchClient(authSession, "db name");
-            sandbox.mock(CouchClient).expects("instance")
-                .withExactArgs(authSession).returns(couchClientInstance);
+
+            story = {
+                "title": "title",
+                "body": "body",
+                "docType": "story"
+            };
         });
 
         afterEach("saveStory", () => {
@@ -192,18 +196,50 @@ describe("StoryRequestHandler", () => {
         });
 
         it("should return ok on success response from db", async () => {
-            let story = {
-                "title": "title",
-                "body": "body"
-            };
+            sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance).twice();
+            let updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
+                .withExactArgs(story).returns({ "ok": true });
+            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .returns({ "docs": [] });
+            try {
+                let response = await StoryRequestHandler.saveStory(story, authSession);
+                assert.deepEqual(response, { "ok": true });
+                updateDocMock.verify();
+                findDocMock.verify();
+            } catch(error) {
+                assert.fail();
+            }
+        });
+
+        it("should throw if title is already exists", async () => {
+            sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance);
+            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .returns({ "docs": [{ "_id": "id" }] });
+            try {
+                await StoryRequestHandler.saveStory(story, authSession);
+            } catch(error) {
+                assert.strictEqual(error, "Title Already exists");
+                findDocMock.verify();
+            }
+        });
+
+        it("should update the document", async () => {
+            story._id = "id";
+            sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance).twice();
+            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .returns({ "docs": [{ "_id": "id" }] });
             let updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
                 .withExactArgs(story).returns({ "ok": true });
             try {
                 let response = await StoryRequestHandler.saveStory(story, authSession);
                 assert.deepEqual(response, { "ok": true });
+                findDocMock.verify();
                 updateDocMock.verify();
             } catch(error) {
-                assert.fail();
+                assert.fail(error);
             }
         });
     });
