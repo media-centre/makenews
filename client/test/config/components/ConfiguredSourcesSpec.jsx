@@ -13,7 +13,8 @@ describe("Configured Sources", () => {
         it("should render twitter sources when the current source tab is TWITTER", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "twitter",
-                "configuredSources": { "twitter": [{ "_id": "123", "name": "hello" }, { "_id": "1234", "name": "test" }] }
+                "configuredSources": { "twitter": [{ "_id": "123", "name": "hello" }, { "_id": "1234", "name": "test" }] },
+                "searchInConfiguredSources": ""
             }), applyMiddleware(thunkMiddleware));
 
             let configuredSources = TestUtils.renderIntoDocument(
@@ -23,7 +24,7 @@ describe("Configured Sources", () => {
             );
             let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
-            let sourcesHeading = configuredSourcesDOM.querySelector(".configured-sources__group__heading");
+            let sourcesHeading = configuredSourcesDOM.querySelector(".list-sources__group__heading");
             expect(sourcesHeading.textContent).to.equal("Twitter");
             expect(source.length).to.equal(2); //eslint-disable-line no-magic-numbers
         });

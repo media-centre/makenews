@@ -18,8 +18,4 @@ describe("NewsBoardTabs", () => {
         expect(renderedSources).to.have.lengthOf(6);  //eslint-disable-line no-magic-numbers
     });
 
-    it("should have classname", () => {
-        expect(result.type).to.be.equals("div");
-        expect(result.props.className).to.be.equals("source-type-bar");
-    });
 });

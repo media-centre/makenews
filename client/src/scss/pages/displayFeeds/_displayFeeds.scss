@@ -31,29 +31,20 @@
     }
 
     .source-filter.news-board-tab {
-      padding: 10px;
-      width: 1.5em;
-      height: 1.5em;
-      text-align: center;
-      margin-bottom: 10px;
-      cursor: pointer;
-
       &.hidden {
         visibility: hidden;
       }
     }
   }
   .configured-feeds-container {
-    $flex-basis-width: 420px;
-
     background-color: $background-color;
     height: calc(100vh - #{$main-header-height});
     overflow-y: auto;
-    flex-basis: $flex-basis-width;
+    flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
 
     &.expand {
-      flex-basis: 2 * $flex-basis-width;
+      flex-basis: 2 * $side-panel-width;
 
       .feed {
         flex-basis: 50%;
@@ -64,11 +55,11 @@
       }
 
       .expand-icon {
-        left: 46 + (2 * $flex-basis-width);
+        left: 46 + (2 * $side-panel-width);
       }
 
       @media (max-width: 1100px) {
-        flex-basis: $flex-basis-width;
+        flex-basis: $side-panel-width;
 
         .feed {
           flex-basis: 100%;
@@ -79,7 +70,7 @@
         }
 
         .expand-icon {
-          left: 46 + $flex-basis-width;
+          left: 46 + $side-panel-width;
         }
       }
     }
@@ -91,7 +82,7 @@
       display: inline-block;
       position: fixed;
       top: 45vh;
-      left: 46 + $flex-basis-width;
+      left: 46 + $side-panel-width;
       background: url("./images/expand-icon.png") no-repeat;
       background-size: contain;
 
@@ -176,7 +167,7 @@
     margin: 0;
   }
 
- .collection-name {
+  .collection-name {
       padding: 2% 0% 2% 6%;
       font-family: "Lato", sans-serif;
       font-size: 17px;
@@ -189,11 +180,11 @@
       color: $secondary-color;
     }
 
-  .create_collection {
+    .create_collection {
       font-family: "Lato", sans-serif;
       font-size: 17px;
       color: $primary-color-light;
-      padding: 5% 0% 3% 8%;
+      padding: 5% 0 3% 8%;
       cursor: pointer;
     }
 
@@ -219,7 +210,7 @@
       background-color: rgba(70, 65, 74, 0.6);
       top: 68px;
       position: fixed;
-      left: 0px;
+      left: 0;
       height: 100%;
       width: 100%;
       &:target {

@@ -77,7 +77,7 @@ export class DisplayFeeds extends Component {
                     filter.sources = {};
                     filter.sources[sourceType] = this.props.currentFilterSource[sourceType];
                 }
-                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, callback, filter));
+                this.props.dispatch(DisplayFeedActions.displayFeedsByPage(this.offset, filter, callback));
             }
         }
     }

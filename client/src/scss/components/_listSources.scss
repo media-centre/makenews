@@ -1,0 +1,20 @@
+.list-sources {
+  padding-left: 8px;
+  color: $primary-color;
+
+  &-block {
+    flex: 1;
+  }
+
+  &__group {
+    padding: 10px;
+
+    &.open {
+      background-color: #fff;
+    }
+    &__heading {
+      font-size: 1em;
+      color: $primary-color;
+    }
+  }
+}

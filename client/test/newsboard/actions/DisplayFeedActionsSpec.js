@@ -51,23 +51,22 @@ describe("DisplayFeedActions", () => {
         });
 
         it("dispatch displayFetchedFeedAction action with feeds on successful fetch", (done) => {
-            let sourceType = "twitter";
-            let feeds = { "docs": [
+            const feeds = { "docs": [
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
                 { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "sourceType": "twitter" }
             ] };
-            let ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
+            const ajaxClientInstance = AjaxClient.instance("/feeds", true);
             let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
-                .returns(ajaxClientInstance);
+                .withArgs("/feeds").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("get")
-                .withArgs({ offset, "sourceType": sourceType }).returns(Promise.resolve(feeds));
-            let store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
-            store.dispatch(displayFeedsByPage(offset, sourceType, (result) => {
+                .withArgs({ offset, "filter": "{}" }).returns(Promise.resolve(feeds));
+            const store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
+            store.dispatch(displayFeedsByPage(offset, {}, (result) => {
                 try {
-                    assert.strictEqual(result.docsLength, 2); //eslint-disable-line no-magic-numbers
-                    assert.isFalse(result.hasMoreFeeds);
                     ajaxClientMock.verify();
                     postMock.verify();
+                    assert.strictEqual(result.docsLength, 2); //eslint-disable-line no-magic-numbers
+                    assert.isFalse(result.hasMoreFeeds);
                 } catch(err) {
                     done(err);
                 }

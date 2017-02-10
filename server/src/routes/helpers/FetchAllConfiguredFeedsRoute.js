@@ -1,8 +1,6 @@
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
 import FeedsRequestHandler from "./../../fetchAllFeeds/FeedsRequestHandler";
-import { newsBoardSourceTypes } from "./../../util/Constants";
-import StringUtil from "../../../../common/src/util/StringUtil";
 
 export default class FetchAllConfiguredFeeds extends Route {
     constructor(request, response, next) {

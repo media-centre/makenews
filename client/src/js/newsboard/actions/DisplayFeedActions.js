@@ -22,8 +22,8 @@ export const displayArticle = (article) => ({
     article
 });
 
-export function displayFeedsByPage(pageIndex, callback = () => {}, filter = {}) {
-    let ajaxClient = AjaxClient.instance("/feeds");
+export function displayFeedsByPage(pageIndex, filter = {}, callback = () => {}) {
+    const ajaxClient = AjaxClient.instance("/feeds");
     return _getFeeds(ajaxClient, { "offset": pageIndex, "filter": JSON.stringify(filter) }, callback);
 }
 
@@ -51,20 +51,21 @@ export async function fetchFeedsFromSources(isAuto) {
 
 function _getFeeds(ajaxClient, params, callback) {
     return async dispatch => {
+        let result = {
+            "docsLength": 0
+        };
         try {
             let feeds = await ajaxClient.get(params);
-            let result = {
-                "docsLength": 0
-            };
             if (feeds.docs.length) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             }
             const defaultPageSize = 25;
             result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
-            callback(result); //eslint-disable-line callback-return
+            return callback(result); //eslint-disable-line callback-return
         } catch(err) {
             dispatch(paginatedFeeds([]));
+            return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
         }
     };
 }

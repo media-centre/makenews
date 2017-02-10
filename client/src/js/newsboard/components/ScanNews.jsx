@@ -27,20 +27,13 @@ export class ScanNews extends Component {
         }
         return <NewsBoardTabs />;
     }
-    
+
     render() {
         if(this.props.currentFilter !== "") {
             return(
                 <div className="news-board-container">
-                    <div className="source-type-bar">
-                        <div className="source-filter news-board-tab">
-                            <i className="icon fa fa-filter"/>
-                        </div>
-                        <FilterTabs currentTab = {this.props.currentTab} />
-                    </div>
-                    <div className="configure-container">
-                        <DisplayFilters callback={() => this.hideFilter()} />
-                    </div>
+                    <FilterTabs currentTab = {this.props.currentTab} />
+                    <DisplayFilters callback={() => this.hideFilter()} />
                 </div>
             );
         }

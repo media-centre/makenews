@@ -1,0 +1,29 @@
+button {
+  padding: 8px 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: none;
+  text-transform: uppercase;
+
+  &.primary {
+    background-color: $secondary-color;
+    color: #fff;
+    box-shadow: -2px 3px 2px 0 #b3b1b1;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border: 1px solid $primary-color;
+    }
+  }
+
+  &.secondary {
+    color: $medium-gray-color;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border: 1px solid $primary-color-light;
+    }
+  }
+}
