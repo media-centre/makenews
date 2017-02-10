@@ -22,10 +22,7 @@ export class StoryBoardCards extends Component {
         </li>);
         this.props.stories.map((story, index) =>
             storiesArray.push(
-                <li key={index + 1} className="story-card" onClick={() => {
-                    this.props.dispatch(StoryBoardActions.getStory(story._id));
-                }}
-                >
+                <li key={index + 1} className="story-card">
                     <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="added-card">
                         <i ref={`title${story.title}`}>{story.title}</i>
                     </Link>
