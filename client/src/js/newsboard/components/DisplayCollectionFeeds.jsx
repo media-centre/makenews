@@ -32,6 +32,8 @@ export class DisplayCollectionFeeds extends Component {
             this.offset = 0;
             this.props.dispatch(clearFeeds());
             this.getMoreFeedsCallback(nextProps.collectionName);
+            this.refs.collection.style.display = "block";
+            this.props.dispatch(displayArticle());
         }
     }
 
