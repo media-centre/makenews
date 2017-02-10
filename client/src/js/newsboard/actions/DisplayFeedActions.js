@@ -42,12 +42,12 @@ export function getAllCollections(pageIndex, callback = () => {}) {
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
-export async function fetchFeedsFromSources() {
+export async function fetchFeedsFromSources(isAuto) {
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    let ajaxFetch = AjaxClient.instance("/fetch-feeds", true);
+    let ajaxFetch = AjaxClient.instance("/fetch-feeds", isAuto);
     await ajaxFetch.post(headers, {});
 }
 

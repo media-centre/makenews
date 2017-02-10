@@ -12,6 +12,7 @@ import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { stories } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
+import { setLastAccestime } from "./utils/SessionReducer";
 
 const contentDiscoveryApp = combineReducers({
     login,
@@ -37,7 +38,8 @@ const contentDiscoveryApp = combineReducers({
     addArticleToCollection,
     displayCollection,
     currentCollection,
-    stories
+    stories,
+    setLastAccestime
 });
 
 export default contentDiscoveryApp;
