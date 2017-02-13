@@ -26,7 +26,7 @@ export default class AddURLDocumentRoute extends Route {
             return this._handleSuccess(response);
         } catch (error) { //eslint-disable-line
             RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %j", error);
-            throw this._handleInvalidRequest({ "message": error });
+            throw this._handleInvalidRequest({ "message": error.message });
         }
     }
 }
