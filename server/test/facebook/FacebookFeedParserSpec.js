@@ -15,6 +15,7 @@ describe("FacebookFeedParser", () => {
                     "deny": ""
                 },
                 "created_time": "2016-05-06T07:11:43+0000",
+                "from": { "name": "some" },
                 "id": "952680454818870_1019161978170717"
             },
             {
@@ -27,6 +28,7 @@ describe("FacebookFeedParser", () => {
                     "deny": ""
                 },
                 "created_time": "2016-05-06T06:33:49+0000",
+                "from": { "name": "some" },
                 "id": "952680454818870_1019152051505043"
             }
         ];
@@ -40,7 +42,7 @@ describe("FacebookFeedParser", () => {
             "link": "https://www.facebook.com/952680454818870/posts/1019161978170717",
             "description": "Latest Feed 1.0",
             "pubDate": "2016-05-06T07:11:43Z",
-            "tags": [],
+            "tags": ["some"],
             "images": [],
             "videos": [],
             "sourceId": "source"
@@ -53,7 +55,7 @@ describe("FacebookFeedParser", () => {
             "link": "https://www.facebook.com/952680454818870/posts/1019152051505043",
             "description": "hello world",
             "pubDate": "2016-05-06T06:33:49Z",
-            "tags": [],
+            "tags": ["some"],
             "images": [],
             "videos": [],
             "sourceId": "source"
@@ -78,6 +80,7 @@ describe("FacebookFeedParser", () => {
                     "deny": ""
                 },
                 "created_time": "2017-01-05T02:30:02+0000",
+                "from": { "name": "some" },
                 "id": "35245929077_10154988680249078"
             }
         ];
@@ -91,7 +94,7 @@ describe("FacebookFeedParser", () => {
             "link": "https://www.facebook.com/DisneyPixar/photos/a.127437064077.102676.35245929077/10154988680249078/?type=3",
             "description": "Destination: everywhere.",
             "pubDate": "2017-01-05T02:30:02Z",
-            "tags": [],
+            "tags": ["some"],
             "images": [{
                 "url": "https://fullpicture.url/fullpicture.jpg",
                 "thumbnail": "https://scontent.xx.fbcdn.net/v/t1.0-0/s130x130/15826130_10154988680249078_436498272897924830_n.jpg?oh=eb979257835ed17a5a0668dda02417c2&oe=591AE0D9"
@@ -118,6 +121,7 @@ describe("FacebookFeedParser", () => {
                 "deny": ""
             },
             "created_time": "2017-01-04T23:01:54+0000",
+            "from": { "name": "some" },
             "id": "35245929077_10154988196624078"
         }];
 
@@ -130,7 +134,7 @@ describe("FacebookFeedParser", () => {
             "link": "https://www.facebook.com/DisneyPixar/videos/10154988196624078/",
             "description": "Dive into a sea of Easter eggs. It's National Trivia Day!",
             "pubDate": "2017-01-04T23:01:54Z",
-            "tags": [],
+            "tags": ["some"],
             "images": [{
                 "url": "https://full.picture/url.jpg",
                 "thumbnail": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742"

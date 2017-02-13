@@ -115,7 +115,7 @@ describe("FacebookRequestHandler", () => {
             sourceId = "https://www.facebook.com/TestPage";
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
-            requiredFields = "link,message,picture,full_picture,name,caption,place,privacy,created_time";
+            requiredFields = "link,message,picture,full_picture,name,caption,place,privacy,created_time,from";
             optionsJson = {"fields": requiredFields, "limit": 100}; //eslint-disable-line
         });
 

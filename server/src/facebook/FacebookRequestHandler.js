@@ -118,7 +118,7 @@ export default class FacebookRequestHandler {
 
     _getAllOptions(userOptions) {
         let allOptions = userOptions ? userOptions : {};
-        allOptions.fields = "link,message,picture,full_picture,name,caption,place,privacy,created_time";
+        allOptions.fields = "link,message,picture,full_picture,name,caption,place,privacy,created_time,from";
         allOptions.limit = 100;
         return allOptions;
     }

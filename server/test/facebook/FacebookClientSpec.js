@@ -34,8 +34,8 @@ describe("FacebookClient", () => {
     describe("fetchFeeds", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
         before("fetchFeeds", () => {
-            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time" };
-            remainingUrl = "/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
+            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from" };
+            remainingUrl = "/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
             pageId = "12345678";
         });
 
@@ -47,8 +47,8 @@ describe("FacebookClient", () => {
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.OK, {
                     "data":
-                    [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                            { "message": "test news 2", "id": "163974433696568_957850670975603" }]
+                    [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
+                            { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }]
                 });
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
