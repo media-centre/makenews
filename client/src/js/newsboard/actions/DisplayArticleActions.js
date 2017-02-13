@@ -1,6 +1,7 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import { newsBoardTabSwitch, paginatedFeeds } from "./DisplayFeedActions";
 import { newsBoardSourceTypes } from "../../utils/Constants";
+import Toast from "./../../utils/custom_templates/Toast";
 
 export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
 export const WEB_ARTICLE_RECEIVED = "WEB_ARTICLE_RECEIVED";
@@ -33,7 +34,7 @@ export function bookmarkArticle(article) {
 }
 
 export function displayWebArticle(feed) {
-    let ajaxClient = AjaxClient.instance("/article");
+    const ajaxClient = AjaxClient.instance("/article");
 
     return async dispatch => {
         dispatch(webArticleRequested());
@@ -41,6 +42,7 @@ export function displayWebArticle(feed) {
             let article = await ajaxClient.get({ "url": feed.link });
             dispatch(articleReceived(article.markup, true));
         } catch (err) {
+            Toast.show("Unable to get the article contents");
             dispatch(articleReceived(feed.description));
         }
     };

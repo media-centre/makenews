@@ -14,6 +14,7 @@ import sinon from "sinon";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { expect } from "chai";
+import Toast from "./../../../src/js/utils/custom_templates/Toast";
 
 describe("DisplayArticleActions", () => {
 
@@ -60,6 +61,7 @@ describe("DisplayArticleActions", () => {
 
         beforeEach("displayWebArticle", () => {
             sandbox = sinon.sandbox.create();
+            sandbox.useFakeTimers();
         });
 
         afterEach("displayWebArticle", () => {
@@ -71,7 +73,7 @@ describe("DisplayArticleActions", () => {
             let response = { "markup": article };
             let ajaxClientInstance = AjaxClient.instance("/article");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("get")
+            let getMock = sandbox.mock(ajaxClientInstance).expects("get")
                 .withArgs({ "url": "some url" }).returns(Promise.resolve(response));
 
             let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
@@ -81,22 +83,26 @@ describe("DisplayArticleActions", () => {
             }], done);
             store.dispatch(displayWebArticle({ "link": "some url" }));
 
-            postMock.verify();
+            getMock.verify();
         });
 
+        /* TODO: not able to fail the test with reason, when toastMock fails */ //eslint-disable-line
         it("should dispatch fetchingArticleFailed action ", (done) => {
             let ajaxClientInstance = AjaxClient.instance("/article");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
+            let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
+            let toastMock = sandbox.mock(Toast).expects("show")
+                .withArgs("Unable to get the article contents");
 
             let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
                 "type": WEB_ARTICLE_RECEIVED,
                 "article": "some desc",
                 "isHTML": false
-            }], done);
+            }], done, () => {
+                toastMock.verify();
+            });
             store.dispatch(displayWebArticle({ "link": "something", "description": "some desc" }));
-
-            postMock.verify();
+            getMock.verify();
         });
     });
 
