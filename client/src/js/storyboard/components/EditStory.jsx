@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
-import { getStory } from "../actions/StoryBoardActions";
 
 export class EditStory extends Component {
     constructor() {
@@ -13,30 +12,38 @@ export class EditStory extends Component {
         this._onChange = this._onChange.bind(this);
         this._onTitleChange = this._onTitleChange.bind(this);
         this.storyId = "";
+        this.story = {};
     }
 
     componentDidMount() {
         let path = this.props.location.pathname; //eslint-disable-line react/prop-types
         this.storyId = path.slice(path.lastIndexOf("/") + 1, path.length); //eslint-disable-line no-magic-numbers
-        this.props.dispatch(getStory(this.storyId));
+        if(this.storyId && this.storyId !== "story") {
+            this._getStory(this.storyId);
+        }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(this.props.story !== nextProps.story) {
-            this.setState({ "title": nextProps.story.title });
-            this._onChange(nextProps.story.body);
-        }
+    _getStory(storyId) {
+        let ajax = AjaxClient.instance("/story");
+        ajax.get({ "id": storyId }).then((response) => {
+            this.story = response;
+            this._onChange(this.story.body);
+            this.setState({ "title": this.story.title });
+        });
     }
 
     _saveStory() {
         let story = {};
-        if(this.props.story._id) {
-            story = this.props.story;
-            story.title = this.state.title;
-            story.body = this.state.body;
-        } else {
-            story = { "title": this.state.title, "body": this.state.body };
+        if(this.story._id) {
+            story = this.story;
         }
+
+        let title = this.state.title;
+        if(this.state.body && !title) {
+            title = this.props.untitledIndex;
+        }
+        story.title = title;
+        story.body = this.state.body;
 
         let history = History.getHistory();
 
@@ -92,13 +99,13 @@ export class EditStory extends Component {
 
 EditStory.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "story": PropTypes.object
+    "untitledIndex": PropTypes.string
 };
 
 
 function mapToStore(store) {
     return {
-        "story": store.story
+        "untitledIndex": store.untitledIndex
     };
 }
 export default connect(mapToStore)(EditStory);

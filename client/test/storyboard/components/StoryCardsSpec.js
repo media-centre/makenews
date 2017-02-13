@@ -1,15 +1,15 @@
-import { StoryBoardCards } from "../../../src/js/storyboard/components/StoryBoardCards";
+import { StoryCards } from "../../../src/js/storyboard/components/StoryCards";
 import TestUtils from "react-addons-test-utils";
 import { assert } from "chai";
 import React from "react";
 import ReactDOM from "react-dom";
 
-describe("StoryBoardCards", () => {
+describe("StoryCards", () => {
     let storyBoardCards = null, stories = null;
-    beforeEach("StoryBoardCards", () => {
+    beforeEach("StoryCards", () => {
         stories = [{ "_id": "id1", "title": "title1" }, { "_id": "id2", "title": "title2" }];
         storyBoardCards = TestUtils.renderIntoDocument(
-          <StoryBoardCards stories = {stories} dispatch={()=>{}}/>
+          <StoryCards stories = {stories} dispatch={()=>{}}/>
         );
     });
 

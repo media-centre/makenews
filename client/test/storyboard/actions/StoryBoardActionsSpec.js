@@ -49,32 +49,11 @@ describe("StoryBoardActions", () => {
         });
     });
 
-    describe("getStory", () => {
-        let ajaxInstance = null, sandbox = null;
-        beforeEach("getStory", () => {
-            sandbox = sinon.sandbox.create();
-            ajaxInstance = AjaxClient.instance("/story");
-            sandbox.mock(AjaxClient).expects("instance")
-                .withExactArgs("/story").returns(ajaxInstance);
-        });
-
-        afterEach("getStory", () => {
-            sandbox.restore();
-        });
-
-        it("should return success response", (done) => {
-            let document = {
-                "id": "1234",
-                "rev": "1234",
-                "title": "title",
-                "body": "body"
-            };
-
-            let getMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.resolve(document));
-            let action = [{ "type": StoryBoardActions.STORY, "story": document }];
-            let store = mockStore([], action, done);
-            store.dispatch(StoryBoardActions.getStory(document.id));
-            getMock.verify();
+    describe("addDefaultTitle", () => {
+        it("should dispatch UNTITLED_NUMBER action with index", (done) => {
+            let action = [{ "type": StoryBoardActions.UNTITLED_NUMBER, "untitledIndex": "Untitled2" }];
+            let store = mockStore("Untitled1", action, done);
+            store.dispatch(StoryBoardActions.addDefaultTitle("Untitled2"));
         });
     });
 });

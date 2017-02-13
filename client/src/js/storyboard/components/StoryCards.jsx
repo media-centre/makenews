@@ -4,13 +4,30 @@ import { connect } from "react-redux";
 import * as StoryBoardActions from "../actions/StoryBoardActions";
 import { Link } from "react-router";
 
-export class StoryBoardCards extends Component {
+export class StoryCards extends Component {
 
     componentDidMount() {
         this.props.dispatch(StoryBoardActions.getStories());
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.props.dispatch(StoryBoardActions.addDefaultTitle(this._untitledNumber(nextProps.stories)));
+    }
+
     componentWillUnmount() {
         this.props.dispatch(StoryBoardActions.clearStories);
+    }
+
+    _untitledNumber(stories) {
+        let untitled = [];
+        let storyTitles = stories.map((value) => value.title);
+        untitled = Array(storyTitles.length + 1).fill().map((value, index) => { //eslint-disable-line consistent-return
+            let untitledNo = "Untitled" + (index + 1);
+            if(storyTitles.indexOf(untitledNo) === -1) {
+                return untitledNo;
+            }
+        });
+        return untitled.sort()[0];
     }
 
     _renderStoriesList() {
@@ -51,7 +68,7 @@ export class StoryBoardCards extends Component {
     }
 }
 
-StoryBoardCards.propTypes = {
+StoryCards.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "stories": PropTypes.array.isRequired
 };
@@ -62,5 +79,5 @@ function mapToStore(store) {
         "stories": store.stories
     };
 }
-export default connect(mapToStore)(StoryBoardCards);
+export default connect(mapToStore)(StoryCards);
 

@@ -1,4 +1,4 @@
-import { ADD_STORY_TITLE, CLEAR_STORIES, STORY } from "../actions/StoryBoardActions";
+import { ADD_STORY_TITLE, CLEAR_STORIES, UNTITLED_NUMBER } from "../actions/StoryBoardActions";
 import { List } from "immutable";
 
 export const stories = (state = [], action = {}) => {
@@ -12,10 +12,10 @@ export const stories = (state = [], action = {}) => {
     }
 };
 
-export const story = (state = {}, action = {}) => {
-    switch(action.type) {
-    case STORY: {
-        return action.story;
+export const untitledIndex = (state = "Untitled1", action = {}) => {
+    switch (action.type) {
+    case UNTITLED_NUMBER: {
+        return action.untitledIndex;
     }
     default: return state;
     }

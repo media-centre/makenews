@@ -12,7 +12,7 @@ import ScanNews from "./newsboard/components/ScanNews";
 import StoryBoard from "./storyboard/components/StoryBoard";
 import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 import AddUrl from "./../js/config/components/AddUrl";
-import StoryBoardCards from "./storyboard/components/StoryBoardCards";
+import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 
 export function renderRoutes() {
@@ -28,7 +28,7 @@ export function renderRoutes() {
 
                 <Route path="/newsBoard" component={ScanNews} />
                 <Route path="/story-board" component={StoryBoard}>
-                    <Route path="/story-board/stories" component={StoryBoardCards} />
+                    <Route path="/story-board/stories" component={StoryCards} />
                     <Route path="/story-board/story" component={EditStory} />
                     <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
                 </Route>

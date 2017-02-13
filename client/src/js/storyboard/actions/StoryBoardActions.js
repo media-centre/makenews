@@ -1,7 +1,7 @@
 import AjaxClient from "../../utils/AjaxClient";
 export const ADD_STORY_TITLE = "Story title";
 export const CLEAR_STORIES = "CLEAR_STORIES";
-export const STORY = "STORY";
+export const UNTITLED_NUMBER = "UNTITLED_NUMBER";
 
 export const clearStories = {
     "type": CLEAR_STORIES
@@ -10,13 +10,6 @@ export const clearStories = {
 export function setStoryTitle(story) {
     return {
         "type": ADD_STORY_TITLE,
-        story
-    };
-}
-
-export function gotStory(story) {
-    return {
-        "type": STORY,
         story
     };
 }
@@ -32,14 +25,8 @@ export function getStories() {
         });
     };
 }
-
-export function getStory(storyId) {
+export function addDefaultTitle(untitledIndex) {
     return (dispatch) => {
-        let ajax = AjaxClient.instance("/story");
-        ajax.get({ "id": storyId }).then((response) => {
-            dispatch(gotStory(response));
-        }).catch(() => {
-            /*TODO: has to handle */ //eslint-disable-line
-        });
+        dispatch({ "type": UNTITLED_NUMBER, untitledIndex });
     };
 }
