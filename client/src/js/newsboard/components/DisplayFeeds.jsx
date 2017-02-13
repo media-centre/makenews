@@ -7,6 +7,7 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import { setCollectionName } from "../actions/DisplayCollectionActions";
 import StringUtil from "../../../../../common/src/util/StringUtil";
+import R from "ramda"; //eslint-disable-line id-length
 
 export class DisplayFeeds extends Component {
     constructor() {
@@ -19,7 +20,7 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillMount() {
-        DisplayFeedActions.fetchFeedsFromSources();
+        this.fetchFeedsFromSources();
         this.autoRefresh();
     }
 
@@ -58,6 +59,17 @@ export class DisplayFeeds extends Component {
         }
     }
 
+    fetchFeedsFromSources(param) {
+        let array = this.props.configuredSources;
+        let hasConfiguredSources = R.pipe(
+            R.values,
+            R.all(arr => !arr.length)
+        )(array);
+        if(!hasConfiguredSources) {
+            DisplayFeedActions.fetchFeedsFromSources(param);
+        }
+    }
+
     getMoreFeeds(sourceType) {
         let callback = (result) => {
             this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
@@ -90,7 +102,7 @@ export class DisplayFeeds extends Component {
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
         if (!AppWindow.instance().get("autoRefreshTimer")) {
             AppWindow.instance().set("autoRefreshTimer", setInterval(() => {
-                DisplayFeedActions.fetchFeedsFromSources(true);
+                this.fetchFeedsFromSources(true);
             }, AUTO_REFRESH_INTERVAL));
         }
     }
@@ -171,7 +183,7 @@ export class DisplayFeeds extends Component {
         return (
             this.props.sourceType === "collections" ? this.displayCollections()
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
-                <button onClick={DisplayFeedActions.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
+                <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 <i onClick={() => {
                     this._toggleFeedsView();
                 }} className="expand-icon"
@@ -191,7 +203,8 @@ function mapToStore(store) {
         "sourceType": store.newsBoardCurrentSourceTab,
         "articleToDisplay": store.selectedArticle._id,
         "addArticleToCollection": store.addArticleToCollection,
-        "currentFilterSource": store.currentFilterSource
+        "currentFilterSource": store.currentFilterSource,
+        "configuredSources": store.configuredSources
     };
 }
 
@@ -201,7 +214,8 @@ DisplayFeeds.propTypes = {
     "sourceType": PropTypes.string.isRequired,
     "articleToDisplay": PropTypes.string,
     "addArticleToCollection": PropTypes.object,
-    "currentFilterSource": PropTypes.object
+    "currentFilterSource": PropTypes.object,
+    "configuredSources": PropTypes.object
 
 };
 
