@@ -15,7 +15,7 @@ export default class Feed extends Component {
 
     render() {
         const feed = this.props.feed;
-        
+        const tags = feed.tags || [];
         return (
             <div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={() => this.props.dispatch(displayArticle(feed))}>
                 <div className="feed__media">{this.getMedia()}</div>
@@ -31,7 +31,7 @@ export default class Feed extends Component {
                     </div>
                     <div className="source">
                         { //eslint-disable-next-line no-magic-numbers
-                            feed.tags.map((tag, index) => <span key={index}> { index === 0 ? tag : `| ${tag}` } </span>)
+                            tags.map((tag, index) => <span key={index}> { index === 0 ? tag : `| ${tag}` } </span>)
                         }
                     </div>
                     <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>

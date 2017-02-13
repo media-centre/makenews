@@ -81,7 +81,7 @@ describe("TwitterParser", () => {
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
-                "tags": ["someUser", ["tag1", "tag2"]],
+                "tags": ["someUser", "tag1", "tag2"],
                 "images": [],
                 "videos": [],
                 "sourceId": sourceId
@@ -116,7 +116,7 @@ describe("TwitterParser", () => {
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
-                "tags": ["someUser", ["tag1", "tag2"]],
+                "tags": ["someUser", "tag1", "tag2"],
                 "images": [{ "url": "https://www.test.com", "thumbnail": "https://www.test.com:thumb" }],
                 "videos": [],
                 "sourceId": sourceId
@@ -152,7 +152,7 @@ describe("TwitterParser", () => {
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
-                "tags": ["someUser", ["tag1", "tag2"]],
+                "tags": ["someUser", "tag1", "tag2"],
                 "images": [
                     {
                         "url": "https://www.test1.com",
@@ -201,7 +201,7 @@ describe("TwitterParser", () => {
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56Z",
-                "tags": ["someUser", ["tag1", "tag2"]],
+                "tags": ["someUser", "tag1", "tag2"],
                 "images": [
                     {
                         "url": "https://www.test1.com",
