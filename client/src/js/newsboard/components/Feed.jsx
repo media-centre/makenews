@@ -29,7 +29,11 @@ export default class Feed extends Component {
                     <div className="source-type">
                         <i className={`fa fa-${feed.sourceType}`}/>
                     </div>
-                    <div className="source">{[feed.tags]}</div>
+                    <div className="source">
+                        { //eslint-disable-next-line no-magic-numbers
+                            feed.tags.map((tag, index) => <span key={index}> { index === 0 ? tag : `| ${tag}` } </span>)
+                        }
+                    </div>
                     <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
                 </div>
             </div>

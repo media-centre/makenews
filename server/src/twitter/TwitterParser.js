@@ -37,13 +37,13 @@ export default class TwitterParser {
             "title": tweet.text,
             "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
             "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
-            "tags": this.hashTags(tweet),
+            "tags": [tweet.user.name, this.hashTags(tweet)],
             "images": [],
             "videos": [],
             "sourceId": sourceId
         };
         let images = tweet.entities.media;
-        if(images) { // eslint-disable-line no-magic-numbers
+        if(images) {
             images.forEach(item => {
                 feedObj.images.push({ "url": item.media_url_https, "thumbnail": `${item.media_url_https}:thumb` });
             });

@@ -13,7 +13,7 @@ describe("Feed", () => {
             "title": "Some Title",
             "description": "Some Description",
             "sourceType": "rss",
-            "tags": "Hindu",
+            "tags": ["Hindu"],
             "pubDate": "someDate"
         };
         active = false;
@@ -75,7 +75,7 @@ describe("Feed", () => {
         expect(source.className).to.equals("feed__source");
         expect(source.children[0].props.className).to.equals("source-type");
         expect(source.children[1].props.className).to.equals("source");
-        expect(source.children[1].props.children).to.deep.equals(["Hindu"]);
+        expect(source.children[1].props.children[0].props.children[1]).to.deep.equals("Hindu");
         expect(source.children[2].props.className).to.equals("date");
     });
 
