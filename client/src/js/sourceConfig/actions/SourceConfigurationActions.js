@@ -97,7 +97,9 @@ export function addAllSources() {
         let sourceType = getState().currentSourceTab;
         let sources = getState().sourceResults.data;
         let unConfiguredSources = R.reject(source => source.added, sources);
-        dispatch(addSourceToConfigureList(sourceType, ...unConfiguredSources));
+        if(unConfiguredSources.length) {
+            dispatch(addSourceToConfigureList(sourceType, ...unConfiguredSources));
+        }
     };
 }
 
