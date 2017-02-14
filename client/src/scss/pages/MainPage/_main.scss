@@ -1,8 +1,7 @@
 @import "../../utils/variable";
 
 .main {
-  position: absolute;
-  margin-top: $main-header-height;
+  padding-top: $main-header-height;
 }
 
 .main-page header {
