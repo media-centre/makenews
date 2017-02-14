@@ -17,5 +17,4 @@ describe("NewsBoardTabs", () => {
         let renderedSources = findAllWithType(result, NewsBoardTab);
         expect(renderedSources).to.have.lengthOf(6);  //eslint-disable-line no-magic-numbers
     });
-
 });

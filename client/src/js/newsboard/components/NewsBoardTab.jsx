@@ -13,6 +13,7 @@ export class NewsBoardTab extends Component {
         return (
             <div className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
                 onClick={() => { this.displayFeeds(this.props.sourceType); }}
+                title={this.props.title}
             >
                 <i className={`icon fa fa-${this.props.sourceIcon}`} />
             </div>
@@ -30,7 +31,8 @@ NewsBoardTab.propTypes = {
     "sourceIcon": PropTypes.string.isRequired,
     "sourceType": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "currentNewsBoard": PropTypes.string.isRequired
+    "currentNewsBoard": PropTypes.string.isRequired,
+    "title": PropTypes.string
 };
 
 export default connect(mapToStore)(NewsBoardTab);

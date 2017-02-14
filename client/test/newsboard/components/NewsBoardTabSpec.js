@@ -17,7 +17,11 @@ describe("NewsBoardTab", () => {
         store = createStore(() => ({
             "newsBoardCurrentSourceTab": currentTab
         }), applyMiddleware(thunkMiddleware));
-        newsBoardTab = TestUtils.renderIntoDocument(<Provider store={store}><NewsBoard sourceIcon="twitter" sourceType={"twitter"}/></Provider>);
+        newsBoardTab = TestUtils.renderIntoDocument(
+            <Provider store={store}>
+                <NewsBoard sourceIcon="twitter" sourceType={"twitter"} title="bookmarked feeds"/>
+            </Provider>
+        );
     });
 
     it("should have onclick function", () => {
@@ -43,10 +47,14 @@ describe("NewsBoardTab", () => {
         expect(newsBoardTabClass).to.be.equals("news-board-tab");
     });
 
+    it("should have title attribute", () => {
+        let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab");
+        expect(newsBoardTabClass.title).to.be.equals("bookmarked feeds");
+    });
+
     it("current tab should highlight if both sourcetype and current tabs are equal", () => {
         newsBoardTab = TestUtils.renderIntoDocument(<Provider store={store}><NewsBoard sourceIcon="web" sourceType={"web"}/></Provider>);
         let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
         expect(newsBoardTabClass).to.be.equals("news-board-tab active");
     });
-
 });
