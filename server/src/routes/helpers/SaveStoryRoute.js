@@ -9,8 +9,9 @@ export default class SaveStoryRoute extends Route {
     }
 
     validate() {
-        if(super.validate(this.story.title) && super.validate(this.story.body)) {
-            return "Cannot save empty story";
+        if(super.validate(this.story.title)) {
+            let message = "Please add title";
+            throw message;
         }
         return null;
     }

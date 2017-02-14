@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
+import StringUtil from "../../../../../common/src/util/StringUtil";
 
 export class EditStory extends Component {
     constructor() {
@@ -47,26 +48,30 @@ export class EditStory extends Component {
 
         let history = History.getHistory();
 
-        let ajax = AjaxClient.instance("/save-story");
-        const headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        };
-
-        ajax.put(headers, { story }).then(() => {
-            Toast.show("Story saved successfully");
+        if(StringUtil.isEmptyString(story.title) && StringUtil.isEmptyString(story.body)) {
+            Toast.show("Cannot save empty story");
             history.push("/story-board/stories");
-        }).catch((error) => {
-            if(error.message === "Cannot save empty story") {
-                Toast.show(error.message);
+        } else {
+            let ajax = AjaxClient.instance("/save-story");
+            const headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            };
+
+            ajax.put(headers, { story }).then(() => {
+                Toast.show("Story saved successfully");
                 history.push("/story-board/stories");
-            }else if(error.message === "Title Already exists") {
-                Toast.show(error.message);
-            } else {
-                Toast.show("Not able to save");
-                history.push("/story-board/stories");
-            }
-        });
+            }).catch((error) => {
+                if(error.message === "Please add title") {
+                    Toast.show(error.message);
+                }else if(error.message === "Title Already exists") {
+                    Toast.show(error.message);
+                } else {
+                    Toast.show("Not able to save");
+                    history.push("/story-board/stories");
+                }
+            });
+        }
     }
 
     _onChange(body) {
@@ -80,7 +85,7 @@ export class EditStory extends Component {
     render() {
         return (
             <div className="story-board">
-                <div className="collections">
+                <div className="story-collections">
                     <h1>Collections</h1>
                 </div>
                 <div className="editor-container">
