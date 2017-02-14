@@ -1,24 +1,19 @@
 .configure-container {
+  $configured-source-panel-width: 360px;
   .configured-sources {
     &-container {
       background-color: $background-color;
       border-right: 2px solid $primary-color-light;
       box-sizing: border-box;
       padding-bottom: 80px;
-      width: 320px;
+      width: $configured-source-panel-width;
       height: calc(100vh - #{$main-header-height});
       position: fixed;
       display: flex;
       flex-direction: column;
 
-      .configured-sources-block {
-        flex-basis: 83vh;
-        height: 83vh;
-        overflow-y: auto;
-      }
-
       .input-box {
-        flex-basis: 0;
+        flex-basis: 40px;
       }
 
       li.source-name {
@@ -28,11 +23,15 @@
         padding: 7px 0;
         color: $primary-color-light;
       }
+
+      .list-sources-block {
+        overflow-y: auto;
+      }
     }
   }
 
   .configure-sources {
-    margin-left: 320px;
+    margin-left: $configured-source-panel-width;
   }
 
   .input-group {
