@@ -1,5 +1,7 @@
 .header {
   height: $main-header-height;
+  position: fixed;
+  z-index: 1;
   width: 100%;
   background-color: $primary-color-dark;
   border-bottom: 4px solid $secondary-color;

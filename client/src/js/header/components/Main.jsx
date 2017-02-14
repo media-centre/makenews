@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import Header from "./Header";
 import { connect } from "react-redux";
 
-export class MainHeader extends Component {
+export class Main extends Component {
     render() {
         return (
             <div>
@@ -14,13 +14,13 @@ export class MainHeader extends Component {
                         <Header mainHeaderStrings={this.props.mainHeaderStrings} currentHeaderTab={this.props.currentHeaderTab}/>
                     </div>
                 </div>
-                <section>{this.props.children}</section>
+                <section className="main">{this.props.children}</section>
             </div>
         );
     }
 }
 
-MainHeader.propTypes = {
+Main.propTypes = {
     "children": PropTypes.node,
     "mainHeaderStrings": PropTypes.object.isRequired,
     "currentHeaderTab": PropTypes.string.isRequired,
@@ -31,4 +31,4 @@ function select(store) {
     return { "mainHeaderStrings": store.mainHeaderStrings, "currentHeaderTab": store.currentHeaderTab };
 }
 
-export default connect(select)(MainHeader);
+export default connect(select)(Main);

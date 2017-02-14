@@ -1,5 +1,5 @@
 /*eslint no-magic-numbers:0*/
-import { MainHeader } from "./../../../src/js/header/components/MainHeader";
+import { Main } from "./../../../src/js/header/components/Main";
 import Header from "./../../../src/js/header/components/Header";
 import React from "react";
 import { expect } from "chai";
@@ -33,7 +33,7 @@ describe("MainHeader", () => {
         };
         childElement = <div>{"main-page children"}</div>;
         let renderer = TestUtils.createRenderer();
-        result = renderer.render(<MainHeader store= {store} children={childElement} mainHeaderStrings={mainHeaderStrings} currentHeaderTab={"Scan News"} dispatch={() => {}}/>);
+        result = renderer.render(<Main store= {store} children={childElement} mainHeaderStrings={mainHeaderStrings} currentHeaderTab={"Scan News"} dispatch={() => {}}/>);
     });
 
     it("should have Header element", () => {
@@ -50,5 +50,4 @@ describe("MainHeader", () => {
         expect(image.children.type).to.equals("img");
         expect(image.children.props.src).to.equals(".../../../images/makenews-logo.png");
     });
-
 });

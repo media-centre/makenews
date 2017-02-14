@@ -7,7 +7,7 @@ import UserProfile from "./user/UserProfile";
 import React from "react";
 import { Route } from "react-router";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
-import Header from "./header/components/MainHeader";
+import Main from "./header/components/Main";
 import ScanNews from "./newsboard/components/ScanNews";
 import StoryBoard from "./storyboard/components/StoryBoard";
 import ConfigureURLs from "./../js/config/components/ConfigureURLs";
@@ -19,7 +19,7 @@ export function renderRoutes() {
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
-            <Route path="/main" component={Header} onEnter={isLoggedIn}>
+            <Route path="/main" component={Main} onEnter={isLoggedIn}>
 
                 <Route path="/configure" component={ConfigureURLs}>
                     <Route path="/configure/addurl" component={AddUrl} />

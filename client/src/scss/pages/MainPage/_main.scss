@@ -1,5 +1,10 @@
 @import "../../utils/variable";
 
+.main {
+  position: absolute;
+  margin-top: $main-header-height;
+}
+
 .main-page header {
   display: none;
   color: $primary-font-color;
