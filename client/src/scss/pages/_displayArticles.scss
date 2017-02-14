@@ -47,6 +47,11 @@
   .article {
     padding: 2rem;
 
+    a {
+      color: $secondary-color;
+      text-decoration: underline;
+    }
+
     &__title {
       font-size: 2rem;
       color: $secondary-color;
@@ -66,10 +71,6 @@
         margin: 1rem auto;
         max-width: 100%;
       }
-
-      a {
-        color: $secondary-color;
-      }
     }
 
     &__images {
@@ -78,6 +79,10 @@
         margin: 1rem;
         max-width: 100%;
       }
+    }
+
+    &__original-source {
+      margin: 2rem 0 1rem;
     }
   }
 }
