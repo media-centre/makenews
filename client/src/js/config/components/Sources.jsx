@@ -11,11 +11,23 @@ export class Sources extends Component {
         super();
         this.getMoreFeeds = this._getMoreFeeds.bind(this);
     }
+
     componentWillMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         document.addEventListener("scroll", this.getMoreFeeds);
     }
 
+    componentDidUpdate() {
+        if(this.props.sources.keyword && !this.props.sources.isFetchingSources) {
+            if(this.props.hasMoreSourceResults && document.body.scrollHeight <= window.innerHeight) {
+                this.props.dispatch(
+                    getSources(this.props.currentTab, this.props.sources.keyword,
+                        this.props.sources.nextPage, this.props.sources.twitterPreFirstId)
+                );
+            }
+        }
+    }
+    
     componentWillUnmount() {
         document.removeEventListener("scroll", this.getMoreFeeds);
     }
