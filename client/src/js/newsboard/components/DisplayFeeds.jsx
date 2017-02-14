@@ -17,6 +17,7 @@ export class DisplayFeeds extends Component {
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
+        this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
     }
 
     componentWillMount() {
