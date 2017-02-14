@@ -14,12 +14,12 @@ describe("StoryCards", () => {
     });
 
     it("should have the stories based on props input", () => {
-        let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.story-card");
-        assert.strictEqual(3, storiesList.length);    //eslint-disable-line no-magic-numbers
+        let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card");
+        assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
     });
 
     it("should have story name", () => {
-        let storyTitle = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.story-card i")[1].textContent;        //eslint-disable-line no-magic-numbers
+        let storyTitle = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i")[0].textContent;        //eslint-disable-line no-magic-numbers
         assert.strictEqual("title1", storyTitle);
     });
 

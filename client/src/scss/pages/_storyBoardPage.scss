@@ -20,27 +20,38 @@
 .story-board-container {
   background-color: #FAF5F5;
   .story-cards {
+    height: calc(100vh - 68px);
     li {
       display: inline-block;
     }
   }
-  .story-card {
     .add-card, .added-card {
-      margin: 30px;
+      margin: 15px;
       height: 100px;
-      border-style: dashed;
       width: 200px;
+      border:1px dashed;
       text-align: center;
-      i {
-        top: 37%;
+      color: #917fa9;
+       .card {
+        color: #917fa9;
+        overflow: hidden;
+        max-height: 60px;
+        word-break: break-all;
         position: relative;
-        font-size: initial;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        .icon {
+          padding: 10px;
+        }
       }
     }
     .added-card {
-      border-style: solid;
+      color: $dark-background-color;
+      background-color: #ffffff;
+      vertical-align: top;
+      border: 1px solid;
     }
-  }
 }
 
 .create-story-tab, .story-board-container {
