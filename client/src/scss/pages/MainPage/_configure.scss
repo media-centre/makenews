@@ -151,7 +151,7 @@
     .source {
       background: $dark-background-color;
       padding: 10px;
-      margin: .5%;
+      margin: 4px;
       width: 31.433333%;
       display: flex;
       -webkit-box-sizing: border-box;
@@ -161,12 +161,17 @@
 
       @media (min-width: 1400px) {
         width: 24%;
-        margin: .5%;
+        margin: 4px;
       }
 
-      @media (max-width: 996px) {
-        width: 49%;
-        margin: .5%;
+      @media (max-width: 1024px) {
+        width: 48.5%;
+        margin: 3px;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        margin: 3px;
       }
 
       &.added {
