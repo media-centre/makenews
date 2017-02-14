@@ -1,15 +1,13 @@
 import DisplayFeeds from "../../../src/js/newsboard/components/DisplayFeeds";
 import Feed from "../../../src/js/newsboard/components/Feed";
 import React from "react";
-import ReactDOM from "react-dom";
 import TestUtils from "react-addons-test-utils";
 import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import sinon from "sinon";
-import * as DisplayArticleActions from "../../../src/js/newsboard/actions/DisplayArticleActions";
-
+import DisplayCollection from "../../../src/js/newsboard/components/DisplayCollection";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
@@ -82,41 +80,9 @@ describe("DisplayFeeds", () => {
             sandbox.restore();
         });
 
-        it("should render collections when the souretype is collection", () => {
-            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "collection-name"));
-
-        });
-        it("should show popup when create new collection is clicked", () => {
-            let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
-            TestUtils.Simulate.click(createCollectionElement);
-            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "new-collection"));
-        });
-
-        it("should dispatch addToCollection when save button is clicked", () => {
-            let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
-            TestUtils.Simulate.click(createCollectionElement);
-            let addToCollectionMock = sandbox.mock(DisplayArticleActions)
-                .expects("addToCollection")
-                .returns({ "type": "" });
-            let displayFeedDOM = ReactDOM.findDOMNode(result);
-            let inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
-            inputBox.value = "collectionName";
-            let saveCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "save-collection");
-            TestUtils.Simulate.click(saveCollectionElement);
-            addToCollectionMock.verify();
-        });
-
-        it("should dispatch addToCollection on keyup", () => {
-            let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
-            TestUtils.Simulate.click(createCollectionElement);
-            let addToCollectionMock = sandbox.mock(DisplayArticleActions)
-                .expects("addToCollection")
-                .returns({ "type": "" });
-            let displayFeedDOM = ReactDOM.findDOMNode(result);
-            let inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
-            inputBox.value = "collectionName";
-            TestUtils.Simulate.keyUp(inputBox, { "keyCode": 13 });
-            addToCollectionMock.verify();
+        it("should have Display collection", () => {
+            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
+            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
     });
 });
