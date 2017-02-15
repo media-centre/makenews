@@ -78,7 +78,7 @@
 
 .user-profile {
   float: left;
-  width: 180px;
+  width: 200px;
   height: 64px;
   cursor: pointer;
   color: white;
@@ -108,8 +108,10 @@
     position: absolute;
   }
 
-  &.hide {
-    display: none;
+  &:hover {
+    .user-profile--dropdown {
+      display: block;
+    }
   }
 }
 
@@ -117,9 +119,11 @@
   position: absolute;
   top: 64px;
   right: 0;
-  width: 210px;
-  background: $primary-color;
+  width: 200px;
+  background: $primary-color-dark;
   z-index: 1;
+  display: none;
+  list-style-type: none;
 
   .user-profile--change-password, .user-profile--help, .user-profile--logout {
     vertical-align: top;
