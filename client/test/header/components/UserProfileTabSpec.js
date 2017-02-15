@@ -4,14 +4,19 @@ import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import { findAllWithType } from "react-shallow-testutils";
+import sinon from "sinon";
 
 describe("UserProfileTab", () => {
-    let renderer = null, result = null;
+    let renderer = null, result = null, sandbox = sinon.sandbox.create();
 
     beforeEach("UserProfileTab", () => {
         renderer = TestUtils.createRenderer();
         renderer.render(<UserProfileTab />);
         result = renderer.getRenderOutput();
+    });
+
+    afterEach("UserProfileTab", () => {
+        sandbox.restore();
     });
 
     it("should have User Profile component", () => {
@@ -33,11 +38,21 @@ describe("UserProfileTab", () => {
         expect(img.props.children.props.src).to.be.equals("../../../images/userprofile-icon.png");
     });
 
-    it("should have name", ()=> {
+    it("should have default name as user", ()=> {
         let [, name] = result.props.children;
 
         expect(name.type).to.be.equals("span");
         expect(name.props.className).to.be.equals("user-profile__name");
+        expect(name.props.children).to.be.equals("user");
+    });
+
+    it("should have name", ()=> {
+        sandbox.stub(localStorage, "getItem").withArgs("userName").returns("someName");
+        renderer.render(<UserProfileTab />);
+        result = renderer.getRenderOutput();
+        let [, name] = result.props.children;
+
+        expect(name.props.children).to.be.equals("someName");
     });
 
     it("should have down arrow", ()=> {

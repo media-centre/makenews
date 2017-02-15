@@ -5,7 +5,7 @@ import UserProfile from "./UserProfile";
 export default class UserProfileTab extends Component {
 
     render() {
-        const userName = JSON.parse(localStorage.getItem("userName")) || "";
+        const userName = localStorage.getItem("userName") || "user";
         return (
             <div className="user-profile">
                 <span className="user-profile__image">

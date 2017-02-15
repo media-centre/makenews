@@ -17,7 +17,7 @@ export function userLogin(history, userName, password) {
             .then(() => {
                 let userSession = UserSession.instance();
                 userSession.setLastAccessedTime();
-                localStorage.setItem("userName", JSON.stringify(userName));
+                localStorage.setItem("userName", userName);
                 dispatch(loginSuccess());
                 history.push("/newsBoard");
             })
