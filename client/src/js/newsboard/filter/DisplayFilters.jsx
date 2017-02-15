@@ -7,7 +7,7 @@ import { getConfiguredSources, searchInConfiguredSources } from "../../sourceCon
 import SourceFilters from "./SourceFilters";
 import Input from "./../../utils/components/Input";
 
-let selectedSources = {};
+let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
 class DisplayFilters extends Component {
     constructor() {
         super();
