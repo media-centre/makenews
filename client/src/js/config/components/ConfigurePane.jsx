@@ -16,6 +16,10 @@ export class ConfigurePane extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.dispatch(SourceConfigActions.fetchingSourcesFailed(""));
+    }
+
     checkEnterKey(event) {
         const ENTERKEY = 13;
         if (event.keyCode === ENTERKEY) {
