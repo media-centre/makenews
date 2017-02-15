@@ -39,6 +39,22 @@ export class DisplayFeeds extends Component {
             this.props.dispatch(DisplayFeedActions.clearFeeds());
         }
 
+        if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
+            this.offset = 0;
+        }
+
+        const firstArticleIndex = 0;
+        let [firstArticle] = nextProps.feeds;
+        if(firstArticle && !firstArticle.collection && this.offset === firstArticleIndex && this.props.feeds !== nextProps.feeds) {
+            if(!nextProps.articleToDisplay._id && this.currentArticle) {
+                firstArticle = this.currentArticle;
+            }
+            this.props.dispatch(DisplayFeedActions.displayArticle(firstArticle));
+        }
+
+        if(this.props.articleToDisplay !== nextProps.articleToDisplay && nextProps.articleToDisplay._id) {
+            this.currentArticle = nextProps.articleToDisplay;
+        }
     }
 
     componentWillUnmount() {
@@ -117,7 +133,7 @@ export class DisplayFeeds extends Component {
                 />
            <div className="feeds">
                     {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay} dispatch={this.props.dispatch}/>)}
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} dispatch={this.props.dispatch}/>)}
                 </div>
             </div>
         );
@@ -128,7 +144,7 @@ function mapToStore(store) {
     return {
         "feeds": store.fetchedFeeds,
         "sourceType": store.newsBoardCurrentSourceTab,
-        "articleToDisplay": store.selectedArticle._id,
+        "articleToDisplay": store.selectedArticle,
         "currentFilterSource": store.currentFilterSource,
         "configuredSources": store.configuredSources
     };
@@ -138,7 +154,7 @@ DisplayFeeds.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired,
     "sourceType": PropTypes.string.isRequired,
-    "articleToDisplay": PropTypes.string,
+    "articleToDisplay": PropTypes.object,
     "currentFilterSource": PropTypes.object,
     "configuredSources": PropTypes.object
 
