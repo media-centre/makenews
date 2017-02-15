@@ -38,15 +38,15 @@ describe("UserProfileTab", () => {
 
         expect(name.type).to.be.equals("span");
         expect(name.props.className).to.be.equals("user-profile__name");
-        expect(name.props.children).to.be.equals("User Profile");
     });
 
     it("should have down arrow", ()=> {
         let [, , arrow] = result.props.children;
 
         expect(arrow.type).to.be.equals("span");
+        expect(arrow.props.className).to.be.equals("user-profile__downarrow");
         expect(arrow.props.children.type).to.be.equals("i");
-        expect(arrow.props.children.props.className).to.be.equals("fa fa-caret-down down-arrow");
+        expect(arrow.props.children.props.className).to.be.equals("fa fa-caret-down");
     });
 
     it("should have dropdown", ()=> {

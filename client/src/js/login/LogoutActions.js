@@ -11,6 +11,7 @@ export default class LogoutActions {
         AjaxClient.instance("/logout", true).get();
         AppSessionStorage.instance().clear();
         History.getHistory().push("/");
+        localStorage.removeItem("userName");
         window.location.reload();
     }
 }

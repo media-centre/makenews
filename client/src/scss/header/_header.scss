@@ -78,11 +78,13 @@
 
 .user-profile {
   float: left;
-  width: 200px;
+  min-width: 180px;
   height: 64px;
   cursor: pointer;
   color: white;
   padding: 0px;
+  display: flex;
+  box-sizing: border-box;
 
   img {
     width: 36px;
@@ -90,14 +92,18 @@
   }
 
   &__image {
-    float: left;
     margin-top: 13px;
     margin-left: 10px;
   }
 
-  &__name, .down-arrow {
-    float: left;
-    margin-top: 20px;
+  &__name{
+    margin-top: 17px;
+    margin-left: 10px;
+    font-size: large;
+  }
+
+  &__downarrow{
+    margin-top: 19px;
     margin-left: 10px;
   }
 
@@ -119,7 +125,7 @@
   position: absolute;
   top: 64px;
   right: 0;
-  width: 200px;
+  min-width: 180px;
   background: $primary-color-dark;
   z-index: 1;
   display: none;
