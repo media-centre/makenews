@@ -33,7 +33,7 @@ export class DisplayArticle extends Component {
                 { this.props.article.description }
             </div>}
             <div className="article__original-source">
-                <a href={this.props.article.link} target="_blank" rel="nofollow noreferrer">Read the Original Article</a>
+                <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">Read the Original Article</a>
             </div>
         </main>);
     }

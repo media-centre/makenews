@@ -153,6 +153,11 @@ gulp.task("common:test", function() {
         .pipe(mocha());
 });
 
+gulp.task("common:watch", () => {
+    gulp.watch(`${parameters.common.srcPath}/**/*.js`, ["common:copy-js", "common:test"]);
+    gulp.watch(`${parameters.common.testPath}/**/**/*.js`, ["common:test"]);
+});
+
 gulp.task("common:src-eslint", function() {
     return gulp.src([parameters.common.srcPath + "/**/*.js"])
         .pipe(eslint())
