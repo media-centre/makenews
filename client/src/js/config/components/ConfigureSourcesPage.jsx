@@ -70,7 +70,7 @@ export class ConfigureSourcesPage extends Component {
     render() {
         let sourceType = this.props.params.sourceType;
         return (this.isPopUpDisplayed ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
-            : <div className="configure-container"><ConfiguredSources /><ConfigurePane /></div>);
+            : <div className="configure-container"><ConfiguredSources /><ConfigurePane currentSourceType={this.props.params.sourceType}/></div>);
     }
 }
 

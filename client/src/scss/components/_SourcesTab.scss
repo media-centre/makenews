@@ -1,10 +1,9 @@
 .sources-nav {
-  padding-left: 20%;
-  background-color: $background-color;
+  background-color: $dark-background-color;
 
   &__item {
     display: inline-block;
-    padding: 20px 20px 20px 10px;
+    padding: 16px 20px;
     cursor: pointer;
     color: $primary-color;
     opacity: .5;

@@ -5,12 +5,23 @@
       background-color: $background-color;
       border-right: 2px solid $primary-color-light;
       box-sizing: border-box;
-      padding-bottom: 80px;
+      padding-bottom: 10px;
       width: $configured-source-panel-width;
       height: calc(100vh - #{$main-header-height});
       position: fixed;
       display: flex;
       flex-direction: column;
+
+     .heading {
+        background: $dark-background-color;
+        padding: 15px;
+        margin: 0;
+        color: $primary-color;
+        height: 54px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
 
       .input-box {
         flex-basis: 40px;
@@ -40,6 +51,7 @@
     width: 60%;
     margin-left: 20%;
     margin-right: 20%;
+    margin-top: 20px;
     border-bottom: $border-size solid $primary-color;
     display: table;
     position: relative;
@@ -108,7 +120,7 @@
   .sources-suggestions {
     background-color: $background-color;
     padding: 20px;
-    margin-top: 50px;
+    margin-top: 40px;
 
     .fb-sources-tab {
       display: inline-block;

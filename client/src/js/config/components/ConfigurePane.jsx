@@ -1,6 +1,7 @@
 /* eslint brace-style:0*/
 import React, { Component, PropTypes } from "react";
 import SourcePane from "./SourcePane";
+import ConfigPaneNavigation from "./ConfigPaneNavigation";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import { handleMessages } from "../actions/AddUrlActions";
@@ -34,6 +35,7 @@ export class ConfigurePane extends Component {
     render() {
         return (
           <div className="configure-sources">
+              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType}/>
               <div className="input-group">
                   <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
                   <span className="input-group__addon">
@@ -60,7 +62,8 @@ function mapToStore(state) {
 ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "sources": PropTypes.object.isRequired
+    "sources": PropTypes.object.isRequired,
+    "currentSourceType": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(ConfigurePane);

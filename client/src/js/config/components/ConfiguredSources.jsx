@@ -39,6 +39,7 @@ class ConfiguredSources extends Component {
     render() {
         return (
             <aside className="configured-sources-container">
+                <h3 className="heading">My Sources</h3>
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
                 <Input eventHandlers={{ "onKeyUp": (event) => {
                     this._searchInSources(event);

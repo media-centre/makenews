@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ConfigurePaneConnected, { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
+import ConfigPaneNavigation from "./../../../src/js/config/components/ConfigPaneNavigation";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
@@ -34,13 +35,19 @@ describe("Configure Pane", () => {
             currentTab = SourceConfigActions.WEB;
             renderer = TestUtils.createRenderer();
             configurePaneDOM = renderer.render(
-                <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search"/>
+                <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search" currentSourceType="web"/>
             );
         });
 
         it("wraps with a <div> with a proper class name", function() {
             expect(configurePaneDOM.type).to.equal("div");
             expect(configurePaneDOM.props.className).to.equal("configure-sources");
+        });
+
+        it("should have ConfigPaneNavigationComponent", () => {
+            let result = renderer.getRenderOutput();
+            let renderedSources = findAllWithType(result, ConfigPaneNavigation);
+            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
 
         it("should have an input box for searching sources", () => {
@@ -106,7 +113,7 @@ describe("Configure Pane", () => {
 
             configurePane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfigurePaneConnected />
+                    <ConfigurePaneConnected currentSourceType="web"/>
                 </Provider>
             );
 
@@ -124,7 +131,7 @@ describe("Configure Pane", () => {
 
             configurePane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfigurePaneConnected />
+                    <ConfigurePaneConnected currentSourceType="web" />
                 </Provider>
             );
 
@@ -144,7 +151,7 @@ describe("Configure Pane", () => {
 
             configurePane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfigurePaneConnected />
+                    <ConfigurePaneConnected currentSourceType="web" />
                 </Provider>
             );
 
