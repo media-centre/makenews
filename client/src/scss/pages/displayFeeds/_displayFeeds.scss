@@ -107,6 +107,7 @@
       flex-basis: 100%;
 
       &__description {
+        word-break: break-all;
         overflow: hidden;
         font-family: "Lato", sans-serif;
         font-size: 12px;
@@ -116,6 +117,7 @@
       }
 
       &__title {
+        word-break: break-all;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -165,11 +167,12 @@
   }
 
   .collection-name {
-      padding: 2% 0% 2% 6%;
-      font-family: "Lato", sans-serif;
-      font-size: 17px;
-      cursor: pointer;
-      color: $primary-color-light;
+    padding: 2% 0% 2% 6%;
+    font-family: "Lato", sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+    color: $primary-color-light;
+    word-break: break-all;
     }
 
     .active{
