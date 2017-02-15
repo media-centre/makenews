@@ -19,7 +19,7 @@ describe("sanitizeHTML", () => {
     it("should keep the anchor tag with only href attribute", () => {
         let html = "<a href='http://some.url' class='link' id='cK7_'>link</a>";
 
-        let expectedHTML = "<a href=\"http://some.url\" rel=\"nofollow noopener noreferrer\">link</a>";
+        let expectedHTML = "<a href=\"http://some.url\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">link</a>";
 
         expect(sanitizeHTML(html)).equal(expectedHTML);
     });
@@ -51,7 +51,7 @@ describe("sanitizeHTML", () => {
     it("should add rel='nofollow noopener noreferrer' attributes to <a> tag", () => {
         const html = "<a class='link' href='http://some.url' rel='some random rel'>link</a>";
 
-        const expectedHTML = "<a href=\"http://some.url\" rel=\"nofollow noopener noreferrer\">link</a>";
+        const expectedHTML = "<a href=\"http://some.url\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">link</a>";
 
         expect(sanitizeHTML(html)).equal(expectedHTML);
     });

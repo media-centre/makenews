@@ -4,7 +4,7 @@ export function sanitizeHTML(html) {
     return sanitize(html, {
         "allowedTags": sanitize.defaults.allowedTags.concat(["img"]),
         "allowedAttributes": {
-            "a": ["href", "rel"],
+            "a": ["href", "target", "rel"],
             "img": ["src", "alt"]
         },
         "transformTags": {
@@ -13,6 +13,7 @@ export function sanitizeHTML(html) {
                     tagName,
                     "attribs": {
                         "href": attribs.href,
+                        "target": "_blank",
                         "rel": "nofollow noopener noreferrer"
                     }
                 };
