@@ -47,6 +47,9 @@ export class Sources extends Component {
     render() {
         const _renderSources = (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>;
 
+        let message = this.props.sources.keyword ? <p>{"No results found. Please enter another keyword"}</p>
+            : <p>{"Enter a keyword in the input box to get some sources"}</p>;
+
         return (
             <div className="source-results">
 
@@ -54,7 +57,7 @@ export class Sources extends Component {
                     R.addIndex(R.map)(_renderSources, this.props.sources.data) || "" }
 
                 { !this.props.sources.data.length && !this.props.sources.isFetchingSources &&
-                    <p>{"Enter a keyword in the input box to get some sources"}</p>
+                    message
                 }
 
                 { this.props.sources.isFetchingSources &&

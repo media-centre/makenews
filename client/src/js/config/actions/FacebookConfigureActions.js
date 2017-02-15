@@ -49,10 +49,10 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
                 dispatch(hasMoreSourceResults);
             } else {
                 dispatch(noMoreSourceResults);
-                dispatch(fetchingSourcesFailed);
+                dispatch(fetchingSourcesFailed(keyword));
             }
         } catch (err) {
-            dispatch(fetchingSourcesFailed);
+            dispatch(fetchingSourcesFailed(keyword));
         }
     };
 }

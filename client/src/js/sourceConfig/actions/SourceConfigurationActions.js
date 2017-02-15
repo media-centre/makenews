@@ -112,7 +112,12 @@ export function switchSourceTab(currentTab) {
 
 export const fetchingSources = { "type": FETCHING_SOURCE_RESULTS };
 
-export const fetchingSourcesFailed = { "type": FETCHING_SOURCE_RESULTS_FAILED };
+export function fetchingSourcesFailed(keyword) {
+    return {
+        "type": FETCHING_SOURCE_RESULTS_FAILED,
+        keyword
+    };
+}
 
 export function searchInConfiguredSources(keyword = "") {
     return {

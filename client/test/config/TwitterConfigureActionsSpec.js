@@ -129,14 +129,19 @@ describe("TwitterConfigureActions", () => {
             sandbox.mock(SearchResultsSetOperations).expects("intersectionWith");
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS }, { "type": NO_MORE_SOURCE_RESULTS }, { "type": FETCHING_SOURCE_RESULTS_FAILED }], done);
+            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
+                { "type": NO_MORE_SOURCE_RESULTS },
+                { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
+                done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
         });
 
         it(`should dispatch ${{ "type": FETCHING_SOURCE_RESULTS_FAILED }} if  fetching handle reject with error`, (done) => {
             ajaxGetMock.returns(Promise.reject("error"));
 
-            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS }, { "type": FETCHING_SOURCE_RESULTS_FAILED }], done);
+            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
+                { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
+                done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
         });
     });

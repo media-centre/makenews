@@ -46,7 +46,7 @@ export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingS
     }
 
     case FETCHING_SOURCE_RESULTS_FAILED: {
-        return Object.assign({}, state, { "isFetchingSources": false });
+        return Object.assign({}, state, { "isFetchingSources": false, "keyword": action.keyword });
     }
 
     case WEB_ADD_SOURCE: {

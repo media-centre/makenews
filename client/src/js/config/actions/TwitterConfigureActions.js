@@ -32,10 +32,10 @@ export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0)
                 dispatch(hasMoreSourceResults);
             } else {
                 dispatch(noMoreSourceResults);
-                dispatch(fetchingSourcesFailed);
+                dispatch(fetchingSourcesFailed(keyword));
             }
         } catch(err) { //eslint-disable-line un-used-variable
-            dispatch(fetchingSourcesFailed);
+            dispatch(fetchingSourcesFailed(keyword));
         }
     };
 }

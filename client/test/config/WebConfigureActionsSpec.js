@@ -140,7 +140,7 @@ describe("WebConfigureActions", () => {
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": NO_MORE_SOURCE_RESULTS },
-                { "type": FETCHING_SOURCE_RESULTS_FAILED }
+                { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }
             ];
 
             let store = mockStore({}, actions, done);

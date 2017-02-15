@@ -144,7 +144,7 @@ describe("Facebook Configure Actions", () => {
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": NO_MORE_SOURCE_RESULTS },
-                { "type": FETCHING_SOURCE_RESULTS_FAILED }
+                { "type": FETCHING_SOURCE_RESULTS_FAILED, "keyword": pageName }
             ];
 
             const getStore = () => ({
