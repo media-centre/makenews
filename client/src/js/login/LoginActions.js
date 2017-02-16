@@ -1,6 +1,7 @@
 
 import AjaxClient from "../utils/AjaxClient";
 import UserSession from "../user/UserSession";
+import { getConfiguredSources } from "../sourceConfig/actions/SourceConfigurationActions";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
@@ -19,6 +20,7 @@ export function userLogin(history, userName, password) {
                 userSession.setLastAccessedTime();
                 localStorage.setItem("userName", userName);
                 dispatch(loginSuccess());
+                dispatch(getConfiguredSources());
                 history.push("/newsBoard");
             })
             .catch(errorData => { //eslint-disable-line no-unused-vars

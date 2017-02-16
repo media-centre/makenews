@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
-import { getConfiguredSources, searchInConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { searchInConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
 import SourceFilters from "./../../newsboard/filter/SourceFilters";
@@ -13,7 +13,6 @@ class ConfiguredSources extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(getConfiguredSources());
         this.props.dispatch(searchInConfiguredSources(""));
     }
 

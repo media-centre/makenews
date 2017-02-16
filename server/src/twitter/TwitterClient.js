@@ -32,9 +32,8 @@ export default class TwitterClient {
 
             oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
-                    const errorInfo = JSON.parse(data);
                     TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s.", url, error);
-                    reject(errorInfo.message);
+                    reject(error);
                 } else {
                     let tweetData = JSON.parse(data);
                     let parsedTweets = TwitterParser.instance().parseTweets(url, tweetData.statuses || tweetData);
@@ -83,9 +82,8 @@ export default class TwitterClient {
 
             oauth.get(getHandles, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
-                    let errorInfo = JSON.parse(data);
-                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter handles for ${getHandles}, Error: ${JSON.stringify(error)}`);
-                    reject(errorInfo.message);
+                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter handles for ${getHandles}, Error: ${error}`);
+                    reject(error);
                 } else {
                     let jsonParsedData = JSON.parse(data);
                     if (jsonParsedData.length) {
