@@ -23,7 +23,7 @@ describe("DisplayFeeds", () => {
                 "_id": "1234"
             },
             "newsBoardCurrentSourceTab": "web",
-            "currentFilterSource": "web"
+            "currentFilterSource": { "web": [] }
         }), applyMiddleware(thunkMiddleware));
 
         sandbox.useFakeTimers();

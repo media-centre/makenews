@@ -21,7 +21,7 @@ describe("actions", () => {
 });
 
 describe("userLogin", () => {
-    let headers = null, data = null, userName = null, password = null, ajaxPostMock = null, history = null, sandbox = null;
+    let headers = null, data = null, userName = null, password = null, ajaxInstanceMock = null, ajaxPostMock = null, history = null, sandbox = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
@@ -33,8 +33,8 @@ describe("userLogin", () => {
         data = { "username": userName, "password": password };
         sandbox = sinon.sandbox.create();
         let ajaxInstance = new AjaxClient("/login", true);
-        let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-        ajaxInstanceMock.withArgs("/login").returns(ajaxInstance);
+        ajaxInstanceMock = sandbox.mock(AjaxClient);
+        ajaxInstanceMock.expects("instance").withArgs("/login").returns(ajaxInstance);
         ajaxPostMock = sandbox.mock(ajaxInstance).expects("post");
     });
 
@@ -44,7 +44,7 @@ describe("userLogin", () => {
     });
 
     describe("success", () => {
-        let historyMock = null, userSessionMock = null;
+        let historyMock = null, userSessionMock = null, sources = { "web": [], "facebook": [], "twitter": [{ "_id": "123" }] };
         beforeEach("userLogin", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
@@ -53,6 +53,9 @@ describe("userLogin", () => {
             sandbox.stub(UserSession, "instance").returns(userSession);
             userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
             historyMock = sandbox.mock(history).expects("push");
+            let configAjaxInstance = new AjaxClient("/configure-sources", true);
+            ajaxInstanceMock.expects("instance").withArgs("/configure-sources").returns(configAjaxInstance);
+            sandbox.stub(configAjaxInstance, "get").returns(Promise.resolve(sources));
         });
 
         afterEach("userLogin", () => {
@@ -63,8 +66,10 @@ describe("userLogin", () => {
         it("should dispatch login successful action if the login is successful", (done) => {
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve());
             historyMock.withArgs("/newsBoard");
+
             const expectedActions = [
-                { "type": LOGIN_SUCCESS }
+                { "type": LOGIN_SUCCESS },
+                { "type": "GOT_CONFIGURED_SOURCES", "sources": sources }
             ];
 
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);
@@ -75,7 +80,8 @@ describe("userLogin", () => {
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
             historyMock.withArgs("/newsBoard");
             const expectedActions = [
-                { "type": LOGIN_SUCCESS }
+                { "type": LOGIN_SUCCESS },
+                { "type": "GOT_CONFIGURED_SOURCES", "sources": sources }
             ];
 
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);

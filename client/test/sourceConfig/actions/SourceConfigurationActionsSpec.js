@@ -37,9 +37,10 @@ describe("SourceConfigurationActions", () => {
             sandbox.mock(UserSession).expects("instance").returns({
                 "continueSessionIfActive": () => {}
             });
-            let ajaxClient = AjaxClient.instance("/configure-sources", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources", false).returns(ajaxClient);
+            let ajaxClient = AjaxClient.instance("/configure-sources");
+            sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources").returns(ajaxClient);
             sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
+            //ss
 
             let store = mockStore({}, [{ "type": sourceConfigActions.GOT_CONFIGURED_SOURCES, "sources": sources }], done);
             store.dispatch(sourceConfigActions.getConfiguredSources());

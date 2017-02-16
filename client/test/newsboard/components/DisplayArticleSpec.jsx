@@ -112,7 +112,7 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} addToCollectionStatus = {"message"} dispatch={()=>{}}/>);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "added" }} dispatch={()=>{}}/>);
             let result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, DisplayWebArticle);
 

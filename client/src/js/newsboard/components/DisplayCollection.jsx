@@ -11,8 +11,11 @@ export class DisplayCollection extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let collectionName = nextProps.feeds[0].collection; //eslint-disable-line no-magic-numbers
-        this.props.dispatch(setCollectionName(collectionName));
+        let [firstCollection] = nextProps.feeds;
+        if(firstCollection) {
+            let collectionName = firstCollection.collection;
+            this.props.dispatch(setCollectionName(collectionName));
+        }
     }
 
 

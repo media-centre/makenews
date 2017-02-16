@@ -82,7 +82,7 @@ export class DisplayArticle extends Component {
 }
 
 DisplayArticle.propTypes = {
-    "article": PropTypes.object.isRequired,
+    "article": PropTypes.object,
     "dispatch": PropTypes.func.isRequired,
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "addToCollectionStatus": PropTypes.object.isRequired,

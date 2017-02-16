@@ -102,14 +102,12 @@ describe("TwitterClient", () => {
 
             nock("https://api.twitter.com/1.1")
                 .get("/users/search.json?q=india&page=1")
-                .reply(HttpResponseHanlder.codes.BAD_REQUEST, {
-                    "message": "no result"
-                });
+                .reply(HttpResponseHanlder.codes.BAD_REQUEST, "no result");
 
             try {
                 await twitterClient.fetchHandles("userName", "india", 1, 0);  //eslint-disable-line no-magic-numbers
             } catch(error) {
-                assert.deepEqual("no result", error);
+                assert.deepEqual("no result", error.data);
             }
         });
 
@@ -223,14 +221,12 @@ describe("TwitterClient", () => {
 
             nock("https://api.twitter.com/1.1")
                 .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since:2017-1-9&user_id=dhoni")
-                .reply(HttpResponseHanlder.codes.BAD_REQUEST, {
-                    "message": "could not authenticate you"
-                });
+                .reply(HttpResponseHanlder.codes.BAD_REQUEST, "could not authenticate you");
             try {
                 await twitterClient.fetchTweets("dhoni", "userName", 1483947627341); //eslint-disable-line no-magic-numbers
                 assert.fail();
             } catch(error) {
-                assert.deepEqual("could not authenticate you", error);
+                assert.deepEqual("could not authenticate you", error.data);
             }
         });
 

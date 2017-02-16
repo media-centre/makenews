@@ -20,7 +20,7 @@ describe("DisplayWebArticle", () => {
             "link": "some link"
         };
         store = createStore(() => ({
-            "webArticleMarkup": "<p>This is the body of the tag</p>",
+            "webArticleMarkup": { "isHtml": true, "markup": "<p>This is the body of the tag</p>" },
             "selectedArticle": currentArticle,
             "fetchingWebArticle": false
         }), applyMiddleware(thunkMiddleWare));
