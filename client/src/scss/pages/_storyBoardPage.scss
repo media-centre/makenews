@@ -77,14 +77,6 @@
 .story-board {
   display: flex;
 
-  .story-collections {
-    border-right: 1px solid $primary-color-light;
-    flex-basis: 420px;
-    box-sizing: border-box;
-    height: calc(100vh - #{$main-header-height});
-    background: $background-color;
-  }
-
   .editor-container {
     flex-basis: 0;
     flex-grow: 1;
@@ -117,4 +109,25 @@
     }
   }
 }
-  
+
+.story-collections .configured-feeds-container {
+  .expand-icon {
+  //.create_collection {
+    display: none;
+  }
+}
+
+.select_collection {
+font-size: 17px;
+color: $primary-color-light;
+padding: 5% 0 3% 8%;
+}
+
+.collections {
+  flex: 0;
+  flex-basis: 420px;
+}
+
+.display-collection .collection-feeds .collection-feed {
+  flex-basis: 100%;
+}

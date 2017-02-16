@@ -1,4 +1,4 @@
-.news-board-container, .story-board-container {
+.news-board-container, .story-collections {
   display: flex;
 
   .source-type-bar {
@@ -42,7 +42,7 @@
       }
     }
   }
-  .news-feeds-container {
+  .configured-feeds-container {
     background-color: $background-color;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
@@ -173,7 +173,58 @@
       }
     }
 
-    .configured-sources {
+  .configured-sources {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .collection-name {
+    padding: 2% 0% 2% 6%;
+    font-family: "Lato", sans-serif;
+    font-size: 19px;
+    cursor: pointer;
+    color: $primary-color-light;
+    word-break: break-all;
+    }
+
+    .active{
+      background-color: white;
+      color: $secondary-color;
+    }
+
+    .create_collection {
+      font-family: "Lato", sans-serif;
+      font-size: 17px;
+      color: $primary-color-light;
+      padding: 5% 0 3% 8%;
+      cursor: pointer;
+    }
+
+    .new-collection-input-box {
+      width: 80%;
+      margin: 6%;
+      display: table;
+      border: none;
+      border-bottom: 2px solid $primary-color-light;
+    }
+
+    .save-collection {
+      background-color: $secondary-color;
+      color: white;
+      margin-right: 15px;
+    }
+
+    .cancel-collection {
+      color: $primary-color-light;
+      margin-right: 15px;
+    }
+    .collection-popup-overlay{
+      background-color: rgba(70, 65, 74, 0.6);
+      top: 68px;
+      position: fixed;
+      left: 0;
+      height: 100%;
       width: 100%;
       padding: 0;
       margin: 0;
