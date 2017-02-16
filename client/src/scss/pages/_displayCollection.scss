@@ -1,6 +1,84 @@
+.collection-list-container {
+  background-color: $background-color;
+  height: calc(100vh - #{$main-header-height});
+  overflow-y: auto;
+  flex-basis: $side-panel-width;
+  border-right: 2px solid lighten($primary-color, 35%);
+
+  .search-bar {
+    height: $secondary-header-nav-height;
+    background-color: $dark-background-color;
+    padding: 8px 10px 5px;
+    box-sizing: border-box;
+  }
+
+  .collection-name {
+    padding: 10px 15px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    color: $primary-color-light;
+    word-break: break-all;
+  }
+
+  .active {
+    background-color: white;
+    color: $secondary-color;
+  }
+
+  .create_collection {
+    font-size: .9rem;
+    font-weight: 400;
+    color: $primary-color;
+    text-transform: uppercase;
+    padding: 20px 10px;
+    cursor: pointer;
+  }
+
+  .new-collection-input-box {
+    width: 80%;
+    margin: 6%;
+    display: table;
+    border: none;
+    border-bottom: 2px solid $primary-color-light;
+  }
+
+  .save-collection {
+    background-color: $secondary-color;
+    color: white;
+    margin-right: 15px;
+  }
+
+  .cancel-collection {
+    color: $primary-color-light;
+    margin-right: 15px;
+  }
+  .collection-popup-overlay {
+    background-color: rgba(70, 65, 74, 0.6);
+    top: 68px;
+    position: fixed;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    &:target {
+      opacity: 1;
+    }
+    .new-collection {
+      text-align: right;
+      background-color: white;
+      position: absolute;
+      opacity: 1;
+      height: 150px;
+      left: 65px;
+      width: 395px;
+      top: 5%;
+    }
+  }
+}
+
 .collections {
   flex: 1;
 }
+
 .display-collection {
   flex: 1;
   height: calc(100vh - #{$main-header-height});
@@ -58,8 +136,7 @@
   }
 
   .collection-header {
-    padding: 14px 10px;
     background: $dark-background-color;
-    height: 31px;
+    height: $secondary-header-nav-height;
   }
 }

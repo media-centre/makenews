@@ -15,7 +15,8 @@ describe("Display Collections", () => {
 
     beforeEach("Display Collection", () => {
         feeds = [
-            { "_id": "1234", "collection": "collection1" }
+            { "_id": "1234", "collection": "collection1" },
+            { "_id": "12345", "collection": "politics" }
         ];
         store = createStore(() => ({
             "fetchedFeeds": feeds,
@@ -36,7 +37,8 @@ describe("Display Collections", () => {
     });
 
     it("should render collections when the souretype is collection", () => {
-        assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "collection-name"));
+        //eslint-disable-next-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);
 
     });
     it("should show popup when create new collection is clicked", () => {
@@ -70,5 +72,25 @@ describe("Display Collections", () => {
         inputBox.value = "collectionName";
         TestUtils.Simulate.keyUp(inputBox, { "keyCode": 13 });
         addToCollectionMock.verify();
+    });
+
+    it("should have an search input box", () => {
+        assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "input-box"));
+    });
+
+    it("should render the filtered collection names only, after entering the keyword in searchbar", () => {
+        //eslint-disable-next-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);
+
+        let displayFeedDom = ReactDOM.findDOMNode(result);
+        let inputBox = displayFeedDom.querySelector(".input-box input");
+        inputBox.value = "politic";
+        TestUtils.Simulate.keyUp(inputBox, { "key": "s" });
+
+        let collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
+        //eslint-disable-next-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);
+        //eslint-disable-next-line no-magic-numbers
+        assert.equal(collections[0].textContent, " politics");
     });
 });

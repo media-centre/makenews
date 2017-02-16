@@ -19,6 +19,10 @@
     padding: 14px 10px;
     background: $dark-background-color;
     text-align: right;
+    height: $secondary-header-nav-height;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 
     .bookmark {
       color: $primary-color-light;
@@ -55,6 +59,7 @@
     &__title {
       font-size: 2rem;
       color: $secondary-color;
+      word-wrap: break-word;
     }
 
     &__details {

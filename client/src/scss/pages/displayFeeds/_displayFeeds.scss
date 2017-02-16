@@ -2,7 +2,6 @@
   display: flex;
 
   .source-type-bar {
-    padding: 0 5px 20px;
     box-sizing: border-box;
     flex-basis: 54px;
     background-color: $dark-background-color;
@@ -12,7 +11,7 @@
       width: 1.5em;
       height: 1.5em;
       text-align: center;
-      margin-bottom: 10px;
+      margin: 10px 5px;
       cursor: pointer;
 
       &.active {
@@ -31,15 +30,20 @@
     }
 
     .source-filter.news-board-tab {
+      background: #e0ced7;
+      width: 100%;
+      margin: 0;
+      height: $secondary-header-nav-height;
+      box-sizing: border-box;
+      padding: 15px;
+
       &.hidden {
         visibility: hidden;
       }
     }
   }
-  .configured-feeds-container {
+  .news-feeds-container {
     background-color: $background-color;
-    height: calc(100vh - #{$main-header-height});
-    overflow-y: auto;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
 
@@ -91,9 +95,18 @@
       }
     }
 
+    .refresh-container {
+      background: $dark-background-color;
+      height: $secondary-header-nav-height;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
     .feeds {
       display: flex;
       flex-wrap: wrap;
+      height: calc(100vh - #{$main-header-height} - #{$secondary-header-nav-height});
+      overflow-y: auto;
     }
 
     .feed {
@@ -134,7 +147,6 @@
         height: 100%;
         max-width: 230px;
         max-height: 100px;
-        //padding-top: 6%;
       }
 
       &__media {
@@ -160,73 +172,12 @@
       }
     }
 
-  .configured-sources {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-  }
-
-  .collection-name {
-    padding: 2% 0% 2% 6%;
-    font-family: "Lato", sans-serif;
-    font-size: 17px;
-    cursor: pointer;
-    color: $primary-color-light;
-    word-break: break-all;
-    }
-
-    .active{
-      background-color: white;
-      color: $secondary-color;
-    }
-
-    .create_collection {
-      font-family: "Lato", sans-serif;
-      font-size: 17px;
-      color: $primary-color-light;
-      padding: 5% 0 3% 8%;
-      cursor: pointer;
-    }
-
-    .new-collection-input-box {
-      width: 80%;
-      margin: 6%;
-      display: table;
-      border: none;
-      border-bottom: 2px solid $primary-color-light;
-    }
-
-    .save-collection {
-      background-color: $secondary-color;
-      color: white;
-      margin-right: 15px;
-    }
-
-    .cancel-collection {
-      color: $primary-color-light;
-      margin-right: 15px;
-    }
-    .collection-popup-overlay{
-      background-color: rgba(70, 65, 74, 0.6);
-      top: 68px;
-      position: fixed;
-      left: 0;
-      height: 100%;
+    .configured-sources {
       width: 100%;
-      &:target {
-        opacity: 1;
-      }
-      .new-collection {
-        text-align: right;
-        background-color: white;
-        position: absolute;
-        opacity: 1;
-        height: 150px;
-        left: 65px;
-        width: 395px;
-        top: 5%;
-      }
+      padding: 0;
+      margin: 0;
     }
+
   }
 
   .article {

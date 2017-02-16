@@ -77,7 +77,10 @@ describe("Configure Pane", () => {
 
         it("should have SourcePane if there are sources", () => {
             renderer = TestUtils.createRenderer();
-            configurePaneDOM = renderer.render(<ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": ["Hindu"] }} currentSourceType="web"/>);
+            configurePaneDOM = renderer.render(
+                <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab}
+                    sources = {{ "data": ["Hindu"] }} currentSourceType="web"
+                />);
             let result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, SourcePane);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers

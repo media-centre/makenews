@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import AppWindow from "./../../utils/AppWindow";
 import { connect } from "react-redux";
@@ -25,8 +24,10 @@ export class DisplayFeeds extends Component {
 
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
-        this.dom = ReactDOM.findDOMNode(this);
-        this.dom.addEventListener("scroll", this.getFeedsCallBack);
+        this.feedsDOM = this.refs.feeds;
+        if(this.feedsDOM) {
+            this.feedsDOM.addEventListener("scroll", this.getFeedsCallBack);
+        }
         this.getMoreFeeds(this.props.sourceType);
         this.props.dispatch(DisplayFeedActions.clearFeeds());
     }
@@ -58,7 +59,7 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillUnmount() {
-        this.dom.removeEventListener("scroll", this.getFeedsCallBack);
+        this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
     }
 
     getFeedsCallBack() {
@@ -66,8 +67,8 @@ export class DisplayFeeds extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                const scrollTop = this.dom.scrollTop;
-                if (scrollTop && scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
+                const scrollTop = this.feedsDOM.scrollTop;
+                if (scrollTop && scrollTop + this.feedsDOM.clientHeight >= this.feedsDOM.scrollHeight) {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }, scrollTimeInterval);
@@ -125,13 +126,15 @@ export class DisplayFeeds extends Component {
     render() {
         return (
             this.props.sourceType === "collections" ? <DisplayCollection />
-            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
-                <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
+            : <div className={this.state.expandFeedsView ? "news-feeds-container expand" : "news-feeds-container"}>
+                <div className="refresh-container">
+                    <button onClick={this.fetchFeedsFromSources} className="refresh-button secondary">{"Refresh"}</button>
+                </div>
                 <i onClick={() => {
                     this._toggleFeedsView();
                 }} className="expand-icon"
                 />
-           <div className="feeds">
+                <div className="feeds" ref="feeds">
                     {this.props.feeds.map((feed, index) =>
                         <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} dispatch={this.props.dispatch}/>)}
                 </div>

@@ -23,7 +23,7 @@ describe("DisplayFeeds", () => {
                 "_id": "1234"
             },
             "newsBoardCurrentSourceTab": "web",
-            "currentFilterSource": { "web": [] }
+            "currentFilterSource": { "web": [], "facebook": [], "twitter": [] }
         }), applyMiddleware(thunkMiddleware));
 
         sandbox.useFakeTimers();
@@ -44,15 +44,15 @@ describe("DisplayFeeds", () => {
     });
 
     it("should not have expand class by default", () => {
-        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
-        expect(displayFeeds.className).to.equal("configured-feeds-container");
+        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "news-feeds-container");
+        expect(displayFeeds.className).to.equal("news-feeds-container");
     });
 
     it("should have expand class when we click on expand icon", () => {
         let renderedSources = TestUtils.findRenderedDOMComponentWithClass(result, "expand-icon");
         TestUtils.Simulate.click(renderedSources);
 
-        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
+        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "news-feeds-container");
         expect(displayFeeds.className).to.contains("expand");
     });
 
