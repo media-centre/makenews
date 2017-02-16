@@ -17,6 +17,7 @@ export class ConfigurePane extends Component {
     }
 
     componentWillUnmount() {
+        this.props.dispatch(SourceConfigActions.clearSources);
         this.props.dispatch(SourceConfigActions.fetchingSourcesFailed(""));
     }
 
