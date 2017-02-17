@@ -5,11 +5,13 @@ import StringUtil from "./../../../../../common/src/util/StringUtil";
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
 import R from "ramda"; //eslint-disable-line id-length
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 
 export class DisplayCollection extends Component {
     constructor() {
         super();
-        this.state = { "showCollectionPopup": false, "searchKey": "" };
+        this.state = { "showCollectionPopup": false, "searchKey": "" , "isClicked": false };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -22,6 +24,7 @@ export class DisplayCollection extends Component {
 
 
     collectionClick(event, collection) {
+        this.setState({ "isClicked": true });
         this.refs.collectionList.querySelector(".collection-name.active").className = "collection-name";
         event.target.className = "collection-name active";
         this.props.dispatch(setCollectionName(collection.collection));
@@ -99,29 +102,38 @@ export class DisplayCollection extends Component {
         );
     }
 
-    render() {
-        return (
-            <div className="collection-list-container" >
-                <div className="search-bar">
-                    <Input placeholder="Search collections" eventHandlers={{ "onKeyUp": (event) => {
-                        this._searchCollections(event);
-                    } }} addonSrc="./images/search-icon.png"
-                    />
-                </div>
-                <div className="create_collection" onClick={() => {
-                    this.setState({ "showCollectionPopup": true });
-                }}
+    createNewCollection() {
+        return (<div className="create_collection" onClick={() => {
+            this.setState({ "showCollectionPopup": true });
+        }}
                 >
                     <i className="fa fa-plus-circle"/> Create new collection
-                </div>
+            </div>
+        );
 
-                { this.state.showCollectionPopup ? this.showPopup() : null}
+    }
+
+    displayCollections() {
+        return (<div className="collection-list-container" >
+                    <div className="search-bar">
+                        <Input placeholder="Search collections" eventHandlers={{ "onKeyUp": (event) => {
+                            this._searchCollections(event);
+                        } }} addonSrc="./images/search-icon.png"
+                        />
+                    </div>
+                {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">SELECT A COLLECTION</div> : this.createNewCollection()}
+                {this.state.showCollectionPopup ? this.showPopup() : null}
                 <div className="feeds">
                     <ul className="configured-sources" ref="collectionList">
                         { this._renderCollections() }
                     </ul>
                 </div>
-            </div>
+        </div>);
+    }
+
+    render() {
+        return (
+           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab}/> : this.displayCollections()
         );
     }
 }
@@ -129,14 +141,16 @@ export class DisplayCollection extends Component {
 function mapToStore(store) {
     return {
         "feeds": store.fetchedFeeds,
-        "addArticleToCollection": store.addArticleToCollection
+        "addArticleToCollection": store.addArticleToCollection,
+        "mainHeaderTab": store.currentHeaderTab
     };
 }
 
 DisplayCollection.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "feeds": PropTypes.array.isRequired,
-    "addArticleToCollection": PropTypes.object
+    "addArticleToCollection": PropTypes.object,
+    "mainHeaderTab": PropTypes.string
 };
 
 export default connect(mapToStore)(DisplayCollection);

@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import DisplayCollection from "../../../src/js/newsboard/components/DisplayCollection";
-import DisplayStoryCollection from "../../../src/js/storyboard/components/DisplayStoryCollection";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
@@ -78,28 +77,6 @@ describe("DisplayFeeds", () => {
                 </Provider>);
 
             let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
-            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
-        });
-
-        it("should have Display story collection", () => {
-            feeds = [
-                { "_id": "1234", "collection": "collection1" }
-            ];
-            store = createStore(() => ({
-                "fetchedFeeds": feeds,
-                "selectedArticle": {
-                    "_id": "1234"
-                },
-                "newsBoardCurrentSourceTab": "collections",
-                "currentHeaderTab": "Write a Story"
-
-            }), applyMiddleware(thunkMiddleware));
-
-            result = TestUtils.renderIntoDocument(
-                <Provider store={store}>
-                    <DisplayFeeds />
-                </Provider>);
-            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayStoryCollection);
             expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
     });

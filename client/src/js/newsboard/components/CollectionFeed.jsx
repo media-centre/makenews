@@ -1,8 +1,9 @@
-/* eslint brace-style:0 */
+/* eslint brace-style:0  no-unused-expressions:0*/
 import React, { Component, PropTypes } from "react";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
 
 export default class CollectionFeed extends Component {
 
@@ -14,8 +15,11 @@ export default class CollectionFeed extends Component {
         const feed = this.props.feed;
         let [video] = feed.videos || [];
         let [image] = feed.images;
+        let style = {};
+        this.props.tab === WRITE_A_STORY ? style = { "flexBasis": "100%" } : style;
+
         return (
-            <div className="collection-feed">
+            <div style={style} className="collection-feed">
                 <div className="collection-feed__title">{feed.title}</div>
 
                 <div className="collection-feed__source">
@@ -36,5 +40,6 @@ export default class CollectionFeed extends Component {
 
 CollectionFeed.propTypes = {
     "feed": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func
+    "dispatch": PropTypes.func,
+    "tab": PropTypes.string
 };

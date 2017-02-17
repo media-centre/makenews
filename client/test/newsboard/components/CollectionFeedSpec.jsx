@@ -20,7 +20,7 @@ describe("CollectionFeed", () => {
         onToggle = () => {
         };
         renderer = TestUtils.createRenderer();
-        feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
+        feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Scan News"/>);
     });
 
     it("should have a div with feed class", () => {
@@ -49,6 +49,16 @@ describe("CollectionFeed", () => {
 
         expect(description.className).to.equals("collection-feed__description");
         expect(description.children).to.equals("Some Description");
+    });
+
+    it("should not have style when current tab scan news", () => {
+        expect(feedDom.props.style).to.deep.equals({});
+    });
+
+    it("should have style when current tab write a story", () => {
+        let style = { "flexBasis": "100%" };
+        feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Write a Story"/>);
+        expect(feedDom.props.style).to.deep.equals(style);
     });
 
     describe("Read more Button", () => {

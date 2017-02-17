@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 import DisplayCollection from "./DisplayCollection";
-import DisplayStoryCollection from "./../../storyboard/components/DisplayStoryCollection";
 
 export class DisplayFeeds extends Component {
     constructor() {
@@ -125,9 +124,8 @@ export class DisplayFeeds extends Component {
     }
 
     render() {
-        let collection = this.props.mainHeaderTab === "Write a Story" ? <DisplayStoryCollection/> : <DisplayCollection />;
         return (
-            this.props.sourceType === "collections" ? collection
+            this.props.sourceType === "collections" ? <DisplayCollection />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 <i onClick={() => {
@@ -149,8 +147,7 @@ function mapToStore(store) {
         "sourceType": store.newsBoardCurrentSourceTab,
         "articleToDisplay": store.selectedArticle,
         "currentFilterSource": store.currentFilterSource,
-        "configuredSources": store.configuredSources,
-        "mainHeaderTab": store.currentHeaderTab
+        "configuredSources": store.configuredSources
     };
 }
 
@@ -160,9 +157,7 @@ DisplayFeeds.propTypes = {
     "sourceType": PropTypes.string.isRequired,
     "articleToDisplay": PropTypes.object,
     "currentFilterSource": PropTypes.object,
-    "configuredSources": PropTypes.object,
-    "mainHeaderTab": PropTypes.string
-
+    "configuredSources": PropTypes.object
 };
 
 export default connect(mapToStore)(DisplayFeeds);

@@ -6,6 +6,7 @@ import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -66,15 +67,18 @@ export class DisplayCollectionFeeds extends Component {
     }
 
     render() {
+        let style = {};
+        this.props.tab === WRITE_A_STORY ? style = { "flex": "0", "flex-basis": "420px" } : style; //eslint-disable-line no-unused-expressions
+
         return (
-            <div className="collections">
+            <div style={style} className="collections">
                 <DisplayArticle collection={this.refs.collection}/>
                 <div ref="collection" className="display-collection">
                     <header className="collection-header" />
                     <div className="collection-feeds">
                         {
                             this.props.feeds.map((feed, index) =>
-                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch}/>)
+                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)
                         }
                     </div>
                 </div>
@@ -86,7 +90,8 @@ export class DisplayCollectionFeeds extends Component {
 DisplayCollectionFeeds.propTypes = {
     "collectionName": PropTypes.string.isRequired,
     "feeds": PropTypes.array.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "tab": PropTypes.string
 };
 
 function mapToStore(store) {

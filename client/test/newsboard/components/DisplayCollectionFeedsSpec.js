@@ -7,7 +7,7 @@ import { findAllWithType, findWithClass } from "react-shallow-testutils";
 import { assert } from "chai";
 
 describe("DisplayCollectionFeeds", () => {
-    let result = null, feeds = null, collectionName = null;
+    let result = null, feeds = null, collectionName = null, renderer = null;
 
     beforeEach("DisplayCollectionFeeds", () => {
         collectionName = "test";
@@ -16,9 +16,9 @@ describe("DisplayCollectionFeeds", () => {
             { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
         ];
 
-        const renderer = TestUtils.createRenderer();
+        renderer = TestUtils.createRenderer();
         renderer.render(
-                <DisplayCollectionFeeds collectionName = {collectionName} dispatch = {() => {}} feeds = {feeds} />);
+                <DisplayCollectionFeeds collectionName = {collectionName} dispatch = {() => {}} feeds = {feeds} tab="Scan News"/>);
         result = renderer.getRenderOutput();
     });
 
@@ -49,6 +49,19 @@ describe("DisplayCollectionFeeds", () => {
         let renderedSources = findAllWithType(result, DisplayArticle);
         let [source] = renderedSources;
         assert.isDefined(source);
+    });
+
+    it("should not have style when current tab scan news", () => {
+        assert.deepEqual(result.props.style, {});
+    });
+
+    it("should have style when current tab write a story", () => {
+        let style = { "flex": "0", "flex-basis": "420px" };
+        renderer.render(
+            <DisplayCollectionFeeds collectionName={collectionName} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
+        result = renderer.getRenderOutput();
+
+        assert.deepEqual(result.props.style, style);
     });
 });
 
