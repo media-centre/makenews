@@ -17,7 +17,8 @@
     font-size: 1.05rem;
     cursor: pointer;
     color: $primary-color-light;
-    word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 
   .active {

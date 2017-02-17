@@ -120,7 +120,8 @@
       flex-basis: 100%;
 
       &__description {
-        word-break: break-all;
+        word-wrap: break-word;
+        word-break: break-word;
         overflow: hidden;
         font-family: "Lato", sans-serif;
         font-size: 12px;
@@ -130,14 +131,14 @@
       }
 
       &__title {
-        word-break: break-all;
+        word-wrap: break-word;
+        word-break: break-word;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        font-family: "Lato", sans-serif;
-        font-size: $mid-font-size;
+        font-size: 1.12rem;
         color: $primary-color;
         line-height: 24px;
       }
