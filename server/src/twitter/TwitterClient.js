@@ -18,16 +18,15 @@ export default class TwitterClient {
 
     async fetchTweets(url, userName, timestamp) {
         let type = url.startsWith("#") ? twitterTypes.TAG : twitterTypes.USER;
-        let timestampQuery = timestamp ? `&since:${this._getTwitterTimestampFormat(timestamp)}` : "";
+        let timestampQuery = timestamp ? `&since=${this._getTwitterTimestampFormat(timestamp)}` : "";
         let tokenInfo = await this.getAccessTokenAndSecret(userName);
 
         return new Promise((resolve, reject) => {
             let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
             let oauth = TwitterLogin.createOAuthInstance();
 
-
             let searchUrl = type === twitterTypes.TAG
-                ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter:retweets${timestampQuery}`
+                ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter=retweets${timestampQuery}`
                 : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&user_id=${url}`;
 
             oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
