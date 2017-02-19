@@ -51,7 +51,7 @@ function isLoggedIn(nextState, replaceState) {
 function showLoginPage(nextState, replaceState) {
     let userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
-        userSession.setLastAccessedTime();
-        replaceState("/configure/web");
+        userSession.init();
+        replaceState("/newsBoard");
     }
 }

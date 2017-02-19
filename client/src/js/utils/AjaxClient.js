@@ -8,9 +8,9 @@ export default class AjaxClient {
         return new AjaxClient(url, skipTimer);
     }
 
-    constructor(url, skipTimer) {
-        if (!skipTimer) {
-            UserSession.instance().continueSessionIfActive();
+    constructor(url, isAutomatic) {
+        if (!isAutomatic) {
+            UserSession.instance().setLastAccessedTime();
         }
         this.url = AppWindow.instance().get("serverUrl") + url;
     }
@@ -54,7 +54,7 @@ export default class AjaxClient {
         if (response.status === this.responseCodes().OK) {
             return responseJson;
         } else if(response.status === this.responseCodes().UNAUTHORIZED) {
-            if (responseJson.message === "session expired") { //eslint-disable-line max-depth
+            if (responseJson.message === "session expired") {
                 UserSession.instance().autoLogout();
             }
             throw responseJson;

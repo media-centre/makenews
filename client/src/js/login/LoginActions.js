@@ -17,7 +17,7 @@ export function userLogin(history, userName, password) {
         ajax.post(headers, data)
             .then(() => {
                 let userSession = UserSession.instance();
-                userSession.setLastAccessedTime();
+                userSession.init();
                 localStorage.setItem("userName", userName);
                 dispatch(loginSuccess());
                 dispatch(getConfiguredSources());

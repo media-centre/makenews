@@ -51,7 +51,7 @@ describe("userLogin", () => {
 
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
-            userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
+            userSessionMock = sandbox.mock(userSession).expects("init");
             historyMock = sandbox.mock(history).expects("push");
             let configAjaxInstance = new AjaxClient("/configure-sources", true);
             ajaxInstanceMock.expects("instance").withArgs("/configure-sources").returns(configAjaxInstance);

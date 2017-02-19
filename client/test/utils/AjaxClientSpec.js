@@ -14,7 +14,7 @@ describe("AjaxClient", function() {
         sandbox = sinon.sandbox.create();
         userSession = new UserSession();
         sandbox.stub(UserSession, "instance").returns(userSession);
-        userSessionMock = sandbox.mock(userSession).expects("continueSessionIfActive");
+        userSessionMock = sandbox.mock(userSession).expects("setLastAccessedTime");
         let appWindow = new AppWindow();
         sinon.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost:5000");
         sinon.stub(AppWindow, "instance").returns(appWindow);
