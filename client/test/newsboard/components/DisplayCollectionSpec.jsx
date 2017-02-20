@@ -20,19 +20,20 @@ describe("Display Collections", () => {
         ];
         store = createStore(() => ({
             "fetchedFeeds": feeds,
-            "newsBoardCurrentSourceTab": "collections"
+            "newsBoardCurrentSourceTab": "collections",
+            "currentHeaderTab": "Scan News"
 
         }), applyMiddleware(thunkMiddleware));
 
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
-                <DisplayCollection />
+                <DisplayCollection dispatch={()=> {}}/>
             </Provider>);
 
         sandbox = sinon.sandbox.create();
     });
 
-    afterEach("DisplayFeeds", () => {
+    afterEach("Display Collections", () => {
         sandbox.restore();
     });
 
@@ -79,18 +80,41 @@ describe("Display Collections", () => {
     });
 
     it("should render the filtered collection names only, after entering the keyword in searchbar", () => {
-        //eslint-disable-next-line no-magic-numbers
-        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2); //eslint-disable-line no-magic-numbers
 
         let displayFeedDom = ReactDOM.findDOMNode(result);
         let inputBox = displayFeedDom.querySelector(".input-box input");
         inputBox.value = "politic";
         TestUtils.Simulate.keyUp(inputBox, { "key": "s" });
-
         let collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
-        //eslint-disable-next-line no-magic-numbers
-        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);
-        //eslint-disable-next-line no-magic-numbers
-        assert.equal(collections[0].textContent, " politics");
+
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
+        assert.equal(collections[0].textContent, " politics"); //eslint-disable-line no-magic-numbers
+    });
+
+    describe("Display StoryBoard Collection", () => {
+        beforeEach("Display StoryBoard Collection", () => {
+            store = createStore(() => ({
+                "fetchedFeeds": feeds,
+                "newsBoardCurrentSourceTab": "collections",
+                "currentHeaderTab": "Write a Story"
+
+            }), applyMiddleware(thunkMiddleware));
+
+            result = TestUtils.renderIntoDocument(
+                <Provider store={store}>
+                    <DisplayCollection dispatch={()=> {}}/>
+                </Provider>);
+        });
+
+        it("should have main div", () => {
+            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container"));
+        });
+        it("should have feeds div", () => {
+            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "feeds"));
+        });
+        it("should have feeds div", () => {
+            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "select_collection"));
+        });
     });
 });

@@ -66,15 +66,26 @@ export class DisplayCollectionFeeds extends Component {
         }
     }
 
+    displayHeader() {
+        return(this.props.tab === WRITE_A_STORY
+            ? <header className="collection-header">
+                <button className="all-collections" onClick={() => {
+                    this.props.isClicked();
+                }}
+                ><i className="fa fa-arrow-left" aria-hidden="true"/>All Collections</button>
+            </header>
+            : <header className="collection-header" />);
+
+    }
+
     render() {
-        let style = {};
-        this.props.tab === WRITE_A_STORY ? style = { "flex": "0", "flex-basis": "420px" } : style; //eslint-disable-line no-unused-expressions
+        let style = this.props.tab === WRITE_A_STORY ? { "flex": "0", "flex-basis": "420px" } : {};
 
         return (
             <div style={style} className="collections">
-                <DisplayArticle collection={this.refs.collection}/>
+                <DisplayArticle collection={this.refs.collection} collectionName={this.props.collectionName} />
                 <div ref="collection" className="display-collection">
-                    <header className="collection-header" />
+                    {this.displayHeader()}
                     <div className="collection-feeds">
                         {
                             this.props.feeds.map((feed, index) =>
@@ -91,7 +102,8 @@ DisplayCollectionFeeds.propTypes = {
     "collectionName": PropTypes.string.isRequired,
     "feeds": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "tab": PropTypes.string
+    "tab": PropTypes.string,
+    "isClicked": PropTypes.func
 };
 
 function mapToStore(store) {

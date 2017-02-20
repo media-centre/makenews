@@ -131,9 +131,13 @@ export class DisplayCollection extends Component {
         </div>);
     }
 
+    _isClicked() {
+        this.setState({ "isClicked": false });
+    }
+
     render() {
         return (
-           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab}/> : this.displayCollections()
+           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/> : this.displayCollections()
         );
     }
 }

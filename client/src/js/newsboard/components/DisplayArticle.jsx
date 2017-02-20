@@ -42,7 +42,7 @@ export class DisplayArticle extends Component {
         return this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
             ? <header className="display-article__header back">
             <button className="back__button" onClick={() => { this.props.collection.style.display = "block"; this.props.dispatch(displayArticle()); }}>
-                <i className="icon fa fa-arrow-left" aria-hidden="true"/> Back</button>
+                <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
         </header>
 
             : <header className="display-article__header">
@@ -86,7 +86,8 @@ DisplayArticle.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "addToCollectionStatus": PropTypes.object.isRequired,
-    "collection": PropTypes.object
+    "collection": PropTypes.object,
+    "collectionName": PropTypes.string
 };
 
 function mapToStore(store) {

@@ -102,6 +102,10 @@
         border-right: 1px solid $dark-background-color;
       }
 
+      &__media {
+        float: right;
+      }
+
       &__title {
         padding:9px;
         font-size: $mid-font-size;
@@ -111,6 +115,7 @@
       &__source {
         padding:9px;
         color: $primary-color-light;
+        font-size: small;
 
         div {
           display: inline-block;
@@ -123,7 +128,7 @@
       &__description {
         padding:9px;
         color: $primary-color;
-        font-size: $medium-font-size;
+        font-size: $small-font-size;
       }
       &__readmore {
         float: right;
@@ -139,5 +144,23 @@
   .collection-header {
     background: $dark-background-color;
     height: $secondary-header-nav-height;
+
+    .all-collections{
+      color: $primary-color-light;
+      font-size: 17px;
+      border: 0;
+      cursor: pointer;
+
+      i {
+        font-size: larger;
+        padding-right: 7px;
+      }
+    }
   }
+}
+
+.select_collection {
+  font-size: 17px;
+  color: $primary-color-light;
+  padding: 5% 0 3% 8%;
 }

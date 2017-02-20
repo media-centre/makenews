@@ -8,7 +8,7 @@ describe("CollectionFeed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
     beforeEach("Feed", () => {
         feed = {
-            "images": [],
+            "images": [{ "thumbnail": "some link" }],
             "videos": [],
             "title": "Some Title",
             "description": "Some Description",
@@ -34,14 +34,11 @@ describe("CollectionFeed", () => {
         expect(title.children).to.equals("Some Title");
     });
 
-    it("should have source ", () => {
-        let source = feedDom.props.children[1].props;
+    it("should have media ", () => {
+        let media = feedDom.props.children[1].props;
 
-        expect(source.className).to.equals("collection-feed__source");
-        expect(source.children[0].props.className).to.equals("source-type");
-        expect(source.children[1].props.className).to.equals("source");
-        expect(source.children[1].props.children).to.deep.equals(`${[feed.tags]} |`);
-        expect(source.children[2].props.className).to.equals("date");
+        expect(media.className).to.equals("collection-feed__media");
+        expect(media.children.props.src).to.equals("some link");
     });
 
     it("should have description ", () => {
@@ -49,6 +46,16 @@ describe("CollectionFeed", () => {
 
         expect(description.className).to.equals("collection-feed__description");
         expect(description.children).to.equals("Some Description");
+    });
+
+    it("should have source ", () => {
+        let source = feedDom.props.children[3].props;
+
+        expect(source.className).to.equals("collection-feed__source");
+        expect(source.children[0].props.className).to.equals("source-type");
+        expect(source.children[1].props.className).to.equals("source");
+        expect(source.children[1].props.children).to.deep.equals(`${[feed.tags]} |`);
+        expect(source.children[2].props.className).to.equals("date");
     });
 
     it("should not have style when current tab scan news", () => {
@@ -81,7 +88,7 @@ describe("CollectionFeed", () => {
         it("should be visible when source type is web", ()=> {
             feed.sourceType = "web";
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[3];
+            let readMore = feedDom.props.children[4];
 
             expect(readMore.type).to.equals("button");
             expect(readMore.props.className).to.equals("collection-feed__readmore");
@@ -90,7 +97,7 @@ describe("CollectionFeed", () => {
         it("should be visible when when article contain video", ()=> {
             feed.videos = [{ "thumbnail": "video image url" }];
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[3];
+            let readMore = feedDom.props.children[4];
 
             expect(readMore.type).to.equals("button");
             expect(readMore.props.className).to.equals("collection-feed__readmore");
@@ -99,7 +106,7 @@ describe("CollectionFeed", () => {
         it("should be visible when when article contain image", ()=> {
             feed.images = [{ "url": "image url", "thumbnail": "image url" }];
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[3];
+            let readMore = feedDom.props.children[4];
 
             expect(readMore.type).to.equals("button");
             expect(readMore.props.className).to.equals("collection-feed__readmore");

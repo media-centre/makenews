@@ -28,7 +28,7 @@ describe("DisplayArticle", () => {
         active = false;
         sandbox = sinon.sandbox.create();
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
+        displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} collectionName="test" />);
     });
 
     afterEach("DisplayArticle", () => {
@@ -229,10 +229,10 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }}/>);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }} collectionName="test"/>);
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
-            let [arrowIcon] = backButton.props.children; //eslint-disable-line no-magic-numbers
+            let [arrowIcon, name] = backButton.props.children; //eslint-disable-line no-magic-numbers
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("display-article__header back");
@@ -241,6 +241,7 @@ describe("DisplayArticle", () => {
             expect(backButton.props.className).to.be.equal("back__button");
             expect(arrowIcon.type).to.be.equal("i");
             expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
+            expect(name).to.be.equal("test");
         });
     });
 

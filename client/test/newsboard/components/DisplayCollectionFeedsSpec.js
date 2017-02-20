@@ -3,7 +3,7 @@ import CollectionFeed from "../../../src/js/newsboard/components/CollectionFeed"
 import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
-import { findAllWithType, findWithClass } from "react-shallow-testutils";
+import { findAllWithType } from "react-shallow-testutils";
 import { assert } from "chai";
 
 describe("DisplayCollectionFeeds", () => {
@@ -18,7 +18,7 @@ describe("DisplayCollectionFeeds", () => {
 
         renderer = TestUtils.createRenderer();
         renderer.render(
-                <DisplayCollectionFeeds collectionName = {collectionName} dispatch = {() => {}} feeds = {feeds} tab="Scan News"/>);
+                <DisplayCollectionFeeds collectionName = {collectionName} dispatch = {() => {}} feeds = {feeds} tab="Scan News" />);
         result = renderer.getRenderOutput();
     });
 
@@ -30,19 +30,33 @@ describe("DisplayCollectionFeeds", () => {
         assert.isDefined(source2);
     });
 
+    it("should have collections class", () => {
+        assert.equal(result.type, "div");
+        assert.equal(result.props.className, "collections");
+    });
+
     it("should have display-collection class", () => {
-        let displayCollection = findWithClass(result, "display-collection");
-        assert.isDefined(displayCollection);
+        let [, collection] = result.props.children;
+
+        assert.equal(collection.type, "div");
+        assert.equal(collection.ref, "collection");
+        assert.equal(collection.props.className, "display-collection");
     });
 
     it("should have header class", () => {
-        let collectionHeader = findWithClass(result, "collection-header");
-        assert.isDefined(collectionHeader);
+        let [, collection] = result.props.children;
+        let [header] = collection.props.children;
+        assert.equal(header.type, "header");
+        assert.equal(header.props.className, "collection-header");
     });
 
+
     it("should have collection-feeds class", () => {
-        let collectionFeeds = findWithClass(result, "collection-feeds");
-        assert.isDefined(collectionFeeds);
+        let [, collection] = result.props.children;
+        let [, collectionFeeds] = collection.props.children;
+
+        assert.equal(collectionFeeds.type, "div");
+        assert.equal(collectionFeeds.props.className, "collection-feeds");
     });
 
     it("should have display Article", () => {
@@ -55,13 +69,32 @@ describe("DisplayCollectionFeeds", () => {
         assert.deepEqual(result.props.style, {});
     });
 
-    it("should have style when current tab write a story", () => {
-        let style = { "flex": "0", "flex-basis": "420px" };
-        renderer.render(
-            <DisplayCollectionFeeds collectionName={collectionName} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
-        result = renderer.getRenderOutput();
+    describe("header", () => {
 
-        assert.deepEqual(result.props.style, style);
+        beforeEach("header", () => {
+            renderer.render(
+                <DisplayCollectionFeeds collectionName={collectionName} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
+            result = renderer.getRenderOutput();
+        });
+
+        it("should have style when current tab write a story", () => {
+            let style = { "flex": "0", "flex-basis": "420px" };
+            assert.deepEqual(result.props.style, style);
+        });
+
+        it("should have button class for all collections", () => {
+            let [, collection] = result.props.children;
+            let [header] = collection.props.children;
+            let allCollection = header.props.children;
+            let [arrow, text] = allCollection.props.children;
+
+            assert.equal(allCollection.type, "button");
+            assert.equal(allCollection.props.className, "all-collections");
+            assert.equal(arrow.type, "i");
+            assert.equal(arrow.props.className, "fa fa-arrow-left");
+            assert.equal(text, "All Collections");
+        });
     });
+
 });
 
