@@ -9,6 +9,10 @@ const leadTime = 120000, minuteToMilliSeconds = 60000;
 
 export default class UserSession {
 
+    constructor() {
+        this.sessionTime = (AppWindow.instance().get("dbSessionInterval") * minuteToMilliSeconds) - leadTime;
+    }
+
     static instance() {
         if(!UserSession.session) {
             UserSession.session = new UserSession();
@@ -18,7 +22,6 @@ export default class UserSession {
 
     init() {
         this.setLastAccessedTime();
-        this.sessionTime = (AppWindow.instance().get("dbSessionInterval") * minuteToMilliSeconds) - leadTime;
         this.sessionTimer = setInterval(() => this.renewSession(), this.sessionTime);
     }
 

@@ -45,7 +45,6 @@ function isLoggedIn(nextState, replaceState) {
     if(!userSession.isActiveContinuously()) {
         replaceState("/");
     }
-
 }
 
 function showLoginPage(nextState, replaceState) {
