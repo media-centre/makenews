@@ -89,7 +89,7 @@
     display: flex;
     flex-wrap: wrap;
 
-    .collection-feed {
+    .collection-feed, .story-collection-feed {
       flex-basis: 50%;
       cursor: pointer;
       line-height: 24px;
@@ -97,9 +97,15 @@
       box-sizing: border-box;
       background-color: $background-color;
       border-bottom: 1px solid $dark-background-color;
+      display: flex;
+      flex-direction: column;
 
       &:nth-child(odd) {
         border-right: 1px solid $dark-background-color;
+      }
+
+      &__body {
+        flex-basis: 90%;
       }
 
       &__media {
@@ -131,13 +137,20 @@
         font-size: $small-font-size;
       }
       &__readmore {
-        float: right;
-        color: $secondary-color;
-        border: 0;
+        flex-basis: 10%;
+        &-button {
+          float: right;
+          color: $secondary-color;
+          border: 0;
+        }
       }
       &:hover{
         background-color: #ffffff;
       }
+    }
+
+    .story-collection-feed {
+      flex-basis: 100%;
     }
   }
 
@@ -163,4 +176,9 @@
   font-size: 17px;
   color: $primary-color-light;
   padding: 5% 0 3% 8%;
+}
+
+.story-board-collections {
+  flex: 0;
+  flex-basis: 420px;
 }

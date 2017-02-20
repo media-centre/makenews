@@ -24,24 +24,24 @@ export default class CollectionFeed extends Component {
         const feed = this.props.feed;
         let [video] = feed.videos || [];
         let [image] = feed.images;
-        let style = {};
-        this.props.tab === WRITE_A_STORY ? style = { "flexBasis": "100%" } : style;
-
-        return (
-            <div style={style} className="collection-feed">
-                <div className="collection-feed__title">{feed.title}</div>
-                <div className="collection-feed__media">{this.getMedia()}</div>
-                <div className="collection-feed__description">{getHtmlContent(feed.description)}</div>
-                <div className="collection-feed__source">
-                        <div className="source-type">
-                            <i className={`fa fa-${feed.sourceType}`}/>
+        let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed" : "collection-feed";
+        return (<div className={feedClass}>
+                    <div className={`${feedClass}__body`}>
+                        <div className={`${feedClass}__title`}>{feed.title}</div>
+                        <div className={`${feedClass}__media`}>{this.getMedia()}</div>
+                        <div className={`${feedClass}__description`}>{getHtmlContent(feed.description)}</div>
+                        <div className={`${feedClass}__source`}>
+                            <div className="source-type">
+                                <i className={`fa fa-${feed.sourceType}`}/>
+                            </div>
+                            <div className="source">{`${[feed.tags]} |`}</div>
+                            <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
                         </div>
-                        <div className="source">{`${[feed.tags]} |`}</div>
-                        <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
                     </div>
-
-                {feed.sourceType === "web" || video || image
-                    ? <button className="collection-feed__readmore" onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
+                    <div className={`${feedClass}__readmore`}>
+                        {feed.sourceType === "web" || video || image
+                        ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
+                    </div>
             </div>);
     }
 }

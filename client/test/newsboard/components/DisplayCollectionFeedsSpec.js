@@ -65,10 +65,6 @@ describe("DisplayCollectionFeeds", () => {
         assert.isDefined(source);
     });
 
-    it("should not have style when current tab scan news", () => {
-        assert.deepEqual(result.props.style, {});
-    });
-
     describe("header", () => {
 
         beforeEach("header", () => {
@@ -78,8 +74,7 @@ describe("DisplayCollectionFeeds", () => {
         });
 
         it("should have style when current tab write a story", () => {
-            let style = { "flex": "0", "flex-basis": "420px" };
-            assert.deepEqual(result.props.style, style);
+            assert.deepEqual(result.props.className, "story-board-collections");
         });
 
         it("should have button class for all collections", () => {

@@ -6,7 +6,7 @@ import { expect } from "chai";
 
 describe("CollectionFeed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
-    beforeEach("Feed", () => {
+    beforeEach("CollectionFeed", () => {
         feed = {
             "images": [{ "thumbnail": "some link" }],
             "videos": [],
@@ -27,45 +27,52 @@ describe("CollectionFeed", () => {
         expect(feedDom.props.className).to.equals("collection-feed");
     });
 
-    it("should have title ", () => {
-        let title = feedDom.props.children[0].props;
+    it("should have body ", () => {
+        let [body] = feedDom.props.children;
+        expect(body.props.className).to.equals("collection-feed__body");
+        expect(body.type).to.equals("div");
+    });
 
-        expect(title.className).to.equals("collection-feed__title");
-        expect(title.children).to.equals("Some Title");
+    it("should have title ", () => {
+        let [body] = feedDom.props.children;
+        let [title] = body.props.children;
+
+        expect(title.props.className).to.equals("collection-feed__title");
+        expect(title.props.children).to.equals("Some Title");
     });
 
     it("should have media ", () => {
-        let media = feedDom.props.children[1].props;
+        let [body] = feedDom.props.children;
+        let [, media] = body.props.children;
 
-        expect(media.className).to.equals("collection-feed__media");
-        expect(media.children.props.src).to.equals("some link");
+        expect(media.props.className).to.equals("collection-feed__media");
+        expect(media.props.children.props.src).to.equals("some link");
     });
 
     it("should have description ", () => {
-        let description = feedDom.props.children[2].props;
+        let [body] = feedDom.props.children;
+        let [,, description] = body.props.children;
 
-        expect(description.className).to.equals("collection-feed__description");
-        expect(description.children).to.equals("Some Description");
+        expect(description.props.className).to.equals("collection-feed__description");
+        expect(description.props.children).to.equals("Some Description");
     });
 
     it("should have source ", () => {
-        let source = feedDom.props.children[3].props;
+        let [body] = feedDom.props.children;
+        let [,,, source] = body.props.children;
+        let [sourceType, tag, date] = source.props.children;
 
-        expect(source.className).to.equals("collection-feed__source");
-        expect(source.children[0].props.className).to.equals("source-type");
-        expect(source.children[1].props.className).to.equals("source");
-        expect(source.children[1].props.children).to.deep.equals(`${[feed.tags]} |`);
-        expect(source.children[2].props.className).to.equals("date");
+        expect(source.props.className).to.equals("collection-feed__source");
+        expect(sourceType.props.className).to.equals("source-type");
+        expect(tag.props.className).to.equals("source");
+        expect(tag.props.children).to.deep.equals(`${[feed.tags]} |`);
+        expect(date.props.className).to.equals("date");
     });
 
-    it("should not have style when current tab scan news", () => {
-        expect(feedDom.props.style).to.deep.equals({});
-    });
 
-    it("should have style when current tab write a story", () => {
-        let style = { "flexBasis": "100%" };
+    it("should have story-collection feed class when current tab write a story", () => {
         feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Write a Story"/>);
-        expect(feedDom.props.style).to.deep.equals(style);
+        expect(feedDom.props.className).to.deep.equals("story-collection-feed");
     });
 
     describe("Read more Button", () => {
@@ -88,28 +95,34 @@ describe("CollectionFeed", () => {
         it("should be visible when source type is web", ()=> {
             feed.sourceType = "web";
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[4];
+            let [, readMore] = feedDom.props.children;
+            let button = readMore.props.children;
 
-            expect(readMore.type).to.equals("button");
-            expect(readMore.props.className).to.equals("collection-feed__readmore");
+            expect(readMore.type).to.equals("div");
+            expect(button.type).to.equals("button");
+            expect(button.props.className).to.equals("collection-feed__readmore-button");
         });
 
         it("should be visible when when article contain video", ()=> {
             feed.videos = [{ "thumbnail": "video image url" }];
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[4];
+            let [, readMore] = feedDom.props.children;
+            let button = readMore.props.children;
 
-            expect(readMore.type).to.equals("button");
-            expect(readMore.props.className).to.equals("collection-feed__readmore");
+            expect(readMore.type).to.equals("div");
+            expect(button.type).to.equals("button");
+            expect(button.props.className).to.equals("collection-feed__readmore-button");
         });
 
         it("should be visible when when article contain image", ()=> {
             feed.images = [{ "url": "image url", "thumbnail": "image url" }];
             feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let readMore = feedDom.props.children[4];
+            let [, readMore] = feedDom.props.children;
+            let button = readMore.props.children;
 
-            expect(readMore.type).to.equals("button");
-            expect(readMore.props.className).to.equals("collection-feed__readmore");
+            expect(readMore.type).to.equals("div");
+            expect(button.type).to.equals("button");
+            expect(button.props.className).to.equals("collection-feed__readmore-button");
         });
     });
 

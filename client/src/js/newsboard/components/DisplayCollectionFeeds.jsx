@@ -79,10 +79,8 @@ export class DisplayCollectionFeeds extends Component {
     }
 
     render() {
-        let style = this.props.tab === WRITE_A_STORY ? { "flex": "0", "flex-basis": "420px" } : {};
-
         return (
-            <div style={style} className="collections">
+            <div className={this.props.tab === WRITE_A_STORY ? "story-board-collections" : "collections"}>
                 <DisplayArticle collection={this.refs.collection} collectionName={this.props.collectionName} />
                 <div ref="collection" className="display-collection">
                     {this.displayHeader()}
