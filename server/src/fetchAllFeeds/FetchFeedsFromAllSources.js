@@ -21,6 +21,7 @@ export default class FetchFeedsFromAllSources extends Route {
         super(request, response, next);
         this.accesstoken = request.cookies.AuthSession;
         this.facebookAcessToken = null;
+        this.DOCSLIMIT = 25;
     }
 
     static logger() {
@@ -39,7 +40,8 @@ export default class FetchFeedsFromAllSources extends Route {
     }
 
     async fetchFeedsFromAllSources() {
-        let urlDocuments = await this._getUrlDocuments();
+        const couchClient = CouchClient.instance(this.accesstoken);
+        let urlDocuments = await this._getUrlDocuments(couchClient);
         let mapUrlDocs = urlDocuments.map(async (url) => {
             let feeds = await this.fetchFeedsFromSource(url);
             if(!R.isEmpty(feeds)) {
@@ -52,17 +54,21 @@ export default class FetchFeedsFromAllSources extends Route {
         return await this.saveFeedDocumentsToDb(feeds);
     }
     
-    async _getUrlDocuments() {
-        let couchClient = CouchClient.instance(this.accesstoken);
-        let selector = {
+    async _getUrlDocuments(couchClient, offset = 0, results = []) { // eslint-disable-line no-magic-numbers
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "source"
                 }
-            }
+            },
+            "skip": offset
         };
-        let response = await couchClient.findDocuments(selector);
-        return response.docs;
+        const response = await couchClient.findDocuments(selector);
+
+        if(response.docs.length === this.DOCSLIMIT) {
+            return await this._getUrlDocuments(couchClient, offset + this.DOCSLIMIT, results.concat(response.docs));
+        }
+        return results.concat(response.docs);
     }
 
     /*TODO: missing single responsibility */ //eslint-disable-line
