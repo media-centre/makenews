@@ -27,11 +27,13 @@
   }
   .add-card, .added-card {
     margin: 15px;
-    height: 100px;
-    width: 200px;
     border: 1px dashed;
     text-align: center;
     color: #917fa9;
+    .navigation-link {
+      height: 100px;
+      width: 200px;
+    }
     .card {
       color: #917fa9;
       overflow: hidden;

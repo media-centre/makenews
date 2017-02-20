@@ -33,16 +33,20 @@ export class StoryCards extends Component {
     _renderStoriesList() {
         let storiesArray = [];
         storiesArray.push(<li className="add-card" key="0">
-            <Link ref="newStoryCard" className="card" to="/story-board/story">
+            <Link ref="newStoryCard" className="navigation-link" to="/story-board/story">
+                <div className="card">
                 <i className="fa fa-plus-circle icon" aria-hidden="true"/>
                 { "Create New Story" }
+                </div>
             </Link>
         </li>);
         this.props.stories.map((story, index) =>
             storiesArray.push(
                 <li key={index + 1} className="added-card">
-                    <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="card">
-                        <i ref={`title${story.title}`}>{story.title}</i>
+                    <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
+                        <div className="card">
+                            <i ref={`title${story.title}`}>{story.title}</i>
+                        </div>
                     </Link>
                 </li>
             )
