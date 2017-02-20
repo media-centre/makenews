@@ -28,12 +28,20 @@ export default class SourceConfigRequestHandler {
     }
 
     _getFormattedSources(sourceType, sources) {
-        let formatSources = source => ({
-            "_id": source.url,
-            "name": source.name,
-            "docType": "source",
-            "sourceType": sourceType
-        });
+        let formatSources = source => {
+            let doc = {
+                "_id": source.url,
+                "name": source.name,
+                "docType": "source",
+                "sourceType": sourceType
+            };
+
+            if(source.url.startsWith("#")) {
+                doc._id = encodeURIComponent(source.url);
+                doc.hashtag = true;
+            }
+            return doc;
+        };
         let filterEmpty = source => {
             return !StringUtil.isEmptyString(source.url);
         };

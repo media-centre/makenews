@@ -3,7 +3,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { filteredSources, filterTabSwitch } from "./FilterActions";
 const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
-import { getConfiguredSources, searchInConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import SourceFilters from "./SourceFilters";
 import Input from "./../../utils/components/Input";
 
@@ -74,6 +74,23 @@ class DisplayFilters extends Component {
         this.props.dispatch(filterTabSwitch(""));
     }
 
+    addHashtag(event) {
+        const ENTERKEY = 13;
+        if(event.keyCode === ENTERKEY) {
+            let hashtag = event.target.value;
+
+            if(!hashtag.startsWith("#")) {
+                hashtag = "#" + hashtag;
+            }
+
+            let sourceDoc = {
+                "id": hashtag,
+                "name": hashtag
+            };
+            this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
+        }
+    }
+
     render() {
         return (
             <aside ref="sources" className="filters-container">
@@ -81,6 +98,13 @@ class DisplayFilters extends Component {
                     this.searchInSources(event);
                 } }} placeholder="search" addonSrc="./images/search-icon.png"
                 />
+
+                { this.props.currentTab === "twitter" &&
+                <Input className="hashtags" placeholder="add hashtag" eventHandlers={{ "onKeyUp": (event) => {
+                    this.addHashtag(event);
+                } }}
+                /> }
+
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
                 <div className="controls">

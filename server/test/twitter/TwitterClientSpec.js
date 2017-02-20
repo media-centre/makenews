@@ -163,7 +163,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since:2017-1-9&user_id=123")
+                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&user_id=123")
                 .reply(HttpResponseHanlder.codes.OK, twitterRespone);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -200,7 +200,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get("/search/tweets.json?q=%23dhoni&count=100&filter:retweets&since:2017-1-9")
+                .get("/search/tweets.json?q=%23dhoni&count=100&filter=retweets&since=2017-1-9")
                 .reply(HttpResponseHanlder.codes.OK, twitterRespone);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -217,12 +217,47 @@ describe("TwitterClient", () => {
             }
         });
 
+        it("should fetch feeds for the given hash tag with %23", async () => {
+            let twitterRespone = {
+                "statuses": [{
+                    "id": 1277389,
+                    "id_str": 1277389,
+                    "created_at": "Fri Dec 09 07:24:44 +0000 2016",
+                    "text": "Just posted a photo https://t.co/7X7kvw9Plf"
+                }]
+            };
+            let parsedTweets = [{
+                "_id": 1277389,
+                "docType": "feed",
+                "sourceType": "twitter",
+                "pubDate": "Fri Dec 09 07:24:44 +0000 2016",
+                "description": "Just posted a photo https://t.co/7X7kvw9Plf"
+            }];
+
+            nock("https://api.twitter.com/1.1")
+                .get(`/search/tweets.json?q=${encodeURIComponent("%23dhoni")}&count=100&filter=retweets&since=2017-1-9`)
+                .reply(HttpResponseHanlder.codes.OK, twitterRespone);
+
+            sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
+            sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
+            sandbox.mock(TwitterParser).expects("instance").returns(twitterParser);
+            sandbox.mock(twitterParser).expects("parseTweets")
+                .withExactArgs("%23dhoni", twitterRespone.statuses)
+                .returns(parsedTweets);
+            try {
+                let tweetData = await twitterClient.fetchTweets("%23dhoni", "userName", 1483947627341); //eslint-disable-line no-magic-numbers
+                assert.deepEqual(parsedTweets, tweetData);
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
         it("should reject with an error if oauth get returns error", async () => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
             nock("https://api.twitter.com/1.1")
-                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since:2017-1-9&user_id=dhoni")
+                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&user_id=dhoni")
                 .reply(HttpResponseHanlder.codes.BAD_REQUEST, {
                     "message": "could not authenticate you"
                 });

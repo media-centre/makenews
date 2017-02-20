@@ -53,6 +53,10 @@ export default class TwitterParser {
         videos.forEach(item => {
             feedObj.videos.push({ "thumbnail": `${item.media_url_https}:thumb` });
         });
+
+        if(sourceId.startsWith("#")) {
+            feedObj.hashtag = true;
+        }
         return feedObj;
     }
 

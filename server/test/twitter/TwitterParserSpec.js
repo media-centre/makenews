@@ -125,6 +125,53 @@ describe("TwitterParser", () => {
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
+        it("should return tweets with the desired format for twitter hashtag", ()=> {
+            let sourceId = "#123";
+            let actualTweet = [{
+                "metadata": {
+                    "result_type": "recent"
+                },
+                "created_at": "Fri Dec 11 11:41:56",
+                "id_str": "123457",
+                "text": "Hindu twitter text - 123457",
+                "entities": {
+                    "hashtags": [{ "text": "tag1" }, { "text": "tag2" }],
+                    "media": [{ "media_url": "http://www.test1.com", "media_url_https": "https://www.test1.com" },
+                        { "media_url": "http://www.test2.com", "media_url_https": "https://www.test2.com" }]
+                },
+                "user": {
+                    "name": "someUser"
+                }
+            }];
+
+            let expectedTweet = [{
+                "_id": "123457",
+                "docType": "feed",
+                "sourceType": "twitter",
+                "description": "",
+                "title": "Hindu twitter text - 123457",
+                "link": "https://twitter.com/#123/status/123457",
+                "pubDate": "2001-12-11T06:11:56Z",
+                "tags": ["someUser", "tag1", "tag2"],
+                "images": [
+                    {
+                        "url": "https://www.test1.com",
+                        "thumbnail": "https://www.test1.com:thumb"
+                    },
+                    {
+                        "url": "https://www.test2.com",
+                        "thumbnail": "https://www.test2.com:thumb"
+                    }
+                ],
+                "videos": [],
+                "sourceId": sourceId,
+                "hashtag": true
+            }];
+            let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            expect(newTweets).to.deep.equal(expectedTweet);
+        });
+
+
         it("should return tweets with the desired format of type gallery", ()=> {
             let sourceId = "123";
             let actualTweet = [{
