@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
-
 import LogoutRoute from "../../../src/routes/helpers/LogoutRoute";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import DeleteHashtagsHandler from "../../../src/hashtags/DeleteHashtagsHandler";
 import { userDetails } from "../../../src/Factory";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -35,7 +35,11 @@ describe("LogoutRoute", () => {
             let request = { "cookies": { "AuthSession": "token1" } };
             let next = {};
             userDetailsMock.withArgs("token1");
+            let deleteHashtagHanlder = DeleteHashtagsHandler.instance();
+            sandbox.mock(DeleteHashtagsHandler).expects("instance").returns(deleteHashtagHanlder);
+            let deleteHashtagsMock = sandbox.mock(deleteHashtagHanlder).expects("deleteHashtags").withExactArgs("token1");
             new LogoutRoute(request, response, next).handle();
+            deleteHashtagsMock.verify();
         });
     });
 });

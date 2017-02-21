@@ -19,7 +19,7 @@ export default (app) => {
     app.get("/logout", (request, response, next) => {
         RouteLogger.instance().info("AuthorizationRoutes:: /logout request received");
         try {
-            new LogoutRoute(request, response, next).handle();
+            new LogoutRoute(request, response, next).process();
         } catch(error) {
             RouteLogger.instance().error("AuthorizationRoutes:: /logout error. Error: %s", error);
         }
