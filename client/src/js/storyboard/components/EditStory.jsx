@@ -7,6 +7,7 @@ import History from "../../History";
 import StringUtil from "../../../../../common/src/util/StringUtil";
 import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
 
 export class EditStory extends Component {
     constructor() {
@@ -96,7 +97,7 @@ export class EditStory extends Component {
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
                 </div>
-                <DisplayFeeds />
+                <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>
                 <div className="source-type-bar">
                     <NewsBoardTabs />
                 </div>

@@ -1,4 +1,4 @@
-.display-article {
+.display-article, .story-display-article {
   flex: 1;
   height: calc(100vh - #{$main-header-height});
   overflow: auto;
@@ -90,4 +90,9 @@
       margin: 2rem 0 1rem;
     }
   }
+}
+
+.story-display-article {
+  flex: 0;
+  flex-basis: 420px;
 }

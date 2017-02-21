@@ -13,11 +13,15 @@ export default class Feed extends Component {
         return null;
     }
 
+    _onClick() {
+        this.props.dispatch(displayArticle(this.props.feed));
+        this.props.isClicked();
+    }
+
     render() {
         const feed = this.props.feed;
         const tags = feed.tags || [];
-        return (
-            <div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={() => this.props.dispatch(displayArticle(feed))}>
+        return (<div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={() => this._onClick()}>
                 <div className="feed__media">{this.getMedia()}</div>
 
                 <div className="feed__content">
@@ -44,5 +48,6 @@ export default class Feed extends Component {
 Feed.propTypes = {
     "active": PropTypes.bool,
     "feed": PropTypes.object.isRequired,
-    "dispatch": PropTypes.func
+    "dispatch": PropTypes.func,
+    "isClicked": PropTypes.func
 };

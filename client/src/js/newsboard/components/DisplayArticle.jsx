@@ -39,13 +39,22 @@ export class DisplayArticle extends Component {
     }
 
     renderHeader() {
-        return this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
+        return(this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
             ? <header className="display-article__header back">
-            <button className="back__button" onClick={() => { this.props.collection.style.display = "block"; this.props.dispatch(displayArticle()); }}>
+                <button className="back__button" onClick={() => { this.props.collection.style.display = "block"; this.props.dispatch(displayArticle()); }}>
                 <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
-        </header>
+                </header>
+            : this.renderArticleHeader()
+        );
 
-            : <header className="display-article__header">
+    }
+
+    renderArticleHeader() {
+        return(this.props.isSelected ? <header className={`${this.articleClass}__header back`}>
+                <button className="back__button" onClick={() => { this.props.isClicked(); }}><i className="icon fa fa-arrow-left" aria-hidden="true"/>back</button>
+            </header>
+
+            : <header className={`${this.articleClass}__header`}>
             <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
                 this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab));
             }}
@@ -61,16 +70,17 @@ export class DisplayArticle extends Component {
                 <i className="icon fa fa-bookmark"/> Bookmark
             </div>
             }
-        </header>;
+        </header>);
     }
 
     render() {
+        this.articleClass = this.props.isSelected ? "story-display-article" : "display-article";
         if(this.props.article && this.props.article._id) {
             if(this.props.collection) {
                 this.props.collection.style.display = "none";
             }
             return (
-                <article className="display-article">
+                <article className={this.articleClass}>
                     { this.renderHeader() }
                     { this.renderBody() }
                     { this.props.addToCollectionStatus.message && (<div className="add-to-collection-message">{Toast.show(this.props.addToCollectionStatus.message)}</div>)}
@@ -87,7 +97,9 @@ DisplayArticle.propTypes = {
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "addToCollectionStatus": PropTypes.object.isRequired,
     "collection": PropTypes.object,
-    "collectionName": PropTypes.string
+    "collectionName": PropTypes.string,
+    "isClicked": PropTypes.func,
+    "isSelected": PropTypes.bool
 };
 
 function mapToStore(store) {

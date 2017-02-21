@@ -5,11 +5,13 @@ import { connect } from "react-redux";
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 import DisplayCollection from "./DisplayCollection";
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import DisplayArticle from "./DisplayArticle";
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -122,21 +124,29 @@ export class DisplayFeeds extends Component {
             }, AUTO_REFRESH_INTERVAL));
         }
     }
+    _isClicked() {
+        this.setState({ "isClicked": !this.state.isClicked });
+    }
 
-    render() {
-        return (
-            this.props.sourceType === "collections" ? <DisplayCollection />
+    displayFeeds() {
+        return(this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayArticle isClicked={this._isClicked.bind(this)} isSelected={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 <i onClick={() => {
                     this._toggleFeedsView();
                 }} className="expand-icon"
                 />
-                <div className="feeds" ref="feeds">
-                    {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} dispatch={this.props.dispatch}/>)}
-                </div>
+
+            <div className="feeds">
+                {this.props.feeds.map((feed, index) =>
+                    <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}/>)}
             </div>
+        </div>);
+    }
+
+    render() {
+        return (
+            this.props.sourceType === "collections" ? <DisplayCollection /> : this.displayFeeds()
         );
     }
 }
@@ -157,7 +167,8 @@ DisplayFeeds.propTypes = {
     "sourceType": PropTypes.string.isRequired,
     "articleToDisplay": PropTypes.object,
     "currentFilterSource": PropTypes.object,
-    "configuredSources": PropTypes.object
+    "configuredSources": PropTypes.object,
+    "currentHeaderTab": PropTypes.string
 };
 
 export default connect(mapToStore)(DisplayFeeds);
