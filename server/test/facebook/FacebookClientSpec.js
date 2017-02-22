@@ -5,6 +5,7 @@ import FacebookClient from "../../src/facebook/FacebookClient";
 import NodeErrorHandler from "../../src/NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
+import DateUtil from "../../src/util/DateUtil";
 import nock from "nock";
 import { assert, expect } from "chai";
 import sinon from "sinon";
@@ -33,37 +34,108 @@ describe("FacebookClient", () => {
 
     describe("fetchFeeds", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
-        before("fetchFeeds", () => {
-            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from" };
-            remainingUrl = "/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof;
+        let sandbox = sinon.sandbox.create();
+        beforeEach("fetchFeeds", () => {
+            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "since": "12943678" };
+            remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
             pageId = "12345678";
         });
 
+        afterEach("fetchFeeds", () => {
+            sandbox.restore();
+        });
+
         it("should return feeds for a public page", (done) => {
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
+
+            const fbResponse = {
+                "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
+                    { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
+                "paging": {
+                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485955212&format=json",
+                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1485955212&format=json"
+                }
+            };
+
+            const expectedResponse = {
+                "docs": [{ "_id": "163974433696568_957858557641481",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957858557641481",
+                    "description": "test news 1",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_957850670975603",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957850670975603",
+                    "description": "test news 2",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" }],
+                "paging": {
+                    "since": 1485955212
+                }
+            };
 
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
-                .reply(HttpResponseHandler.codes.OK, {
-                    "data":
-                    [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
-                            { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }]
-                });
+                .reply(HttpResponseHandler.codes.OK, fbResponse);
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).then((feeds) => {
+            facebookClient.fetchFeeds(pageId, type, userParameters).then(response => {
                 try {
-                    assert.strictEqual("test news 1", feeds[0].description);
-                    assert.strictEqual("test news 2", feeds[1].description);
+                    assert.deepEqual(response, expectedResponse);
                     nodeErrorHandlerMock.verify();
-                    NodeErrorHandler.noError.restore();
                     done();
                 } catch(err) {
                     done(err);
                 }
             });
         });
+
+        it("should return feeds for a public page and paging with current time if paging not there", (done) => {
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            nodeErrorHandlerMock.returns(true);
+
+            const fbResponse = {
+                "data": []
+            };
+
+            sandbox.stub(DateUtil, "getCurrentTime").returns(1485955212);
+            const expectedResponse = {
+                "docs": [],
+                "paging": {
+                    "since": 1485955212
+                }
+            };
+
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .reply(HttpResponseHandler.codes.OK, fbResponse);
+            let type = "posts";
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            facebookClient.fetchFeeds(pageId, type, userParameters).then(response => {
+                try {
+                    assert.deepEqual(response, expectedResponse);
+                    nodeErrorHandlerMock.verify();
+                    done();
+                } catch(err) {
+                    done(err);
+                }
+            });
+        });
+
 
         it("should reject the promise if there are any errors from facebook like authentication", (done) => {
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
@@ -159,6 +231,7 @@ describe("FacebookClient", () => {
             });
         });
     });
+
     describe("getFacebookId", () => {
         let accessToken1 = null, appSecretProof1 = null, facebookUrl1 = null, remainingUrl = null;
         before("getFacebookId", () => {
@@ -262,27 +335,6 @@ describe("FacebookClient", () => {
             let facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
             facebookClient.getLongLivedToken().catch((error) => {
                 assert.strictEqual(error.message, "error");
-                done();
-            });
-        });
-    });
-
-    describe("pageNavigationFeeds", () => {
-        let navigationPageUrl = null;
-        before("pageNavigationFeeds", () => {
-            navigationPageUrl = "https://graph.facebook.com/v2.8/173565992684755/feed?fields=link,message,picture,name,caption,place,tags,privacy,created_time&limit=100&format=json&__paging_token=enc_AdCLZBz7YiUQuPwDZCD0BRu4XDvd5x8sQ7G1Qm5bpkv1j8ZCPnSxnqnAPwsxx7VH1jSyrGYxnuDZAwyuxePYhJeWZBr5cZCdCwF94GiCWpLeZCPv2jnKAZDZD&access_token=CAACEdEose0cBAKqvTZCVPHVHEOtvrt808MILI3d5dKVtB7eMvwQqUPnb9v0rto2bNjY3xL31fIdFkbEMQqc8zmKQMnjTxKp0ZAC2fylrnD4q8QfCEEfzM3OnXsAiV1zLYUohRg9vPDZAVCsZCZAJosVpvrSkjpG4XXVTZAshI8FQPH2iCDQQpBltbLUO1iYLIqFmXWaamadQZDZD&until=1445701972"; //eslint-disable-line
-        });
-        it("should resolve the feeds of a prev or next page", (done) => {
-            nock("https://graph.facebook.com")
-            .get("/v2.8/173565992684755/feed?fields=link,message,picture,name,caption,place,tags,privacy,created_time&limit=100&format=json&__paging_token=enc_AdCLZBz7YiUQuPwDZCD0BRu4XDvd5x8sQ7G1Qm5bpkv1j8ZCPnSxnqnAPwsxx7VH1jSyrGYxnuDZAwyuxePYhJeWZBr5cZCdCwF94GiCWpLeZCPv2jnKAZDZD&access_token=CAACEdEose0cBAKqvTZCVPHVHEOtvrt808MILI3d5dKVtB7eMvwQqUPnb9v0rto2bNjY3xL31fIdFkbEMQqc8zmKQMnjTxKp0ZAC2fylrnD4q8QfCEEfzM3OnXsAiV1zLYUohRg9vPDZAVCsZCZAJosVpvrSkjpG4XXVTZAshI8FQPH2iCDQQpBltbLUO1iYLIqFmXWaamadQZDZD&until=1445701972&access_token=" + accessToken + "&appsecret_proof=" + appSecretProof) //eslint-disable-line
-            .reply(HttpResponseHandler.codes.OK, {
-                "data":
-                [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
-                    { "message": "test news 2", "id": "163974433696568_957850670975603" }]
-            });
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.pageNavigationFeeds(navigationPageUrl).then(feeds => {
-                assert.equal("test news 1", feeds.data[0].message);
                 done();
             });
         });

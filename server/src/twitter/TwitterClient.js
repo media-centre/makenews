@@ -17,14 +17,13 @@ export default class TwitterClient {
     }
 
     async fetchTweets(url, userName, timestamp) {
-        let type = url.startsWith("#") || url.startsWith("%23") ? twitterTypes.TAG : twitterTypes.USER;
-        let timestampQuery = timestamp ? `&since=${this._getTwitterTimestampFormat(timestamp)}` : "";
-        let tokenInfo = await this.getAccessTokenAndSecret(userName);
+        const type = url.startsWith("#") || url.startsWith("%23") ? twitterTypes.TAG : twitterTypes.USER;
+        const timestampQuery = timestamp ? `&since=${this._getTwitterTimestampFormat(timestamp)}` : "";
+        const tokenInfo = await this.getAccessTokenAndSecret(userName);
 
         return new Promise((resolve, reject) => {
             let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
             let oauth = TwitterLogin.createOAuthInstance();
-
 
             let searchUrl = type === twitterTypes.TAG
                 ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter=retweets${timestampQuery}`
@@ -53,7 +52,6 @@ export default class TwitterClient {
             let fetchedDocument = await dbInstance.getDocument(tokenDocumentId);
             TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter access token for user %s.", userName);
             return ([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
-
         } catch (error) {
             TwitterClient.logger().error("TwitterClient:: access token not found for user %s.", userName);
             let err = "Not authenticated with twitter";

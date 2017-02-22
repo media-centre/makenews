@@ -9,6 +9,7 @@ import AdminDbClient from "../../src/db/AdminDbClient";
 import CouchClient from "../../src/CouchClient";
 import { userDetails } from "../../src/Factory";
 import { assert, expect } from "chai";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
@@ -79,11 +80,11 @@ describe("FacebookRequestHandler", () => {
 
     describe("fetchFeeds", () => {
         let facebookClient = null, sourceId = null, facebookRequestHandler = null;
-        let facebookClientPagePostsMock = null, feeds = null, requiredFields = null;
+        let facebookClientPagePostsMock = null, response = null, requiredFields = null;
         let optionsJson = null;
         beforeEach("fetchFeeds", () => {
-            feeds = {
-                "data": [{
+            response = {
+                "docs": [{
                     "message": "Lammasingi village in #AndhraPradesh is a meteorological oddity. \n\nFind out how - bit.ly/1Y19P17",
                     "created_time": "2015-12-11T08:02:59+0000",
                     "id": "163974433696568_958425464251457"
@@ -107,7 +108,10 @@ describe("FacebookRequestHandler", () => {
                     "message": "Shah Rukh unseats Salman as India’s top-earning celebrity\nbit.ly/1RHWZjk",
                     "created_time": "2015-12-11T06:55:58+0000",
                     "id": "163974433696568_958408404253163"
-                }]
+                }],
+                "pagiging": {
+                    "since": "12943678"
+                }
             };
             facebookClient = new FacebookClient(accessToken, appSecretProof);
             sinon.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof).returns(facebookClient);
@@ -116,7 +120,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretProof").returns(appSecretProof);
             requiredFields = "link,message,picture,full_picture,name,caption,place,privacy,created_time,from";
-            optionsJson = {"fields": requiredFields, "limit": 100}; //eslint-disable-line
+            optionsJson = { "since": "12943678", "fields": requiredFields, "limit": 100 };
         });
 
         afterEach("fetchFeeds", () => {
@@ -125,31 +129,18 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler.appSecretProof.restore();
         });
 
-        it("should return the page posts for a given facebook web url", (done) => {
-            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.resolve(feeds));
-            facebookRequestHandler.fetchFeeds(sourceId, "posts").then(actualFeeds => {
-                assert.strictEqual(5, actualFeeds.data.length); //eslint-disable-line
-                facebookClientPagePostsMock.verify();
-                done();
-            });
+        it("should return the page posts for a given facebook web url", async () => {
+            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.resolve(response));
+            const actualFeeds = await facebookRequestHandler.fetchFeeds(sourceId, "posts", { "since": "12943678" });
+
+            facebookClientPagePostsMock.verify();
+            assert.strictEqual(actualFeeds, response);
         });
 
-        it("should reject with error if there is error while fetching facebook id", (done) => {
-            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).never();
-            facebookRequestHandler.fetchFeeds(sourceId, "posts").catch(error => {
-                assert.deepEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
-                facebookClientPagePostsMock.verify();
-                done();
-            });
-        });
+        it("should reject with error if there is error while fetching facebook id", async () => {
+            facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.reject("test"));
 
-        it("should reject with error if there is error while fetching facebook feeds", (done) => {
-            facebookClientPagePostsMock.withExactArgs(sourceId, "posts", optionsJson).returns(Promise.reject("error"));
-            facebookRequestHandler.fetchFeeds(sourceId, "posts").catch(error => {
-                assert.strictEqual("error fetching facebook feeds of web url = https://www.facebook.com/TestPage", error);
-                facebookClientPagePostsMock.verify();
-                done();
-            });
+            await isRejected(facebookRequestHandler.fetchFeeds(sourceId, "posts", { "since": "12943678" }), `error fetching facebook feeds of web url = ${sourceId}`);
         });
 
     });

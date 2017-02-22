@@ -8,6 +8,7 @@ import { constructQueryString } from "../../../common/src/util/HttpRequestUtil";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
 import { parseFacebookPosts } from "./FacebookFeedParser.js";
+import DateUtil from "./../util/DateUtil";
 
 export default class FacebookClient {
 
@@ -28,33 +29,6 @@ export default class FacebookClient {
         this.appId = appId;
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
-    
-    pageNavigationFeeds(pageUrl) {
-        return new Promise((resolve, reject) => {
-            let parameters = {};
-            this._addDefaultParameters(parameters);
-            request.get({
-                "url": pageUrl + "&" + constructQueryString(parameters, false),
-                "timeout": this.facebookParameters.timeOut
-            }, (error, response, body) => {
-                if (NodeErrorHandler.noError(error)) {
-                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        let feedResponse = JSON.parse(body);
-                        FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageUrl);
-                        resolve(feedResponse);
-                    } else {
-                        let errorInfo = JSON.parse(body);
-                        FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageUrl, JSON.stringify(errorInfo));
-                        reject(errorInfo.error);
-                    }
-                } else {
-                    FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s.", pageUrl, JSON.stringify(error));
-                    reject(error);
-                }
-            });
-
-        });
-    }
 
     fetchFeeds(pageId, type, parameters = {}) {
         return new Promise((resolve, reject) => {
@@ -73,8 +47,9 @@ export default class FacebookClient {
                         if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
                             let feedResponse = JSON.parse(body);
                             FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
-                            feedResponse = parseFacebookPosts(pageId, feedResponse.data);
-                            resolve(feedResponse);
+                            const parsedFeeds = parseFacebookPosts(pageId, feedResponse.data);
+                            let since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
+                            resolve({ "docs": parsedFeeds, "paging": { since } });
                         } else {
                             let errorInfo = JSON.parse(body);
                             FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageId, JSON.stringify(errorInfo));
@@ -161,7 +136,7 @@ export default class FacebookClient {
     getLongLivedToken() {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             request.get({
-                "url": this.facebookParameters.url + "/oauth/access_token?grant_type=fb_exchange_token&client_id=" + this.appId + "&client_secret=" + this.appSecretProof + "&fb_exchange_token=" + this.accessToken,
+                "url": `${this.facebookParameters.url}/oauth/access_token?grant_type=fb_exchange_token&client_id=${this.appId}&client_secret=${this.appSecretProof}&fb_exchange_token=${this.accessToken}`,
                 "timeout": this.facebookParameters.timeOut
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
@@ -178,7 +153,6 @@ export default class FacebookClient {
                     FacebookClient.logger().error("FacebookClient:: error while getting long lived token. Error: %s.", JSON.stringify(error));
                     reject(error);
                 }
-
             });
         });
     }
@@ -186,5 +160,9 @@ export default class FacebookClient {
     _addDefaultParameters(receivedParameters) {
         receivedParameters.access_token = this.accessToken; //eslint-disable-line camelcase
         receivedParameters.appsecret_proof = this.appSecretProof; //eslint-disable-line camelcase
+    }
+
+    _getLatestFeedTimeStamp(paging) {
+        return parseInt(paging.split("since=")[1].split("&")[0], 10); //eslint-disable-line no-magic-numbers
     }
 }

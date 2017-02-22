@@ -9,7 +9,6 @@ import Route from "./../routes/helpers/Route";
 import { userDetails } from "./../Factory";
 import DateUtil from "./../util/DateUtil";
 import { fetchFeedsTimeInterval } from "./../util/Constants";
-import R from "ramda"; //eslint-disable-line id-length
 
 export const WEB = "web";
 export const FACEBOOK_PAGE = "fb_page";
@@ -30,7 +29,12 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeeds() {
         try {
-            let response = await this.fetchFeedsFromAllSources();
+            const feeds = await this.fetchFeedsFromAllSources();
+            let response = { "status": false, "message": "No new feeds" };
+            if(feeds.length) {
+                await this.saveFeedDocumentsToDb(feeds);
+                response = { "status": true };
+            }
             FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched feeds.");
             this._handleSuccess(response);
         } catch(err) {
@@ -43,15 +47,18 @@ export default class FetchFeedsFromAllSources extends Route {
         const couchClient = CouchClient.instance(this.accesstoken);
         let urlDocuments = await this._getUrlDocuments(couchClient);
         let mapUrlDocs = urlDocuments.map(async (url) => {
-            let feeds = await this.fetchFeedsFromSource(url);
-            if(!R.isEmpty(feeds)) {
-                await this.updateUrlTimeStamp(url);
+            const currentTime = DateUtil.getCurrentTime();
+            if(!url.since ||
+                currentTime - parseInt(url.since, 10) > fetchFeedsTimeInterval[url.sourceType]) {
+                let feeds = await this.fetchFeedsFromSource(url);
+                /* TODO: URLTimeStamp should be updated, only after we save the feeds in DB*/ //eslint-disable-line
+                await this.updateUrlTimeStamp(url, feeds.paging);
+                return feeds.docs;
             }
-            return feeds;
+            return [];
         });
         let feedArrays = await Promise.all(mapUrlDocs);
-        let feeds = feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
-        return await this.saveFeedDocumentsToDb(feeds);
+        return feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
     }
     
     async _getUrlDocuments(couchClient, offset = 0, results = []) { // eslint-disable-line no-magic-numbers
@@ -71,23 +78,19 @@ export default class FetchFeedsFromAllSources extends Route {
         return results.concat(response.docs);
     }
 
-    /*TODO: missing single responsibility */ //eslint-disable-line
-    async updateUrlTimeStamp(sourceUrlDoc) {
-        let currentTime = parseInt(DateUtil.getCurrentTime(), 10);
-        if(!sourceUrlDoc.latestFeedTimeStamp || currentTime - parseInt(sourceUrlDoc.latestFeedTimeStamp, 10) > fetchFeedsTimeInterval[sourceUrlDoc.sourceType]) {
-            try {
-                let couchClient = CouchClient.instance(this.accesstoken);
-                sourceUrlDoc.latestFeedTimeStamp = currentTime;
-                await couchClient.saveDocument(encodeURIComponent(sourceUrlDoc._id), sourceUrlDoc);
-            } catch (err) {
-                FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error updating source url timestamp. Error: %s", err);
-            }
+    async updateUrlTimeStamp(sourceUrlDoc, paging) {
+        try {
+            let couchClient = CouchClient.instance(this.accesstoken);
+            const updatedSource = Object.assign({}, sourceUrlDoc, paging);
+            await couchClient.saveDocument(encodeURIComponent(sourceUrlDoc._id), updatedSource);
+        } catch (err) {
+            FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error updating source url timestamp. Error: %s", err);
         }
     }
 
     async fetchFeedsFromSource(item) {
         let feeds = null, type = "posts";
-        let emptyArray = [];
+        let defaultResponse = { "docs": [] };
         switch (item.sourceType) {
         case WEB:
             try {
@@ -96,7 +99,7 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching rss feeds. Error: ${JSON.stringify(err)}`);
-                return emptyArray;
+                return defaultResponse;
             }
         case FACEBOOK_GROUP:
             type = "feed";
@@ -105,12 +108,13 @@ export default class FetchFeedsFromAllSources extends Route {
                 if (!this.facebookAcessToken) {
                     this.facebookAcessToken = await this._getFacebookAccessToken();
                 }
-                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).fetchFeeds(item._id, type);
+                //eslint-disable-next-line no-magic-numbers
+                feeds = await FacebookRequestHandler.instance(this.facebookAcessToken).fetchFeeds(item._id, type, { "since": item.since || 0 });
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched facebook feeds from all sources.");
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error("FetchFeedsFromAllSources:: error fetching facebook feeds. Error: %s", err);
-                return emptyArray;
+                return defaultResponse;
             }
         case TWITTER_TYPE:
             try {
@@ -119,10 +123,10 @@ export default class FetchFeedsFromAllSources extends Route {
                 return feeds;
             } catch (err) {
                 FetchFeedsFromAllSources.logger().error(`FetchFeedsFromAllSources:: error fetching twitter feeds. Error: ${JSON.stringify(err)}`);
-                return emptyArray;
+                return defaultResponse;
             }
         default:
-            return emptyArray;
+            return defaultResponse;
         }
     }
 
