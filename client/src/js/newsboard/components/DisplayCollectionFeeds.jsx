@@ -73,14 +73,14 @@ export class DisplayCollectionFeeds extends Component {
                     this.props.isClicked();
                 }}
                 ><i className="fa fa-arrow-left" aria-hidden="true"/>All Collections</button>
-            </header>
+              </header>
             : <header className="collection-header" />);
 
     }
 
     render() {
         return (
-            <div className={this.props.tab === WRITE_A_STORY ? "story-board-collections" : "collections"}>
+            <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
                 <DisplayArticle collection={this.refs.collection} collectionName={this.props.collectionName} />
                 <div ref="collection" className="display-collection">
                     {this.displayHeader()}

@@ -130,7 +130,8 @@ export class DisplayFeeds extends Component {
     }
 
     displayFeeds() {
-        return(this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayArticle isClicked={this._isClicked.bind(this)} isSelected={this.state.isClicked} />
+        return(this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked
+            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 <i onClick={() => {
@@ -138,11 +139,11 @@ export class DisplayFeeds extends Component {
                 }} className="expand-icon"
                 />
 
-            <div className="feeds">
-                {this.props.feeds.map((feed, index) =>
-                    <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}/>)}
-            </div>
-        </div>);
+                <div className="feeds">
+                    {this.props.feeds.map((feed, index) =>
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}/>)}
+                </div>
+              </div>);
     }
 
     render() {

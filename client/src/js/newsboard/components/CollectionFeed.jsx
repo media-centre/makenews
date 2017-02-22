@@ -24,7 +24,7 @@ export default class CollectionFeed extends Component {
         const feed = this.props.feed;
         let [video] = feed.videos || [];
         let [image] = feed.images;
-        let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed" : "collection-feed";
+        let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         return (<div className={feedClass}>
                     <div className={`${feedClass}__body`}>
                         <div className={`${feedClass}__title`}>{feed.title}</div>
@@ -42,7 +42,7 @@ export default class CollectionFeed extends Component {
                         {feed.sourceType === "web" || video || image
                         ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
                     </div>
-            </div>);
+              </div>);
     }
 }
 

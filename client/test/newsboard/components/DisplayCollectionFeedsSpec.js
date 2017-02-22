@@ -73,8 +73,8 @@ describe("DisplayCollectionFeeds", () => {
             result = renderer.getRenderOutput();
         });
 
-        it("should have style when current tab write a story", () => {
-            assert.deepEqual(result.props.className, "story-board-collections");
+        it("should have new className when current tab write a story", () => {
+            assert.deepEqual(result.props.className, "collections story-board-collections");
         });
 
         it("should have button class for all collections", () => {

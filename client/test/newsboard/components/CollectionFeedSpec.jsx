@@ -72,7 +72,7 @@ describe("CollectionFeed", () => {
 
     it("should have story-collection feed class when current tab write a story", () => {
         feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Write a Story"/>);
-        expect(feedDom.props.className).to.deep.equals("story-collection-feed");
+        expect(feedDom.props.className).to.deep.equals("story-collection-feed collection-feed");
     });
 
     describe("Read more Button", () => {

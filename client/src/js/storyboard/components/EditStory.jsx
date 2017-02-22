@@ -67,7 +67,7 @@ export class EditStory extends Component {
             }).catch((error) => {
                 if(error.message === "Please add title") {
                     Toast.show(error.message);
-                }else if(error.message === "Title Already exists") {
+                } else if(error.message === "Title Already exists") {
                     Toast.show(error.message);
                 } else {
                     Toast.show("Not able to save");
@@ -97,7 +97,9 @@ export class EditStory extends Component {
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
                 </div>
+
                 <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>
+
                 <div className="source-type-bar">
                     <NewsBoardTabs />
                 </div>

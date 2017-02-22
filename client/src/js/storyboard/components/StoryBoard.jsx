@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import { Component, PropTypes } from "react";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
 
@@ -9,11 +9,7 @@ export class StoryBoard extends Component {
     }
 
     render() {
-        return (
-            <div>
-                { this.props.children }
-            </div>
-        );
+        return this.props.children;
     }
 }
 
