@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import DisplayCollection from "../../../src/js/newsboard/components/DisplayCollection";
+import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
+import { SCAN_NEWS, WRITE_A_STORY } from "./../../../src/js/header/HeaderActions";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
@@ -30,7 +32,7 @@ describe("DisplayFeeds", () => {
 
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
-                <DisplayFeeds />
+                <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
             </Provider>);
     });
 
@@ -67,16 +69,40 @@ describe("DisplayFeeds", () => {
                     "_id": "1234"
                 },
                 "newsBoardCurrentSourceTab": "collections",
-                "currentHeaderTab": "Scan News"
-
+                "currentFilterSource": { "web": [] }
             }), applyMiddleware(thunkMiddleware));
 
             result = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <DisplayFeeds />
+                    <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
                 </Provider>);
 
             let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
+            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+        });
+    });
+
+    /*TODO: update the state from test*/ //eslint-disable-line
+    xdescribe("write a story", () => {
+        it("should have Display Article", () => {
+            feeds = [
+                { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
+                { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
+            ];
+            store = createStore(() => ({
+                "fetchedFeeds": feeds,
+                "selectedArticle": {
+                    "_id": "1234"
+                },
+                "newsBoardCurrentSourceTab": "web",
+                "currentFilterSource": { "web": [] }
+            }), applyMiddleware(thunkMiddleware));
+
+            result = TestUtils.renderIntoDocument(
+                    <DisplayFeeds store={store} currentHeaderTab={WRITE_A_STORY}/>);
+            result.setState({ "isClicked": true });
+
+            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayArticle);
             expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
     });

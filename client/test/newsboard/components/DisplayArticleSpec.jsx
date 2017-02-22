@@ -28,7 +28,7 @@ describe("DisplayArticle", () => {
         active = false;
         sandbox = sinon.sandbox.create();
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} collectionName="test" />);
+        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} collectionName="test" />);
     });
 
     afterEach("DisplayArticle", () => {
@@ -40,14 +40,14 @@ describe("DisplayArticle", () => {
     });
 
     it("should not render if article is not passed", () => {
-        let noArticleDom = renderer.render(<DisplayArticle active={active} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
+        let noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
         expect(noArticleDom).to.be.a("null");
     });
 
     describe("main tag", () => {
         let mainDOM = null;
-        beforeEach("", () => {
-            mainDOM = displayArticleDom.props.children[1]; //eslint-disable-line no-magic-numbers
+        beforeEach("main tag", () => {
+            [, mainDOM] = displayArticleDom.props.children;
         });
 
         it("should have main tag with article class", () => {
@@ -82,13 +82,14 @@ describe("DisplayArticle", () => {
 
         it("should have article images", () => {
             let [, , imagesDOM] = mainDOM.props.children;
+            let [img] = imagesDOM.props.children;
 
             expect(imagesDOM.type).to.equals("div");
             expect(imagesDOM.props.className).to.equals("article__images");
 
             expect(imagesDOM.props.children).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
-            expect(imagesDOM.props.children[0].type).to.equals("img"); //eslint-disable-line no-magic-numbers
-            expect(imagesDOM.props.children[0].props.src).to.equals(feed.images[0].url); //eslint-disable-line no-magic-numbers
+            expect(img.type).to.equals("img");
+            expect(img.props.src).to.equals(feed.images[0].url); //eslint-disable-line no-magic-numbers
         });
 
         it("should have article description", () => {
@@ -112,7 +113,7 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "added" }} dispatch={()=>{}}/>);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} dispatch={()=>{}}/>);
             let result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, DisplayWebArticle);
 
@@ -124,7 +125,7 @@ describe("DisplayArticle", () => {
     describe("headerTag", () => {
 
         it("should have header tag with display-article__header class", () => {
-            let headerDOM = displayArticleDom.props.children[0]; //eslint-disable-line no-magic-numbers
+            let [headerDOM] = displayArticleDom.props.children;
             expect(headerDOM.props.className).to.equal("display-article__header");
             expect(headerDOM.type).to.equal("header");
         });
@@ -146,7 +147,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
                 </Provider>
             );
             let collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
@@ -156,8 +157,8 @@ describe("DisplayArticle", () => {
         });
 
         it("should have bookmark class when article is not bookmarked", () => {
-            let headerDOM = displayArticleDom.props.children[0]; //eslint-disable-line no-magic-numbers
-            let bookmarkDOM = headerDOM.props.children[1]; //eslint-disable-line no-magic-numbers
+            let [headerDOM] = displayArticleDom.props.children;
+            let [, bookmarkDOM] = headerDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark");
             expect(bookmarkDOM.type).to.equal("div");
         });
@@ -165,8 +166,8 @@ describe("DisplayArticle", () => {
         it("should have bookmark & active classes when article is boomarked", () => {
             feed.bookmark = true;
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} addToCollectionStatus={{ "message": "" }}/>);
-            let headerDOM = displayArticleDom.props.children[0]; //eslint-disable-line no-magic-numbers
-            let bookmarkDOM = headerDOM.props.children[1]; //eslint-disable-line no-magic-numbers
+            let [headerDOM] = displayArticleDom.props.children;
+            let [, bookmarkDOM] = headerDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark active");
             expect(bookmarkDOM.type).to.equal("div");
         });
@@ -185,7 +186,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
@@ -208,7 +209,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
@@ -232,7 +233,7 @@ describe("DisplayArticle", () => {
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }} collectionName="test"/>);
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
-            let [arrowIcon, name] = backButton.props.children; //eslint-disable-line no-magic-numbers
+            let [arrowIcon, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("display-article__header back");
@@ -243,18 +244,45 @@ describe("DisplayArticle", () => {
             expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
             expect(name).to.be.equal("test");
         });
+
+        it("should have back button when current header tab is write a story", () => {
+            feed = {
+                "images": [{ "url": "image url" }],
+                "videos": [{ "thumbnail": "video image url" }],
+                "title": "Some Title",
+                "description": "Some Description",
+                "sourceType": "web",
+                "tags": ["Hindu"],
+                "pubDate": "2017-01-31T06:58:27.000Z",
+                "_id": 123
+            };
+            let isSelected = true;
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"web"} addToCollectionStatus={{ "message": "" }} isClicked={()=>{}} isSelected={isSelected}/>);
+            let [mainDOM] = displayArticleDom.props.children;
+            let backButton = mainDOM.props.children;
+            let [arrowIcon, name] = backButton.props.children;
+
+            expect(mainDOM.type).to.be.equal("header");
+            expect(mainDOM.props.className).to.be.equal("story-display-article__header back");
+
+            expect(backButton.type).to.be.equal("button");
+            expect(backButton.props.className).to.be.equal("back__button");
+            expect(arrowIcon.type).to.be.equal("i");
+            expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
+            expect(name).to.be.equal("back");
+        });
     });
 
     describe("toast", () => {
 
         it("should not have toast message when there is addToCollectionStatus is empty", () => {
-            let toastDiv = displayArticleDom.props.children[2]; //eslint-disable-line no-magic-numbers
+            let [,, toastDiv] = displayArticleDom.props.children;
             expect(toastDiv).to.equals("");
         });
 
         it("should have toast message when there is addToCollectionStatus", () => {
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} addToCollectionStatus={{ "message": "successfully added" }}/>);
-            let toastDiv = displayArticleDom.props.children[2]; //eslint-disable-line no-magic-numbers
+            let [,, toastDiv] = displayArticleDom.props.children;
             expect(toastDiv.type).to.equals("div");
             expect(toastDiv.props.className).to.equals("add-to-collection-message");
         });

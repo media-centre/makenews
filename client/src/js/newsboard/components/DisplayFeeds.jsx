@@ -40,6 +40,7 @@ export class DisplayFeeds extends Component {
             this.offset = 0;
             this.getMoreFeeds(nextProps.sourceType);
             this.props.dispatch(DisplayFeedActions.clearFeeds());
+            this.setState({ "isClicked": false });
         }
 
         if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
