@@ -6,6 +6,17 @@
   flex-direction: column;
   box-sizing: border-box;
 
+  .input-hashtag-box {
+    visibility: hidden;
+
+    &.show {
+      visibility: visible;
+      width: 60%;
+      margin-left: 10px;
+    }
+  }
+
+
   .filter-source {
     list-style: none;
     margin: 15px 0;
@@ -54,6 +65,53 @@
 
     button {
       margin: 0 10px;
+    }
+  }
+
+  .hashtag-container {
+    input {
+      border: 0;
+      background-color: $background-color;
+      border-bottom: 1px solid $primary-color;
+      width: 230px;
+    }
+    .hashtag-box {
+      div {
+        display: inline-block;
+      }
+
+      .add-tag {
+        background-color: #FF6945;
+        color: #fff;
+        box-shadow: -2px 3px 2px 0 #b3b1b1;
+        margin: 0 0 20px 18px;
+        padding: 10px;
+        font-size: 12px;
+      }
+    }
+
+    .add-hashtag {
+      margin: 17px 0 10px 10px;
+    }
+    .hashtags {
+      visibility: hidden;
+
+      &active {
+        visibility: visible;
+      }
+    }
+  }
+
+  .spinner-container {
+    position: fixed;
+    top:50px;
+    background-color: lightgrey;
+    opacity: 0.5;
+    height: 950px;
+    width: 420px;
+    .show-spinner {
+      top: 400px;
+      margin-top: 400px;
     }
   }
 }

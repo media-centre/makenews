@@ -5,12 +5,15 @@ import { filteredSources, filterTabSwitch } from "./FilterActions";
 const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import SourceFilters from "./SourceFilters";
+import { fetchFeedsFromSources } from "../actions/DisplayFeedActions";
 import Input from "./../../utils/components/Input";
+import Spinner from "../../utils/components/Spinner";
 
 let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
-class DisplayFilters extends Component {
+export class DisplayFilters extends Component {
     constructor() {
         super();
+        this.state = { "hashtagInputBox": false, "showSpinner": false };
         this._renderSources = this._renderSources.bind(this);
     }
 
@@ -28,7 +31,9 @@ class DisplayFilters extends Component {
     _renderSources(sourceType, searchKey) {
         let configuredSourceDOM = (source) =>
             <li className="filter-source" key={source._id}>
-                <input type="checkbox" role="checkbox" name={sourceType} title={source.name} value={source._id} onClick={this.sourceClick} defaultChecked={this.hasChecked(source._id, sourceType)} />
+                <input type="checkbox" role="checkbox" name={sourceType} title={source.name} value={source._id}
+                    onClick={this.sourceClick} defaultChecked={this.hasChecked(source._id, sourceType)}
+                />
                 <span className="source__title">{source.name}</span>
             </li>;
         if(searchKey) {
@@ -60,11 +65,20 @@ class DisplayFilters extends Component {
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
-    applyFilter() {
+    async applyFilter() {
+        this.setState({ "showSpinner": true });
         let sourceFilters = {};
         sourceFilters.web = [...selectedSources.web];
         sourceFilters.facebook = [...selectedSources.facebook];
         sourceFilters.twitter = [...selectedSources.twitter];
+        sourceFilters.twitter = sourceFilters.twitter.map((source) => {
+            if(source.startsWith("#")) {
+                source = encodeURIComponent(source); //eslint-disable-line no-param-reassign
+            }
+            return source;
+        });
+
+        await fetchFeedsFromSources();
         this.props.dispatch(filteredSources(sourceFilters));
         this.props.dispatch(filterTabSwitch(""));
     }
@@ -74,42 +88,64 @@ class DisplayFilters extends Component {
         this.props.dispatch(filterTabSwitch(""));
     }
 
-    addHashtag(event) {
+    onEnterKeyPressed(event) {
         const ENTERKEY = 13;
         if(event.keyCode === ENTERKEY) {
             let hashtag = event.target.value;
+            this.addHashtag(hashtag);
+        }
+    }
 
+    addHashtag(hashtag) {
+        if(hashtag) {
             if(!hashtag.startsWith("#")) {
-                hashtag = "#" + hashtag;
+                hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
             }
 
             let sourceDoc = {
                 "id": hashtag,
                 "name": hashtag
             };
+            selectedSources.twitter.add(hashtag);
             this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
+
         }
     }
 
     render() {
+        let hashtagValue = "";
         return (
             <aside ref="sources" className="filters-container">
-                <Input eventHandlers={{ "onKeyUp": (event) => {
+                <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => { //eslint-disable-line react/jsx-boolean-value
                     this.searchInSources(event);
                 } }} placeholder="search" addonSrc="./images/search-icon.png"
                 />
 
                 { this.props.currentTab === "twitter" &&
-                <Input className="hashtags" placeholder="add hashtag" eventHandlers={{ "onKeyUp": (event) => {
-                    this.addHashtag(event);
-                } }}
-                /> }
+                    <div className="hashtag-container">
+                       <div className="add-hashtag" onClick={() => this.setState({ "hashtagInputBox": !this.state.hashtagInputBox })}>
+                           <i className="fa fa-plus-circle" />
+                           <span>  ADD HASHTAG </span>
+                       </div>
+                        { this.state.hashtagInputBox &&
+                        <div className="hashtag-box">
+                            <Input placeholder="add hashtag" className={"input-hashtag-box show"} eventHandlers={{ "onKeyUp": (event) => {
+                                hashtagValue = event.target.value;
+                                this.onEnterKeyPressed(event);
+                            } }}
+                            />
+                            <div className="add-tag" onClick={() => this.addHashtag(hashtagValue)} >ADD TAG</div>
+                        </div> }
+                    </div>
+                }
 
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
+                {this.state.showSpinner && <div className="spinner-container"> <div className="show-spinner"> <Spinner /></div> </div>}
+
                 <div className="controls">
                     <button id="cancelBtn" className="cancel-btn secondary" onClick={() => this.cancelFilter()}>Cancel</button>
-                    <button id="applyBtn" className="apply-btn primary" onClick={() =>this.applyFilter()}>Apply</button>
+                    <button id="applyBtn" className="apply-btn primary" onClick={async () => await this.applyFilter()}>Apply</button>
                 </div>
             </aside>
         );

@@ -27,8 +27,13 @@ class ConfiguredSources extends Component {
                 R.map(configuredSourceDOM)
             )(this.props.sources[sourceType]);
         }
-
-        return R.map(configuredSourceDOM, R.prop(sourceType, this.props.sources));
+        let filterHashtags = (source) => {
+            if(!source.hashtag) {
+                return source;
+            }
+            return null;
+        };
+        return R.map(configuredSourceDOM, R.filter(filterHashtags, (R.prop(sourceType, this.props.sources))));
     }
 
     _searchInSources(event) {
@@ -41,7 +46,7 @@ class ConfiguredSources extends Component {
             <aside className="configured-sources-container">
                 <h3 className="heading">My Sources</h3>
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
-                <Input eventHandlers={{ "onKeyUp": (event) => {
+                <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => {
                     this._searchInSources(event);
                 } }} placeholder="search" addonSrc="./images/search-icon.png"
                 />
