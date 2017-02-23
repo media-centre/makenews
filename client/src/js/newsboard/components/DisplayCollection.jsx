@@ -11,7 +11,7 @@ import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 export class DisplayCollection extends Component {
     constructor() {
         super();
-        this.state = { "showCollectionPopup": false, "searchKey": "" , "isClicked": false };
+        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false };
     }
 
     componentWillReceiveProps(nextProps) {

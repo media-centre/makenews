@@ -108,12 +108,12 @@ describe("Display Collections", () => {
         });
 
         it("should have main div", () => {
-            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container"));
+            assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "collection-list-container"));
         });
         it("should have feeds div", () => {
             assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "feeds"));
         });
-        it("should have feeds div", () => {
+        it("should have select_collection div", () => {
             assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "select_collection"));
         });
     });

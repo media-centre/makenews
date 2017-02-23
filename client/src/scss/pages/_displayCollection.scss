@@ -110,6 +110,13 @@
 
       &__media {
         float: right;
+        width: 130px;
+        padding: 5px;
+
+        img{
+          max-width: 130px;
+          max-height: 130px;
+        }
       }
 
       &__title {
@@ -163,6 +170,7 @@
       font-size: 17px;
       border: 0;
       cursor: pointer;
+      padding-top: 20px;
 
       i {
         font-size: larger;

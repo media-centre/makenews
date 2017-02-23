@@ -62,7 +62,9 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillUnmount() {
-        this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
+        if(this.feedsDOM) {
+            this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
+        }
     }
 
     getFeedsCallBack() {

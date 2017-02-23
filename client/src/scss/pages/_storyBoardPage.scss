@@ -115,19 +115,3 @@
     display: none;
   }
 }
-
-.select_collection {
-font-size: 17px;
-color: $primary-color-light;
-padding: 5% 0 3% 8%;
-}
-
-.collections {
-  flex: 0;
-  flex-basis: 420px;
-}
-
-.display-collection .collection-feeds .collection-feed {
-  flex-basis: 100%;
-}
-
