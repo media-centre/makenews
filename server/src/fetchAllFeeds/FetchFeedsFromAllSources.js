@@ -49,7 +49,7 @@ export default class FetchFeedsFromAllSources extends Route {
         let mapUrlDocs = urlDocuments.map(async (url) => {
             const currentTime = DateUtil.getCurrentTime();
             if(!url.since ||
-                currentTime - parseInt(url.since, 10) > fetchFeedsTimeInterval[url.sourceType]) {
+                currentTime - url.since > fetchFeedsTimeInterval[url.sourceType]) {
                 let feeds = await this.fetchFeedsFromSource(url);
                 /* TODO: URLTimeStamp should be updated, only after we save the feeds in DB*/ //eslint-disable-line
                 await this.updateUrlTimeStamp(url, feeds.paging);

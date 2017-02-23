@@ -6,6 +6,7 @@ import NodeErrorHandler from "../../src/NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import DateUtil from "../../src/util/DateUtil";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 import nock from "nock";
 import { assert, expect } from "chai";
 import sinon from "sinon";
@@ -36,8 +37,8 @@ describe("FacebookClient", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
         let sandbox = sinon.sandbox.create();
         beforeEach("fetchFeeds", () => {
-            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "since": "12943678" };
-            remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
+            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "limit": 100, "since": "12943678" };
+            remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&limit=100&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
             pageId = "12345678";
         });
 
@@ -45,10 +46,7 @@ describe("FacebookClient", () => {
             sandbox.restore();
         });
 
-        it("should return feeds for a public page", (done) => {
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
-            nodeErrorHandlerMock.returns(true);
-
+        it("should return feeds for a public page", async () => {
             const fbResponse = {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
@@ -93,21 +91,11 @@ describe("FacebookClient", () => {
                 .reply(HttpResponseHandler.codes.OK, fbResponse);
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).then(response => {
-                try {
-                    assert.deepEqual(response, expectedResponse);
-                    nodeErrorHandlerMock.verify();
-                    done();
-                } catch(err) {
-                    done(err);
-                }
-            });
+            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return feeds for a public page and paging with current time if paging not there", (done) => {
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
-            nodeErrorHandlerMock.returns(true);
-
+        it("should return feeds for a public page and paging with current time if paging not there", async () => {
             const fbResponse = {
                 "data": []
             };
@@ -125,22 +113,12 @@ describe("FacebookClient", () => {
                 .reply(HttpResponseHandler.codes.OK, fbResponse);
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).then(response => {
-                try {
-                    assert.deepEqual(response, expectedResponse);
-                    nodeErrorHandlerMock.verify();
-                    done();
-                } catch(err) {
-                    done(err);
-                }
-            });
+
+            const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            assert.deepEqual(response, expectedResponse);
         });
 
-
-        it("should reject the promise if there are any errors from facebook like authentication", (done) => {
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
-            nodeErrorHandlerMock.returns(true);
-
+        it("should reject the promise if there are any errors from facebook like authentication", async () => {
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, {
@@ -151,42 +129,19 @@ describe("FacebookClient", () => {
                         "error_subcode": 463,
                         "fbtrace_id": "AWpk5h2ceG6"
                     }
-                }
-                );
+                });
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => {
-                assert.strictEqual("OAuthException", error.type);
-                assert.strictEqual("Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.", error.message);
-                nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
-                done();
-            });
-        });
 
-        it("should reject with error if the facebook node is not available", (done) => {
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
-            nodeErrorHandlerMock.returns(false);
+            const exprectedMessage = {
+                "code": 190,
+                "error_subcode": 463,
+                "fbtrace_id": "AWpk5h2ceG6",
+                "type": "OAuthException",
+                "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST."
+            };
 
-            nock("https://graph.facebook.com")
-                .get(remainingUrl)
-                .replyWithError({
-                    "code": "ETIMEDOUT",
-                    "errno": "ETIMEDOUT",
-                    "syscall": "connect",
-                    "address": "65.19.157.235",
-                    "port": 443
-                }
-                );
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => {
-                assert.strictEqual("ETIMEDOUT", error.code);
-                assert.strictEqual("ETIMEDOUT", error.errno);
-                nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
-                done();
-            });
+            await isRejected(facebookClient.fetchFeeds(pageId, type, userParameters), exprectedMessage);
         });
 
         it("should reject if the facebook takes too long to return the data", (done) => {

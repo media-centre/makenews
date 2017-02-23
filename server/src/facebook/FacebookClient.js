@@ -30,38 +30,36 @@ export default class FacebookClient {
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
-    fetchFeeds(pageId, type, parameters = {}) {
-        return new Promise((resolve, reject) => {
-            if (StringUtil.isEmptyString(pageId)) {
-                reject({
-                    "message": "page id cannot be empty",
-                    "type": "InvalidArgument"
-                });
-            } else {
-                this._addDefaultParameters(parameters);
-                request.get({
-                    "url": this.facebookParameters.url + "/" + pageId + "/" + type + "?" + constructQueryString(parameters, false),
-                    "timeout": this.facebookParameters.timeOut
-                }, (error, response, body) => {
-                    if (NodeErrorHandler.noError(error)) {
-                        if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                            let feedResponse = JSON.parse(body);
-                            FacebookClient.logger().debug("FacebookClient:: successfully fetched feeds for url %s.", pageId);
-                            const parsedFeeds = parseFacebookPosts(pageId, feedResponse.data);
-                            let since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
-                            resolve({ "docs": parsedFeeds, "paging": { since } });
-                        } else {
-                            let errorInfo = JSON.parse(body);
-                            FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageId, JSON.stringify(errorInfo));
-                            reject(errorInfo.error);
-                        }
-                    } else {
-                        FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s.", pageId, JSON.stringify(error));
-                        reject(error);
-                    }
-                });
+    async fetchFeeds(pageId, type, parameters = {}) {
+        if (StringUtil.isEmptyString(pageId)) {
+            const errorInfo = {
+                "message": "page id cannot be empty",
+                "type": "InvalidArgument"
+            };
+            throw errorInfo;
+        } else {
+            this._addDefaultParameters(parameters);
+            const url = `${this.facebookParameters.url}/${pageId}/${type}?${constructQueryString(parameters, false)}`;
+            try {
+                let feedResponse = await this.requestForFeeds(url);
+                feedResponse.docs = parseFacebookPosts(pageId, feedResponse.docs);
+                return feedResponse;
+            } catch (err) {
+                FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageId, JSON.stringify(err));
+                throw err;
             }
-        });
+        }
+    }
+
+    async requestForFeeds(url) {
+        const response = await fetch(url, { "timeout": this.facebookParameters.timeOut });
+        if (response.status === HttpResponseHandler.codes.OK) {
+            let feedResponse = await response.json();
+            let since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
+            return { "docs": feedResponse.data, "paging": { since } };
+        }
+        let errorInfo = await response.json();
+        throw errorInfo.error;
     }
 
     fetchProfiles(parameters = { "fields": "id,name,picture", "limit": 100 }) {
