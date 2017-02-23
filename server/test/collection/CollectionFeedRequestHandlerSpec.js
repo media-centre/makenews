@@ -1,4 +1,4 @@
-import { getCollectedFeeds } from "./../../src/collection/CollectionFeedsRequestHandler";
+import { getCollectedFeeds, getCollectionFeedIds } from "./../../src/collection/CollectionFeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -144,6 +144,38 @@ describe("CollectionFeedsRequestHandler", () => {
                 findDocumentsMock.verify();
             } catch(error) {
                 assert.strictEqual(error, "unexpected response from the db");
+            }
+        });
+    });
+
+
+    describe("getCollectionFeedIds", () => {
+
+        it("should return array with feed ids", async () => {
+            let couchClient = CouchClient.instance("accessToken");
+            let sandbox = sinon.sandbox.create();
+            let colletionFeedDocs = { "docs": [{ "feedId": "feedId1" }, { "feedId": "feedId2" }] };
+            let expectedFeedIdArray = ["feedId1", "feedId2"];
+            sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(colletionFeedDocs));
+            try {
+                let feedIdArray = await getCollectionFeedIds(couchClient, 0); //eslint-disable-line no-magic-numbers
+                assert.deepEqual(feedIdArray, expectedFeedIdArray);
+            } catch(error) {
+                assert.fail(error);
+            }
+        });
+
+        it("should return empty array", async () => {
+            let couchClient = CouchClient.instance("accessToken");
+            let sandbox = sinon.sandbox.create();
+            let colletionFeedDocs = { "docs": [] };
+            let expectedFeedIdArray = [];
+            sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(colletionFeedDocs));
+            try {
+                let feedIdArray = await getCollectionFeedIds(couchClient, 0); //eslint-disable-line no-magic-numbers
+                assert.deepEqual(feedIdArray, expectedFeedIdArray);
+            } catch(error) {
+                assert.fail(error);
             }
         });
     });

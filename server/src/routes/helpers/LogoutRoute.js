@@ -9,7 +9,8 @@ export default class LogoutRoute extends Route {
     }
 
     async handle() {
-        await DeleteHashtagsHandler.instance().deleteHashtags(this.request.cookies.AuthSession);
+        let deleteHashtagHandler = DeleteHashtagsHandler.instance();
+        await deleteHashtagHandler.deleteHashtags(this.request.cookies.AuthSession);
         userDetails.removeUser(this.request.cookies.AuthSession);
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", "AuthSession=;Version=1; Path=/; HttpOnly")

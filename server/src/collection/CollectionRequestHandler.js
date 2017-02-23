@@ -18,22 +18,22 @@ export default class CollectionRequestHandler {
         return await this.createCollection(couchClient, docId, collectionName, collectionDocId); /* TODO:split the create collection and create intermediate doc*/ //eslint-disable-line
     }
 
-    async createCollection(couchClient, docId, collectionName, collectionDocId) {
+    async createCollection(couchClient, feedDocId, collectionName, collectionDocId) {
         let collectionDoc = {
             "docType": "collection",
             "collection": collectionName };
         let collectionFeedDoc = {
             "docType": "collectionFeed",
-            "feedId": docId,
+            "feedId": feedDocId,
             "collection": collectionName };
         let feedCollectionId = null;
         try {
-            if (docId && collectionDocId) {
-                feedCollectionId = docId + collectionDocId;
+            if (feedDocId && collectionDocId) {
+                feedCollectionId = feedDocId + collectionDocId;
                 await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
-            } else if (docId) {
+            } else if (feedDocId) {
                 let response = await couchClient.updateDocument(collectionDoc); /* TODO: change the updateDoc to createDoc*/ //eslint-disable-line
-                feedCollectionId = docId + response.id;
+                feedCollectionId = feedDocId + response.id;
                 await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
             } else {
                 await couchClient.updateDocument(collectionDoc);

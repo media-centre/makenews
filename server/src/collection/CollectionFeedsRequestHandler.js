@@ -1,5 +1,6 @@
 import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
+const DOCS_PER_REQUEST = 25;
 
 export async function getCollectedFeeds(authSession, collectionName, offset) {
     const couchClient = CouchClient.instance(authSession);
@@ -31,4 +32,34 @@ async function getFeedIds(couchClient, collectionName, offset) {
         "skip": offset
     };
     return await couchClient.findDocuments(selector);
+}
+
+export async function getCollectionFeedIds(couchClient) {
+    let skipValue = 0;
+    let allCollectionFeedDocs = [], collectionFeedDocs = [];
+
+    do { //eslint-disable-line no-loops/no-loops
+        collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue);
+        allCollectionFeedDocs = allCollectionFeedDocs.concat(collectionFeedDocs);
+        skipValue += DOCS_PER_REQUEST;
+    } while (collectionFeedDocs.length === DOCS_PER_REQUEST);
+
+    let feedId = collectionFeedDoc => {
+        return R.prop("feedId", collectionFeedDoc);
+    };
+    return R.map(feedId, allCollectionFeedDocs);
+}
+
+async function getCollectionFeedDocs(couchClient, skipvalue) {
+    let selector = {
+        "selector": {
+            "docType": {
+                "$eq": "collectionFeed"
+            }
+        },
+        "fields": ["feedId"],
+        "skip": skipvalue
+    };
+    let collectionFeedDocs = await couchClient.findDocuments(selector);
+    return collectionFeedDocs.docs;
 }
