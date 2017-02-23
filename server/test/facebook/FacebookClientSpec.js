@@ -22,7 +22,8 @@ describe("FacebookClient", () => {
         applicationConfigFacebookStub.returns({
             "url": "https://graph.facebook.com/v2.8",
             "appSecretKey": "appSecretKey",
-            "timeOut": 10
+            "timeOut": 10,
+            "limit": 4
         });
         sinon.stub(FacebookClient, "logger").returns(LogTestHelper.instance());
     });
@@ -37,8 +38,8 @@ describe("FacebookClient", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
         let sandbox = sinon.sandbox.create();
         beforeEach("fetchFeeds", () => {
-            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "limit": 100, "since": "12943678" };
-            remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&limit=100&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
+            userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "limit": 2, "since": "12943678" };
+            remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&limit=${userParameters.limit}&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
             pageId = "12345678";
         });
 
@@ -51,8 +52,8 @@ describe("FacebookClient", () => {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
                 "paging": {
-                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485955212&format=json",
-                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1485955212&format=json"
+                    "previous": `https://graph.facebook.com/v2.8/1608617579371619/posts?limit=${userParameters.limit}&since=1485955212&format=json`,
+                    "next": `https://graph.facebook.com/v2.8/1608617579371619/posts?limit=${userParameters.limit}&until=1485955212&format=json`
                 }
             };
 
@@ -88,10 +89,13 @@ describe("FacebookClient", () => {
 
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
-                .reply(HttpResponseHandler.codes.OK, fbResponse);
+                .reply(HttpResponseHandler.codes.OK, fbResponse)
+                .get(`/v2.8/1608617579371619/posts?limit=${userParameters.limit}&until=1485955212&format=json`)
+                .reply(HttpResponseHandler.codes.OK, { "data": [] });
+
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
             assert.deepEqual(response, expectedResponse);
         });
 
@@ -115,6 +119,167 @@ describe("FacebookClient", () => {
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
 
             const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            assert.deepEqual(response, expectedResponse);
+        });
+
+        it("should return the feeds recursively", async () => {
+            const fbResponseFirst = {
+                "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
+                    { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
+                "paging": {
+                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485955212&format=json",
+                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1475253123&format=json"
+                }
+            };
+
+            const fbResponseSecond = {
+                "data": [{ "message": "test news 3", "id": "163974433696568_956585496352123", "from": { "name": "some" } }],
+                "paging": {
+                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485425132&format=json",
+                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1485952132&format=json"
+                }
+            };
+
+            const expectedResponse = {
+                "docs": [{ "_id": "163974433696568_957858557641481",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957858557641481",
+                    "description": "test news 1",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_957850670975603",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957850670975603",
+                    "description": "test news 2",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_956585496352123",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/956585496352123",
+                    "description": "test news 3",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" }],
+                "paging": {
+                    "since": 1485955212
+                }
+            };
+
+            const [, secondUrl] = fbResponseFirst.paging.next.split("https://graph.facebook.com");
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .reply(HttpResponseHandler.codes.OK, fbResponseFirst)
+                .get(secondUrl)
+                .reply(HttpResponseHandler.codes.OK, fbResponseSecond);
+
+            let type = "posts";
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+
+            assert.deepEqual(response, expectedResponse);
+        });
+
+        it("should return the feeds recursively only till the maxlimit of iterations", async () => {
+            const fbResponseFirst = {
+                "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
+                    { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
+                "paging": {
+                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485955212&format=json",
+                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1475253123&format=json"
+                }
+            };
+
+            const fbResponseSecond = {
+                "data": [{ "message": "test news 3", "id": "163974433696568_956585496352123", "from": { "name": "some" } },
+                { "message": "test news 4", "id": "163974433696568_956578545587459", "from": { "name": "some" } }],
+                "paging": {
+                    "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485425132&format=json",
+                    "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1485362142&format=json"
+                }
+            };
+
+            const expectedResponse = {
+                "docs": [{ "_id": "163974433696568_957858557641481",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957858557641481",
+                    "description": "test news 1",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_957850670975603",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/957850670975603",
+                    "description": "test news 2",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_956585496352123",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/956585496352123",
+                    "description": "test news 3",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" },
+                { "_id": "163974433696568_956578545587459",
+                    "docType": "feed",
+                    "type": "description",
+                    "title": "",
+                    "sourceType": "facebook",
+                    "link": "https://www.facebook.com/163974433696568/posts/956578545587459",
+                    "description": "test news 4",
+                    "pubDate": null,
+                    "tags": ["some"],
+                    "images": [],
+                    "videos": [],
+                    "sourceId": "12345678" }],
+                "paging": {
+                    "since": 1485955212
+                }
+            };
+
+            const [, secondUrl] = fbResponseFirst.paging.next.split("https://graph.facebook.com");
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .reply(HttpResponseHandler.codes.OK, fbResponseFirst)
+                .get(secondUrl)
+                .reply(HttpResponseHandler.codes.OK, fbResponseSecond);
+
+            let type = "posts";
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+
             assert.deepEqual(response, expectedResponse);
         });
 

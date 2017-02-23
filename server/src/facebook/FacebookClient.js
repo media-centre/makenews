@@ -41,7 +41,8 @@ export default class FacebookClient {
             this._addDefaultParameters(parameters);
             const url = `${this.facebookParameters.url}/${pageId}/${type}?${constructQueryString(parameters, false)}`;
             try {
-                let feedResponse = await this.requestForFeeds(url);
+                const maxFeedsLimit = this.facebookParameters.limit;
+                let feedResponse = await this.requestForFeeds(url, parameters.limit, maxFeedsLimit);
                 feedResponse.docs = parseFacebookPosts(pageId, feedResponse.docs);
                 return feedResponse;
             } catch (err) {
@@ -51,12 +52,18 @@ export default class FacebookClient {
         }
     }
 
-    async requestForFeeds(url) {
+    async requestForFeeds(url, maxFeedsPerRequest, maxFeedsLimit, since, feeds = []) {
         const response = await fetch(url, { "timeout": this.facebookParameters.timeOut });
         if (response.status === HttpResponseHandler.codes.OK) {
-            let feedResponse = await response.json();
-            let since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
-            return { "docs": feedResponse.data, "paging": { since } };
+            const feedResponse = await response.json();
+            const feedsAccumulator = feeds.concat(feedResponse.data);
+            if(!since) { //eslint-disable-next-line no-param-reassign
+                since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
+            }
+            if(feedResponse.data.length === maxFeedsPerRequest && feedsAccumulator.length < maxFeedsLimit) {
+                return await this.requestForFeeds(feedResponse.paging.next, maxFeedsPerRequest, maxFeedsLimit, since, feedsAccumulator);
+            }
+            return { "docs": feedsAccumulator, "paging": { since } };
         }
         let errorInfo = await response.json();
         throw errorInfo.error;

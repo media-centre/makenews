@@ -60,7 +60,7 @@ export default class FetchFeedsFromAllSources extends Route {
         let feedArrays = await Promise.all(mapUrlDocs);
         return feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
     }
-    
+    /* TODO: change DOCSLIMIT to 100 and add limit to selector*/ //eslint-disable-line 
     async _getUrlDocuments(couchClient, offset = 0, results = []) { // eslint-disable-line no-magic-numbers
         const selector = {
             "selector": {
