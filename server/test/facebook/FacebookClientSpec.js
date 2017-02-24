@@ -6,13 +6,14 @@ import NodeErrorHandler from "../../src/NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import DateUtil from "../../src/util/DateUtil";
-import { isRejected } from "./../helpers/AsyncTestHelper";
+import * as Constants from "./../../src/util/Constants";
 import nock from "nock";
 import { assert, expect } from "chai";
 import sinon from "sinon";
 
 describe("FacebookClient", () => {
     let accessToken = null, appSecretProof = null, applicationConfigFacebookStub = null, applicationConfig = null;
+    let logger = LogTestHelper.instance();
     before("FacebookClient", () => {
         accessToken = "test_token";
         appSecretProof = "test_secret_proof";
@@ -22,10 +23,10 @@ describe("FacebookClient", () => {
         applicationConfigFacebookStub.returns({
             "url": "https://graph.facebook.com/v2.8",
             "appSecretKey": "appSecretKey",
-            "timeOut": 10,
-            "limit": 4
+            "timeOut": 100,
+            "maxFeeds": 4
         });
-        sinon.stub(FacebookClient, "logger").returns(LogTestHelper.instance());
+        sinon.stub(FacebookClient, "logger").returns(logger);
     });
 
     after("FacebookClient", () => {
@@ -37,13 +38,16 @@ describe("FacebookClient", () => {
     describe("fetchFeeds", () => {
         let remainingUrl = null, userParameters = null, pageId = null;
         let sandbox = sinon.sandbox.create();
+        let fbReadLimit = Constants.maxFeedsPerRequest.facebook;
         beforeEach("fetchFeeds", () => {
             userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "limit": 2, "since": "12943678" };
             remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&limit=${userParameters.limit}&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
             pageId = "12345678";
+            Constants.maxFeedsPerRequest.facebook = 2;
         });
 
         afterEach("fetchFeeds", () => {
+            Constants.maxFeedsPerRequest.facebook = fbReadLimit;
             sandbox.restore();
         });
 
@@ -104,7 +108,7 @@ describe("FacebookClient", () => {
                 "data": []
             };
 
-            sandbox.stub(DateUtil, "getCurrentTime").returns(1485955212);
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1485955212);
             const expectedResponse = {
                 "docs": [],
                 "paging": {
@@ -275,7 +279,6 @@ describe("FacebookClient", () => {
                 .reply(HttpResponseHandler.codes.OK, fbResponseFirst)
                 .get(secondUrl)
                 .reply(HttpResponseHandler.codes.OK, fbResponseSecond);
-
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
             let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
@@ -283,7 +286,8 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should reject the promise if there are any errors from facebook like authentication", async () => {
+        it("should return empty data if there are any errors from facebook like authentication", async () => {
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, {
@@ -298,21 +302,39 @@ describe("FacebookClient", () => {
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
 
-            const exprectedMessage = {
-                "code": 190,
-                "error_subcode": 463,
-                "fbtrace_id": "AWpk5h2ceG6",
-                "type": "OAuthException",
-                "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST."
-            };
+            let data = await facebookClient.fetchFeeds(pageId, type, userParameters);
 
-            await isRejected(facebookClient.fetchFeeds(pageId, type, userParameters), exprectedMessage);
+            assert.deepEqual(data, { "docs": [], "paging": { "since": 1487927102 } });
         });
 
-        it("should reject if the facebook takes too long to return the data", (done) => {
+        it("should log error if there are any errors from facebook like authentication", async () => {
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
-                .socketDelay(2000)
+                .reply(HttpResponseHandler.codes.BAD_REQUEST, {
+                    "error": {
+                        "message": "Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.",
+                        "type": "OAuthException",
+                        "code": 190,
+                        "error_subcode": 463,
+                        "fbtrace_id": "AWpk5h2ceG6"
+                    }
+                });
+            let type = "posts";
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+
+            const loggerMock = sandbox.mock(logger).expects("error")
+                .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.`);
+            await facebookClient.fetchFeeds(pageId, type, userParameters);
+
+            loggerMock.verify();
+        });
+        
+        it("should reject if the facebook takes too long to return the data", async () => {
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .delayConnection(3000)
                 .reply(HttpResponseHandler.codes.OK, {
                     "data":
                     [{ "message": "test news 1", "id": "163974433696568_957858557641481" },
@@ -321,11 +343,31 @@ describe("FacebookClient", () => {
 
             let type = "posts";
             let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            facebookClient.fetchFeeds(pageId, type, userParameters).catch((error) => { //eslint-disable-line
-                done();
-            });
+
+            const loggerMock = sandbox.mock(logger).expects("error")
+                .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error occurred while fetching feeds`);
+            await facebookClient.fetchFeeds(pageId, type, userParameters);
+
+            loggerMock.verify();
         });
 
+        it("should reject if it is not able to fetch the data", async () => {
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
+            nock("https://graph.facebook.com")
+                .get(remainingUrl)
+                .replyWithError({
+                    "code": "ENOENT"
+                });
+
+            let type = "posts";
+            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+
+            const loggerMock = sandbox.mock(logger).expects("error")
+                .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error occurred while fetching feeds`);
+            await facebookClient.fetchFeeds(pageId, type, userParameters);
+
+            loggerMock.verify();
+        });
         it("should throw an error when access token is null", () => {
             let createFacebookClient = () => {
                 return new FacebookClient(null, appSecretProof);

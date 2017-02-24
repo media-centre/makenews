@@ -47,7 +47,7 @@ export default class FetchFeedsFromAllSources extends Route {
         const couchClient = CouchClient.instance(this.accesstoken);
         let urlDocuments = await this._getUrlDocuments(couchClient);
         let mapUrlDocs = urlDocuments.map(async (url) => {
-            const currentTime = DateUtil.getCurrentTime();
+            const currentTime = DateUtil.getCurrentTimeInSeconds();
             if(!url.since ||
                 currentTime - url.since > fetchFeedsTimeInterval[url.sourceType]) {
                 let feeds = await this.fetchFeedsFromSource(url);

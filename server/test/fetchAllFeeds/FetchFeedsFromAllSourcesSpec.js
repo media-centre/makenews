@@ -97,23 +97,23 @@ describe("FetchFeedsFromAllSources", () => {
             let urlDocuments = [
                 { "sourceType": "web",
                     "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                    "since": 12845678
+                    "since": 1487927102
                 },
                 { "sourceType": "web",
                     "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                    "since": 12345680
+                    "since": 1487927202
                 }
             ];
 
-            const currentTime = 12943678;
-            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
+            const currentTime = 1487927602;
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(currentTime);
 
             const expectedFeeds = { "docs": [{ "_id": 1, "title": "Something" }, { "_id": 2, "title": "Something1" }],
-                "paging": { "since": 12943679 } };
+                "paging": { "since": 1487927102 } };
             let fetchFeedsFromSourceMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromSource");
             fetchFeedsFromSourceMock.withArgs({ "sourceType": "web",
                 "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                "since": 12345680
+                "since": 1487927102
             }).returns(Promise.resolve(expectedFeeds));
             let getUrlDocumentsMock = sandbox.mock(fetchFeedsRequest).expects("_getUrlDocuments");
             getUrlDocumentsMock.returns(Promise.resolve(urlDocuments));
@@ -133,16 +133,16 @@ describe("FetchFeedsFromAllSources", () => {
             let urlDocuments = [
                 { "sourceType": "web",
                     "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                    "since": 12645780
+                    "since": 1487927502
                 },
                 { "sourceType": "web",
                     "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms",
-                    "since": 12645680
+                    "since": 1487927602
                 }
             ];
 
-            const currentTime = 12943678;
-            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
+            const currentTime = 1487927902;
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(currentTime);
 
             let fetchFeedsFromSourceMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromSource");
             fetchFeedsFromSourceMock.never();

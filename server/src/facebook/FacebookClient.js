@@ -5,6 +5,7 @@ import fetch from "isomorphic-fetch";
 import NodeErrorHandler from "../NodeErrorHandler";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import { constructQueryString } from "../../../common/src/util/HttpRequestUtil";
+import { maxFeedsPerRequest } from "./../util/Constants";
 import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
 import { parseFacebookPosts } from "./FacebookFeedParser.js";
@@ -30,8 +31,8 @@ export default class FacebookClient {
         this.facebookParameters = ApplicationConfig.instance().facebook();
     }
 
-    async fetchFeeds(pageId, type, parameters = {}) {
-        if (StringUtil.isEmptyString(pageId)) {
+    async fetchFeeds(sourceId, type, parameters = {}) {
+        if (StringUtil.isEmptyString(sourceId)) {
             const errorInfo = {
                 "message": "page id cannot be empty",
                 "type": "InvalidArgument"
@@ -39,34 +40,45 @@ export default class FacebookClient {
             throw errorInfo;
         } else {
             this._addDefaultParameters(parameters);
-            const url = `${this.facebookParameters.url}/${pageId}/${type}?${constructQueryString(parameters, false)}`;
+            const url = `${this.facebookParameters.url}/${sourceId}/${type}?${constructQueryString(parameters, false)}`;
+            let feedResponse = await this.requestForFeeds(url);
+            if(feedResponse.error) {
+                FacebookClient.logger().error(`FacebookClient:: error fetch feeds for url ${sourceId}. Details:: ${feedResponse.error}`);
+                delete feedResponse.error;
+            }
             try {
-                const maxFeedsLimit = this.facebookParameters.limit;
-                let feedResponse = await this.requestForFeeds(url, parameters.limit, maxFeedsLimit);
-                feedResponse.docs = parseFacebookPosts(pageId, feedResponse.docs);
+                feedResponse.docs = parseFacebookPosts(sourceId, feedResponse.docs);
                 return feedResponse;
             } catch (err) {
-                FacebookClient.logger().error("FacebookClient:: error fetching feeds for url %s. Error %s", pageId, JSON.stringify(err));
+                FacebookClient.logger().error("FacebookClient:: error parsing feeds for url %s. Error %s", sourceId, JSON.stringify(err));
                 throw err;
             }
         }
     }
 
-    async requestForFeeds(url, maxFeedsPerRequest, maxFeedsLimit, since, feeds = []) {
-        const response = await fetch(url, { "timeout": this.facebookParameters.timeOut });
-        if (response.status === HttpResponseHandler.codes.OK) {
-            const feedResponse = await response.json();
-            const feedsAccumulator = feeds.concat(feedResponse.data);
-            if(!since) { //eslint-disable-next-line no-param-reassign
-                since = feedResponse.paging ? this._getLatestFeedTimeStamp(feedResponse.paging.previous) : DateUtil.getCurrentTime();
+    async requestForFeeds(url, since, feeds = []) {
+        let feedsData = { "docs": feeds, "paging": {} };
+        try {
+            const response = await fetch(url, { "timeout": this.facebookParameters.timeOut });
+            if (response.status === HttpResponseHandler.codes.OK) {
+                const feedResponse = await response.json();
+                const feedsAccumulator = feeds.concat(feedResponse.data);
+                if(!since && feedResponse.paging) { //eslint-disable-next-line no-param-reassign
+                    since = this._getLatestFeedTimeStamp(feedResponse.paging.previous);
+                }
+                if(feedResponse.data.length === maxFeedsPerRequest.facebook && feedsAccumulator.length < this.facebookParameters.maxFeeds) {
+                    return await this.requestForFeeds(feedResponse.paging.next, since, feedsAccumulator);
+                }
+                feedsData.docs = feedsAccumulator;
+            } else {
+                feedsData.error = (await response.json()).error.message;
             }
-            if(feedResponse.data.length === maxFeedsPerRequest && feedsAccumulator.length < maxFeedsLimit) {
-                return await this.requestForFeeds(feedResponse.paging.next, maxFeedsPerRequest, maxFeedsLimit, since, feedsAccumulator);
-            }
-            return { "docs": feedsAccumulator, "paging": { since } };
+        } catch (err) {
+            feedsData.error = "Error occurred while fetching feeds";
         }
-        let errorInfo = await response.json();
-        throw errorInfo.error;
+        feedsData.paging.since = since ? since : DateUtil.getCurrentTimeInSeconds();
+        return feedsData;
+
     }
 
     fetchProfiles(parameters = { "fields": "id,name,picture", "limit": 100 }) {
