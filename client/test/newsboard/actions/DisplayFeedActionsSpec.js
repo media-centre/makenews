@@ -5,6 +5,7 @@ import {
     newsBoardTabSwitch,
     displayArticle,
     fetchFeedsFromSources,
+    searchFeeds,
     CLEAR_NEWS_BOARD_FEEDS,
     PAGINATED_FETCHED_FEEDS,
     NEWS_BOARD_CURRENT_TAB,
@@ -87,6 +88,44 @@ describe("DisplayFeedActions", () => {
 
             ajaxClientMock.verify();
             postMock.verify();
+        });
+
+        xit("should return feeds for searched keyword", (done) => {
+            let sourceType = "web";
+            let keyword = "test key";
+            const feeds = { "docs": [
+                { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
+                { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "sourceType": "twitter" }
+            ] };
+
+            let ajaxClientInstance = AjaxClient.instance("/search-feeds", true);
+            let ajaxClientMock = sinon.mock(AjaxClient);
+            ajaxClientMock.expects("instance").returns(ajaxClientInstance);
+            let getMock = sandbox.mock(ajaxClientInstance);
+            getMock.expects("get").returns(Promise.resolve(feeds));
+
+            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds }], done);
+            store.dispatch(searchFeeds({ sourceType, keyword }));
+            getMock.verify();
+        });
+
+        xit("should return empty array for searched keyword search feeds return with error", (done) => {
+            let sourceType = "web";
+            let keyword = "test key";
+            const feeds = { "docs": [
+                { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
+                { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed", "sourceType": "twitter" }
+            ] };
+
+            let ajaxClientInstance = AjaxClient.instance("/search-feeds", true);
+            let ajaxClientMock = sinon.mock(AjaxClient);
+            ajaxClientMock.expects("instance").returns(ajaxClientInstance);
+            let getMock = sandbox.mock(ajaxClientInstance);
+            getMock.expects("get").returns(Promise.resolve(feeds));
+
+            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds }], done);
+            store.dispatch(searchFeeds({ sourceType, keyword }));
+            getMock.verify();
         });
     });
 
