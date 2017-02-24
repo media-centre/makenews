@@ -1,6 +1,7 @@
 /*eslint no-unused-vars:0*/
 import RssURLDocuments from "./admin/20161114174315_RssURLDocuments";
 import RssURLSearchIndex from "./admin/20170103161414_RssURLSearchIndex";
+import FeedsSearchIndex from "./admin/20170225114814_FeedsSearchIndex";
 import FetchFeedsIndex from "./db/20170124122859_FetchFeedsIndex";
 import BookmarkIndex from "./db/20170124122859_BookmarkIndex";
 import TitleIndex from "./db/20170202122859_TitleIndex";
@@ -116,6 +117,8 @@ export default class Migration {
             return new TitleIndex(this.dbName, this.accessToken);
         case "CollectionIndex" :
             return new CollectionIndex(this.dbName, this.accessToken);
+        case "FeedsSearchIndex" :
+            return new FeedsSearchIndex(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }

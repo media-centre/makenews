@@ -46,6 +46,14 @@
     background-color: $background-color;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
+    border-left: 2px solid lighten($primary-color, 35%);
+
+    .search-bar {
+      height: $secondary-header-nav-height;
+      background-color: $dark-background-color;
+      padding: 8px 10px 5px;
+      box-sizing: border-box;
+    }
 
     .newsfeeds-notify {
       position: absolute;

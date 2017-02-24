@@ -8,6 +8,8 @@ import DisplayCollection from "./DisplayCollection";
 import Spinner from "../../utils/components/Spinner";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayArticle from "./DisplayArticle";
+import Input from "./../../utils/components/Input";
+import StringUtils from "./../../../../../common/src/util/StringUtil";
 
 export class DisplayFeeds extends Component {
     constructor() {
@@ -80,7 +82,7 @@ export class DisplayFeeds extends Component {
             }, scrollTimeInterval);
         }
     }
-    
+
     async fetchFeedsFromSources(param) {
         const hasConfiguredSources = R.pipe(
             R.values,
@@ -147,11 +149,31 @@ export class DisplayFeeds extends Component {
             }}
             > {"Show new feeds"} </button>);
     }
+    _searchFeeds(event) {
+        const ENTERKEY = 13;
+        const searchKey = event.target.value;
+        if (event.keyCode === ENTERKEY) {
+            this.fetchFeeds(searchKey);
+        }
+    }
+
+    fetchFeeds(searchKey) {
+        if(!StringUtils.isEmptyString(searchKey)) {
+            let offset = 0;
+            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, offset));
+        }
+    }
 
     displayFeeds() {
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
+                <div className="search-bar">
+                    <Input placeholder={"Search Keywords,Articles etc."} eventHandlers={{ "onKeyUp": (event) => {
+                        this._searchFeeds(event);
+                    } }} addonSrc="./images/search-icon.png"
+                    />
+                </div>
                 { this.state.gotNewFeeds && this._showMoreFeedsButton() }
                 <i onClick={() => {
                     this._toggleFeedsView();

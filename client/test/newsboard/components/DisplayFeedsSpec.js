@@ -106,4 +106,12 @@ describe("DisplayFeeds", () => {
             expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
     });
+
+    describe("search", () => {
+        it("should have search Box", () => {
+            let searchBox = TestUtils.findRenderedDOMComponentWithClass(result, "input-box");
+            expect(searchBox.className).to.equal("input-box");
+        });
+    });
+
 });

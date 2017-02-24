@@ -81,3 +81,15 @@ function _getFeeds(ajaxClient, params, callback) {
         }
     };
 }
+
+export function searchFeeds(sourceType, searchKey, offset) {
+    return async dispatch => {
+        let ajax = AjaxClient.instance("/search-feeds");
+        try {
+            let feeds = ajax.get({ sourceType, searchKey, offset });
+            dispatch(paginatedFeeds(feeds.docs));
+        } catch (err) {
+            dispatch(paginatedFeeds([]));
+        }
+    };
+}

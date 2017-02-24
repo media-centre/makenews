@@ -5,6 +5,7 @@ import CollectionRoute from "./helpers/CollectionRoute";
 import RouteLogger from "./RouteLogger";
 import FetchArticleFromUrl from "./helpers/FetchArticleFromUrl";
 import CollectionFeedsRoute from "./helpers/CollectionFeedsRoute";
+import SearchFeedsRoute from "./helpers/SearchFeedsRoute";
 
 export default (app) => {
     app.get("/feeds", (request, response) => {
@@ -40,5 +41,10 @@ export default (app) => {
     app.get("/collection-feeds", (request, response) => {
         RouteLogger.instance().info("collectionFeedsRoute:: GET /collection-feeds request received url = %s", request.url);
         new CollectionFeedsRoute(request, response).process();
+    });
+
+    app.get("/search-feeds", (request, response) => {
+        RouteLogger.instance().info("searchFeedsRoute:: GET /search-feeds request received url = %s", request.url);
+        new SearchFeedsRoute(request, response).process();
     });
 };
