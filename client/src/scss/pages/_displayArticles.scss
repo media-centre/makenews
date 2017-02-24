@@ -6,7 +6,7 @@
   .back {
     text-align: left;
     &__button {
-      color: $primary-color;
+      color: $primary-color-light;
       font-size: $mid-font-size;
       border: 0
     }
@@ -19,6 +19,10 @@
     padding: 14px 10px;
     background: $dark-background-color;
     text-align: right;
+    height: $secondary-header-nav-height;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 
     .bookmark {
       color: $primary-color-light;
@@ -55,6 +59,7 @@
     &__title {
       font-size: 2rem;
       color: $secondary-color;
+      word-wrap: break-word;
     }
 
     &__details {
@@ -85,4 +90,9 @@
       margin: 2rem 0 1rem;
     }
   }
+}
+
+.story-display-article {
+  flex: 0;
+  flex-basis: 420px;
 }

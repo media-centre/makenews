@@ -25,33 +25,36 @@
       display: inline-block;
     }
   }
-    .add-card, .added-card {
-      margin: 15px;
+  .add-card, .added-card {
+    margin: 15px;
+    border: 1px dashed;
+    text-align: center;
+    color: #917fa9;
+    .navigation-link {
       height: 100px;
       width: 200px;
-      border:1px dashed;
-      text-align: center;
+    }
+    .card {
       color: #917fa9;
-       .card {
-        color: #917fa9;
-        overflow: hidden;
-        max-height: 60px;
-        word-break: break-all;
-        position: relative;
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        .icon {
-          padding: 10px;
-        }
+      overflow: hidden;
+      max-height: 60px;
+      word-wrap: break-word;
+      word-break: break-word;
+      position: relative;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      .icon {
+        padding: 10px;
       }
     }
-    .added-card {
-      color: $dark-background-color;
-      background-color: #ffffff;
-      vertical-align: top;
-      border: 1px solid;
-    }
+  }
+  .added-card {
+    color: $dark-background-color;
+    background-color: #ffffff;
+    vertical-align: top;
+    border: 1px solid;
+  }
 }
 
 .create-story-tab, .story-board-container {
@@ -73,14 +76,6 @@
 
 .story-board {
   display: flex;
-
-  .story-collections {
-    border-right: 1px solid $primary-color-light;
-    flex-basis: 420px;
-    box-sizing: border-box;
-    height: calc(100vh - #{$main-header-height});
-    background: $background-color;
-  }
 
   .editor-container {
     flex-basis: 0;
@@ -115,3 +110,8 @@
   }
 }
 
+.story-collections .configured-feeds-container, .collection-list-container {
+  .expand-icon {
+    display: none;
+  }
+}

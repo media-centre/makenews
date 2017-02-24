@@ -1,6 +1,85 @@
+.collection-list-container {
+  background-color: $background-color;
+  height: calc(100vh - #{$main-header-height});
+  overflow-y: auto;
+  flex-basis: $side-panel-width;
+  border-right: 2px solid lighten($primary-color, 35%);
+
+  .search-bar {
+    height: $secondary-header-nav-height;
+    background-color: $dark-background-color;
+    padding: 8px 10px 5px;
+    box-sizing: border-box;
+  }
+
+  .collection-name {
+    padding: 10px 15px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    color: $primary-color-light;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .active {
+    background-color: white;
+    color: $secondary-color;
+  }
+
+  .create_collection {
+    font-size: .9rem;
+    font-weight: 400;
+    color: $primary-color;
+    text-transform: uppercase;
+    padding: 20px 10px;
+    cursor: pointer;
+  }
+
+  .new-collection-input-box {
+    width: 80%;
+    margin: 6%;
+    display: table;
+    border: none;
+    border-bottom: 2px solid $primary-color-light;
+  }
+
+  .save-collection {
+    background-color: $secondary-color;
+    color: white;
+    margin-right: 15px;
+  }
+
+  .cancel-collection {
+    color: $primary-color-light;
+    margin-right: 15px;
+  }
+  .collection-popup-overlay {
+    background-color: rgba(70, 65, 74, 0.6);
+    top: 68px;
+    position: fixed;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    &:target {
+      opacity: 1;
+    }
+    .new-collection {
+      text-align: right;
+      background-color: white;
+      position: absolute;
+      opacity: 1;
+      height: 150px;
+      left: 65px;
+      width: 395px;
+      top: 5%;
+    }
+  }
+}
+
 .collections {
   flex: 1;
 }
+
 .display-collection {
   flex: 1;
   height: calc(100vh - #{$main-header-height});
@@ -18,9 +97,26 @@
       box-sizing: border-box;
       background-color: $background-color;
       border-bottom: 1px solid $dark-background-color;
+      display: flex;
+      flex-direction: column;
 
       &:nth-child(odd) {
         border-right: 1px solid $dark-background-color;
+      }
+
+      &__body {
+        flex-basis: 90%;
+      }
+
+      &__media {
+        float: right;
+        width: 130px;
+        padding: 5px;
+
+        img{
+          max-width: 130px;
+          max-height: 130px;
+        }
       }
 
       &__title {
@@ -32,6 +128,7 @@
       &__source {
         padding:9px;
         color: $primary-color-light;
+        font-size: small;
 
         div {
           display: inline-block;
@@ -44,22 +141,52 @@
       &__description {
         padding:9px;
         color: $primary-color;
-        font-size: $medium-font-size;
+        font-size: $small-font-size;
       }
       &__readmore {
-        float: right;
-        color: $secondary-color;
-        border: 0;
+        flex-basis: 10%;
+        &-button {
+          float: right;
+          color: $secondary-color;
+          border: 0;
+        }
       }
       &:hover{
         background-color: #ffffff;
       }
     }
+
+    .story-collection-feed {
+      flex-basis: 100%;
+    }
   }
 
   .collection-header {
-    padding: 14px 10px;
     background: $dark-background-color;
-    height: 31px;
+    height: $secondary-header-nav-height;
+
+    .all-collections{
+      color: $primary-color-light;
+      font-size: 17px;
+      border: 0;
+      cursor: pointer;
+      padding-top: 20px;
+
+      i {
+        font-size: larger;
+        padding-right: 7px;
+      }
+    }
   }
+}
+
+.select_collection {
+  font-size: 17px;
+  color: $primary-color-light;
+  padding: 5% 0 3% 8%;
+}
+
+.story-board-collections {
+  flex: 0;
+  flex-basis: 420px;
 }

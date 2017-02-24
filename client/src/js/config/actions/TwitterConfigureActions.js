@@ -35,6 +35,7 @@ export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0)
                 dispatch(fetchingSourcesFailed(keyword));
             }
         } catch(err) { //eslint-disable-line un-used-variable
+            dispatch(noMoreSourceResults);
             dispatch(fetchingSourcesFailed(keyword));
         }
     };

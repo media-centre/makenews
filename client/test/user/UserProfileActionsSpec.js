@@ -3,7 +3,6 @@
 import UserProfileActions, { CHANGE_PASSWORD_SUCCESSFUL, INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD } from "../../src/js/user/UserProfileActions";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
-import UserSession from "../../src/js/user/UserSession";
 import "../helper/TestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -28,10 +27,6 @@ describe("UserProfileActions", ()=> {
                 "Content-type": "application/json"
             };
             data = { "userName": userName, "currentPassword": currentPassword, "newPassword": newPassword };
-
-            let userSession = new UserSession();
-            sandbox.stub(UserSession, "instance").returns(userSession);
-            sandbox.stub(userSession, "continueSessionIfActive");
 
             ajaxClient = new AjaxClient(url);
             sandbox.stub(AjaxClient, "instance").withArgs(url).returns(ajaxClient);

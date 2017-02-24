@@ -140,6 +140,7 @@ describe("TwitterConfigureActions", () => {
             ajaxGetMock.returns(Promise.reject("error"));
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
+                { "type": NO_MORE_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
                 done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));

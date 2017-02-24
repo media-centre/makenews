@@ -10,20 +10,17 @@
 @import "pages/login";
 @import "pages/MainPage/main";
 @import "pages/MainPage/configure";
-@import "pages/surf/surf";
-@import "pages/userProfile";
-@import "pages/help";
 @import "pages/displayFeeds/displayFeeds";
-@import "pages/storyBoardPage";
 @import "header/header";
 @import "pages/displayArticles";
 @import "pages/displayCollection";
+@import "pages/storyBoardPage";
 
 //@import components
 @import "components/CategoryNavigationHeader";
 @import "pages/MainPage/CreateCategory/createCategory";
 @import "components/TabControl";
-@import "components/SmallControls";
+@import "components/toast";
 @import "components/ConfirmPopup";
 @import "components/addurl";
 @import "components/SourcesTab";
@@ -34,10 +31,3 @@
 @import "components/listSources";
 @import "../../../node_modules/react-quill/node_modules/quill/dist/quill.snow";
 
-//responsive css
-@import "layouts/responsive/mobile";
-@import "layouts/responsive/large-screen";
-
-
-//themes css
-@import "themes/themes";

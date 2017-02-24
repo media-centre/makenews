@@ -313,35 +313,64 @@ describe("FetchFeedsFromAllSources", () => {
     });
 
     describe("GetUrlDocs", () => {
-        it("should get all url docs", () => {
-            response = {
-                "userCtx": {
-                    "name": "dbName"
-                }
-            };
-            let rss = { "sourceType": "rss", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
+        it("should get all url docs", async () => {
+            let rss = { "sourceType": "rss",
+                "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
             let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
             let twitter = { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" };
-            let requestData = {
-                "cookies": { "AuthSession": "test_token" }
-
-            };
             let selector = {
                 "selector": {
                     "docType": {
                         "$eq": "source"
                     }
-                }
+                },
+                "skip": 0
             };
             let couchClientInstance = new CouchClient();
-            sandbox.stub(CouchClient, "createInstance").withArgs("test_token").returns(couchClientInstance);
-            sandbox.mock(couchClientInstance).expects("findDocuments").withArgs(selector).returns({ "docs": [rss, facebook, twitter] });
+            let findDocsMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .withArgs(selector).returns({ "docs": [rss, facebook, twitter] });
 
-            let fetchFeedsFromAllSources = new FetchFeedsFromAllSources(requestData, response);
-            fetchFeedsFromAllSources._getUrlDocuments().then((resp) => {
-                let ZERO = 0;
-                assert.strictEqual(resp[ZERO]._id, rss._id);
-            });
+            let resp = await fetchFeedsRequest._getUrlDocuments(couchClientInstance);
+            findDocsMock.verify();
+            const expectedFeeds = [rss, facebook, twitter];
+            assert.deepEqual(resp, expectedFeeds);
+        });
+
+        it("should get the url docs recursively, if there are more than 25 url docs", async () => {
+            const feedResults1 = [{ "sourceType": "rss",
+                "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" },
+                { "sourceType": "twitter", "_id": "@TheHindu" },
+                { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }];
+            const feedResults2 = [{ "sourceType": "twitter", "_id": "@TheEconomicsTimes" },
+                { "sourceType": "facebook", "_id": "http://www.facebook.com/minion" }];
+            const offset = 3;
+            fetchFeedsRequest.DOCSLIMIT = offset;
+
+            const query1 = {
+                "selector": {
+                    "docType": {
+                        "$eq": "source"
+                    }
+                },
+                "skip": 0
+            };
+            const query2 = {
+                "selector": {
+                    "docType": {
+                        "$eq": "source"
+                    }
+                },
+                "skip": offset
+            };
+
+            let couchClientInstance = new CouchClient();
+            let findDocsStub = sandbox.stub(couchClientInstance, "findDocuments");
+            findDocsStub.withArgs(query1).returns({ "docs": feedResults1 });
+            findDocsStub.withArgs(query2).returns({ "docs": feedResults2 });
+
+            const expectedFeeds = [...feedResults1, ...feedResults2];
+            let resp = await fetchFeedsRequest._getUrlDocuments(couchClientInstance);
+            assert.deepEqual(resp, expectedFeeds);
         });
     });
 

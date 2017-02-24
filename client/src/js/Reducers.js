@@ -12,7 +12,6 @@ import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { stories, untitledIndex } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
-import { setLastAccestime } from "./utils/SessionReducer";
 import { currentFilter, currentFilterSource } from "./newsboard/filter/FilterReducer";
 
 const contentDiscoveryApp = combineReducers({
@@ -40,7 +39,6 @@ const contentDiscoveryApp = combineReducers({
     displayCollection,
     currentCollection,
     stories,
-    setLastAccestime,
     currentFilter,
     currentFilterSource,
     untitledIndex,

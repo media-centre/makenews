@@ -1,8 +1,7 @@
-.news-board-container, .story-board-container {
+.news-board-container, .story-collections {
   display: flex;
 
   .source-type-bar {
-    padding: 0 5px 20px;
     box-sizing: border-box;
     flex-basis: 54px;
     background-color: $dark-background-color;
@@ -12,7 +11,7 @@
       width: 1.5em;
       height: 1.5em;
       text-align: center;
-      margin-bottom: 10px;
+      margin: 10px 5px;
       cursor: pointer;
 
       &.active {
@@ -31,6 +30,13 @@
     }
 
     .source-filter.news-board-tab {
+      background: #e0ced7;
+      width: 100%;
+      margin: 0;
+      height: $secondary-header-nav-height;
+      box-sizing: border-box;
+      padding: 15px;
+
       &.hidden {
         visibility: hidden;
       }
@@ -38,8 +44,6 @@
   }
   .configured-feeds-container {
     background-color: $background-color;
-    height: calc(100vh - #{$main-header-height});
-    overflow-y: auto;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
     .spinner-container {
@@ -103,9 +107,18 @@
       }
     }
 
+    .refresh-container {
+      background: $dark-background-color;
+      height: $secondary-header-nav-height;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
     .feeds {
       display: flex;
       flex-wrap: wrap;
+      height: calc(100vh - #{$main-header-height} - #{$secondary-header-nav-height});
+      overflow-y: auto;
     }
 
     .feed {
@@ -119,7 +132,8 @@
       flex-basis: 100%;
 
       &__description {
-        word-break: break-all;
+        word-wrap: break-word;
+        word-break: break-word;
         overflow: hidden;
         font-family: "Lato", sans-serif;
         font-size: 12px;
@@ -129,14 +143,14 @@
       }
 
       &__title {
-        word-break: break-all;
+        word-wrap: break-word;
+        word-break: break-word;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        font-family: "Lato", sans-serif;
-        font-size: $mid-font-size;
+        font-size: 1.12rem;
         color: $primary-color;
         line-height: 24px;
       }
@@ -146,7 +160,6 @@
         height: 100%;
         max-width: 230px;
         max-height: 100px;
-        //padding-top: 6%;
       }
 
       &__media {
@@ -181,7 +194,7 @@
   .collection-name {
     padding: 2% 0% 2% 6%;
     font-family: "Lato", sans-serif;
-    font-size: 17px;
+    font-size: 19px;
     cursor: pointer;
     color: $primary-color-light;
     word-break: break-all;
@@ -225,20 +238,10 @@
       left: 0;
       height: 100%;
       width: 100%;
-      &:target {
-        opacity: 1;
-      }
-      .new-collection {
-        text-align: right;
-        background-color: white;
-        position: absolute;
-        opacity: 1;
-        height: 150px;
-        left: 65px;
-        width: 395px;
-        top: 5%;
-      }
+      padding: 0;
+      margin: 0;
     }
+
   }
 
   .article {

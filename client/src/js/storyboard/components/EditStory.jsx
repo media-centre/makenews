@@ -5,6 +5,9 @@ import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
 import StringUtil from "../../../../../common/src/util/StringUtil";
+import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
+import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
 
 export class EditStory extends Component {
     constructor() {
@@ -64,7 +67,7 @@ export class EditStory extends Component {
             }).catch((error) => {
                 if(error.message === "Please add title") {
                     Toast.show(error.message);
-                }else if(error.message === "Title Already exists") {
+                } else if(error.message === "Title Already exists") {
                     Toast.show(error.message);
                 } else {
                     Toast.show("Not able to save");
@@ -84,10 +87,7 @@ export class EditStory extends Component {
 
     render() {
         return (
-            <div className="story-board">
-                <div className="story-collections">
-                    <h1>Collections</h1>
-                </div>
+            <div className="story-board story-collections">
                 <div className="editor-container">
                     <input className = "story-title" ref = "title" placeholder = "please enter title" value = {this.state.title} onChange={this._onTitleChange}/>
                     <button ref="saveButton" type="submit" className="story-save" value="save" onClick={() => {
@@ -96,6 +96,12 @@ export class EditStory extends Component {
                     >
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
+                </div>
+
+                <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>
+
+                <div className="source-type-bar">
+                    <NewsBoardTabs />
                 </div>
             </div>
         );

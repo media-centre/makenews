@@ -6,6 +6,7 @@ import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -65,16 +66,28 @@ export class DisplayCollectionFeeds extends Component {
         }
     }
 
+    displayHeader() {
+        return(this.props.tab === WRITE_A_STORY
+            ? <header className="collection-header">
+                <button className="all-collections" onClick={() => {
+                    this.props.isClicked();
+                }}
+                ><i className="fa fa-arrow-left" aria-hidden="true"/>All Collections</button>
+              </header>
+            : <header className="collection-header" />);
+
+    }
+
     render() {
         return (
-            <div className="collections">
-                <DisplayArticle collection={this.refs.collection}/>
+            <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
+                <DisplayArticle collection={this.refs.collection} collectionName={this.props.collectionName} />
                 <div ref="collection" className="display-collection">
-                    <header className="collection-header" />
+                    {this.displayHeader()}
                     <div className="collection-feeds">
                         {
                             this.props.feeds.map((feed, index) =>
-                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch}/>)
+                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)
                         }
                     </div>
                 </div>
@@ -86,7 +99,9 @@ export class DisplayCollectionFeeds extends Component {
 DisplayCollectionFeeds.propTypes = {
     "collectionName": PropTypes.string.isRequired,
     "feeds": PropTypes.array.isRequired,
-    "dispatch": PropTypes.func.isRequired
+    "dispatch": PropTypes.func.isRequired,
+    "tab": PropTypes.string,
+    "isClicked": PropTypes.func
 };
 
 function mapToStore(store) {

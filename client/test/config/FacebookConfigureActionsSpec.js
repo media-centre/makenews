@@ -3,7 +3,6 @@ import { expect } from "chai";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import sinon from "sinon";
 import "../helper/TestHelper";
-import UserSession from "../../src/js/user/UserSession";
 import mockStore from "../helper/ActionHelper";
 import {
     HAS_MORE_SOURCE_RESULTS,
@@ -27,18 +26,11 @@ describe("Facebook Configure Actions", () => {
     });
 
     describe("fetchFacebookSources", () => {
-        let sandbox = null, ajaxClient = null, ajaxClientMock = null;
+        let sandbox = sinon.sandbox.create(), ajaxClient = null, ajaxClientMock = null;
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-
-        beforeEach("fetchFacebookSources", () => {
-            sandbox = sinon.sandbox.create();
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-        });
 
         afterEach("fetchFacebookSources", () => {
             sandbox.restore();

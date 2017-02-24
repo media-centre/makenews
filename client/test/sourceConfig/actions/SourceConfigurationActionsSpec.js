@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import UserSession from "../../../src/js/user/UserSession";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
@@ -34,11 +33,8 @@ describe("SourceConfigurationActions", () => {
             let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
 
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-            let ajaxClient = AjaxClient.instance("/configure-sources", false);
-            sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources", false).returns(ajaxClient);
+            let ajaxClient = AjaxClient.instance("/configure-sources");
+            sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources").returns(ajaxClient);
             sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
 
             let store = mockStore({}, [{ "type": sourceConfigActions.GOT_CONFIGURED_SOURCES, "sources": sources }], done);
@@ -128,10 +124,6 @@ describe("SourceConfigurationActions", () => {
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
 
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-
             nock("http://localhost")
                 .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
@@ -144,10 +136,6 @@ describe("SourceConfigurationActions", () => {
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
 
             nock("http://localhost")
                 .put("/configure-sources")
@@ -162,10 +150,6 @@ describe("SourceConfigurationActions", () => {
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
 
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
-
             nock("http://localhost")
                 .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
@@ -178,10 +162,6 @@ describe("SourceConfigurationActions", () => {
             let appWindow = new AppWindow();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
 
             nock("http://localhost")
                 .put("/configure-sources")
@@ -197,10 +177,6 @@ describe("SourceConfigurationActions", () => {
             configuredSources = [{ "name": "something", "id": "432455", "url": "432455" }];
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
 
             nock("http://localhost")
                 .put("/configure-sources")
@@ -224,9 +200,6 @@ describe("SourceConfigurationActions", () => {
             sandbox = sinon.sandbox.create();
             sandbox.mock(AppWindow).expects("instance").returns(appWindow);
             sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-            sandbox.mock(UserSession).expects("instance").returns({
-                "continueSessionIfActive": () => {}
-            });
 
             nock("http://localhost")
                 .put("/configure-sources")

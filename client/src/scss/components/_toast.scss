@@ -1,0 +1,23 @@
+.custom-toast {
+  &.hide {
+    z-index: -1;
+  }
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 10%;
+  width: 60%;
+  background: $primary-color-dark;
+  margin: auto;
+  padding: 10px;
+  color: $primary-font-color;
+
+  button {
+    display: block;
+    color: $primary-font-color;
+    &:hover {
+      color: $secondary-font-color;
+    }
+  }
+}

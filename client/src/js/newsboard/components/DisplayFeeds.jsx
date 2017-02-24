@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import ReactDOM from "react-dom";
 import Feed from "./Feed.jsx";
 import AppWindow from "./../../utils/AppWindow";
 import { connect } from "react-redux";
@@ -7,11 +6,13 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 import DisplayCollection from "./DisplayCollection";
 import Spinner from "../../utils/components/Spinner";
+import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import DisplayArticle from "./DisplayArticle";
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -27,8 +28,10 @@ export class DisplayFeeds extends Component {
         this.props.dispatch(DisplayFeedActions.fetchingFeeds(true));
         await this.fetchFeedsFromSources();
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
-        this.dom = ReactDOM.findDOMNode(this);
-        this.dom.addEventListener("scroll", this.getFeedsCallBack);
+        this.feedsDOM = this.refs.feeds;
+        if(this.feedsDOM) {
+            this.feedsDOM.addEventListener("scroll", this.getFeedsCallBack);
+        }
         this.getMoreFeeds(this.props.sourceType);
         this.props.dispatch(DisplayFeedActions.clearFeeds());
     }
@@ -39,6 +42,7 @@ export class DisplayFeeds extends Component {
             this.offset = 0;
             this.getMoreFeeds(nextProps.sourceType);
             this.props.dispatch(DisplayFeedActions.clearFeeds());
+            this.setState({ "isClicked": false });
         }
 
         if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
@@ -60,7 +64,9 @@ export class DisplayFeeds extends Component {
     }
 
     componentWillUnmount() {
-        this.dom.removeEventListener("scroll", this.getFeedsCallBack);
+        if(this.feedsDOM) {
+            this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
+        }
     }
 
     getFeedsCallBack() {
@@ -68,8 +74,8 @@ export class DisplayFeeds extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                const scrollTop = this.dom.scrollTop;
-                if (scrollTop && scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
+                const scrollTop = this.feedsDOM.scrollTop;
+                if (scrollTop && scrollTop + this.feedsDOM.clientHeight >= this.feedsDOM.scrollHeight) {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }, scrollTimeInterval);
@@ -123,10 +129,13 @@ export class DisplayFeeds extends Component {
             }, AUTO_REFRESH_INTERVAL));
         }
     }
+    _isClicked() {
+        this.setState({ "isClicked": !this.state.isClicked });
+    }
 
-    render() {
-        return (
-            this.props.sourceType === "collections" ? <DisplayCollection />
+    displayFeeds() {
+        return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked
+            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
                 <i onClick={() => {
@@ -136,9 +145,14 @@ export class DisplayFeeds extends Component {
                 { this.props.isFetchingFeeds ? <div className="spinner-container"> <div className="show-spinner"> <Spinner /></div> </div>
                   : <div className="feeds">
                     {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} dispatch={this.props.dispatch}/>)}
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}/>)}
                 </div> }
-            </div>
+            </div>);
+    }
+
+    render() {
+        return (
+            this.props.sourceType === "collections" ? <DisplayCollection /> : this.displayFeeds()
         );
     }
 }
@@ -161,7 +175,8 @@ DisplayFeeds.propTypes = {
     "articleToDisplay": PropTypes.object,
     "currentFilterSource": PropTypes.object,
     "configuredSources": PropTypes.object,
-    "isFetchingFeeds": PropTypes.bool
+    "isFetchingFeeds": PropTypes.bool,
+    "currentHeaderTab": PropTypes.string
 };
 
 export default connect(mapToStore)(DisplayFeeds);

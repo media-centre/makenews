@@ -1,9 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 
 import UserSession from "../../src/js/user/UserSession";
-import AjaxClient from "../../src/js/utils/AjaxClient";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
-import History from "../../src/js/History";
 import { assert } from "chai";
 import moment from "moment";
 import sinon from "sinon";
@@ -54,81 +52,28 @@ describe("UserSession", () => {
                 let fiveMinute = 5;
                 let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
                 let userSession = new UserSession();
+                userSession.sessionTime = 600000;
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
 
-            it("should return the false if not active for 9 minutes", () => {
-                let nineMinute = 9;
-                let lastAccessedTime = moment().subtract(nineMinute, "m").valueOf();
+            it("should return the false if not active for 8 minutes", () => {
+                let eightMinutes = 8;
+                let lastAccessedTime = moment().subtract(eightMinutes, "m").valueOf();
                 let userSession = new UserSession();
+                userSession.sessionTime = 600000;
                 userSession.lastAccessedTime = lastAccessedTime;
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
 
-            it("should return the false if not active for more than 9 minutes", () => {
+            it("should return the false if not active for more than 8 minutes", () => {
                 let tenMinute = 10;
                 let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
                 let userSession = new UserSession();
+                userSession.sessionTime = 600000;
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
-        });
-
-        describe("continueSessionIfActive", () => {
-            let historyPush = { "push": () => {} };
-            beforeEach("", () => {
-                sandbox.stub(History, "getHistory").returns(historyPush);
-            });
-
-            it("should logout if user inactive for 9 minutes", () => {
-                let ajaxInstance = new AjaxClient("/logout", true);
-                let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-                ajaxInstanceMock.withArgs("/logout").returns(ajaxInstance);
-                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").atMost(1); // eslint-disable-line no-magic-numbers
-                sandbox.stub(appSessionStorage, "clear");
-                let historyMock = sandbox.mock(historyPush).expects("push");
-                historyMock.withArgs("/");
-                let userSession = new UserSession();
-                sandbox.stub(userSession, "isActiveContinuously").returns(false);
-                userSession.continueSessionIfActive();
-                historyMock.verify();
-                ajaxGetMock.verify();
-            });
-
-            it("should not call logout if user active continuously within 9 minutes", () => {
-                let userSession = new UserSession();
-                let sixMinutes = 360000;
-                let ajaxInstance = new AjaxClient("/renew_session", true);
-                let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-                ajaxInstanceMock.withArgs("/renew_session").returns(ajaxInstance);
-                let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.resolve(true));
-
-                sandbox.stub(userSession, "getLastAccessedTime").returns(moment().valueOf() - sixMinutes);
-                let setAccessTimeMock = sandbox.mock(userSession).expects("setLastAccessedTime");
-                userSession.continueSessionIfActive();
-                ajaxGetMock.verify();
-                setAccessTimeMock.verify();
-            });
-
-            //
-            //it("should call logout if user active continuously within 9 minutes and not able to renew session", () => {
-            //    let userSession = new UserSession();
-            //    userSession.setLastAccessedTime();
-            //    let nineMinutes = 540000;
-            //    let ajaxInstance = new AjaxClient("/renew_session");
-            //    let ajaxInstanceMock = sandbox.mock(AjaxClient).expects("instance");
-            //    let clock = sandbox.useFakeTimers();
-            //    ajaxInstanceMock.withArgs("/renew_session").returns(ajaxInstance);
-            //    let ajaxGetMock = sandbox.mock(ajaxInstance).expects("get").returns(Promise.reject());
-            //    sandbox.stub(userSession, "isActiveContinuously").returns(true);
-            //    sandbox.stub(userSession, "autoLogout");
-            //
-            //    let timer = userSession.continueSessionIfActive();
-            //    clock.tick(nineMinutes);
-            //    ajaxGetMock.verify();
-            //    clearInterval(timer);
-            //});
         });
 
     });

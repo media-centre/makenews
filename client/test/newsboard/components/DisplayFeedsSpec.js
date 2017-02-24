@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
 import DisplayCollection from "../../../src/js/newsboard/components/DisplayCollection";
+import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
+import { SCAN_NEWS, WRITE_A_STORY } from "./../../../src/js/header/HeaderActions";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
@@ -23,14 +25,14 @@ describe("DisplayFeeds", () => {
                 "_id": "1234"
             },
             "newsBoardCurrentSourceTab": "web",
-            "currentFilterSource": "web"
+            "currentFilterSource": { "web": [], "facebook": [], "twitter": [] }
         }), applyMiddleware(thunkMiddleware));
 
         sandbox.useFakeTimers();
 
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
-                <DisplayFeeds />
+                <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
             </Provider>);
     });
 
@@ -57,7 +59,7 @@ describe("DisplayFeeds", () => {
     });
 
     describe("Collections", () => {
-        beforeEach("DisplayFeeds", () => {
+        it("should have Display collection", () => {
             feeds = [
                 { "_id": "1234", "collection": "collection1" }
             ];
@@ -66,22 +68,41 @@ describe("DisplayFeeds", () => {
                 "selectedArticle": {
                     "_id": "1234"
                 },
-                "newsBoardCurrentSourceTab": "collections"
-
+                "newsBoardCurrentSourceTab": "collections",
+                "currentFilterSource": { "web": [] }
             }), applyMiddleware(thunkMiddleware));
 
             result = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <DisplayFeeds />
+                    <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
                 </Provider>);
-        });
 
-        afterEach("DisplayFeeds", () => {
-            sandbox.restore();
-        });
-
-        it("should have Display collection", () => {
             let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
+            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+        });
+    });
+
+    /*TODO: update the state from test*/ //eslint-disable-line
+    xdescribe("write a story", () => {
+        it("should have Display Article", () => {
+            feeds = [
+                { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
+                { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
+            ];
+            store = createStore(() => ({
+                "fetchedFeeds": feeds,
+                "selectedArticle": {
+                    "_id": "1234"
+                },
+                "newsBoardCurrentSourceTab": "web",
+                "currentFilterSource": { "web": [] }
+            }), applyMiddleware(thunkMiddleware));
+
+            result = TestUtils.renderIntoDocument(
+                    <DisplayFeeds store={store} currentHeaderTab={WRITE_A_STORY}/>);
+            result.setState({ "isClicked": true });
+
+            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayArticle);
             expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
     });
