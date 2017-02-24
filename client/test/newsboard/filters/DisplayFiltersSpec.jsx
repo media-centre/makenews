@@ -1,7 +1,6 @@
 import DisplayFilters from "../../../src/js/newsboard/filter/DisplayFilters";
 import * as SourceConfigurationActions from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import * as FilterActions from "../../../src/js/newsboard/filter/FilterActions";
-import * as DisplayFeedActions from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import SourceFilters from "../../../src/js/newsboard/filter/SourceFilters";
 import Input from "../../../src/js/utils/components/Input";
 import TestUtils from "react-addons-test-utils";
@@ -35,7 +34,7 @@ describe("DisplayFilters", () => {
         sandbox = sinon.sandbox.create();
     });
 
-    afterEach("DiaplyFilters", () => {
+    afterEach("DisplayFilters", () => {
         sandbox.restore();
     });
 
@@ -75,15 +74,13 @@ describe("DisplayFilters", () => {
         filterTabSwitchMock.verify();
     });
 
-    xit("should dispatch filterTabSwitch after clicking on apply button", () => {
-        let fetchFeedsMock = sandbox.mock(DisplayFeedActions).expects("fetchFeedsFromSources").returns(Promise.resolve(""));
+    it("should dispatch filterTabSwitch after clicking on apply button", () => {
         let filteredSources = sandbox.mock(FilterActions).expects("filteredSources").returns({ "type": "" });
         let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
         let applyButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "apply-btn primary");
         TestUtils.Simulate.click(applyButton);
         filteredSources.verify();
         filterTabSwitchMock.verify();
-        // fetchFeedsMock.verify();
     });
 
     it("should dispatch searchInSources after clicking on first child input tag", () => {

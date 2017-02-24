@@ -1,5 +1,4 @@
 import CouchClient from "../CouchClient";
-import R from "ramda"; //eslint-disable-line id-length
 import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
 const DOCS_PER_REQUEST = 25;
 

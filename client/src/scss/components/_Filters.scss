@@ -101,17 +101,4 @@
       }
     }
   }
-
-  .spinner-container {
-    position: fixed;
-    top:50px;
-    background-color: lightgrey;
-    opacity: 0.5;
-    height: 950px;
-    width: 420px;
-    .show-spinner {
-      top: 400px;
-      margin-top: 400px;
-    }
-  }
 }

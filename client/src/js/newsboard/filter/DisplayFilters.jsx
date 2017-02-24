@@ -5,15 +5,13 @@ import { filteredSources, filterTabSwitch } from "./FilterActions";
 const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import SourceFilters from "./SourceFilters";
-import { fetchFeedsFromSources } from "../actions/DisplayFeedActions";
 import Input from "./../../utils/components/Input";
-import Spinner from "../../utils/components/Spinner";
 
 let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
 export class DisplayFilters extends Component {
     constructor() {
         super();
-        this.state = { "hashtagInputBox": false, "showSpinner": false };
+        this.state = { "hashtagInputBox": false };
         this._renderSources = this._renderSources.bind(this);
     }
 
@@ -65,8 +63,7 @@ export class DisplayFilters extends Component {
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
-    async applyFilter() {
-        this.setState({ "showSpinner": true });
+    applyFilter() {
         let sourceFilters = {};
         sourceFilters.web = [...selectedSources.web];
         sourceFilters.facebook = [...selectedSources.facebook];
@@ -78,7 +75,6 @@ export class DisplayFilters extends Component {
             return source;
         });
 
-        await fetchFeedsFromSources();
         this.props.dispatch(filteredSources(sourceFilters));
         this.props.dispatch(filterTabSwitch(""));
     }
@@ -141,11 +137,9 @@ export class DisplayFilters extends Component {
 
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
-                {this.state.showSpinner && <div className="spinner-container"> <div className="show-spinner"> <Spinner /></div> </div>}
-
                 <div className="controls">
                     <button id="cancelBtn" className="cancel-btn secondary" onClick={() => this.cancelFilter()}>Cancel</button>
-                    <button id="applyBtn" className="apply-btn primary" onClick={async () => await this.applyFilter()}>Apply</button>
+                    <button id="applyBtn" className="apply-btn primary" onClick={() => this.applyFilter()}>Apply</button>
                 </div>
             </aside>
         );

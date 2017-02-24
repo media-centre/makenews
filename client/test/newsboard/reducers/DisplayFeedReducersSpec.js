@@ -2,9 +2,10 @@ import {
     fetchedFeeds,
     newsBoardCurrentSourceTab,
     selectedArticle,
-    fetchingWebArticle
+    fetchingWebArticle,
+    fetchingFeeds
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
-import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE, FETCHING_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import { BOOKMARKED_ARTICLE, WEB_ARTICLE_REQUESTED, WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
@@ -110,6 +111,18 @@ describe("DisplayFeedReducer", () => {
 
         it("should return false as default", () => {
             expect(fetchingWebArticle(false, {})).to.be.false; // eslint-disable-line no-unused-expressions
+        });
+    });
+
+    describe("fetchingFeeds", () => {
+
+        it("should return default state on default", () => {
+            expect(fetchingFeeds()).to.be.false; // eslint-disable-line no-unused-expressions
+        });
+
+        it("should return action state", () => {
+            const action = { "type": FETCHING_FEEDS, "isFetching": true };
+            expect(fetchingFeeds(false, action)).to.be.true; // eslint-disable-line no-unused-expressions
         });
     });
 });

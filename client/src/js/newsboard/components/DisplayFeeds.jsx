@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 import DisplayCollection from "./DisplayCollection";
+import Spinner from "../../utils/components/Spinner";
 
 export class DisplayFeeds extends Component {
     constructor() {
@@ -18,12 +19,13 @@ export class DisplayFeeds extends Component {
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
     }
 
-    componentWillMount() {
-        this.fetchFeedsFromSources();
-        this.autoRefresh();
+    async componentWillMount() {
+        await this.autoRefresh();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.props.dispatch(DisplayFeedActions.fetchingFeeds(true));
+        await this.fetchFeedsFromSources();
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.dom = ReactDOM.findDOMNode(this);
         this.dom.addEventListener("scroll", this.getFeedsCallBack);
@@ -74,14 +76,14 @@ export class DisplayFeeds extends Component {
         }
     }
 
-    fetchFeedsFromSources(param) {
+    async fetchFeedsFromSources(param) {
         let array = this.props.configuredSources;
         let hasConfiguredSources = R.pipe(
             R.values,
             R.all(arr => !arr.length)
         )(array);
         if(!hasConfiguredSources) {
-            DisplayFeedActions.fetchFeedsFromSources(param);
+            await DisplayFeedActions.fetchFeedsFromSources(param);
         }
     }
 
@@ -116,8 +118,8 @@ export class DisplayFeeds extends Component {
     autoRefresh() {
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
         if (!AppWindow.instance().get("autoRefreshTimer")) {
-            AppWindow.instance().set("autoRefreshTimer", setInterval(() => {
-                this.fetchFeedsFromSources(true);
+            AppWindow.instance().set("autoRefreshTimer", setInterval(async() => {
+                await this.fetchFeedsFromSources(true);
             }, AUTO_REFRESH_INTERVAL));
         }
     }
@@ -131,10 +133,11 @@ export class DisplayFeeds extends Component {
                     this._toggleFeedsView();
                 }} className="expand-icon"
                 />
-           <div className="feeds">
+                { this.props.isFetchingFeeds ? <div className="spinner-container"> <div className="show-spinner"> <Spinner /></div> </div>
+                  : <div className="feeds">
                     {this.props.feeds.map((feed, index) =>
                         <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} dispatch={this.props.dispatch}/>)}
-                </div>
+                </div> }
             </div>
         );
     }
@@ -146,7 +149,8 @@ function mapToStore(store) {
         "sourceType": store.newsBoardCurrentSourceTab,
         "articleToDisplay": store.selectedArticle,
         "currentFilterSource": store.currentFilterSource,
-        "configuredSources": store.configuredSources
+        "configuredSources": store.configuredSources,
+        "isFetchingFeeds": store.fetchingFeeds
     };
 }
 
@@ -156,8 +160,8 @@ DisplayFeeds.propTypes = {
     "sourceType": PropTypes.string.isRequired,
     "articleToDisplay": PropTypes.object,
     "currentFilterSource": PropTypes.object,
-    "configuredSources": PropTypes.object
-
+    "configuredSources": PropTypes.object,
+    "isFetchingFeeds": PropTypes.bool
 };
 
 export default connect(mapToStore)(DisplayFeeds);

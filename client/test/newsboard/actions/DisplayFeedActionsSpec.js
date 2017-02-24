@@ -7,7 +7,8 @@ import {
     CLEAR_NEWS_BOARD_FEEDS,
     PAGINATED_FETCHED_FEEDS,
     NEWS_BOARD_CURRENT_TAB,
-    DISPLAY_ARTICLE
+    DISPLAY_ARTICLE,
+    FETCHING_FEEDS
 } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -60,7 +61,7 @@ describe("DisplayFeedActions", () => {
                 .withArgs("/feeds").returns(ajaxClientInstance);
             let postMock = sandbox.mock(ajaxClientInstance).expects("get")
                 .withArgs({ offset, "filter": "{}" }).returns(Promise.resolve(feeds));
-            const store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }], done);
+            const store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
             store.dispatch(displayFeedsByPage(offset, {}, (result) => {
                 try {
                     ajaxClientMock.verify();
@@ -80,7 +81,7 @@ describe("DisplayFeedActions", () => {
             let postMock = sandbox.mock(ajaxClientInstance);
             postMock.expects("get").returns(Promise.reject("error"));
 
-            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }], done);
+            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
             store.dispatch(displayFeedsByPage(offset, "twitter"));
 
             ajaxClientMock.verify();

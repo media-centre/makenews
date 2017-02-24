@@ -2,7 +2,8 @@ import {
     PAGINATED_FETCHED_FEEDS,
     NEWS_BOARD_CURRENT_TAB,
     CLEAR_NEWS_BOARD_FEEDS,
-    DISPLAY_ARTICLE
+    DISPLAY_ARTICLE,
+    FETCHING_FEEDS
 } from "./../actions/DisplayFeedActions";
 import {
     BOOKMARKED_ARTICLE,
@@ -58,5 +59,12 @@ export function fetchingWebArticle(state = false, action = {}) {
         return false;
     default: return state;
     }
+}
+
+export function fetchingFeeds(state = false, action = {}) {
+    if(action.type === FETCHING_FEEDS) {
+        return action.isFetching;
+    }
+    return state;
 }
 

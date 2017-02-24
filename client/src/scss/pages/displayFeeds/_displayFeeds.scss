@@ -42,6 +42,18 @@
     overflow-y: auto;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
+    .spinner-container {
+      position: fixed;
+      top:50px;
+      background-color: lightgrey;
+      opacity: 0.5;
+      height: 950px;
+      width: 420px;
+      .show-spinner {
+        top: 400px;
+        margin-top: 400px;
+      }
+    }
 
     &.expand {
       flex-basis: 2 * $side-panel-width;

@@ -4,6 +4,7 @@ export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
+export const FETCHING_FEEDS = "FETCHING_FEEDS";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -22,6 +23,11 @@ export const displayArticle = (article) => ({
     article
 });
 
+export const fetchingFeeds = (isFetching) => ({
+    "type": FETCHING_FEEDS,
+    isFetching
+});
+
 export function displayFeedsByPage(pageIndex, filter = {}, callback = () => {}) {
     const ajaxClient = AjaxClient.instance("/feeds");
     return _getFeeds(ajaxClient, { "offset": pageIndex, "filter": JSON.stringify(filter) }, callback);
@@ -36,17 +42,16 @@ export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
 
 export function getAllCollections(pageIndex, callback = () => {}) {
     let ajaxClient = AjaxClient.instance("/collections");
-
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
-export async function fetchFeedsFromSources(isAuto) {
+export async function fetchFeedsFromSources(isAuto = false) {
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    let ajaxFetch = AjaxClient.instance("/fetch-feeds", isAuto);
-    await ajaxFetch.post(headers, {});
+    const ajaxClient = AjaxClient.instance("/fetch-feeds", isAuto);
+    await ajaxClient.post(headers, {});
 }
 
 function _getFeeds(ajaxClient, params, callback) {
@@ -66,6 +71,8 @@ function _getFeeds(ajaxClient, params, callback) {
         } catch(err) {
             dispatch(paginatedFeeds([]));
             return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
+        } finally {
+            dispatch(fetchingFeeds(false));
         }
     };
 }
