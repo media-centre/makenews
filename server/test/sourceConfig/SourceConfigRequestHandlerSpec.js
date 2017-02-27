@@ -131,12 +131,12 @@ describe("SourceConfigRequestHandler", () => {
         it("should format the sources to put them in database", () => {
             let [first, second] = sources;
             documents = [{
-                "_id": first.url,
+                "_id": "http%3A%2F%2Fsource.url",
                 "name": first.name,
                 "docType": "source",
                 "sourceType": sourceType
             }, {
-                "_id": second.url,
+                "_id": "http%3A%2F%2Fsource.url.in",
                 "name": second.name,
                 "docType": "source",
                 "sourceType": sourceType

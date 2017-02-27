@@ -8,6 +8,7 @@ export default class LogoutActions {
     }
 
     logout() {
+        AjaxClient.instance("/delete-hashtag-feeds").get();
         AjaxClient.instance("/logout", true).get();
         AppSessionStorage.instance().clear();
         History.getHistory().push("/");

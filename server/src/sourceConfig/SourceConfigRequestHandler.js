@@ -30,14 +30,13 @@ export default class SourceConfigRequestHandler {
     _getFormattedSources(sourceType, sources) {
         let formatSources = source => {
             let doc = {
-                "_id": source.url,
+                "_id": encodeURIComponent(source.url),
                 "name": source.name,
                 "docType": "source",
                 "sourceType": sourceType
             };
 
             if(source.url.startsWith("#")) {
-                doc._id = encodeURIComponent(source.url);
                 doc.hashtag = true;
             }
             return doc;

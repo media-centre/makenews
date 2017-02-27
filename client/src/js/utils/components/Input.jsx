@@ -5,7 +5,7 @@ export default class Input extends Component {
         return (
             <div className={this.props.className}>
                 <div className="input-container">
-                    <input ref="hashtag" className="input-tag" type="text" placeholder={this.props.placeholder} {...this.props.eventHandlers} />
+                    <input className="input-tag" type="text" placeholder={this.props.placeholder} {...this.props.eventHandlers} />
                     <span className="input-addon">
                         <img src={this.props.addonSrc} />
                     </span>

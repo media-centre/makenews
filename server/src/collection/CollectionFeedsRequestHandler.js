@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
-const DOCS_PER_REQUEST = 25;
+import { DOCS_PER_REQUEST } from "../util/Constants";
 
 export async function getCollectedFeeds(authSession, collectionName, offset) {
     const couchClient = CouchClient.instance(authSession);

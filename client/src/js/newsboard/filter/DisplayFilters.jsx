@@ -6,6 +6,7 @@ const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook"
 import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import SourceFilters from "./SourceFilters";
 import Input from "./../../utils/components/Input";
+import Toast from "../../utils/custom_templates/Toast";
 
 let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
 export class DisplayFilters extends Component {
@@ -13,6 +14,7 @@ export class DisplayFilters extends Component {
         super();
         this.state = { "hashtagInputBox": false };
         this._renderSources = this._renderSources.bind(this);
+        this.hashtags = [];
     }
 
     componentDidMount() {
@@ -94,17 +96,23 @@ export class DisplayFilters extends Component {
 
     addHashtag(hashtag) {
         if(hashtag) {
-            if(!hashtag.startsWith("#")) {
-                hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
+            if(this.hashtags.indexOf(hashtag) < 0) { //eslint-disable-line no-magic-numbers
+                this.hashtags.push(hashtag);
+                if (!hashtag.startsWith("#")) {
+                    hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
+                }
+
+                let sourceDoc = {
+                    "id": hashtag,
+                    "name": hashtag
+                };
+                selectedSources.twitter.add(hashtag);
+                this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
+            }else {
+                Toast.show("Hashtag already exists");
             }
-
-            let sourceDoc = {
-                "id": hashtag,
-                "name": hashtag
-            };
-            selectedSources.twitter.add(hashtag);
-            this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
-
+        }else {
+            Toast.show("Hashtag cannot be Empty");
         }
     }
 

@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
-const DOCS_PER_REQUEST = 25;
+import { DOCS_PER_REQUEST } from "../util/Constants";
 
 export default class CollectionRequestHandler {
     static instance() {

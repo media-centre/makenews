@@ -3,17 +3,19 @@ import AjaxClient from "../../src/js/utils/AjaxClient";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import sinon from "sinon";
 
-describe("userLogout", () => {
+describe("LogoutActions", () => {
     it("should send the request to logout", () => {
         let sandbox = sinon.sandbox.create();
-        let ajaxGetMock = sandbox.mock(AjaxClient.prototype).expects("get");
+        let ajaxDelete = AjaxClient.instance("/delete-hashtag-feeds");
+        let ajaxMock = sandbox.mock(AjaxClient).expects("instance").twice().returns(ajaxDelete);
+        let ajaxDeleteFeeds = sandbox.mock(ajaxDelete).expects("get").twice().returns(Promise.resolve());
         let appSessionStorage = new AppSessionStorage();
         let appSessionStorageClearMock = sandbox.mock(appSessionStorage).expects("clear");
         sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-        ajaxGetMock.returns(Promise.resolve({ "message": "logout successful" }));
         LogoutActions.instance().logout();
         appSessionStorageClearMock.verify();
-        ajaxGetMock.verify();
+        ajaxMock.verify();
+        ajaxDeleteFeeds.verify();
         sandbox.restore();
     });
 });

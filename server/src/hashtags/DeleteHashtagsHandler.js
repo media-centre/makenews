@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
-const DOCS_PER_REQUEST = 25;
+import { DOCS_PER_REQUEST } from "../util/Constants";
 
 export default class DeleteHashtagsHandler {
     static instance() {
