@@ -57,6 +57,7 @@ describe("TwitterRequestHandler", () => {
         it("should fetch tweets from the twitter", async () => {
             let url = "123344";
             let timeStamp = 12345678;
+            const sinceId = "8123472382371882392";
             let tweets = [{
                 "_id": "812574284300173312",
                 "docType": "feed",
@@ -80,14 +81,11 @@ describe("TwitterRequestHandler", () => {
             }];
             let getUserMock = sandbox.mock(userDetails).expects("getUser").withExactArgs(authSesssion).returns(userName);
             sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
-            sandbox.mock(twitterClientInstance).expects("fetchTweets").withExactArgs(url, "userName", timeStamp).returns(Promise.resolve(tweets));
-            try {
-                let tweetsArray = await twitterRequestHandler.fetchTweetsRequest(url, timeStamp, authSesssion);
-                assert.deepEqual(tweetsArray, tweets);
-                getUserMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            sandbox.mock(twitterClientInstance).expects("fetchTweets")
+                .withExactArgs(url, "userName", timeStamp, sinceId).returns(Promise.resolve(tweets));
+            const tweetsArray = await twitterRequestHandler.fetchTweetsRequest(url, timeStamp, authSesssion, sinceId);
+            assert.deepEqual(tweetsArray, tweets);
+            getUserMock.verify();
         });
     });
 });

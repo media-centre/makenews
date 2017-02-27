@@ -16,11 +16,12 @@ import DateUtil from "./../../src/util/DateUtil";
 
 describe("FetchFeedsFromAllSources", () => {
     let sandbox = null, requestBody = null, response = null, fetchFeedsRequest = null;
+    const accessToken = "test_token";
 
     beforeEach("FetchFeedsFromAllSources", () => {
         sandbox = sinon.sandbox.create();
         requestBody = {
-            "cookies": { "AuthSession": "test_token" }
+            "cookies": { "AuthSession": accessToken }
         };
         response = mockResponse();
         fetchFeedsRequest = new FetchFeedsFromAllSources(requestBody, response);
@@ -181,21 +182,21 @@ describe("FetchFeedsFromAllSources", () => {
     });
 
     describe("fetchFeedsFromSource", () => {
-        let urlDocument = null, feed = null;
+        let urlDocument = null, feeds = null;
 
         describe("web", () => {
             it("should return feeds for valid web url", async() => {
                 urlDocument = { "docType": "source", "sourceType": "web", "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
-                feed = [{ "docType": "feed", "sourceType": "web", "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" }];
+                feeds = [{ "docType": "feed", "sourceType": "web", "url": "http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" }];
                 let rssRequestHandlerInstance = new RssRequestHandler();
                 let rssRequestHandlerMock = sandbox.mock(RssRequestHandler).expects("instance");
                 rssRequestHandlerMock.returns(rssRequestHandlerInstance);
                 let fetchRssFeedRequestMock = sandbox.mock(rssRequestHandlerInstance).expects("fetchBatchRssFeedsRequest");
-                fetchRssFeedRequestMock.returns(Promise.resolve(feed));
+                fetchRssFeedRequestMock.returns(Promise.resolve(feeds));
 
                 let result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
 
-                assert.deepEqual(result, feed);
+                assert.deepEqual(result, feeds);
             });
 
             it("should return empty for when the feed fetch request fails from web url", async() => {
@@ -216,7 +217,7 @@ describe("FetchFeedsFromAllSources", () => {
         describe("facebook", () => {
             it("should return feeds for valid facebook page url", async() => {
                 urlDocument = { "_id": "www.facebook.com/theHindu", "sourceType": "fb_page", "docType": "source", "since": "123456789" };
-                feed = [{ "_id": "www.facebook.com/theHindu", "sourceType": "fb_page", "docType": "feed" }];
+                feeds = [{ "_id": "www.facebook.com/theHindu", "sourceType": "fb_page", "docType": "feed" }];
 
                 let getFacebookTokenMock = sandbox.mock(fetchFeedsRequest).expects("_getFacebookAccessToken");
                 getFacebookTokenMock.returns("facebook_token");
@@ -224,12 +225,12 @@ describe("FetchFeedsFromAllSources", () => {
                 let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
                 facebookRequestHandlerMock.withArgs("facebook_token").returns(facebookRequestHandlerInstance);
                 let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("fetchFeeds")
-                    .withExactArgs(urlDocument._id, "posts", { "since": "123456789" }).returns(Promise.resolve(feed));
+                    .withExactArgs(urlDocument._id, "posts", { "since": "123456789" }).returns(Promise.resolve(feeds));
 
                 let result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
 
                 fetchFacebookFeedRequestMock.verify();
-                assert.deepEqual(result, feed);
+                assert.deepEqual(result, feeds);
             });
 
             it("should return empty array for invalid facebook page url", async() => {
@@ -251,7 +252,7 @@ describe("FetchFeedsFromAllSources", () => {
 
             it("should return feeds for valid facebook group url", async() => {
                 urlDocument = { "_id": "www.facebook.com/theHindu", "sourceType": "fb_group", "docType": "source" };
-                feed = [{ "_id": "www.facebook.com/theHindu", "sourceType": "fb_group", "docType": "feed" }];
+                feeds = [{ "_id": "www.facebook.com/theHindu", "sourceType": "fb_group", "docType": "feed" }];
 
                 let getFacebookTokenMock = sandbox.mock(fetchFeedsRequest).expects("_getFacebookAccessToken");
                 getFacebookTokenMock.returns("facebook_token");
@@ -259,11 +260,11 @@ describe("FetchFeedsFromAllSources", () => {
                 let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler).expects("instance");
                 facebookRequestHandlerMock.withArgs("facebook_token").returns(facebookRequestHandlerInstance);
                 let fetchFacebookFeedRequestMock = sandbox.mock(facebookRequestHandlerInstance).expects("fetchFeeds").withArgs(urlDocument._id, "feed");
-                fetchFacebookFeedRequestMock.returns(Promise.resolve(feed));
+                fetchFacebookFeedRequestMock.returns(Promise.resolve(feeds));
 
                 let result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
 
-                assert.deepEqual(result, feed);
+                assert.deepEqual(result, feeds);
             });
 
             it("should return empty array for invalid facebook group url", async() => {
@@ -282,27 +283,42 @@ describe("FetchFeedsFromAllSources", () => {
             });
         });
 
-        describe("", () => {
+        describe("twitter", () => {
             it("should return feeds for valid twitter url", async() => {
-                urlDocument = { "sourceType": "twitter", "_id": "@TheHindu", "timestamp": "12344568" };
-                feed = [{ "sourceType": "twitter", "_id": "@TheHindu", "latestFeedTimeStamp": "12344568", "docType": "feed" }];
+                urlDocument = { "sourceType": "twitter", "_id": "@TheHindu", "since": "12344568", "sinceId": "835103042471096320" };
+                feeds = { "docs": [
+                    { "sourceType": "twitter", "_id": "@TheHindu", "since": "12344568", "docType": "feed" }
+                ],
+                    "paging": {
+                        "sinceId": "123124123131",
+                        "since": 124123432
+                    }
+                };
                 let twitterRequestHandler = new TwitterRequestHandler();
                 let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
                 twitterRequestHandlerMock.returns(twitterRequestHandler);
-                let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest").withArgs(urlDocument._id, urlDocument.latestFeedTimeStamp);
-                fetchTwitterFeedRequestMock.returns(Promise.resolve(feed));
-                let result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
-                assert.deepEqual(result, feed);
+                let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest")
+                    .withExactArgs(urlDocument._id, urlDocument.since, accessToken, urlDocument.sinceId);
+                fetchTwitterFeedRequestMock.returns(Promise.resolve(feeds));
+
+                const result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
+
+                fetchTwitterFeedRequestMock.verify();
+                assert.deepEqual(result, feeds);
             });
 
             it("should return empty array for invalid twitter url", async() => {
-                urlDocument = { "sourceType": "twitter", "_id": "@TheHindu", "timestamp": "12344568" };
+                urlDocument = { "sourceType": "twitter", "_id": "@TheHindu", "since": "12344568", "sinceId": "835103042471096320" };
                 let twitterRequestHandler = new TwitterRequestHandler();
                 let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
                 twitterRequestHandlerMock.returns(twitterRequestHandler);
-                let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest").withArgs(urlDocument._id, urlDocument.latestFeedTimeStamp);
+                let fetchTwitterFeedRequestMock = sandbox.mock(twitterRequestHandler).expects("fetchTweetsRequest")
+                    .withExactArgs(urlDocument._id, urlDocument.since, accessToken, urlDocument.sinceId);
                 fetchTwitterFeedRequestMock.returns(Promise.reject("error"));
-                let result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
+
+                const result = await fetchFeedsRequest.fetchFeedsFromSource(urlDocument);
+
+                fetchTwitterFeedRequestMock.verify();
                 assert.deepEqual(result, { "docs": [] });
             });
         });

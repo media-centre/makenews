@@ -37,7 +37,7 @@ export default class TwitterParser {
             "title": tweet.text,
             "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
             "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
-            "tags": [tweet.user.name].concat(this.hashTags(tweet)),
+            "tags": [tweet.user.name].concat(this.hashTags(tweet.entities.hashtags)),
             "images": [],
             "videos": [],
             "sourceId": sourceId
@@ -60,11 +60,7 @@ export default class TwitterParser {
         return feedObj;
     }
 
-    hashTags(tweet) {
-        let tagsArray = [];
-        tweet.entities.hashtags.forEach(tag => {
-            tagsArray.push(tag.text);
-        });
-        return tagsArray;
+    hashTags(hashtags) {
+        return hashtags.map(tag => tag.text);
     }
 }

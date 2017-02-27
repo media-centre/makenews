@@ -3,6 +3,9 @@ import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import TwitterLogin from "./TwitterLogin";
 import TwitterParser from "./TwitterParser";
+import DateUtils from "../util/DateUtil";
+import { maxFeedsPerRequest } from "./../util/Constants";
+import R from "ramda"; //eslint-disable-line id-length
 
 export const searchApi = "/search/tweets.json", userApi = "/statuses/user_timeline.json", FEEDS_COUNT = 100;
 const twitterTypes = { "TAG": "tag", "USER": "user" };
@@ -15,30 +18,58 @@ export default class TwitterClient {
     static instance() {
         return new TwitterClient();
     }
-
-    async fetchTweets(url, userName, timestamp) {
+    
+    async fetchTweets(url, userName, since, sinceId = "1") {
         const type = url.startsWith("#") || url.startsWith("%23") ? twitterTypes.TAG : twitterTypes.USER;
-        const timestampQuery = timestamp ? `&since=${this._getTwitterTimestampFormat(timestamp)}` : "";
+        const timestampQuery = since ? `&since=${this._getTwitterTimestampFormat(since)}` : "";
         const tokenInfo = await this.getAccessTokenAndSecret(userName);
+        const searchUrl = type === twitterTypes.TAG
+            ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter=retweets${timestampQuery}&since_id=${sinceId}`
+            : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&since_id=${sinceId}&user_id=${url}`;
+        const oauth = TwitterLogin.createOAuthInstance();
+        const twitterMaxFeedsLimit = ApplicationConfig.instance().twitter().maxFeeds;
+        
+        const tweets = await this.recursivelyFetchTweets(searchUrl, oauth, tokenInfo, twitterMaxFeedsLimit);
+        if(tweets.error) {
+            TwitterClient.logger().error("TwitterClient:: error fetching feeds for %s", url);
+        }
+        const parsedTweets = TwitterParser.instance().parseTweets(url, tweets.docs);
+        TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
+        const respSinceId = parsedTweets.length ? R.head(parsedTweets)._id : sinceId;
+        return {
+            "docs": parsedTweets,
+            "paging": {
+                "sinceId": respSinceId,
+                "since": DateUtils.getCurrentTimeInSeconds()
+            }
+        };
+    }
 
+    async recursivelyFetchTweets(url, oauth, tokenInfo, twitterMaxFeedsLimit, feeds = []) {
+        let feedsData = { "docs": feeds };
+        try {
+            const tweets = await this.requestTweets(url, oauth, tokenInfo);
+            const feedsAccumulator = feeds.concat(tweets);
+            if (tweets.length === maxFeedsPerRequest.twitter && feedsAccumulator.length < twitterMaxFeedsLimit) {
+                const newUrl = `${url}&max_id:${R.last(tweets).id_str}`;
+                return await this.recursivelyFetchTweets(newUrl, oauth, tokenInfo, twitterMaxFeedsLimit, feedsAccumulator);
+            }
+            feedsData.docs = feedsAccumulator;
+        } catch(err) {
+            feedsData.error = "Error occurred while fetching feeds";
+        }
+        return feedsData;
+    }
+    
+    requestTweets(url, oauth, tokenInfo) {
         return new Promise((resolve, reject) => {
-            let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
-            let oauth = TwitterLogin.createOAuthInstance();
-
-            let searchUrl = type === twitterTypes.TAG
-                ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter=retweets${timestampQuery}`
-                : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&user_id=${url}`;
-
-            oauth.get(searchUrl, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+            oauth.get(url, ...tokenInfo, (error, data) => {
                 if (error) {
-                    TwitterClient.logger().error("TwitterClient:: error fetching twitter feeds for %s.", url, error);
                     reject(error);
                 } else {
-                    let tweetData = JSON.parse(data);
-                    let parsedTweets = TwitterParser.instance().parseTweets(url, tweetData.statuses || tweetData);
-
-                    TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
-                    resolve(parsedTweets);
+                    const tweetData = JSON.parse(data);
+                    const tweets = tweetData.statuses ? tweetData.statuses : tweetData;
+                    resolve(tweets);
                 }
             });
         });

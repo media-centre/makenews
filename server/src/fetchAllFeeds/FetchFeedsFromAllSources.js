@@ -118,7 +118,7 @@ export default class FetchFeedsFromAllSources extends Route {
             }
         case TWITTER_TYPE:
             try {
-                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id, item.latestFeedTimeStamp, this.accesstoken);
+                feeds = await TwitterRequestHandler.instance().fetchTweetsRequest(item._id, item.since, this.accesstoken, item.sinceId);
                 FetchFeedsFromAllSources.logger().debug("FetchFeedsFromAllSources:: successfully fetched twitter feeds from all sources.");
                 return feeds;
             } catch (err) {

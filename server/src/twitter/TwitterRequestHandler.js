@@ -11,16 +11,16 @@ export default class TwitterRequestHandler {
         return Logger.instance();
     }
 
-    async fetchTweetsRequest(url, timestamp, authSession) {
-        let userName = userDetails.getUser(authSession).userName;
-        let tweets = await this.twitterClient().fetchTweets(url, userName, timestamp);
+    async fetchTweetsRequest(url, since, authSession, sinceId) {
+        const userName = userDetails.getUser(authSession).userName;
+        const tweets = await this.twitterClient().fetchTweets(url, userName, since, sinceId);
         TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched twitter handles for: %s.", url);
         return tweets;
     }
 
     async fetchHandlesRequest(authSession, keyword, page, preFirstId) {
-        let userName = userDetails.getUser(authSession).userName;
-        let handles = await this.twitterClient().fetchHandles(userName, keyword, page, preFirstId);
+        const userName = userDetails.getUser(authSession).userName;
+        const handles = await this.twitterClient().fetchHandles(userName, keyword, page, preFirstId);
         TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched handles for user");
         return handles;
     }
