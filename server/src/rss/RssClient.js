@@ -8,6 +8,7 @@ import ApplicationConfig from "../config/ApplicationConfig";
 import CouchClient from "../CouchClient";
 import { searchDocuments } from "../LuceneClient";
 import R from "ramda"; //eslint-disable-line id-length
+import DateUtil from "../util/DateUtil";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
 const NOT_FOUND_INDEX = -1, LIMIT_VALUE = 25;
@@ -135,7 +136,7 @@ export default class RssClient {
                     let rssParser = new RssParser(this);
                     rssParser.parse(url).then(feeds => {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
-                        resolve(feeds);
+                        resolve({ "docs": feeds.items, "paging": { "since": DateUtil.getCurrentTimeInSeconds() } });
                     }).catch(error => {
                         RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}.`);
                         reject({ "message": FEEDS_NOT_FOUND, "data": data });

@@ -76,7 +76,7 @@ describe("Rss Request Handler", () => {
         it("should fetch rss feed for given url", async () => {
             let url = "www.example.com";
             let response = {
-                "items":
+                "docs":
                 [{
                     "_id": "test-guid-1",
                     "guid": "test-guid-1",
@@ -90,16 +90,20 @@ describe("Rss Request Handler", () => {
                     "sourceUrl": url,
                     "tags": [null],
                     "images": []
-                }]
+                }],
+                "paging": {
+                    "since": 123412312
+                }
             };
             let rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
             rssClientPostMock.withArgs(url).returns(response);
 
             let feeds = await rssRequestHandler.fetchBatchRssFeedsRequest(url);
 
-            expect(feeds).to.deep.equal(response.items);
             rssClientMock.verify();
             rssClientPostMock.verify();
+
+            expect(feeds).to.deep.equal(response);
         });
 
         it("should return error rss feed for given url", () => {

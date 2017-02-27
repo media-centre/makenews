@@ -15,7 +15,7 @@ export default class RssRequestHandler {
         try {
             let feeds = await this.rssClient().getRssData(url);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
-            return feeds.items;
+            return feeds;
         } catch (error) {
             RssRequestHandler.logger().error("RssRequestHandler:: %s is not a proper feed url. Error: %j.", url, error);
             throw error;

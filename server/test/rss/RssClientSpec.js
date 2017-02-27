@@ -13,6 +13,7 @@ import * as LuceneClient from "../../src/LuceneClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import { userDetails } from "./../../src/Factory";
 import { isRejected } from "./../helpers/AsyncTestHelper";
+import DateUtil from "../../src/util/DateUtil";
 
 describe("RssClient", () => {
     let sandbox, rssClientMock, feed, error, url = null;
@@ -307,12 +308,18 @@ describe("RssClient", () => {
             nock(url)
                 .get("/")
                 .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
-            sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve(feed));
-            let res = await rssClientMock.getRssData(url);
-            assert.equal(res, feed);
+            const since = 1234123412;
+            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(since);
+
+            const expectedFeeds = { "docs": feed, "paging": { "since": since } };
+            sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve({ "items": feed }));
+
+            const res = await rssClientMock.getRssData(url);
+
+            assert.deepEqual(res, expectedFeeds);
         });
 
-        it("it should return bad_status_code when status code is not 200 ok", async() => {
+        it("it should return bad_status_code when status code is not 200 ok", async () => {
             nock(url)
                 .get("/rss")
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "data": "error" });
@@ -346,6 +353,7 @@ describe("RssClient", () => {
             }
         });
     });
+
     describe("addURL", () => {
         beforeEach("addURL", () => {
             sandbox = sinon.sandbox.create();
