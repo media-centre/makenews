@@ -25,7 +25,6 @@ export class DisplayFeeds extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(DisplayFeedActions.fetchingFeeds(true));
         await this.fetchFeedsFromSources();
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.feedsDOM = this.refs.feeds;
@@ -100,6 +99,7 @@ export class DisplayFeeds extends Component {
         };
 
         if (this.hasMoreFeeds) {
+            this.props.dispatch(DisplayFeedActions.fetchingFeeds(true));
             if(sourceType === "bookmark") {
                 this.props.dispatch(DisplayFeedActions.getBookmarkedFeeds(this.offset, callback));
             } else if(sourceType === "collections") {
@@ -142,11 +142,14 @@ export class DisplayFeeds extends Component {
                     this._toggleFeedsView();
                 }} className="expand-icon"
                 />
-                { this.props.isFetchingFeeds ? <div className="spinner-container"> <div className="show-spinner"> <Spinner /></div> </div>
-                  : <div className="feeds">
-                    {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}/>)}
-                </div> }
+                <div className="feeds" ref="feeds">
+                { this.props.feeds.map((feed, index) =>
+                    <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
+                        isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
+                    />)
+                }
+                { this.props.isFetchingFeeds ? <Spinner /> : null }
+                </div>
             </div>);
     }
 
