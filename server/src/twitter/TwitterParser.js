@@ -54,9 +54,6 @@ export default class TwitterParser {
             feedObj.videos.push({ "thumbnail": `${item.media_url_https}:thumb` });
         });
 
-        if(sourceId.startsWith("%23") || sourceId.startsWith("#")) {
-            feedObj.hashtag = true;
-        }
         return feedObj;
     }
 

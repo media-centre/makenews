@@ -8,7 +8,7 @@ import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
 import { userDetails } from "../../../src/Factory";
 import { assert } from "chai";
 import sinon from "sinon";
-import DeleteHashtagsHandler from "../../../src/hashtags/DeleteHashtagsHandler";
+import DeleteSourceHandler from "../../../src/hashtags/DeleteSourceHandler";
 
 describe("LoginRoute", () => {
     let request = null, response = null, userName = null, password = null,
@@ -36,9 +36,9 @@ describe("LoginRoute", () => {
             authSessionCookie = "AuthSession=" + token + "; Version=1; Path=/; HttpOnly";
             userRequest = new UserRequest(userName, password);
             sandbox.stub(UserRequest, "instance").withArgs(userName, password).returns(userRequest);
-            let deleteHanlder = DeleteHashtagsHandler.instance();
-            sandbox.mock(DeleteHashtagsHandler).expects("instance").returns(deleteHanlder);
-            deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteHashtags")
+            let deleteHanlder = DeleteSourceHandler.instance();
+            sandbox.mock(DeleteSourceHandler).expects("instance").returns(deleteHanlder);
+            deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteSources")
                 .returns(Promise.resolve({ "ok": true }));
             userReqGetAuthSessionCookieMock = sandbox.mock(userRequest).expects("getAuthSessionCookie");
         });

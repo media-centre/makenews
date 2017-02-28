@@ -248,110 +248,6 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should fetch feeds for the given hash tag", async () => {
-            const twitterResponse = {
-                "statuses": [{
-                    "id": 835103042471096320,
-                    "id_str": "835103042471096320",
-                    "created_at": "fri dec 09 07:24:44 +0000 2016",
-                    "text": "just posted a photo https://t.co/7x7kvw9plf",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "dhoni" }]
-                    }
-                }],
-                "search_metadata": {
-                    "max_id_str": "835103042471096320"
-                }
-            };
-
-            const expectedData = {
-                "docs": [{
-                    "_id": "835103042471096320",
-                    "docType": "feed",
-                    "hashtag": true,
-                    "sourceType": "twitter",
-                    "description": "",
-                    "title": "just posted a photo https://t.co/7x7kvw9plf",
-                    "link": "https://twitter.com/#dhoni/status/835103042471096320",
-                    "pubDate": "2016-12-09T07:24:44Z",
-                    "tags": ["user1", "dhoni"],
-                    "images": [],
-                    "videos": [],
-                    "sourceId": "#dhoni"
-                }],
-                "paging": {
-                    "sinceId": "835103042471096320",
-                    "since": 1487927102
-                }
-            };
-            //eslint-disable-next-line no-magic-numbers
-            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
-            nock("https://api.twitter.com/1.1")
-                .get("/search/tweets.json?q=%23dhoni&count=100&filter=retweets&since=2017-1-9&since_id=1")
-                .reply(HttpResponseHanlder.codes.OK, twitterResponse);
-
-            sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
-            sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
-
-            const tweetData = await twitterClient.fetchTweets("#dhoni", "userName", 1483947627341); //eslint-disable-line no-magic-numbers
-            assert.deepEqual(tweetData, expectedData);
-        });
-
-        it("should fetch feeds for the given hash tag with %23", async () => {
-            const twitterResponse = {
-                "statuses": [{
-                    "id": 835103042471096320,
-                    "id_str": "835103042471096320",
-                    "created_at": "fri dec 09 07:24:44 +0000 2016",
-                    "text": "just posted a photo https://t.co/7x7kvw9plf",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "dhoni" }]
-                    }
-                }],
-                "search_metadata": {
-                    "max_id_str": "835103042471096320"
-                }
-            };
-
-            const expectedData = {
-                "docs": [{
-                    "_id": "835103042471096320",
-                    "docType": "feed",
-                    "hashtag": true,
-                    "sourceType": "twitter",
-                    "description": "",
-                    "title": "just posted a photo https://t.co/7x7kvw9plf",
-                    "link": "https://twitter.com/%23dhoni/status/835103042471096320",
-                    "pubDate": "2016-12-09T07:24:44Z",
-                    "tags": ["user1", "dhoni"],
-                    "images": [],
-                    "videos": [],
-                    "sourceId": "%23dhoni"
-                }],
-                "paging": {
-                    "sinceId": "835103042471096320",
-                    "since": 1487927102
-                }
-            };
-            //eslint-disable-next-line no-magic-numbers
-            sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
-            nock("https://api.twitter.com/1.1")
-                .get("/search/tweets.json?q=%2523dhoni&count=100&filter=retweets&since=2017-1-9&since_id=1")
-                .reply(HttpResponseHanlder.codes.OK, twitterResponse);
-
-            sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
-            sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
-
-            const tweetData = await twitterClient.fetchTweets("%23dhoni", "userName", 1483947627341); //eslint-disable-line no-magic-numbers
-            assert.deepEqual(tweetData, expectedData);
-        });
-
         it("should return empty docs and same sinceId if twitter gives empty feeds", async () => {
             const twitterResponse = {
                 "statuses": [],
@@ -756,7 +652,6 @@ describe("TwitterClient", () => {
                 "docs": [{
                     "_id": "835103042471096320",
                     "docType": "feed",
-                    "hashtag": true,
                     "sourceType": "twitter",
                     "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
@@ -769,7 +664,6 @@ describe("TwitterClient", () => {
                 }, {
                     "_id": "835103042474521902",
                     "docType": "feed",
-                    "hashtag": true,
                     "sourceType": "twitter",
                     "description": "",
                     "title": "This is my post",

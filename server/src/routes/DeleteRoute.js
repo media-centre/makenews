@@ -1,9 +1,9 @@
 import RouteLogger from "./RouteLogger";
-import DeleteHashtagRoute from "./helpers/DeleteHashtagRoute";
+import DeleteSourceRoute from "./helpers/DeleteSourceRoute";
 
 export default (app) => {
-    app.get("/delete-hashtag-feeds", (request, response, next) => {
-        RouteLogger.instance().info("StoryBoardRoutes:: /story request received");
-        new DeleteHashtagRoute(request, response, next).process();
+    app.post("/delete-sources", (request, response, next) => {
+        RouteLogger.instance().info("DeleteRoute:: /delete story request received");
+        new DeleteSourceRoute(request, response, next).process();
     });
 };

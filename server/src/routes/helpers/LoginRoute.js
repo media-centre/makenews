@@ -5,7 +5,7 @@ import RouteLogger from "../RouteLogger";
 import Route from "./Route";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import { userDetails } from "../../Factory";
-import DeleteHashtagsHandler from "../../../src/hashtags/DeleteHashtagsHandler";
+import DeleteSourceHandler from "../../../src/hashtags/DeleteSourceHandler";
 
 export default class LoginRoute extends Route {
     constructor(request, response, next) {
@@ -46,7 +46,7 @@ export default class LoginRoute extends Route {
         let [authSession] = authSessionCookie.split(";");
         let [, token] = authSession.split("=");
         userDetails.updateUser(token, this.userName);
-        await DeleteHashtagsHandler.instance().deleteHashtags(token);
+        await DeleteSourceHandler.instance().deleteSources([], token);
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
             .json({ "userName": this.userName, "dbParameters": dbJson });
