@@ -4,6 +4,7 @@ import {
     displayFeedsByPage,
     newsBoardTabSwitch,
     displayArticle,
+    fetchFeedsFromSources,
     CLEAR_NEWS_BOARD_FEEDS,
     PAGINATED_FETCHED_FEEDS,
     NEWS_BOARD_CURRENT_TAB,
@@ -93,6 +94,48 @@ describe("DisplayFeedActions", () => {
         it("should dispatch the current selected article", () => {
             let displayArticleAction = { "type": DISPLAY_ARTICLE, "article": { "_id": "id", "title": "title" } };
             assert.deepEqual(displayArticle({ "_id": "id", "title": "title" }), displayArticleAction);
+        });
+    });
+
+    describe("fetchFeedsFromSources", () => {
+        const sandbox = sinon.sandbox.create();
+
+        afterEach("fetchFeedsFromSources", () => {
+            sandbox.restore();
+        });
+
+        it("should call /fetch-feeds", async () => {
+            const ajaxClient = new AjaxClient("/fetch-feeds", false);
+            const ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
+                .withExactArgs("/fetch-feeds", false).returns(ajaxClient);
+            const postMock = sandbox.mock(ajaxClient).expects("post");
+
+            await fetchFeedsFromSources(false);
+
+            ajaxClientMock.verify();
+            postMock.verify();
+        });
+
+        it("should return status true after fetching the sources", async () => {
+            const ajaxClient = new AjaxClient("/fetch-feeds", false);
+            sandbox.stub(AjaxClient, "instance")
+                .withArgs("/fetch-feeds", false).returns(ajaxClient);
+            sandbox.stub(ajaxClient, "post").returns(Promise.resolve({ "status": true }));
+
+            const response = await fetchFeedsFromSources(false);
+
+            assert.isTrue(response);
+        });
+
+        it("should return status true after fetching the sources", async () => {
+            const ajaxClient = new AjaxClient("/fetch-feeds", false);
+            sandbox.stub(AjaxClient, "instance")
+                .withArgs("/fetch-feeds", false).returns(ajaxClient);
+            sandbox.stub(ajaxClient, "post").returns(Promise.reject({ "status": false }));
+
+            const response = await fetchFeedsFromSources(false);
+
+            assert.isFalse(response);
         });
     });
 });

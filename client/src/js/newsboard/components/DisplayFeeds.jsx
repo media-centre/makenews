@@ -12,7 +12,7 @@ import DisplayArticle from "./DisplayArticle";
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -25,7 +25,7 @@ export class DisplayFeeds extends Component {
     }
 
     async componentDidMount() {
-        await this.fetchFeedsFromSources();
+        await this.fetchFeedsFromSources(false);
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.feedsDOM = this.refs.feeds;
         if(this.feedsDOM) {
@@ -80,15 +80,18 @@ export class DisplayFeeds extends Component {
             }, scrollTimeInterval);
         }
     }
-
+    
     async fetchFeedsFromSources(param) {
-        let array = this.props.configuredSources;
-        let hasConfiguredSources = R.pipe(
+        const hasConfiguredSources = R.pipe(
             R.values,
-            R.all(arr => !arr.length)
-        )(array);
-        if(!hasConfiguredSources) {
-            await DisplayFeedActions.fetchFeedsFromSources(param);
+            R.any(sources => sources.length)
+        )(this.props.configuredSources);
+
+        if(hasConfiguredSources) {
+            const response = await DisplayFeedActions.fetchFeedsFromSources(this.notifyLatestFeeds, param);
+            if(response) {
+                this.setState({ "gotNewFeeds": true });
+            }
         }
     }
 
@@ -133,16 +136,29 @@ export class DisplayFeeds extends Component {
         this.setState({ "isClicked": !this.state.isClicked });
     }
 
+    _showMoreFeedsButton() {
+        return (
+            <button className="newsfeeds-notify" onClick={() => {
+                this.setState({ "gotNewFeeds": false });
+                this.offset = 0;
+                this.hasMoreFeeds = true;
+                this.props.dispatch(DisplayFeedActions.clearFeeds());
+                this.getMoreFeeds(this.props.sourceType);
+            }}
+            > {"Show new feeds"} </button>);
+    }
+
     displayFeeds() {
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
-                <button onClick={this.fetchFeedsFromSources} className="refresh-button">{"Refresh"}</button>
+                { this.state.gotNewFeeds && this._showMoreFeedsButton() }
                 <i onClick={() => {
                     this._toggleFeedsView();
                 }} className="expand-icon"
                 />
                 <div className="feeds" ref="feeds">
+                <button onClick={this.fetchFeedsFromSources}>something</button>
                 { this.props.feeds.map((feed, index) =>
                     <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
                         isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}

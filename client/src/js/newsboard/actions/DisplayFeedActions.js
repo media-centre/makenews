@@ -51,7 +51,12 @@ export async function fetchFeedsFromSources(isAuto = false) {
         "Content-Type": "application/json"
     };
     const ajaxClient = AjaxClient.instance("/fetch-feeds", isAuto);
-    await ajaxClient.post(headers, {});
+    try {
+        const response = await ajaxClient.post(headers, {});
+        return response.status;
+    } catch(err) {
+        return false;
+    }
 }
 
 function _getFeeds(ajaxClient, params, callback) {

@@ -46,17 +46,17 @@
     background-color: $background-color;
     flex-basis: $side-panel-width;
     border-right: 2px solid lighten($primary-color, 35%);
-    .spinner-container {
-      position: fixed;
-      top:50px;
-      background-color: lightgrey;
-      opacity: 0.5;
-      height: 950px;
-      width: 420px;
-      .show-spinner {
-        top: 400px;
-        margin-top: 400px;
-      }
+
+    .newsfeeds-notify {
+      position: absolute;
+      background: $secondary-color;
+      color: #ffffff;
+      font-size: 1rem;
+      border-radius: 5px;
+      padding: 9px 15px;
+      margin-top: 30px;
+      margin-left: 100px;
+      box-shadow: 0 1px 7px 2px #bfb8b6;
     }
 
     &.expand {
