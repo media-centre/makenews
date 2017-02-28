@@ -5,6 +5,7 @@ import RouteLogger from "../RouteLogger";
 import Route from "./Route";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import { userDetails } from "../../Factory";
+import DeleteHashtagsHandler from "../../../src/hashtags/DeleteHashtagsHandler";
 
 export default class LoginRoute extends Route {
     constructor(request, response, next) {
@@ -28,8 +29,8 @@ export default class LoginRoute extends Route {
             RouteLogger.instance().info("LoginRoute::handle Login request received for the user = %s", this.request.body.username);
 
             let userRequest = UserRequest.instance(this.userName, this.password);
-            userRequest.getAuthSessionCookie().then(authSessionCookie => {
-                this._handleLoginSuccess(authSessionCookie);
+            userRequest.getAuthSessionCookie().then(async authSessionCookie => {
+                await this._handleLoginSuccess(authSessionCookie);
             }).catch(error => {
                 RouteLogger.instance().error(`LoginRoute::handle Failed while fetching auth session cookie, Error: ${JSON.stringify(error)}`);
                 this._handleFailure({ "message": "unauthorized" });
@@ -40,11 +41,12 @@ export default class LoginRoute extends Route {
         }
     }
 
-    _handleLoginSuccess(authSessionCookie) {
+    async _handleLoginSuccess(authSessionCookie) {
         let dbJson = ClientConfig.instance().db();
         let [authSession] = authSessionCookie.split(";");
         let [, token] = authSession.split("=");
         userDetails.updateUser(token, this.userName);
+        await DeleteHashtagsHandler.instance().deleteHashtags(token);
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
             .json({ "userName": this.userName, "dbParameters": dbJson });

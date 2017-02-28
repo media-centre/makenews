@@ -131,18 +131,35 @@ describe("SourceConfigRequestHandler", () => {
         it("should format the sources to put them in database", () => {
             let [first, second] = sources;
             documents = [{
-                "_id": "http%3A%2F%2Fsource.url",
+                "_id": "http://source.url",
                 "name": first.name,
                 "docType": "source",
                 "sourceType": sourceType
             }, {
-                "_id": "http%3A%2F%2Fsource.url.in",
+                "_id": "http://source.url.in",
                 "name": second.name,
                 "docType": "source",
                 "sourceType": sourceType
             }];
 
             expect(sourceRequestHandler._getFormattedSources(sourceType, sources)).to.deep.equal(documents);
+        });
+
+        it("should format the sources with extra fields if the source id hashtag to put them in database", () => {
+            sources = [{
+                "_id": "#icc",
+                "url": "#icc",
+                "name": "#icc"
+            }];
+            documents = [{
+                "_id": "%23icc",
+                "name": "#icc",
+                "hashtag": true,
+                "docType": "source",
+                "sourceType": "twitter"
+            }];
+
+            expect(sourceRequestHandler._getFormattedSources("twitter", sources)).to.deep.equal(documents);
         });
 
         it("should add the source to configured list", (done) => {

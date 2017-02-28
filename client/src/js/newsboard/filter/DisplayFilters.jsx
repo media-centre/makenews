@@ -20,6 +20,9 @@ export class DisplayFilters extends Component {
     componentDidMount() {
         this.props.dispatch(getConfiguredSources());
         this.props.dispatch(searchInConfiguredSources(""));
+        this.hashtags = this.props.sources.twitter.map((source) => {
+            return source.name;
+        });
         this.initSelectedSources();
     }
 
@@ -96,12 +99,12 @@ export class DisplayFilters extends Component {
 
     addHashtag(hashtag) {
         if(hashtag) {
+            if (!hashtag.startsWith("#")) {
+                hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
+            }
+
             if(this.hashtags.indexOf(hashtag) < 0) { //eslint-disable-line no-magic-numbers
                 this.hashtags.push(hashtag);
-                if (!hashtag.startsWith("#")) {
-                    hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
-                }
-
                 let sourceDoc = {
                     "id": hashtag,
                     "name": hashtag
