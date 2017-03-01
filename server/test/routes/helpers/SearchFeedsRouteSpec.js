@@ -7,7 +7,7 @@ describe("Search Feeds Route", () => {
     let sourceType = null, searchkey = null, accessToken = null, feeds = null;
     let sandbox = null;
 
-    it("should return feeds", () => {
+    it("should return feeds", async() => {
         sandbox = sinon.sandbox.create();
         sourceType = "web";
         searchkey = "test";
@@ -24,7 +24,7 @@ describe("Search Feeds Route", () => {
         sandbox.mock(FeedsRequestHandler).expects("instance").returns(requestHandleInstance);
         sandbox.mock(requestHandleInstance).expects("searchFeeds").returns(feeds);
 
-        let result = searchFeed.handle();
+        let result = await searchFeed.process();
         assert.equal(result, feeds);
     });
 });

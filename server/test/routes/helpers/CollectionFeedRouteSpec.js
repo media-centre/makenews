@@ -33,14 +33,14 @@ describe("CollectionFeedsRoute", () => {
         });
     });
 
-    describe("handle", () => {
+    describe("process", () => {
         let sandbox = null, authSession = "test_token", collectionName = "test", offset = 0;
 
-        beforeEach("handle", () => {
+        beforeEach("process", () => {
             sandbox = sinon.sandbox.create();
         });
 
-        afterEach("handle", () => {
+        afterEach("process", () => {
             sandbox.restore();
         });
 
@@ -65,7 +65,7 @@ describe("CollectionFeedsRoute", () => {
             sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectedFeeds")
                 .returns(feeds);
 
-            let result = await collectionFeed.handle();
+            let result = await collectionFeed.process();
             expect(result).to.deep.equal(feeds);
         });
     });
