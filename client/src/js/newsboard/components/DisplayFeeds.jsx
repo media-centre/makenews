@@ -88,7 +88,7 @@ export class DisplayFeeds extends Component {
         )(this.props.configuredSources);
 
         if(hasConfiguredSources) {
-            const response = await DisplayFeedActions.fetchFeedsFromSources(this.notifyLatestFeeds, param);
+            const response = await DisplayFeedActions.fetchFeedsFromSources(param);
             if(response) {
                 this.setState({ "gotNewFeeds": true });
             }
