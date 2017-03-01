@@ -12,7 +12,6 @@
     &.show {
       visibility: visible;
       width: 60%;
-      margin-left: 10px;
     }
   }
 
@@ -88,6 +87,10 @@
         padding: 10px;
         font-size: 12px;
         cursor: pointer;
+      }
+
+      .hash {
+        margin-left: 5px;
       }
     }
 

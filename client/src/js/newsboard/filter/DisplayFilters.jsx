@@ -98,7 +98,7 @@ export class DisplayFilters extends Component {
     }
 
     addHashtag(hashtag) {
-        if(hashtag) {
+        if(hashtag && hashtag !== "#") {
             if (!hashtag.startsWith("#")) {
                 hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
             }
@@ -136,7 +136,8 @@ export class DisplayFilters extends Component {
                        </div>
                         { this.state.hashtagInputBox &&
                         <div className="hashtag-box">
-                            <Input placeholder="add hashtag" className={"input-hashtag-box show"} eventHandlers={{ "onKeyUp": (event) => {
+                            <span className="hash">#</span>
+                            <Input placeholder="Add Hashtag" className={"input-hashtag-box show"} eventHandlers={{ "onKeyUp": (event) => {
                                 hashtagValue = event.target.value;
                                 this.onEnterKeyPressed(event);
                             } }}
