@@ -64,14 +64,15 @@ export default class FeedsRequestHandler {
         const query = {
             "q": `sourceType:${sourceType} AND ${keyQuery}`,
             "limit": LIMIT_VALUE,
-            skip
+            skip,
+            "include_docs": true
         };
 
         try {
             const dbName = userDetails.getUser(authSession).dbName;
             const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
-            result.docs = R.map(row => row.fields)(response.rows);
+            result.docs = R.map(row => row.doc)(response.rows);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
 
         } catch (error) {

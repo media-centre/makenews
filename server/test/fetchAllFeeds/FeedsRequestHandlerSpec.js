@@ -176,7 +176,7 @@ describe("FeedsRequestHandler", () => {
 
         it("should return the feeds related to search key", async () => {
             const response = {
-                "q": "sourceType:web",
+                "q": "+sourceType:web +title:test* description:test*",
                 "fetch_duration": 0,
                 "total_rows": 14,
                 "limit": 25,
@@ -186,7 +186,7 @@ describe("FeedsRequestHandler", () => {
                 "rows": [{
                     "score": 0.03390154987573624,
                     "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
-                    "fields": {
+                    "doc": {
                         "sourceType": "web",
                         "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
                         "title": "Trump signs executive order on black colleges"
@@ -194,14 +194,14 @@ describe("FeedsRequestHandler", () => {
                 }, {
                     "score": 0.03390154987573624,
                     "id": "3e02fd2f7e49dc4107b505378e457c60135e4c96b4477f6b02c14a30fd4b80fd",
-                    "fields": {
+                    "doc": {
                         "sourceType": "web",
                         "description": "US President Donald Trump\u2019s top spymaster nominee has said he was \u201cshocked\u201d to read that India successfully launched",
                         "title": "Trump\u2019s spy pick \u2018shocked\u2019 by India launching 104 satellites"
                     }
                 }]
             };
-            const docs = R.map(row => row.fields)(response.rows);
+            const docs = R.map(row => row.doc)(response.rows);
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
 
             sandbox.stub(userDetails, "getUser").returns({ dbName });

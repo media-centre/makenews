@@ -37,11 +37,11 @@ describe("CollectionFeedsRoute", () => {
         let sandbox = null;
         const authSession = "test_token", offset = 0;
 
-        beforeEach("handle", () => {
+        beforeEach("process", () => {
             sandbox = sinon.sandbox.create();
         });
 
-        afterEach("handle", () => {
+        afterEach("process", () => {
             sandbox.restore();
         });
 
