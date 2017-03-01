@@ -1,9 +1,12 @@
 import FeedsRequestHandler from "../../src/fetchAllFeeds/FeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
+import * as LuceneClient from "../../src/LuceneClient";
+import { userDetails } from "./../../src/Factory";
 import chai, { assert } from "chai";
 import sinon from "sinon";
 import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
+import R from "ramda"; //eslint-disable-line id-length
 
 describe("FeedsRequestHandler", () => {
     describe("fetch feeds", () => {
@@ -76,11 +79,13 @@ describe("FeedsRequestHandler", () => {
                     "pubDate": {
                         "$gt": null
                     },
-                    "$or": [{ "sourceType": {
-                        "$eq": sourceType
-                    }, "sourceId": {
-                        "$in": sourceIds
-                    } }]
+                    "$or": [{
+                        "sourceType": {
+                            "$eq": sourceType
+                        }, "sourceId": {
+                            "$in": sourceIds
+                        }
+                    }]
                 },
                 "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
@@ -104,9 +109,11 @@ describe("FeedsRequestHandler", () => {
                     "pubDate": {
                         "$gt": null
                     },
-                    "$or": [{ "sourceType": {
-                        "$eq": sourceType
-                    } }]
+                    "$or": [{
+                        "sourceType": {
+                            "$eq": sourceType
+                        }
+                    }]
                 },
                 "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
@@ -121,4 +128,73 @@ describe("FeedsRequestHandler", () => {
             assert.deepEqual(expectedFeeds, feed);
         });
     });
+
+    describe("searchFeeds", () => {
+        let sandbox = null;
+        let feedRequestHandler = null;
+        const authSession = "AuthSession", dbName = "dbName";
+        const sourceType = "web", searchKey = "test", skip = 5;
+        beforeEach("searchFeeds", () => {
+            sandbox = sinon.sandbox.create();
+            feedRequestHandler = FeedsRequestHandler.instance();
+        });
+
+        afterEach("searchFeeds", () => {
+            sandbox.restore();
+        });
+
+        it("should return the feeds related to search key", async () => {
+            const response = {
+                "q": "sourceType:web",
+                "fetch_duration": 0,
+                "total_rows": 14,
+                "limit": 25,
+                "search_duration": 0,
+                "etag": "1358a6ef5569e8",
+                "skip": 0,
+                "rows": [{
+                    "score": 0.03390154987573624,
+                    "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
+                    "fields": {
+                        "sourceType": "web",
+                        "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
+                        "title": "Trump signs executive order on black colleges"
+                    }
+                }, {
+                    "score": 0.03390154987573624,
+                    "id": "3e02fd2f7e49dc4107b505378e457c60135e4c96b4477f6b02c14a30fd4b80fd",
+                    "fields": {
+                        "sourceType": "web",
+                        "description": "US President Donald Trump\u2019s top spymaster nominee has said he was \u201cshocked\u201d to read that India successfully launched",
+                        "title": "Trump\u2019s spy pick \u2018shocked\u2019 by India launching 104 satellites"
+                    }
+                }]
+            };
+            const docs = R.map(row => row.fields)(response.rows);
+            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").returns(Promise.resolve(response));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it("should reject with error if search documents reject with error", async () => {
+            let searchDocumentMock = null;
+            try {
+                sandbox.stub(userDetails, "getUser").returns({ dbName });
+                searchDocumentMock = sandbox.mock(LuceneClient).expects("searchDocuments").returns(Promise.reject("error"));
+
+                await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+            } catch(error) {
+                assert.strictEqual(`can't search for the keyword ${searchKey}`, error);
+            }
+            searchDocumentMock.verify();
+        });
+    });
 });
+

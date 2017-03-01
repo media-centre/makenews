@@ -14,9 +14,8 @@ describe("FeedsSearchIndex", () => {
         indexDocument = new FeedsSearchIndex(dbName, accessToken);
         indexDoc = { "_id": "_design/feedSearch",
             "fulltext": {
-                "by_title": {
-                    "index":
-                        "function(doc) { if(doc.docType === 'feed') { return doc; } }"
+                "by_document": {
+                    "index": "function(doc) { if(doc.docType === 'feed') { var ret=new Document();if(doc.sourceType) {ret.add(doc.sourceType, {'field': 'sourceType', 'store': 'yes'});} if(doc.title) {ret.add(doc.title,  {'field':'title', 'store': 'yes'});} if(doc.description) {ret.add(doc.description,  {'field':'description', 'store': 'yes'});}return ret; } }" //eslint-disable-line max-len
                 }
             }
         };
