@@ -158,7 +158,6 @@ export class DisplayFeeds extends Component {
                 }} className="expand-icon"
                 />
                 <div className="feeds" ref="feeds">
-                <button onClick={this.fetchFeedsFromSources}>something</button>
                 { this.props.feeds.map((feed, index) =>
                     <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
                         isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
