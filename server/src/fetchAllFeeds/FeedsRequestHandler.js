@@ -1,8 +1,7 @@
 import CouchClient from "../CouchClient";
-import ApplicationConfig from "../config/ApplicationConfig";
 import { searchDocuments } from "./../LuceneClient";
 import R from "ramda"; //eslint-disable-line id-length
-
+import { userDetails } from "./../Factory";
 const LIMIT_VALUE = 25;
 export default class FeedsRequestHandler {
     static instance() {
@@ -57,24 +56,26 @@ export default class FeedsRequestHandler {
         }
     }
 
-    async searchFeeds(sourceType, searchKey, skip) {
+    async searchFeeds(authSession, sourceType, searchKey, skip) {
         let result = { };
-        let queryString = searchKey === "" ? "*/*" : `${searchKey}*`;
+        const queryString = searchKey === "" ? "*/*" : `${searchKey}*`;
+        const keyQuery = `title:${queryString} OR description:${queryString}`;
+
+        const query = {
+            "q": `sourceType:${sourceType} AND ${keyQuery}`,
+            "limit": LIMIT_VALUE,
+            skip
+        };
+
         try {
-            let query = {
-                "q": `title:${queryString}`,
-                "limit": LIMIT_VALUE,
-                skip
-            };
-            let dbName = ApplicationConfig.instance().adminDetails().db;
-            dbName = "db_f7c905535b6a74667a913bb9f346b4db7e4d161c54c407f1f6c7bd8d59ef83e3";
-            let response = await searchDocuments(dbName, "_design/feedSearch/by_title", query);
+            const dbName = userDetails.getUser(authSession).dbName;
+            const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
             result.docs = R.map(row => row.fields)(response.rows);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
 
         } catch (error) {
-            this.handleRequestError(searchKey, error);
+            throw `can't search for the keyword ${searchKey}`; //eslint-disable-line no-throw-literal
         }
         return result;
     }

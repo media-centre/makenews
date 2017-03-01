@@ -11,7 +11,7 @@ describe("LuceneClient", () => {
         sandbox.restore();
     });
 
-    describe("findDocument", () => {
+    describe("searchDocuments", () => {
         it("should fetch the documents", async () => {
             let query = {
                 "q": "name:my"
