@@ -18,35 +18,31 @@ describe("FacebookRoutesSpec", () => {
             done(new Error(error));
         });
     });
-    
+
     describe("/facebook-set-token", () => {
         it("should set the token", (done) => {
             let currentTime = new Date().getTime();
             let expiresAfter = currentTime + (123456 * 1000);
             request(serverIp)
-            .post("/facebook-set-token")
-            .send({
-                "accessToken": "1234"
-            })
-            .set("Cookie", accessToken)
-            .end((err, res) => {
-                let tokenDiff = Math.abs(res.body.expires_after - expiresAfter) < 1000;
-                assert.isTrue(tokenDiff);
-                done();
-            });
+                .post("/facebook-set-token")
+                .send({
+                    "accessToken": "1234"
+                })
+                .set("Cookie", accessToken)
+                .end((err, res) => {
+                    let tokenDiff = Math.abs(res.body.expires_after - expiresAfter) < 1000;
+                    assert.isTrue(tokenDiff);
+                    done();
+                });
         });
     });
-    
+
     describe("/facebook-sources", () => {
         it("should fetch the page source results", (done) => {
 
-            let expectedData = {
+            const expectedData = {
                 "paging": {
-                    "__after_id": "enc_AdClDCor0",
-                    "limit": "25",
-                    "offset": "25",
-                    "q": "The+Times+of+India",
-                    "type": "page"
+                    "after": "enc_AdClDCor0"
                 },
                 "data": [{
                     "id": "26781952138",
