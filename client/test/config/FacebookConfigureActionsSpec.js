@@ -5,8 +5,6 @@ import sinon from "sinon";
 import "../helper/TestHelper";
 import mockStore from "../helper/ActionHelper";
 import {
-    HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
@@ -36,7 +34,7 @@ describe("Facebook Configure Actions", () => {
             sandbox.restore();
         });
 
-        it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES}, ${HAS_MORE_SOURCE_RESULTS} action after getting fb profiles`, (done) => {
+        it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES} action after getting fb profiles`, (done) => {
             let serverUrl = "/facebook-sources";
             let response = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {} };
             let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {}, "keyword": "testProfile" };
@@ -50,8 +48,7 @@ describe("Facebook Configure Actions", () => {
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "profiles" },
-                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources },
-                { "type": HAS_MORE_SOURCE_RESULTS }
+                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
             ];
             let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
             store.dispatch(FBActions.fetchFacebookSources("testProfile", "profile", FBActions.PROFILES));
@@ -74,8 +71,7 @@ describe("Facebook Configure Actions", () => {
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
-                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
-                { "type": HAS_MORE_SOURCE_RESULTS }
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
             ];
             let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
@@ -105,8 +101,7 @@ describe("Facebook Configure Actions", () => {
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
-                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources },
-                { "type": HAS_MORE_SOURCE_RESULTS }
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
             ];
 
             const getStore = () => ({
@@ -122,7 +117,7 @@ describe("Facebook Configure Actions", () => {
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
-        it(`should dispatch ${NO_MORE_SOURCE_RESULTS} when the sources are empty`, (done) => {
+        it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} when the sources are empty`, (done) => {
             let serverUrl = "/facebook-sources";
             let pageName = "testPage";
             let fbResponse = { "data": [], "paging": {} };
@@ -135,7 +130,6 @@ describe("Facebook Configure Actions", () => {
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
-                { "type": NO_MORE_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, "keyword": pageName }
             ];
 

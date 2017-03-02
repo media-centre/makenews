@@ -19,7 +19,7 @@ export class Sources extends Component {
 
     componentDidUpdate() {
         if(this.props.sources.keyword && !this.props.sources.isFetchingSources) {
-            if(this.props.hasMoreSourceResults && document.body.scrollHeight <= window.innerHeight) {
+            if(this.props.sources.hasMoreSourceResults && document.body.scrollHeight <= window.innerHeight) {
                 this.props.dispatch(
                     getSources(this.props.currentTab, this.props.sources.keyword,
                         this.props.sources.nextPage, this.props.sources.twitterPreFirstId)
@@ -33,7 +33,7 @@ export class Sources extends Component {
     }
 
     _getMoreFeeds() {
-        if(this.props.hasMoreSourceResults && !this.timer) {
+        if(this.props.sources.hasMoreSourceResults && !this.timer) {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
@@ -70,16 +70,14 @@ export class Sources extends Component {
 function mapToStore(store) {
     return {
         "sources": store.sourceResults,
-        "currentTab": store.currentSourceTab,
-        "hasMoreSourceResults": store.hasMoreSourceResults
+        "currentTab": store.currentSourceTab
     };
 }
 
 Sources.propTypes = {
     "sources": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "currentTab": PropTypes.string.isRequired,
-    "hasMoreSourceResults": PropTypes.bool.isRequired
+    "currentTab": PropTypes.string.isRequired
 };
 
 export default connect(mapToStore)(Sources);

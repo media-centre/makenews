@@ -8,8 +8,6 @@ import sinon from "sinon";
 import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
 import {
-    HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
@@ -52,8 +50,8 @@ describe("WebConfigureActions", () => {
             sandbox.restore();
         });
 
-        it(`should dispatch ${WEB_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources`, (done) => {
-            let result = {
+        it(`should dispatch ${WEB_GOT_SOURCE_RESULTS} after getting sources`, (done) => {
+            const result = {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
@@ -67,24 +65,23 @@ describe("WebConfigureActions", () => {
             };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let gotWebSourcesActionObj = {
+            const gotWebSourcesActionObj = {
                 "type": WEB_GOT_SOURCE_RESULTS,
                 "sources": { "data": result.docs, "paging": result.paging, "keyword": keyword }
             };
 
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                gotWebSourcesActionObj,
-                { "type": HAS_MORE_SOURCE_RESULTS }
+                gotWebSourcesActionObj
             ];
 
-            let store = mockStore({ "configuredSources": { "web": [] } }, actions, done);
+            const store = mockStore({ "configuredSources": { "web": [] } }, actions, done);
             store.dispatch(fetchWebSources(keyword));
             ajaxGetMock.verify();
         });
 
-        it(`should dispatch ${WEB_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
-            let result = {
+        it(`should dispatch ${WEB_GOT_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
+            const result = {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
@@ -98,7 +95,7 @@ describe("WebConfigureActions", () => {
             };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let gotWebSourcesActionObj = {
+            const gotWebSourcesActionObj = {
                 "type": WEB_GOT_SOURCE_RESULTS,
                 "sources": {
                     "data": [{
@@ -122,28 +119,26 @@ describe("WebConfigureActions", () => {
                 }]
             } };
 
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                gotWebSourcesActionObj,
-                { "type": HAS_MORE_SOURCE_RESULTS }
+                gotWebSourcesActionObj
             ];
 
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(fetchWebSources(keyword));
             ajaxGetMock.verify();
         });
 
-        it(`should dispatch ${NO_MORE_SOURCE_RESULTS} if sources are empty`, (done) => {
-            let result = { "docs": [], "paging": { "offset": "25" } };
+        it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if sources are empty`, (done) => {
+            const result = { "docs": [], "paging": { "offset": "25" } };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": NO_MORE_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }
             ];
 
-            let store = mockStore({}, actions, done);
+            const store = mockStore({}, actions, done);
             store.dispatch(fetchWebSources(keyword));
         });
     });

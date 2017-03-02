@@ -29,7 +29,7 @@ export class ConfigurePane extends Component {
     }
 
     fetchSources(currentTab = this.props.currentTab) {
-        let value = this.refs.searchSources.value;
+        const value = this.refs.searchSources.value;
         if(!StringUtils.isEmptyString(value)) {
             this.props.dispatch(handleMessages(""));
             this.props.dispatch(SourceConfigActions.clearSources);

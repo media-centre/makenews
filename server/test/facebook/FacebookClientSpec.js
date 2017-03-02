@@ -10,6 +10,7 @@ import * as Constants from "./../../src/util/Constants";
 import nock from "nock";
 import { assert, expect } from "chai";
 import sinon from "sinon";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("FacebookClient", () => {
     let accessToken = null, appSecretProof = null, applicationConfigFacebookStub = null, applicationConfig = null;
@@ -590,7 +591,7 @@ describe("FacebookClient", () => {
             facebookClient = FacebookClient.instance(accessToken, appSecretProof);
         });
 
-        it("should give an error when facebook is rejected with some error", (done) => {
+        it("should give an error when facebook is rejected with some error", async () => {
             let params = {
                 "q": "keyword",
                 "type": "user"
@@ -602,24 +603,20 @@ describe("FacebookClient", () => {
                 "offset": "25"
             };
 
+
+            const response = {
+                "error": {
+                    "message": "Invalid OAuth access token.",
+                    "type": "OAuthException",
+                    "code": 190
+                }
+            };
+
             nock("https://graph.facebook.com")
                 .get(`/v2.8/search?q=${params.q}&type=user&fields=id,name,picture&__after_id=${paging.__after_id}&limit=${paging.limit}&offset=${paging.offset}&access_token=test_token&appsecret_proof=test_secret_proof`)
-                .reply(HttpResponseHandler.codes.BAD_REQUEST, {
-                    "error": { "message": "Invalid OAuth access token.",
-                        "type": "OAuthException",
-                        "code": 190
-                    } }
-                );
+                .reply(HttpResponseHandler.codes.BAD_REQUEST, response);
 
-            facebookClient.fetchSourceUrls(params, paging).catch(error => {
-                try {
-                    assert.strictEqual("OAuthException", error.type);
-                    assert.strictEqual("Invalid OAuth access token.", error.message);
-                    done();
-                } catch(err) {
-                    done(err);
-                }
-            });
+            await isRejected(facebookClient.fetchSourceUrls(params, paging), response);
         });
 
         it("should fetch the facebook pages", (done) => {

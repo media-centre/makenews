@@ -105,13 +105,13 @@ export default class FacebookRequestHandler {
     }
 
     async fetchSourceUrls(params, paging = {}) {
-        let facebookClientInstance = this.facebookClient();
+        const facebookClientInstance = this.facebookClient();
         try {
-            let sources = await facebookClientInstance.fetchSourceUrls(params, paging);
+            const sources = await facebookClientInstance.fetchSourceUrls(params, paging);
             FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${params.type}s for ${params.q}.`);
             return R.assoc("data", sources.data, { "paging": this._getPagingParams(sources.paging) });
         } catch(error) {
-            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${error}`);
+            FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${JSON.stringify(error)}`);
             throw `error fetching facebook ${params.type}s`;  // eslint-disable-line no-throw-literal
         }
     }

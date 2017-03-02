@@ -5,7 +5,7 @@ import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle, fetchingWebArticle, fetchingFeeds } from "./newsboard/reducers/DisplayFeedReducers";
-import { configuredSources, hasMoreSourceResults, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
+import { configuredSources, currentSourceTab, sourceResults, searchInConfiguredSources } from "./sourceConfig/reducers/SourceConfigurationReducers";
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
@@ -21,7 +21,6 @@ const contentDiscoveryApp = combineReducers({
     changePassword,
     userProfileStrings,
     configuredSources,
-    hasMoreSourceResults,
     fetchedFeeds,
     addUrlMessage,
     sourceResults,

@@ -49,7 +49,6 @@ describe("Sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
             "sourceResults": { "data": [], "isFetchingSources": true },
-            "hasMoreSourceResults": false,
             "sourceSearchKeyword": "Bla"
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(
@@ -65,7 +64,6 @@ describe("Sources", () => {
         store = createStore(() => ({
             "currentSourceTab": currentTab,
             "sourceResults": { "data": [], "isFetchingSources": false },
-            "hasMoreSourceResults": false,
             "sourceSearchKeyword": "Bla"
         }), applyMiddleware(thunkMiddleware));
         result = TestUtils.renderIntoDocument(
