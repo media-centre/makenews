@@ -337,6 +337,59 @@ describe("FacebookRequestHandler", () => {
 
             expect(pagesData).to.deep.equal(result);
         });
+
+        it("should get facebook users", async () => {
+            const users = {
+                "data": [
+                    { "name": "The Hindu", "id": "163974433696568" },
+                    { "name": "The Hindu Business Line", "id": "60573550946" },
+                    { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
+                "paging": {
+                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture,full_picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
+                }
+            };
+
+            const result = {
+                "data": users.data,
+                "paging": {
+                    "__after_id": "enc_AdClDCor0",
+                    "limit": "25",
+                    "offset": "25",
+                    "q": "journalism",
+                    "type": "user"
+                }
+            };
+
+            const params = {
+                "q": keyword,
+                "type": "user"
+            };
+
+            sandbox.stub(facebookClientInstance, "fetchSourceUrls")
+                .withArgs(params).returns(Promise.resolve(users));
+
+            const pagesData = await facebookRequstHandler.fetchSourceUrls(params);
+
+            expect(pagesData).to.deep.equal(result);
+        });
+
+        it("_getPagingParams should return empty object properties if no path is provided", () => {
+            expect(facebookRequstHandler._getPagingParams()).to.deep.equal({});
+        });
+
+        it("_getPagingParams should return empty object if path has no next property", () => {
+            expect(facebookRequstHandler._getPagingParams({})).to.deep.equal({});
+        });
+
+        it("_getPagingParams should return paging parameters", () => {
+            let result = {
+                "__after_id": "123",
+                "limit": "21",
+                "offset": "20"
+            };
+            expect(facebookRequstHandler._getPagingParams({ "next": "facebook.com?limit=21&offset=20&__after_id=123" }))
+                .to.deep.equal(result);
+        });
     });
 
     describe("saveToken", () => {

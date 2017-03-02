@@ -88,12 +88,33 @@ export default class FacebookRequestHandler {
         });
     }
 
+    _getPagingParams(path) {
+        let queryParams = { };
+
+        if(path && path.next) {
+            let queryStrings = path.next.split("?")[1]; // eslint-disable-line no-magic-numbers
+            let vars = queryStrings.split("&");
+            vars.forEach(param => {
+                let pair = param.split("=");
+                queryParams[pair[0]] = pair[1]; // eslint-disable-line no-magic-numbers
+            });
+        }
+        delete queryParams.access_token;
+        delete queryParams.fields;
+        return queryParams;
+    }
+
     async fetchSourceUrls(params, paging = {}) {
         const facebookClientInstance = this.facebookClient();
         try {
             const sources = await facebookClientInstance.fetchSourceUrls(params, paging);
             FacebookRequestHandler.logger().debug(`FacebookRequestHandler:: successfully fetched ${params.type}s for ${params.q}.`);
-            const pagingResponse = sources.paging ? { "paging": { "after": sources.paging.cursors.after } } : {};
+            let pagingResponse = {};
+            if(params.type === "user") {
+                pagingResponse.paging = this._getPagingParams(sources.paging);
+            } else {
+                pagingResponse.paging = sources.paging ? { "after": sources.paging.cursors.after } : {};
+            }
             return R.assoc("data", sources.data, pagingResponse);
         } catch(error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${JSON.stringify(error)}`);
