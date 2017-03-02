@@ -1,13 +1,18 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
+import Toast from "./../../utils/custom_templates/Toast";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
 export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 export const FETCHING_FEEDS = "FETCHING_FEEDS";
+export const SEARCHED_FEEDS = "SEARCHED_FEEDS";
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
+});
+export const searchedFeeds = feeds => ({
+    "type": SEARCHED_FEEDS, feeds
 });
 
 export const newsBoardTabSwitch = currentTab => ({
@@ -86,10 +91,11 @@ export function searchFeeds(sourceType, searchKey, offset) {
     return async dispatch => {
         let ajax = AjaxClient.instance("/search-feeds");
         try {
-            let feeds = ajax.get({ sourceType, searchKey, offset });
-            dispatch(paginatedFeeds(feeds.docs));
+            let feeds = await ajax.get({ sourceType, searchKey, offset });
+            dispatch(searchedFeeds(feeds.docs));
         } catch (err) {
-            dispatch(paginatedFeeds([]));
+            Toast.show(err.message);
+            dispatch(clearFeeds());
         }
     };
 }

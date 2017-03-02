@@ -1,3 +1,4 @@
+/* eslint brace-style:0*/
 import React, { Component, PropTypes } from "react";
 import Feed from "./Feed.jsx";
 import AppWindow from "./../../utils/AppWindow";
@@ -8,13 +9,12 @@ import DisplayCollection from "./DisplayCollection";
 import Spinner from "../../utils/components/Spinner";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayArticle from "./DisplayArticle";
-import Input from "./../../utils/components/Input";
 import StringUtils from "./../../../../../common/src/util/StringUtil";
 
 export class DisplayFeeds extends Component {
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false, "search": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
@@ -149,18 +149,25 @@ export class DisplayFeeds extends Component {
             }}
             > {"Show new feeds"} </button>);
     }
-    _searchFeeds(event) {
+
+    checkEnterKey(event) {
         const ENTERKEY = 13;
-        const searchKey = event.target.value;
         if (event.keyCode === ENTERKEY) {
-            this.fetchFeeds(searchKey);
+            this.updateSearch();
+            this.searchFeeds();
         }
     }
 
-    fetchFeeds(searchKey) {
+    updateSearch() {
+        this.props.dispatch(DisplayFeedActions.clearFeeds());
+        this.offset = 0;
+        this.setState({ "search": !this.state.search });
+    }
+
+    searchFeeds() {
+        const searchKey = this.refs.searchFeeds.value;
         if(!StringUtils.isEmptyString(searchKey)) {
-            let offset = 0;
-            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, offset));
+            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, this.offset));
         }
     }
 
@@ -169,23 +176,23 @@ export class DisplayFeeds extends Component {
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <div className="search-bar">
-                    <Input placeholder={"Search Keywords,Articles etc."} eventHandlers={{ "onKeyUp": (event) => {
-                        this._searchFeeds(event);
-                    } }} addonSrc="./images/search-icon.png"
-                    />
+                    <div className="input-box">
+                        <input type="text" ref="searchFeeds" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={"Search Keywords,Articles etc."}/>
+                        {this.state.search
+                            ? <span className="input-addon" onClick={() => { this.updateSearch(); this.getMoreFeeds(this.props.sourceType); }}><i className="fa fa-times" aria-hidden="true"/></span>
+                            : <span className="input-addon" onClick={() => { this.updateSearch(); this.searchFeeds(); }}><i className="fa fa-search" aria-hidden="true"/></span>
+                        }
+                    </div>
                 </div>
                 { this.state.gotNewFeeds && this._showMoreFeedsButton() }
-                <i onClick={() => {
-                    this._toggleFeedsView();
-                }} className="expand-icon"
-                />
+                <i onClick={() => { this._toggleFeedsView(); }} className="expand-icon" />
                 <div className="feeds" ref="feeds">
-                { this.props.feeds.map((feed, index) =>
-                    <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                        isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
-                    />)
-                }
-                { this.props.isFetchingFeeds ? <Spinner /> : null }
+                    { this.props.feeds.map((feed, index) =>
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
+                            isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
+                        />)
+                    }
+                    { this.props.isFetchingFeeds ? <Spinner /> : null }
                 </div>
             </div>);
     }

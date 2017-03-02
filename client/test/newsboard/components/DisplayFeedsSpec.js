@@ -10,6 +10,7 @@ import sinon from "sinon";
 import DisplayCollection from "../../../src/js/newsboard/components/DisplayCollection";
 import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
 import { SCAN_NEWS, WRITE_A_STORY } from "./../../../src/js/header/HeaderActions";
+import * as DisplayFeedActions from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
@@ -108,10 +109,39 @@ describe("DisplayFeeds", () => {
     });
 
     describe("search", () => {
-        it("should have search Box", () => {
-            let searchBox = TestUtils.findRenderedDOMComponentWithClass(result, "input-box");
-            expect(searchBox.className).to.equal("input-box");
+        it("should have search bar", () => {
+            let searchBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-bar");
+            expect(searchBox.className).to.equal("search-bar");
+        });
+
+        it("should have input Box", () => {
+            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "input-box");
+            expect(inputBox.className).to.equal("input-box");
+        });
+
+        it("should dispatch search feeds", () => {
+            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
+            inputBox.value = "test";
+            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("searchFeeds").returns({ "type": "" });
+            let addOn = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            TestUtils.Simulate.click(addOn);
+
+            searchFeedsMock.verify();
+        });
+
+        it("should dispatch display feeds by page", () => {
+            result = TestUtils.renderIntoDocument(
+                <Provider store={store}>
+                    <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
+                </Provider>);
+
+            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("displayFeedsByPage").returns({ "type": "" });
+            let search = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            TestUtils.Simulate.click(search);
+
+            let cross = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            TestUtils.Simulate.click(cross);
+            searchFeedsMock.verify();
         });
     });
-
 });

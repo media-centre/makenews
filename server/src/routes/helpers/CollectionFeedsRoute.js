@@ -13,7 +13,7 @@ export default class CollectionFeedsRoute extends Route {
         return super.validate(this.authSession, this.collection);
     }
 
-    async process() {
+    async handle() {
         return await getCollectedFeeds(this.authSession, this.collection, this.offset);
     }
 }
