@@ -191,7 +191,7 @@ describe("FeedsRequestHandler", () => {
 
                 await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
             } catch(error) {
-                assert.strictEqual(`can't search for the keyword ${searchKey}`, error);
+                assert.strictEqual(`No Search results found for this keyword "${searchKey}"`, error);
             }
             searchDocumentMock.verify();
         });

@@ -24,7 +24,7 @@ describe("Search Feeds Route", () => {
         sandbox.mock(FeedsRequestHandler).expects("instance").returns(requestHandleInstance);
         sandbox.mock(requestHandleInstance).expects("searchFeeds").returns(feeds);
 
-        let result = await searchFeed.process();
+        let result = await searchFeed.handle();
         assert.equal(result, feeds);
     });
 });

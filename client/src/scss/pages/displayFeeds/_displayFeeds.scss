@@ -51,8 +51,19 @@
     .search-bar {
       height: $secondary-header-nav-height;
       background-color: $dark-background-color;
-      padding: 8px 10px 5px;
+      padding: 10px 10px 5px;
       box-sizing: border-box;
+
+      input {
+        padding: 6px;
+      }
+
+      .input-addon {
+        width: 20px;
+        font-size: 20px;
+        padding: 2px;
+        color: $secondary-color;
+      }
     }
 
     .newsfeeds-notify {

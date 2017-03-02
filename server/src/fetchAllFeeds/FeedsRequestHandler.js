@@ -63,9 +63,8 @@ export default class FeedsRequestHandler {
 
             result.docs = R.map(row => row.doc)(response.rows);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
-
         } catch (error) {
-            throw `can't search for the keyword ${searchKey}`; //eslint-disable-line no-throw-literal
+            throw `No Search results found for this keyword "${searchKey}"`; //eslint-disable-line no-throw-literal
         }
         return result;
     }

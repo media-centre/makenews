@@ -14,7 +14,7 @@ export default class SearchFeedsRoute extends Route {
         return super.validate(this.authSession, this.sourceType, this.searchKey);
     }
 
-    async process() {
+    async handle() {
         const feedsRequestHandler = FeedsRequestHandler.instance();
         return await feedsRequestHandler.searchFeeds(this.authSession, this.sourceType, this.searchKey, this.skip);
     }

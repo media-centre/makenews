@@ -3,7 +3,8 @@ import {
     NEWS_BOARD_CURRENT_TAB,
     CLEAR_NEWS_BOARD_FEEDS,
     DISPLAY_ARTICLE,
-    FETCHING_FEEDS
+    FETCHING_FEEDS,
+    SEARCHED_FEEDS
 } from "./../actions/DisplayFeedActions";
 import {
     BOOKMARKED_ARTICLE,
@@ -17,6 +18,8 @@ export function fetchedFeeds(state = [], action = {}) {
     switch (action.type) {
     case PAGINATED_FETCHED_FEEDS:
         return Object.assign([], List(state).concat(action.feeds).toArray());  //eslint-disable-line new-cap
+    case SEARCHED_FEEDS:
+        return Object.assign([], action.feeds);  //eslint-disable-line new-cap
     case CLEAR_NEWS_BOARD_FEEDS:
         return [];
     case BOOKMARKED_ARTICLE: {
