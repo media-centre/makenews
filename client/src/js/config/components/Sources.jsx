@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
 import Source from "./Source";
 import { connect } from "react-redux";
-import { getSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { getSources, deleteSourceStatus } from "./../../sourceConfig/actions/SourceConfigurationActions";
 import Spinner from "./../../utils/components/Spinner";
+import Toast from "../../utils/custom_templates/Toast";
 
 export class Sources extends Component {
 
@@ -17,7 +18,7 @@ export class Sources extends Component {
         document.addEventListener("scroll", this.getMoreFeeds);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if(this.props.sources.keyword && !this.props.sources.isFetchingSources) {
             if(this.props.hasMoreSourceResults && document.body.scrollHeight <= window.innerHeight) {
                 this.props.dispatch(
@@ -25,6 +26,9 @@ export class Sources extends Component {
                         this.props.sources.nextPage, this.props.sources.twitterPreFirstId)
                 );
             }
+        }
+        if(this.props.deleteSourceStatus !== prevProps.deleteSourceStatus) {
+            this.props.dispatch(deleteSourceStatus(""));
         }
     }
     
@@ -62,6 +66,7 @@ export class Sources extends Component {
 
                 { this.props.sources.isFetchingSources &&
                     <Spinner /> }
+                { this.props.deleteSourceStatus && Toast.show(this.props.deleteSourceStatus) }
             </div>
         );
     }
@@ -71,7 +76,8 @@ function mapToStore(store) {
     return {
         "sources": store.sourceResults,
         "currentTab": store.currentSourceTab,
-        "hasMoreSourceResults": store.hasMoreSourceResults
+        "hasMoreSourceResults": store.hasMoreSourceResults,
+        "deleteSourceStatus": store.deleteSourceStatus
     };
 }
 
@@ -79,7 +85,8 @@ Sources.propTypes = {
     "sources": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "currentTab": PropTypes.string.isRequired,
-    "hasMoreSourceResults": PropTypes.bool.isRequired
+    "hasMoreSourceResults": PropTypes.bool.isRequired,
+    "deleteSourceStatus": PropTypes.string
 };
 
 export default connect(mapToStore)(Sources);

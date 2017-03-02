@@ -19,3 +19,12 @@ export function markSourcesAsAdded(sources, sourcesToConfigure, propertyToCompar
     }
     return [];
 }
+
+export function unmarkDeletedSource(sources, sourceToDelete) {
+    return (sources.map((source) => {
+        if(source._id === sourceToDelete._id) {
+            source.added = false;
+        }
+        return source;
+    }));
+}

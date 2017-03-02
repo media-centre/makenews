@@ -59,8 +59,7 @@ export class ConfigurePane extends Component {
 function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
-        "sources": state.sourceResults,
-        "isFetchingSources": state.isFetchingSources
+        "sources": state.sourceResults
     };
 }
 

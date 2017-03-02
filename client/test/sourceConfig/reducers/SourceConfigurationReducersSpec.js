@@ -20,7 +20,9 @@ import {
     WEB,
     CLEAR_SOURCES,
     FETCHING_SOURCE_RESULTS,
-    FETCHING_SOURCE_RESULTS_FAILED
+    FETCHING_SOURCE_RESULTS_FAILED,
+    SOURCE_DELETED,
+    UNMARK_DELETED_SOURCE
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../../src/js/config/actions/TwitterConfigureActions";
@@ -73,6 +75,15 @@ describe("SourceConfigurationReducers", () => {
                 "pages": [], "groups": [], "twitter": [], "web": [] };
             let action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
+        });
+
+        it("should return updated configured sources with deleted sources", () => {
+            state = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
+                "pages": [], "groups": [], "twitter": [], "web": [] };
+            let sources = { "profiles": [{ "name": "Profile2" }],
+                "pages": [], "groups": [], "twitter": [], "web": [] };
+            let action = { "type": SOURCE_DELETED, "sources": sources };
+            expect(configuredSources(state, action)).to.deep.equal(sources);
         });
     });
 
@@ -206,6 +217,14 @@ describe("SourceConfigurationReducers", () => {
         it(`should return the isFetchingSources as false when ${FETCHING_SOURCE_RESULTS_FAILED} action is performed`, () => {
             const isFetching = sourceResults({}, { "type": FETCHING_SOURCE_RESULTS_FAILED }).isFetchingSources;
             expect(isFetching).to.be.false; // eslint-disable-line no-unused-expressions
+        });
+
+        it("should change added to false for the source to be delete", () => {
+            let state = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": true }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            let action = { "type": UNMARK_DELETED_SOURCE, "source": { "_id": 1, "name": "Profile" } };
+            let result = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": false }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            expect(sourceResults(state, action)).to.deep.equal(result);
+
         });
     });
 

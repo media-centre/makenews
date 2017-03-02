@@ -4,7 +4,7 @@ import {
     FACEBOOK_ADD_GROUP,
     FACEBOOK_GOT_SOURCES
 } from "./../../config/actions/FacebookConfigureActions";
-import { markSourcesAsAdded } from "./../../sourceConfig/reducers/SourceConfiguraionReducersUtils";
+import { markSourcesAsAdded, unmarkDeletedSource } from "./../../sourceConfig/reducers/SourceConfiguraionReducersUtils";
 import { List } from "immutable";
 import {
     GOT_CONFIGURED_SOURCES,
@@ -15,7 +15,10 @@ import {
     CLEAR_SOURCES,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED,
-    CONFIGURED_SOURCE_SEARCH_KEYWORD
+    CONFIGURED_SOURCE_SEARCH_KEYWORD,
+    SOURCE_DELETED,
+    UNMARK_DELETED_SOURCE,
+    DELETE_SOURCE_STATUS
 } from "./../actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/WebConfigureActions";
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
@@ -56,6 +59,10 @@ export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingS
     case TWITTER_ADD_SOURCE: {
         return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "id") });
     }
+
+    case UNMARK_DELETED_SOURCE: {
+        return Object.assign({}, state, { "data": unmarkDeletedSource(state.data, action.source) });
+    }
         
     case CLEAR_SOURCES: {
         return Object.assign({}, state,
@@ -93,6 +100,9 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     case GOT_CONFIGURED_SOURCES: {
         return action.sources;
     }
+    case SOURCE_DELETED: {
+        return Object.assign({}, state, action.sources); //eslint-disable-line
+    }
     default: return state;
     }
 };
@@ -126,4 +136,11 @@ export const searchInConfiguredSources = (keyword = "", action = {}) => {
     }
     return keyword;
 };
+
+export function deleteSourceStatus(state = "", action = {}) {
+    if(action.type === DELETE_SOURCE_STATUS) {
+        return action.message;
+    }
+    return state;
+}
 

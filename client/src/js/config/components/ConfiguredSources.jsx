@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
-import { searchInConfiguredSources } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { searchInConfiguredSources, deleteSource } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
 import SourceFilters from "./../../newsboard/filter/SourceFilters";
@@ -17,7 +17,11 @@ class ConfiguredSources extends Component {
     }
 
     _renderSources(sourceType, searchKey) {
-        let configuredSourceDOM = (source) => <li className="source-name" key={source._id}>{source.name}</li>;
+        let configuredSourceDOM = (source) => <li className="source-name" key={source._id}>{source.name}
+            <i className="fa fa-times delete-source" onClick={() => {
+                this.props.dispatch(deleteSource(this.props.sources, this.props.currentTab, source));
+            }}
+            /></li>;
         if(searchKey) {
             let key = searchKey.toUpperCase();
             let configuredSources = source => source.name.toUpperCase().match(key) && source;
