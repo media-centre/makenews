@@ -304,29 +304,28 @@ describe("FacebookRequestHandler", () => {
             });
         });
 
-        it("should get facebook pages", (done) => {
-            let pages = {
+        it("should get facebook pages", async () => {
+            const pages = {
                 "data": [
                     { "name": "The Hindu", "id": "163974433696568" },
                     { "name": "The Hindu Business Line", "id": "60573550946" },
                     { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
                 "paging": {
+                    "cursors": {
+                        "after": "enc_AdClDCor0"
+                    },
                     "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture,full_picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
                 }
             };
 
-            let result = {
+            const result = {
                 "data": pages.data,
                 "paging": {
-                    "__after_id": "enc_AdClDCor0",
-                    "limit": "25",
-                    "offset": "25",
-                    "q": "journalism",
-                    "type": "user"
+                    "after": "enc_AdClDCor0"
                 }
             };
 
-            let params = {
+            const params = {
                 "q": keyword,
                 "type": type
             };
@@ -334,33 +333,9 @@ describe("FacebookRequestHandler", () => {
             sandbox.stub(facebookClientInstance, "fetchSourceUrls")
                 .withArgs(params).returns(Promise.resolve(pages));
 
-            facebookRequstHandler.fetchSourceUrls(params).then(pagesData => {
-                try {
-                    expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
-                    expect(pagesData).to.deep.equal(result);
-                    done();
-                } catch (error) {
-                    done(error);
-                }
-            });
-        });
+            const pagesData = await facebookRequstHandler.fetchSourceUrls(params);
 
-        it("_getPagingParams should return empty object properties if no path is provided", () => {
-            expect(facebookRequstHandler._getPagingParams()).to.deep.equal({});
-        });
-
-        it("_getPagingParams should return empty object if path has no next property", () => {
-            expect(facebookRequstHandler._getPagingParams({})).to.deep.equal({});
-        });
-
-        it("_getPagingParams should return paging parameters", () => {
-            let result = {
-                "__after_id": "123",
-                "limit": "21",
-                "offset": "20"
-            };
-            expect(facebookRequstHandler._getPagingParams({ "next": "facebook.com?limit=21&offset=20&__after_id=123" }))
-                .to.deep.equal(result);
+            expect(pagesData).to.deep.equal(result);
         });
     });
 
