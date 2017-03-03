@@ -123,7 +123,7 @@ export default class FacebookClient {
             return responseJson;
         }
         FacebookClient.logger().debug(`FacebookClient:: Failed to fetch the ${parameters.type}s for ${parameters.q}`);
-        throw responseJson.error;
+        throw responseJson;
     }
 
     getFacebookId(facebookPageUrl) {

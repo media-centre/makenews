@@ -304,8 +304,42 @@ describe("FacebookRequestHandler", () => {
             });
         });
 
-        it("should get facebook pages", (done) => {
-            let pages = {
+        it("should get facebook pages", async () => {
+            const pages = {
+                "data": [
+                    { "name": "The Hindu", "id": "163974433696568" },
+                    { "name": "The Hindu Business Line", "id": "60573550946" },
+                    { "name": "The Hindu Temple of Canton", "id": "148163135208246" }],
+                "paging": {
+                    "cursors": {
+                        "after": "enc_AdClDCor0"
+                    },
+                    "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture,full_picture&type=user&q=journalism&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
+                }
+            };
+
+            const result = {
+                "data": pages.data,
+                "paging": {
+                    "after": "enc_AdClDCor0"
+                }
+            };
+
+            const params = {
+                "q": keyword,
+                "type": type
+            };
+
+            sandbox.stub(facebookClientInstance, "fetchSourceUrls")
+                .withArgs(params).returns(Promise.resolve(pages));
+
+            const pagesData = await facebookRequstHandler.fetchSourceUrls(params);
+
+            expect(pagesData).to.deep.equal(result);
+        });
+
+        it("should get facebook users", async () => {
+            const users = {
                 "data": [
                     { "name": "The Hindu", "id": "163974433696568" },
                     { "name": "The Hindu Business Line", "id": "60573550946" },
@@ -315,8 +349,8 @@ describe("FacebookRequestHandler", () => {
                 }
             };
 
-            let result = {
-                "data": pages.data,
+            const result = {
+                "data": users.data,
                 "paging": {
                     "__after_id": "enc_AdClDCor0",
                     "limit": "25",
@@ -326,23 +360,17 @@ describe("FacebookRequestHandler", () => {
                 }
             };
 
-            let params = {
+            const params = {
                 "q": keyword,
-                "type": type
+                "type": "user"
             };
 
             sandbox.stub(facebookClientInstance, "fetchSourceUrls")
-                .withArgs(params).returns(Promise.resolve(pages));
+                .withArgs(params).returns(Promise.resolve(users));
 
-            facebookRequstHandler.fetchSourceUrls(params).then(pagesData => {
-                try {
-                    expect(pagesData.data).to.have.lengthOf(3); // eslint-disable-line no-magic-numbers
-                    expect(pagesData).to.deep.equal(result);
-                    done();
-                } catch (error) {
-                    done(error);
-                }
-            });
+            const pagesData = await facebookRequstHandler.fetchSourceUrls(params);
+
+            expect(pagesData).to.deep.equal(result);
         });
 
         it("_getPagingParams should return empty object properties if no path is provided", () => {

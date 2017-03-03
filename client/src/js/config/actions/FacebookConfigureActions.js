@@ -1,8 +1,6 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 import {
-    hasMoreSourceResults,
-    noMoreSourceResults,
     switchSourceTab,
     fetchingSources,
     fetchingSourcesFailed } from "./../../sourceConfig/actions/SourceConfigurationActions";
@@ -46,9 +44,7 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response, keyword));
-                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed(keyword));
             }
         } catch (err) {

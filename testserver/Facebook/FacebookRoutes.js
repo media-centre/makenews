@@ -17,6 +17,9 @@ function facebookRoutes(app) {
 
         let responseData = {
             "paging": {
+                "cursors": {
+                    "after": "enc_AdClDCor0"
+                },
                 "next": "https://graph.facebook.com/v2.8/search?fields=id,name,picture&type=page&q=The+Times+of+India&access_token=EAACQgZBvNveQ&offset=25&limit=25&__after_id=enc_AdClDCor0"
             },
             "data": [{

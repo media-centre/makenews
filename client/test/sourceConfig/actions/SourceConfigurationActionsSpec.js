@@ -43,14 +43,6 @@ describe("SourceConfigurationActions", () => {
     });
 
     describe("source results", () => {
-        it(`should return ${sourceConfigActions.NO_MORE_SOURCE_RESULTS} when request for noMoreSourceResults action`, () => {
-            expect(sourceConfigActions.noMoreSourceResults).to.deep.equal({ "type": sourceConfigActions.NO_MORE_SOURCE_RESULTS });
-        });
-
-        it(`should return ${sourceConfigActions.HAS_MORE_SOURCE_RESULTS} when request for hasMoreSourceResults action`, () => {
-            expect(sourceConfigActions.hasMoreSourceResults).to.deep.equal({ "type": sourceConfigActions.HAS_MORE_SOURCE_RESULTS });
-        });
-
         it(`should return ${sourceConfigActions.CLEAR_SOURCES} when request for clearSources action`, () => {
             expect(sourceConfigActions.clearSources).to.deep.equal({ "type": sourceConfigActions.CLEAR_SOURCES });
         });

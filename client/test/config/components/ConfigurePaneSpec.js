@@ -27,8 +27,7 @@ describe("Configure Pane", () => {
                         "currentSourceTab": "",
                         "sourceResults": {
                             "data": []
-                        },
-                        "hasMoreSourceResults": false
+                        }
                     };
                 }
             };
@@ -98,7 +97,6 @@ describe("Configure Pane", () => {
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },
-                "hasMoreSourceResults": false,
                 "sourceSearchKeyword": "something",
                 "addUrlMessage": {}
             }), applyMiddleware(thunkMiddleware));

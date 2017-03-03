@@ -1,7 +1,5 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import {
-    hasMoreSourceResults,
-    noMoreSourceResults,
     fetchingSources,
     fetchingSourcesFailed } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
@@ -28,9 +26,7 @@ export function fetchWebSources(keyword, params = {}) {
                 const cmp = (first, second) => first.url === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotWebSourceResults(data, keyword));
-                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed(keyword));
             }
         } catch(err) {

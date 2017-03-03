@@ -8,8 +8,6 @@ import { markSourcesAsAdded, unmarkDeletedSource } from "./../../sourceConfig/re
 import { List } from "immutable";
 import {
     GOT_CONFIGURED_SOURCES,
-    HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
     CLEAR_SOURCES,
@@ -24,7 +22,16 @@ import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../config/actions/W
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../config/actions/TwitterConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 
-export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingSources": false, "twitterPreFirstId": 0, "keyword": "" }, action = {}) => {
+const sourceResultsInitialState = {
+    "data": [],
+    "nextPage": {},
+    "isFetchingSources": false,
+    "twitterPreFirstId": 0,
+    "keyword": "",
+    "hasMoreSourceResults": true
+};
+
+export const sourceResults = (state = sourceResultsInitialState, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES:
     case TWITTER_GOT_SOURCE_RESULTS:
@@ -35,7 +42,8 @@ export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingS
                 "nextPage": action.sources.paging,
                 "twitterPreFirstId": action.sources.twitterPreFirstId,
                 "isFetchingSources": false,
-                "keyword": action.sources.keyword
+                "keyword": action.sources.keyword,
+                "hasMoreSourceResults": true
             });
     }
     case FACEBOOK_ADD_PROFILE:
@@ -49,7 +57,7 @@ export const sourceResults = (state = { "data": [], "nextPage": {}, "isFetchingS
     }
 
     case FETCHING_SOURCE_RESULTS_FAILED: {
-        return Object.assign({}, state, { "isFetchingSources": false, "keyword": action.keyword });
+        return Object.assign({}, state, { "isFetchingSources": false, "keyword": action.keyword, "hasMoreSourceResults": false });
     }
 
     case WEB_ADD_SOURCE: {
@@ -107,20 +115,6 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
     }
 };
 
-export const hasMoreSourceResults = (state = true, action = {}) => {
-    switch (action.type) {
-    case HAS_MORE_SOURCE_RESULTS: {
-        return true;
-    }
-    case NO_MORE_SOURCE_RESULTS: {
-        return false;
-    }
-    default: {
-        return state;
-    }
-    }
-};
-
 export const currentSourceTab = (state = WEB, action = {}) => {
     switch(action.type) {
     case CHANGE_CURRENT_SOURCE_TAB: {
@@ -143,4 +137,3 @@ export function deleteSourceStatus(state = "", action = {}) {
     }
     return state;
 }
-

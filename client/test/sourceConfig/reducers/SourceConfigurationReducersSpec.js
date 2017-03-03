@@ -8,14 +8,11 @@ import {
 import {
     sourceResults,
     configuredSources,
-    hasMoreSourceResults,
     currentSourceTab,
     searchInConfiguredSources
 } from "../../../src/js/sourceConfig/reducers/SourceConfigurationReducers";
 import {
     GOT_CONFIGURED_SOURCES,
-    HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS,
     CHANGE_CURRENT_SOURCE_TAB,
     WEB,
     CLEAR_SOURCES,
@@ -87,19 +84,6 @@ describe("SourceConfigurationReducers", () => {
         });
     });
 
-    describe("hasMoreSourceResults", () => {
-        it("should give true if no action type is given", () => {
-            expect(hasMoreSourceResults()).to.be.true; //eslint-disable-line no-unused-expressions
-        });
-
-        it(`should give true if action type is ${HAS_MORE_SOURCE_RESULTS}`, () => {
-            expect(hasMoreSourceResults(null, { "type": HAS_MORE_SOURCE_RESULTS })).to.be.true; //eslint-disable-line no-unused-expressions
-        });
-
-        it(`should give false if action type is ${NO_MORE_SOURCE_RESULTS}`, () => {
-            expect(hasMoreSourceResults(null, { "type": NO_MORE_SOURCE_RESULTS })).to.be.false; //eslint-disable-line no-unused-expressions
-        });
-    });
     describe("current source Tab", () => {
         it("should return Web as current tab by default", () => {
             expect(currentSourceTab()).to.equal(WEB);
@@ -113,38 +97,70 @@ describe("SourceConfigurationReducers", () => {
 
     describe("Sources Results", () => {
         it("should return an empty list by default when asked sources", () => {
-            expect({ "data": [], "nextPage": {}, "twitterPreFirstId": 0, "isFetchingSources": false, "keyword": "" }).to.deep.equal(sourceResults());
+            expect({ "data": [], "nextPage": {}, "twitterPreFirstId": 0, "isFetchingSources": false, "keyword": "", "hasMoreSourceResults": true }).to.deep.equal(sourceResults());
         });
 
         it("should return the list of sources when it got the FACEBOOK sources", () => {
-            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
-            let action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources };
-            let state = sourceResults([], action);
-            expect(state.data).to.deep.equal(sources.data);
-            expect(state.nextPage).to.deep.equal(sources.paging);
-            expect(state.isFetchingSources).to.be.false; //eslint-disable-line no-unused-expressions
+            const sources = {
+                "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }],
+                "paging": {},
+                "keyword": "key"
+            };
+            const action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources };
+            const state = sourceResults([], action);
+
+            const expectedResults = {
+                "data": sources.data,
+                "nextPage": sources.paging,
+                "isFetchingSources": false,
+                "keyword": sources.keyword,
+                "twitterPreFirstId": undefined, //eslint-disable-line no-undefined
+                "hasMoreSourceResults": true
+            };
+
+            expect(state).to.deep.equal(expectedResults);
         });
 
         it("should return the list of sources when it got the WEB sources", () => {
-            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
-            let action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources };
-            let state = sourceResults([], action);
-            expect(state.data).to.deep.equal(sources.data);
-            expect(state.nextPage).to.deep.equal(sources.paging);
-            expect(state.isFetchingSources).to.be.false; //eslint-disable-line no-unused-expressions
+            const sources = {
+                "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }],
+                "paging": {},
+                "keyword": "key"
+            };
+            const action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources };
+            const state = sourceResults([], action);
+
+            const expectedResults = {
+                "data": sources.data,
+                "nextPage": sources.paging,
+                "isFetchingSources": false,
+                "keyword": sources.keyword,
+                "twitterPreFirstId": undefined, //eslint-disable-line no-undefined
+                "hasMoreSourceResults": true
+            };
+
+            expect(state).to.deep.equal(expectedResults);
         });
 
         it("should return the list of sources when it got the TWITTER sources", () => {
-            let twitterPreFirstId = 12345;
-            let sources = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }],
+            const sources = {
+                "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }],
                 "paging": {},
-                "twitterPreFirstId": twitterPreFirstId
+                "keyword": "key",
+                "twitterPreFirstId": 12345
             };
-            let action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources };
-            let state = sourceResults([], action);
-            expect(state.data).to.deep.equal(sources.data);
-            expect(state.nextPage).to.deep.equal(sources.paging);
-            expect(state.twitterPreFirstId).to.equal(twitterPreFirstId);
+            const action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources };
+            const state = sourceResults([], action);
+            const expectedResuls = {
+                "data": sources.data,
+                "nextPage": sources.paging,
+                "isFetchingSources": false,
+                "keyword": sources.keyword,
+                "twitterPreFirstId": sources.twitterPreFirstId,
+                "hasMoreSourceResults": true
+            };
+
+            expect(state).to.deep.equal(expectedResuls);
         });
 
         it("should add the added=true property to the configured facebook profile", () => {

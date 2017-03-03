@@ -9,15 +9,12 @@ import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
 import * as SearchResultsSetOperations from "../../src/js/utils/SearchResultsSetOperations";
 import {
-    HAS_MORE_SOURCE_RESULTS,
-    NO_MORE_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("TwitterConfigureActions", () => {
     describe("gotTwitterSourceResults", () => {
-
         it("should return source and type object", () => {
             let pageNumber = 1, twitterPreFirstId = 123, keyword = "india";
             let data = [{
@@ -34,7 +31,7 @@ describe("TwitterConfigureActions", () => {
                 "paging": pageNumber,
                 "twitterPreFirstId": twitterPreFirstId
             };
-            let result = gotTwitterSourceResults(sources, keyword);
+            const result = gotTwitterSourceResults(sources, keyword);
             assert.equal(result.type, TWITTER_GOT_SOURCE_RESULTS);
             assert.deepEqual(result.sources.data, data);
             assert.equal(result.sources.paging, pageNumber);
@@ -70,7 +67,7 @@ describe("TwitterConfigureActions", () => {
             sandbox.restore();
         });
 
-        it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources`, (done) => {
+        it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS} after getting sources`, (done) => {
             let result = {
                 "docs": sourceDocs,
                 "paging": paging,
@@ -88,12 +85,12 @@ describe("TwitterConfigureActions", () => {
                 }
             };
 
-            let store = mockStore({ "configuredSources": { "twitter": [] } }, [{ "type": FETCHING_SOURCE_RESULTS }, gotTwitterSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            const store = mockStore({ "configuredSources": { "twitter": [] } }, [{ "type": FETCHING_SOURCE_RESULTS }, gotTwitterSourcesActionObj], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
             ajaxGetMock.verify();
         });
 
-        it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS}, ${HAS_MORE_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
+        it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
             let result = {
                 "docs": sourceDocs,
                 "paging": paging,
@@ -119,28 +116,26 @@ describe("TwitterConfigureActions", () => {
                     }]
                 }
             };
-            let store = mockStore(getStore, [{ "type": FETCHING_SOURCE_RESULTS }, gotWebSourcesActionObj, { "type": HAS_MORE_SOURCE_RESULTS }], done);
+            const store = mockStore(getStore, [{ "type": FETCHING_SOURCE_RESULTS }, gotWebSourcesActionObj], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
             ajaxGetMock.verify();
         });
 
-        it(`should dispatch ${NO_MORE_SOURCE_RESULTS} if sources are empty`, (done) => {
+        it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if sources are empty`, (done) => {
             let result = { "docs": [], "paging": {}, "twitterPreFirstId": 0 };
             sandbox.mock(SearchResultsSetOperations).expects("intersectionWith");
             ajaxGetMock.returns(Promise.resolve(result));
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
-                { "type": NO_MORE_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
                 done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
         });
 
-        it(`should dispatch ${{ "type": FETCHING_SOURCE_RESULTS_FAILED }} if  fetching handle reject with error`, (done) => {
+        it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if  fetching handle reject with error`, (done) => {
             ajaxGetMock.returns(Promise.reject("error"));
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
-                { "type": NO_MORE_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
                 done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));

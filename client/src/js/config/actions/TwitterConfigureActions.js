@@ -1,8 +1,8 @@
 import AjaxClient from "./../../utils/AjaxClient";
-import { hasMoreSourceResults,
-    noMoreSourceResults,
+import {
     fetchingSources,
-    fetchingSourcesFailed } from "../../sourceConfig/actions/SourceConfigurationActions";
+    fetchingSourcesFailed
+} from "../../sourceConfig/actions/SourceConfigurationActions";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const TWITTER_GOT_SOURCE_RESULTS = "TWITTER_GOT_SOURCE_RESULTS";
@@ -14,7 +14,8 @@ export function gotTwitterSourceResults(sources, keyword) {
         "sources": { "data": sources.docs,
             "paging": sources.paging,
             "twitterPreFirstId": sources.twitterPreFirstId,
-            "keyword": keyword }
+            "keyword": keyword
+        }
     };
 }
 
@@ -29,13 +30,10 @@ export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0)
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotTwitterSourceResults(data, keyword));
-                dispatch(hasMoreSourceResults);
             } else {
-                dispatch(noMoreSourceResults);
                 dispatch(fetchingSourcesFailed(keyword));
             }
-        } catch(err) { //eslint-disable-line un-used-variable
-            dispatch(noMoreSourceResults);
+        } catch(err) {
             dispatch(fetchingSourcesFailed(keyword));
         }
     };

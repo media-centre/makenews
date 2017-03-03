@@ -7,8 +7,6 @@ import AppWindow from "../../utils/AppWindow";
 import R from "ramda"; //eslint-disable-line id-length
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
-export const HAS_MORE_SOURCE_RESULTS = "HAS_MORE_SOURCE_RESULTS";
-export const NO_MORE_SOURCE_RESULTS = "NO_MORE_SOURCE_RESULTS";
 export const CLEAR_SOURCES = "CLEAR_SOURCES";
 export const CHANGE_CURRENT_SOURCE_TAB = "CHANGE_CURRENT_SOURCE_TAB";
 export const WEB = "web";
@@ -26,10 +24,6 @@ export function configuredSourcesReceived(sources) {
         "sources": sources
     };
 }
-
-export const noMoreSourceResults = { "type": NO_MORE_SOURCE_RESULTS };
-
-export const hasMoreSourceResults = { "type": HAS_MORE_SOURCE_RESULTS };
 
 export const clearSources = { "type": CLEAR_SOURCES };
 

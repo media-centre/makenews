@@ -6,7 +6,6 @@ import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle, fetchingWebArticle, fetchingFeeds } from "./newsboard/reducers/DisplayFeedReducers";
 import { configuredSources,
-    hasMoreSourceResults,
     currentSourceTab,
     sourceResults,
     searchInConfiguredSources,
@@ -27,7 +26,6 @@ const contentDiscoveryApp = combineReducers({
     changePassword,
     userProfileStrings,
     configuredSources,
-    hasMoreSourceResults,
     fetchedFeeds,
     addUrlMessage,
     sourceResults,
