@@ -3,6 +3,7 @@ import * as CollectionFeedsRequestHandler from "../../src/collection/CollectionF
 import sinon from "sinon";
 import { assert } from "chai";
 import CouchClient from "../../src/CouchClient";
+import * as Constants from "./../../src/util/Constants";
 
 describe("DeleteSourceHandler", () => {
     let deleteSourceHandler = null, sandbox = null, couchClient = null, accessToken = null;
@@ -20,12 +21,18 @@ describe("DeleteSourceHandler", () => {
 
     describe("deleteSources", () => {
         let getCollectionFeedIdsMock = null, collectionFeedIds = null;
+        const feedsLimitOriginal = Constants.FEED_LIMIT_TO_DELETE_IN_QUERY;
 
         beforeEach("deleteSources", () => {
             collectionFeedIds = ["id2", "id3"];
             sandbox.mock(CouchClient).expects("instance").withExactArgs(accessToken).returns(couchClient);
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient).returns(Promise.resolve(collectionFeedIds));
+            Constants.FEED_LIMIT_TO_DELETE_IN_QUERY = 25;
+        });
+
+        afterEach("deleteSources", () => {
+            Constants.FEED_LIMIT_TO_DELETE_IN_QUERY = feedsLimitOriginal;
         });
 
         it("should delete feeds of the given sources", async () => {

@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
-import { DOCS_PER_REQUEST } from "../util/Constants";
+import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 
 export default class DeleteSourceHandler {
     static instance() {
@@ -45,7 +45,8 @@ export default class DeleteSourceHandler {
                     "$nin": collectionFeedIds
                 }
             },
-            "skip": 0
+            "skip": 0,
+            "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
         };
 
         return await this._findDocuments(couchClient, selector);
@@ -86,8 +87,8 @@ export default class DeleteSourceHandler {
     async _findDocuments(couchClient, selector, docs = []) {
         const docsInReq = await couchClient.findDocuments(selector);
 
-        if(docsInReq.docs.length === DOCS_PER_REQUEST) {
-            const updatedSelector = Object.assign({}, selector, { "skip": selector.skip + DOCS_PER_REQUEST });
+        if(docsInReq.docs.length === FEED_LIMIT_TO_DELETE_IN_QUERY) {
+            const updatedSelector = Object.assign({}, selector, { "skip": selector.skip + FEED_LIMIT_TO_DELETE_IN_QUERY });
             return await this._findDocuments(couchClient, updatedSelector, docs.concat(docsInReq.docs));
         }
 

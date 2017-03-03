@@ -160,9 +160,22 @@ describe("CollectionFeedsRequestHandler", () => {
             const couchClient = CouchClient.instance("accessToken");
             const collectionFeedDocs = { "docs": [{ "feedId": "feedId1" }, { "feedId": "feedId2" }] };
             const expectedFeedIdArray = ["feedId1", "feedId2"];
-            sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(collectionFeedDocs));
+            const selector = {
+                "selector": {
+                    "docType": {
+                        "$eq": "collectionFeed"
+                    }
+                },
+                "fields": ["feedId"],
+                "skip": 0,
+                "limit": 1000
+            };
+            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments")
+                .withExactArgs(selector).returns(Promise.resolve(collectionFeedDocs));
 
             const feedIdArray = await getCollectionFeedIds(couchClient); //eslint-disable-line no-magic-numbers
+
+            findDocsMock.verify();
             assert.deepEqual(feedIdArray, expectedFeedIdArray);
         });
 

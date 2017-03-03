@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
-import { DOCS_PER_REQUEST } from "../util/Constants";
+import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 
 export async function getCollectedFeeds(authSession, collectionName, offset) {
     const couchClient = CouchClient.instance(authSession);
@@ -39,8 +39,8 @@ export async function getCollectionFeedIds(couchClient, feeds = [], skipValue = 
     const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue);
     const feedsAccumulator = feeds.concat(collectionFeedDocs);
 
-    if(collectionFeedDocs.length === DOCS_PER_REQUEST) {
-        return await getCollectionFeedIds(couchClient, feedsAccumulator, skipValue + DOCS_PER_REQUEST);
+    if(collectionFeedDocs.length === FEED_LIMIT_TO_DELETE_IN_QUERY) {
+        return await getCollectionFeedIds(couchClient, feedsAccumulator, skipValue + FEED_LIMIT_TO_DELETE_IN_QUERY);
     }
 
     return R.map(feed => feed.feedId)(feedsAccumulator);
@@ -54,7 +54,8 @@ async function getCollectionFeedDocs(couchClient, skipvalue) {
             }
         },
         "fields": ["feedId"],
-        "skip": skipvalue
+        "skip": skipvalue,
+        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
     };
     const collectionFeedDocs = await couchClient.findDocuments(selector);
     return collectionFeedDocs.docs;
