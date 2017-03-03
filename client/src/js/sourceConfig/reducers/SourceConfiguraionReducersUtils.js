@@ -22,7 +22,7 @@ export function markSourcesAsAdded(sources, sourcesToConfigure, propertyToCompar
 
 export function unmarkDeletedSource(sources, sourceToDelete) {
     return (sources.map((source) => {
-        if(source._id === sourceToDelete._id) {
+        if(source._id === sourceToDelete) {
             source.added = false;
         }
         return source;

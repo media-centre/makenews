@@ -8,17 +8,15 @@ export default class DeleteSourceHandler {
     }
 
     async deleteSources(sources = [], accessToken) {
-        let couchClient = CouchClient.instance(accessToken);
-        let collectionFeedIds = await getCollectionFeedIds(couchClient);
+        const couchClient = CouchClient.instance(accessToken);
+        const collectionFeedIds = await getCollectionFeedIds(couchClient);
         let sourceDocuments = [];
 
-        if(sources.length === 0) { //eslint-disable-line no-magic-numbers
-            sourceDocuments = await this._fetchHashtagSources(couchClient);
-            sources = sourceDocuments.map((hashtag) => { //eslint-disable-line no-param-reassign
-                return hashtag._id;
-            });
-        } else {
+        if (sources.length) {
             sourceDocuments = await this.fetchSourceDocuments(couchClient, sources);
+        } else {
+            sourceDocuments = await this._fetchHashtagSources(couchClient);
+            sources = sourceDocuments.map(hashtag => hashtag._id); //eslint-disable-line no-param-reassign
         }
 
         let feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
@@ -27,7 +25,7 @@ export default class DeleteSourceHandler {
     }
 
     async _getFeedsFromSources(couchClient, sources, collectionFeedIds) {
-        let selector = {
+        const selector = {
             "selector": {
                 "sourceId": {
                     "$in": sources
@@ -54,7 +52,7 @@ export default class DeleteSourceHandler {
     }
 
     async _fetchHashtagSources(couchClient) {
-        let selector = {
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "source"
@@ -65,11 +63,12 @@ export default class DeleteSourceHandler {
             },
             "skip": 0
         };
+
         return await this._findDocuments(couchClient, selector);
     }
 
     async fetchSourceDocuments(couchClient, sources) {
-        let selector = {
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "source"
@@ -84,21 +83,19 @@ export default class DeleteSourceHandler {
         return await this._findDocuments(couchClient, selector);
     }
 
-    async _findDocuments(couchClient, selector) {
-        let allDocs = [], docsObject = {};
+    async _findDocuments(couchClient, selector, docs = []) {
+        const docsInReq = await couchClient.findDocuments(selector);
 
-        do {    //eslint-disable-line no-loops/no-loops
-            docsObject = await couchClient.findDocuments(selector);
-            allDocs = allDocs.concat(docsObject.docs);
-            selector.skip += DOCS_PER_REQUEST;
-        } while (docsObject.docs.length === DOCS_PER_REQUEST);
+        if(docsInReq.docs.length === DOCS_PER_REQUEST) {
+            const updatedSelector = Object.assign({}, selector, { "skip": selector.skip + DOCS_PER_REQUEST });
+            return await this._findDocuments(couchClient, updatedSelector, docs.concat(docsInReq.docs));
+        }
 
-        return allDocs;
+        return docs.concat(docsInReq.docs);
     }
 
     async _deleteDocuments(couchClient, allDocs) {
-
-        let deletedDocuments = allDocs.map((doc) => {
+        const deletedDocuments = allDocs.map((doc) => {
             doc._deleted = true;
             return doc;
         });

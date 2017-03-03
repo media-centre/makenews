@@ -109,7 +109,8 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
         return action.sources;
     }
     case SOURCE_DELETED: {
-        return Object.assign({}, state, action.sources); //eslint-disable-line
+        state[action.sourceType] = removeSource(state[action.sourceType], action.source);
+        return Object.assign({}, state);
     }
     default: return state;
     }
@@ -136,4 +137,8 @@ export function deleteSourceStatus(state = "", action = {}) {
         return action.message;
     }
     return state;
+}
+
+function removeSource(sources, sourceToDelete) {
+    return R.filter(source => source._id !== sourceToDelete, sources);
 }

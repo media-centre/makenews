@@ -150,33 +150,30 @@ describe("CollectionFeedsRequestHandler", () => {
 
 
     describe("getCollectionFeedIds", () => {
+        const sandbox = sinon.sandbox.create();
+
+        afterEach("getCollectionFeedIds", () => {
+            sandbox.restore();
+        });
 
         it("should return array with feed ids", async () => {
-            let couchClient = CouchClient.instance("accessToken");
-            let sandbox = sinon.sandbox.create();
-            let colletionFeedDocs = { "docs": [{ "feedId": "feedId1" }, { "feedId": "feedId2" }] };
-            let expectedFeedIdArray = ["feedId1", "feedId2"];
-            sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(colletionFeedDocs));
-            try {
-                let feedIdArray = await getCollectionFeedIds(couchClient, 0); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(feedIdArray, expectedFeedIdArray);
-            } catch(error) {
-                assert.fail(error);
-            }
+            const couchClient = CouchClient.instance("accessToken");
+            const collectionFeedDocs = { "docs": [{ "feedId": "feedId1" }, { "feedId": "feedId2" }] };
+            const expectedFeedIdArray = ["feedId1", "feedId2"];
+            sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(collectionFeedDocs));
+
+            const feedIdArray = await getCollectionFeedIds(couchClient); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(feedIdArray, expectedFeedIdArray);
         });
 
         it("should return empty array", async () => {
-            let couchClient = CouchClient.instance("accessToken");
-            let sandbox = sinon.sandbox.create();
-            let colletionFeedDocs = { "docs": [] };
-            let expectedFeedIdArray = [];
+            const couchClient = CouchClient.instance("accessToken");
+            const colletionFeedDocs = { "docs": [] };
+            const expectedFeedIdArray = [];
             sandbox.mock(couchClient).expects("findDocuments").returns(Promise.resolve(colletionFeedDocs));
-            try {
-                let feedIdArray = await getCollectionFeedIds(couchClient, 0); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(feedIdArray, expectedFeedIdArray);
-            } catch(error) {
-                assert.fail(error);
-            }
+
+            const feedIdArray = await getCollectionFeedIds(couchClient); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(feedIdArray, expectedFeedIdArray);
         });
     });
 });

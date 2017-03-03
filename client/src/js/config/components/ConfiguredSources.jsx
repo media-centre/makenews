@@ -17,26 +17,25 @@ class ConfiguredSources extends Component {
     }
 
     _renderSources(sourceType, searchKey) {
-        let configuredSourceDOM = (source) => <li className="source-name" key={source._id}>{source.name}
-            <i className="fa fa-times delete-source" onClick={() => {
-                this.props.dispatch(deleteSource(this.props.sources, this.props.currentTab, source));
-            }}
-            /></li>;
+        const configuredSourceDOM = source =>
+            <li className="source-name" key={source._id}>{source.name}
+                <button className="delete-source" title={`Delete ${source.name}`} onClick={() => {
+                    this.props.dispatch(deleteSource(source._id, sourceType));
+                }}
+                >&times;</button>
+            </li>;
+
         if(searchKey) {
-            let key = searchKey.toUpperCase();
-            let configuredSources = source => source.name.toUpperCase().match(key) && source;
+            const key = searchKey.toUpperCase();
+            const configuredSources = source => source.name.toUpperCase().match(key) && source;
             return R.pipe(
                 R.filter(configuredSources),
                 R.map(configuredSourceDOM)
             )(this.props.sources[sourceType]);
         }
-        let filterHashtags = (source) => {
-            if(!source.hashtag) {
-                return source;
-            }
-            return null;
-        };
-        return R.map(configuredSourceDOM, R.filter(filterHashtags, (R.prop(sourceType, this.props.sources))));
+
+        const filterHashtags = source => !source.hashtag;
+        return R.map(configuredSourceDOM, R.filter(filterHashtags, this.props.sources[sourceType]));
     }
 
     _searchInSources(event) {

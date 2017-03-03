@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from "react";
 import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { filteredSources, filterTabSwitch } from "./FilterActions";
-const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import SourceFilters from "./SourceFilters";
 import Input from "./../../utils/components/Input";
 import Toast from "../../utils/custom_templates/Toast";
+
+const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 
 let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
 export class DisplayFilters extends Component {
@@ -105,16 +106,17 @@ export class DisplayFilters extends Component {
 
             if(this.hashtags.indexOf(hashtag) < 0) { //eslint-disable-line no-magic-numbers
                 this.hashtags.push(hashtag);
-                let sourceDoc = {
+                const sourceDoc = {
                     "id": hashtag,
-                    "name": hashtag
+                    "name": hashtag,
+                    "hashtag": true
                 };
                 selectedSources.twitter.add(hashtag);
                 this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
-            }else {
+            } else {
                 Toast.show("Hashtag already exists");
             }
-        }else {
+        } else {
             Toast.show("Hashtag cannot be Empty");
         }
     }

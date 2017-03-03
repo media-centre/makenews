@@ -21,11 +21,10 @@ describe("SourceConfiguraionReducersUtils", () => {
     });
 
     describe("unmarkDeletedSource", () => {
-
         it("should change added property to false when the configure source is deleted", () => {
             let sources = [{ "_id": 1, "name": "Group", "added": true }, { "_id": 2, "name": "Group2" }];
             let expectedSources = [{ "_id": 1, "name": "Group", "added": false }, { "_id": 2, "name": "Group2" }];
-            let sourceToDelete = { "_id": 1 };
+            let sourceToDelete = 1;
             expect(unmarkDeletedSource(sources, sourceToDelete)).to.deep.equal(expectedSources);
         });
     });

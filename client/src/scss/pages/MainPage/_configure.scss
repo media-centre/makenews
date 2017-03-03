@@ -35,12 +35,14 @@
         color: $primary-color-light;
 
         .delete-source {
+          font-size: 1.3em;
+          font-weight: 400;
+          font-style: normal;
           float: right;
           cursor: pointer;
-        }
-
-        &:hover {
-          background: white;
+          padding: 0;
+          border: none;
+          color: $primary-color-light;
         }
       }
     }

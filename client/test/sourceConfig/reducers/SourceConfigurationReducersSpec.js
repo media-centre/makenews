@@ -75,11 +75,12 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should return updated configured sources with deleted sources", () => {
-            state = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
+            state = { "profiles": [{ "_id": 1, "name": "Profile1" }, { "_id": 2, "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
-            let sources = { "profiles": [{ "name": "Profile2" }],
+            const sources = { "profiles": [{ "_id": 2, "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
-            let action = { "type": SOURCE_DELETED, "sources": sources };
+            const action = { "type": SOURCE_DELETED, "source": 1, "sourceType": "profiles" };
+
             expect(configuredSources(state, action)).to.deep.equal(sources);
         });
     });
@@ -237,7 +238,7 @@ describe("SourceConfigurationReducers", () => {
 
         it("should change added to false for the source to be delete", () => {
             let state = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": true }, { "id": 2, "name": "Profile2" }], "paging": {} };
-            let action = { "type": UNMARK_DELETED_SOURCE, "source": { "_id": 1, "name": "Profile" } };
+            let action = { "type": UNMARK_DELETED_SOURCE, "source": 1 };
             let result = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": false }, { "id": 2, "name": "Profile2" }], "paging": {} };
             expect(sourceResults(state, action)).to.deep.equal(result);
 

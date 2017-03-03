@@ -146,28 +146,19 @@ export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) {
     }
 }
 
-export function deleteSource(configuredSources, currentTab, sourceToDelete) {
+export function deleteSource(sourceId, sourceType) {
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    let updatedSources = [];
-
-    if(currentTab === "profiles" || currentTab === "pages" || currentTab === "groups") {
-        updatedSources = getUpdatedSources(configuredSources, "profiles", sourceToDelete._id);
-        updatedSources = getUpdatedSources(configuredSources, "pages", sourceToDelete._id);
-        updatedSources = getUpdatedSources(configuredSources, "groups", sourceToDelete._id);
-    } else {
-        updatedSources = getUpdatedSources(configuredSources, currentTab, sourceToDelete._id);
-    }
 
     return async dispatch => {
-        let ajaxInstance = AjaxClient.instance("/delete-sources");
-        let response = await ajaxInstance.post(headers, { "sources": [sourceToDelete._id] });
+        const ajaxInstance = AjaxClient.instance("/delete-sources");
+        const response = await ajaxInstance.post(headers, { "sources": [sourceId] });
 
         if(response[0] && response[0].ok) { //eslint-disable-line no-magic-numbers
-            dispatch(unmarkSource(sourceToDelete));
-            dispatch(deletedSource(updatedSources));
+            dispatch(unmarkSource(sourceId));
+            dispatch(deletedSource(sourceId, sourceType));
             dispatch(deleteSourceStatus("Deleted Source Successfully"));
         } else {
             dispatch(deleteSourceStatus("Could not delete source"));
@@ -175,29 +166,19 @@ export function deleteSource(configuredSources, currentTab, sourceToDelete) {
     };
 }
 
-function getUpdatedSources(configuredSources, sourceTab, sourceToDeleteId) {
-    let sources = configuredSources[sourceTab].filter((source) => { //eslint-disable-line consistent-return
-        if(source._id !== sourceToDeleteId) {
-            return source;
-        }
-    });
-    if(configuredSources[sourceTab].length !== sources.length) {
-        configuredSources[sourceTab] = sources;
-    }
-    return configuredSources;
-}
 
-function deletedSource(configuredSources) {
+function deletedSource(sourceId, sourceType) {
     return {
         "type": SOURCE_DELETED,
-        "sources": configuredSources
+        "source": sourceId,
+        sourceType
     };
 }
 
-function unmarkSource(sourceToDelete) {
+function unmarkSource(sourceId) {
     return {
         "type": UNMARK_DELETED_SOURCE,
-        "source": sourceToDelete
+        "source": sourceId
     };
 }
 

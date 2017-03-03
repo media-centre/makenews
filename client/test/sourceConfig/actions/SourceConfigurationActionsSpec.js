@@ -268,18 +268,17 @@ describe("SourceConfigurationActions", () => {
     });
 
     describe("deleteSource", () => {
-        let ajaxInstance = null, sandbox = null, configuredSources = null, currentTab = null,
-            sourceToDelete = null, updatedSources = null, getStore = null;
+        let ajaxInstance = null, sandbox = null, configuredSources = null,
+            sourceToDelete = null, getStore = null;
+
         beforeEach("deleteSource", () => {
-            ajaxInstance = AjaxClient.instance("/delete-sources");
             sandbox = sinon.sandbox.create();
-            sandbox.mock(AjaxClient).expects("instance").withExactArgs("/delete-sources").returns(ajaxInstance);
+            ajaxInstance = AjaxClient.instance("/delete-sources");
+            sandbox.stub(AjaxClient, "instance").returns(ajaxInstance);
+
             configuredSources = { "profiles": [], "pages": [], "groups": [], "web": [{ "_id": "wid1" }],
                 "twitter": [{ "_id": "tid1" }, { "_id": "tid2" }] };
-            currentTab = "twitter";
-            sourceToDelete = { "_id": "tid2" };
-            updatedSources = { "profiles": [], "pages": [], "groups": [], "web": [{ "_id": "wid1" }],
-                "twitter": [{ "_id": "tid1" }] };
+            sourceToDelete = { "_id": "tid2", "sourceType": "twitter" };
 
             getStore = {
                 "sourceResults": {
@@ -294,23 +293,22 @@ describe("SourceConfigurationActions", () => {
         });
 
         it("should dispatch unmarkSources, deletedSource, handleMessage for the success response", (done) => {
-
-            let actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete },
-                { "type": sourceConfigActions.SOURCE_DELETED, "sources": updatedSources },
-                { "type": sourceConfigActions.DELETE_SOURCE_STATUS, "message": "Deleted Source Successfully" }];
-
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([{ "ok": true }]));
 
+            const actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete._id },
+                { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" },
+                { "type": sourceConfigActions.DELETE_SOURCE_STATUS, "message": "Deleted Source Successfully" }];
+
             let store = mockStore(getStore, actions, done);
-            store.dispatch(sourceConfigActions.deleteSource(configuredSources, currentTab, sourceToDelete));
+            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType));
         });
 
-        it("should dispatch handleMessge when the could not be deleted", (done) => {
+        it("should dispatch handleMessage when the could not be deleted", (done) => {
             let actions = [{ "type": sourceConfigActions.DELETE_SOURCE_STATUS, "message": "Could not delete source" }];
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([]));
 
             let store = mockStore(getStore, actions, done);
-            store.dispatch(sourceConfigActions.deleteSource(configuredSources, currentTab, sourceToDelete));
+            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType));
         });
     });
 });

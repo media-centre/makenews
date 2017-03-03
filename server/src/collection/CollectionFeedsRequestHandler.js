@@ -34,24 +34,20 @@ async function getFeedIds(couchClient, collectionName, offset) {
     return await couchClient.findDocuments(selector);
 }
 
-export async function getCollectionFeedIds(couchClient) {
-    let skipValue = 0;
-    let allCollectionFeedDocs = [], collectionFeedDocs = [];
+export async function getCollectionFeedIds(couchClient, feeds = [], skipValue = 0) { // eslint-disable-line no-magic-numbers
 
-    do { //eslint-disable-line no-loops/no-loops
-        collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue);
-        allCollectionFeedDocs = allCollectionFeedDocs.concat(collectionFeedDocs);
-        skipValue += DOCS_PER_REQUEST;
-    } while (collectionFeedDocs.length === DOCS_PER_REQUEST);
+    const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue);
+    const feedsAccumulator = feeds.concat(collectionFeedDocs);
 
-    let feedId = collectionFeedDoc => {
-        return R.prop("feedId", collectionFeedDoc);
-    };
-    return R.map(feedId, allCollectionFeedDocs);
+    if(collectionFeedDocs.length === DOCS_PER_REQUEST) {
+        return await getCollectionFeedIds(couchClient, feedsAccumulator, skipValue + DOCS_PER_REQUEST);
+    }
+
+    return R.map(feed => feed.feedId)(feedsAccumulator);
 }
 
 async function getCollectionFeedDocs(couchClient, skipvalue) {
-    let selector = {
+    const selector = {
         "selector": {
             "docType": {
                 "$eq": "collectionFeed"
@@ -60,6 +56,6 @@ async function getCollectionFeedDocs(couchClient, skipvalue) {
         "fields": ["feedId"],
         "skip": skipvalue
     };
-    let collectionFeedDocs = await couchClient.findDocuments(selector);
+    const collectionFeedDocs = await couchClient.findDocuments(selector);
     return collectionFeedDocs.docs;
 }

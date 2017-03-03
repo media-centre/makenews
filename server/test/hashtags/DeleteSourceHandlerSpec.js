@@ -27,6 +27,7 @@ describe("DeleteSourceHandler", () => {
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient).returns(Promise.resolve(collectionFeedIds));
         });
+
         it("should delete feeds of the given sources", async () => {
             let sources = ["newsClick"];
             let sourcesDoc = { "docs": [{ "_id": "source1" }] };
@@ -38,15 +39,12 @@ describe("DeleteSourceHandler", () => {
 
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
-            try {
-                let res = await deleteSourceHandler.deleteSources(sources, accessToken);
-                assert.deepEqual(res, { "ok": true });
-                getCollectionFeedIdsMock.verify();
-                findMock.verify();
-                saveMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            let res = await deleteSourceHandler.deleteSources(sources, accessToken);
+
+            getCollectionFeedIdsMock.verify();
+            findMock.verify();
+            saveMock.verify();
+            assert.deepEqual(res, { "ok": true });
         });
 
         it("should delete hashtag feed when the sources are empty", async () => {
@@ -60,13 +58,10 @@ describe("DeleteSourceHandler", () => {
             findMock.onThirdCall().returns(Promise.resolve(sourcesDoc));
 
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            try {
-                let response = await deleteSourceHandler.deleteSources([], accessToken);
-                assert.deepEqual(response, { "ok": true });
-                saveMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+
+            const response = await deleteSourceHandler.deleteSources([], accessToken);
+            assert.deepEqual(response, { "ok": true });
+            saveMock.verify();
         });
 
         it("should iterate the findDocuments if the current result is 25 ", async () => {
@@ -86,16 +81,12 @@ describe("DeleteSourceHandler", () => {
 
             let saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
-            try {
-                let response = await deleteSourceHandler.deleteSources(sources, accessToken);
-                assert.deepEqual(response, { "ok": true });
-                findDocs.verify();
-                saveDocs.verify();
-                getCollectionFeedIdsMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const response = await deleteSourceHandler.deleteSources(sources, accessToken);
+
+            findDocs.verify();
+            saveDocs.verify();
+            getCollectionFeedIdsMock.verify();
+            assert.deepEqual(response, { "ok": true });
         });
     });
-
 });
