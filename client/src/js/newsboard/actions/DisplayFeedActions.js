@@ -7,6 +7,7 @@ export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 export const FETCHING_FEEDS = "FETCHING_FEEDS";
 export const SEARCHED_FEEDS = "SEARCHED_FEEDS";
+const DEFAULT_PAGE_SIZE = 25;
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds
@@ -75,9 +76,8 @@ function _getFeeds(ajaxClient, params, callback) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             }
-            const defaultPageSize = 25;
-            result.hasMoreFeeds = feeds.docs.length === defaultPageSize;
-            return callback(result); //eslint-disable-line callback-return
+            result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
+            return callback(result);
         } catch(err) {
             dispatch(paginatedFeeds([]));
             return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
@@ -87,15 +87,24 @@ function _getFeeds(ajaxClient, params, callback) {
     };
 }
 
-export function searchFeeds(sourceType, searchKey, offset) {
+export function searchFeeds(sourceType, searchKey, offset, callback) {
     return async dispatch => {
+        let result = {
+            "docsLength": 0
+        };
         let ajax = AjaxClient.instance("/search-feeds");
         try {
             let feeds = await ajax.get({ sourceType, searchKey, offset });
-            dispatch(searchedFeeds(feeds.docs));
+            if(feeds.docs.length) {
+                dispatch(searchedFeeds(feeds.docs));
+                result.docsLength = feeds.docs.length;
+            }
+            result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
+            return callback(result);
         } catch (err) {
             Toast.show(err.message);
             dispatch(clearFeeds());
+            return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
         }
     };
 }

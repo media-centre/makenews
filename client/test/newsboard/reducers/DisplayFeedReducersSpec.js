@@ -5,60 +5,48 @@ import {
     fetchingWebArticle,
     fetchingFeeds
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
-import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE, FETCHING_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE, FETCHING_FEEDS, SEARCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import { BOOKMARKED_ARTICLE, WEB_ARTICLE_REQUESTED, WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
 describe("DisplayFeedReducer", () => {
+    let feeds = null;
+
     describe("Fetched Feeds", () => {
+        beforeEach("Fetched Feeds", () => {
+            feeds = [{
+                "_id": "123",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test.com/rss"
+            }, {
+                "_id": "1234",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test3.com/rss"
+            }];
+        });
+
         it("should return an empty list when fetched feeds called without any action type", () => {
             expect(fetchedFeeds()).to.deep.equal([]);
         });
 
         it("should return feeds when action type is paginated fetched feeds", () => {
-            let feeds = [{
-                "_id": "123",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test.com/rss"
-            }, {
-                "_id": "1234",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test3.com/rss"
-            }];
             let action = { "type": "PAGINATED_FETCHED_FEEDS", feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
 
-        it("should return feeds when action type is paginated fetched feeds", () => {
-            let state = [{
-                "_id": "123",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test.com/rss"
-            }, {
-                "_id": "1234",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test3.com/rss"
-            }];
-
-            let modifiedState = [{
-                "_id": "123",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test.com/rss",
-                "bookmark": true
-            }, {
-                "_id": "1234",
-                "sourceType": "rss",
-                "docType": "feed",
-                "sourceUrl": "http://www.test3.com/rss"
-            }];
+        it("should return feeds when action type is bookmarked_article feeds", () => {
+            let state = feeds;
+            let modifiedState = feeds;
 
             let action = { "type": BOOKMARKED_ARTICLE, "articleId": "123", "bookmarkStatus": true };
             expect(fetchedFeeds(state, action)).to.deep.equal(modifiedState);
+        });
+
+        it("should return feeds when type searched feeds", () => {
+            let action = { "type": SEARCHED_FEEDS, feeds };
+            expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
     });
 

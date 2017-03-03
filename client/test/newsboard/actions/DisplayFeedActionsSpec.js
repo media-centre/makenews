@@ -114,13 +114,19 @@ describe("DisplayFeedActions", () => {
                 };
 
                 let ajaxClientInstance = AjaxClient.instance("/search-feeds");
-                let ajaxClientMock = sandbox.mock(AjaxClient);
-                ajaxClientMock.expects("instance").returns(ajaxClientInstance);
-                let getMock = sandbox.mock(ajaxClientInstance);
-                getMock.expects("get").returns(Promise.resolve(feeds));
+                sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
+                let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(feeds));
 
                 let store = mockStore([], [{ "type": SEARCHED_FEEDS, "feeds": feeds.docs }], done);
-                store.dispatch(searchFeeds({ sourceType, keyword, offset }));
+                store.dispatch(searchFeeds(sourceType, keyword, offset, (result) => {
+                    try {
+                        assert.strictEqual(result.docsLength, 2); //eslint-disable-line no-magic-numbers
+                        assert.isFalse(result.hasMoreFeeds);
+                    } catch (err) {
+                        done(err);
+                    }
+
+                }));
                 getMock.verify();
             });
 

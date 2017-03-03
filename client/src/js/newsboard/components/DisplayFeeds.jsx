@@ -77,7 +77,7 @@ export class DisplayFeeds extends Component {
                 this.timer = null;
                 const scrollTop = this.feedsDOM.scrollTop;
                 if (scrollTop && scrollTop + this.feedsDOM.clientHeight >= this.feedsDOM.scrollHeight) {
-                    this.getMoreFeeds(this.props.sourceType);
+                    this.state.search ? this.searchFeeds() : this.getMoreFeeds(this.props.sourceType);//eslint-disable-line no-unused-expressions
                 }
             }, scrollTimeInterval);
         }
@@ -153,21 +153,31 @@ export class DisplayFeeds extends Component {
     checkEnterKey(event) {
         const ENTERKEY = 13;
         if (event.keyCode === ENTERKEY) {
-            this.updateSearch();
+            this.updateSearchState();
             this.searchFeeds();
         }
     }
 
-    updateSearch() {
-        this.props.dispatch(DisplayFeedActions.clearFeeds());
-        this.offset = 0;
-        this.setState({ "search": !this.state.search });
+    updateSearchState() {
+        const searchKey = this.refs.searchFeeds.value;
+        if(!StringUtils.isEmptyString(searchKey)) {
+            this.offset = 0;
+            this.searchOffset = 0;
+            this.hasMoreSearchFeeds = true;
+            this.props.dispatch(DisplayFeedActions.clearFeeds());
+            this.setState({ "search": !this.state.search });
+        }
     }
 
     searchFeeds() {
         const searchKey = this.refs.searchFeeds.value;
-        if(!StringUtils.isEmptyString(searchKey)) {
-            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, this.offset));
+        let callback = (result) => {
+            this.searchOffset = result.docsLength ? (this.searchOffset + result.docsLength) : this.searchOffset;
+            this.hasMoreSearchFeeds = result.hasMoreFeeds;
+        };
+
+        if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(searchKey)) {
+            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, this.searchOffset, callback));
         }
     }
 
@@ -179,8 +189,8 @@ export class DisplayFeeds extends Component {
                     <div className="input-box">
                         <input type="text" ref="searchFeeds" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={"Search Keywords,Articles etc."}/>
                         {this.state.search
-                            ? <span className="input-addon" onClick={() => { this.updateSearch(); this.getMoreFeeds(this.props.sourceType); }}><i className="fa fa-times" aria-hidden="true"/></span>
-                            : <span className="input-addon" onClick={() => { this.updateSearch(); this.searchFeeds(); }}><i className="fa fa-search" aria-hidden="true"/></span>
+                            ? <span className="input-addon" onClick={() => { this.updateSearchState(); this.refs.searchFeeds.value = ""; this.getMoreFeeds(this.props.sourceType); }}><i className="fa fa-times" aria-hidden="true"/></span>
+                            : <span className="input-addon" onClick={() => { this.updateSearchState(); this.searchFeeds(); }}><i className="fa fa-search" aria-hidden="true"/></span>
                         }
                     </div>
                 </div>

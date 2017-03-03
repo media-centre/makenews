@@ -58,7 +58,7 @@ export default class FeedsRequestHandler {
 
     async searchFeeds(authSession, sourceType, searchKey, skip) {
         let result = { };
-        const queryString = searchKey === "" ? "*/*" : `${searchKey}*`;
+        const queryString = searchKey === "" ? "*/*" : `${searchKey}`;
         const keyQuery = `title:${queryString} OR description:${queryString}`;
 
         const query = {

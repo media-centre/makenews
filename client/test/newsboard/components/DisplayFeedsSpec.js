@@ -120,9 +120,12 @@ describe("DisplayFeeds", () => {
         });
 
         it("should dispatch search feeds", () => {
+            let searchKey = "test";
+            let offset = 0, sourceType = "web";
             let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
             inputBox.value = "test";
-            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("searchFeeds").returns({ "type": "" });
+            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("searchFeeds")
+                .withArgs(sourceType, searchKey, offset).returns({ "type": "" });
             let addOn = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
             TestUtils.Simulate.click(addOn);
 
@@ -135,6 +138,8 @@ describe("DisplayFeeds", () => {
                     <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
                 </Provider>);
 
+            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
+            inputBox.value = "test";
             let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("displayFeedsByPage").returns({ "type": "" });
             let search = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
             TestUtils.Simulate.click(search);

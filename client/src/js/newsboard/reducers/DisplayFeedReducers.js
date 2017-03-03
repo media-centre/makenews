@@ -19,7 +19,7 @@ export function fetchedFeeds(state = [], action = {}) {
     case PAGINATED_FETCHED_FEEDS:
         return Object.assign([], List(state).concat(action.feeds).toArray());  //eslint-disable-line new-cap
     case SEARCHED_FEEDS:
-        return Object.assign([], action.feeds);  //eslint-disable-line new-cap
+        return Object.assign([], List(state).concat(action.feeds).toArray()); //eslint-disable-line new-cap
     case CLEAR_NEWS_BOARD_FEEDS:
         return [];
     case BOOKMARKED_ARTICLE: {
