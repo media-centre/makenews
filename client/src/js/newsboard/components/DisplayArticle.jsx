@@ -63,7 +63,7 @@ export class DisplayArticle extends Component {
 
                 : <header className={`${this.articleClass}__header`}>
                     <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-                        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab));
+                        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
                     }}
                     >
                         <i className="icon fa fa-folder-o"/> Add to collection

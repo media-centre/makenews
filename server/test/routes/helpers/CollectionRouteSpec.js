@@ -10,6 +10,7 @@ describe("CollectionRoute", () => {
     describe("addToCollection", () => {
         let request = null, response = null, docId = null, collectionName = null;
         let authSession = null, collectionRoute = null, collectionRequestHandler = null, sandbox = null;
+        const sourceId = "http://www.thehindu.com/?service=rss";
 
         beforeEach("addToCollection", () => {
             docId = "docId";
@@ -20,7 +21,8 @@ describe("CollectionRoute", () => {
                 "body": {
                     "docId": docId,
                     "collection": collectionName,
-                    "isNewCollection": true
+                    "isNewCollection": true,
+                    "sourceId": sourceId
                 },
                 "cookies": {
                     "AuthSession": authSession
@@ -37,16 +39,14 @@ describe("CollectionRoute", () => {
 
         it("should return success response when collection is successfully updated", async() => {
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
-            let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, docId, collectionName, true)
+            const updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
+                .withExactArgs(authSession, collectionName, true, docId, sourceId)
                 .returns(Promise.resolve({ "ok": true }));
-            try {
-                await collectionRoute.addToCollection();
-                assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
-                updateMock.verify();
-            } catch (error) {
-                assert.fail(error);
-            }
+            
+            await collectionRoute.addToCollection();
+            
+            updateMock.verify();
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
         });
 
         it("should throw bad request when there is no collection", async() => {
@@ -70,7 +70,7 @@ describe("CollectionRoute", () => {
         it("should throw bad request when collection is not updated", async() => {
             sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, docId, collectionName, true)
+                .withExactArgs(authSession, collectionName, true, docId, sourceId)
                 .returns(Promise.reject({ "error": "failed to update" }));
             try {
                 await collectionRoute.addToCollection();

@@ -6,19 +6,20 @@ export default class CollectionRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.authSession = this.request.cookies.AuthSession;
-        this.docId = this.request.body.docId;
-        this.collection = this.request.body.collection;
-        this.isNewCollection = this.request.body.isNewCollection;
+        const body = this.request.body;
+        this.docId = body.docId;
+        this.collection = body.collection;
+        this.isNewCollection = body.isNewCollection;
+        this.sourceId = body.sourceId;
     }
 
     async addToCollection() {
-        let response = null;
         try {
             if(!this.collection) {
                 this._handleBadRequest();
                 return;
             }
-            response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.docId, this.collection, this.isNewCollection);
+            const response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.collection, this.isNewCollection, this.docId, this.sourceId);
             RouteLogger.instance().debug(`CollectionRoute:: successfully added feed ${this.docId} to the collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {
@@ -29,7 +30,7 @@ export default class CollectionRoute extends Route {
 
     async getAllCollections() {
         try {
-            let response = await CollectionRequestHandler.instance().getAllCollections(this.authSession);
+            const response = await CollectionRequestHandler.instance().getAllCollections(this.authSession);
             RouteLogger.instance().debug(`CollectionRoute:: successfully fetched all collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {

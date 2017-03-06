@@ -7,38 +7,47 @@ export default class CollectionRequestHandler {
         return new CollectionRequestHandler();
     }
 
-    async updateCollection(authSession, docId, collectionName, isNewCollection) {
-        let couchClient = CouchClient.instance(authSession);
+    async updateCollection(authSession, collectionName, isNewCollection, docId, sourceId) {
+        const couchClient = CouchClient.instance(authSession);
         let collectionDoc = await this.getCollectionDoc(couchClient, collectionName);
         let collectionDocId = collectionDoc.docs.length ? collectionDoc.docs[0]._id : 0; //eslint-disable-line no-magic-numbers
 
         if(isNewCollection && collectionDocId) {
             return { "message": "collection already exists with this name" };
         }
-        return await this.createCollection(couchClient, docId, collectionName, collectionDocId); /* TODO:split the create collection and create intermediate doc*/ //eslint-disable-line
+
+        if(!docId && !collectionDocId) {
+            return await this.createCollection(couchClient, collectionName);
+        }
+
+        if(docId && collectionDocId) {
+            return await this.createCollectionFeedDoc(couchClient, collectionDocId, collectionName, docId, sourceId);
+        }
+        collectionDocId = await this.createCollection(couchClient, collectionName);
+        return await this.createCollectionFeedDoc(couchClient, collectionDocId, collectionName, docId, sourceId);
     }
 
-    async createCollection(couchClient, feedDocId, collectionName, collectionDocId) {
-        let collectionDoc = {
+    async createCollection(couchClient, collectionName) {
+        const collectionDoc = {
             "docType": "collection",
-            "collection": collectionName };
-        let collectionFeedDoc = {
+            "collection": collectionName
+        };
+
+        const response = await couchClient.updateDocument(collectionDoc);
+        return response.id;
+    }
+
+    async createCollectionFeedDoc(couchClient, collectionId, collectionName, feedId, sourceId) {
+        const collectionFeedDoc = {
             "docType": "collectionFeed",
-            "feedId": feedDocId,
-            "collection": collectionName };
-        let feedCollectionId = null;
+            "feedId": feedId,
+            "collection": collectionName,
+            "sourceId": sourceId
+        };
+
+        const feedCollectionId = feedId + collectionId;
         try {
-            if (feedDocId && collectionDocId) {
-                feedCollectionId = feedDocId + collectionDocId;
-                await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
-            } else if (feedDocId) {
-                let response = await couchClient.updateDocument(collectionDoc); /* TODO: change the updateDoc to createDoc*/ //eslint-disable-line
-                feedCollectionId = feedDocId + response.id;
-                await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
-            } else {
-                await couchClient.updateDocument(collectionDoc);
-            }
-            return { "ok": true };
+            return await couchClient.saveDocument(feedCollectionId, collectionFeedDoc);
         } catch(error) {
             if(HttpResponseHandler.codes.CONFLICT === error.status) {
                 return { "message": "article already added to that collection" };

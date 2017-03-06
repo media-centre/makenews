@@ -64,15 +64,16 @@ export function articleReceived(article, isHTML = false) {
 
 export function addToCollection(collection, article, isNewCollection = false) {
     return async dispatch => {
-        let ajaxClient = AjaxClient.instance("/collection");
+        const ajaxClient = AjaxClient.instance("/collection");
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        let response = await ajaxClient.put(headers, {
+        const response = await ajaxClient.put(headers, {
             "collection": collection,
             "docId": article.id,
-            "isNewCollection": isNewCollection
+            "isNewCollection": isNewCollection,
+            "sourceId": article.sourceId
         });
         if(response.ok === true && article.id) {
             dispatch(handleMessages("Successfully added feed to collection"));
@@ -86,7 +87,7 @@ export function addToCollection(collection, article, isNewCollection = false) {
         } else {
             dispatch(handleMessages("Failed add feed to collection"));
         }
-        dispatch(addArticleToCollection("", ""));
+        dispatch(addArticleToCollection("", "", ""));
         dispatch(handleMessages(""));
     };
 }
@@ -98,9 +99,9 @@ export function handleMessages(message) {
     };
 }
 
-export function addArticleToCollection(articleId, articleSourceType) {
+export function addArticleToCollection(articleId, sourceType, sourceId) {
     return {
         "type": ADD_ARTICLE_TO_COLLECTION,
-        "addArticleToCollection": { "id": articleId, "sourceType": articleSourceType }
+        "addArticleToCollection": { "id": articleId, sourceType, sourceId }
     };
 }

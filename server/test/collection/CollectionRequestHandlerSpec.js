@@ -7,7 +7,7 @@ import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 describe("CollectionRequestHandler", () => {
     describe("updateCollection", () => {
         let collectionRequestHandler = null, authSession = null, docId = null, collectionName = null;
-        let sandbox = null, couchClient = null;
+        let sandbox = null, couchClient = null, sourceId = "http://www.thehindu.com/?service=rss";
         beforeEach("updateCollection", () => {
             authSession = "auth session";
             docId = "doc id";
@@ -23,33 +23,56 @@ describe("CollectionRequestHandler", () => {
         });
 
         it("should throw error if isNewCollection is true and collection id Exist", async () => {
-            let collectionDoc = [{ "_id": "collection id", "collection": "first collection" }];
-            let findDocMock = sandbox.mock(couchClient).expects("findDocuments")
+            const collectionDoc = [{ "_id": "collection id", "collection": "first collection" }];
+            const findDocMock = sandbox.mock(couchClient).expects("findDocuments")
                 .returns(Promise.resolve({ "docs": collectionDoc }));
 
-            try {
-                let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName, true);
-                assert.deepEqual(response, { "message": "collection already exists with this name" });
-                findDocMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, true, docId, "");
+            assert.deepEqual(response, { "message": "collection already exists with this name" });
+            findDocMock.verify();
         });
 
-        it("should create doc when there is isCollection is false or no collectionId", async () => {
-            let createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
-                .returns(Promise.resolve({ "ok": true }));
-            let findDocMock = sandbox.mock(couchClient).expects("findDocuments")
-                .returns(Promise.resolve({ "docs": [] }));
+        it("should create collectionDoc", async () => {
+            const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
+                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [] }));
+            const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
+                .withExactArgs(couchClient, collectionName).returns(Promise.resolve("1234"));
 
-            try {
-                let response = await collectionRequestHandler.updateCollection(authSession, docId, collectionName, false);
-                assert.deepEqual(response, { "ok": true });
-                createCollectionMock.verify();
-                findDocMock.verify();
-            } catch(error) {
-                assert.fail();
-            }
+            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, "", "");
+
+            getCollectionMock.verify();
+            createCollectionMock.verify();
+            assert.deepEqual(response, "1234");
+        });
+
+        it("should create collectionFeedDoc when the collection already exists", async () => {
+
+            const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
+                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [{ "_id": "123455" }] }));
+            const collectionFeedDocMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedDoc")
+               .returns(Promise.resolve({ "ok": true }));
+
+            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, docId, sourceId);
+
+            getCollectionMock.verify();
+            collectionFeedDocMock.verify();
+            assert.deepEqual(response, { "ok": true });
+        });
+
+        it("should create collectionDoc and collectionFeedDoc", async () => {
+            const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
+                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [] }));
+            const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
+                .withExactArgs(couchClient, collectionName).returns(Promise.resolve("1234"));
+            const collectionFeedDocMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedDoc")
+                .returns(Promise.resolve({ "ok": true }));
+
+            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, docId, sourceId);
+
+            getCollectionMock.verify();
+            collectionFeedDocMock.verify();
+            createCollectionMock.verify();
+            assert.deepEqual(response, { "ok": true });
         });
     });
 
@@ -65,98 +88,76 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should create collectionFeed doc when there is docId and collectionId", async () => {
-            let docId = "doc id";
-            let collectionName = "collection name";
-            let collectionId = 123;
-            let collectionFeedId = "doc id123";
-            let collectionFeedDoc = {
-                "docType": "collectionFeed",
-                "feedId": docId,
+        it("should return collection id after creating collection", async () => {
+            const collectionName = "collection name";
+            const collectionDoc = {
+                "docType": "collection",
                 "collection": collectionName };
 
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
+            const updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
+                .withExactArgs(collectionDoc).returns(Promise.resolve({ "id": "123" }));
+
+            const response = await collectionRequestHandler.createCollection(couchClient, collectionName); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(response, "123");
+            updateDocMock.verify();
+        });
+    });
+
+    describe("createCollectionFeedDoc", () => {
+        let sandbox = null, couchClient = null, collectionRequestHandler = null;
+        beforeEach("createCollectionFeedDoc", () => {
+            collectionRequestHandler = new CollectionRequestHandler();
+            couchClient = new CouchClient("auth session");
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach("createCollectionFeedDoc", () => {
+            sandbox.restore();
+        });
+
+        it("should create collectionFeed doc when there is docId and collectionId", async () => {
+            const docId = "doc id";
+            const feedSourceId = "http://www.thehindu.com/?service=rss";
+            const collectionName = "collection name";
+            const collectionId = 123;
+            const collectionFeedId = "doc id123";
+            const collectionFeedDoc = {
+                "docType": "collectionFeed",
+                "feedId": docId,
+                "collection": collectionName,
+                "sourceId": feedSourceId };
+
+            const saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
                 .withExactArgs(collectionFeedId, collectionFeedDoc)
                 .returns(Promise.resolve({ "ok": true }));
 
-            try {
-                let response = await collectionRequestHandler.createCollection(couchClient, docId, collectionName, collectionId);
-                assert.deepEqual(response, { "ok": true });
-                saveDocMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, feedSourceId);
+            assert.deepEqual(response, { "ok": true });
+            saveDocMock.verify();
         });
 
-        it("should create collectionDoc and collectionFeedDoc when there is docId and no collection Id", async () => {
-            let docId = "doc id";
-            let collectionName = "collection name";
-            let updateDocResponse = { "id": "docId" };
-            let collectionDoc = {
-                "docType": "collection",
-                "collection": collectionName };
-            let collectionFeedDoc = {
-                "docType": "collectionFeed",
-                "feedId": docId,
-                "collection": collectionName };
-            let feedCollectionId = "doc iddocId";
+        it("should return article already added if the article already added to same collection", async () => {
+            const docId = "doc id";
+            const sourceId = "1123455";
+            const collectionId = "collection id";
+            const collectionName = "collection name";
+            const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
+                .returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT, "message": "conflict" }));
 
-            let updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
-                .withExactArgs(collectionDoc)
-                .returns(Promise.resolve(updateDocResponse));
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
-                .withExactArgs(feedCollectionId, collectionFeedDoc);
-
-            try {
-                let response = await collectionRequestHandler.createCollection(couchClient, docId, collectionName, 0); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(response, { "ok": true });
-                updateDocMock.verify();
-                saveDocMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
-        });
-
-        it("should create collectionDoc when there is no docId and collectionId", async () => {
-            let collectionName = "collection name";
-            let collectionDoc = {
-                "docType": "collection",
-                "collection": collectionName };
-
-            let updateDocMock = sandbox.mock(couchClient).expects("updateDocument").withExactArgs(collectionDoc);
-
-            try {
-                let response = await collectionRequestHandler.createCollection(couchClient, "", collectionName, 0); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(response, { "ok": true });
-                updateDocMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
-        });
-
-        it("should return article already added when db throws conflict", async () => {
-            let docId = "doc id";
-            let collecitonId = "collection id";
-            let collecitonName = "collection name";
-            let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
-               .returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT, "message": "conflict" }));
-            try {
-                let response = await collectionRequestHandler.createCollection(couchClient, docId, collecitonName, collecitonId);
-                assert.deepEqual(response, { "message": "article already added to that collection" });
-                saveDocumentMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, sourceId);
+            assert.deepEqual(response, { "message": "article already added to that collection" });
+            saveDocumentMock.verify();
         });
 
         it("should throw error when there is error from db other than conflict", async () => {
-            let docId = "doc id";
-            let collecitonId = "collection id";
-            let collecitonName = "collection name";
-            let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
-               .returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" }));
+            const docId = "doc id";
+            const sourceId = "1233455";
+            const collectionId = "collection id";
+            const collectionName = "collection name";
+            const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
+                .returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" }));
             try {
-                await collectionRequestHandler.createCollection(couchClient, docId, collecitonName, collecitonId);
+                await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, sourceId);
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(error, { "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" });
