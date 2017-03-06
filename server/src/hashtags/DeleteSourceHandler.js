@@ -1,10 +1,16 @@
 import CouchClient from "../CouchClient";
 import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
+import R from "ramda"; //eslint-disable-line id-length
+import Logger from "../logging/Logger";
 
 export default class DeleteSourceHandler {
     static instance() {
         return new DeleteSourceHandler();
+    }
+
+    static logger() {
+        return Logger.instance("DeleteSourceHandler");
     }
 
     async deleteSources(sources = [], accessToken) {
@@ -19,9 +25,15 @@ export default class DeleteSourceHandler {
         }
         const collectionFeedIds = await getCollectionFeedIds(couchClient, sources);
 
-        let feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
-        let docsToBeDeleted = feedDocuments.concat(sourceDocuments);
-        return await this._deleteDocuments(couchClient, docsToBeDeleted);
+        const feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
+        const docsToBeDeleted = feedDocuments.concat(sourceDocuments);
+        await this._deleteDocuments(couchClient, docsToBeDeleted);
+        try {
+            await this.markAsSourceDeleted(couchClient, sources);
+        } catch(err) {
+            DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
+        }
+        return { "ok": true };
     }
 
     async _getFeedsFromSources(couchClient, sources, collectionFeedIds) {
@@ -105,5 +117,25 @@ export default class DeleteSourceHandler {
         });
 
         return await couchClient.saveBulkDocuments({ "docs": deletedDocuments });
+    }
+
+    async markAsSourceDeleted(couchClient, sources) {
+        const selector = {
+            "selector": {
+                "sourceId": {
+                    "$in": sources
+                }
+            },
+            "skip": 0,
+            "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
+        };
+
+        const feeds = await this._findDocuments(couchClient, selector);
+        const markedFeeds = R.map(feed => {
+            feed.sourceDeleted = true;
+            return feed;
+        })(feeds);
+
+        return await couchClient.saveBulkDocuments({ "docs": markedFeeds });
     }
 }

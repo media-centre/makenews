@@ -7,9 +7,7 @@ chai.use(chaiAsPromised);
 
 describe("FeedsRequestHandler", () => {
     describe("fetch feeds", () => {
-        let feed = null;
-        let authSession = null;
-        let feedsRequestHandler = null;
+        let feed = null, authSession = null, feedsRequestHandler = null;
         let couchClientInstanceMock = null;
         let dbName = "dbName", body = null;
         let offset = null, sourceType = "web";
@@ -30,6 +28,17 @@ describe("FeedsRequestHandler", () => {
                 "selector": {
                     "docType": {
                         "$eq": "feed"
+                    },
+                    "sourceDeleted": {
+                        "$or": [
+                            {
+                                "$exists": false
+                            },
+                            {
+                                "$exists": true,
+                                "$eq": false
+                            }
+                        ]
                     },
                     "pubDate": {
                         "$gt": null
@@ -73,6 +82,17 @@ describe("FeedsRequestHandler", () => {
                     "docType": {
                         "$eq": "feed"
                     },
+                    "sourceDeleted": {
+                        "$or": [
+                            {
+                                "$exists": false
+                            },
+                            {
+                                "$exists": true,
+                                "$eq": false
+                            }
+                        ]
+                    },
                     "pubDate": {
                         "$gt": null
                     },
@@ -100,6 +120,17 @@ describe("FeedsRequestHandler", () => {
                 "selector": {
                     "docType": {
                         "$eq": "feed"
+                    },
+                    "sourceDeleted": {
+                        "$or": [
+                            {
+                                "$exists": false
+                            },
+                            {
+                                "$exists": true,
+                                "$eq": false
+                            }
+                        ]
                     },
                     "pubDate": {
                         "$gt": null

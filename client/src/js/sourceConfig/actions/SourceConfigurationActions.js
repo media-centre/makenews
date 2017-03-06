@@ -159,7 +159,7 @@ export function deleteSource(sourceId, sourceType, event) {
         const ajaxInstance = AjaxClient.instance("/delete-sources");
         try {
             const response = await ajaxInstance.post(headers, { "sources": [sourceId] });
-            if(response[0] && response[0].ok) { //eslint-disable-line no-magic-numbers
+            if(response.ok) {
                 dispatch(unmarkSource(sourceId));
                 dispatch(deletedSource(sourceId, sourceType));
             } else {

@@ -12,6 +12,17 @@ export default class FeedsRequestHandler {
                 "docType": {
                     "$eq": "feed"
                 },
+                "sourceDeleted": {
+                    "$or": [
+                        {
+                            "$exists": false
+                        },
+                        {
+                            "$exists": true,
+                            "$eq": false
+                        }
+                    ]
+                },
                 "pubDate": {
                     "$gt": null
                 }

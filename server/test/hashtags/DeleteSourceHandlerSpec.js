@@ -99,5 +99,30 @@ describe("DeleteSourceHandler", () => {
             getCollectionFeedIdsMock.verify();
             assert.deepEqual(response, { "ok": true });
         });
+        
+        it("should add sourceDeleted true prop to the collection and bookmarked feeds", async () => {
+            const sources = ["newsClick"];
+            const selector = {
+                "selector": {
+                    "sourceId": {
+                        "$in": sources
+                    }
+                },
+                "skip": 0,
+                "limit": Constants.FEED_LIMIT_TO_DELETE_IN_QUERY
+            };
+            const updatedDocs = [{ "id": "123", "sourceDeleted": true }];
+            
+            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments")
+                .withArgs(selector).returns(Promise.resolve({ "docs": [{ "id": "123" }] }));
+            const saveDocsMock = sandbox.mock(couchClient).expects("saveBulkDocuments")
+                .withArgs({ "docs": updatedDocs }).returns({ "ok": true });
+            
+            const response = await deleteSourceHandler.markAsSourceDeleted(couchClient, sources);
+            
+            findDocsMock.verify();
+            saveDocsMock.verify();
+            assert.deepEqual(response, { "ok": true });
+        });
     });
 });

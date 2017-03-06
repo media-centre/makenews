@@ -289,7 +289,7 @@ describe("SourceConfigurationActions", () => {
         });
         
         it("should dispatch unmarkSources, deletedSource for the success response", (done) => {
-            sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([{ "ok": true }]));
+            sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve({ "ok": true }));
 
             let event = { "target": {} };
             const actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete._id },
@@ -300,7 +300,7 @@ describe("SourceConfigurationActions", () => {
         });
 
         it("should show a Toast message when the source could not be deleted", async () => {
-            sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([]));
+            sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve({ "ok": false }));
 
             const toastMock = sandbox.mock(Toast).expects("show")
                 .withExactArgs("Could not delete source");
