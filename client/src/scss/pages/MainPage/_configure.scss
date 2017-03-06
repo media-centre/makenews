@@ -33,6 +33,21 @@
         font-weight: 100;
         padding: 7px 0;
         color: $primary-color-light;
+        float: none;
+        clear: both;
+
+        .spinner {
+          padding: 0;
+          border: none;
+          float: right;
+          margin-top: 5px;
+
+          &:before {
+            width: 10px;
+            height: 10px;
+            border-width: 2px;
+          }
+        }
 
         .delete-source {
           font-size: 1.3em;

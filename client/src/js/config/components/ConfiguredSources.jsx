@@ -19,8 +19,8 @@ class ConfiguredSources extends Component {
     _renderSources(sourceType, searchKey) {
         const configuredSourceDOM = source =>
             <li className="source-name" key={source._id}>{source.name}
-                <button className="delete-source" title={`Delete ${source.name}`} onClick={() => {
-                    this.props.dispatch(deleteSource(source._id, sourceType));
+                <button className="delete-source" title={`Delete ${source.name}`} onClick={(event) => {
+                    this.props.dispatch(deleteSource(source._id, sourceType, event));
                 }}
                 >&times;</button>
             </li>;

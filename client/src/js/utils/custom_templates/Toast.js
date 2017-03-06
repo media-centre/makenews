@@ -39,6 +39,6 @@ export default class Toast {
             toastDOM.classList.add("hide");
         }
     }
-
 }
+
 Toast.timer = null;

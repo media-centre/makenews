@@ -9,6 +9,7 @@ import sinon from "sinon";
 import AppWindow from "../../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import nock from "nock";
+import Toast from "../../../src/js/utils/custom_templates/Toast";
 
 describe("SourceConfigurationActions", () => {
     describe("configured sources", () => {
@@ -205,8 +206,6 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${WebConfigActions.WEB_ADD_SOURCE} for add all in web`, (done) => {
-
-            sources = [{ "name": "something", "url": "432455" }];
             let actions = [
                 { "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }
             ];
@@ -222,7 +221,6 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} for add all in facebook profile`, (done) => {
-
             let actions = [
                 { "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }
             ];
@@ -237,7 +235,6 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook page`, (done) => {
-
             let actions = [
                 { "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }
             ];
@@ -252,7 +249,6 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook group`, (done) => {
-
             let actions = [
                 { "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }
             ];
@@ -291,24 +287,29 @@ describe("SourceConfigurationActions", () => {
         afterEach("deleteSource", () => {
             sandbox.restore();
         });
-
-        it("should dispatch unmarkSources, deletedSource, handleMessage for the success response", (done) => {
+        
+        it("should dispatch unmarkSources, deletedSource for the success response", (done) => {
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([{ "ok": true }]));
 
+            let event = { "target": {} };
             const actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete._id },
-                { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" },
-                { "type": sourceConfigActions.DELETE_SOURCE_STATUS, "message": "Deleted Source Successfully" }];
+                { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" }];
 
-            let store = mockStore(getStore, actions, done);
-            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType));
+            const store = mockStore(getStore, actions, done);
+            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType, event));
         });
 
-        it("should dispatch handleMessage when the could not be deleted", (done) => {
-            let actions = [{ "type": sourceConfigActions.DELETE_SOURCE_STATUS, "message": "Could not delete source" }];
+        it("should show a Toast message when the source could not be deleted", async () => {
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve([]));
 
-            let store = mockStore(getStore, actions, done);
-            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType));
+            const toastMock = sandbox.mock(Toast).expects("show")
+                .withExactArgs("Could not delete source");
+            let event = { "target": {} };
+            const fn = sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType, event);
+            await fn();
+            expect(event.target.className).to.equal("delete-source");
+            expect(event.target.innerHTML).to.equal("&times");
+            toastMock.verify();
         });
     });
 });

@@ -5,6 +5,7 @@ import * as TwitterConfigureActions from "./../../config/actions/TwitterConfigur
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
 import R from "ramda"; //eslint-disable-line id-length
+import Toast from "../../utils/custom_templates/Toast";
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const CLEAR_SOURCES = "CLEAR_SOURCES";
@@ -146,22 +147,28 @@ export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) {
     }
 }
 
-export function deleteSource(sourceId, sourceType) {
+export function deleteSource(sourceId, sourceType, event) {
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-
+    const button = event.target;
+    button.className = "spinner";
+    button.textContent = "";
     return async dispatch => {
         const ajaxInstance = AjaxClient.instance("/delete-sources");
-        const response = await ajaxInstance.post(headers, { "sources": [sourceId] });
-
-        if(response[0] && response[0].ok) { //eslint-disable-line no-magic-numbers
-            dispatch(unmarkSource(sourceId));
-            dispatch(deletedSource(sourceId, sourceType));
-            dispatch(deleteSourceStatus("Deleted Source Successfully"));
-        } else {
-            dispatch(deleteSourceStatus("Could not delete source"));
+        try {
+            const response = await ajaxInstance.post(headers, { "sources": [sourceId] });
+            if(response[0] && response[0].ok) { //eslint-disable-line no-magic-numbers
+                dispatch(unmarkSource(sourceId));
+                dispatch(deletedSource(sourceId, sourceType));
+            } else {
+                throw new Error();
+            }
+        } catch(err) {
+            button.className = "delete-source";
+            button.innerHTML = "&times";
+            Toast.show("Could not delete source");
         }
     };
 }
@@ -179,12 +186,5 @@ function unmarkSource(sourceId) {
     return {
         "type": UNMARK_DELETED_SOURCE,
         "source": sourceId
-    };
-}
-
-export function deleteSourceStatus(message) {
-    return {
-        "type": DELETE_SOURCE_STATUS,
-        message
     };
 }
