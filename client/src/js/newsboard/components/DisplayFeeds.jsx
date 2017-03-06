@@ -10,13 +10,18 @@ import Spinner from "../../utils/components/Spinner";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayArticle from "./DisplayArticle";
 import StringUtils from "./../../../../../common/src/util/StringUtil";
+import Toast from "./../../utils/custom_templates/Toast";
+
+const MIN_SEARCH_KEY_LENGTH = 3;
 
 export class DisplayFeeds extends Component {
+
     constructor() {
         super();
         this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false, "search": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
+        this.searchKey = "";
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
@@ -152,15 +157,15 @@ export class DisplayFeeds extends Component {
 
     checkEnterKey(event) {
         const ENTERKEY = 13;
-        if (event.keyCode === ENTERKEY) {
+        if (event.keyCode === ENTERKEY && event.target.value !== this.searchKey) {
             this.updateSearchState();
             this.searchFeeds();
         }
     }
 
     updateSearchState() {
-        const searchKey = this.refs.searchFeeds.value;
-        if(!StringUtils.isEmptyString(searchKey)) {
+        this.searchKey = this.refs.searchFeeds.value;
+        if(!StringUtils.isEmptyString(this.searchKey) && this.searchKey.length >= MIN_SEARCH_KEY_LENGTH) {
             this.offset = 0;
             this.searchOffset = 0;
             this.hasMoreSearchFeeds = true;
@@ -168,17 +173,19 @@ export class DisplayFeeds extends Component {
             this.props.dispatch(DisplayFeedActions.clearFeeds());
             this.setState({ "search": !this.state.search });
         }
+        else {
+            Toast.show("Please enter a keyword minimum of 3 characters");
+        }
     }
 
     searchFeeds() {
-        const searchKey = this.refs.searchFeeds.value;
         let callback = (result) => {
             this.searchOffset = result.docsLength ? (this.searchOffset + result.docsLength) : this.searchOffset;
             this.hasMoreSearchFeeds = result.hasMoreFeeds;
         };
 
-        if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(searchKey)) {
-            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, searchKey, this.searchOffset, callback));
+        if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(this.searchKey)) {
+            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, this.searchKey, this.searchOffset, callback));
         }
     }
 
