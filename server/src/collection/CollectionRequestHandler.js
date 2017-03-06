@@ -57,7 +57,7 @@ export default class CollectionRequestHandler {
     }
 
     async getCollectionDoc(couchClient, collectionName) {
-        let selector = {
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "collection"

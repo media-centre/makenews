@@ -34,23 +34,26 @@ async function getFeedIds(couchClient, collectionName, offset) {
     return await couchClient.findDocuments(selector);
 }
 
-export async function getCollectionFeedIds(couchClient, feeds = [], skipValue = 0) { // eslint-disable-line no-magic-numbers
+export async function getCollectionFeedIds(couchClient, sourceIds, feeds = [], skipValue = 0) { // eslint-disable-line no-magic-numbers
 
-    const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue);
+    const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue, sourceIds);
     const feedsAccumulator = feeds.concat(collectionFeedDocs);
 
     if(collectionFeedDocs.length === FEED_LIMIT_TO_DELETE_IN_QUERY) {
-        return await getCollectionFeedIds(couchClient, feedsAccumulator, skipValue + FEED_LIMIT_TO_DELETE_IN_QUERY);
+        return await getCollectionFeedIds(couchClient, sourceIds, feedsAccumulator, skipValue + FEED_LIMIT_TO_DELETE_IN_QUERY);
     }
 
-    return R.map(feed => feed.feedId)(feedsAccumulator);
+    return R.map(feed => feed.feedId, feedsAccumulator);
 }
 
-async function getCollectionFeedDocs(couchClient, skipvalue) {
+async function getCollectionFeedDocs(couchClient, skipvalue, sources) {
     const selector = {
         "selector": {
             "docType": {
                 "$eq": "collectionFeed"
+            },
+            "sourceId": {
+                "$in": sources
             }
         },
         "fields": ["feedId"],

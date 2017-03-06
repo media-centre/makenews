@@ -26,8 +26,6 @@ describe("DeleteSourceHandler", () => {
         beforeEach("deleteSources", () => {
             collectionFeedIds = ["id2", "id3"];
             sandbox.mock(CouchClient).expects("instance").withExactArgs(accessToken).returns(couchClient);
-            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
-                .withExactArgs(couchClient).returns(Promise.resolve(collectionFeedIds));
             Constants.FEED_LIMIT_TO_DELETE_IN_QUERY = 25;
         });
 
@@ -44,6 +42,8 @@ describe("DeleteSourceHandler", () => {
             findMock.onFirstCall().returns(Promise.resolve(feedDocs));
             findMock.onSecondCall().returns(Promise.resolve(sourcesDoc));
 
+            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
+                .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             let res = await deleteSourceHandler.deleteSources(sources, accessToken);
@@ -64,6 +64,8 @@ describe("DeleteSourceHandler", () => {
             findMock.onSecondCall().returns(Promise.resolve(feeds));
             findMock.onThirdCall().returns(Promise.resolve(sourcesDoc));
 
+            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
+                .withExactArgs(couchClient, ["hashtag1"]).returns(Promise.resolve(collectionFeedIds));
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             const response = await deleteSourceHandler.deleteSources([], accessToken);
@@ -86,6 +88,8 @@ describe("DeleteSourceHandler", () => {
             findDocs.onSecondCall().returns(Promise.resolve(secondResponse));
             findDocs.onThirdCall().returns(Promise.resolve(sourcesDoc));
 
+            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
+                .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
             let saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             const response = await deleteSourceHandler.deleteSources(sources, accessToken);

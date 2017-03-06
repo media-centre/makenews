@@ -151,6 +151,7 @@ describe("CollectionFeedsRequestHandler", () => {
 
     describe("getCollectionFeedIds", () => {
         const sandbox = sinon.sandbox.create();
+        const sourceIds = ["14251256"];
 
         afterEach("getCollectionFeedIds", () => {
             sandbox.restore();
@@ -164,6 +165,9 @@ describe("CollectionFeedsRequestHandler", () => {
                 "selector": {
                     "docType": {
                         "$eq": "collectionFeed"
+                    },
+                    "sourceId": {
+                        "$in": sourceIds
                     }
                 },
                 "fields": ["feedId"],
@@ -173,7 +177,7 @@ describe("CollectionFeedsRequestHandler", () => {
             const findDocsMock = sandbox.mock(couchClient).expects("findDocuments")
                 .withExactArgs(selector).returns(Promise.resolve(collectionFeedDocs));
 
-            const feedIdArray = await getCollectionFeedIds(couchClient); //eslint-disable-line no-magic-numbers
+            const feedIdArray = await getCollectionFeedIds(couchClient, sourceIds); //eslint-disable-line no-magic-numbers
 
             findDocsMock.verify();
             assert.deepEqual(feedIdArray, expectedFeedIdArray);

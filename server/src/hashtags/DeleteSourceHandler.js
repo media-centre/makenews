@@ -9,7 +9,6 @@ export default class DeleteSourceHandler {
 
     async deleteSources(sources = [], accessToken) {
         const couchClient = CouchClient.instance(accessToken);
-        const collectionFeedIds = await getCollectionFeedIds(couchClient);
         let sourceDocuments = [];
 
         if (sources.length) {
@@ -18,6 +17,7 @@ export default class DeleteSourceHandler {
             sourceDocuments = await this._fetchHashtagSources(couchClient);
             sources = sourceDocuments.map(hashtag => hashtag._id); //eslint-disable-line no-param-reassign
         }
+        const collectionFeedIds = await getCollectionFeedIds(couchClient, sources);
 
         let feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
         let docsToBeDeleted = feedDocuments.concat(sourceDocuments);
@@ -27,6 +27,9 @@ export default class DeleteSourceHandler {
     async _getFeedsFromSources(couchClient, sources, collectionFeedIds) {
         const selector = {
             "selector": {
+                "docType": {
+                    "$eq": "feed"
+                },
                 "sourceId": {
                     "$in": sources
                 },
