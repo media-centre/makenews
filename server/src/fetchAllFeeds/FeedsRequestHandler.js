@@ -2,7 +2,9 @@ import CouchClient from "../CouchClient";
 import { searchDocuments } from "./../LuceneClient";
 import R from "ramda"; //eslint-disable-line id-length
 import { userDetails } from "./../Factory";
+import { NEWSBOARD_SOURCE_TYPES } from "./../util/Constants";
 const LIMIT_VALUE = 25;
+
 export default class FeedsRequestHandler {
     static instance() {
         return new FeedsRequestHandler();
@@ -56,13 +58,22 @@ export default class FeedsRequestHandler {
         }
     }
 
-    async searchFeeds(authSession, sourceType, searchKey, skip) {
-        let result = { };
-        const queryString = searchKey === "" ? "*/*" : `${searchKey}`;
-        const keyQuery = `title:${queryString} OR description:${queryString}`;
+    getQuery(sourceType, searchKey) {
+        const queryString = searchKey === "" ? "*/*" : `${searchKey}*`;
+        switch(sourceType) {
+        case NEWSBOARD_SOURCE_TYPES.trending:
+            return `title:${queryString} OR description:${queryString}`;
+        case NEWSBOARD_SOURCE_TYPES.bookmark:
+            return `bookmark:true AND title:${queryString} OR description:${queryString}`;
+        default:
+            return `sourceType:${sourceType} AND title:${queryString} OR description:${queryString}`;
+        }
+    }
 
+    async searchFeeds(authSession, sourceType, searchKey, skip) {
+        let result = {};
         const query = {
-            "q": `sourceType:${sourceType} AND ${keyQuery}`,
+            "q": this.getQuery(sourceType, searchKey),
             "limit": LIMIT_VALUE,
             skip,
             "include_docs": true

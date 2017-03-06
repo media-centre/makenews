@@ -164,6 +164,7 @@ export class DisplayFeeds extends Component {
             this.offset = 0;
             this.searchOffset = 0;
             this.hasMoreSearchFeeds = true;
+            this.hasMoreFeeds = true;
             this.props.dispatch(DisplayFeedActions.clearFeeds());
             this.setState({ "search": !this.state.search });
         }

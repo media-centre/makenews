@@ -164,7 +164,33 @@ describe("FeedsRequestHandler", () => {
         let sandbox = null;
         let feedRequestHandler = null;
         const authSession = "AuthSession", dbName = "dbName";
-        const sourceType = "web", searchKey = "test", skip = 5;
+        let sourceType = "web", searchKey = "test", skip = 5;
+        const response = {
+            "q": "+sourceType:web +title:test* description:test*",
+            "fetch_duration": 0,
+            "total_rows": 14,
+            "limit": 25,
+            "search_duration": 0,
+            "etag": "1358a6ef5569e8",
+            "skip": 0,
+            "rows": [{
+                "score": 0.03390154987573624,
+                "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
+                "doc": {
+                    "sourceType": "web",
+                    "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
+                    "title": "Trump signs executive order on black colleges"
+                }
+            }, {
+                "score": 0.03390154987573624,
+                "id": "3e02fd2f7e49dc4107b505378e457c60135e4c96b4477f6b02c14a30fd4b80fd",
+                "doc": {
+                    "sourceType": "web",
+                    "description": "US President Donald Trump\u2019s top spymaster nominee has said he was \u201cshocked\u201d to read that India successfully launched",
+                    "title": "Trump\u2019s spy pick \u2018shocked\u2019 by India launching 104 satellites"
+                }
+            }]
+        };
         beforeEach("searchFeeds", () => {
             sandbox = sinon.sandbox.create();
             feedRequestHandler = FeedsRequestHandler.instance();
@@ -174,33 +200,67 @@ describe("FeedsRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return the feeds related to search key", async () => {
-            const response = {
-                "q": "+sourceType:web +title:test* description:test*",
-                "fetch_duration": 0,
-                "total_rows": 14,
+        it("should call searchDocuments with query on title, description and sourceType if the sourceType is web ", async () => {
+            const docs = R.map(row => row.doc)(response.rows);
+            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const query = {
+                "q": `sourceType:${sourceType} AND title:${searchKey}* OR description:${searchKey}*`,
                 "limit": 25,
-                "search_duration": 0,
-                "etag": "1358a6ef5569e8",
-                "skip": 0,
-                "rows": [{
-                    "score": 0.03390154987573624,
-                    "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
-                    "doc": {
-                        "sourceType": "web",
-                        "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
-                        "title": "Trump signs executive order on black colleges"
-                    }
-                }, {
-                    "score": 0.03390154987573624,
-                    "id": "3e02fd2f7e49dc4107b505378e457c60135e4c96b4477f6b02c14a30fd4b80fd",
-                    "doc": {
-                        "sourceType": "web",
-                        "description": "US President Donald Trump\u2019s top spymaster nominee has said he was \u201cshocked\u201d to read that India successfully launched",
-                        "title": "Trump\u2019s spy pick \u2018shocked\u2019 by India launching 104 satellites"
-                    }
-                }]
+                skip,
+                "include_docs": true
             };
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").withArgs(dbName, "_design/feedSearch/by_document", query).returns(Promise.resolve(response));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it("should call searchDocuments with query on only title, description if the sourceType is trending ", async () => {
+            const docs = R.map(row => row.doc)(response.rows);
+            sourceType = "trending";
+            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const query = {
+                "q": `title:${searchKey}* OR description:${searchKey}*`,
+                "limit": 25,
+                skip,
+                "include_docs": true
+            };
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").withArgs(dbName, "_design/feedSearch/by_document", query).returns(Promise.resolve(response));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it("should call searchDocuments with query on only title, description with bookmark if the sourceType is bookmark ", async () => {
+            const docs = R.map(row => row.doc)(response.rows);
+            sourceType = "bookmark";
+            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const query = {
+                "q": `bookmark:true AND title:${searchKey}* OR description:${searchKey}*`,
+                "limit": 25,
+                skip,
+                "include_docs": true
+            };
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").withArgs(dbName, "_design/feedSearch/by_document", query).returns(Promise.resolve(response));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result, expectedResult);
+        });
+
+        it("should return the feeds related to search key", async () => {
+
             const docs = R.map(row => row.doc)(response.rows);
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
 
@@ -213,6 +273,7 @@ describe("FeedsRequestHandler", () => {
             searchDocumentMock.verify();
             assert.deepEqual(result, expectedResult);
         });
+
 
         it("should reject with error if search documents reject with error", async () => {
             let searchDocumentMock = null;
