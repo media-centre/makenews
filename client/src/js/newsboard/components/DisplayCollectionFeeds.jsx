@@ -5,8 +5,8 @@ import DisplayArticle from "./DisplayArticle";
 import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
 import { displayArticle } from "./../actions/DisplayFeedActions";
-import R from "ramda"; //eslint-disable-line id-length
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import R from "ramda"; //eslint-disable-line id-length
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -17,7 +17,7 @@ export class DisplayCollectionFeeds extends Component {
     }
 
     componentWillMount() {
-        this.getMoreFeedsCallback(this.props.collectionName);
+        this.getMoreFeedsCallback(this.props.collection);
     }
 
     componentDidMount() {
@@ -28,11 +28,11 @@ export class DisplayCollectionFeeds extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.props.collectionName !== nextProps.collectionName) {
+        if(this.props.collection !== nextProps.collection) {
             this.hasMoreFeeds = true;
             this.offset = 0;
             this.props.dispatch(clearFeeds());
-            this.getMoreFeedsCallback(nextProps.collectionName);
+            this.getMoreFeedsCallback(nextProps.collection);
             this.refs.collection.style.display = "block";
             this.props.dispatch(displayArticle());
         }
@@ -49,20 +49,20 @@ export class DisplayCollectionFeeds extends Component {
             this.timer = setTimeout(() => {
                 this.timer = null;
                 if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
-                    this.getMoreFeedsCallback(this.props.collectionName);
+                    this.getMoreFeedsCallback(this.props.collection);
                 }
             }, scrollTimeInterval);
         }
     }
 
-    getMoreFeedsCallback(collectionName) {
+    getMoreFeedsCallback(collection) {
         let callback = (result) => {
             this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
             this.hasMoreFeeds = result.hasMoreFeeds;
         };
 
-        if (this.hasMoreFeeds && !R.isEmpty(collectionName)) {
-            this.props.dispatch(displayCollectionFeeds(this.offset, collectionName, callback));
+        if (this.hasMoreFeeds && !R.isEmpty(collection.name)) {
+            this.props.dispatch(displayCollectionFeeds(this.offset, collection.id, callback));
         }
     }
 
@@ -81,7 +81,7 @@ export class DisplayCollectionFeeds extends Component {
     render() {
         return (
             <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
-                <DisplayArticle collection={this.refs.collection} collectionName={this.props.collectionName} />
+                <DisplayArticle collectionDOM={this.refs.collection} collectionName={this.props.collection.name} />
                 <div ref="collection" className="display-collection">
                     {this.displayHeader()}
                     <div className="collection-feeds">
@@ -97,7 +97,7 @@ export class DisplayCollectionFeeds extends Component {
 }
 
 DisplayCollectionFeeds.propTypes = {
-    "collectionName": PropTypes.string.isRequired,
+    "collection": PropTypes.object.isRequired,
     "feeds": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "tab": PropTypes.string,
@@ -107,7 +107,7 @@ DisplayCollectionFeeds.propTypes = {
 function mapToStore(store) {
     return {
         "feeds": store.displayCollection,
-        "collectionName": store.currentCollection
+        "collection": store.currentCollection
     };
 }
 export default connect(mapToStore)(DisplayCollectionFeeds);

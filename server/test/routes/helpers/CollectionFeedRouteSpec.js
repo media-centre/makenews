@@ -5,36 +5,37 @@ import sinon from "sinon";
 
 describe("CollectionFeedsRoute", () => {
     describe("validate", () => {
-        let offset = 0, collectionName = "test", authSession = "test_token";
+        const offset = 0, collection = "bsjzueer1_1jshguejsnmgjeu", authSession = "test_token";
         it("should return error message of missing params if collection Name  is empty", () => {
-            let request = {
+            const request = {
                 "cookies": { "AuthSession": authSession },
                 "query": {
-                    "collectionName": "",
+                    "collection": "",
                     offset
                 }
             };
-            let collectionFeed = new CollectionFeedsRoute(request, {});
+            const collectionFeed = new CollectionFeedsRoute(request, {});
 
             expect(collectionFeed.validate()).to.equal("missing parameters");
         });
 
         it("should return error message of missing params if auth session is empty", () => {
-            let request = {
+            const request = {
                 "cookies": { "AuthSession": "" },
                 "query": {
-                    collectionName,
+                    collection,
                     offset
                 }
             };
-            let collectionFeed = new CollectionFeedsRoute(request, {});
+            const collectionFeed = new CollectionFeedsRoute(request, {});
 
             expect(collectionFeed.validate()).to.equal("missing parameters");
         });
     });
 
     describe("handle", () => {
-        let sandbox = null, authSession = "test_token", collectionName = "test", offset = 0;
+        let sandbox = null;
+        const authSession = "test_token", offset = 0;
 
         beforeEach("handle", () => {
             sandbox = sinon.sandbox.create();
@@ -45,19 +46,21 @@ describe("CollectionFeedsRoute", () => {
         });
 
         it("should get collected feeds", async () => {
-            let request = {
+            const collection = "bsjzueer1_1jshguejsnmgjeu";
+            const request = {
                 "cookies": { "AuthSession": authSession },
-                "query": { collectionName, offset }
+                "query": { collection, offset }
             };
-            let collectionFeed = new CollectionFeedsRoute(request, {});
+            const collectionFeed = new CollectionFeedsRoute(request, {});
 
-            let feeds = {
+            const feeds = {
                 "docs": [
                     {
                         "_id": "b9c4a434f0e4aa72f7cf55f21ac1c18218a22d896dbfcd39fec7e55e9cbefd7352853c9656edcb45308bf0476e000678",
-                        "docType": "collectionFeed",
-                        "feedId": "b9c4a434f0e4aa72f7cf55f21ac1c18218a22d896dbfcd39fec7e55e9cbefd73",
-                        "collection": collectionName
+                        "docType": "feed",
+                        "sourceType": "web",
+                        "title": "some title",
+                        "description": "Some desc"
                     }
                 ]
             };
@@ -65,7 +68,7 @@ describe("CollectionFeedsRoute", () => {
             sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectedFeeds")
                 .returns(feeds);
 
-            let result = await collectionFeed.handle();
+            const result = await collectionFeed.handle();
             expect(result).to.deep.equal(feeds);
         });
     });

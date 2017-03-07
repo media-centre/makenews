@@ -1,5 +1,5 @@
 import { displayCollection, currentCollection } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
-import { COLLECTION_FEEDS, COLLECTION_NAME, CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { assert } from "chai";
 
 describe("DisplayCollectionReducer", () => {
@@ -25,17 +25,15 @@ describe("DisplayCollectionReducer", () => {
     });
 
     describe("currentCollection", () => {
-
         it("should return feeds with type collection name", () => {
-            let collection = "test";
-            let action = { "type": COLLECTION_NAME, collection };
+            const collection = { "name": "test", "id": "xskdfhnasdflkiej123" };
+            const action = { "type": CURRENT_COLLECTION, collection };
 
-            assert.deepEqual(currentCollection("", action), collection);
+            assert.deepEqual(currentCollection({}, action), collection);
         });
 
         it("should return empty string by default", () => {
-            assert.deepEqual(currentCollection(), "");
+            assert.deepEqual(currentCollection(), { "name": "", "id": "" });
         });
     });
-
 });

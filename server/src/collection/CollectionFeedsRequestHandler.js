@@ -2,31 +2,31 @@ import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 
-export async function getCollectedFeeds(authSession, collectionName, offset) {
+export async function getCollectedFeeds(authSession, collection, offset) {
     const couchClient = CouchClient.instance(authSession);
-    let feedIds = await getFeedIds(couchClient, collectionName, offset);
+    const feedIds = await getFeedIds(couchClient, collection, offset);
     return await getFeeds(couchClient, feedIds.docs);
 }
 
 async function getFeeds(couchClient, feedIds) {
-    let feedPromises = feedIds.map(async (collection) => {
+    const feedPromises = feedIds.map(async (collection) => {
         try {
             return await couchClient.getDocument(collection.feedId);
         } catch(error) {
             return {};
         }
     });
-    let feeds = await Promise.all(feedPromises);
+    const feeds = await Promise.all(feedPromises);
     return R.reject(R.isEmpty, feeds);
 }
 
-async function getFeedIds(couchClient, collectionName, offset) {
-    let selector = {
+async function getFeedIds(couchClient, collection, offset) {
+    const selector = {
         "selector": {
             "docType": {
                 "$eq": "collectionFeed"
-            }, "collection": {
-                "$eq": collectionName
+            }, "collectionId": {
+                "$eq": collection
             }
         },
         "skip": offset
@@ -46,7 +46,7 @@ export async function getCollectionFeedIds(couchClient, sourceIds, feeds = [], s
     return R.map(feed => feed.feedId, feedsAccumulator);
 }
 
-async function getCollectionFeedDocs(couchClient, skipvalue, sources) {
+async function getCollectionFeedDocs(couchClient, skipValue, sources) {
     const selector = {
         "selector": {
             "docType": {
@@ -57,7 +57,7 @@ async function getCollectionFeedDocs(couchClient, skipvalue, sources) {
             }
         },
         "fields": ["feedId"],
-        "skip": skipvalue,
+        "skip": skipValue,
         "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
     };
     const collectionFeedDocs = await couchClient.findDocuments(selector);

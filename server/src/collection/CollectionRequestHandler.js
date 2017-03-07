@@ -21,10 +21,10 @@ export default class CollectionRequestHandler {
         }
 
         if(docId && collectionDocId) {
-            return await this.createCollectionFeedDoc(couchClient, collectionDocId, collectionName, docId, sourceId);
+            return await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
         }
         collectionDocId = await this.createCollection(couchClient, collectionName);
-        return await this.createCollectionFeedDoc(couchClient, collectionDocId, collectionName, docId, sourceId);
+        return await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
     }
 
     async createCollection(couchClient, collectionName) {

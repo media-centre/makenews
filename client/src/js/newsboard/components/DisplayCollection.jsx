@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { setCollectionName } from "./../actions/DisplayCollectionActions";
+import { setCurrentCollection } from "./../actions/DisplayCollectionActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import StringUtil from "./../../../../../common/src/util/StringUtil";
 import { connect } from "react-redux";
@@ -15,10 +15,9 @@ export class DisplayCollection extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let [firstCollection] = nextProps.feeds;
+        const [firstCollection] = nextProps.feeds;
         if(firstCollection) {
-            let collectionName = firstCollection.collection;
-            this.props.dispatch(setCollectionName(collectionName));
+            this.props.dispatch(setCurrentCollection(firstCollection));
         }
     }
 
@@ -27,7 +26,7 @@ export class DisplayCollection extends Component {
         this.setState({ "isClicked": true });
         this.refs.collectionList.querySelector(".collection-name.active").className = "collection-name";
         event.target.className = "collection-name active";
-        this.props.dispatch(setCollectionName(collection.collection));
+        this.props.dispatch(setCurrentCollection(collection));
         if(this.props.addArticleToCollection.id) {
             this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
         }
@@ -137,7 +136,9 @@ export class DisplayCollection extends Component {
 
     render() {
         return (
-           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/> : this.displayCollections()
+           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
+               ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/>
+               : this.displayCollections()
         );
     }
 }

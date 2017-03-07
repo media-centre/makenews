@@ -1,4 +1,4 @@
-import { COLLECTION_FEEDS, COLLECTION_NAME, CLEAR_COLLECTION_FEEDS } from "./../actions/DisplayCollectionActions";
+import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS } from "./../actions/DisplayCollectionActions";
 
 export function displayCollection(state = [], action = {}) {
     switch(action.type) {
@@ -12,9 +12,9 @@ export function displayCollection(state = [], action = {}) {
     }
 }
 
-export function currentCollection(state = "", action = {}) {
+export function currentCollection(state = { "name": "", "id": "" }, action = {}) {
     switch(action.type) {
-    case COLLECTION_NAME:
+    case CURRENT_COLLECTION:
         return action.collection;
     default:
         return state;

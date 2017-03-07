@@ -7,7 +7,7 @@ describe("CollectionFeedsRequestHandler", () => {
 
     describe("getCollectedFeeds", () => {
         let sandbox = null, authSession = null, couchClient = null, selector = null;
-        let offset = 0, collection = "test";
+        let offset = 0, collection = "bzfuwlajfuea_ali2nfaliwean";
 
         beforeEach("getCollectedFeeds", () => {
             sandbox = sinon.sandbox.create();
@@ -16,7 +16,7 @@ describe("CollectionFeedsRequestHandler", () => {
                     "docType": {
                         "$eq": "collectionFeed"
                     },
-                    "collection": {
+                    "collectionId": {
                         "$eq": collection
                     }
                 },
@@ -32,24 +32,23 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database", async () => {
-            let feedIDs = {
+            const feedIDs = {
                 "docs": [
                     {
                         "_id": "id",
                         "docType": "collectionFeed",
                         "feedId": "feedId",
-                        "collection": collection
+                        "collectionId": collection
                     },
                     {
                         "_id": "id2",
                         "docType": "collectionFeed",
                         "feedId": "feedId2",
-                        "collection": collection
+                        "collectionId": collection
                     }
                 ]
             };
-
-            let feeds = [
+            const feeds = [
                 {
                     "_id": "id",
                     "title": "title",
@@ -63,7 +62,7 @@ describe("CollectionFeedsRequestHandler", () => {
             ];
 
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
-            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feedIDs));
+            findDocumentsMock.withExactArgs(selector).returns(Promise.resolve(feedIDs));
 
             let getDocsMock = sandbox.mock(couchClient);
 
@@ -87,7 +86,7 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database when one of the promise is rejected", async () => {
-            let feedIDs = {
+            const feedIDs = {
                 "docs": [
                     {
                         "_id": "id",
@@ -104,7 +103,7 @@ describe("CollectionFeedsRequestHandler", () => {
                 ]
             };
 
-            let feeds = [
+            const feeds = [
                 {
                     "_id": "id",
                     "title": "title",
@@ -117,23 +116,24 @@ describe("CollectionFeedsRequestHandler", () => {
 
             let getDocsMock = sandbox.mock(couchClient);
 
-            let getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
+            const getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
                 "_id": "id",
                 "title": "title",
                 "description": "description"
             }));
 
-            let getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.reject({
+            const getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.reject({
                 "_id": "id2",
                 "title": "title2",
                 "description": "description2"
             }));
 
-            let docs = await getCollectedFeeds(authSession, collection, offset);
-            assert.deepEqual(docs, feeds);
+            const docs = await getCollectedFeeds(authSession, collection, offset);
+            
             findDocumentsMock.verify();
             getFirstFeedMock.verify();
             getSecondFeedMock.verify();
+            assert.deepEqual(docs, feeds);
         });
 
         it("should reject with error when database throws unexpected response while getting feedIds", async () => {
@@ -147,7 +147,6 @@ describe("CollectionFeedsRequestHandler", () => {
             }
         });
     });
-
 
     describe("getCollectionFeedIds", () => {
         const sandbox = sinon.sandbox.create();

@@ -46,7 +46,7 @@ export class DisplayArticle extends Component {
     renderHeader() {
         return(this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
             ? <header className="display-article__header back">
-                <button className="back__button" onClick={() => { this.props.collection.style.display = "block"; this.props.dispatch(displayArticle()); }}>
+                <button className="back__button" onClick={() => { this.props.collectionDOM.style.display = "block"; this.props.dispatch(displayArticle()); }}>
                 <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
                 </header>
             : this.renderArticleHeader()
@@ -84,8 +84,8 @@ export class DisplayArticle extends Component {
     render() {
         this.articleClass = this.props.isStoryBoard ? "story-display-article display-article" : "display-article";
         if(this.props.article && this.props.article._id) {
-            if(this.props.collection) {
-                this.props.collection.style.display = "none";
+            if(this.props.collectionDOM) {
+                this.props.collectionDOM.style.display = "none";
             }
             return (
                 <article className={this.articleClass}>
@@ -104,7 +104,7 @@ DisplayArticle.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "addToCollectionStatus": PropTypes.object.isRequired,
-    "collection": PropTypes.object,
+    "collectionDOM": PropTypes.object,
     "collectionName": PropTypes.string,
     "articleOpen": PropTypes.func,
     "isStoryBoard": PropTypes.bool

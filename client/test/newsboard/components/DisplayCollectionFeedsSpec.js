@@ -7,69 +7,69 @@ import { findAllWithType } from "react-shallow-testutils";
 import { assert } from "chai";
 
 describe("DisplayCollectionFeeds", () => {
-    let result = null, feeds = null, collectionName = null, renderer = null;
+    let result = null;
+    const feeds = [
+                { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
+                { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }];
+    const collectionName = "test";
 
-    beforeEach("DisplayCollectionFeeds", () => {
-        collectionName = "test";
-        feeds = [
-            { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
-            { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
-        ];
+    describe("Feeds", () => {
+        let renderer = null;
+        beforeEach("Feeds", () => {
+            renderer = TestUtils.createRenderer();
+            renderer.render(
+                <DisplayCollectionFeeds collection = {{ "name": collectionName }} dispatch = {() => {}} feeds = {feeds} tab="Scan News" />);
+            result = renderer.getRenderOutput();
+        });
 
-        renderer = TestUtils.createRenderer();
-        renderer.render(
-                <DisplayCollectionFeeds collectionName = {collectionName} dispatch = {() => {}} feeds = {feeds} tab="Scan News" />);
-        result = renderer.getRenderOutput();
-    });
+        it("should render the feeds", () => {
+            let renderedSources = findAllWithType(result, CollectionFeed);
+            let [source1, source2] = renderedSources;
+            assert.isDefined(source1);
+            assert.isDefined(source2);
+        });
 
+        it("should have collections class", () => {
+            assert.equal(result.type, "div");
+            assert.equal(result.props.className, "collections");
+        });
 
-    it("should render the feeds", () => {
-        let renderedSources = findAllWithType(result, CollectionFeed);
-        let [source1, source2] = renderedSources;
-        assert.isDefined(source1);
-        assert.isDefined(source2);
-    });
+        it("should have display-collection class", () => {
+            let [, collection] = result.props.children;
 
-    it("should have collections class", () => {
-        assert.equal(result.type, "div");
-        assert.equal(result.props.className, "collections");
-    });
+            assert.equal(collection.type, "div");
+            assert.equal(collection.ref, "collection");
+            assert.equal(collection.props.className, "display-collection");
+        });
 
-    it("should have display-collection class", () => {
-        let [, collection] = result.props.children;
+        it("should have header class", () => {
+            let [, collection] = result.props.children;
+            let [header] = collection.props.children;
+            assert.equal(header.type, "header");
+            assert.equal(header.props.className, "collection-header");
+        });
 
-        assert.equal(collection.type, "div");
-        assert.equal(collection.ref, "collection");
-        assert.equal(collection.props.className, "display-collection");
-    });
+        it("should have collection-feeds class", () => {
+            let [, collection] = result.props.children;
+            let [, collectionFeeds] = collection.props.children;
 
-    it("should have header class", () => {
-        let [, collection] = result.props.children;
-        let [header] = collection.props.children;
-        assert.equal(header.type, "header");
-        assert.equal(header.props.className, "collection-header");
-    });
+            assert.equal(collectionFeeds.type, "div");
+            assert.equal(collectionFeeds.props.className, "collection-feeds");
+        });
 
-
-    it("should have collection-feeds class", () => {
-        let [, collection] = result.props.children;
-        let [, collectionFeeds] = collection.props.children;
-
-        assert.equal(collectionFeeds.type, "div");
-        assert.equal(collectionFeeds.props.className, "collection-feeds");
-    });
-
-    it("should have display Article", () => {
-        let renderedSources = findAllWithType(result, DisplayArticle);
-        let [source] = renderedSources;
-        assert.isDefined(source);
+        it("should have display Article", () => {
+            let renderedSources = findAllWithType(result, DisplayArticle);
+            let [source] = renderedSources;
+            assert.isDefined(source);
+        });
     });
 
     describe("header", () => {
-
+        let renderer = null;
         beforeEach("header", () => {
+            renderer = TestUtils.createRenderer();
             renderer.render(
-                <DisplayCollectionFeeds collectionName={collectionName} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
+                <DisplayCollectionFeeds collection={{ "name": collectionName }} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
             result = renderer.getRenderOutput();
         });
 
@@ -90,6 +90,5 @@ describe("DisplayCollectionFeeds", () => {
             assert.equal(text, "All Collections");
         });
     });
-
 });
 

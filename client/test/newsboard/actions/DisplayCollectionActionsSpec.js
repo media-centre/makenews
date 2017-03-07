@@ -1,10 +1,10 @@
 import {
     displayCollectionFeeds,
-    setCollectionName,
+    setCurrentCollection,
     clearFeeds,
     COLLECTION_FEEDS,
     NO_COLLECTION_FEEDS,
-    COLLECTION_NAME,
+    CURRENT_COLLECTION,
     CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -27,7 +27,7 @@ describe("DisplayCollectionAction", () => {
         sandbox.restore();
     });
 
-    it("should dispatch colletion feeds when successful fetch of feeds", (done) => {
+    it("should dispatch collection feeds when successful fetch of feeds", (done) => {
         let feeds = [{ "_id": "id", "title": "someTitle" }];
         let offset = 0;
 
@@ -46,7 +46,7 @@ describe("DisplayCollectionAction", () => {
         }));
     });
 
-    it("should dispatch no colletion feeds when failed to fetch the feeds", (done) => {
+    it("should dispatch no collection feeds when failed to fetch the feeds", (done) => {
         let offset = 0;
         let getMock = sandbox.mock(ajaxClientInstance).expects("get")
             .withArgs({ collection, offset }).returns(Promise.reject("error"));
@@ -57,12 +57,12 @@ describe("DisplayCollectionAction", () => {
         getMock.verify();
     });
 
-    describe("setCollection Name", () => {
+    describe("set current collection", () => {
         it("should set collection Name", () => {
-            collection = "test";
-            let result = setCollectionName(collection);
-            assert.strictEqual(result.type, COLLECTION_NAME);
-            assert.strictEqual(result.collection, collection);
+            collection = { "collection": "name", "_id": "aldkfjlasdfujuw_sdf23" };
+            let result = setCurrentCollection(collection);
+            assert.strictEqual(result.type, CURRENT_COLLECTION);
+            assert.deepEqual(result.collection, { "name": collection.collection, "id": collection._id });
         });
     });
 

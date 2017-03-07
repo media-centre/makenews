@@ -1,7 +1,7 @@
 import AjaxClient from "./../../utils/AjaxClient";
 export const COLLECTION_FEEDS = "COLLECTION_FEEDS";
 export const NO_COLLECTION_FEEDS = "NO_COLLECTION_FEEDS";
-export const COLLECTION_NAME = "COLLECTION_NAME";
+export const CURRENT_COLLECTION = "CURRENT_COLLECTION";
 export const CLEAR_COLLECTION_FEEDS = "CLEAR_COLLECTION_FEEDS";
 
 const noCollectionFeeds = { "type": NO_COLLECTION_FEEDS };
@@ -35,10 +35,13 @@ function collectionFeeds(feeds) {
     };
 }
 
-export function setCollectionName(collection) {
+export function setCurrentCollection(collection) {
     return {
-        "type": COLLECTION_NAME,
-        collection
+        "type": CURRENT_COLLECTION,
+        "collection": {
+            "name": collection.collection,
+            "id": collection._id
+        }
     };
 }
 
