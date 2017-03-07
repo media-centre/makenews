@@ -71,7 +71,6 @@ export default class FeedsRequestHandler {
     }
 
     async searchFeeds(authSession, sourceType, searchKey, skip) {
-        let result = {};
         const query = {
             "q": this.getQuery(sourceType, searchKey),
             "sort": "\\pubDate<date>",
@@ -84,11 +83,13 @@ export default class FeedsRequestHandler {
             const dbName = userDetails.getUser(authSession).dbName;
             const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
+            let result = {};
             result.docs = R.map(row => row.doc)(response.rows);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
+            return result;
         } catch (error) {
+            /*TODO: log the error*/ //eslint-disable-line
             throw `No Search results found for this keyword "${searchKey}"`; //eslint-disable-line no-throw-literal
         }
-        return result;
     }
 }

@@ -92,9 +92,9 @@ export function searchFeeds(sourceType, searchKey, offset, callback) {
         let result = {
             "docsLength": 0
         };
-        let ajax = AjaxClient.instance("/search-feeds");
+        const ajax = AjaxClient.instance("/search-feeds");
         try {
-            let feeds = await ajax.get({ sourceType, searchKey, offset });
+            const feeds = await ajax.get({ sourceType, searchKey, offset });
             if(feeds.docs.length) {
                 dispatch(searchedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
