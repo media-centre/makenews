@@ -205,6 +205,7 @@ describe("FeedsRequestHandler", () => {
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
             const query = {
                 "q": `sourceType:${sourceType} AND title:${searchKey}* OR description:${searchKey}*`,
+                "sort": "\\pubDate<date>",
                 "limit": 25,
                 skip,
                 "include_docs": true
@@ -225,6 +226,7 @@ describe("FeedsRequestHandler", () => {
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
             const query = {
                 "q": `title:${searchKey}* OR description:${searchKey}*`,
+                "sort": "\\pubDate<date>",
                 "limit": 25,
                 skip,
                 "include_docs": true
@@ -245,6 +247,7 @@ describe("FeedsRequestHandler", () => {
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
             const query = {
                 "q": `bookmark:true AND title:${searchKey}* OR description:${searchKey}*`,
+                "sort": "\\pubDate<date>",
                 "limit": 25,
                 skip,
                 "include_docs": true

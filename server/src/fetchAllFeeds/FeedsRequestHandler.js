@@ -74,6 +74,7 @@ export default class FeedsRequestHandler {
         let result = {};
         const query = {
             "q": this.getQuery(sourceType, searchKey),
+            "sort": "\\pubDate<date>",
             "limit": LIMIT_VALUE,
             skip,
             "include_docs": true
