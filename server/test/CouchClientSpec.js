@@ -394,4 +394,70 @@ describe("CouchClient", () => {
             });
         });
     });
+
+    describe("deleteDocument", () => {
+        const docId = "123", revision = "1";
+        it("should delete document", async () => {
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .delete(`/${dbName}/${docId}?rev=${revision}`)
+                .reply(HttpResponseHandler.codes.OK, response);
+
+            let couchClientInstance = new CouchClient(accessToken, dbName);
+            await couchClientInstance.deleteDocument(docId, revision);
+        });
+
+        it("should get revision and then delete document if revision not passed", async () => {
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .delete(`/${dbName}/${docId}?rev=${revision}`)
+                .reply(HttpResponseHandler.codes.OK, response);
+
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .get(`/${dbName}/${docId}`)
+                .reply(HttpResponseHandler.codes.OK, { "_rev": revision });
+
+            let couchClientInstance = new CouchClient(accessToken, dbName);
+            await couchClientInstance.deleteDocument(docId);
+        });
+
+        it("should reject if deletion failed", async () => {
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .delete(`/${dbName}/${docId}?rev=${revision}`)
+                .replyWithError({
+                    "code": "ECONNREFUSED",
+                    "errno": "ECONNREFUSED",
+                    "syscall": "connect",
+                    "address": "127.0.0.1",
+                    "port": 5984
+                });
+
+            let couchClientInstance = new CouchClient(accessToken, dbName);
+            await couchClientInstance.deleteDocument(docId, revision).catch((error) => {
+                assert.strictEqual("ECONNREFUSED", error.code);
+            });
+        });
+    });
 });

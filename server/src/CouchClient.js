@@ -56,6 +56,24 @@ export default class CouchClient {
         return this.get(path, {}, customHeaders);
     }
 
+    async deleteDocument(documentId, revision) {
+        let rev = revision;
+        if(!rev) {
+            let doc = await this.getDocument(documentId);
+            rev = doc._rev;
+        }
+        const url = `${this.dbUrl}/${this.dbName}/${documentId}?rev=${rev}`;
+        return new Promise((resolve, reject) => {
+            request.delete({
+                "uri": url,
+                "headers": this._headers({}),
+                "json": true
+            }, (error, response) => {
+                this.handleResponse(error, response, resolve, reject);
+            });
+        });
+    }
+
     findDocuments(query, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
         return this.post(path, query, customHeaders);

@@ -16,7 +16,8 @@ export default class Route {
 
     async process() {
         let routeClass = this.constructor.name;
-        let routeParams = this.request.query || this.request.body || "";
+        let routeParams = Object.keys(this.request.query || {}).length
+            ? this.request.query : this.request.body || "";
         let message = this.validate();
         if(message) {
             RouteLogger.instance().warn(`${routeClass}:: validation failed for parameters: [${routeParams}] with message: [${message}]`);

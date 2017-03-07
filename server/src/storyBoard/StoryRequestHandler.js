@@ -1,25 +1,5 @@
 import CouchClient from "../CouchClient";
 
-
-export async function addStory(story, authSession) {
-    let document = {
-        "docType": "story",
-        "title": story
-    };
-    let couchClient = CouchClient.instance(authSession);
-    let stories = await getStoryWithTitle(story.title, authSession);
-    if (stories.docs.length) {
-        let conflictMsg = "Story title already exist";
-        throw conflictMsg;
-    }
-    try {
-        return await couchClient.updateDocument(document);
-    } catch (error) {
-        let errorMsg = "Unable to add the story";
-        throw errorMsg;
-    }
-}
-
 export async function getStoryWithTitle(title, authSession) {
     let couchClient = CouchClient.instance(authSession);
     let query = {
@@ -42,6 +22,17 @@ export async function getStory(id, authSession) {
     } catch (error) {
         let notFoundMsg = "No document found";
         throw notFoundMsg;
+    }
+}
+
+export async function deleteStory(id, authSession) {
+    try {
+        let couchClient = CouchClient.instance(authSession);
+        await couchClient.deleteDocument(id);
+        return { "message": "deleted" };
+    } catch (error) {
+        const errorMsg = { "message": `Unable to delete story. Details: ${JSON.stringify(error)}` };
+        throw errorMsg;
     }
 }
 

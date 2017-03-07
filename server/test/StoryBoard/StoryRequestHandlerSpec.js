@@ -1,66 +1,21 @@
 import * as StoryRequestHandler from "../../src/storyBoard/StoryRequestHandler";
 import CouchClient from "../../src/CouchClient";
+import { isRejected } from "../helpers/AsyncTestHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 
 
 describe("StoryRequestHandler", () => {
-    describe("addStory", () => {
-        let sandbox = null, authSession = null;
-        let couchClientInstanceMock = null, document = null, dbName = "dbName";
-        let story = "title";
-        beforeEach("add story", () => {
-            authSession = "Access Token";
-            couchClientInstanceMock = new CouchClient(authSession, dbName);
-            sandbox = sinon.sandbox.create();
-            document = { "title": story, "docType": "story" };
-        });
+    const sandbox = sinon.sandbox.create();
 
-        afterEach("add story", () => {
-            sandbox.restore();
-        });
-
-
-        it("should throw an error if there is any error from db while saving the document", async () => {
-            let docs = { "docs": [] };
-            story = { "title": "title" };
-            sandbox.mock(CouchClient).expects("instance")
-                .withArgs(authSession).returns(couchClientInstanceMock).twice();
-            sandbox.mock(couchClientInstanceMock).expects("findDocuments").returns(Promise.resolve(docs));
-            sandbox.mock(couchClientInstanceMock).expects("updateDocument").withArgs(document).returns(Promise.reject("Unable to add the story"));
-            await assert.isRejected(StoryRequestHandler.addStory(story, authSession), "Unable to add the story");
-        });
-
-        it("should throw a conflict error if the story with the same title already exists", async () => {
-            let docs = { "docs": [{ "id": "id", "title": "title" }, { "id": "id2", "title": "title2" }] };
-            sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock).twice();
-            sandbox.mock(couchClientInstanceMock).expects("findDocuments").returns(Promise.resolve(docs));
-            await assert.isRejected(StoryRequestHandler.addStory(story, authSession), "Story title already exist");
-        });
-
-        it("should return success response from db", async () => {
-            let docs = { "docs": [] }, result = { "ok": "true", "id": "1234", "rev": "1234" };
-            sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock).twice();
-            sandbox.mock(couchClientInstanceMock).expects("updateDocument").withArgs(document).returns(Promise.resolve(result));
-            sandbox.mock(couchClientInstanceMock).expects("findDocuments").returns(Promise.resolve(docs));
-            let expectedFeeds = await StoryRequestHandler.addStory(story, authSession);
-            assert.deepEqual(expectedFeeds, result);
-        });
+    afterEach("StoryRequestHandler", () => {
+        sandbox.restore();
     });
 
-
     describe("getStory", () => {
-        let sandbox = null, authSession = null, dbName = "dbName", couchClientInstanceMock = null;
-        beforeEach("getStory", () => {
-            authSession = "Access Token";
-            sandbox = sinon.sandbox.create();
+        const authSession = "Access Token",
+            dbName = "dbName",
             couchClientInstanceMock = new CouchClient(authSession, dbName);
-        });
-
-        afterEach("getStory", () => {
-            sandbox.restore();
-        });
-
 
         it("should find the document of docType story and id", async () => {
             let resultDoc = {
@@ -90,17 +45,11 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("getStories", () => {
-        let sandbox = null, authSession = null, result = null,
-            dbName = "dbName", query = null, couchClientInstanceMock = null;
-        beforeEach("getStories", () => {
-            authSession = "Access Token";
-            sandbox = sinon.sandbox.create();
+        const authSession = "Access Token",
+            dbName = "dbName",
             couchClientInstanceMock = new CouchClient(authSession, dbName);
-        });
+        let result = null, query = null;
 
-        afterEach("getStories", () => {
-            sandbox.restore();
-        });
         it("should find the documents of docType story", async () => {
             result = {
                 "docs": [
@@ -130,12 +79,8 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("getStoryWithTitle", () => {
-        let sandbox = null, authSession = null, result = null, dbName = "dbName",
-            query = null, couchClientInstanceMock = null;
-        beforeEach("getStoryWithTitle", () => {
-            authSession = "Access Token";
-            sandbox = sinon.sandbox.create();
-            couchClientInstanceMock = new CouchClient(authSession, dbName);
+        const authSession = "Access Token",
+            dbName = "dbName",
             query = {
                 "selector": {
                     "docType": {
@@ -145,12 +90,9 @@ describe("StoryRequestHandler", () => {
                         "$eq": "title"
                     }
                 }
-            };
-        });
-
-        afterEach("getStoryWithTitle", () => {
-            sandbox.restore();
-        });
+            },
+            couchClientInstanceMock = new CouchClient(authSession, dbName);
+        let result = null;
 
         it("should return documents which have same title and doctype is story", async () => {
             let title = "title";
@@ -177,11 +119,10 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("saveStory", () => {
-        let couchClientInstance = null, authSession = null, sandbox = null, story = null;
+        let couchClientInstance = null, authSession = null, story = null;
 
         beforeEach("saveStory", () => {
             authSession = "auth session";
-            sandbox = sinon.sandbox.create();
             couchClientInstance = new CouchClient(authSession, "db name");
 
             story = {
@@ -189,10 +130,6 @@ describe("StoryRequestHandler", () => {
                 "body": "body",
                 "docType": "story"
             };
-        });
-
-        afterEach("saveStory", () => {
-            sandbox.restore();
         });
 
         it("should return ok on success response from db", async () => {
@@ -241,6 +178,34 @@ describe("StoryRequestHandler", () => {
             } catch(error) {
                 assert.fail(error);
             }
+        });
+    });
+    
+    describe("deleteStory", () => {
+        const id = "test_1", authSession = "auth session",
+            couchClientInstance = new CouchClient(authSession, "db name");
+        let deleteDocumentMock = null;
+
+        beforeEach("deleteStory", () => {
+            deleteDocumentMock = sandbox.mock(couchClientInstance)
+                 .expects("deleteDocument")
+                 .withExactArgs(id);
+            sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClientInstance);
+        });
+
+        it("should delete document", async () => {
+            deleteDocumentMock.returns(Promise.resolve({ "ok": true }));
+            const message = await StoryRequestHandler.deleteStory(id, authSession);
+            deleteDocumentMock.verify();
+            assert.deepEqual(message, { "message": "deleted" });
+        });
+
+        it("should throw error if deletion fails", async () => {
+            const erroMessage = { "message": "error" };
+            deleteDocumentMock.returns(Promise.reject(erroMessage));
+            await isRejected(StoryRequestHandler.deleteStory(id, authSession),
+                { "message": `Unable to delete story. Details: ${JSON.stringify(erroMessage)}` });
+            deleteDocumentMock.verify();
         });
     });
 });
