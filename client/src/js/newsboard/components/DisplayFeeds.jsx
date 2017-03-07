@@ -21,7 +21,7 @@ export class DisplayFeeds extends Component {
         this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false, "search": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
-        this.searchKey = "";
+        this.key = "";
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
@@ -44,11 +44,10 @@ export class DisplayFeeds extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(this.props.sourceType !== nextProps.sourceType) {
-            this.hasMoreFeeds = true;
-            this.offset = 0;
-            this.getMoreFeeds(nextProps.sourceType);
-            this.props.dispatch(DisplayFeedActions.clearFeeds());
+            this.clearOffset();
             this.setState({ "isClicked": false });
+            this.state.search && nextProps.sourceType !== "collections" ? this.searchFeeds(nextProps.sourceType) : this.getMoreFeeds(nextProps.sourceType);//eslint-disable-line no-unused-expressions
+            nextProps.sourceType === "collections" ? this.setState({ "search": false }) : ""; //eslint-disable-line no-unused-expressions
         }
 
         if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
@@ -82,7 +81,7 @@ export class DisplayFeeds extends Component {
                 this.timer = null;
                 const scrollTop = this.feedsDOM.scrollTop;
                 if (scrollTop && scrollTop + this.feedsDOM.clientHeight >= this.feedsDOM.scrollHeight) {
-                    this.state.search ? this.searchFeeds() : this.getMoreFeeds(this.props.sourceType);//eslint-disable-line no-unused-expressions
+                    this.state.search ? this.searchFeeds(this.props.sourceType) : this.getMoreFeeds(this.props.sourceType);//eslint-disable-line no-unused-expressions
                 }
             }, scrollTimeInterval);
         }
@@ -157,20 +156,20 @@ export class DisplayFeeds extends Component {
 
     checkEnterKey(event) {
         const ENTERKEY = 13;
-        if (event.keyCode === ENTERKEY && event.target.value !== this.searchKey) {
-            this.updateSearchState();
-            this.searchFeeds();
+        if (event.keyCode === ENTERKEY) {
+            this._search();
         }
     }
 
+    _search() {
+        this.updateSearchState();
+        this.clearOffset();
+        this.searchFeeds(this.props.sourceType);
+    }
+
     updateSearchState() {
-        this.searchKey = this.refs.searchFeeds.value;
-        if(!StringUtils.isEmptyString(this.searchKey) && this.searchKey.length >= MIN_SEARCH_KEY_LENGTH) {
-            this.offset = 0;
-            this.searchOffset = 0;
-            this.hasMoreSearchFeeds = true;
-            this.hasMoreFeeds = true;
-            this.props.dispatch(DisplayFeedActions.clearFeeds());
+        let key = this.refs.searchFeeds.value;
+        if(!StringUtils.isEmptyString(key) && key.length >= MIN_SEARCH_KEY_LENGTH) {
             this.setState({ "search": !this.state.search });
         }
         else {
@@ -178,15 +177,31 @@ export class DisplayFeeds extends Component {
         }
     }
 
-    searchFeeds() {
+    clearOffset() {
+        this.searchOffset = 0;
+        this.hasMoreSearchFeeds = true;
+        this.hasMoreFeeds = true;
+        this.offset = 0;
+        this.props.dispatch(DisplayFeedActions.clearFeeds());
+    }
+
+    searchFeeds(sourceType) {
+        let key = this.refs.searchFeeds.value;
         let callback = (result) => {
             this.searchOffset = result.docsLength ? (this.searchOffset + result.docsLength) : this.searchOffset;
             this.hasMoreSearchFeeds = result.hasMoreFeeds;
         };
 
-        if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(this.searchKey)) {
-            this.props.dispatch(DisplayFeedActions.searchFeeds(this.props.sourceType, this.searchKey, this.searchOffset, callback));
+        if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(key)) {
+            this.props.dispatch(DisplayFeedActions.searchFeeds(sourceType, key, this.searchOffset, callback));
         }
+    }
+
+    _cancel() {
+        this.updateSearchState();
+        this.clearOffset();
+        this.refs.searchFeeds.value = "";
+        this.getMoreFeeds(this.props.sourceType);
     }
 
     displayFeeds() {
@@ -196,9 +211,8 @@ export class DisplayFeeds extends Component {
                 <div className="search-bar">
                     <div className="input-box">
                         <input type="text" ref="searchFeeds" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={"Search Keywords,Articles etc."}/>
-                        {this.state.search
-                            ? <span className="input-addon" onClick={() => { this.updateSearchState(); this.refs.searchFeeds.value = ""; this.getMoreFeeds(this.props.sourceType); }}><i className="fa fa-times" aria-hidden="true"/></span>
-                            : <span className="input-addon" onClick={() => { this.updateSearchState(); this.searchFeeds(); }}><i className="fa fa-search" aria-hidden="true"/></span>
+                        {this.state.search ? <span className="input-addon" onClick={() => { this._cancel(); }}><i className="fa fa-times" aria-hidden="true"/></span>
+                            : <span className="input-addon" onClick={() => { this._search(); }}><i className="fa fa-search" aria-hidden="true"/></span>
                         }
                     </div>
                 </div>
