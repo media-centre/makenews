@@ -116,22 +116,22 @@ describe("CollectionRequestHandler", () => {
         });
 
         it("should create collectionFeed doc when there is docId and collectionId", async () => {
-            const docId = "doc id";
-            const feedSourceId = "http://www.thehindu.com/?service=rss";
-            const collectionName = "collection name";
+            const feedId = "doc id";
+            const sourceId = "http://www.thehindu.com/?service=rss";
             const collectionId = 123;
             const collectionFeedId = "doc id123";
             const collectionFeedDoc = {
                 "docType": "collectionFeed",
-                "feedId": docId,
-                "collection": collectionName,
-                "sourceId": feedSourceId };
+                feedId,
+                collectionId,
+                sourceId
+            };
 
             const saveDocMock = sandbox.mock(couchClient).expects("saveDocument")
                 .withExactArgs(collectionFeedId, collectionFeedDoc)
                 .returns(Promise.resolve({ "ok": true }));
 
-            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, feedSourceId);
+            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, feedId, sourceId);
             assert.deepEqual(response, { "ok": true });
             saveDocMock.verify();
         });
@@ -140,11 +140,10 @@ describe("CollectionRequestHandler", () => {
             const docId = "doc id";
             const sourceId = "1123455";
             const collectionId = "collection id";
-            const collectionName = "collection name";
             const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
                 .returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT, "message": "conflict" }));
 
-            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, sourceId);
+            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, docId, sourceId);
             assert.deepEqual(response, { "message": "article already added to that collection" });
             saveDocumentMock.verify();
         });
@@ -153,11 +152,10 @@ describe("CollectionRequestHandler", () => {
             const docId = "doc id";
             const sourceId = "1233455";
             const collectionId = "collection id";
-            const collectionName = "collection name";
             const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
                 .returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" }));
             try {
-                await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, collectionName, docId, sourceId);
+                await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, docId, sourceId);
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(error, { "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" });

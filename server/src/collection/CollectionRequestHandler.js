@@ -37,12 +37,12 @@ export default class CollectionRequestHandler {
         return response.id;
     }
 
-    async createCollectionFeedDoc(couchClient, collectionId, collectionName, feedId, sourceId) {
+    async createCollectionFeedDoc(couchClient, collectionId, feedId, sourceId) {
         const collectionFeedDoc = {
             "docType": "collectionFeed",
-            "feedId": feedId,
-            "collection": collectionName,
-            "sourceId": sourceId
+            feedId,
+            collectionId,
+            sourceId
         };
 
         const feedCollectionId = feedId + collectionId;
