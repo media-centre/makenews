@@ -14,7 +14,7 @@ export default class FeedsSearchIndexDocument {
                 "_id": "_design/feedSearch",
                 "fulltext": {
                     "by_document": {
-                        "index": "function(doc) { if(doc.docType === 'feed') { var ret=new Document();if(doc.sourceType) {ret.add(doc.sourceType, {'field': 'sourceType', 'store': 'yes'});} if(doc.title) {ret.add(doc.title,  {'field':'title', 'store': 'yes'});} if(doc.description) {ret.add(doc.description,  {'field':'description', 'store': 'yes'});}return ret; } }" //eslint-disable-line max-len
+                        "index": "function(doc) {if(doc.docType === 'feed') { var ret=new Document(); ret.add(doc.title,  {'field':'title', 'store': 'no'}); ret.add(doc.bookmark,  {'field':'bookmark', 'store': 'no'}); ret.add(doc.description,  {'field':'description', 'store': 'no'}); ret.add(doc.sourceType, {'field': 'sourceType', 'store': 'no'}); ret.add(new Date(doc.pubDate), {'field':'pubDate', 'store': 'no', 'type': 'date'}); return ret; } }" //eslint-disable-line max-len
                     }
                 }
             };
