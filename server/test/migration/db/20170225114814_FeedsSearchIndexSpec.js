@@ -1,4 +1,4 @@
-import FeedsSearchIndex from "./../../../src/migration/admin/20170225114814_FeedsSearchIndex";
+import FeedsSearchIndex from "./../../../src/migration/db/20170225114814_FeedsSearchIndex";
 import sinon from "sinon";
 import CouchClient from "../../../src/CouchClient";
 import { assert } from "chai";
