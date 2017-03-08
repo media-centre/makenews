@@ -20,16 +20,16 @@ window.mediaCenter.appEn = {
             },
             "featuresHelp": {
                 "configureHelp": {
-                    "name": "Configure",
-                    "text": "You identify your favourite RSS feeds, Twitter handles, Twitter hashtags and Facebook pages as sources. Group your sources into Categories and get a structured view of news updates."
+                    "name": "Add news sources",
+                    "text": "Identify and add all your favourite sources from RSS feeds, Facebook and Twitter to aggregate these and create a one stop destination for all your news."
                 },
-                "surfHelp": {
-                    "name": "Surf",
-                    "text": "MakeNews relays updates from sources. You do not have to go to every source to seek updates. Add sources in Configure then scroll infinitely through updates in Surf. Click on the item and it opens up in a new tab."
+                "scanNewsHelp": {
+                    "name": "Scan news articles",
+                    "text": "Don’t miss out on any news. Look out for all the trending and latest news. Save and sort your references and make your own news collections."
                 },
-                "parkHelp": {
-                    "name": "Park",
-                    "text": "Set aside interesting posts from the rush of news items in Surf. Parked items can be considered later or unparked and moved back to Surf."
+                "writeStoryHelp": {
+                    "name": "Write your story",
+                    "text": "Write and export your own story while referring to your collections and the news world."
                 }
             }
         },

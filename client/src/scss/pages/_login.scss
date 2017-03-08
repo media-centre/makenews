@@ -23,12 +23,44 @@
 
     .watch-demo {
       display: block;
-      margin: 2rem 0;
+      margin: 2rem 0 0;
+      color:$primary-color-light;
+
+      .arrow{
+        font-size: large;
+      }
     }
   }
 
   .login-box {
     margin-left: 10px;
+  }
+
+  .screenshots {
+    background: -webkit-linear-gradient($background-color 50%, white 50%);
+    background: -o-linear-gradient($background-color 50%, white 50%);
+    background: -moz-linear-gradient($background-color 50%, white 50%);
+    background: linear-gradient($background-color 50%, white 50%);
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .details {
+    display: flex;
+    .page {
+      h2 {
+        color: $primary-color;
+        font-weight: 100;
+      }
+      .description {
+        color: $primary-color-light;
+        font-size: 0.9rem;
+        line-height: 1.5rem;
+        padding-right: 1rem;
+      }
+    }
   }
 }
 
