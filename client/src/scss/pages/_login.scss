@@ -1,78 +1,22 @@
-@import "../utils/_variable";
+.login {
+  text-align: center;
+  .input-container {
+    margin: 1rem;
+    width: 20rem;
+    text-align: center;
+    display: inline-block;
 
-.login-bg {
-  background: url("images/news-bg.jpg") fixed;
-  background-size: cover;
-  background-position-y: 100px;
-}
-
-.login.app-header {
-  position: relative;
-  background: $app-header-bg-color;
-  color: $primary-font-color;
-  padding: 30px;
-  margin-bottom: 2px;
-  @extend .bottom-box-shadow;
-
-  .app-logo {
-    margin-bottom: 15px;
-  }
-
-  .description {
-    line-height: 22px;
-  }
-
-  form {
-    .input-container > div {
-      margin-right: 10px;
-    }
-
-    p.error {
-      margin-top: -20px;
-    }
-
-    p {
-      margin: 8px 0;
-      min-height: 17px;
+    input {
+      display: block;
+      padding: 10px;
+      font-size: 1.05rem;
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 10px 0;
+      background: $dark-background-color;
+      color: $primary-color-light;
     }
   }
-
-  .login-button {
-    background: transparent;
-    color: $primary-font-color;
-    &:hover {
-      color: $secondary-font-color;
-    }
-  }
-}
-
-.login.app-section {
-    padding: 3% 0;
-
-    .static-block {
-      width: 240px;
-      margin: 20px 50px 20px 50px;
-      color: $body-font-color;
-      vertical-align: top;
-      display: inline-block;
-
-      .image-block {
-        width: 50px;
-        height: 50px;
-        padding: 40px;
-        margin: auto;
-        z-index: 1;
-        position: relative;
-
-        img {
-          width: 50px;
-        }
-      }
-
-      .content-block {
-        background: rgba(245,245,245, 0.85);
-        padding: 55px 20px 1px 20px;
-        margin-top: -60px;
-      }
-    }
 }

@@ -8,9 +8,9 @@ window.mediaCenter.appEn = {
     "messages": {
         "loginPage": {
             "login": {
-                "loginButton": "Login",
-                "userNamePlaceHoder": "username",
-                "passwordPlaceHoder": "password",
+                "loginButton": "Sign in",
+                "userNamePlaceHolder": "Username",
+                "passwordPlaceHolder": "Password",
                 "loginHelpLabel": "Need help to login"
 
             },

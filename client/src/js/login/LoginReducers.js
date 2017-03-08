@@ -18,11 +18,10 @@ export function login(state = { "errorMessage": "" }, action = {}) {
         };
     default:
         return state;
-
     }
 }
 
 export function loginPageLocale(state = {}, action = {}) {
-    let appLocaleEn = Locale.applicationStrings();
+    const appLocaleEn = Locale.applicationStrings();
     return appLocaleEn.messages.loginPage;
 }

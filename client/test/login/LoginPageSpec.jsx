@@ -1,5 +1,3 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
 import "../helper/TestHelper";
 import { LoginPage } from "../../src/js/login/pages/LoginPage";
 
@@ -11,7 +9,7 @@ import ReactDOM from "react-dom";
 describe("login page component", () => {
     let loginPage = null;
     before("login page component", () => {
-        let props = {
+        const props = {
             "login": {
                 "errorMessage": "invalid credentials"
             },
@@ -21,20 +19,6 @@ describe("login page component", () => {
                 },
                 "branding": {
                     "text": "sample branding"
-                },
-                "featuresHelp": {
-                    "configureHelp": {
-                        "name": "Test Configure Name",
-                        "text": "sample Configure text"
-                    },
-                    "surfHelp": {
-                        "name": "Test Surf Name",
-                        "text": "sample Surf text"
-                    },
-                    "parkHelp": {
-                        "name": "Test Park Name",
-                        "text": "sample Park text"
-                    }
                 }
             }
         };
@@ -45,28 +29,17 @@ describe("login page component", () => {
     });
 
     it("should have login component with the errorMessage property", () => {
-        let loginDOM = ReactDOM.findDOMNode(loginPage.refs.login);
-        assert.strictEqual("login", loginDOM.getAttribute("id"));
+        const loginDOM = ReactDOM.findDOMNode(loginPage.refs.login);
+        assert.strictEqual(loginDOM.className, "login");
         assert.strictEqual("invalid credentials", loginPage.refs.login.props.errorMessage);
     });
 
     it("should have the property loginPageStrings", () => {
-        let loginCompoent = loginPage.refs.login;
+        const loginCompoent = loginPage.refs.login;
         assert.isDefined(loginCompoent.props.loginStrings);
     });
 
     it("should have props errorMessage as invalid credentials", () => {
         assert.strictEqual("invalid credentials", loginPage.props.login.errorMessage);
-    });
-
-    it("should have branding component", () => {
-        assert.strictEqual("sample branding", loginPage.refs.branding.props.branding.text);
-    });
-
-    /*intentionally added integration tests*/
-    it("should have features help component", () => {
-        assert.strictEqual("Test Configure Name", loginPage.refs.featuresHelp.props.featuresHelp.configureHelp.name);
-        assert.strictEqual("Test Surf Name", loginPage.refs.featuresHelp.props.featuresHelp.surfHelp.name);
-        assert.strictEqual("Test Park Name", loginPage.refs.featuresHelp.props.featuresHelp.parkHelp.name);
     });
 });
