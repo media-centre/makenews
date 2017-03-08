@@ -8,6 +8,7 @@ import ReactDOM from "react-dom";
 
 describe("login page component", () => {
     let loginPage = null;
+    let loginPageDOM = null;
     before("login page component", () => {
         const props = {
             "login": {
@@ -17,6 +18,8 @@ describe("login page component", () => {
                 "login": {
                     "loginButton": "Login"
                 },
+                "getStarted": "get started for free",
+                "watchDemo": "Watch Makenews Demo",
                 "branding": {
                     "text": "sample branding"
                 }
@@ -26,6 +29,29 @@ describe("login page component", () => {
         loginPage = TestUtils.renderIntoDocument(
             <LoginPage dispatch={()=>{}} login={props.login} loginPageStrings={props.loginPageStrings}/>
         );
+
+        loginPageDOM = ReactDOM.findDOMNode(loginPage);
+    });
+
+    it("should have a logo image", () => {
+        const [img] = loginPageDOM.querySelectorAll("img.logo");
+        assert.strictEqual(img.src, "./images/makenews-logo.png");
+        assert.strictEqual(img.alt, "makenews");
+    });
+
+    it("should have the makenews description", () => {
+        const [desc] = loginPageDOM.querySelectorAll(".makenews-desc");
+        assert.strictEqual(desc.textContent, "sample branding");
+    });
+
+    it("should have the getStarted button", () => {
+        const [button] = loginPageDOM.querySelectorAll(".get-started.btn");
+        assert.strictEqual(button.textContent, "get started for free");
+    });
+
+    it("should have a watch makenews demo link", () => {
+        const [link] = loginPageDOM.querySelectorAll(".watch-demo");
+        assert.strictEqual(link.textContent, "Watch Makenews Demo");
     });
 
     it("should have login component with the errorMessage property", () => {

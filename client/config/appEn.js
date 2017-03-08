@@ -12,8 +12,9 @@ window.mediaCenter.appEn = {
                 "userNamePlaceHolder": "Username",
                 "passwordPlaceHolder": "Password",
                 "loginHelpLabel": "Need help to login"
-
             },
+            "getStarted": "get started for free",
+            "watchDemo": "Watch Makenews Demo",
             "branding": {
                 "text": "MakeNews is for journalists and newsrooms. It helps you track news from web and social media in real-time."
             },

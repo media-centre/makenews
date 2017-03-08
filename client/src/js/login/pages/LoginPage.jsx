@@ -14,7 +14,23 @@ export class LoginPage extends Component {
         const { dispatch } = this.props;
         return (
             <div className="login-page">
-                <Login ref="login" onLoginClick={(history, userName, password) => dispatch(userLogin(history, userName, password))} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
+                <div className="row container">
+                    <div className="branding">
+                        <img className="logo" alt="makenews" src="./images/makenews-logo.png"/>
+                        <p className="makenews-desc">
+                            {this.props.loginPageStrings.branding.text}
+                        </p>
+                        <button className="get-started btn primary lg">
+                            {this.props.loginPageStrings.getStarted}
+                        </button>
+                        <a href="#" className="watch-demo">
+                            {this.props.loginPageStrings.watchDemo}
+                        </a>
+                    </div>
+                    <div className="login-box">
+                        <Login ref="login" onLoginClick={(history, userName, password) => dispatch(userLogin(history, userName, password))} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
+                    </div>
+                </div>
             </div>
         );
     }
