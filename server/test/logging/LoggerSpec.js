@@ -2,10 +2,12 @@
 
 import { assert } from "chai";
 import Logger, { logLevel, logType, LOG_DIR } from "../../src/logging/Logger";
+import EnvironmentConfig from "../../src/config/EnvironmentConfig";
 import sinon from "sinon";
 
 describe("Logger", () => {
     const defaultDirPath = LOG_DIR;
+    const environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).environment;
 
     describe("instance", () => {
         let sandBox = null, JsonStub = null, loggerStub = null, defaultCategoryLogger = null;
@@ -31,13 +33,13 @@ describe("Logger", () => {
 
         it("default logger should be returned when instance is called without default logging config ", () => {
             let myJson = {
-                "unit_testing": {
-                    "dir": "../../../dist/logs",
-                    "test1": {
-                        "file": {
-                            "filename": "test1.log",
-                            "level": logLevel.LOG_INFO
-                        }
+            };
+            myJson[environment] = {
+                "dir": "../../../dist/logs",
+                "test1": {
+                    "file": {
+                        "filename": "test1.log",
+                        "level": logLevel.LOG_INFO
                     }
                 }
             };
@@ -49,32 +51,30 @@ describe("Logger", () => {
             assertFileLogger(logger, "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
         });
 
-        it("default category logger should be returned if logging.json is read", () => {
-            loggerStub.returns(false);
-            assertFileLogger(new Logger(), "unitTest.log", defaultDirPath, logLevel.LOG_ERROR);
-        });
-
         it("category logger should be returned when instance is called with category name", () => {
             let myJson = {
-                "unit_testing": {
-                    "dir": "/var/logs",
-                    "default": {
-                        "file": {
-                            "filename": "def.log",
-                            "level": logLevel.LOG_WARN
-                        }
-                    },
-                    "test3": {
-                        "file": {
-                            "filename": "test3.log",
-                            "level": logLevel.LOG_INFO
-                        }
+            };
+            myJson[environment] = {
+                "dir": "/var/logs",
+                "default": {
+                    "file": {
+                        "filename": "def.log",
+                        "level": logLevel.LOG_WARN
+                    }
+                },
+                "test3": {
+                    "file": {
+                        "filename": "test3.log",
+                        "level": logLevel.LOG_INFO
                     }
                 }
             };
             JsonStub = sandBox.stub(Logger, "_getJson");
             JsonStub.returns(myJson);
             loggerStub.returns(false);
+
+            defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
+            defaultCategoryLogger.returns(null);
 
             let logger = new Logger(null, "test3");
             assertFileLogger(logger, "test3.log", "/var/logs", logLevel.LOG_INFO);

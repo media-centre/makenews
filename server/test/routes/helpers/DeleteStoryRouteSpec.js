@@ -1,10 +1,16 @@
 import DeleteStoryRoute from "../../../src/routes/helpers/DeleteStoryRoute";
+import LogTestHelper from "../../helpers/LogTestHelper";
+import RouteLogger from "../../../src/routes/RouteLogger";
 import CouchClient from "../../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("DeleteStoryRoute", () => {
     let sandbox = sinon.sandbox.create();
+
+    beforeEach("DeleteStoryRoute", () => {
+        sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
+    });
 
     afterEach("DeleteStoryRoute", () => {
         sandbox.restore();
