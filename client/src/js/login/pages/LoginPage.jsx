@@ -1,3 +1,4 @@
+/* eslint react/self-closing-comp:0 */
 import Login from "../components/Login";
 import { userLogin } from "../LoginActions";
 import AppSessionStorage from "../../../js/utils/AppSessionStorage";
@@ -49,6 +50,7 @@ export class LoginPage extends Component {
                         <p className="description">{featuresHelp.writeStoryHelp.text}</p>
                     </div>
                 </div>
+                <div className="empty-box"></div>
             </div>
         );
     }

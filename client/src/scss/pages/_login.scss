@@ -36,6 +36,11 @@
     margin-left: 10px;
   }
 
+  .empty-box {
+    padding: 5rem;
+    background: $background-color;
+  }
+
   .screenshots {
     background: -webkit-linear-gradient($background-color 50%, white 50%);
     background: -o-linear-gradient($background-color 50%, white 50%);

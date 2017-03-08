@@ -10,11 +10,14 @@ button {
     color: #fff;
     box-shadow: -2px 3px 2px 0 #b3b1b1;
 
-    &:hover,
     &:focus,
     &:active {
       border: 1px solid $primary-color;
     }
+  }
+
+  &.lg {
+    font-size: 1.1rem;
   }
 
   &.secondary {
