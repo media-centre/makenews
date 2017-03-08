@@ -30,6 +30,12 @@ export class StoryCards extends Component {
         return untitled.sort()[0];
     }
 
+    deleteStory(id, event) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.props.dispatch(StoryBoardActions.deleteStory(id));
+    }
+
     _renderStoriesList() {
         let storiesArray = [];
         storiesArray.push(<li className="add-card" key="0">
@@ -43,6 +49,7 @@ export class StoryCards extends Component {
         this.props.stories.map((story, index) =>
             storiesArray.push(
                 <li key={index + 1} className="added-card">
+                    <i className="fa fa-remove icon delete-icon" onClick={(event) => this.deleteStory(story._id, event)}/>
                     <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
                         <div className="card">
                             <i ref={`title${story.title}`}>{story.title}</i>

@@ -1,4 +1,4 @@
-import { ADD_STORY_TITLE, CLEAR_STORIES, UNTITLED_NUMBER } from "../actions/StoryBoardActions";
+import { ADD_STORY_TITLE, CLEAR_STORIES, UNTITLED_NUMBER, REMOVE_STORY } from "../actions/StoryBoardActions";
 import { List } from "immutable";
 
 export const stories = (state = [], action = {}) => {
@@ -8,6 +8,9 @@ export const stories = (state = [], action = {}) => {
     }
     case CLEAR_STORIES:
         return [];
+    case REMOVE_STORY: {
+        return state.filter(story => story._id !== action.id);
+    }
     default: return state;
     }
 };

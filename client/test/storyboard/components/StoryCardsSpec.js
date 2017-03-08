@@ -3,6 +3,7 @@ import TestUtils from "react-addons-test-utils";
 import { assert } from "chai";
 import React from "react";
 import ReactDOM from "react-dom";
+import sinon from "sinon";
 
 describe("StoryCards", () => {
     let storyBoardCards = null, stories = null;
@@ -18,8 +19,27 @@ describe("StoryCards", () => {
         assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
     });
 
+    it("should have the remove icon", () => {
+        let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i.delete-icon");
+        assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
+    });
+
+    it("onclick of remove icon should dispatch event", () => {
+        const storyBoardCards1 = TestUtils.renderIntoDocument(
+            <StoryCards stories = {stories} dispatch={()=>{}}/>
+        );
+
+        let storiesList = ReactDOM.findDOMNode(storyBoardCards1).querySelectorAll("ul li.added-card i.delete-icon");
+        let [story1] = storiesList;
+        let deleteMock = sinon.mock(storyBoardCards1).expects("deleteStory");
+        TestUtils.Simulate.click(story1);
+        assert.strictEqual(story1.className, "fa fa-remove icon delete-icon");
+        deleteMock.verify();
+    });
+
     it("should have story name", () => {
-        let storyTitle = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i")[0].textContent;        //eslint-disable-line no-magic-numbers
+        const [nodeList] = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card a.navigation-link div.card i");
+        let storyTitle = nodeList.textContent;
         assert.strictEqual("title1", storyTitle);
     });
 

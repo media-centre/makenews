@@ -48,6 +48,18 @@
         padding: 10px;
       }
     }
+    .delete-icon {
+      display: none;
+    }
+    &:hover {
+        .delete-icon {
+          display: inline;
+          float: right;
+          padding-right: 5px;
+          padding-top: 2px;
+          color: #917fa9;
+        }
+    }
   }
   .added-card {
     color: $dark-background-color;
