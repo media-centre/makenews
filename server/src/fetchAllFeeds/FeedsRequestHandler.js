@@ -3,6 +3,7 @@ import { searchDocuments } from "./../LuceneClient";
 import R from "ramda"; //eslint-disable-line id-length
 import { userDetails } from "./../Factory";
 import { NEWSBOARD_SOURCE_TYPES } from "./../util/Constants";
+import RouteLogger from "./../routes/RouteLogger";
 const LIMIT_VALUE = 25;
 
 export default class FeedsRequestHandler {
@@ -88,7 +89,7 @@ export default class FeedsRequestHandler {
             result.paging = { "offset": (skip + LIMIT_VALUE) };
             return result;
         } catch (error) {
-            /*TODO: log the error*/ //eslint-disable-line
+            RouteLogger.instance().warn(`Search Feeds:: request with : ${searchKey} failed with error: [${JSON.stringify(error)}]`);
             throw `No Search results found for this keyword "${searchKey}"`; //eslint-disable-line no-throw-literal
         }
     }

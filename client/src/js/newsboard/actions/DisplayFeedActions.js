@@ -98,12 +98,13 @@ export function searchFeeds(sourceType, searchKey, offset, callback) {
             if(feeds.docs.length) {
                 dispatch(searchedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
+            }else {
+                Toast.show(`No Search results found for this keyword "${searchKey}"`);
             }
             result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
             return callback(result);
         } catch (err) {
             Toast.show(err.message);
-            dispatch(clearFeeds());
             return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
         }
     };

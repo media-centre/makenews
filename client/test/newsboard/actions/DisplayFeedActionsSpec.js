@@ -17,6 +17,7 @@ import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
+import Toast from "../../../src/js/utils/custom_templates/Toast";
 
 
 describe("DisplayFeedActions", () => {
@@ -130,17 +131,20 @@ describe("DisplayFeedActions", () => {
                 getMock.verify();
             });
 
-            it("should show message when no search results found", (done) => {
-                let sourceType = "web";
-                let keyword = "test key";
+            it("should show message when no search results found", async() => {
+                const sourceType = "web";
+                const searchKey = "test_key";
 
-                let ajaxClientInstance = AjaxClient.instance("/search-feeds");
-                sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-                let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject(`No Search results found for this keyword "${keyword}"`));
+                const ajaxClientInstance = AjaxClient.instance("/search-feeds");
+                sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
+                const getMock = sandbox.mock(ajaxClientInstance).expects("get").withArgs({ sourceType, searchKey, offset })
+                    .returns(Promise.reject({ "message": `No Search results found for this keyword "${searchKey}"` }));
+                const toastMock = sandbox.mock(Toast).expects("show")
+                    .withExactArgs(`No Search results found for this keyword "${searchKey}"`);
 
-                let store = mockStore([], [{ "type": CLEAR_NEWS_BOARD_FEEDS }], done);
-                store.dispatch(searchFeeds({ sourceType, keyword, offset }));
+                await searchFeeds(sourceType, searchKey, offset, () => {})();
 
+                toastMock.verify();
                 getMock.verify();
             });
         });
