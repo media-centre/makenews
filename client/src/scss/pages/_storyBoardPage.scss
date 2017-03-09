@@ -1,18 +1,19 @@
 .create-story-tab {
   overflow: auto;
   background-color: $dark-background-color;
+  height: 54px;
+  padding: 8px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 
   .create-story-icon {
     float: right;
     cursor: pointer;
-    width: 170px;
-    padding: 10px;
-    height: 50px;
-    i {
-      color: #917fa9;
-    }
+
     .icon {
       padding: 10px;
+      color: #917fa9;
     }
   }
 }
@@ -21,15 +22,13 @@
   background-color: #FAF5F5;
   .story-cards {
     height: calc(100vh - 68px);
-    li {
-      display: inline-block;
-    }
   }
   .add-card, .added-card {
     margin: 15px;
     border: 1px dashed;
     text-align: center;
     color: #917fa9;
+    display: inline-block;
     .navigation-link {
       height: 100px;
       width: 200px;
@@ -50,14 +49,16 @@
     }
     .delete-icon {
       display: none;
+      right: 0;
+      padding-right: 5px;
+      padding-top: 2px;
+      color: #917fa9;
+      position: absolute;
+      cursor: pointer;
     }
     &:hover {
         .delete-icon {
           display: inline;
-          float: right;
-          padding-right: 5px;
-          padding-top: 2px;
-          color: #917fa9;
         }
     }
   }
@@ -66,10 +67,12 @@
     background-color: #ffffff;
     vertical-align: top;
     border: 1px solid;
+    position: relative;
   }
 }
 
-.create-story-tab, .story-board-container {
+.create-story-tab,
+.story-board-container {
   a {
     display: block;
     color: #917fa9;
@@ -122,7 +125,8 @@
   }
 }
 
-.story-collections .configured-feeds-container, .collection-list-container {
+.story-collections .configured-feeds-container,
+.collection-list-container {
   .expand-icon {
     display: none;
   }
