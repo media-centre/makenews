@@ -46,9 +46,17 @@ export default class CouchClient {
         return this.put(path, documentObj, customHeaders);
     }
 
-    async saveBulkDocuments(body, customHeaders = {}) {
+    saveBulkDocuments(body, customHeaders = {}) {
         const path = "/" + this.dbName + "/_bulk_docs";
         return this.post(path, body, customHeaders);
+    }
+
+    deleteBulkDocuments(docs) {
+        const docsToDelete = docs.map(doc => {
+            doc._deleted = true;
+            return doc;
+        });
+        return this.saveBulkDocuments({ "docs": docsToDelete });
     }
 
     getDocument(documentId, customHeaders = {}) {
@@ -146,8 +154,8 @@ export default class CouchClient {
     static getAllDbs() {
         return new Promise((resolve, reject) => {
             request.get({
-                "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
-            },
+                    "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
+                },
                 (error, response) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (response.statusCode === HttpResponseHandler.codes.OK) {

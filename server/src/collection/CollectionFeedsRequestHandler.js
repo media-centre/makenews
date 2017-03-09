@@ -20,6 +20,7 @@ async function getFeeds(couchClient, feedIds) {
     return R.reject(R.isEmpty, feeds);
 }
 
+/*TODO: rename this functions to resemble it's original responsibility*/ //eslint-disable-line
 async function getFeedIds(couchClient, collection, offset) {
     const selector = {
         "selector": {
@@ -35,7 +36,6 @@ async function getFeedIds(couchClient, collection, offset) {
 }
 
 export async function getCollectionFeedIds(couchClient, sourceIds, feeds = [], skipValue = 0) { // eslint-disable-line no-magic-numbers
-
     const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue, sourceIds);
     const feedsAccumulator = feeds.concat(collectionFeedDocs);
 
@@ -62,4 +62,45 @@ async function getCollectionFeedDocs(couchClient, skipValue, sources) {
     };
     const collectionFeedDocs = await couchClient.findDocuments(selector);
     return collectionFeedDocs.docs;
+}
+
+export async function deleteCollection(authSession, collectionId) {
+    const couchClient = CouchClient.instance(authSession);
+    const collectionFeedDocs = await _getCollectionFeedDocs(couchClient, collectionId);
+    const collectionDoc = await couchClient.getDocument(collectionId);
+
+    const feedsToDelete = R.map(collectionFeed => collectionFeed.feedId)(collectionFeedDocs);
+    const deletedFeeds = await _getSourceDeletedFeeds(couchClient, feedsToDelete);
+
+    await couchClient.deleteBulkDocuments([...collectionFeedDocs, collectionDoc, ...deletedFeeds]);
+    return { "ok": true };
+}
+
+async function _getCollectionFeedDocs(couchClient, collectionId) {
+    const interMediateDocQuery = {
+        "selector": {
+            "collectionId": {
+                "$eq": collectionId
+            }
+        },
+        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
+    };
+    const collectionFeedDocs = await couchClient.findDocuments(interMediateDocQuery);
+    return collectionFeedDocs.docs;
+}
+
+async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
+    const feedsToDeleteQuery = {
+        "selector": {
+            "_id": {
+                "$in": feedsToDelete
+            },
+            "sourceDeleted": {
+                "$eq": true
+            }
+        },
+        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
+    };
+    const deletedFeeds = await couchClient.findDocuments(feedsToDeleteQuery);
+    return deletedFeeds.docs;
 }

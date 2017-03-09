@@ -11,17 +11,17 @@ import nock from "nock";
 
 describe("CouchClient", () => {
     let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
+    let sandbox = null;
     before("CouchClient", () => {
+        sandbox = sinon.sandbox.create();
         applicationConfig = new ApplicationConfig();
-        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
-        sinon.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
-        sinon.stub(CouchClient, "logger").returns(LogTestHelper.instance());
+        sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sandbox.stub(applicationConfig, "dbUrl").returns("http://localhost:5984");
+        sandbox.stub(CouchClient, "logger").returns(LogTestHelper.instance());
     });
 
     after("CouchClient", () => {
-        ApplicationConfig.instance.restore();
-        applicationConfig.dbUrl.restore();
-        CouchClient.logger.restore();
+        sandbox.restore();
     });
 
     describe("findDocuments", () => {
@@ -89,8 +89,8 @@ describe("CouchClient", () => {
                     "Accept": "application/json"
                 }
             })
-              .post("/" + dbName + "/_index")
-              .reply(HttpResponseHandler.codes.OK, response);
+                .post("/" + dbName + "/_index")
+                .reply(HttpResponseHandler.codes.OK, response);
 
             let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
@@ -102,7 +102,6 @@ describe("CouchClient", () => {
                 done();
             });
         });
-        
     });
 
     describe("saveDocument", () => {
@@ -212,6 +211,24 @@ describe("CouchClient", () => {
                 NodeErrorHandler.noError.restore();
                 done();
             });
+        });
+    });
+
+    describe("deleteBulkDocuments", () => {
+        it("should delete the bulk docs", () => {
+            const docs = [{ "_id": 1 }, { "_id": 2 }];
+            const docsToDelete = [
+                { "_id": 1, "_deleted": true },
+                { "_id": 2, "_deleted": true }
+            ];
+
+            const couchClientInstance = new CouchClient(accessToken, dbName);
+            const postMock = sandbox.mock(couchClientInstance).expects("saveBulkDocuments");
+            postMock.withExactArgs({ "docs": docsToDelete }).returns(Promise.resolve());
+
+            couchClientInstance.deleteBulkDocuments(docs);
+
+            postMock.verify();
         });
     });
 

@@ -27,7 +27,7 @@ export default class DeleteSourceHandler {
 
         const feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
         const docsToBeDeleted = feedDocuments.concat(sourceDocuments);
-        await this._deleteDocuments(couchClient, docsToBeDeleted);
+        await couchClient.deleteBulkDocuments(docsToBeDeleted);
         try {
             await this.markAsSourceDeleted(couchClient, sources);
         } catch(err) {
@@ -108,15 +108,6 @@ export default class DeleteSourceHandler {
         }
 
         return docs.concat(docsInReq.docs);
-    }
-
-    async _deleteDocuments(couchClient, allDocs) {
-        const deletedDocuments = allDocs.map((doc) => {
-            doc._deleted = true;
-            return doc;
-        });
-
-        return await couchClient.saveBulkDocuments({ "docs": deletedDocuments });
     }
 
     async markAsSourceDeleted(couchClient, sources) {

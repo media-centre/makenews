@@ -44,7 +44,7 @@ describe("DeleteSourceHandler", () => {
 
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
-            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             let res = await deleteSourceHandler.deleteSources(sources, accessToken);
 
@@ -66,7 +66,7 @@ describe("DeleteSourceHandler", () => {
 
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, ["hashtag1"]).returns(Promise.resolve(collectionFeedIds));
-            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             const response = await deleteSourceHandler.deleteSources([], accessToken);
             assert.deepEqual(response, { "ok": true });
@@ -90,38 +90,13 @@ describe("DeleteSourceHandler", () => {
 
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
-            let saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let saveDocs = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
 
             const response = await deleteSourceHandler.deleteSources(sources, accessToken);
 
             findDocs.verify();
             saveDocs.verify();
             getCollectionFeedIdsMock.verify();
-            assert.deepEqual(response, { "ok": true });
-        });
-        
-        it("should add sourceDeleted true prop to the collection and bookmarked feeds", async () => {
-            const sources = ["newsClick"];
-            const selector = {
-                "selector": {
-                    "sourceId": {
-                        "$in": sources
-                    }
-                },
-                "skip": 0,
-                "limit": Constants.FEED_LIMIT_TO_DELETE_IN_QUERY
-            };
-            const updatedDocs = [{ "id": "123", "sourceDeleted": true }];
-            
-            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments")
-                .withArgs(selector).returns(Promise.resolve({ "docs": [{ "id": "123" }] }));
-            const saveDocsMock = sandbox.mock(couchClient).expects("saveBulkDocuments")
-                .withArgs({ "docs": updatedDocs }).returns({ "ok": true });
-            
-            const response = await deleteSourceHandler.markAsSourceDeleted(couchClient, sources);
-            
-            findDocsMock.verify();
-            saveDocsMock.verify();
             assert.deepEqual(response, { "ok": true });
         });
     });
