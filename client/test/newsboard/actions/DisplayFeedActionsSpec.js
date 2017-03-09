@@ -1,6 +1,7 @@
 import {
     paginatedFeeds,
     clearFeeds,
+    hideBookmarkToast,
     displayFeedsByPage,
     newsBoardTabSwitch,
     displayArticle,
@@ -11,7 +12,8 @@ import {
     NEWS_BOARD_CURRENT_TAB,
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
-    SEARCHED_FEEDS
+    SEARCHED_FEEDS,
+    HIDE_BOOKMARK_TOAST
 } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
@@ -43,6 +45,13 @@ describe("DisplayFeedActions", () => {
         it("should return type CLEAR_NEWS_BOARD_FEEDS action ", () => {
             let clearFeedsAction = { "type": CLEAR_NEWS_BOARD_FEEDS };
             assert.deepEqual(clearFeeds(), clearFeedsAction);
+        });
+    });
+
+    describe("hideBookmarkToast", () => {
+        it("should return type HIDE_BOOKMARK_TOAST action ", () => {
+            const hideBookmarkAction = { "type": HIDE_BOOKMARK_TOAST };
+            assert.deepEqual(hideBookmarkToast(), hideBookmarkAction);
         });
     });
 

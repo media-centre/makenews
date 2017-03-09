@@ -3,7 +3,8 @@ import {
     newsBoardCurrentSourceTab,
     selectedArticle,
     fetchingWebArticle,
-    fetchingFeeds
+    fetchingFeeds,
+    displayFeedsToast
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE, FETCHING_FEEDS, SEARCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import { DELETE_COLLECTION } from "../../../src/js/newsboard/actions/DisplayCollectionActions";
@@ -155,6 +156,16 @@ describe("DisplayFeedReducer", () => {
         it("should return action state", () => {
             const action = { "type": FETCHING_FEEDS, "isFetching": true };
             expect(fetchingFeeds(false, action)).to.be.true; // eslint-disable-line no-unused-expressions
+        });
+    });
+
+    describe("Display feeds toast", () => {
+        it("should return book mark status", () => {
+            const action = { "type": BOOKMARKED_ARTICLE, "bookmarkStatus": true };
+            expect(displayFeedsToast({}, action)).to.deep.equals({ "bookmark": action.bookmarkStatus });
+        });
+        it("should return false by default", () => {
+            expect(displayFeedsToast({}, {})).to.deep.equals({ "bookmark": false });
         });
     });
 });

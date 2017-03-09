@@ -42,12 +42,12 @@ describe("DisplayFeeds", () => {
     });
 
     it("should render the feeds", () => {
-        let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Feed);
+        const renderedSources = TestUtils.scryRenderedComponentsWithType(result, Feed);
         expect(renderedSources).to.have.lengthOf(2);  //eslint-disable-line no-magic-numbers
     });
 
     it("should not have expand class by default", () => {
-        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
+        const displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
         expect(displayFeeds.className).to.equal("configured-feeds-container");
     });
 
@@ -57,10 +57,10 @@ describe("DisplayFeeds", () => {
     });
 
     it("should have expand class when we click on expand icon", () => {
-        let renderedSources = TestUtils.findRenderedDOMComponentWithClass(result, "expand-icon");
+        const renderedSources = TestUtils.findRenderedDOMComponentWithClass(result, "expand-icon");
         TestUtils.Simulate.click(renderedSources);
 
-        let displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
+        const displayFeeds = TestUtils.findRenderedDOMComponentWithClass(result, "configured-feeds-container");
         expect(displayFeeds.className).to.contains("expand");
     });
 

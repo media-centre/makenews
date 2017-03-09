@@ -23,6 +23,28 @@
         }
       }
 
+      .toast {
+        position: absolute;
+        background: $primary-color;
+        padding: 10px 19px;
+        margin-left: -15px;
+        margin-top: -2.1rem;
+        color: #fff;
+        display: flex;
+        transition: .5s transform;
+        transform: translateX(-17rem);
+
+        .close {
+          padding-left: 10px;
+          font-size: 1.3rem;
+          margin-top: -2px;
+        }
+
+        &.show {
+          transform: translateX(0);
+        }
+      }
+
       .icon {
         font-size: 1.5em;
         color: $primary-color-light;
@@ -45,8 +67,8 @@
   .configured-feeds-container {
     background-color: $background-color;
     flex-basis: $side-panel-width;
-    border-right: 2px solid lighten($primary-color, 35%);
-    border-left: 2px solid lighten($primary-color, 35%);
+    border-right: 1px solid lighten($primary-color, 35%);
+    border-left: 1px solid lighten($primary-color, 35%);
 
     .search-bar {
       height: $secondary-header-nav-height;
@@ -272,4 +294,8 @@
     flex-grow: 1;
     flex-basis: 0;
   }
+}
+
+.story-collections .source-type-bar .news-board-tab .toast {
+  display: none;
 }

@@ -12,10 +12,12 @@ export class NewsBoardTab extends Component {
     render() {
         return (
             <div className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
-                onClick={() => { this.displayFeeds(this.props.sourceType); }}
                 title={this.props.title}
             >
-                <i className={`icon fa fa-${this.props.sourceIcon}`} />
+                <i className={`icon fa fa-${this.props.sourceIcon}`}
+                    onClick={() => { this.displayFeeds(this.props.sourceType); }}
+                />
+                {this.props.children}
             </div>
         );
     }
@@ -32,7 +34,8 @@ NewsBoardTab.propTypes = {
     "sourceType": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "currentNewsBoard": PropTypes.string.isRequired,
-    "title": PropTypes.string
+    "title": PropTypes.string,
+    "children": PropTypes.object
 };
 
 export default connect(mapToStore)(NewsBoardTab);

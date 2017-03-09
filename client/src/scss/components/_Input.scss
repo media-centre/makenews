@@ -1,6 +1,6 @@
 .input-box {
   display: flex;
-  border-bottom: 2px solid $primary-color-light;
+  border-bottom: 1px solid $primary-color-light;
   margin: 0 5px;
   align-items: flex-end;
 
@@ -8,7 +8,7 @@
   &:after {
     content: '';
     display: inline-flex;
-    width: 2px;
+    width: 1px;
     height: 7px;
     background-color: $primary-color-light;
   }

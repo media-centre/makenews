@@ -27,34 +27,35 @@ describe("NewsBoardTab", () => {
     it("should have onclick function", () => {
 
         sandbox = sinon.sandbox.create();
-        let newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions).expects("newsBoardTabSwitch").returns({
+        const newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions).expects("newsBoardTabSwitch").returns({
             "type": ""
         });
-        let newsBoardTabDOM = ReactDOM.findDOMNode(newsBoardTab);
-        TestUtils.Simulate.click(newsBoardTabDOM);
+        const newsBoardTabDOM = ReactDOM.findDOMNode(newsBoardTab);
+        const [icon] = newsBoardTabDOM.getElementsByClassName("icon");
+        TestUtils.Simulate.click(icon);
         newsBoardTabSwitchMock.verify();
         sandbox.restore();
     });
 
     it("should have icon", () => {
-        let sourceType = newsBoardTab.props.children.props.sourceType;
-        let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, `icon fa fa-${sourceType}`).className;
+        const sourceType = newsBoardTab.props.children.props.sourceType;
+        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, `icon fa fa-${sourceType}`).className;
         expect(newsBoardTabClass).to.be.equals("icon fa fa-twitter");
     });
 
     it("should have className ", () => {
-        let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
+        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
         expect(newsBoardTabClass).to.be.equals("news-board-tab");
     });
 
     it("should have title attribute", () => {
-        let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab");
+        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab");
         expect(newsBoardTabClass.title).to.be.equals("bookmarked feeds");
     });
 
     it("current tab should highlight if both sourcetype and current tabs are equal", () => {
         newsBoardTab = TestUtils.renderIntoDocument(<Provider store={store}><NewsBoard sourceIcon="web" sourceType={"web"}/></Provider>);
-        let newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
+        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
         expect(newsBoardTabClass).to.be.equals("news-board-tab active");
     });
 });

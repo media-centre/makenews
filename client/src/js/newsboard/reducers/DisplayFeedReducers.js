@@ -24,7 +24,7 @@ export function fetchedFeeds(state = [], action = {}) {
     case CLEAR_NEWS_BOARD_FEEDS:
         return [];
     case BOOKMARKED_ARTICLE: {
-        let article = state.find(feed => feed._id === action.articleId);
+        const article = state.find(feed => feed._id === action.articleId);
         article.bookmark = action.bookmarkStatus;
         return state;
     }
@@ -74,3 +74,13 @@ export function fetchingFeeds(state = false, action = {}) {
     return state;
 }
 
+const toastInitialState = {
+    "bookmark": false
+};
+export function displayFeedsToast(state = toastInitialState, action = {}) {
+    switch (action.type) {
+    case BOOKMARKED_ARTICLE:
+        return Object.assign({}, state, { "bookmark": action.bookmarkStatus });
+    default: return toastInitialState;
+    }
+}

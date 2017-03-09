@@ -4,7 +4,13 @@ import { mainHeaderStrings } from "./main/reducers/MainReducer";
 import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
-import { fetchedFeeds, newsBoardCurrentSourceTab, selectedArticle, fetchingWebArticle, fetchingFeeds } from "./newsboard/reducers/DisplayFeedReducers";
+import { fetchedFeeds,
+    newsBoardCurrentSourceTab,
+    selectedArticle,
+    fetchingWebArticle,
+    fetchingFeeds,
+    displayFeedsToast
+} from "./newsboard/reducers/DisplayFeedReducers";
 import { configuredSources,
     currentSourceTab,
     sourceResults,
@@ -46,7 +52,8 @@ const contentDiscoveryApp = combineReducers({
     currentFilterSource,
     untitledIndex,
     fetchingFeeds,
-    deleteSourceStatus
+    deleteSourceStatus,
+    displayFeedsToast
 });
 
 export default contentDiscoveryApp;
