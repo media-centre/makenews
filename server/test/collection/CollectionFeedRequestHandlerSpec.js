@@ -1,4 +1,9 @@
-import { getCollectedFeeds, getCollectionFeedIds, deleteCollection, deleteFeedFromCollection } from "./../../src/collection/CollectionFeedsRequestHandler";
+import {
+    getCollectedFeeds,
+    getCollectionFeedIds,
+    deleteCollection,
+    deleteFeedFromCollection
+} from "./../../src/collection/CollectionFeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -31,7 +36,7 @@ describe("CollectionFeedsRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should get Collection Feeds from the database", async () => {
+        it("should get Collection Feeds from the database", async() => {
             const feedIDs = {
                 "docs": [
                     {
@@ -85,7 +90,7 @@ describe("CollectionFeedsRequestHandler", () => {
             getSecondFeedMock.verify();
         });
 
-        it("should get Collection Feeds from the database when one of the promise is rejected", async () => {
+        it("should get Collection Feeds from the database when one of the promise is rejected", async() => {
             const feedIDs = {
                 "docs": [
                     {
@@ -136,13 +141,13 @@ describe("CollectionFeedsRequestHandler", () => {
             assert.deepEqual(docs, feeds);
         });
 
-        it("should reject with error when database throws unexpected response while getting feedIds", async () => {
+        it("should reject with error when database throws unexpected response while getting feedIds", async() => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
-            try{
+            try {
                 await getCollectedFeeds(authSession, collection, offset);
                 findDocumentsMock.verify();
-            } catch(error) {
+            } catch (error) {
                 assert.strictEqual(error, "unexpected response from the db");
             }
         });
@@ -156,7 +161,7 @@ describe("CollectionFeedsRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return array with feed ids", async () => {
+        it("should return array with feed ids", async() => {
             const couchClient = CouchClient.instance("accessToken");
             const collectionFeedDocs = { "docs": [{ "feedId": "feedId1" }, { "feedId": "feedId2" }] };
             const expectedFeedIdArray = ["feedId1", "feedId2"];
@@ -182,7 +187,7 @@ describe("CollectionFeedsRequestHandler", () => {
             assert.deepEqual(feedIdArray, expectedFeedIdArray);
         });
 
-        it("should return empty array", async () => {
+        it("should return empty array", async() => {
             const couchClient = CouchClient.instance("accessToken");
             const colletionFeedDocs = { "docs": [] };
             const expectedFeedIdArray = [];
@@ -351,65 +356,6 @@ describe("CollectionFeedsRequestHandler", () => {
                 findMock.verify();
                 assert.deepEqual(error, { "message": "Unexpected response from db" });
             }
-        });
-    });
-
-    describe("deleteCollections", () => {
-        const sandbox = sinon.sandbox.create();
-        const authSession = "accessToken";
-        let couchClient = null;
-        const collectionId = "sdfuenxyw13s_12qadj";
-        beforeEach("deleteCollections", () => {
-            couchClient = new CouchClient(authSession);
-            sandbox.stub(CouchClient, "instance").returns(couchClient);
-        });
-
-        afterEach("deleteCollections", () => {
-            sandbox.restore();
-        });
-
-        it("should call couchDb for the collection Document", async () => {
-            sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
-            sandbox.stub(couchClient, "deleteBulkDocuments").returns(Promise.resolve());
-
-            const collectionDocMock = sandbox.mock(couchClient);
-            collectionDocMock.expects("getDocument").withExactArgs(collectionId).returns({});
-
-            await deleteCollection(authSession, collectionId);
-
-            collectionDocMock.verify();
-        });
-
-        it("should delete docs", async () => {
-            const interMediateResults = { "docs": [{ "feedId": "id1" }, { "feedId": "id4" }, { "feedId": "id2" }] };
-            const feedDocs = { "docs": [
-                { "_id": "id1", "sourceDeleted": true },
-                { "_id": "id2", "sourceDeleted": true }]
-            };
-            const collectionDoc = { "_id": collectionId, "collection": "name" };
-            const deleteDocs = [
-                { "feedId": "id1" },
-                { "feedId": "id4" },
-                { "feedId": "id2" },
-                { "_id": "sdfuenxyw13s_12qadj", "collection": "name" },
-                { "_id": "id1", "sourceDeleted": true },
-                { "_id": "id2", "sourceDeleted": true }
-            ];
-
-            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
-            findDocsMock.onFirstCall().returns(Promise.resolve(interMediateResults));
-            findDocsMock.onSecondCall().returns(Promise.resolve(feedDocs));
-
-            sandbox.stub(couchClient, "getDocument").returns(Promise.resolve(collectionDoc));
-
-            const saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments");
-            saveMock.withExactArgs(deleteDocs).returns(Promise.resolve({ "ok": true }));
-
-            let response = await deleteCollection(authSession, collectionId);
-
-            findDocsMock.verify();
-            saveMock.verify();
-            assert.deepEqual(response, { "ok": true });
         });
     });
 });

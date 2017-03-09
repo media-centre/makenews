@@ -8,7 +8,6 @@ import CollectionFeedsRoute from "./helpers/CollectionFeedsRoute";
 import SearchFeedsRoute from "./helpers/SearchFeedsRoute";
 import DeleteCollectionRoute from "./helpers/DeleteCollectionRoute";
 import DeleteCollectionFeedRoute from "./helpers/DeleteCollectionFeedRoute";
-import DeleteCollectionRoute from "./helpers/DeleteCollectionRoute";
 
 export default (app) => {
     app.get("/feeds", (request, response) => {
