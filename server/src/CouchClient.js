@@ -154,8 +154,8 @@ export default class CouchClient {
     static getAllDbs() {
         return new Promise((resolve, reject) => {
             request.get({
-                    "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
-                },
+                "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
+            },
                 (error, response) => {
                     if (NodeErrorHandler.noError(error)) {
                         if (response.statusCode === HttpResponseHandler.codes.OK) {

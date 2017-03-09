@@ -10,7 +10,7 @@ export default class DeleteCollectionFeedRoute extends Route {
     }
 
     validate() {
-        return super.validate(this.authSession, this.feedId, this.collectionId);
+        return super.validate(this.feedId, this.collectionId);
     }
 
     async handle() {
