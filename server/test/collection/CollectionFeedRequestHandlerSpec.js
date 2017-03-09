@@ -278,7 +278,7 @@ describe("CollectionFeedsRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should delete collectionFeedDoc", async () => {
+        it("should delete collectionFeedDoc", async() => {
             const collectionFeedDoc = {
                 "docs": [{
                     "_id": "1234",
@@ -307,7 +307,7 @@ describe("CollectionFeedsRequestHandler", () => {
             assert.deepEqual(response, { "ok": true });
         });
 
-        it("should delete CollectionFeedDoc and feedDoc if the source is deleted", async () => {
+        it("should delete CollectionFeedDoc and feedDoc if the source is deleted", async() => {
             const collectionFeedDoc = {
                 "docs": [{
                     "_id": "1234",
@@ -337,7 +337,7 @@ describe("CollectionFeedsRequestHandler", () => {
             assert.deepEqual(response, { "ok": true });
         });
 
-        it("should throw error", async () => {
+        it("should throw error", async() => {
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
             const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
@@ -346,11 +346,70 @@ describe("CollectionFeedsRequestHandler", () => {
             try {
                 await deleteFeedFromCollection(authSession, feedId, collectionId);
                 assert.fail();
-            } catch(error) {
+            } catch (error) {
                 instanceMock.verify();
                 findMock.verify();
                 assert.deepEqual(error, { "message": "Unexpected response from db" });
             }
+        });
+    });
+
+    describe("deleteCollections", () => {
+        const sandbox = sinon.sandbox.create();
+        const authSession = "accessToken";
+        let couchClient = null;
+        const collectionId = "sdfuenxyw13s_12qadj";
+        beforeEach("deleteCollections", () => {
+            couchClient = new CouchClient(authSession);
+            sandbox.stub(CouchClient, "instance").returns(couchClient);
+        });
+
+        afterEach("deleteCollections", () => {
+            sandbox.restore();
+        });
+
+        it("should call couchDb for the collection Document", async () => {
+            sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
+            sandbox.stub(couchClient, "deleteBulkDocuments").returns(Promise.resolve());
+
+            const collectionDocMock = sandbox.mock(couchClient);
+            collectionDocMock.expects("getDocument").withExactArgs(collectionId).returns({});
+
+            await deleteCollection(authSession, collectionId);
+
+            collectionDocMock.verify();
+        });
+
+        it("should delete docs", async () => {
+            const interMediateResults = { "docs": [{ "feedId": "id1" }, { "feedId": "id4" }, { "feedId": "id2" }] };
+            const feedDocs = { "docs": [
+                { "_id": "id1", "sourceDeleted": true },
+                { "_id": "id2", "sourceDeleted": true }]
+            };
+            const collectionDoc = { "_id": collectionId, "collection": "name" };
+            const deleteDocs = [
+                { "feedId": "id1" },
+                { "feedId": "id4" },
+                { "feedId": "id2" },
+                { "_id": "sdfuenxyw13s_12qadj", "collection": "name" },
+                { "_id": "id1", "sourceDeleted": true },
+                { "_id": "id2", "sourceDeleted": true }
+            ];
+
+            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            findDocsMock.onFirstCall().returns(Promise.resolve(interMediateResults));
+            findDocsMock.onSecondCall().returns(Promise.resolve(feedDocs));
+
+            sandbox.stub(couchClient, "getDocument").returns(Promise.resolve(collectionDoc));
+
+            const saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments");
+            saveMock.withExactArgs(deleteDocs).returns(Promise.resolve({ "ok": true }));
+
+            let response = await deleteCollection(authSession, collectionId);
+
+            findDocsMock.verify();
+            saveMock.verify();
+            assert.deepEqual(response, { "ok": true });
         });
     });
 });
