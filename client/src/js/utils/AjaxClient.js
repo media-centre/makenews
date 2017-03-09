@@ -33,7 +33,7 @@ export default class AjaxClient {
         });
     }
 
-    async get(queryParams = {}) {
+    async sendRequest(requestType, queryParams = {}) {
         let keys = Object.keys(queryParams);
         if (keys.length) {
             this.url = this.url + "?";
@@ -41,9 +41,17 @@ export default class AjaxClient {
             this.url = this.url + keyValues.join("&");
         }
         return await this.request({
-            "method": "GET",
+            "method": requestType,
             "credentials": "same-origin"
         });
+    }
+
+    async get(queryParams = {}) {
+        return await this.sendRequest("GET", queryParams);
+    }
+
+    async deleteRequest(queryParams = {}) {
+        return await this.sendRequest("DELETE", queryParams);
     }
 
     async request(params) {

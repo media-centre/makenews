@@ -14,7 +14,7 @@ import { configuredSources,
 import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
 import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
-import { addToCollectionStatus, addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
+import { addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { stories, untitledIndex } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
 import { currentFilter, currentFilterSource } from "./newsboard/filter/FilterReducer";
@@ -38,7 +38,6 @@ const contentDiscoveryApp = combineReducers({
     selectedArticle,
     fetchingWebArticle,
     webArticleMarkup,
-    addToCollectionStatus,
     addArticleToCollection,
     displayCollection,
     currentCollection,

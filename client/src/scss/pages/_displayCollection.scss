@@ -19,6 +19,29 @@
     color: $primary-color-light;
     word-wrap: break-word;
     word-break: break-word;
+    .spinner {
+      padding: 0;
+      border: none;
+      float: right;
+      margin-top: 5px;
+
+      &:before {
+        width: 10px;
+        height: 10px;
+        border-width: 2px;
+      }
+    }
+
+    .delete-collection {
+      font-size: 1.3em;
+      font-weight: 400;
+      font-style: normal;
+      float: right;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      color: $primary-color-light;
+    }
   }
 
   .active {

@@ -6,6 +6,7 @@ import {
     fetchingFeeds
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { NEWS_BOARD_CURRENT_TAB, DISPLAY_ARTICLE, FETCHING_FEEDS, SEARCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import { DELETE_COLLECTION } from "../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { BOOKMARKED_ARTICLE, WEB_ARTICLE_REQUESTED, WEB_ARTICLE_RECEIVED } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
@@ -48,6 +49,49 @@ describe("DisplayFeedReducer", () => {
             let action = { "type": SEARCHED_FEEDS, feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
+
+        it("should return updated collections when action type is DELETE_COLLECTION", () => {
+            const state = [{
+                "_id": "123",
+                "collectionName": "collection1",
+                "docType": "collection"
+            }, {
+                "_id": "1234",
+                "collectionName": "colletction2",
+                "docType": "collection"
+            }];
+            const updatedCollection = [{
+                "_id": "123",
+                "collectionName": "collection1",
+                "docType": "collection"
+            }];
+            const action = { "type": DELETE_COLLECTION, "collection": "1234" };
+            expect(fetchedFeeds(state, action)).to.deep.equal(updatedCollection);
+        });
+
+        it("should return feeds when type searched feeds", () => {
+            let action = { "type": SEARCHED_FEEDS, feeds };
+            expect(fetchedFeeds([], action)).to.deep.equal(feeds);
+        });
+
+        it("should return updated collections when action type is DELETE_COLLECTION", () => {
+            const state = [{
+                "_id": "123",
+                "collectionName": "collection1",
+                "docType": "collection"
+            }, {
+                "_id": "1234",
+                "collectionName": "colletction2",
+                "docType": "collection"
+            }];
+            const updatedCollection = [{
+                "_id": "123",
+                "collectionName": "collection1",
+                "docType": "collection"
+            }];
+            const action = { "type": DELETE_COLLECTION, "collection": "1234" };
+            expect(fetchedFeeds(state, action)).to.deep.equal(updatedCollection);
+        });
     });
 
     describe("NewsBoard Current Source Tab", () => {
@@ -61,7 +105,7 @@ describe("DisplayFeedReducer", () => {
             expect(newsBoardCurrentSourceTab()).to.deep.equal("trending");
         });
     });
-    
+
     describe("selectedArticle", () => {
         it("should return empty object by default", () => {
             expect(selectedArticle()).to.deep.equals({});

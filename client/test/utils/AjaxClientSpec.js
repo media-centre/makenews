@@ -226,4 +226,64 @@ describe("AjaxClient", function() {
         });
     });
 
+    describe("deleteRequest", () => {
+        it("should do a delete request to the url", async () => {
+            const url = "/collection";
+            const ajax = new AjaxClient(url);
+            nock("http://localhost:5000")
+                .delete(url)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
+
+            const successData = await ajax.deleteRequest({});
+
+            expect(successData.data).to.eq("success");
+        });
+
+        it("should do a delete request with query parameter to the url", async () => {
+            const url = "/collection";
+            const ajax = new AjaxClient(url);
+            nock("http://localhost:5000")
+                .delete(`${url}?collection=testCollection`)
+                .reply(HttpResponseHandler.codes.OK, {
+                    "data": "success"
+                });
+
+            const succesData = await ajax.deleteRequest({ "collection": "testCollection" });
+            expect(succesData.data).to.eq("success");
+        });
+
+
+        it("should handle for 404", async () => {
+
+            const url = "/collection";
+            nock("http://localhost:5000")
+                .delete(url)
+                .reply(HttpResponseHandler.codes.NOT_FOUND, { "error": "error" });
+            const ajax = new AjaxClient(url);
+            try {
+                await ajax.deleteRequest({});
+                assert.fail();
+            } catch (errorData) {
+                expect(errorData.error).to.eq("error");
+            }
+        });
+
+        it("should reject on connection refused", async () => {
+            const url = "/collection";
+            nock("http://localhost:5000")
+                .delete(url)
+                .reply(HttpResponseHandler.codes.BAD_GATEWAY, { "error": "connection refused" });
+
+            const ajax = new AjaxClient(url);
+            try {
+                await ajax.deleteRequest();
+                assert.fail();
+            } catch (errorData) {
+                expect(errorData).to.eq("connection refused");
+            }
+        });
+    });
+
 });

@@ -42,7 +42,7 @@ describe("CollectionRequestHandler", () => {
 
             getCollectionMock.verify();
             createCollectionMock.verify();
-            assert.deepEqual(response, "1234");
+            assert.deepEqual(response, { "ok": true, "_id": "1234" });
         });
 
         it("should create collectionFeedDoc when the collection already exists", async () => {
@@ -50,13 +50,13 @@ describe("CollectionRequestHandler", () => {
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
                 .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [{ "_id": "123455" }] }));
             const collectionFeedDocMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedDoc")
-               .returns(Promise.resolve({ "ok": true }));
+                .returns(Promise.resolve({ "ok": true }));
 
             const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, docId, sourceId);
 
             getCollectionMock.verify();
             collectionFeedDocMock.verify();
-            assert.deepEqual(response, { "ok": true });
+            assert.deepEqual(response, { "ok": true, "_id": "123455" });
         });
 
         it("should create collectionDoc and collectionFeedDoc", async () => {
@@ -72,7 +72,7 @@ describe("CollectionRequestHandler", () => {
             getCollectionMock.verify();
             collectionFeedDocMock.verify();
             createCollectionMock.verify();
-            assert.deepEqual(response, { "ok": true });
+            assert.deepEqual(response, { "ok": true, "_id": "1234" });
         });
     });
 

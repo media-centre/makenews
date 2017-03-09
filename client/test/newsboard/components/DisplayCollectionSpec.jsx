@@ -38,8 +38,8 @@ describe("Display Collections", () => {
     });
 
     it("should render collections when the sourcetype is collection", () => {
-        //eslint-disable-next-line no-magic-numbers
-        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);  //eslint-disable-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "delete-collection").length, 2);  //eslint-disable-line no-magic-numbers
     });
 
     it("should show popup when create new collection is clicked", () => {
@@ -89,7 +89,7 @@ describe("Display Collections", () => {
         let collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
 
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
-        assert.equal(collections[0].textContent, " politics"); //eslint-disable-line no-magic-numbers
+        assert.equal(collections[0].textContent, "politics×"); //eslint-disable-line no-magic-numbers
     });
 
     describe("Display StoryBoard Collection", () => {

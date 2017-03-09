@@ -9,22 +9,25 @@ export default class CollectionRequestHandler {
 
     async updateCollection(authSession, collectionName, isNewCollection, docId, sourceId) {
         const couchClient = CouchClient.instance(authSession);
-        let collectionDoc = await this.getCollectionDoc(couchClient, collectionName);
-        let collectionDocId = collectionDoc.docs.length ? collectionDoc.docs[0]._id : 0; //eslint-disable-line no-magic-numbers
+        let collectionDocs = await this.getCollectionDoc(couchClient, collectionName);
+        let collectionDocId = "";
+
+        if(collectionDocs.docs.length) {
+            let [collectionDoc] = collectionDocs.docs;
+            collectionDocId = collectionDoc._id;
+        }
 
         if(isNewCollection && collectionDocId) {
             return { "message": "collection already exists with this name" };
+        } else if(!docId && !collectionDocId) {
+            collectionDocId = await this.createCollection(couchClient, collectionName);
+        } else if(docId && collectionDocId) {
+            await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
+        } else {
+            collectionDocId = await this.createCollection(couchClient, collectionName);
+            await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
         }
-
-        if(!docId && !collectionDocId) {
-            return await this.createCollection(couchClient, collectionName);
-        }
-
-        if(docId && collectionDocId) {
-            return await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
-        }
-        collectionDocId = await this.createCollection(couchClient, collectionName);
-        return await this.createCollectionFeedDoc(couchClient, collectionDocId, docId, sourceId);
+        return { "ok": true, "_id": collectionDocId };
     }
 
     async createCollection(couchClient, collectionName) {

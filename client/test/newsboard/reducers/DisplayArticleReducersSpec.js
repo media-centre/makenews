@@ -1,20 +1,8 @@
-import { addArticleToCollection, addToCollectionStatus } from "../../../src/js/newsboard/reducers/DisplayArticleReducers";
-import { ADD_ARTICLE_TO_COLLECTION, ADD_TO_COLLECTION_STATUS } from "../../../src/js/newsboard/actions/DisplayArticleActions";
+import { addArticleToCollection, webArticleMarkup } from "../../../src/js/newsboard/reducers/DisplayArticleReducers";
+import { ADD_ARTICLE_TO_COLLECTION, WEB_ARTICLE_RECEIVED } from "../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
 describe("DisplayArticleReducers", () => {
-
-    describe("addToCollectionStatus", () => {
-
-        it("should return object with empty message by default", () => {
-            expect(addToCollectionStatus()).to.deep.equals({ "message": "" });
-        });
-
-        it("should update the message when there is message from server", () => {
-            let action = { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "success" } };
-            expect(addToCollectionStatus({}, action)).to.deep.equals({ "message": "success" });
-        });
-    });
 
     describe("addArticleToCollection", () => {
         it("should return empty object by default", () => {
@@ -24,6 +12,17 @@ describe("DisplayArticleReducers", () => {
         it("should update the message when there is message from server", () => {
             let action = { "type": ADD_ARTICLE_TO_COLLECTION, "addArticleToCollection": { "id": "docId", "sourceType": "web" } };
             expect(addArticleToCollection({}, action)).to.deep.equals({ "id": "docId", "sourceType": "web" });
+        });
+    });
+
+    describe("webArticleMarkup", () => {
+        it("should return article with type article", () => {
+            let action = { "type": WEB_ARTICLE_RECEIVED, "article": "some Article", "isHTML": true };
+            expect(webArticleMarkup("", action)).to.deep.equals({ "markup": "some Article", "isHTML": true });
+        });
+
+        it("should return article empty string by default", () => {
+            expect(webArticleMarkup({ "markup": "", "isHTML": false }, {})).to.deep.equals({ "markup": "", "isHTML": false });
         });
     });
 });

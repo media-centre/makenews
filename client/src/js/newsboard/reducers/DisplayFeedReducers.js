@@ -11,6 +11,7 @@ import {
     WEB_ARTICLE_REQUESTED,
     WEB_ARTICLE_RECEIVED
 } from "./../actions/DisplayArticleActions";
+import { DELETE_COLLECTION } from "../actions/DisplayCollectionActions";
 import { List } from "immutable";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 
@@ -27,6 +28,8 @@ export function fetchedFeeds(state = [], action = {}) {
         article.bookmark = action.bookmarkStatus;
         return state;
     }
+    case DELETE_COLLECTION:
+        return state.filter(collection => collection._id !== action.collection);
     default:
         return state;
     }

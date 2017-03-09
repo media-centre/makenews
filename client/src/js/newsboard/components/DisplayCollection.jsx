@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { setCurrentCollection } from "./../actions/DisplayCollectionActions";
+import { setCurrentCollection, deleteCollection } from "./../actions/DisplayCollectionActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import StringUtil from "./../../../../../common/src/util/StringUtil";
 import { connect } from "react-redux";
@@ -46,7 +46,15 @@ export class DisplayCollection extends Component {
         let [first, ...rest] = filteredCollections;
         let collectionItems = [];
         const getCollectionItem = (collection, className) =>
-            (<li className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}> { collection.collection }</li>);
+            (<li className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>{ collection.collection }
+                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) => {
+                        event.stopPropagation();
+                        this.props.dispatch(deleteCollection(event, collection._id));
+                    }}
+                    >
+                        &times;</button>
+                </li>
+            );
 
         if(!first) {
             return collectionItems;
@@ -74,28 +82,28 @@ export class DisplayCollection extends Component {
         return (
             <div className="collection-popup-overlay">
                 {this.state.showCollectionPopup &&
-                    <div className="new-collection">
-                        <input type="text" className="new-collection-input-box" ref="collectionName"
-                            placeholder="create new collection" onKeyUp={(event) => {
-                                this.createCollection(event);
-                            }}
-                        />
+                <div className="new-collection">
+                    <input type="text" className="new-collection-input-box" ref="collectionName"
+                           placeholder="create new collection" onKeyUp={(event) => {
+                        this.createCollection(event);
+                    }}
+                    />
 
-                        <button className="cancel-collection" onClick={() => {
-                            this.setState({ "showCollectionPopup": false });
-                        }}
-                        >CANCEL
-                        </button>
+                    <button className="cancel-collection" onClick={() => {
+                        this.setState({ "showCollectionPopup": false });
+                    }}
+                    >CANCEL
+                    </button>
 
-                        <button className="save-collection" onClick={() => {
-                            if (!StringUtil.isEmptyString(this.refs.collectionName.value)) {
-                                this.props.dispatch(addToCollection(this.refs.collectionName.value, this.props.addArticleToCollection, true));
-                            }
-                            this.setState({ "showCollectionPopup": false });
-                        }}
-                        >SAVE
-                        </button>
-                    </div>
+                    <button className="save-collection" onClick={() => {
+                        if (!StringUtil.isEmptyString(this.refs.collectionName.value)) {
+                            this.props.dispatch(addToCollection(this.refs.collectionName.value, this.props.addArticleToCollection, true));
+                        }
+                        this.setState({ "showCollectionPopup": false });
+                    }}
+                    >SAVE
+                    </button>
+                </div>
                 }
             </div>
         );
@@ -103,10 +111,10 @@ export class DisplayCollection extends Component {
 
     createNewCollection() {
         return (<div className="create_collection" onClick={() => {
-            this.setState({ "showCollectionPopup": true });
-        }}
-                >
-                    <i className="fa fa-plus-circle"/> Create new collection
+                this.setState({ "showCollectionPopup": true });
+            }}
+            >
+                <i className="fa fa-plus-circle"/> Create new collection
             </div>
         );
 
@@ -114,19 +122,19 @@ export class DisplayCollection extends Component {
 
     displayCollections() {
         return (<div className="collection-list-container" >
-                    <div className="search-bar">
-                        <Input className={"input-box"} placeholder="Search collections" eventHandlers={{ "onKeyUp": (event) => {
-                            this._searchCollections(event);
-                        } }} addonSrc="./images/search-icon.png"
-                        />
-                    </div>
-                {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">SELECT A COLLECTION</div> : this.createNewCollection()}
-                {this.state.showCollectionPopup ? this.showPopup() : null}
-                <div className="feeds">
-                    <ul className="configured-sources" ref="collectionList">
-                        { this._renderCollections() }
-                    </ul>
-                </div>
+            <div className="search-bar">
+                <Input className={"input-box"} placeholder="Search collections" eventHandlers={{ "onKeyUp": (event) => {
+                    this._searchCollections(event);
+                } }} addonSrc="./images/search-icon.png"
+                />
+            </div>
+            {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">SELECT A COLLECTION</div> : this.createNewCollection()}
+            {this.state.showCollectionPopup ? this.showPopup() : null}
+            <div className="feeds">
+                <ul className="configured-sources" ref="collectionList">
+                    { this._renderCollections() }
+                </ul>
+            </div>
         </div>);
     }
 
@@ -136,9 +144,9 @@ export class DisplayCollection extends Component {
 
     render() {
         return (
-           this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
-               ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/>
-               : this.displayCollections()
+            this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
+                ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/>
+                : this.displayCollections()
         );
     }
 }

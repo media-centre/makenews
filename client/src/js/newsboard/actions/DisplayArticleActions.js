@@ -6,7 +6,6 @@ import Toast from "./../../utils/custom_templates/Toast";
 export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
 export const WEB_ARTICLE_RECEIVED = "WEB_ARTICLE_RECEIVED";
 export const WEB_ARTICLE_REQUESTED = "WEB_ARTICLE_REQUESTED";
-export const ADD_TO_COLLECTION_STATUS = "ADD_TO_COLLECTION_STATUS";
 export const ADD_ARTICLE_TO_COLLECTION = "ADD_ARTICLE_TO_COLLECTION";
 
 export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
@@ -76,26 +75,18 @@ export function addToCollection(collection, article, isNewCollection = false) {
             "sourceId": article.sourceId
         });
         if(response.ok === true && article.id) {
-            dispatch(handleMessages("Successfully added feed to collection"));
+            Toast.show("Successfully added feed to collection");
             dispatch(newsBoardTabSwitch(article.sourceType));
         } else if(response.ok === true) {
-            dispatch(handleMessages("Successfully added collection"));
-            dispatch(paginatedFeeds([{ "collection": collection, "_id": collection }]));
+            Toast.show("Successfully added collection");
+            dispatch(paginatedFeeds([{ "collection": collection, "_id": response._id }]));
         } else if(response.message) {
-            dispatch(handleMessages(response.message));
+            Toast.show(response.message);
             dispatch(newsBoardTabSwitch(article.sourceType || newsBoardSourceTypes.collection));
         } else {
-            dispatch(handleMessages("Failed add feed to collection"));
+            Toast.show("Failed add feed to collection");
         }
         dispatch(addArticleToCollection("", "", ""));
-        dispatch(handleMessages(""));
-    };
-}
-
-export function handleMessages(message) {
-    return {
-        "type": ADD_TO_COLLECTION_STATUS,
-        "status": { message }
     };
 }
 

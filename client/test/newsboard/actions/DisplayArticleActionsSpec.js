@@ -6,7 +6,6 @@ import {
     BOOKMARKED_ARTICLE,
     WEB_ARTICLE_RECEIVED,
     WEB_ARTICLE_REQUESTED,
-    ADD_TO_COLLECTION_STATUS,
     ADD_ARTICLE_TO_COLLECTION
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { NEWS_BOARD_CURRENT_TAB, PAGINATED_FETCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
@@ -123,7 +122,7 @@ describe("DisplayArticleActions", () => {
             };
             sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            response = { "ok": true };
+            response = { "ok": true, "_id": "1234" };
         });
 
         afterEach("addToCollection", () => {
@@ -131,11 +130,10 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch newsBoardTabSwitch, handleMessage, addArticleToCollection when response is success and there is docId", (done) => {
-            const store = mockStore({}, [{ "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Successfully added feed to collection" } },
-                { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
+            const store = mockStore({}, [{ "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } },
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "" } }], done);
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
+            ], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
@@ -147,10 +145,9 @@ describe("DisplayArticleActions", () => {
 
         it("should dispatch addArticleToCollection and handleMessage with failed message on bad request", (done) => {
             response = { "error": "unexpected response" };
-            const store = mockStore({}, [{ "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Failed add feed to collection" } },
-                { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } },
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "" } }], done);
+            const store = mockStore({}, [{ "type": ADD_ARTICLE_TO_COLLECTION,
+                "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
+            ], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
@@ -163,11 +160,9 @@ describe("DisplayArticleActions", () => {
         it("should dispatch handleMessage, paginatedFeeds, addArticleToCollection on success response and there is no doc id", (done) => {
             body = { "collection": collection, "docId": "", "isNewCollection": true, "sourceId": "" };
             const store = mockStore({}, [
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Successfully added collection" } },
-                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": collection }] },
+                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": "1234" }] },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } },
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "" } }
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
             ], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
@@ -181,11 +176,9 @@ describe("DisplayArticleActions", () => {
         it("should dispatch handleMessage, addArticleToCollection when there is message in response", (done) => {
             response = { "message": "Collection already exists with this name" };
             const store = mockStore({}, [
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Collection already exists with this name" } },
                 { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } },
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "" } }
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
             ], done);
 
             let ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")

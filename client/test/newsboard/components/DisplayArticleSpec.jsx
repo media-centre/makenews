@@ -28,7 +28,7 @@ describe("DisplayArticle", () => {
         active = false;
         sandbox = sinon.sandbox.create();
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} collectionName="test" />);
+        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" collectionName="test" />);
     });
 
     afterEach("DisplayArticle", () => {
@@ -40,7 +40,7 @@ describe("DisplayArticle", () => {
     });
 
     it("should not render if article is not passed", () => {
-        let noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }}/>);
+        let noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={()=>{}} newsBoardCurrentSourceTab="web"/>);
         expect(noArticleDom).to.be.a("null");
     });
 
@@ -113,7 +113,7 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" addToCollectionStatus={{ "message": "" }} dispatch={()=>{}}/>);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" dispatch={()=>{}}/>);
             let result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, DisplayWebArticle);
 
@@ -147,7 +147,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web"/>
                 </Provider>
             );
             let collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
@@ -165,7 +165,7 @@ describe("DisplayArticle", () => {
 
         it("should have bookmark & active classes when article is boomarked", () => {
             feed.bookmark = true;
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} addToCollectionStatus={{ "message": "" }}/>);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} />);
             let [headerDOM] = displayArticleDom.props.children;
             let [, bookmarkDOM] = headerDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark active");
@@ -186,7 +186,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web"/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
@@ -209,7 +209,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web" addToCollectionStatus = {{ "message": "" }}/>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="web"/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
@@ -230,7 +230,7 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} addToCollectionStatus={{ "message": "" }} collectionName="test"/>);
+            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collections"} collectionName="test"/>);
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
             let [arrowIcon, name] = backButton.props.children;
@@ -257,7 +257,7 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
             let isSelected = true;
-            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"web"} addToCollectionStatus={{ "message": "" }} articleOpen={()=>{}} isStoryBoard={isSelected}/>);
+            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"web"} articleOpen={()=>{}} isStoryBoard={isSelected}/>);
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
             let [arrowIcon, name] = backButton.props.children;
@@ -270,21 +270,6 @@ describe("DisplayArticle", () => {
             expect(arrowIcon.type).to.be.equal("i");
             expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
             expect(name).to.be.equal("back");
-        });
-    });
-
-    describe("toast", () => {
-
-        it("should not have toast message when there is addToCollectionStatus is empty", () => {
-            let [,, toastDiv] = displayArticleDom.props.children;
-            expect(toastDiv).to.equals("");
-        });
-
-        it("should have toast message when there is addToCollectionStatus", () => {
-            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"collection"} addToCollectionStatus={{ "message": "successfully added" }}/>);
-            let [,, toastDiv] = displayArticleDom.props.children;
-            expect(toastDiv.type).to.equals("div");
-            expect(toastDiv.props.className).to.equals("add-to-collection-message");
         });
     });
 });
