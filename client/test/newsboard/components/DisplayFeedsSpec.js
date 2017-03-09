@@ -51,6 +51,11 @@ describe("DisplayFeeds", () => {
         expect(displayFeeds.className).to.equal("configured-feeds-container");
     });
 
+    it("should have feeds-container class", () => {
+        const feedsContainer = TestUtils.findRenderedDOMComponentWithClass(result, "feeds-container");
+        expect(feedsContainer).to.not.be.undefined; //eslint-disable-line no-unused-expressions
+    });
+
     it("should have expand class when we click on expand icon", () => {
         let renderedSources = TestUtils.findRenderedDOMComponentWithClass(result, "expand-icon");
         TestUtils.Simulate.click(renderedSources);

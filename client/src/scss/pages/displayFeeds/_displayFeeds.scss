@@ -133,12 +133,15 @@
       padding: 10px;
     }
 
+    .feeds-container {
+      height: calc(100vh - #{$main-header-height} - #{$secondary-header-nav-height});
+      overflow-y: auto;
+    }
+
     .feeds {
       display: flex;
       flex-wrap: wrap;
       min-height: 100px;
-      max-height: calc(100vh - #{$main-header-height} - #{$secondary-header-nav-height});
-      overflow-y: auto;
       align-items: flex-start;
     }
 

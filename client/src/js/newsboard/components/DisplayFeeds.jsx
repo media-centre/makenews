@@ -218,13 +218,15 @@ export class DisplayFeeds extends Component {
                 </div>
                 { this.state.gotNewFeeds && this._showMoreFeedsButton() }
                 <i onClick={() => { this._toggleFeedsView(); }} className="expand-icon" />
-                <div className="feeds" ref="feeds">
-                    { this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                            isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
-                        />)
-                    }
-                    { this.props.isFetchingFeeds ? <Spinner /> : null }
+                <div className="feeds-container" ref="feeds">
+                    <div className="feeds">
+                        { this.props.feeds.map((feed, index) =>
+                            <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
+                                isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
+                            />)
+                        }
+                        { this.props.isFetchingFeeds ? <Spinner /> : null }
+                    </div>
                 </div>
             </div>);
     }
