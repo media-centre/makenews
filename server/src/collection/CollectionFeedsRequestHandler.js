@@ -123,10 +123,51 @@ export async function deleteFeedFromCollection(authSession, feedId, collectionId
     let collectionFeedDoc = await couchClient.findDocuments(query);
     const feedDoc = await couchClient.getDocument(feedId);
 
-    if(feedDoc.sourceDeleted) {
+    if (feedDoc.sourceDeleted) {
         (collectionFeedDoc.docs).push(feedDoc);
     }
 
     await couchClient.deleteBulkDocuments(collectionFeedDoc.docs);
     return { "ok": true };
+}
+
+export async function deleteCollection(authSession, collectionId) {
+    const couchClient = CouchClient.instance(authSession);
+    const collectionFeedDocs = await _getCollectionFeedDocs(couchClient, collectionId);
+    const collectionDoc = await couchClient.getDocument(collectionId);
+
+    const feedsToDelete = R.map(collectionFeed => collectionFeed.feedId)(collectionFeedDocs);
+    const deletedFeeds = await _getSourceDeletedFeeds(couchClient, feedsToDelete);
+
+    await couchClient.deleteBulkDocuments([...collectionFeedDocs, collectionDoc, ...deletedFeeds]);
+    return { "ok": true };
+}
+
+async function _getCollectionFeedDocs(couchClient, collectionId) {
+    const interMediateDocQuery = {
+        "selector": {
+            "collectionId": {
+                "$eq": collectionId
+            }
+        },
+        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
+    };
+    const collectionFeedDocs = await couchClient.findDocuments(interMediateDocQuery);
+    return collectionFeedDocs.docs;
+}
+
+async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
+    const feedsToDeleteQuery = {
+        "selector": {
+            "_id": {
+                "$in": feedsToDelete
+            },
+            "sourceDeleted": {
+                "$eq": true
+            }
+        },
+        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
+    };
+    const deletedFeeds = await couchClient.findDocuments(feedsToDeleteQuery);
+    return deletedFeeds.docs;
 }
