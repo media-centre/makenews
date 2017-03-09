@@ -104,3 +104,28 @@ async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
     const deletedFeeds = await couchClient.findDocuments(feedsToDeleteQuery);
     return deletedFeeds.docs;
 }
+export async function deleteFeedFromCollection(authSession, feedId, collectionId) {
+
+    const couchClient = CouchClient.instance(authSession);
+
+    const query = {
+        "selector": {
+            "collectionId": {
+                "$eq": collectionId
+            },
+            "feedId": {
+                "$eq": feedId
+            }
+        }
+    };
+
+    let collectionFeedDoc = await couchClient.findDocuments(query);
+    const feedDoc = await couchClient.getDocument(feedId);
+
+    if(feedDoc.sourceDeleted) {
+        (collectionFeedDoc.docs).push(feedDoc);
+    }
+
+    await couchClient.deleteBulkDocuments(collectionFeedDoc.docs);
+    return { "ok": true };
+}

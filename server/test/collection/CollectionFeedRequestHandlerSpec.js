@@ -1,4 +1,4 @@
-import { getCollectedFeeds, getCollectionFeedIds, deleteCollection } from "./../../src/collection/CollectionFeedsRequestHandler";
+import { getCollectedFeeds, getCollectionFeedIds, deleteCollection, deleteFeedFromCollection } from "./../../src/collection/CollectionFeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
@@ -207,7 +207,7 @@ describe("CollectionFeedsRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should call couchDb for the collection Document", async () => {
+        it("should call couchDb for the collection Document", async() => {
             sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
             sandbox.stub(couchClient, "deleteBulkDocuments").returns(Promise.resolve());
 
@@ -219,11 +219,12 @@ describe("CollectionFeedsRequestHandler", () => {
             collectionDocMock.verify();
         });
 
-        it("should delete docs", async () => {
+        it("should delete docs", async() => {
             const interMediateResults = { "docs": [{ "feedId": "id1" }, { "feedId": "id4" }, { "feedId": "id2" }] };
-            const feedDocs = { "docs": [
-                { "_id": "id1", "sourceDeleted": true },
-                { "_id": "id2", "sourceDeleted": true }]
+            const feedDocs = {
+                "docs": [
+                    { "_id": "id1", "sourceDeleted": true },
+                    { "_id": "id2", "sourceDeleted": true }]
             };
             const collectionDoc = { "_id": collectionId, "collection": "name" };
             const deleteDocs = [
@@ -249,6 +250,107 @@ describe("CollectionFeedsRequestHandler", () => {
             findDocsMock.verify();
             saveMock.verify();
             assert.deepEqual(response, { "ok": true });
+        });
+    });
+
+    describe("deleteFeedFromCollection", () => {
+        let sandbox = null;
+        const authSession = "AuthSession";
+        const feedId = "FeedId";
+        const collectionId = "CollectionId";
+        let query = null, couchClientInstance = null;
+        beforeEach("deleteFeedFromCollection", () => {
+            sandbox = sinon.sandbox.create();
+            query = {
+                "selector": {
+                    "collectionId": {
+                        "$eq": collectionId
+                    },
+                    "feedId": {
+                        "$eq": feedId
+                    }
+                }
+            };
+            couchClientInstance = new CouchClient(authSession);
+        });
+
+        afterEach("deleteFeedFromCollection", () => {
+            sandbox.restore();
+        });
+
+        it("should delete collectionFeedDoc", async () => {
+            const collectionFeedDoc = {
+                "docs": [{
+                    "_id": "1234",
+                    "feedId": feedId,
+                    "collectionId": collectionId
+                }]
+            };
+
+            const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des" };
+
+            const instanceMock = sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance);
+            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
+            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
+                .withExactArgs(collectionFeedDoc.docs).returns(Promise.resolve({ "ok": true }));
+
+            const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
+
+            instanceMock.verify();
+            findMock.verify();
+            getDocumentMock.verify();
+            deleteMock.verify();
+            assert.deepEqual(response, { "ok": true });
+        });
+
+        it("should delete CollectionFeedDoc and feedDoc if the source is deleted", async () => {
+            const collectionFeedDoc = {
+                "docs": [{
+                    "_id": "1234",
+                    "feedId": feedId,
+                    "collectionId": collectionId
+                }]
+            };
+
+            const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des", "sourceDeleted": true };
+            const docsToDelete = [...(collectionFeedDoc.docs), feedDoc];
+
+            const instanceMock = sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance);
+            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
+            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
+                .withExactArgs(docsToDelete).returns(Promise.resolve({ "ok": true }));
+
+            const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
+
+            instanceMock.verify();
+            findMock.verify();
+            getDocumentMock.verify();
+            deleteMock.verify();
+            assert.deepEqual(response, { "ok": true });
+        });
+
+        it("should throw error", async () => {
+            const instanceMock = sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance);
+            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+                .withExactArgs(query).returns(Promise.reject({ "message": "Unexpected response from db" }));
+
+            try {
+                await deleteFeedFromCollection(authSession, feedId, collectionId);
+                assert.fail();
+            } catch(error) {
+                instanceMock.verify();
+                findMock.verify();
+                assert.deepEqual(error, { "message": "Unexpected response from db" });
+            }
         });
     });
 });

@@ -7,6 +7,7 @@ import FetchArticleFromUrl from "./helpers/FetchArticleFromUrl";
 import CollectionFeedsRoute from "./helpers/CollectionFeedsRoute";
 import SearchFeedsRoute from "./helpers/SearchFeedsRoute";
 import DeleteCollectionRoute from "./helpers/DeleteCollectionRoute";
+import DeleteCollectionFeedRoute from "./helpers/DeleteCollectionFeedRoute";
 
 export default (app) => {
     app.get("/feeds", (request, response) => {
@@ -47,6 +48,11 @@ export default (app) => {
     app.get("/collection-feeds", (request, response) => {
         RouteLogger.instance().info("collectionFeedsRoute:: GET /collection-feeds request received url = %s", request.url);
         new CollectionFeedsRoute(request, response).process();
+    });
+
+    app.delete("/collection-feed", (request, response) => {
+        RouteLogger.instance().info("DeleteCollectionFeedRoute:: DELETE /collection-feed request received url = %s", request.url);
+        new DeleteCollectionFeedRoute(request, response).process();
     });
 
     app.get("/search-feeds", (request, response) => {
