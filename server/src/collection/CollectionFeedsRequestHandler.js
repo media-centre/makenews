@@ -104,6 +104,7 @@ async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
     const deletedFeeds = await couchClient.findDocuments(feedsToDeleteQuery);
     return deletedFeeds.docs;
 }
+
 export async function deleteFeedFromCollection(authSession, feedId, collectionId) {
 
     const couchClient = CouchClient.instance(authSession);
@@ -122,7 +123,7 @@ export async function deleteFeedFromCollection(authSession, feedId, collectionId
     let collectionFeedDoc = await couchClient.findDocuments(query);
     const feedDoc = await couchClient.getDocument(feedId);
 
-    if (feedDoc.sourceDeleted) {
+    if(feedDoc.sourceDeleted) {
         (collectionFeedDoc.docs).push(feedDoc);
     }
 
