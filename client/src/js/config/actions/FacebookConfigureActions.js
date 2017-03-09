@@ -1,7 +1,6 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 import {
-    switchSourceTab,
     fetchingSources,
     fetchingSourcesFailed } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
@@ -38,7 +37,6 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
                 type,
                 "paging": props
             });
-            dispatch(switchSourceTab(sourceType));
             if (response.data.length) {
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 const cmp = (first, second) => first.id === second._id;

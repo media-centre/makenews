@@ -1,7 +1,8 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import {
     fetchingSources,
-    fetchingSourcesFailed } from "../../sourceConfig/actions/SourceConfigurationActions";
+    fetchingSourcesFailed
+} from "../../sourceConfig/actions/SourceConfigurationActions";
 import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 
 export const WEB_GOT_SOURCE_RESULTS = "WEB_GOT_SOURCE_RESULTS";

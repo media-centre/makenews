@@ -39,6 +39,7 @@ export class ConfigureSourcesPage extends Component {
             dispatch(updateTokenExpireTime(expiresAfter));
         });
     }
+
     _showTwitterLogin(dispatch) {
         if(!this.props.twitterAuthenticated) {
             TwitterLogin.instance().login().then((authenticated) => {
@@ -62,8 +63,7 @@ export class ConfigureSourcesPage extends Component {
 
     sourceTab(params, dispatch) {
         dispatch(SourceConfigActions.clearSources);
-        let sourceType = params.sourceType;
-        this.showLoginPrompt(sourceType, dispatch);
+        this.showLoginPrompt(params.sourceType, dispatch);
         dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
     }
 
@@ -81,7 +81,7 @@ ConfigureSourcesPage.propTypes = {
     "twitterAuthenticated": PropTypes.bool
 };
 
-let mapToStore = (store) => ({
+const mapToStore = (store) => ({
     "currentSourceTab": store.currentSourceTab,
     "expireTime": store.tokenExpiresTime.expireTime,
     "twitterAuthenticated": store.twitterTokenInfo.twitterAuthenticated

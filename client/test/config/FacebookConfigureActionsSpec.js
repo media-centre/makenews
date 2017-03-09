@@ -5,7 +5,6 @@ import sinon from "sinon";
 import "../helper/TestHelper";
 import mockStore from "../helper/ActionHelper";
 import {
-    CHANGE_CURRENT_SOURCE_TAB,
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
@@ -47,7 +46,6 @@ describe("Facebook Configure Actions", () => {
 
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": "profiles" },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
             ];
             let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
@@ -70,7 +68,6 @@ describe("Facebook Configure Actions", () => {
 
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
             ];
             let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
@@ -100,7 +97,6 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
             ];
 
@@ -129,7 +125,6 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": FBActions.PAGES },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, "keyword": pageName }
             ];
 
