@@ -16,11 +16,11 @@ export class AddUrl extends Component {
     }
 
     _addUrl() {
-        let url = this.refs.url.value.trim();
+        const url = this.refs.url.value.trim();
         if (url.match(this.urlRegex)) {
             this.props.dispatch(AddUrlActions.addRssUrl(url));
         } else {
-            this.props.dispatch(AddUrlActions.invalidRssUrl());
+            Toast.show("Please enter proper url");
         }
     }
 
@@ -48,11 +48,10 @@ export class AddUrl extends Component {
                             <div className="addurl-icon"><img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/></div>
                         </div>
                     </div>
-                    { this.props.addUrlStatus.message && Toast.show(this.props.addUrlStatus.message) }
                 </div>
             );
         }
-        return (<div className="add-url-message">{Toast.show(this.props.addUrlStatus.message)}</div>);
+        return null;
     }
 }
 

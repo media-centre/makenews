@@ -62,7 +62,7 @@ export class EditStory extends Component {
             };
 
             ajax.put(headers, { story }).then(() => {
-                Toast.show("Story saved successfully");
+                Toast.show("Story saved successfully", "success");
                 history.push("/story-board/stories");
             }).catch((error) => {
                 if(error.message === "Please add title") {

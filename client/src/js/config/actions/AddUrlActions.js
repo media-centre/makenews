@@ -1,7 +1,6 @@
-/* eslint no-unused-vars:0 no-magic-numbers:0*/
 import AjaxClient from "./../../utils/AjaxClient";
 import { WEB_ADD_SOURCE } from "./WebConfigureActions";
-
+import Toast from "../../utils/custom_templates/Toast";
 
 export const RSS_ADD_URL_STATUS = "RSS_ADD_URL_STATUS";
 
@@ -17,18 +16,18 @@ export function addRssUrl(url) {
                 "type": WEB_ADD_SOURCE,
                 "sources": [response]
             });
-            return dispatch(handleMessages("Added successfully", true));
+            Toast.show("Added successfully", "success");
+            return dispatch(handleMessages(true));
         }).catch((error) => {
-            return dispatch(handleMessages(error.message, false));
+            Toast.show(error.message);
+            return dispatch(handleMessages(false));
         });
     };
 }
 
-export const invalidRssUrl = () => handleMessages("Please enter proper url.", false);
-
-export function handleMessages(message, added) {
+export function handleMessages(added) {
     return {
         "type": RSS_ADD_URL_STATUS,
-        "status": { message, added }
+        "status": { added }
     };
 }

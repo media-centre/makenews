@@ -4,18 +4,31 @@
   }
 
   position: fixed;
-  left: 0;
-  right: 0;
+  right: 5rem;
   bottom: 10%;
-  width: 60%;
+  display: flex;
+  align-items: center;
   background: $primary-color-dark;
   margin: auto;
-  padding: 10px;
-  color: $primary-font-color;
+  padding: 0 10px;
+  color: #FFFFFF;
+
+  .message {
+    line-height: 2.5rem;
+  }
+
+  img {
+    width: 1.7rem;
+    height: 1.7rem;
+    padding-right: 5px;
+  }
 
   button {
     display: block;
     color: $primary-font-color;
+    font-size: 1.5rem;
+    padding: 0 0 0 1rem;
+
     &:hover {
       color: $secondary-font-color;
     }

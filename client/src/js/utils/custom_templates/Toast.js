@@ -1,7 +1,5 @@
-/* eslint react/jsx-wrap-multilines:0 */
-
 export default class Toast {
-    static show(toastMessage) {
+    static show(toastMessage, type) {
         if(Toast.timer !== null) {
             clearTimeout(Toast.timer);
         }
@@ -10,13 +8,18 @@ export default class Toast {
             toastDOM = document.createElement("div");
             toastDOM.className = "custom-toast anim bottom-box-shadow hide clear-fix";
             toastDOM.id = "custom-toast";
-            toastDOM.innerHTML = "<span class='message'></span><button class='button secondary border right'>Got it</button>";
+            toastDOM.innerHTML = "<img /><span class='message'></span><button>&times;</button>";
             document.body.appendChild(toastDOM);
 
             toastDOM.getElementsByTagName("button")[0].addEventListener("click", ()=> { //eslint-disable-line no-magic-numbers
                 Toast.close();
             });
         }
+        let icon = "./images/warning-icon.png";
+        if(type === "success") {
+            icon = "./images/success-icon.png";
+        }
+        toastDOM.getElementsByTagName("img")[0].src = icon; //eslint-disable-line no-magic-numbers
         toastDOM.getElementsByClassName("message")[0].textContent = toastMessage; //eslint-disable-line no-magic-numbers
 
         if(toastDOM.classList.contains("hide")) {
@@ -26,7 +29,7 @@ export default class Toast {
     }
 
     static hide() {
-        let time = 5000;
+        const time = 5000;
         Toast.timer = setTimeout(Toast.close, time);
     }
 
@@ -34,7 +37,7 @@ export default class Toast {
         if(Toast.timer !== null) {
             clearTimeout(Toast.timer);
         }
-        let toastDOM = document.getElementById("custom-toast");
+        const toastDOM = document.getElementById("custom-toast");
         if(!toastDOM.classList.contains("hide")) {
             toastDOM.classList.add("hide");
         }
