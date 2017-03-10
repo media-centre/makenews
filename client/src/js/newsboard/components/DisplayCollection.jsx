@@ -49,7 +49,11 @@ export class DisplayCollection extends Component {
             (<li className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>{ collection.collection }
                     <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) => {
                         event.stopPropagation();
+                        let deletedCollectionClass = event.target.parentNode.className;
                         this.props.dispatch(deleteCollection(event, collection._id));
+                        if(deletedCollectionClass.endsWith("active")) {
+                            this.refs.collectionList.querySelector(".collection-name").className = "collection-name active";
+                        }
                     }}
                     >
                         &times;</button>
@@ -59,6 +63,7 @@ export class DisplayCollection extends Component {
         if(!first) {
             return collectionItems;
         }
+
         collectionItems.push(getCollectionItem(first, "collection-name active"));
         rest.forEach(collection => {
             collectionItems.push(getCollectionItem(collection, "collection-name"));
