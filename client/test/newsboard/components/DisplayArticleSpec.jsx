@@ -269,7 +269,7 @@ describe("DisplayArticle", () => {
             expect(backButton.props.className).to.be.equal("back__button");
             expect(arrowIcon.type).to.be.equal("i");
             expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
-            expect(name).to.be.equal("back");
+            expect(name).to.be.equal(" back");
         });
     });
 });

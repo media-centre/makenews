@@ -3,7 +3,7 @@
   height: calc(100vh - #{$main-header-height});
   overflow-y: auto;
   flex-basis: $side-panel-width;
-  border-right: 2px solid lighten($primary-color, 35%);
+  border-right: 1px solid lighten($primary-color, 35%);
 
   .search-bar {
     height: $secondary-header-nav-height;

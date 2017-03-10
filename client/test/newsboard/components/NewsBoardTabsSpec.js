@@ -9,7 +9,10 @@ describe("NewsBoardTabs", () => {
     let result = null;
     beforeEach("NewsBoardTabs", () => {
         const renderer = TestUtils.createRenderer();
-        renderer.render(<NewsBoardTabs displayFeedsToast={{ "bookmark": true }}/>);
+        renderer.render(
+            <NewsBoardTabs
+                displayFeedsToast={{ "bookmark": true, "collection": { "status": true, "name": "Politics" } }}
+            />);
         result = renderer.getRenderOutput();
     });
 
@@ -26,5 +29,15 @@ describe("NewsBoardTabs", () => {
         const [icon, message] = toastDiv.props.children;
         expect(icon.props.className).to.equals("icon fa fa-bookmark");
         expect(message).to.contains("Successfully bookmarked");
+    });
+
+    it("should have collection tab with toast message div", () => {
+        const [, , , , , collectionTab] = findAllWithType(result, NewsBoardTab);
+        const toastDiv = collectionTab.props.children;
+        expect(toastDiv.type).to.equals("div");
+        expect(toastDiv.props.className).to.equals("toast show");
+        const [icon, message] = toastDiv.props.children;
+        expect(icon.props.className).to.equals("icon fa fa-folder");
+        expect(message.props.children).to.contains("Added to 'Politics' collection");
     });
 });

@@ -7,6 +7,7 @@ export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
 export const WEB_ARTICLE_RECEIVED = "WEB_ARTICLE_RECEIVED";
 export const WEB_ARTICLE_REQUESTED = "WEB_ARTICLE_REQUESTED";
 export const ADD_ARTICLE_TO_COLLECTION = "ADD_ARTICLE_TO_COLLECTION";
+export const ADD_TO_COLLECTION_STATUS = "ADD_TO_COLLECTION_STATUS";
 
 export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
     "type": BOOKMARKED_ARTICLE,
@@ -68,25 +69,36 @@ export function addToCollection(collection, article, isNewCollection = false) {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
-        const response = await ajaxClient.put(headers, {
-            "collection": collection,
-            "docId": article.id,
-            "isNewCollection": isNewCollection,
-            "sourceId": article.sourceId
-        });
-        if(response.ok === true && article.id) {
-            Toast.show("Successfully added feed to collection");
-            dispatch(newsBoardTabSwitch(article.sourceType));
-        } else if(response.ok === true) {
-            Toast.show("Successfully added collection");
-            dispatch(paginatedFeeds([{ "collection": collection, "_id": response._id }]));
-        } else if(response.message) {
-            Toast.show(response.message);
-            dispatch(newsBoardTabSwitch(article.sourceType || newsBoardSourceTypes.collection));
-        } else {
-            Toast.show("Failed add feed to collection");
+        try {
+            const response = await ajaxClient.put(headers, {
+                "collection": collection,
+                "docId": article.id,
+                "isNewCollection": isNewCollection,
+                "sourceId": article.sourceId
+            });
+            if (response.ok === true && article.id) {
+                dispatch(handleMessages("Successfully added feed to collection", collection));
+                dispatch(newsBoardTabSwitch(article.sourceType));
+            } else if (response.ok === true) {
+                dispatch(paginatedFeeds([{ "collection": collection, "_id": collection }]));
+                Toast.show("Successfully created collection", "success");
+            } else if (response.message) {
+                dispatch(newsBoardTabSwitch(article.sourceType || newsBoardSourceTypes.collection));
+                Toast.show(response.message);
+            } else {
+                Toast.show(isNewCollection ? "Failed to create collection" : "Failed to add feed to collection");
+            }
+        } catch (err) {
+            Toast.show(isNewCollection ? "Failed to create collection" : "Failed to add feed to collection");
         }
         dispatch(addArticleToCollection("", "", ""));
+    };
+}
+
+export function handleMessages(message, name) {
+    return {
+        "type": ADD_TO_COLLECTION_STATUS,
+        "status": { message, name }
     };
 }
 

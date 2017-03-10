@@ -4,12 +4,15 @@ import {
     CLEAR_NEWS_BOARD_FEEDS,
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
-    SEARCHED_FEEDS
+    SEARCHED_FEEDS,
+    HIDE_BOOKMARK_TOAST,
+    HIDE_COLLECTION_TOAST
 } from "./../actions/DisplayFeedActions";
 import {
     BOOKMARKED_ARTICLE,
     WEB_ARTICLE_REQUESTED,
-    WEB_ARTICLE_RECEIVED
+    WEB_ARTICLE_RECEIVED,
+    ADD_TO_COLLECTION_STATUS
 } from "./../actions/DisplayArticleActions";
 import { DELETE_COLLECTION } from "../actions/DisplayCollectionActions";
 import { List } from "immutable";
@@ -75,12 +78,24 @@ export function fetchingFeeds(state = false, action = {}) {
 }
 
 const toastInitialState = {
-    "bookmark": false
+    "bookmark": false,
+    "collection": {
+        "status": false,
+        "name": ""
+    }
 };
 export function displayFeedsToast(state = toastInitialState, action = {}) {
     switch (action.type) {
     case BOOKMARKED_ARTICLE:
         return Object.assign({}, state, { "bookmark": action.bookmarkStatus });
-    default: return toastInitialState;
+    case ADD_TO_COLLECTION_STATUS:
+        if(action.status.message === "Successfully added feed to collection") {
+            return Object.assign({}, state, { "collection": { "status": true, "name": action.status.name } });
+        }
+        return toastInitialState;
+    case HIDE_BOOKMARK_TOAST:
+    case HIDE_COLLECTION_TOAST:
+        return toastInitialState;
+    default: return Object.assign({}, state, { "bookmark": false });
     }
 }

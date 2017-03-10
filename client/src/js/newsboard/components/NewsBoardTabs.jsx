@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import NewsBoardTab from "./NewsBoardTab";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
-import { hideBookmarkToast } from "./../actions/DisplayFeedActions";
+import { hideBookmarkToast, hideCollectionToast } from "./../actions/DisplayFeedActions";
 
 export class NewsBoardTabs extends Component {
     render() {
@@ -18,7 +18,13 @@ export class NewsBoardTabs extends Component {
                         <span className="close" onClick={() => this.props.dispatch(hideBookmarkToast())}>&times;</span>
                     </div>
                 </NewsBoardTab>
-                <NewsBoardTab sourceIcon="folder" title="collections" sourceType={newsBoardSourceTypes.collection}/>
+                <NewsBoardTab sourceIcon="folder" title="collections" sourceType={newsBoardSourceTypes.collection}>
+                    <div className={this.props.displayFeedsToast.collection.status ? "toast show" : "toast"}>
+                        <i className="icon fa fa-folder" />
+                        <span className="message">{` Added to '${this.props.displayFeedsToast.collection.name}' collection`}</span>
+                        <span className="close" onClick={() => this.props.dispatch(hideCollectionToast())}>&times;</span>
+                    </div>
+                </NewsBoardTab>
             </div>
         );
     }

@@ -2,6 +2,7 @@ import {
     paginatedFeeds,
     clearFeeds,
     hideBookmarkToast,
+    hideCollectionToast,
     displayFeedsByPage,
     newsBoardTabSwitch,
     displayArticle,
@@ -13,14 +14,14 @@ import {
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
     SEARCHED_FEEDS,
-    HIDE_BOOKMARK_TOAST
+    HIDE_BOOKMARK_TOAST,
+    HIDE_COLLECTION_TOAST
 } from "../../../src/js/newsboard/actions/DisplayFeedActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 import Toast from "../../../src/js/utils/custom_templates/Toast";
-
 
 describe("DisplayFeedActions", () => {
     describe("paginatedFeeds", () => {
@@ -52,6 +53,13 @@ describe("DisplayFeedActions", () => {
         it("should return type HIDE_BOOKMARK_TOAST action ", () => {
             const hideBookmarkAction = { "type": HIDE_BOOKMARK_TOAST };
             assert.deepEqual(hideBookmarkToast(), hideBookmarkAction);
+        });
+    });
+
+    describe("hideCollectionToast", () => {
+        it("should return type HIDE_COLLECTION_TOAST action ", () => {
+            const hideCollectionAction = { "type": HIDE_COLLECTION_TOAST };
+            assert.deepEqual(hideCollectionToast(), hideCollectionAction);
         });
     });
 

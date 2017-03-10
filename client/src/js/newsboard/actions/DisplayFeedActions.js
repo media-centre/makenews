@@ -8,6 +8,7 @@ export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 export const FETCHING_FEEDS = "FETCHING_FEEDS";
 export const SEARCHED_FEEDS = "SEARCHED_FEEDS";
 export const HIDE_BOOKMARK_TOAST = "HIDE_BOOKMARK_TOAST";
+export const HIDE_COLLECTION_TOAST = "HIDE_COLLECTION_TOAST";
 const DEFAULT_PAGE_SIZE = 25;
 
 export const paginatedFeeds = feeds => ({
@@ -20,6 +21,10 @@ export const searchedFeeds = feeds => ({
 
 export const hideBookmarkToast = () => ({
     "type": HIDE_BOOKMARK_TOAST
+});
+
+export const hideCollectionToast = () => ({
+    "type": HIDE_COLLECTION_TOAST
 });
 
 export const newsBoardTabSwitch = currentTab => ({

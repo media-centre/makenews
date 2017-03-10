@@ -12,7 +12,6 @@
       height: 1.5em;
       text-align: center;
       margin: 10px 5px;
-      cursor: pointer;
 
       &.active {
         background-color: #fff;
@@ -32,12 +31,17 @@
         color: #fff;
         display: flex;
         transition: .5s transform;
-        transform: translateX(-17rem);
+        transform: translateX(-25rem);
 
         .close {
           padding-left: 10px;
           font-size: 1.3rem;
           margin-top: -2px;
+          cursor: pointer;
+        }
+
+        .message {
+          padding-left: 10px;
         }
 
         &.show {
@@ -46,6 +50,7 @@
       }
 
       .icon {
+        cursor: pointer;
         font-size: 1.5em;
         color: $primary-color-light;
       }

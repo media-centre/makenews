@@ -6,7 +6,8 @@ import {
     BOOKMARKED_ARTICLE,
     WEB_ARTICLE_RECEIVED,
     WEB_ARTICLE_REQUESTED,
-    ADD_ARTICLE_TO_COLLECTION
+    ADD_ARTICLE_TO_COLLECTION,
+    ADD_TO_COLLECTION_STATUS
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { NEWS_BOARD_CURRENT_TAB, PAGINATED_FETCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import sinon from "sinon";
@@ -130,10 +131,11 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch newsBoardTabSwitch, handleMessage, addArticleToCollection when response is success and there is docId", (done) => {
-            const store = mockStore({}, [{ "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
+            const store = mockStore({}, [
+                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Successfully added feed to collection", "name": collection } },
+                { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
-            ], done);
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
@@ -143,24 +145,39 @@ describe("DisplayArticleActions", () => {
             ajaxPutMock.verify();
         });
 
-        it("should dispatch addArticleToCollection and handleMessage with failed message on bad request", (done) => {
+        it("should show toast message of unable to create collection if failed message on bad request", async () => {
             response = { "error": "unexpected response" };
-            const store = mockStore({}, [{ "type": ADD_ARTICLE_TO_COLLECTION,
-                "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
-            ], done);
-
-            const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
+            sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
                 .returns(response);
 
-            store.dispatch(addToCollection(collection, article));
-            ajaxPutMock.verify();
+            const toastMock = sandbox.mock(Toast).expects("show")
+                .withExactArgs("Failed to create collection");
+
+            await addToCollection(collection, article, true)(() => {});
+
+            toastMock.verify();
+        });
+
+        it("should show toast message of unable to add article if failed message on bad request", async () => {
+            response = { "error": "unexpected response" };
+
+            sandbox.mock(ajaxClientInstance).expects("put")
+                .withExactArgs(headers, body)
+                .returns(response);
+
+            const toastMock = sandbox.mock(Toast).expects("show")
+                .withExactArgs("Failed to add feed to collection");
+
+            await addToCollection(collection, article)(() => {});
+
+            toastMock.verify();
         });
 
         it("should dispatch handleMessage, paginatedFeeds, addArticleToCollection on success response and there is no doc id", (done) => {
             body = { "collection": collection, "docId": "", "isNewCollection": true, "sourceId": "" };
             const store = mockStore({}, [
-                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": "1234" }] },
+                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": collection }] },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
                     "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
             ], done);
@@ -181,7 +198,7 @@ describe("DisplayArticleActions", () => {
                     "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
             ], done);
 
-            let ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
+            const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
                 .returns(response);
 

@@ -57,8 +57,10 @@ export class DisplayArticle extends Component {
         return(
             this.props.isStoryBoard
                 ? <header className={`${this.articleClass}__header back`}>
-                <button className="back__button" onClick={() => { this.props.articleOpen(); }}><i className="icon fa fa-arrow-left" aria-hidden="true"/>back</button>
-            </header>
+                    <button className="back__button" onClick={() => { this.props.articleOpen(); }}>
+                        <i className="icon fa fa-arrow-left" aria-hidden="true"/> back
+                    </button>
+                  </header>
 
                 : <header className={`${this.articleClass}__header`}>
                 <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
