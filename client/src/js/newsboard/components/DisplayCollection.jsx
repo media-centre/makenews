@@ -84,9 +84,9 @@ export class DisplayCollection extends Component {
                 {this.state.showCollectionPopup &&
                 <div className="new-collection">
                     <input type="text" className="new-collection-input-box" ref="collectionName"
-                           placeholder="create new collection" onKeyUp={(event) => {
-                        this.createCollection(event);
-                    }}
+                        placeholder="create new collection" onKeyUp={(event) => {
+                            this.createCollection(event);
+                        }}
                     />
 
                     <button className="cancel-collection" onClick={() => {
@@ -110,7 +110,8 @@ export class DisplayCollection extends Component {
     }
 
     createNewCollection() {
-        return (<div className="create_collection" onClick={() => {
+        return (
+            <div className="create_collection" onClick={() => {
                 this.setState({ "showCollectionPopup": true });
             }}
             >
