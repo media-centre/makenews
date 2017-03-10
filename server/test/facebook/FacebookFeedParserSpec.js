@@ -41,7 +41,7 @@ describe("FacebookFeedParser", () => {
             "sourceType": "facebook",
             "link": "https://www.facebook.com/952680454818870/posts/1019161978170717",
             "description": "Latest Feed 1.0",
-            "pubDate": "2016-05-06T07:11:43Z",
+            "pubDate": "2016-05-06T07:11:43.000Z",
             "tags": ["some"],
             "images": [],
             "videos": [],
@@ -54,13 +54,12 @@ describe("FacebookFeedParser", () => {
             "sourceType": "facebook",
             "link": "https://www.facebook.com/952680454818870/posts/1019152051505043",
             "description": "hello world",
-            "pubDate": "2016-05-06T06:33:49Z",
+            "pubDate": "2016-05-06T06:33:49.000Z",
             "tags": ["some"],
             "images": [],
             "videos": [],
             "sourceId": "source"
         }];
-
         expect(parseFacebookPosts("source", data)).to.deep.equals(parsedData);
     });
 
@@ -93,7 +92,7 @@ describe("FacebookFeedParser", () => {
             "sourceType": "facebook",
             "link": "https://www.facebook.com/DisneyPixar/photos/a.127437064077.102676.35245929077/10154988680249078/?type=3",
             "description": "Destination: everywhere.",
-            "pubDate": "2017-01-05T02:30:02Z",
+            "pubDate": "2017-01-05T02:30:02.000Z",
             "tags": ["some"],
             "images": [{
                 "url": "https://fullpicture.url/fullpicture.jpg",
@@ -133,7 +132,7 @@ describe("FacebookFeedParser", () => {
             "sourceType": "facebook",
             "link": "https://www.facebook.com/DisneyPixar/videos/10154988196624078/",
             "description": "Dive into a sea of Easter eggs. It's National Trivia Day!",
-            "pubDate": "2017-01-04T23:01:54Z",
+            "pubDate": "2017-01-04T23:01:54.000Z",
             "tags": ["some"],
             "images": [{
                 "url": "https://full.picture/url.jpg",

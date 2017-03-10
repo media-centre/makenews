@@ -80,7 +80,7 @@ describe("TwitterParser", () => {
                 "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
-                "pubDate": "2001-12-11T06:11:56Z",
+                "pubDate": "2001-12-11T06:11:56.000Z",
                 "tags": ["someUser", "tag1", "tag2"],
                 "images": [],
                 "videos": [],
@@ -115,7 +115,7 @@ describe("TwitterParser", () => {
                 "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
-                "pubDate": "2001-12-11T06:11:56Z",
+                "pubDate": "2001-12-11T06:11:56.000Z",
                 "tags": ["someUser", "tag1", "tag2"],
                 "images": [{ "url": "https://www.test.com", "thumbnail": "https://www.test.com:thumb" }],
                 "videos": [],
@@ -151,7 +151,7 @@ describe("TwitterParser", () => {
                 "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
-                "pubDate": "2001-12-11T06:11:56Z",
+                "pubDate": "2001-12-11T06:11:56.000Z",
                 "tags": ["someUser", "tag1", "tag2"],
                 "images": [
                     {
@@ -200,7 +200,7 @@ describe("TwitterParser", () => {
                 "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
-                "pubDate": "2001-12-11T06:11:56Z",
+                "pubDate": "2001-12-11T06:11:56.000Z",
                 "tags": ["someUser", "tag1", "tag2"],
                 "images": [
                     {
