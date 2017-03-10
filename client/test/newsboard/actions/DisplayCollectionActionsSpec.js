@@ -83,7 +83,10 @@ describe("DisplayCollectionAction", () => {
 
     describe("deleteCollection", () => {
         collection = "testID";
-        const event = { "target": {} };
+        const event = { "target": {
+            "parentNode": "collection-name"
+        } };
+        const firstCollection = {};
 
         beforeEach("deleteCollection", () => {
             sandbox = sinon.sandbox.create();
@@ -103,7 +106,7 @@ describe("DisplayCollectionAction", () => {
             let store = mockStore([], [{ "type": DELETE_COLLECTION, "collection": collection },
                 { "type": CLEAR_COLLECTION_FEEDS }
             ], done);
-            store.dispatch(deleteCollection(event, collection));
+            store.dispatch(deleteCollection(event, collection, firstCollection));
 
             deleteMock.verify();
         });
@@ -116,7 +119,7 @@ describe("DisplayCollectionAction", () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
 
             try {
-                let dispatchFunc = deleteCollection(event, collection);
+                let dispatchFunc = deleteCollection(event, collection, firstCollection);
                 await dispatchFunc();
                 assert.fail();
             } catch(error) {
@@ -132,7 +135,7 @@ describe("DisplayCollectionAction", () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
 
             try {
-                let dispatchFunc = deleteCollection(event, collection);
+                let dispatchFunc = deleteCollection(event, collection, firstCollection);
                 await dispatchFunc();
                 assert.fail();
             } catch(error) {

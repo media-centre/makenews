@@ -177,7 +177,7 @@ describe("DisplayArticleActions", () => {
         it("should dispatch handleMessage, paginatedFeeds, addArticleToCollection on success response and there is no doc id", (done) => {
             body = { "collection": collection, "docId": "", "isNewCollection": true, "sourceId": "" };
             const store = mockStore({}, [
-                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": collection }] },
+                { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": "1234" }] },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
                     "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
             ], done);

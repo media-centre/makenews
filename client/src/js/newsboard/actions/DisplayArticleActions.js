@@ -80,7 +80,7 @@ export function addToCollection(collection, article, isNewCollection = false) {
                 dispatch(handleMessages("Successfully added feed to collection", collection));
                 dispatch(newsBoardTabSwitch(article.sourceType));
             } else if (response.ok === true) {
-                dispatch(paginatedFeeds([{ "collection": collection, "_id": collection }]));
+                dispatch(paginatedFeeds([{ "collection": collection, "_id": response._id }]));
                 Toast.show("Successfully created collection", "success");
             } else if (response.message) {
                 dispatch(newsBoardTabSwitch(article.sourceType || newsBoardSourceTypes.collection));

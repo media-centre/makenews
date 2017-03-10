@@ -52,10 +52,11 @@ export const clearFeeds = () => ({
     "type": CLEAR_COLLECTION_FEEDS
 });
 
-export function deleteCollection(event, collection) {
+export function deleteCollection(event, collection, firstCollection) {
     return async dispatch => {
         const ajax = AjaxClient.instance("/collection");
         const button = event.target;
+        const currentCollectionClass = event.target.parentNode.className;
         button.className = "spinner";
         button.textContent = "";
         try {
@@ -63,11 +64,14 @@ export function deleteCollection(event, collection) {
             if(response.ok) {
                 dispatch({ "type": DELETE_COLLECTION, collection });
                 dispatch(clearFeeds());
+                if(currentCollectionClass.endsWith("active")) {
+                    firstCollection.className = "collection-name active";
+                }
             } else {
                 throw new Error();
             }
         } catch(error) {
-            button.className = "delete-source";
+            button.className = "delete-collection";
             button.innerHTML = "&times";
             Toast.show("Could not delete collection");
         }
