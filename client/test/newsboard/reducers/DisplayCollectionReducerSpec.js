@@ -1,5 +1,5 @@
 import { displayCollection, currentCollection } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
-import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS, DELETE_COLLECTION_FEED } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { assert } from "chai";
 
 describe("DisplayCollectionReducer", () => {
@@ -21,6 +21,15 @@ describe("DisplayCollectionReducer", () => {
 
         it("should return empty array by default", () => {
             assert.deepEqual(displayCollection(), []);
+        });
+
+        it("should return all the feeds except deleted feed", () => {
+            const state = [{ "_id": 1 }, { "_id": 2 }, { "_id": 3 }];
+            const expectedState = [{ "_id": 1 }, { "_id": 3 }];
+            const feedId = 2;
+            const action = { "type": DELETE_COLLECTION_FEED, feedId };
+
+            assert.deepEqual(displayCollection(state, action), expectedState);
         });
     });
 

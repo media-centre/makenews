@@ -4,6 +4,7 @@ import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import { deleteCollectionFeed } from "../actions/DisplayCollectionActions";
 
 export default class CollectionFeed extends Component {
 
@@ -26,6 +27,17 @@ export default class CollectionFeed extends Component {
         let [image] = feed.images;
         let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         return (<div className={feedClass}>
+                    { this.props.tab !== WRITE_A_STORY &&
+                        <button className="delete-feed" onClick={(event) => {
+                            event.target.parentNode.style.backgroundColor = "black";
+                            event.target.parentNode.style.opacity = 0.5;
+                            event.target.className = "spinner";
+                            event.target.innerHTML = "Deleting...";
+                            this.props.dispatch(deleteCollectionFeed(feed._id, this.props.collectionId));
+                        }}
+                        >&times;
+                        </button>
+                    }
                     <div className={`${feedClass}__body`}>
                         <div className={`${feedClass}__title`}>{feed.title}</div>
                         <div className={`${feedClass}__media`}>{this.getMedia()}</div>
@@ -49,5 +61,6 @@ export default class CollectionFeed extends Component {
 CollectionFeed.propTypes = {
     "feed": PropTypes.object.isRequired,
     "dispatch": PropTypes.func,
-    "tab": PropTypes.string
+    "tab": PropTypes.string,
+    "collectionId": PropTypes.string.isRequired
 };

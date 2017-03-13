@@ -3,11 +3,13 @@ import {
     setCurrentCollection,
     deleteCollection,
     clearFeeds,
+    deleteCollectionFeed,
     COLLECTION_FEEDS,
     NO_COLLECTION_FEEDS,
     CURRENT_COLLECTION,
     CLEAR_COLLECTION_FEEDS,
-    DELETE_COLLECTION
+    DELETE_COLLECTION,
+    DELETE_COLLECTION_FEED
 } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import Toast from "../../../src/js/utils/custom_templates/Toast";
@@ -144,6 +146,58 @@ describe("DisplayCollectionAction", () => {
             }
         });
 
+    });
+
+    describe("deleteCollectionFeed", () => {
+        const feedId = "feedId";
+        const collectionId = "collectionId";
+        beforeEach("deleteCollectionFeed", () => {
+            sandbox = sinon.sandbox.create();
+            ajaxClientInstance = AjaxClient.instance("./collection-feed");
+            sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
+        });
+
+        afterEach("deleteCollectionFeed", () => {
+            sandbox.restore();
+        });
+
+        it("should delete selected feed from the collection", (done) => {
+            const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
+                .withExactArgs({ feedId, collectionId }).returns(Promise.resolve({ "ok": true }));
+
+            const actions = [{ "type": DELETE_COLLECTION_FEED, feedId }];
+            const store = mockStore([], actions, done);
+
+            store.dispatch(deleteCollectionFeed(feedId, collectionId));
+
+            deleteMock.verify();
+        });
+
+        it("should show toast message on failure", async () => {
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not to delete article");
+            const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
+                .withExactArgs({ feedId, collectionId }).returns(Promise.reject());
+            try {
+                const dispatchFn = deleteCollectionFeed(feedId, collectionId);
+                await dispatchFn();
+            } catch(error) {
+                toastMock.verify();
+                deleteMock.verify();
+            }
+        });
+
+        it("should show toast message when there is no response from db", async () => {
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not to delete article");
+            const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
+                .withExactArgs({ feedId, collectionId }).returns(Promise.resolve({}));
+            try {
+                const dispatchFn = deleteCollectionFeed(feedId, collectionId);
+                await dispatchFn();
+            } catch(error) {
+                toastMock.verify();
+                deleteMock.verify();
+            }
+        });
     });
 
 });

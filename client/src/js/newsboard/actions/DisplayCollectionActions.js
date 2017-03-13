@@ -6,6 +6,7 @@ export const NO_COLLECTION_FEEDS = "NO_COLLECTION_FEEDS";
 export const CURRENT_COLLECTION = "CURRENT_COLLECTION";
 export const CLEAR_COLLECTION_FEEDS = "CLEAR_COLLECTION_FEEDS";
 export const DELETE_COLLECTION = "DELETE_COLLECTION";
+export const DELETE_COLLECTION_FEED = "DELETE_COLLECTION_FEED";
 
 const noCollectionFeeds = { "type": NO_COLLECTION_FEEDS };
 
@@ -74,6 +75,23 @@ export function deleteCollection(event, collection, firstCollection) {
             button.className = "delete-collection";
             button.innerHTML = "&times";
             Toast.show("Could not delete collection");
+        }
+    };
+}
+
+export function deleteCollectionFeed(feedId, collectionId) {
+
+    return async dispatch => {
+        const ajaxClient = AjaxClient.instance("/collection-feed");
+        try {
+            const response = await ajaxClient.deleteRequest({ feedId, collectionId });
+            if(response.ok) {
+                dispatch({ "type": DELETE_COLLECTION_FEED, feedId });
+            } else {
+                throw new Error();
+            }
+        } catch(error) {
+            Toast.show("Could not to delete article");
         }
     };
 }

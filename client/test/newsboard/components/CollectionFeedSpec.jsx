@@ -6,6 +6,7 @@ import { expect } from "chai";
 
 describe("CollectionFeed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
+    const collectionId = "collectionId";
     beforeEach("CollectionFeed", () => {
         feed = {
             "images": [{ "thumbnail": "some link" }],
@@ -20,21 +21,27 @@ describe("CollectionFeed", () => {
         onToggle = () => {
         };
         renderer = TestUtils.createRenderer();
-        feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Scan News"/>);
+        feedDom = renderer.render(<CollectionFeed collectionId = {collectionId} active={active} feed={feed} toggle={onToggle} tab="Scan News"/>);
     });
 
     it("should have a div with feed class", () => {
         expect(feedDom.props.className).to.equals("collection-feed");
     });
 
+    it("should have delete-feed class with type button", () => {
+        const [button] = feedDom.props.children;
+        expect(button.props.className).to.equals("delete-feed");
+        expect(button.type).to.equals("button");
+    });
+
     it("should have body ", () => {
-        let [body] = feedDom.props.children;
+        let [, body] = feedDom.props.children;
         expect(body.props.className).to.equals("collection-feed__body");
         expect(body.type).to.equals("div");
     });
 
     it("should have title ", () => {
-        let [body] = feedDom.props.children;
+        let [, body] = feedDom.props.children;
         let [title] = body.props.children;
 
         expect(title.props.className).to.equals("collection-feed__title");
@@ -42,7 +49,7 @@ describe("CollectionFeed", () => {
     });
 
     it("should have media ", () => {
-        let [body] = feedDom.props.children;
+        let [, body] = feedDom.props.children;
         let [, media] = body.props.children;
 
         expect(media.props.className).to.equals("collection-feed__media");
@@ -50,7 +57,7 @@ describe("CollectionFeed", () => {
     });
 
     it("should have description ", () => {
-        let [body] = feedDom.props.children;
+        let [, body] = feedDom.props.children;
         let [,, description] = body.props.children;
 
         expect(description.props.className).to.equals("collection-feed__description");
@@ -58,7 +65,7 @@ describe("CollectionFeed", () => {
     });
 
     it("should have source ", () => {
-        let [body] = feedDom.props.children;
+        let [, body] = feedDom.props.children;
         let [,,, source] = body.props.children;
         let [sourceType, tag, date] = source.props.children;
 
@@ -71,7 +78,7 @@ describe("CollectionFeed", () => {
 
 
     it("should have story-collection feed class when current tab write a story", () => {
-        feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle} tab="Write a Story"/>);
+        feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle} tab="Write a Story"/>);
         expect(feedDom.props.className).to.deep.equals("story-collection-feed collection-feed");
     });
 
@@ -94,8 +101,8 @@ describe("CollectionFeed", () => {
 
         it("should be visible when source type is web", ()=> {
             feed.sourceType = "web";
-            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let [, readMore] = feedDom.props.children;
+            feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
+            let [,, readMore] = feedDom.props.children;
             let button = readMore.props.children;
 
             expect(readMore.type).to.equals("div");
@@ -105,8 +112,8 @@ describe("CollectionFeed", () => {
 
         it("should be visible when when article contain video", ()=> {
             feed.videos = [{ "thumbnail": "video image url" }];
-            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let [, readMore] = feedDom.props.children;
+            feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
+            let [,, readMore] = feedDom.props.children;
             let button = readMore.props.children;
 
             expect(readMore.type).to.equals("div");
@@ -116,8 +123,8 @@ describe("CollectionFeed", () => {
 
         it("should be visible when when article contain image", ()=> {
             feed.images = [{ "url": "image url", "thumbnail": "image url" }];
-            feedDom = renderer.render(<CollectionFeed active={active} feed={feed} toggle={onToggle}/>);
-            let [, readMore] = feedDom.props.children;
+            feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
+            let [,, readMore] = feedDom.props.children;
             let button = readMore.props.children;
 
             expect(readMore.type).to.equals("div");

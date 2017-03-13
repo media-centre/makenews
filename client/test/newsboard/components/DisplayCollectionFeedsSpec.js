@@ -18,7 +18,7 @@ describe("DisplayCollectionFeeds", () => {
         beforeEach("Feeds", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <DisplayCollectionFeeds collection = {{ "name": collectionName }} dispatch = {() => {}} feeds = {feeds} tab="Scan News" />);
+                <DisplayCollectionFeeds collection = {{ "name": collectionName, "id": "collectionId" }} dispatch = {() => {}} feeds = {feeds} tab="Scan News" />);
             result = renderer.getRenderOutput();
         });
 
@@ -69,7 +69,7 @@ describe("DisplayCollectionFeeds", () => {
         beforeEach("header", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <DisplayCollectionFeeds collection={{ "name": collectionName }} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
+                <DisplayCollectionFeeds collection={{ "name": collectionName, "id": "collectionId" }} dispatch={() => {}} feeds={feeds} tab="Write a Story"/>);
             result = renderer.getRenderOutput();
         });
 

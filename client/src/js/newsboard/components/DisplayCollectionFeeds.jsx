@@ -87,7 +87,7 @@ export class DisplayCollectionFeeds extends Component {
                     <div className="collection-feeds">
                         {
                             this.props.feeds.map((feed, index) =>
-                                <CollectionFeed feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)
+                                <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)
                         }
                     </div>
                 </div>
