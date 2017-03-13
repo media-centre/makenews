@@ -65,76 +65,16 @@
 
   .configure-sources {
     margin-left: $configured-source-panel-width;
-  }
 
-  .input-group {
-    $border-size: 2px;
+    .input-box {
+      border-bottom-width: 2px;
+      margin-left: 20%;
+      margin-right: 20%;
+      margin-top: 2rem;
 
-    width: 60%;
-    margin-left: 20%;
-    margin-right: 20%;
-    margin-top: 20px;
-    border-bottom: $border-size solid $primary-color;
-    display: table;
-    position: relative;
-    border-collapse: separate;
-    padding: 0 10px 0 6px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    &:before,
-    &:after {
-      content: '';
-      display: inline-table;
-      box-sizing: border-box;
-      width: 1px;
-      height: 10px;
-      border-right: $border-size solid $primary-color;
-      bottom: -2px;
-      margin-left: -8px;
-      position: absolute;
-    }
-
-    &:after {
-      margin-left: 10px;
-    }
-
-    &__addon {
-      display: table-cell;
-      vertical-align: middle;
-      width: 1%;
-      position: relative;
-      white-space: nowrap;
-      font-size: 0;
-      box-sizing: border-box;
-      cursor: pointer;
-
-      img {
-        position: relative;
-        width: 20px;
-      }
-    }
-
-    input.search-sources {
-      display: table-cell;
-      position: relative;
-      float: left;
-      width: 100%;
-      border: 0;
-      color: $primary-color;
-      box-sizing: border-box;
-      line-height: 24px;
-      font-weight: 700;
-
-      &::-webkit-input-placeholder {
-        color: $primary-color-light;
-      }
-
-      &:-moz-placeholder,
-      &::-moz-placeholder {
-        color: $primary-color;
-        opacity: 1;
+      &:before,
+      &:after {
+        width: 2px;
       }
     }
   }

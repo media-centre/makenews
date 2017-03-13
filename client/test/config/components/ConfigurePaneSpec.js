@@ -60,8 +60,8 @@ describe("Configure Pane", () => {
         });
 
         it("should have an addon search icon", () => {
-            let result = renderer.getRenderOutput();
-            let addon = findWithClass(result, "input-group__addon");
+            const result = renderer.getRenderOutput();
+            const addon = findWithClass(result, "input-addon");
             expect(addon.type).to.equal("span");
 
             let img = addon.props.children;

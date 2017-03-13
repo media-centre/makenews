@@ -41,11 +41,13 @@ export class ConfigurePane extends Component {
         return (
           <div className="configure-sources">
               <ConfigPaneNavigation currentSourceType={this.props.currentSourceType}/>
-              <div className="input-group">
-                  <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
-                  <span className="input-group__addon">
-                    <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
-                  </span>
+              <div className="input-box">
+                  <div className="input-container">
+                      <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
+                      <span className="input-addon">
+                        <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
+                      </span>
+                  </div>
               </div>
               { this.props.currentTab === SourceConfigActions.WEB &&
                 !this.props.sources.data.length && !this.props.sources.isFetchingSources
