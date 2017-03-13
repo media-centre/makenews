@@ -3,23 +3,19 @@ import {
     newsBoardCurrentSourceTab,
     selectedArticle,
     fetchingWebArticle,
-    fetchingFeeds,
-    displayFeedsToast
+    fetchingFeeds
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
 import { DELETE_COLLECTION } from "../../../src/js/newsboard/actions/DisplayCollectionActions";
 import {
     NEWS_BOARD_CURRENT_TAB,
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
-    SEARCHED_FEEDS,
-    HIDE_BOOKMARK_TOAST,
-    HIDE_COLLECTION_TOAST
+    SEARCHED_FEEDS
 } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import {
     BOOKMARKED_ARTICLE,
     WEB_ARTICLE_REQUESTED,
-    WEB_ARTICLE_RECEIVED,
-    ADD_TO_COLLECTION_STATUS
+    WEB_ARTICLE_RECEIVED
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
@@ -168,72 +164,6 @@ describe("DisplayFeedReducer", () => {
         it("should return action state", () => {
             const action = { "type": FETCHING_FEEDS, "isFetching": true };
             expect(fetchingFeeds(false, action)).to.be.true; // eslint-disable-line no-unused-expressions
-        });
-    });
-
-    describe("Display feeds toast", () => {
-        it("should return bookmark status", () => {
-            const action = { "type": BOOKMARKED_ARTICLE, "bookmarkStatus": true };
-            expect(displayFeedsToast({}, action)).to.deep.equals({ "bookmark": action.bookmarkStatus });
-        });
-
-        it("should return bookmark false by default", () => {
-            expect(displayFeedsToast(null, {})).to.deep.equals({ "bookmark": false });
-        });
-
-        it("should return collection status true if article is added to collection", () => {
-            const action = {
-                "type": ADD_TO_COLLECTION_STATUS,
-                "status": { "message": "Successfully added feed to collection", "name": "collectionName" }
-            };
-            const expectedState = {
-                "collection": {
-                    "status": true, "name": "collectionName"
-                }
-            };
-            expect(displayFeedsToast({}, action)).to.deep.equals(expectedState);
-        });
-
-        it("should return default state if the collection status is not added article success", () => {
-            const action = {
-                "type": ADD_TO_COLLECTION_STATUS,
-                "status": { "message": "Successfully created collection", "name": "collectionName" }
-            };
-            const expectedState = {
-                "bookmark": false,
-                "collection": {
-                    "status": false, "name": ""
-                }
-            };
-            expect(displayFeedsToast({}, action)).to.deep.equals(expectedState);
-        });
-
-        it("should return default state after if Hide bookmark action", () => {
-            const action = {
-                "type": HIDE_BOOKMARK_TOAST
-            };
-
-            const expectedState = {
-                "bookmark": false,
-                "collection": {
-                    "status": false, "name": ""
-                }
-            };
-            expect(displayFeedsToast({}, action)).to.deep.equals(expectedState);
-        });
-
-        it("should return default state after if Hide collection action", () => {
-            const action = {
-                "type": HIDE_COLLECTION_TOAST
-            };
-
-            const expectedState = {
-                "bookmark": false,
-                "collection": {
-                    "status": false, "name": ""
-                }
-            };
-            expect(displayFeedsToast({}, action)).to.deep.equals(expectedState);
         });
     });
 });

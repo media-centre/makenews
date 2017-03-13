@@ -6,8 +6,7 @@ import {
     BOOKMARKED_ARTICLE,
     WEB_ARTICLE_RECEIVED,
     WEB_ARTICLE_REQUESTED,
-    ADD_ARTICLE_TO_COLLECTION,
-    ADD_TO_COLLECTION_STATUS
+    ADD_ARTICLE_TO_COLLECTION
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { NEWS_BOARD_CURRENT_TAB, PAGINATED_FETCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import sinon from "sinon";
@@ -131,15 +130,14 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch newsBoardTabSwitch, handleMessage, addArticleToCollection when response is success and there is docId", (done) => {
-            const store = mockStore({}, [
-                { "type": ADD_TO_COLLECTION_STATUS, "status": { "message": "Successfully added feed to collection", "name": collection } },
-                { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
-                { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }], done);
-
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
                 .returns(response);
+
+            const store = mockStore({}, [
+                { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
+                { "type": ADD_ARTICLE_TO_COLLECTION,
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }], done);
 
             store.dispatch(addToCollection(collection, article));
             ajaxPutMock.verify();

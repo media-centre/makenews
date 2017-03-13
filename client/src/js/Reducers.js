@@ -8,8 +8,7 @@ import { fetchedFeeds,
     newsBoardCurrentSourceTab,
     selectedArticle,
     fetchingWebArticle,
-    fetchingFeeds,
-    displayFeedsToast
+    fetchingFeeds
 } from "./newsboard/reducers/DisplayFeedReducers";
 import { configuredSources,
     currentSourceTab,
@@ -52,8 +51,7 @@ const contentDiscoveryApp = combineReducers({
     currentFilterSource,
     untitledIndex,
     fetchingFeeds,
-    deleteSourceStatus,
-    displayFeedsToast
+    deleteSourceStatus
 });
 
 export default contentDiscoveryApp;

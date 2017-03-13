@@ -1,6 +1,7 @@
 .custom-toast {
   &.hide {
     z-index: -1;
+    transition: none;
   }
 
   position: fixed;
@@ -12,15 +13,58 @@
   margin: auto;
   padding: 0 10px;
   color: #FFFFFF;
+  -webkit-transiton: opacity .5s;
+  -moz-transition: opacity .5s;
+  -ms-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  transition: opacity .5s;
+
+  &.collection,
+  &.bookmark {
+    bottom: initial;
+    left: 0;
+    right: initial;
+    background: $primary-color;
+    transform: translateX(-100%);
+    animation: rollInLeft .5s forwards;
+
+    i {
+      font-size: 1.5rem;
+      margin-right: 8px;
+      padding-left: 8px;
+      color: $primary-color-light;
+    }
+  }
+
+  &.collection {
+    top: 404px;
+  }
+
+  &.bookmark {
+    top: 350px;
+  }
+
+  i {
+    font-size: 1.3rem;
+    margin-right: 8px;
+    color: white;
+    padding: 5px;
+    border-radius: 100%;
+    width: 1.2rem;
+    height: 1.2rem;
+    text-align: center;
+  }
+
+  i.fa-exclamation {
+    background: $secondary-color;
+  }
+
+  i.fa-check {
+    background: green;
+  }
 
   .message {
     line-height: 2.5rem;
-  }
-
-  img {
-    width: 1.7rem;
-    height: 1.7rem;
-    padding-right: 5px;
   }
 
   button {
@@ -32,5 +76,14 @@
     &:hover {
       color: $secondary-font-color;
     }
+  }
+}
+
+@keyframes rollInLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
