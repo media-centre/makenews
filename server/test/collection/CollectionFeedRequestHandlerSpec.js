@@ -5,6 +5,7 @@ import {
     deleteFeedFromCollection
 } from "./../../src/collection/CollectionFeedsRequestHandler";
 import CouchClient from "../../src/CouchClient";
+import RouteLogger from "../../src/routes/RouteLogger";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -259,24 +260,15 @@ describe("CollectionFeedsRequestHandler", () => {
     });
 
     describe("deleteFeedFromCollection", () => {
-        let sandbox = null;
+        let sandbox = null, couchClientInstance = null, routeLogger = null;
         const authSession = "AuthSession";
         const feedId = "FeedId";
         const collectionId = "CollectionId";
-        let query = null, couchClientInstance = null;
+
         beforeEach("deleteFeedFromCollection", () => {
             sandbox = sinon.sandbox.create();
-            query = {
-                "selector": {
-                    "collectionId": {
-                        "$eq": collectionId
-                    },
-                    "feedId": {
-                        "$eq": feedId
-                    }
-                }
-            };
             couchClientInstance = new CouchClient(authSession);
+            routeLogger = RouteLogger.instance();
         });
 
         afterEach("deleteFeedFromCollection", () => {
@@ -285,236 +277,84 @@ describe("CollectionFeedsRequestHandler", () => {
 
         it("should delete collectionFeedDoc", async() => {
             const collectionFeedDoc = {
-                "docs": [{
-                    "_id": "1234",
-                    "feedId": feedId,
-                    "collectionId": collectionId
-                }]
+                "_id": "1234",
+                "collectionId": collectionId,
+                "feedId": feedId
             };
 
             const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des" };
 
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
-            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
-                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const getMock = sandbox.mock(couchClientInstance).expects("getDocument").twice();
+            getMock.onFirstCall().returns(Promise.resolve(collectionFeedDoc));
+            getMock.onSecondCall().returns(Promise.resolve(feedDoc));
             const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
-                .withExactArgs(collectionFeedDoc.docs).returns(Promise.resolve({ "ok": true }));
+                .withExactArgs([collectionFeedDoc]).returns(Promise.resolve({ "ok": true }));
+
+            const loggerMock = sandbox.mock(RouteLogger).expects("instance").returns(routeLogger);
+            const debugMock = sandbox.mock(routeLogger).expects("info")
+                .withExactArgs("CollectionFeedRequestHandler:: Successfully deleted article from collection");
 
             const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
 
             instanceMock.verify();
-            findMock.verify();
-            getDocumentMock.verify();
+            getMock.verify();
             deleteMock.verify();
+            loggerMock.verify();
+            debugMock.verify();
             assert.deepEqual(response, { "ok": true });
         });
 
         it("should delete CollectionFeedDoc and feedDoc if the source is deleted", async() => {
             const collectionFeedDoc = {
-                "docs": [{
-                    "_id": "1234",
-                    "feedId": feedId,
-                    "collectionId": collectionId
-                }]
+                "_id": "1234",
+                "feedId": feedId,
+                "collectionId": collectionId
             };
 
             const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des", "sourceDeleted": true };
-            const docsToDelete = [...(collectionFeedDoc.docs), feedDoc];
-
-            const instanceMock = sandbox.mock(CouchClient).expects("instance")
-                .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
-            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
-                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
-            const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
-                .withExactArgs(docsToDelete).returns(Promise.resolve({ "ok": true }));
-
-            const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
-
-            instanceMock.verify();
-            findMock.verify();
-            getDocumentMock.verify();
-            deleteMock.verify();
-            assert.deepEqual(response, { "ok": true });
-        });
-
-        it("should throw error", async() => {
-            const instanceMock = sandbox.mock(CouchClient).expects("instance")
-                .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.reject({ "message": "Unexpected response from db" }));
-
-            try {
-                await deleteFeedFromCollection(authSession, feedId, collectionId);
-                assert.fail();
-            } catch (error) {
-                instanceMock.verify();
-                findMock.verify();
-                assert.deepEqual(error, { "message": "Unexpected response from db" });
-            }
-        });
-    });
-
-    describe("deleteCollections", () => {
-        const sandbox = sinon.sandbox.create();
-        const authSession = "accessToken";
-        let couchClient = null;
-        const collectionId = "sdfuenxyw13s_12qadj";
-        beforeEach("deleteCollections", () => {
-            couchClient = new CouchClient(authSession);
-            sandbox.stub(CouchClient, "instance").returns(couchClient);
-        });
-
-        afterEach("deleteCollections", () => {
-            sandbox.restore();
-        });
-
-        it("should call couchDb for the collection Document", async() => {
-            sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
-            sandbox.stub(couchClient, "deleteBulkDocuments").returns(Promise.resolve());
-
-            const collectionDocMock = sandbox.mock(couchClient);
-            collectionDocMock.expects("getDocument").withExactArgs(collectionId).returns({});
-
-            await deleteCollection(authSession, collectionId);
-
-            collectionDocMock.verify();
-        });
-
-        it("should delete docs", async() => {
-            const interMediateResults = { "docs": [{ "feedId": "id1" }, { "feedId": "id4" }, { "feedId": "id2" }] };
-            const feedDocs = {
-                "docs": [
-                    { "_id": "id1", "sourceDeleted": true },
-                    { "_id": "id2", "sourceDeleted": true }]
-            };
-            const collectionDoc = { "_id": collectionId, "collection": "name" };
-            const deleteDocs = [
-                { "feedId": "id1" },
-                { "feedId": "id4" },
-                { "feedId": "id2" },
-                { "_id": "sdfuenxyw13s_12qadj", "collection": "name" },
-                { "_id": "id1", "sourceDeleted": true },
-                { "_id": "id2", "sourceDeleted": true }
+            const docsToDelete = [
+                collectionFeedDoc,
+                feedDoc
             ];
-
-            const findDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
-            findDocsMock.onFirstCall().returns(Promise.resolve(interMediateResults));
-            findDocsMock.onSecondCall().returns(Promise.resolve(feedDocs));
-
-            sandbox.stub(couchClient, "getDocument").returns(Promise.resolve(collectionDoc));
-
-            const saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments");
-            saveMock.withExactArgs(deleteDocs).returns(Promise.resolve({ "ok": true }));
-
-            let response = await deleteCollection(authSession, collectionId);
-
-            findDocsMock.verify();
-            saveMock.verify();
-            assert.deepEqual(response, { "ok": true });
-        });
-    });
-
-    describe("deleteFeedFromCollection", () => {
-        let sandbox = null;
-        const authSession = "AuthSession";
-        const feedId = "FeedId";
-        const collectionId = "CollectionId";
-        let query = null, couchClientInstance = null;
-        beforeEach("deleteFeedFromCollection", () => {
-            sandbox = sinon.sandbox.create();
-            query = {
-                "selector": {
-                    "collectionId": {
-                        "$eq": collectionId
-                    },
-                    "feedId": {
-                        "$eq": feedId
-                    }
-                }
-            };
-            couchClientInstance = new CouchClient(authSession);
-        });
-
-        afterEach("deleteFeedFromCollection", () => {
-            sandbox.restore();
-        });
-
-        it("should delete collectionFeedDoc", async() => {
-            const collectionFeedDoc = {
-                "docs": [{
-                    "_id": "1234",
-                    "feedId": feedId,
-                    "collectionId": collectionId
-                }]
-            };
-
-            const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des" };
-
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
-            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
-                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
-            const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
-                .withExactArgs(collectionFeedDoc.docs).returns(Promise.resolve({ "ok": true }));
-
-            const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
-
-            instanceMock.verify();
-            findMock.verify();
-            getDocumentMock.verify();
-            deleteMock.verify();
-            assert.deepEqual(response, { "ok": true });
-        });
-
-        it("should delete CollectionFeedDoc and feedDoc if the source is deleted", async() => {
-            const collectionFeedDoc = {
-                "docs": [{
-                    "_id": "1234",
-                    "feedId": feedId,
-                    "collectionId": collectionId
-                }]
-            };
-
-            const feedDoc = { "_id": feedId, "title": "title of the feed", "description": "des", "sourceDeleted": true };
-            const docsToDelete = [...(collectionFeedDoc.docs), feedDoc];
-
-            const instanceMock = sandbox.mock(CouchClient).expects("instance")
-                .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.resolve(collectionFeedDoc));
-            const getDocumentMock = sandbox.mock(couchClientInstance).expects("getDocument")
-                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const getMock = sandbox.mock(couchClientInstance).expects("getDocument").twice();
+            getMock.onFirstCall().returns(Promise.resolve(collectionFeedDoc));
+            getMock.onSecondCall().returns(Promise.resolve(feedDoc));
             const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
                 .withExactArgs(docsToDelete).returns(Promise.resolve({ "ok": true }));
+            const loggerMock = sandbox.mock(RouteLogger).expects("instance").returns(routeLogger);
+            const debugMock = sandbox.mock(routeLogger).expects("info")
+                .withExactArgs("CollectionFeedRequestHandler:: Successfully deleted article from collection");
 
             const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
 
             instanceMock.verify();
-            findMock.verify();
-            getDocumentMock.verify();
+            getMock.verify();
             deleteMock.verify();
+            loggerMock.verify();
+            debugMock.verify();
             assert.deepEqual(response, { "ok": true });
         });
 
         it("should throw error", async() => {
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
-            const findMock = sandbox.mock(couchClientInstance).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.reject({ "message": "Unexpected response from db" }));
-
+            const getMock = sandbox.mock(couchClientInstance).expects("getDocument")
+                .withExactArgs(feedId + collectionId).returns(Promise.reject({ "message": "Unexpected response from db" }));
+            const loggerMock = sandbox.mock(RouteLogger).expects("instance").returns(routeLogger);
+            const debugMock = sandbox.mock(routeLogger).expects("error")
+                .withExactArgs(`CollectionFeedRequestHandler:: Failed deleting article from collection with error ${JSON.stringify({ "message": "Unexpected response from db" })}`);
             try {
                 await deleteFeedFromCollection(authSession, feedId, collectionId);
                 assert.fail();
             } catch (error) {
                 instanceMock.verify();
-                findMock.verify();
+                getMock.verify();
+                loggerMock.verify();
+                debugMock.verify();
                 assert.deepEqual(error, { "message": "Unexpected response from db" });
             }
         });

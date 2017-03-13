@@ -151,9 +151,10 @@ describe("DisplayCollectionAction", () => {
     describe("deleteCollectionFeed", () => {
         const feedId = "feedId";
         const collectionId = "collectionId";
+        const event = { "target": {} };
         beforeEach("deleteCollectionFeed", () => {
             sandbox = sinon.sandbox.create();
-            ajaxClientInstance = AjaxClient.instance("./collection-feed");
+            ajaxClientInstance = AjaxClient.instance("/collection-feed");
             sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
         });
 
@@ -168,7 +169,7 @@ describe("DisplayCollectionAction", () => {
             const actions = [{ "type": DELETE_COLLECTION_FEED, feedId }];
             const store = mockStore([], actions, done);
 
-            store.dispatch(deleteCollectionFeed(feedId, collectionId));
+            store.dispatch(deleteCollectionFeed(event, feedId, collectionId));
 
             deleteMock.verify();
         });
@@ -178,7 +179,7 @@ describe("DisplayCollectionAction", () => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ feedId, collectionId }).returns(Promise.reject());
             try {
-                const dispatchFn = deleteCollectionFeed(feedId, collectionId);
+                const dispatchFn = deleteCollectionFeed(event, feedId, collectionId);
                 await dispatchFn();
             } catch(error) {
                 toastMock.verify();
@@ -191,7 +192,7 @@ describe("DisplayCollectionAction", () => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ feedId, collectionId }).returns(Promise.resolve({}));
             try {
-                const dispatchFn = deleteCollectionFeed(feedId, collectionId);
+                const dispatchFn = deleteCollectionFeed(event, feedId, collectionId);
                 await dispatchFn();
             } catch(error) {
                 toastMock.verify();

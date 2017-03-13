@@ -122,13 +122,30 @@
       border-bottom: 1px solid $dark-background-color;
       display: flex;
       flex-direction: column;
+      position: relative;
+
+      .spinner {
+        position: absolute;
+        right: 1rem;
+        padding: 0;
+        border: none;
+        float: right;
+        margin-top: 5px;
+
+        &:before {
+          width: 10px;
+          height: 10px;
+          border-width: 2px;
+        }
+      }
 
       .delete-feed {
+        position: absolute;
+        right: 1rem;
         display: none;
         font-size: 1.3em;
         font-weight: 400;
         font-style: normal;
-        text-align: right;
         cursor: pointer;
         padding: 0;
         border: none;
@@ -178,6 +195,7 @@
         color: $primary-color;
         font-size: $small-font-size;
       }
+
       &__readmore {
         flex-basis: 10%;
         &-button {
@@ -186,6 +204,7 @@
           border: 0;
         }
       }
+
       &:hover{
         background-color: #ffffff;
         .delete-feed {

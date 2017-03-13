@@ -1,6 +1,7 @@
 import CouchClient from "../CouchClient";
 import R from "ramda"; //eslint-disable-line id-length
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
+import RouteLogger from "../routes/RouteLogger";
 
 export async function getCollectedFeeds(authSession, collection, offset) {
     const couchClient = CouchClient.instance(authSession);
@@ -106,27 +107,23 @@ async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
 }
 
 export async function deleteFeedFromCollection(authSession, feedId, collectionId) {
-
     const couchClient = CouchClient.instance(authSession);
 
-    const query = {
-        "selector": {
-            "collectionId": {
-                "$eq": collectionId
-            },
-            "feedId": {
-                "$eq": feedId
-            }
+    try {
+        const collectionFeedDoc = await couchClient.getDocument(feedId + collectionId);
+        const feedDoc = await couchClient.getDocument(feedId);
+
+        let docsToDelete = [collectionFeedDoc];
+
+        if (feedDoc.sourceDeleted) {
+            docsToDelete.push(feedDoc);
         }
-    };
-
-    let collectionFeedDoc = await couchClient.findDocuments(query);
-    const feedDoc = await couchClient.getDocument(feedId);
-
-    if (feedDoc.sourceDeleted) {
-        (collectionFeedDoc.docs).push(feedDoc);
+        await couchClient.deleteBulkDocuments(docsToDelete);
+        RouteLogger.instance().info("CollectionFeedRequestHandler:: Successfully deleted article from collection");
+        return { "ok": true };
+    } catch (err) {
+        const error = { "message": "Unexpected response from db" };
+        RouteLogger.instance().error(`CollectionFeedRequestHandler:: Failed deleting article from collection with error ${JSON.stringify(err)}`);
+        throw error;
     }
-
-    await couchClient.deleteBulkDocuments(collectionFeedDoc.docs);
-    return { "ok": true };
 }
