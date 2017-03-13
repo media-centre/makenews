@@ -85,6 +85,7 @@ export function deleteCollectionFeed(event, feedId, collectionId) {
         const ajaxClient = AjaxClient.instance("/collection-feed");
         const button = event.target;
         button.className = "spinner";
+        button.textContent = "";
         try {
             const response = await ajaxClient.deleteRequest({ feedId, collectionId });
             if(response.ok) {
