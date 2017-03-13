@@ -150,6 +150,7 @@
         padding: 0;
         border: none;
         color: $primary-color-light;
+        text-transform: lowercase;
       }
 
       &:nth-child(odd) {

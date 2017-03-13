@@ -85,7 +85,6 @@ export function deleteCollectionFeed(event, feedId, collectionId) {
         const ajaxClient = AjaxClient.instance("/collection-feed");
         const button = event.target;
         button.className = "spinner";
-        button.textContent = "";
         try {
             const response = await ajaxClient.deleteRequest({ feedId, collectionId });
             if(response.ok) {
@@ -94,9 +93,10 @@ export function deleteCollectionFeed(event, feedId, collectionId) {
                 throw new Error();
             }
         } catch(error) {
-            button.className = "delete-feed";
-            button.innerHTML = "&times";
             Toast.show("Could not to delete article");
         }
+
+        button.className = "delete-feed";
+        button.innerHTML = "&times";
     };
 }
