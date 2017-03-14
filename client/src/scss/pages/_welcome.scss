@@ -1,0 +1,46 @@
+.welcome-page {
+  background-color: $primary-color-dark;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+
+  header {
+    img.logo {
+      margin-left: 2rem;
+      margin-top: 10px;
+      width: 260px;
+    }
+  }
+
+  main {
+    margin-bottom: 6rem;
+
+    .welcome-message {
+      color: #eae9e9;
+      margin: auto 10rem;
+      font-size: 2rem;
+      line-height: 2.9rem;
+    }
+  }
+
+  footer {
+    height: $secondary-header-nav-height;
+    background-color: lighten($primary-color-dark, 8%);
+    text-align: right;
+
+    a {
+      text-decoration: none;
+      background-color: $secondary-color;
+      height: 100%;
+      display: inline-flex;
+      justify-content: flex-end;
+      align-items: center;
+      color: white;
+      text-transform: uppercase;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      padding: 0 30px;
+    }
+  }
+}

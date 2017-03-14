@@ -1,4 +1,3 @@
-/* eslint react/display-name:0 react/jsx-wrap-multilines:0*/
 import App from "./App";
 import LoginPage from "./login/pages/LoginPage";
 import TwitterSuccess from "./main/pages/TwitterSuccess";
@@ -14,11 +13,13 @@ import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 import AddUrl from "./../js/config/components/AddUrl";
 import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
+import WelcomePage from "./welcome/WelcomePage";
 
 export function renderRoutes() {
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
+            <Route path="/onboard" component={WelcomePage} />
             <Route path="/main" component={Main} onEnter={isLoggedIn}>
 
                 <Route path="/configure" component={ConfigureURLs}>
@@ -37,18 +38,17 @@ export function renderRoutes() {
             </Route>
         </Route>
     );
-
 }
 
 function isLoggedIn(nextState, replaceState) {
-    let userSession = UserSession.instance();
+    const userSession = UserSession.instance();
     if(!userSession.isActiveContinuously()) {
         replaceState("/");
     }
 }
 
 function showLoginPage(nextState, replaceState) {
-    let userSession = UserSession.instance();
+    const userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
         userSession.init();
         replaceState("/newsBoard");

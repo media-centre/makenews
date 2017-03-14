@@ -12,3 +12,4 @@ url2/
 server/logs/
 .vagrant/
 server/config/application.json
+npm-debug.log

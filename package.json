@@ -50,6 +50,7 @@
     "child_process": "^1.0.2",
     "cordova-lib": "^6.4.0",
     "del": "^2.2.2",
+    "enzyme": "^2.7.1",
     "eslint": "^3.10.2",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-mocha-no-only": "0.0.4",
