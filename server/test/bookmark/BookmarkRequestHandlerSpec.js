@@ -99,6 +99,34 @@ describe("BookmarkRequestHandler", () => {
                 assert.deepEqual(response, error);
             }
         });
+
+        it("should delete the feed when the feed is unbookmarked and source is deleted", async () => {
+            const feedId = "feedId";
+            const feedDoc = {
+                "_id": feedId,
+                "title": "feed title",
+                "sourceType": "web",
+                "sourceDeleted": true,
+                "bookmark": true
+            };
+
+            const updatedDoc = {
+                ...feedDoc,
+                "_deleted": true,
+                "bookmark": false
+            };
+
+            sandbox.stub(CouchClient, "instance").returns(couchClient);
+            const getMock = sandbox.mock(couchClient).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const saveMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(feedId, updatedDoc).returns(Promise.resolve({ "ok": true }));
+            const respone = await bookmarkTheDocument(authSession, feedId);
+
+            getMock.verify();
+            saveMock.verify();
+            assert.deepEqual(respone, { "ok": true });
+        });
     });
 
     describe("getFeeds", () => {
