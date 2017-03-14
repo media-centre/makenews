@@ -21,6 +21,19 @@
       margin: auto 10rem;
       font-size: 2rem;
       line-height: 2.9rem;
+
+      .sources {
+        text-align: center;
+
+        .source {
+          padding: 0 1.7rem;
+          font-size: 1.4rem;
+          i {
+            margin-right: 5px;
+            font-size: 1.8rem;
+          }
+        }
+      }
     }
   }
 

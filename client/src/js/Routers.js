@@ -14,12 +14,14 @@ import AddUrl from "./../js/config/components/AddUrl";
 import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
+import ConfigurationIntro from "./welcome/ConfigurationIntro";
 
 export function renderRoutes() {
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
             <Route path="/onboard" component={WelcomePage} />
+            <Route path="/configure-intro" component={ConfigurationIntro}/>
             <Route path="/main" component={Main} onEnter={isLoggedIn}>
 
                 <Route path="/configure" component={ConfigureURLs}>
