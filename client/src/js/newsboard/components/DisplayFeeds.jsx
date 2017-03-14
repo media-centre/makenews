@@ -53,10 +53,11 @@ export class DisplayFeeds extends Component {
         if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
             this.offset = 0;
         }
-        let [firstArticle] = nextProps.feeds;
 
         if(this.props.feeds !== nextProps.feeds) {
-            this.props.dispatch(firstArticle && !firstArticle.collection
+            const [firstArticle] = nextProps.feeds;
+            this.props.dispatch(
+                (firstArticle && !firstArticle.collection)
                 ? DisplayFeedActions.displayArticle(firstArticle)
                 : DisplayFeedActions.clearArticle()
             );

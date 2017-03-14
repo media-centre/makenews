@@ -20,7 +20,7 @@ import { newsBoardSourceTypes } from "./../../../src/js/utils/Constants";
 describe("DisplayArticleActions", () => {
 
     describe("updateBookmarkStatus", () => {
-        it("should dispatch articleId and bookmarkstatus", () => {
+        it("should dispatch articleId and bookmarkStatus", () => {
             const expected = { "type": UPDATE_BOOKMARK_STATUS, "articleId": "id", "bookmarkStatus": true };
             expect(updateBookmarkStatus("id", true)).to.deep.equals(expected);
         });

@@ -64,7 +64,7 @@ describe("DisplayFeedReducer", () => {
                 "docType": "feed",
                 "sourceUrl": "http://www.test3.com/rss"
             }];
-            const action = { "type": UNBOOKMARK_THE_ARTICLE, "articleId": "123", "bookmarkStatus": false };
+            const action = { "type": UNBOOKMARK_THE_ARTICLE, "articleId": "123" };
             expect(fetchedFeeds(state, action)).to.deep.equal(modifiedFeeds);
         });
 
