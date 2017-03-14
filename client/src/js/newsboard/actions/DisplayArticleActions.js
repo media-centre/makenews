@@ -27,7 +27,9 @@ export function bookmarkArticle(article) {
         });
 
         if(response.ok) {
-            Toast.show("Successfully bookmarked", "bookmark");
+            if(!article.bookmark) {
+                Toast.show("Successfully bookmarked", "bookmark");
+            }
             dispatch(bookmarkedArticleAction(article._id, !article.bookmark));
         }
     };

@@ -12,7 +12,7 @@ import { NEWS_BOARD_CURRENT_TAB, PAGINATED_FETCHED_FEEDS } from "./../../../src/
 import sinon from "sinon";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import Toast from "./../../../src/js/utils/custom_templates/Toast";
 
 describe("DisplayArticleActions", () => {
@@ -32,23 +32,29 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch bookmarked Article action after successfully bookmarking the article", (done) => {
-            let article = {
+            const article = {
                 "_id": "id",
                 "title": "title"
             };
-            let docId = "id";
+            const docId = "id";
             const headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             };
 
-            let ajaxClientInstance = AjaxClient.instance("/bookmarks");
+            const ajaxClientInstance = AjaxClient.instance("/bookmarks");
             sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("post")
+            const postMock = sandbox.mock(ajaxClientInstance).expects("post")
                 .withArgs(headers, { "docId": docId }).returns(Promise.resolve({ "ok": true }));
 
-            let store = mockStore({}, [{ "type": "BOOKMARKED_ARTICLE", "articleId": article._id, "bookmarkStatus": true }], done);
+            const toastSpy = sandbox.spy(Toast, "show");
+            toastSpy.withArgs("Successfully bookmarked", "bookmark");
+            const verify = () => {
+                assert.isTrue(toastSpy.withArgs("Successfully bookmarked", "bookmark").calledOnce, "Toast Mock should be called");
+            };
+
+            const store = mockStore({}, [{ "type": "BOOKMARKED_ARTICLE", "articleId": article._id, "bookmarkStatus": true }], done, verify);
             store.dispatch(bookmarkArticle(article));
 
             postMock.verify();
@@ -129,7 +135,7 @@ describe("DisplayArticleActions", () => {
             sandbox.restore();
         });
 
-        it("should dispatch newsBoardTabSwitch, handleMessage, addArticleToCollection when response is success and there is docId", (done) => {
+        it("should dispatch newsBoardTabSwitch, addArticleToCollection when response is success and there is docId", (done) => {
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
                 .returns(response);
