@@ -3,18 +3,24 @@ import { newsBoardTabSwitch, paginatedFeeds } from "./DisplayFeedActions";
 import { newsBoardSourceTypes } from "../../utils/Constants";
 import Toast from "./../../utils/custom_templates/Toast";
 
-export const BOOKMARKED_ARTICLE = "BOOKMARKED_ARTICLE";
+export const UPDATE_BOOKMARK_STATUS = "UPDATE_BOOKMARK_STATUS";
 export const WEB_ARTICLE_RECEIVED = "WEB_ARTICLE_RECEIVED";
 export const WEB_ARTICLE_REQUESTED = "WEB_ARTICLE_REQUESTED";
 export const ADD_ARTICLE_TO_COLLECTION = "ADD_ARTICLE_TO_COLLECTION";
+export const UNBOOKMARK_THE_ARTICLE = "UNBOOKMARK_THE_ARTICLE";
 
-export const bookmarkedArticleAction = (articleId, bookmarkStatus) => ({
-    "type": BOOKMARKED_ARTICLE,
+export const updateBookmarkStatus = (articleId, bookmarkStatus) => ({
+    "type": UPDATE_BOOKMARK_STATUS,
     articleId,
     bookmarkStatus
 });
 
-export function bookmarkArticle(article) {
+export const unbookmarkArticle = (articleId) => ({
+    "type": UNBOOKMARK_THE_ARTICLE,
+    articleId
+});
+
+export function bookmarkArticle(article, currentTab) {
     const ajaxClient = AjaxClient.instance("/bookmarks");
     const headers = {
         "Accept": "application/json",
@@ -30,7 +36,10 @@ export function bookmarkArticle(article) {
             if(!article.bookmark) {
                 Toast.show("Successfully bookmarked", "bookmark");
             }
-            dispatch(bookmarkedArticleAction(article._id, !article.bookmark));
+            dispatch(currentTab === newsBoardSourceTypes.bookmark
+                ? unbookmarkArticle(article._id)
+                : updateBookmarkStatus(article._id, !article.bookmark)
+            );
         }
     };
 }

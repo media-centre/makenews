@@ -53,18 +53,13 @@ export class DisplayFeeds extends Component {
         if(this.props.currentFilterSource !== nextProps.currentFilterSource) {
             this.offset = 0;
         }
-
-        const firstArticleIndex = 0;
         let [firstArticle] = nextProps.feeds;
-        if(firstArticle && !firstArticle.collection && this.offset === firstArticleIndex && this.props.feeds !== nextProps.feeds) {
-            if(!nextProps.articleToDisplay._id && this.currentArticle) {
-                firstArticle = this.currentArticle;
-            }
-            this.props.dispatch(DisplayFeedActions.displayArticle(firstArticle));
-        }
 
-        if(this.props.articleToDisplay !== nextProps.articleToDisplay && nextProps.articleToDisplay._id) {
-            this.currentArticle = nextProps.articleToDisplay;
+        if(this.props.feeds !== nextProps.feeds) {
+            this.props.dispatch(firstArticle && !firstArticle.collection
+                ? DisplayFeedActions.displayArticle(firstArticle)
+                : DisplayFeedActions.clearArticle()
+            );
         }
     }
 

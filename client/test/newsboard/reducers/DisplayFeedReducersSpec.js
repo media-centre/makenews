@@ -10,12 +10,14 @@ import {
     NEWS_BOARD_CURRENT_TAB,
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
-    SEARCHED_FEEDS
+    SEARCHED_FEEDS,
+    CLEAR_ARTICLE
 } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import {
-    BOOKMARKED_ARTICLE,
+    UPDATE_BOOKMARK_STATUS,
     WEB_ARTICLE_REQUESTED,
-    WEB_ARTICLE_RECEIVED
+    WEB_ARTICLE_RECEIVED,
+    UNBOOKMARK_THE_ARTICLE
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { expect } from "chai";
 
@@ -50,8 +52,20 @@ describe("DisplayFeedReducer", () => {
             let state = feeds;
             let modifiedState = feeds;
 
-            let action = { "type": BOOKMARKED_ARTICLE, "articleId": "123", "bookmarkStatus": true };
+            let action = { "type": UPDATE_BOOKMARK_STATUS, "articleId": "123", "bookmarkStatus": true };
             expect(fetchedFeeds(state, action)).to.deep.equal(modifiedState);
+        });
+
+        it("should delete the feed when it is un bookmarked", () => {
+            const state = feeds;
+            const modifiedFeeds = [{
+                "_id": "1234",
+                "sourceType": "rss",
+                "docType": "feed",
+                "sourceUrl": "http://www.test3.com/rss"
+            }];
+            const action = { "type": UNBOOKMARK_THE_ARTICLE, "articleId": "123", "bookmarkStatus": false };
+            expect(fetchedFeeds(state, action)).to.deep.equal(modifiedFeeds);
         });
 
         it("should return feeds when type searched feeds", () => {
@@ -125,8 +139,8 @@ describe("DisplayFeedReducer", () => {
             expect(selectedArticle({}, action)).to.deep.equals(action.article);
         });
 
-        it("should update the bookmark status when it receives BOOKMARKED_ARTICLE", () => {
-            const action = { "type": BOOKMARKED_ARTICLE, "bookmarkStatus": true };
+        it("should update the bookmark status when it receives UPDATE_BOOKMARK_STATUS", () => {
+            const action = { "type": UPDATE_BOOKMARK_STATUS, "bookmarkStatus": true };
             const bookmarkedArticle = {
                 "_id": "id", "title": "title", "bookmark": true
             };
@@ -136,6 +150,11 @@ describe("DisplayFeedReducer", () => {
         it("should clear description when WEB_ARTICLE_REQUESTED is dispatched", () => {
             const action = { "type": WEB_ARTICLE_REQUESTED, "desc": "" };
             expect(selectedArticle({}, action)).to.deep.equals({ "desc": "" });
+        });
+
+        it("should clear article", () => {
+            const action = { "type": CLEAR_ARTICLE };
+            expect(selectedArticle({}, action)).to.deep.equals({});
         });
     });
 

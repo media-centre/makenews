@@ -4,12 +4,14 @@ import {
     CLEAR_NEWS_BOARD_FEEDS,
     DISPLAY_ARTICLE,
     FETCHING_FEEDS,
-    SEARCHED_FEEDS
+    SEARCHED_FEEDS,
+    CLEAR_ARTICLE
 } from "./../actions/DisplayFeedActions";
 import {
-    BOOKMARKED_ARTICLE,
+    UPDATE_BOOKMARK_STATUS,
     WEB_ARTICLE_REQUESTED,
-    WEB_ARTICLE_RECEIVED
+    WEB_ARTICLE_RECEIVED,
+    UNBOOKMARK_THE_ARTICLE
 } from "./../actions/DisplayArticleActions";
 import { DELETE_COLLECTION } from "../actions/DisplayCollectionActions";
 import { List } from "immutable";
@@ -23,13 +25,19 @@ export function fetchedFeeds(state = [], action = {}) {
         return Object.assign([], List(state).concat(action.feeds).toArray()); //eslint-disable-line new-cap
     case CLEAR_NEWS_BOARD_FEEDS:
         return [];
-    case BOOKMARKED_ARTICLE: {
+    case UPDATE_BOOKMARK_STATUS: {
         const article = state.find(feed => feed._id === action.articleId);
         article.bookmark = action.bookmarkStatus;
         return state;
     }
-    case DELETE_COLLECTION:
-        return state.filter(collection => collection._id !== action.collection);
+    case UNBOOKMARK_THE_ARTICLE: {
+        const updatedBookmarks = state.filter(feed => feed._id !== action.articleId);
+        return [].concat(updatedBookmarks);
+    }
+    case DELETE_COLLECTION: {
+        const updatedCollections = state.filter(collection => collection._id !== action.collection);
+        return [].concat(updatedCollections);
+    }
     default:
         return state;
     }
@@ -39,10 +47,12 @@ export function selectedArticle(state = {}, action = {}) {
     switch (action.type) {
     case DISPLAY_ARTICLE:
         return Object.assign({}, action.article);
-    case BOOKMARKED_ARTICLE:
+    case UPDATE_BOOKMARK_STATUS:
         return Object.assign({}, state, { "bookmark": action.bookmarkStatus });
     case WEB_ARTICLE_REQUESTED:
         return Object.assign({}, state, { "desc": "" });
+    case CLEAR_ARTICLE:
+        return {};
     default:
         return state;
     }

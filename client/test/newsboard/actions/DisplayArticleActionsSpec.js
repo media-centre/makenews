@@ -1,12 +1,13 @@
 import {
     bookmarkArticle,
-    bookmarkedArticleAction,
+    updateBookmarkStatus,
     displayWebArticle,
     addToCollection,
-    BOOKMARKED_ARTICLE,
+    UPDATE_BOOKMARK_STATUS,
     WEB_ARTICLE_RECEIVED,
     WEB_ARTICLE_REQUESTED,
-    ADD_ARTICLE_TO_COLLECTION
+    ADD_ARTICLE_TO_COLLECTION,
+    UNBOOKMARK_THE_ARTICLE
 } from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 import { NEWS_BOARD_CURRENT_TAB, PAGINATED_FETCHED_FEEDS } from "./../../../src/js/newsboard/actions/DisplayFeedActions";
 import sinon from "sinon";
@@ -14,29 +15,27 @@ import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import { expect, assert } from "chai";
 import Toast from "./../../../src/js/utils/custom_templates/Toast";
+import { newsBoardSourceTypes } from "./../../../src/js/utils/Constants";
 
 describe("DisplayArticleActions", () => {
 
-    describe("bookmarkedArticleAction", () => {
+    describe("updateBookmarkStatus", () => {
         it("should dispatch articleId and bookmarkstatus", () => {
-            const expected = { "type": BOOKMARKED_ARTICLE, "articleId": "id", "bookmarkStatus": true };
-            expect(bookmarkedArticleAction("id", true)).to.deep.equals(expected);
+            const expected = { "type": UPDATE_BOOKMARK_STATUS, "articleId": "id", "bookmarkStatus": true };
+            expect(updateBookmarkStatus("id", true)).to.deep.equals(expected);
         });
     });
 
     describe("bookmarkArticle", () => {
         let sandbox = sinon.sandbox.create();
+        const article = {
+            "_id": "id",
+            "title": "title"
+        };
+        const docId = "id";
+        let postMock = null;
 
-        afterEach("bookmarkArticle", () => {
-            sandbox.restore();
-        });
-
-        it("should dispatch bookmarked Article action after successfully bookmarking the article", (done) => {
-            const article = {
-                "_id": "id",
-                "title": "title"
-            };
-            const docId = "id";
+        beforeEach("bookmarkArticle", () => {
             const headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
@@ -45,17 +44,37 @@ describe("DisplayArticleActions", () => {
             const ajaxClientInstance = AjaxClient.instance("/bookmarks");
             sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            const postMock = sandbox.mock(ajaxClientInstance).expects("post")
-                .withArgs(headers, { "docId": docId }).returns(Promise.resolve({ "ok": true }));
 
+            postMock = sandbox.mock(ajaxClientInstance).expects("post")
+                .withArgs(headers, { "docId": docId }).returns(Promise.resolve({ "ok": true }));
+        });
+
+        afterEach("bookmarkArticle", () => {
+            sandbox.restore();
+        });
+
+        it("should dispatch bookmarked Article action after successfully bookmarking the article", (done) => {
             const toastSpy = sandbox.spy(Toast, "show");
             toastSpy.withArgs("Successfully bookmarked", "bookmark");
             const verify = () => {
                 assert.isTrue(toastSpy.withArgs("Successfully bookmarked", "bookmark").calledOnce, "Toast Mock should be called");
             };
 
-            const store = mockStore({}, [{ "type": "BOOKMARKED_ARTICLE", "articleId": article._id, "bookmarkStatus": true }], done, verify);
+            const store = mockStore({}, [{ "type": UPDATE_BOOKMARK_STATUS, "articleId": article._id, "bookmarkStatus": true }], done, verify);
             store.dispatch(bookmarkArticle(article));
+
+            postMock.verify();
+        });
+
+        it("should dispatch update bookmarked article on success response and the tab is bookmark", (done) => {
+            const toastSpy = sandbox.spy(Toast, "show");
+            toastSpy.withArgs("Successfully bookmarked", "bookmark");
+            const verify = () => {
+                assert.isTrue(toastSpy.withArgs("Successfully bookmarked", "bookmark").calledOnce, "Toast Mock should be called");
+            };
+            const currentTab = newsBoardSourceTypes.bookmark;
+            const store = mockStore({}, [{ "type": UNBOOKMARK_THE_ARTICLE, "articleId": article._id }], done, verify);
+            store.dispatch(bookmarkArticle(article, currentTab));
 
             postMock.verify();
         });

@@ -72,10 +72,10 @@ export class DisplayArticle extends Component {
 
                 {
                     this.props.article.bookmark
-                        ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article)); }}>
+                        ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
                         <i className="icon fa fa-bookmark"/> Bookmarked
                     </div>
-                        : <div className="bookmark" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article)); }}>
+                        : <div className="bookmark" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
                         <i className="icon fa fa-bookmark"/> Bookmark
                     </div>
                 }

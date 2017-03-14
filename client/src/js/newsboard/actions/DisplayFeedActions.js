@@ -7,6 +7,7 @@ export const CLEAR_NEWS_BOARD_FEEDS = "CLEAR_NEWS_BOARD_FEEDS";
 export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 export const FETCHING_FEEDS = "FETCHING_FEEDS";
 export const SEARCHED_FEEDS = "SEARCHED_FEEDS";
+export const CLEAR_ARTICLE = "CLEAR_ARTICLE";
 const DEFAULT_PAGE_SIZE = 25;
 
 export const paginatedFeeds = feeds => ({
@@ -23,6 +24,10 @@ export const newsBoardTabSwitch = currentTab => ({
 
 export const clearFeeds = () => ({
     "type": CLEAR_NEWS_BOARD_FEEDS
+});
+
+export const clearArticle = () => ({
+    "type": CLEAR_ARTICLE
 });
 
 export const displayArticle = (article) => ({
