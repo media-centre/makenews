@@ -20,23 +20,24 @@ export function renderRoutes() {
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
-            <Route path="/onboard" component={WelcomePage} />
-            <Route path="/configure-intro" component={ConfigurationIntro}/>
-            <Route path="/main" component={Main} onEnter={isLoggedIn}>
+            <Route path="/main" onEnter={isLoggedIn}>
+                <Route path="/onboard" component={WelcomePage} />
+                <Route path="/configure-intro" component={ConfigurationIntro}/>
+                <Route component={Main}>
+                    <Route path="/configure" component={ConfigureURLs}>
+                        <Route path="/configure/addurl" component={AddUrl} />
+                        <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
+                    </Route>
 
-                <Route path="/configure" component={ConfigureURLs}>
-                    <Route path="/configure/addurl" component={AddUrl} />
-                    <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
+                    <Route path="/newsBoard" component={ScanNews} />
+                    <Route path="/story-board" component={StoryBoard}>
+                        <Route path="/story-board/stories" component={StoryCards} />
+                        <Route path="/story-board/story" component={EditStory} />
+                        <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
+                    </Route>
+                    <Route path="/twitterSuccess" component={TwitterSuccess} />
+                    <Route path="/profile" component={UserProfile} />
                 </Route>
-
-                <Route path="/newsBoard" component={ScanNews} />
-                <Route path="/story-board" component={StoryBoard}>
-                    <Route path="/story-board/stories" component={StoryCards} />
-                    <Route path="/story-board/story" component={EditStory} />
-                    <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
-                </Route>
-                <Route path="/twitterSuccess" component={TwitterSuccess} />
-                <Route path="/profile" component={UserProfile} />
             </Route>
         </Route>
     );

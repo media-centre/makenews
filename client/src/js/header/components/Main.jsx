@@ -10,9 +10,7 @@ export class Main extends Component {
                     <div className = "header__logo">
                         <img src=".../../../images/makenews-logo.png"/>
                     </div>
-                    <div>
                         <Header mainHeaderStrings={this.props.mainHeaderStrings} currentHeaderTab={this.props.currentHeaderTab}/>
-                    </div>
                 </div>
                 <section className="main">{this.props.children}</section>
             </div>
