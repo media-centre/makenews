@@ -5,6 +5,8 @@ import LogoutActions from "../login/LogoutActions";
 import AppSessionStorage from "../utils/AppSessionStorage";
 import AjaxClient from "../utils/AjaxClient";
 import AppWindow from "../utils/AppWindow";
+import { getConfiguredSources } from "../sourceConfig/actions/SourceConfigurationActions";
+
 const leadTime = 120000, minuteToMilliSeconds = 60000;
 
 export default class UserSession {
@@ -20,9 +22,13 @@ export default class UserSession {
         return UserSession.session;
     }
 
-    init() {
-        this.setLastAccessedTime();
-        this.sessionTimer = setInterval(() => this.renewSession(), this.sessionTime);
+    init(dispatch) {
+        if(!this.initialized) {
+            dispatch(getConfiguredSources());
+            this.setLastAccessedTime();
+            this.sessionTimer = setInterval(() => this.renewSession(), this.sessionTime);
+            this.initialized = true;
+        }
     }
 
     getLastAccessedTime() {

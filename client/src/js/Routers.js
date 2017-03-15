@@ -16,11 +16,11 @@ import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
 import ConfigurationIntro from "./welcome/ConfigurationIntro";
 
-export function renderRoutes() {
+export function renderRoutes(store) {
     return (
         <Route component={App}>
-            <Route path="/" component={LoginPage} onEnter={showLoginPage}/>
-            <Route path="/main" onEnter={isLoggedIn}>
+            <Route path="/" component={LoginPage} onEnter={(nextState, replaceState) => showLoginPage(store, replaceState)}/>
+            <Route path="/main" onEnter={(nextState, replaceState) => isLoggedIn(store, replaceState)}>
                 <Route path="/onboard" component={WelcomePage} />
                 <Route path="/configure-intro" component={ConfigurationIntro}/>
                 <Route component={Main}>
@@ -43,17 +43,19 @@ export function renderRoutes() {
     );
 }
 
-function isLoggedIn(nextState, replaceState) {
+function isLoggedIn(store, replaceState) {
     const userSession = UserSession.instance();
-    if(!userSession.isActiveContinuously()) {
+    if(userSession.isActiveContinuously()) {
+        userSession.init(store.dispatch);
+    } else {
         replaceState("/");
     }
 }
 
-function showLoginPage(nextState, replaceState) {
+function showLoginPage(store, replaceState) {
     const userSession = UserSession.instance();
     if(userSession.isActiveContinuously()) {
-        userSession.init();
+        userSession.init(store.dispatch);
         replaceState("/newsBoard");
     }
 }

@@ -13,7 +13,7 @@ const store = createStore(contentDiscoveryApp, applyMiddleware(thunkMiddleware))
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={History.getHistory()}>{renderRoutes()}</Router>
+    <Router history={History.getHistory()}>{renderRoutes(store)}</Router>
   </Provider>,
   document.getElementById("main")
 );
