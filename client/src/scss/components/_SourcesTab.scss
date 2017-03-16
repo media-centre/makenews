@@ -1,5 +1,7 @@
 .sources-nav {
   background-color: $dark-background-color;
+  float: none;
+  clear: both;
 
   &__item {
     display: inline-block;
@@ -21,5 +23,15 @@
     &.active {
       opacity: 1;
     }
+  }
+
+  &__next {
+    float: right;
+    padding: 14px 25px;
+    background: $secondary-color;
+    color: white;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    height: 100%;
   }
 }
