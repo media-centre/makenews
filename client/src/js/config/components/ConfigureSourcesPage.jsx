@@ -65,6 +65,7 @@ export class ConfigureSourcesPage extends Component {
         dispatch(SourceConfigActions.clearSources);
         this.showLoginPrompt(params.sourceType, dispatch);
         dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
+        dispatch(SourceConfigActions.getSources(params.sourceSubType || params.sourceType));
     }
 
     render() {

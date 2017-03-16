@@ -19,7 +19,7 @@ export class Sources extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(this.props.sources.keyword && !this.props.sources.isFetchingSources) {
+        if(!this.props.sources.isFetchingSources) {
             if(this.props.sources.hasMoreSourceResults && document.body.scrollHeight <= window.innerHeight) {
                 this.props.dispatch(
                     getSources(this.props.currentTab, this.props.sources.keyword,

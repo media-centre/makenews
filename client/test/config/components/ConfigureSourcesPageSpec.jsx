@@ -29,25 +29,31 @@ describe("ConfigureSourcesPage", () => {
         });
 
         it("should dispatch switchSourceTab with WEB if configure sourceType is web", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
+            const switchTabsMock = sandbox.mock(SourceConfigActions)
                 .expects("switchSourceTab").withArgs("web");
+            const getSourcesMock = sandbox.mock(SourceConfigActions)
+                .expects("getSources").withArgs("web");
 
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "web" }} dispatch={()=>{}}/>
             );
 
             switchTabsMock.verify();
+            getSourcesMock.verify();
         });
 
         it("should dispatch switchSourceTab with PROFILES if configure sourceType is facebook and subType is PROFILE", () => {
-            let switchTabsMock = sandbox.mock(SourceConfigActions)
+            const switchTabsMock = sandbox.mock(SourceConfigActions)
                 .expects("switchSourceTab").withArgs("profiles");
+            const getSourcesMock = sandbox.mock(SourceConfigActions)
+                .expects("getSources").withArgs("profiles");
 
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}}/>
             );
 
             switchTabsMock.verify();
+            getSourcesMock.verify();
         });
     });
 

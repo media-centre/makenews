@@ -47,7 +47,6 @@ describe("TwitterConfigureActions", () => {
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();
             ajaxClient = new AjaxClient("/twitter-handles");
-            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             twitterPreFirstId = 123; //eslint-disable-line no-magic-numbers
             paging = { "page": 2 };
             sourceDocs = [{
@@ -85,6 +84,8 @@ describe("TwitterConfigureActions", () => {
                 }
             };
 
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
+
             const store = mockStore({ "configuredSources": { "twitter": [] } }, [{ "type": FETCHING_SOURCE_RESULTS }, gotTwitterSourcesActionObj], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
             ajaxGetMock.verify();
@@ -116,6 +117,7 @@ describe("TwitterConfigureActions", () => {
                     }]
                 }
             };
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             const store = mockStore(getStore, [{ "type": FETCHING_SOURCE_RESULTS }, gotWebSourcesActionObj], done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
             ajaxGetMock.verify();
@@ -123,6 +125,7 @@ describe("TwitterConfigureActions", () => {
 
         it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if sources are empty`, (done) => {
             let result = { "docs": [], "paging": {}, "twitterPreFirstId": 0 };
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             sandbox.mock(SearchResultsSetOperations).expects("intersectionWith");
             ajaxGetMock.returns(Promise.resolve(result));
 
@@ -133,12 +136,21 @@ describe("TwitterConfigureActions", () => {
         });
 
         it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if  fetching handle reject with error`, (done) => {
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock.returns(Promise.reject("error"));
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
                 done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
+        });
+
+        it("should create instance with followings when there is no keyword", () => {
+            keyword = "";
+            const ajaxInstance = sandbox.mock(AjaxClient).expects("instance").withExactArgs("/twitter-followings");
+            fetchTwitterSources();
+
+            ajaxInstance.verify();
         });
     });
 });
