@@ -138,11 +138,17 @@ export default class TwitterClient {
     }
 
     async fetchFollowings(userName, nextCursor = -1) { //eslint-disable-line no-magic-numbers
+        if(nextCursor === "0") { //eslint-disable-line no-magic-numbers
+            return {
+                "docs": [],
+                "paging": { "page": 0 }
+            };
+        }
         let tokenInfo = await this.getAccessTokenAndSecret(userName);
         return new Promise((resolve, reject) => {
             let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
             let oauth = TwitterLogin.createOAuthInstance();
-            let handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}`;
+            let handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
 
             oauth.get(handlesApi, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {

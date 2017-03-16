@@ -792,7 +792,7 @@ describe("TwitterClient", () => {
             sandbox.mock(twitterParser).expects("parseHandle").returns(parsedData);
 
             nock("https://api.twitter.com/1.1")
-                .get("/friends/list.json?cursor=-1")
+                .get("/friends/list.json?cursor=-1&count=40")
                 .reply(HttpResponseHanlder.codes.OK, {
                     "users": [{
                         "id": 1277389,
@@ -818,7 +818,7 @@ describe("TwitterClient", () => {
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
             nock("https://api.twitter.com/1.1")
-                .get("/friends/list.json?cursor=-1")
+                .get("/friends/list.json?cursor=-1&count=40")
                 .reply(HttpResponseHanlder.codes.BAD_REQUEST, "no result");
 
             try {
