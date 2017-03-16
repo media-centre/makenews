@@ -5,6 +5,7 @@ import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import { findAllWithType } from "react-shallow-testutils";
 import sinon from "sinon";
+import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
 
 describe("UserProfileTab", () => {
     let renderer = null, result = null, sandbox = sinon.sandbox.create();
@@ -47,10 +48,12 @@ describe("UserProfileTab", () => {
     });
 
     it("should have name", ()=> {
-        sandbox.stub(localStorage, "getItem").withArgs("userName").returns("someName");
+        const appSessionStorage = AppSessionStorage.instance();
+        sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+        sandbox.stub(appSessionStorage, "getValue").withArgs("UserName").returns("someName");
         renderer.render(<UserProfileTab />);
         result = renderer.getRenderOutput();
-        let [, name] = result.props.children;
+        const [, name] = result.props.children;
 
         expect(name.props.children).to.be.equals("someName");
     });
@@ -70,5 +73,4 @@ describe("UserProfileTab", () => {
         expect(dropdown.type).to.be.equals("div");
         expect(dropdown.props.className).to.be.equals("user-profile__dropdown");
     });
-
 });

@@ -1,6 +1,7 @@
 
 import AjaxClient from "../utils/AjaxClient";
 import UserSession from "../user/UserSession";
+import AppSessionStorage from "./../utils/AppSessionStorage";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
@@ -17,7 +18,8 @@ export function userLogin(history, userName, password) {
             .then(() => {
                 let userSession = UserSession.instance();
                 userSession.init(dispatch);
-                localStorage.setItem("userName", userName);
+                const appSessionStorage = AppSessionStorage.instance();
+                appSessionStorage.setValue(AppSessionStorage.KEYS.USER_NAME, userName);
                 dispatch(loginSuccess());
                 history.push("/newsBoard");
             })

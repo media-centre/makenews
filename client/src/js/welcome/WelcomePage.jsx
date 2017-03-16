@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router";
+import AppSessionStorage from "./../utils/AppSessionStorage";
 
 export default class WelcomePage extends Component {
     render() {
-        const user = localStorage.getItem("userName") || "user";
+        const appSessionStorage = AppSessionStorage.instance();
+        const user = appSessionStorage.getValue(AppSessionStorage.KEYS.USER_NAME) || "user";
         return (
             <div className="welcome-page">
                 <header>

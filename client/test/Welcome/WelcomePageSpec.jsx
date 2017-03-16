@@ -1,8 +1,10 @@
 import React from "react";
 import WelcomePage from "./../../src/js/welcome/WelcomePage";
+import AppSessionStorage from "./../../src/js/utils/AppSessionStorage";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 import { Link } from "react-router";
+import sinon from "sinon";
 
 describe("WelcomePage", () => {
     const welcomeDOM = shallow(<WelcomePage />);
@@ -27,6 +29,18 @@ describe("WelcomePage", () => {
     it("should have the Hello username text", () => {
         const hello = welcomeDOM.find(".welcome-user");
         expect(hello.text()).to.equals("Hello user,");
+    });
+
+    it("should have the Hello Murali text when the username is Murali", () => {
+        const appSessionStorage = AppSessionStorage.instance();
+        sinon.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+        sinon.stub(appSessionStorage, "getValue").returns("Murali");
+
+        const hello = shallow(<WelcomePage />).find(".welcome-user");
+        expect(hello.text()).to.equals("Hello Murali,");
+
+        AppSessionStorage.instance.restore();
+        appSessionStorage.getValue.restore();
     });
     
     it("should have a introduction", () => {

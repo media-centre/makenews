@@ -8,7 +8,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import mockStore from "../helper/ActionHelper";
 
-describe("actions", () => {
+describe("Loginactions", () => {
     it("return type LOGIN_SUCCESS action", function() {
         const loginSuccessAction = { "type": "LOGIN_SUCCESS" };
         expect(loginSuccessAction).to.deep.equal(loginSuccess());
@@ -20,7 +20,7 @@ describe("actions", () => {
 
 });
 
-describe("userLogin", () => {
+describe("LoginActions", () => {
     let headers = null, data = null, userName = null, password = null, ajaxInstanceMock = null, ajaxPostMock = null, history = null, sandbox = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
@@ -48,6 +48,7 @@ describe("userLogin", () => {
         beforeEach("userLogin", () => {
             let appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+            sandbox.stub(appSessionStorage, "setValue");
 
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);

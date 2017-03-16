@@ -12,7 +12,7 @@ describe("AppSessionStorage", ()=> {
 
     describe("setItem", () => {
         it("should set the value with the given key", (done) => {
-            let localStorage = {
+            let sessionStorage = {
                 "setItem": (actualKey, actualValue) => {
                     assert.strictEqual(key, actualKey);
                     assert.strictEqual(value, actualValue);
@@ -21,7 +21,7 @@ describe("AppSessionStorage", ()=> {
             };
 
             let appSessionStorage = new AppSessionStorage();
-            sinon.stub(appSessionStorage, "getLocalStorage").returns(localStorage);
+            sinon.stub(appSessionStorage, "getSessionStorage").returns(sessionStorage);
             appSessionStorage.setValue(key, value);
         });
 
@@ -52,21 +52,21 @@ describe("AppSessionStorage", ()=> {
 
     describe("getItem", () => {
         it("should get the value with the given key", (done) => {
-            let localStorage = {
+            const sessionStorage = {
                 "getItem": (actualKey) => {
                     assert.strictEqual(key, actualKey);
                     done();
                 }
             };
 
-            let appSessionStorage = new AppSessionStorage();
-            sinon.stub(appSessionStorage, "getLocalStorage").returns(localStorage);
+            const appSessionStorage = new AppSessionStorage();
+            sinon.stub(appSessionStorage, "getSessionStorage").returns(sessionStorage);
             appSessionStorage.getValue(key);
         });
 
         it("should throw an error if key is empty", () => {
-            let appSessionStorage = new AppSessionStorage();
-            let setValueFn = () => {
+            const appSessionStorage = new AppSessionStorage();
+            const setValueFn = () => {
                 appSessionStorage.getValue("  ");
             };
             assert.throw(setValueFn, "Key cannot be empty");
@@ -75,28 +75,16 @@ describe("AppSessionStorage", ()=> {
 
     describe("deleteKey", () => {
         it("should delete the key from local storage", (done) => {
-            let localStorage = {
+            const sessionStorage = {
                 "removeItem": (actualKey) => {
                     assert.strictEqual(key, actualKey);
                     done();
                 }
             };
 
-            let appSessionStorage = new AppSessionStorage();
-            sinon.stub(appSessionStorage, "getLocalStorage").returns(localStorage);
+            const appSessionStorage = new AppSessionStorage();
+            sinon.stub(appSessionStorage, "getSessionStorage").returns(sessionStorage);
             appSessionStorage.remove(key);
         });
-    });
-
-    describe("clear", () => {
-        it("should clear all keys from local storage", () => {
-            let appSessionStorage = new AppSessionStorage();
-            let appSessionStorageMock = sinon.mock(appSessionStorage).expects("remove");
-            appSessionStorage.clear();
-            appSessionStorageMock.verify();
-            appSessionStorageMock.verify();
-            appSessionStorage.remove.restore();
-        });
-
     });
 });

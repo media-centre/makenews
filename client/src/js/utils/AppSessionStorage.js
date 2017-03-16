@@ -10,31 +10,26 @@ export default class AppSessionStorage {
         if(StringUtil.isEmptyString(key) || typeof value === "undefined" || value === "") {
             throw new Error("Key or value cannot be empty");
         }
-        this.getLocalStorage().setItem(key, value);
+        this.getSessionStorage().setItem(key, value);
     }
 
     getValue(key) {
         if(StringUtil.isEmptyString(key)) {
             throw new Error("Key cannot be empty");
         }
-        return this.getLocalStorage().getItem(key);
+        return this.getSessionStorage().getItem(key);
     }
 
-    getLocalStorage() {
-        return localStorage;
+    getSessionStorage() {
+        return sessionStorage;
     }
 
     remove(key) {
-        this.getLocalStorage().removeItem(key);
-    }
-
-    clear() {
-        Object.keys(AppSessionStorage.KEYS).forEach((key) => {
-            this.remove(AppSessionStorage.KEYS[key]);
-        });
+        this.getSessionStorage().removeItem(key);
     }
 }
 
 AppSessionStorage.KEYS = {
-    "LAST_RENEWED_TIME": "LastRenewedTime"
+    "LAST_RENEWED_TIME": "LastRenewedTime",
+    "USER_NAME": "UserName"
 };
