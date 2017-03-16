@@ -133,7 +133,36 @@ export default class TwitterClient {
                         resolve({ "docs": [] });
                     }
                 }
+            });
+        });
+    }
 
+    async fetchFollowings(userName, nextCursor = -1) { //eslint-disable-line no-magic-numbers
+        let tokenInfo = await this.getAccessTokenAndSecret(userName);
+        return new Promise((resolve, reject) => {
+            let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
+            let oauth = TwitterLogin.createOAuthInstance();
+            let handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}`;
+
+            oauth.get(handlesApi, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+                if (error) {
+                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter followings for ${handlesApi}, Error: ${error}`);
+                    reject(error);
+                } else {
+                    let jsonParsedData = JSON.parse(data);
+                    if (jsonParsedData.users.length) {
+                        let parseData = TwitterParser.instance().parseHandle(jsonParsedData);
+                        let resultData = {
+                            "docs": parseData,
+                            "paging": { "nextCursor": jsonParsedData.next_cursor }
+                        };
+                        TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followings");
+                        resolve(resultData);
+                    } else {
+                        TwitterClient.logger().error(`TwitterClient:: no sources for ${handlesApi}`);
+                        resolve({ "docs": [] });
+                    }
+                }
             });
         });
     }

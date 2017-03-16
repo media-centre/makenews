@@ -745,4 +745,98 @@ describe("TwitterClient", () => {
             }
         });
     });
+
+    describe("Fetch Followings", () => {
+        let twitterClientInstance = null, getAccessMock = null, createOAuthMock = null;
+        beforeEach("Fetch Followings", () => {
+            sandbox = sinon.sandbox.create();
+            twitterClientInstance = TwitterClient.instance();
+            sandbox.stub(TwitterClient, "instance").returns(twitterClientInstance);
+
+            tokenInfo = ["oauthAccessToken", "oauthAccessSecretToken"];
+            oauth = new OAuth.OAuth(
+                "https://api.twitter.com/oauth/request_token",
+                "https://api.twitter.com/oauth/access_token",
+                ApplicationConfig.instance().twitter().consumerKey,
+                ApplicationConfig.instance().twitter().consumerSecret,
+                "1.0A",
+                null,
+                "HMAC-SHA1");
+            twitterParser = TwitterParser.instance();
+        });
+
+        afterEach("Fetch Followings", () => {
+            sandbox.restore();
+        });
+
+        it("should fetch followings", async () => {
+            let parsedData = [{
+                "id": 1277389,
+                "id_str": 1277389,
+                "name": "testUser",
+                "picture": {
+                    "data": {
+                        "url": "imagelink"
+                    }
+                }
+            }];
+
+            let expectedData = {
+                "docs": parsedData,
+                "paging": { "nextCursor": 0 }
+            };
+
+            getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
+            createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
+            sandbox.mock(TwitterParser).expects("instance").returns(twitterParser);
+            sandbox.mock(twitterParser).expects("parseHandle").returns(parsedData);
+
+            nock("https://api.twitter.com/1.1")
+                .get("/friends/list.json?cursor=-1")
+                .reply(HttpResponseHanlder.codes.OK, {
+                    "users": [{
+                        "id": 1277389,
+                        "id_str": 1277389,
+                        "name": "testUser",
+                        "picture": {
+                            "data": {
+                                "url": "imagelink"
+                            }
+                        }
+                    }],
+                    "next_cursor": 0
+                });
+
+            let handles = await twitterClientInstance.fetchFollowings("userName"); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(handles, expectedData);
+            getAccessMock.verify();
+            createOAuthMock.verify();
+        });
+
+        it("should reject with an error if oauth get returns error", async () => {
+            getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
+            createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
+
+            nock("https://api.twitter.com/1.1")
+                .get("/friends/list.json?cursor=-1")
+                .reply(HttpResponseHanlder.codes.BAD_REQUEST, "no result");
+
+            try {
+                await twitterClientInstance.fetchFollowings("userName");
+            } catch(error) {
+                assert.deepEqual("no result", error.data);
+            }
+        });
+
+        it("should reject with an error if getAccessToken rejects with an error", async () => {
+            sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.reject("Error"));
+
+            try {
+                await twitterClientInstance.fetchFollowings("userName");
+                assert.fail();
+            } catch(error) {
+                assert.deepEqual(error, "Error");
+            }
+        });
+    });
 });
