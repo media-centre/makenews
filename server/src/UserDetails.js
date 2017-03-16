@@ -7,7 +7,7 @@ export default class UserDetails {
     }
 
     updateUser(token, userName) {
-        let dbName = CryptUtil.dbNameHash(userName);
+        const dbName = CryptUtil.dbNameHash(userName);
         this.userDetailsMap.set(token, { userName, dbName });
     }
 

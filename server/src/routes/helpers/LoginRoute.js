@@ -28,9 +28,12 @@ export default class LoginRoute extends Route {
             }
             RouteLogger.instance().info("LoginRoute::handle Login request received for the user = %s", this.request.body.username);
 
-            let userRequest = UserRequest.instance(this.userName, this.password);
+            const userRequest = UserRequest.instance(this.userName, this.password);
             userRequest.getAuthSessionCookie().then(async authSessionCookie => {
-                await this._handleLoginSuccess(authSessionCookie);
+                const [authSession] = authSessionCookie.split(";");
+                const [, token] = authSession.split("=");
+                const userData = await userRequest.getUserDetails(token, this.userName);
+                await this._handleLoginSuccess(authSessionCookie, token, userData);
             }).catch(error => {
                 RouteLogger.instance().error(`LoginRoute::handle Failed while fetching auth session cookie, Error: ${JSON.stringify(error)}`);
                 this._handleFailure({ "message": "unauthorized" });
@@ -41,15 +44,17 @@ export default class LoginRoute extends Route {
         }
     }
 
-    async _handleLoginSuccess(authSessionCookie) {
-        let dbJson = ClientConfig.instance().db();
-        let [authSession] = authSessionCookie.split(";");
-        let [, token] = authSession.split("=");
+    async _handleLoginSuccess(authSessionCookie, token, userData) {
+        const dbJson = ClientConfig.instance().db();
         userDetails.updateUser(token, this.userName);
         await DeleteSourceHandler.instance().deleteSources([], token);
+        let responseData = { "userName": this.userName, "dbParameters": dbJson };
+        if(!userData.visitedUser) {
+            responseData.firstTimeUser = true;
+        }
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)
-            .json({ "userName": this.userName, "dbParameters": dbJson });
+            .json(responseData);
 
         RouteLogger.instance().info("LoginRoute::_handleLoginSuccess: Login request successful");
         RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": this.userName, "dbParameters": dbJson }));

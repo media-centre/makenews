@@ -1,6 +1,7 @@
 import CouchSession from "../CouchSession";
 import StringUtil from "../../../common/src/util/StringUtil";
 import Logger from "../../src/logging/Logger";
+import CouchClient from "../CouchClient";
 
 export default class UserRequest {
     static logger() {
@@ -39,7 +40,7 @@ export default class UserRequest {
                 .then((authSessionCookieHeader) => {
                     resolve(authSessionCookieHeader);
                 })
-                .catch((error) => { //eslint-disable-line
+                .catch((error) => {
                     UserRequest.logger().error("UserRequest:getAuthSessionCookie fatal error %s", error);
                     reject("login failed");
                 });
@@ -65,5 +66,16 @@ export default class UserRequest {
                 reject(error);
             });
         });
+    }
+
+    async getUserDetails(token, userName) {
+        const dbInstance = CouchClient.instance(token, "_users");
+        const path = "/_users/org.couchdb.user:" + userName;
+        try {
+            return await dbInstance.get(path);
+        } catch (err) {
+            UserRequest.logger().error("UserRequest:getUserDetails fatal error %s", err);
+            throw err;
+        }
     }
 }

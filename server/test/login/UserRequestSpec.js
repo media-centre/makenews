@@ -4,8 +4,9 @@
 import UserRequest from "../../src/login/UserRequest";
 import CouchSession from "../../src/CouchSession";
 import LogTestHelper from "../../test/helpers/LogTestHelper";
+import CouchClient from "./../../src/CouchClient";
 import sinon from "sinon";
-
+import { isRejected } from "./../helpers/AsyncTestHelper";
 import { assert } from "chai";
 
 describe("UserRequest", () => {
@@ -150,6 +151,39 @@ describe("UserRequest", () => {
                 getTokenMock.verify();
                 done();
             });
+        });
+    });
+
+    describe("getUserDetails", () => {
+        const sandbox = sinon.sandbox.create();
+        afterEach("getuserDetails", () => {
+            sandbox.restore();
+        });
+
+        it("should get the user details", async () => {
+            const name = "test", token = "token";
+            const expectedUserDetails = { "takenTour": false };
+            const couchClient = new CouchClient(token, "_users");
+            sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
+            const getMock = sandbox.mock(couchClient).expects("get");
+            getMock.withArgs(`/_users/org.couchdb.user:${name}`).returns(Promise.resolve(expectedUserDetails));
+            const userRequest = UserRequest.instance(name, password);
+
+            const userDetails = await userRequest.getUserDetails(token, name);
+
+            assert.deepEqual(userDetails, expectedUserDetails);
+            getMock.verify();
+        });
+
+        it("should reject with error if fetch fails", async () => {
+            const name = "test", token = "token";
+            const couchClient = new CouchClient(token, "_users");
+            sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
+            const getMock = sandbox.mock(couchClient).expects("get");
+            getMock.withArgs(`/_users/org.couchdb.user:${name}`).returns(Promise.reject("error"));
+            const userRequest = UserRequest.instance(name, password);
+
+            await isRejected(userRequest.getUserDetails(token, name), "error");
         });
     });
 });
