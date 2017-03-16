@@ -783,7 +783,7 @@ describe("TwitterClient", () => {
 
             let expectedData = {
                 "docs": parsedData,
-                "paging": { "nextCursor": 0 }
+                "paging": { "page": 0 }
             };
 
             getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));

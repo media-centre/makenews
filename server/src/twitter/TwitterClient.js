@@ -151,10 +151,10 @@ export default class TwitterClient {
                 } else {
                     let jsonParsedData = JSON.parse(data);
                     if (jsonParsedData.users.length) {
-                        let parseData = TwitterParser.instance().parseHandle(jsonParsedData);
+                        let parseData = TwitterParser.instance().parseHandle(jsonParsedData.users);
                         let resultData = {
                             "docs": parseData,
-                            "paging": { "nextCursor": jsonParsedData.next_cursor }
+                            "paging": { "page": jsonParsedData.next_cursor }
                         };
                         TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followings");
                         resolve(resultData);

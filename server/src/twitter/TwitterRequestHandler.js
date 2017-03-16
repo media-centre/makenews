@@ -11,6 +11,10 @@ export default class TwitterRequestHandler {
         return Logger.instance();
     }
 
+    twitterClient() {
+        return TwitterClient.instance();
+    }
+
     async fetchTweetsRequest(url, since, authSession, sinceId) {
         const userName = userDetails.getUser(authSession).userName;
         const tweets = await this.twitterClient().fetchTweets(url, userName, since, sinceId);
@@ -25,7 +29,10 @@ export default class TwitterRequestHandler {
         return handles;
     }
 
-    twitterClient() {
-        return TwitterClient.instance();
+    async fetchFollowings(authSession, nextCursor) {
+        const userName = userDetails.getUser(authSession).userName;
+        const followings = await this.twitterClient().fetchFollowings(userName, nextCursor);
+        TwitterRequestHandler.logger().debug("TwitterRequestHandler:: Successfully fetched followings for user");
+        return followings;
     }
 }
