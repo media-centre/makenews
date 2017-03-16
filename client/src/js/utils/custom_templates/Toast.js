@@ -41,7 +41,7 @@ export default class Toast {
     }
 
     static hide() {
-        const time = 5000;
+        const time = 3500;
         Toast.timer = setTimeout(Toast.close, time);
     }
 

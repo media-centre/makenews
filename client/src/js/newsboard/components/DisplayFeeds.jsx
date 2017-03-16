@@ -56,11 +56,13 @@ export class DisplayFeeds extends Component {
 
         if(this.props.feeds !== nextProps.feeds) {
             const [firstArticle] = nextProps.feeds;
-            this.props.dispatch(
-                (firstArticle && !firstArticle.collection)
-                ? DisplayFeedActions.displayArticle(firstArticle)
-                : DisplayFeedActions.clearArticle()
-            );
+            if (firstArticle && !firstArticle.collection && (this.offset === 0 || nextProps.sourceType === "bookmark")) { //eslint-disable-line no-magic-numbers
+                this.props.dispatch(DisplayFeedActions.displayArticle(firstArticle));
+            }
+
+            if (!firstArticle) {
+                this.props.dispatch(DisplayFeedActions.clearArticle());
+            }
         }
     }
 
