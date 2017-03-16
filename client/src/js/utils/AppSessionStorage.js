@@ -31,5 +31,6 @@ export default class AppSessionStorage {
 
 AppSessionStorage.KEYS = {
     "LAST_RENEWED_TIME": "LastRenewedTime",
-    "USER_NAME": "UserName"
+    "USER_NAME": "UserName",
+    "FIRST_TIME_USER": "FirstTimeUser"
 };

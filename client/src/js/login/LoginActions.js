@@ -1,4 +1,3 @@
-
 import AjaxClient from "../utils/AjaxClient";
 import UserSession from "../user/UserSession";
 import AppSessionStorage from "./../utils/AppSessionStorage";
@@ -7,25 +6,29 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
 
 export function userLogin(history, userName, password) {
-    return dispatch => {
-        let ajax = AjaxClient.instance("/login", true);
+    return async dispatch => {
+        const ajax = AjaxClient.instance("/login", true);
         const headers = {
             "Accept": "application/json",
             "Content-type": "application/json"
         };
         const data = { "username": userName, "password": password };
-        ajax.post(headers, data)
-            .then(() => {
-                let userSession = UserSession.instance();
-                userSession.init(dispatch);
-                const appSessionStorage = AppSessionStorage.instance();
-                appSessionStorage.setValue(AppSessionStorage.KEYS.USER_NAME, userName);
-                dispatch(loginSuccess());
+        try {
+            const response = await ajax.post(headers, data);
+            const userSession = UserSession.instance();
+            userSession.init(dispatch);
+            localStorage.setItem("userName", userName);
+            dispatch(loginSuccess());
+            if(response.firstTimeUser) {
+                history.push("/onboard");
+                const sessionStorage = AppSessionStorage.instance();
+                sessionStorage.setValue(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
+            } else {
                 history.push("/newsBoard");
-            })
-            .catch(errorData => { //eslint-disable-line no-unused-vars
-                dispatch(loginFailed("Invalid user name or password"));
-            });
+            }
+        } catch(errorData) {
+            dispatch(loginFailed("Invalid user name or password"));
+        }
     };
 }
 

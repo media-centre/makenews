@@ -1,6 +1,10 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
-import { loginFailed, loginSuccess, userLogin, LOGIN_SUCCESS, LOGIN_FAILED } from "../../src/js/login/LoginActions";
+import {
+    loginFailed,
+    loginSuccess,
+    userLogin,
+    LOGIN_SUCCESS,
+    LOGIN_FAILED
+} from "../../src/js/login/LoginActions";
 import AjaxClient from "../../src/js/utils/AjaxClient";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import UserSession from "../../src/js/user/UserSession";
@@ -45,8 +49,10 @@ describe("LoginActions", () => {
 
     describe("success", () => {
         let historyMock = null, userSessionMock = null;
+        const response = { "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } };
+        let appSessionStorage = null;
         beforeEach("userLogin", () => {
-            let appSessionStorage = new AppSessionStorage();
+            appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
             sandbox.stub(appSessionStorage, "setValue");
 
@@ -57,12 +63,13 @@ describe("LoginActions", () => {
         });
 
         afterEach("userLogin", () => {
+            sandbox.restore();
             userSessionMock.verify();
             historyMock.verify();
         });
 
         it("should dispatch login successful action if the login is successful", (done) => {
-            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve());
+            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve(response));
             historyMock.withArgs("/newsBoard");
 
             const expectedActions = [
@@ -73,15 +80,32 @@ describe("LoginActions", () => {
             store.dispatch(userLogin(history, userName, password));
         });
 
-        it("should not set taken tour if user already taken tour", (done) => {
-            ajaxPostMock.withArgs(headers, data).returns(Promise.resolve({ "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } }));
-            historyMock.withArgs("/newsBoard");
+        it("should redirect to onboard page for first time user", (done) => {
+            const responseWithFirstTimeUser = Object.assign({}, response, { "firstTimeUser": true });
+            ajaxPostMock.withArgs(headers, data)
+                .returns(Promise.resolve(responseWithFirstTimeUser));
+            historyMock.withArgs("/onboard");
             const expectedActions = [
                 { "type": LOGIN_SUCCESS }
             ];
 
             const store = mockStore({ "errorMessage": "" }, expectedActions, done);
             store.dispatch(userLogin(history, userName, password));
+        });
+
+        it("should store the first time user prop in session storage", async() => {
+            const responseWithFirstTimeUser = Object.assign({}, response, { "firstTimeUser": true });
+            ajaxPostMock.withArgs(headers, data)
+                .returns(Promise.resolve(responseWithFirstTimeUser));
+            historyMock.withArgs("/onboard");
+
+            const appSessionStoreMock = sandbox.mock(appSessionStorage).expects("setValue");
+            appSessionStoreMock.withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
+            appSessionStorage.something = false;
+            
+            await userLogin(history, userName, password)(()=>{});
+
+            appSessionStoreMock.verify();
         });
     });
 
