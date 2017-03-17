@@ -4,7 +4,7 @@ import ConfigurePane from "./ConfigurePane";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import FacebookLogin from "../../facebook/FacebookLogin";
 import { connect } from "react-redux";
-import { updateTokenExpireTime, getTokenExpireTime } from "./../../facebook/FacebookAction";
+import { updateTokenExpiredInfo, isFBTokenExpired } from "./../../facebook/FacebookAction";
 import { twitterAuthentication, twitterTokenInformation } from "./../../twitter/TwitterTokenActions";
 import TwitterLogin from "./../../twitter/TwitterLogin";
 
@@ -16,7 +16,7 @@ export class ConfigureSourcesPage extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(await getTokenExpireTime());
+        this.props.dispatch(await isFBTokenExpired());
         this.props.dispatch(await twitterAuthentication());
         this.sourceTab(this.props.params, this.props.dispatch);
     }
@@ -29,19 +29,19 @@ export class ConfigureSourcesPage extends Component {
 
     shouldComponentUpdate(nextProps) {
         return nextProps.params.sourceType !== this.props.params.sourceType ||
-            nextProps.expireTime !== this.props.expireTime ||
-            nextProps.twitterAuthenticated !== this.props.twitterAuthenticated;
+            nextProps.sourcesAuthenticationInfo.facebook !== this.props.sourcesAuthenticationInfo.facebook ||
+            nextProps.sourcesAuthenticationInfo.twitter !== this.props.sourcesAuthenticationInfo.twitter;
     }
 
     _showFBLogin(dispatch) {
         this.facebookLogin.login().then(expiresAfter => {
             this.isPopUpDisplayed = false;
-            dispatch(updateTokenExpireTime(expiresAfter));
+            dispatch(updateTokenExpiredInfo(expiresAfter));
         });
     }
 
     _showTwitterLogin(dispatch) {
-        if(!this.props.twitterAuthenticated) {
+        if(!this.props.sourcesAuthenticationInfo.twitter) {
             TwitterLogin.instance().login().then((authenticated) => {
                 this.isPopUpDisplayed = false;
                 dispatch(twitterTokenInformation(authenticated));
@@ -50,10 +50,10 @@ export class ConfigureSourcesPage extends Component {
     }
 
     showLoginPrompt(sourceType, dispatch) {
-        if(sourceType === "facebook" && new Date().getTime() > this.props.expireTime) {
+        if(sourceType === "facebook" && !this.props.sourcesAuthenticationInfo.facebook) {
             this.isPopUpDisplayed = true;
             this._showFBLogin(dispatch);
-        } else if (sourceType === "twitter" && this.props.twitterAuthenticated === false) {
+        } else if (sourceType === "twitter" && !this.props.sourcesAuthenticationInfo.twitter) {
             this.isPopUpDisplayed = true;
             this._showTwitterLogin(dispatch);
         } else {
@@ -78,14 +78,12 @@ export class ConfigureSourcesPage extends Component {
 ConfigureSourcesPage.propTypes = {
     "params": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
-    "expireTime": PropTypes.number,
-    "twitterAuthenticated": PropTypes.bool
+    "sourcesAuthenticationInfo": PropTypes.object
 };
 
 const mapToStore = (store) => ({
     "currentSourceTab": store.currentSourceTab,
-    "expireTime": store.tokenExpiresTime.expireTime,
-    "twitterAuthenticated": store.twitterTokenInfo.twitterAuthenticated
+    "sourcesAuthenticationInfo": store.sourcesAuthenticationInfo
 });
 
 export default connect(mapToStore)(ConfigureSourcesPage);

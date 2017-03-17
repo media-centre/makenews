@@ -24,24 +24,24 @@ describe("FacebookTokenDocumentRoute", () => {
             sandbox.restore();
         });
 
-        it("should response with token expiration time", (done) => {
-            let expiresAfter = "12233";
+        it("should respond with token expiration info", (done) => {
+            const isExpired = true;
             facebookTokenDocumentInstanceMock.returns(facebookTokenDocument);
-            let facebookTokenDocumentStub = sandbox.stub(facebookTokenDocument, "getExpiredTime");
-            let response = {
+            const facebookTokenDocumentStub = sandbox.stub(facebookTokenDocument, "isExpired");
+            const response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.OK, status);
                     return response;
                 },
                 "json": (json) => {
-                    assert.deepEqual(json, { "expireTime": expiresAfter });
+                    assert.deepEqual(json, { isExpired });
                     facebookTokenDocumentInstanceMock.verify();
                     done();
                 }
             };
 
-            facebookTokenDocumentStub.withArgs(authSession).returns(Promise.resolve(expiresAfter));
-            new FacebookTokenDocumentRoute(request1, response, next).getExpiredTime();
+            facebookTokenDocumentStub.withArgs(authSession).returns(Promise.resolve(isExpired));
+            new FacebookTokenDocumentRoute(request1, response, next).isExpired();
         });
     });
 });

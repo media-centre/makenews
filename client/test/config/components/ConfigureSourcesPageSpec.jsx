@@ -20,7 +20,7 @@ describe("ConfigureSourcesPage", () => {
             renderer = TestUtils.createRenderer();
             /* we have to render it twice inorder to trigger componentwillreviceprops because of shallow rendering*/ // eslint-disable-line
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} dispatch={()=>{}} />
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} sourcesAuthenticationInfo = {{ "facebook": true }} dispatch={()=>{}} />
             );
         });
 

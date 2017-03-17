@@ -1,23 +1,23 @@
 import AjaxClient from "../utils/AjaxClient";
-export const FACEBOOK_EXPIRE_TIME = "FACEBOOK_EXPIRE_TIME";
+export const FACEBOOK_EXPIRE_INFO = "FACEBOOK_EXPIRE_INFO";
 
-export function updateTokenExpireTime(expireTime) { //eslint-disable-line
+export function updateTokenExpiredInfo(isValid) {
     return {
-        "type": FACEBOOK_EXPIRE_TIME,
-        "expireTime": expireTime
+        "type": FACEBOOK_EXPIRE_INFO,
+        isValid
     };
 }
 
-export async function getTokenExpireTime() { //eslint-disable-line
-    let ajaxClient = AjaxClient.instance("/facebook-token-expire-time");
-    let expireTime = 0;
+export async function isFBTokenExpired() { //eslint-disable-line
+    let ajaxClient = AjaxClient.instance("/facebook-token-expired");
+    let isExpired = false;
     try {
         let response = await ajaxClient.get();
-        expireTime = response.expireTime;
+        isExpired = !response.isExpired;
     } catch(err) {
         //ignore error
     }
-    return dispatch => { //eslint-disable-line
-        dispatch(updateTokenExpireTime(expireTime));
+    return dispatch => {
+        dispatch(updateTokenExpiredInfo(isExpired));
     };
 }

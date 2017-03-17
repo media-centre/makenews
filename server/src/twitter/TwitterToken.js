@@ -8,13 +8,13 @@ export default class TwitterToken {
     }
 
     static logger() {
-        return Logger.instance("Facebook");
+        return Logger.instance("TwitterToken");
     }
     
     async isPresent(authSession) {
         try {
-            let adminDbInstance = await getAdminDBInstance();
-            let tokenDocumentId = await getUserDocumentId(authSession, TWITTER_DOCUMENT_ID);
+            const adminDbInstance = await getAdminDBInstance();
+            const tokenDocumentId = await getUserDocumentId(authSession, TWITTER_DOCUMENT_ID);
             await adminDbInstance.getDocument(tokenDocumentId);
             return true;
         } catch (error) {

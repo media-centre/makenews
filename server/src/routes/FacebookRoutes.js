@@ -15,10 +15,9 @@ export default (app) => {
         new FacebookSourceRoute(request, response, next).process();
     });
 
-
-    app.get("/facebook-token-expire-time", (request, response, next) => {
+    app.get("/facebook-token-expired", (request, response, next) => {
         RouteLogger.instance().info("FacebookRoutes:: /facebook-token-expire-time request received. url = %s", request.url);
-        new FacebookTokenDocumentRoute(request, response, next).getExpiredTime();
+        new FacebookTokenDocumentRoute(request, response, next).isExpired();
     });
 };
 

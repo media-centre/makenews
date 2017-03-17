@@ -16,8 +16,7 @@ import { configuredSources,
     searchInConfiguredSources,
     deleteSourceStatus
 } from "./sourceConfig/reducers/SourceConfigurationReducers";
-import { tokenExpiresTime } from "./config/reducers/FacebookTokenReducer";
-import { twitterTokenInfo } from "./config/reducers/TwitterTokenReducer";
+import { sourcesAuthenticationInfo } from "./config/reducers/SourcesAuthenticationInfo";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
 import { stories, untitledIndex } from "./storyboard/reducers/StoryBoardReducer";
@@ -37,9 +36,8 @@ const contentDiscoveryApp = combineReducers({
     searchInConfiguredSources,
     currentSourceTab,
     currentHeaderTab,
-    tokenExpiresTime,
+    sourcesAuthenticationInfo,
     newsBoardCurrentSourceTab,
-    twitterTokenInfo,
     selectedArticle,
     fetchingWebArticle,
     webArticleMarkup,

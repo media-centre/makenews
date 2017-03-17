@@ -6,6 +6,7 @@ import LogTestHelper from "../helpers/LogTestHelper";
 import sinon from "sinon";
 import { assert } from "chai";
 import { userDetails } from "./../../src/Factory";
+import DateUtil from "./../../src/util/DateUtil";
 
 let sandbox = null, authSession = "test_authSession", userName = "test";
 describe("FacebookTokenDocument", () => {
@@ -42,41 +43,59 @@ describe("FacebookTokenDocument", () => {
             sandbox.stub(FacebookTokenDocument, "logger").returns(LogTestHelper.instance());
         });
 
-        it("should get the expires time when document is present in database", async() => {
-            let document = {
+        it("should return false when the current time is less than the expires time", async () => {
+            const document = {
                 "access_token": "test_token",
                 "token_type": "test_type",
-                "expires_in": 12345,
-                "expired_after": 123456
+                "expires_in": 123456,
+                "expired_after": 1492322451462
             };
-            let getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
+            const getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
             getDocumentMock.returns(Promise.resolve(document));
-            let facebookTokenDocument = new FacebookTokenDocument();
-            try {
-                let expireTime = await facebookTokenDocument.getExpiredTime(authSession);
-                assert.strictEqual(expireTime, document.expired_after);
-                getDocumentMock.verify();
-                appConfigMock.verify();
-                adminDbMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const facebookTokenDocument = new FacebookTokenDocument();
+            const currentTime = 1492312321232;
+            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
+
+            const isExpired = await facebookTokenDocument.isExpired(authSession);
+
+            getDocumentMock.verify();
+            appConfigMock.verify();
+            adminDbMock.verify();
+            assert.isFalse(isExpired);
         });
 
-        it("should return 'ZERO' when document is not present in database", async() => {
-            let ZERO = 0;
+        it("should return true when the current time is greater then the expires time", async () => {
+            const document = {
+                "access_token": "test_token",
+                "token_type": "test_type",
+                "expires_in": 123456,
+                "expired_after": 1491322451462
+            };
+            const getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
+            getDocumentMock.returns(Promise.resolve(document));
+            const facebookTokenDocument = new FacebookTokenDocument();
+            const currentTime = 1492312321232;
+            sandbox.stub(DateUtil, "getCurrentTime").returns(currentTime);
+
+            const isExpired = await facebookTokenDocument.isExpired(authSession);
+
+            getDocumentMock.verify();
+            appConfigMock.verify();
+            adminDbMock.verify();
+            assert.isTrue(isExpired);
+        });
+
+        it("should return true when there is an error from getting info", async() => {
             let getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
             getDocumentMock.returns(Promise.reject("no document in db"));
             let facebookTokenDocument = new FacebookTokenDocument();
-            try {
-                let expireTime = await facebookTokenDocument.getExpiredTime(authSession);
-                assert.strictEqual(expireTime, ZERO);
-                appConfigMock.verify();
-                adminDbMock.verify();
-                getDocumentMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+
+            const isExpired = await facebookTokenDocument.isExpired(authSession);
+
+            appConfigMock.verify();
+            adminDbMock.verify();
+            getDocumentMock.verify();
+            assert.isTrue(isExpired);
         });
     });
 
