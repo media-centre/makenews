@@ -16,14 +16,14 @@ export function gotWebSourceResults(sources, keyword) {
 }
 
 export function fetchWebSources(keyword, params = {}) {
-    let ajaxClient = keyword ? AjaxClient.instance("/web-sources") : AjaxClient.instance("/web-default-sources");
+    const ajaxClient = keyword ? AjaxClient.instance("/web-sources") : AjaxClient.instance("/web-default-sources");
 
     return async (dispatch, getState) => {
         dispatch(fetchingSources);
         try {
-            let data = await ajaxClient.get({ keyword, ...params });
+            const data = await ajaxClient.get({ keyword, ...params });
             if(data.docs.length) {
-                let configuredSources = getState().configuredSources.web;
+                const configuredSources = getState().configuredSources.web;
                 const cmp = (first, second) => first.url === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotWebSourceResults(data, keyword));

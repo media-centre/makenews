@@ -163,7 +163,7 @@ describe("Rss Request Handler", () => {
     });
 
     describe("fetchDefaultSources", () => {
-        let sandbox = sinon.sandbox.create();
+        const sandbox = sinon.sandbox.create();
         const skip = 0;
         const adminDetails = {
             "username": "test",
@@ -200,7 +200,7 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
 
-        it("should return websources", async () => {
+        it("should return web sources", async () => {
             const sources = [
                 {
                     "_id": "www.hindu.com",
@@ -234,10 +234,10 @@ describe("Rss Request Handler", () => {
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
                 .withExactArgs(query).returns(Promise.reject("error"));
 
-            const respone = await rssRequestHanlder.fetchDefaultSources(skip);
+            const response = await rssRequestHanlder.fetchDefaultSources(skip);
 
             findMock.verify();
-            assert.deepEqual(respone, { "docs": [] });
+            assert.deepEqual(response, { "docs": [] });
         });
     });
 });

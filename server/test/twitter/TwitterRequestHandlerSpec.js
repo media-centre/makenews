@@ -3,6 +3,7 @@ import TwitterClient from "../../src/twitter/TwitterClient";
 import { userDetails } from "../../src/Factory";
 import sinon from "sinon";
 import { assert } from "chai";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("TwitterRequestHandler", () => {
     let sandbox = null, userName = null, userObj = null, keyword = null, page = null, preFirstId = null;
@@ -114,14 +115,12 @@ describe("TwitterRequestHandler", () => {
         });
 
         it("should return twitter followings", async() => {
-
             const expectedData = {
                 "docs": [],
                 "paging": {
                     "page": 0
                 }
             };
-
             fetchFollowingMock.returns(Promise.resolve(expectedData));
 
             const response = await twitterHandler.fetchFollowings(authSession, nextCursor);
@@ -132,12 +131,7 @@ describe("TwitterRequestHandler", () => {
 
         it("should throw could not get more when error status code is 429", async () => {
             fetchFollowingMock.returns(Promise.reject({ "statusCode": 429, "message": "too many requests" }));
-            try {
-                await twitterHandler.fetchFollowings(authSession, nextCursor);
-                assert.fail();
-            } catch(error) {
-                assert.deepEqual(error, { "message": "Could not get more handles" });
-            }
+            await isRejected(twitterHandler.fetchFollowings(authSession, nextCursor), { "message": "Could not get more handles" });
         });
     });
 });

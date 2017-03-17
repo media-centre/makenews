@@ -57,9 +57,9 @@ export default class RssRequestHandler {
         }
     }
 
-    async fetchDefaultSources(skipValue) { //eslint-disable-line no-magic-numbers
-        const adminDetais = ApplicationConfig.instance().adminDetails();
-        const adminInstance = await AdminDbClient.instance(adminDetais.username, adminDetais.password, adminDetais.db);
+    async fetchDefaultSources(skipValue) {
+        const adminDetails = ApplicationConfig.instance().adminDetails();
+        const adminInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
         const query = {
             "selector": {
                 "docType": {
@@ -78,7 +78,7 @@ export default class RssRequestHandler {
                 "docs": sources.docs,
                 "paging": { "offset": skipValue + DOCS_PER_REQUEST }
             };
-        }catch(error) {
+        } catch(error) {
             return { "docs": [] };
         }
     }

@@ -10,6 +10,7 @@ import HttpResponseHanlder from "../../../common/src/HttpResponseHandler";
 import TwitterParser from "../../src/twitter/TwitterParser";
 import DateUtil from "../../src/util/DateUtil";
 import * as Constants from "./../../src/util/Constants";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("TwitterClient", () => {
     let sandbox = null, twitterClient = null, tokenInfo = null, oauth = null, twitterParser = null;
@@ -830,13 +831,18 @@ describe("TwitterClient", () => {
 
         it("should reject with an error if getAccessToken rejects with an error", async () => {
             sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.reject("Error"));
-
-            try {
-                await twitterClientInstance.fetchFollowings("userName");
-                assert.fail();
-            } catch(error) {
-                assert.deepEqual(error, "Error");
-            }
+            await isRejected(twitterClientInstance.fetchFollowings("username"), "Error");
         });
+
+        it("should return empty docs when next cursor value is zero", async() => {
+            const nextCursor = "0";
+            const expectedData = {
+                "docs": [],
+                "paging": { "page": 0 }
+            };
+            let result = await twitterClientInstance.fetchFollowings("username", nextCursor);
+            assert.deepEqual(result, expectedData);
+        });
+
     });
 });

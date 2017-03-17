@@ -119,7 +119,7 @@ export default class TwitterClient {
     }
 
     async fetchFollowings(userName, nextCursor = -1) { //eslint-disable-line no-magic-numbers
-        if(nextCursor === "0") { //eslint-disable-line no-magic-numbers
+        if(nextCursor === "0") {
             return {
                 "docs": [],
                 "paging": { "page": 0 }
@@ -128,8 +128,8 @@ export default class TwitterClient {
         const handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
         const parsedData = await this._getParsedData(handlesApi, userName);
         if (parsedData.users.length) {
-            let parseData = TwitterParser.instance().parseHandle(parsedData.users);
-            let resultData = {
+            const parseData = TwitterParser.instance().parseHandle(parsedData.users);
+            const resultData = {
                 "docs": parseData,
                 "paging": { "page": parsedData.next_cursor }
             };

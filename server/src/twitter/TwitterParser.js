@@ -5,8 +5,8 @@ export default class TwitterParser {
     }
 
     parseHandle(handles) {
-        return handles.map(handle => {
-            return {
+        return handles.map(handle =>
+            ({
                 "id": handle.id_str,
                 "picture": {
                     "data": {
@@ -14,8 +14,8 @@ export default class TwitterParser {
                     }
                 },
                 "name": handle.name
-            };
-        });
+            })
+        );
     }
 
     parseTweets(sourceId, tweets = []) {

@@ -35,7 +35,7 @@ export default class TwitterRequestHandler {
             const followings = await this.twitterClient().fetchFollowings(userName, nextCursor);
             TwitterRequestHandler.logger().debug("TwitterRequestHandler:: Successfully fetched followings for user");
             return followings;
-        }catch(error) {
+        } catch(error) {
             TwitterRequestHandler.logger().error(`TwitterRequestHandler:: Failed to fetch the followings ${error}`);
             if(error.statusCode === 429) { //eslint-disable-line no-magic-numbers
                 const message = { "message": "Could not get more handles" };
