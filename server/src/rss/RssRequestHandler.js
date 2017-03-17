@@ -1,5 +1,7 @@
 import RssClient from "./RssClient";
 import Logger from "../logging/Logger";
+import ApplicationConfig from "../config/ApplicationConfig";
+import AdminDbClient from "../db/AdminDbClient";
 
 export default class RssRequestHandler {
 
@@ -51,6 +53,28 @@ export default class RssRequestHandler {
         } catch(error) {
             RssRequestHandler.logger().error("RssRequestHandler:: Error while adding Document: %j.", error);
             throw error;
+        }
+    }
+
+    async fetchDefaultSources() {
+        const adminDetais = ApplicationConfig.instance().adminDetails();
+        const adminInstance = await AdminDbClient.instance(adminDetais.username, adminDetais.password, adminDetais.db);
+        const query = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                },
+                "sourceType": {
+                    "$eq": "web"
+                }
+            },
+            "limit": 50
+        };
+        try {
+            const sources = await adminInstance.findDocuments(query);
+            return sources.docs;
+        }catch(error) {
+            return [];
         }
     }
 }
