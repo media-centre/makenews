@@ -7,6 +7,7 @@ import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigu
 import { handleMessages } from "../actions/AddUrlActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 import AddUrl from "./AddUrl";
+import SignInWarning from "./SignInWarning";
 
 export class ConfigurePane extends Component {
 
@@ -29,11 +30,15 @@ export class ConfigurePane extends Component {
     }
 
     fetchSources(currentTab = this.props.currentTab) {
-        const value = this.refs.searchSources.value;
-        if(!StringUtils.isEmptyString(value)) {
-            this.props.dispatch(handleMessages(""));
-            this.props.dispatch(SourceConfigActions.clearSources);
-            this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
+        if ((this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
+                (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
+                (this.props.currentSourceType === "web")) {
+            const value = this.refs.searchSources.value;
+            if (!StringUtils.isEmptyString(value)) {
+                this.props.dispatch(handleMessages(""));
+                this.props.dispatch(SourceConfigActions.clearSources);
+                this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
+            }
         }
     }
 
@@ -41,18 +46,26 @@ export class ConfigurePane extends Component {
         return (
           <div className="configure-sources">
               <ConfigPaneNavigation currentSourceType={this.props.currentSourceType}/>
-              <div className="input-box">
-                  <div className="input-container">
-                      <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
-                      <span className="input-addon">
-                        <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
-                      </span>
+              { (this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
+                (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
+                (this.props.currentSourceType === "web")
+                  ? <div>
+                      <div className="input-box">
+                          <div className="input-container">
+                              <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
+                          <span className="input-addon">
+                            <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
+                          </span>
+                          </div>
+                      </div>
+                      { this.props.currentTab === SourceConfigActions.WEB &&
+                      !this.props.sources.data.length && !this.props.sources.isFetchingSources
+                          ? <AddUrl/>
+                          : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/> }
                   </div>
-              </div>
-              { this.props.currentTab === SourceConfigActions.WEB &&
-                !this.props.sources.data.length && !this.props.sources.isFetchingSources
-                  ? <AddUrl/>
-                  : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/> }
+                  : <SignInWarning currentSourceType = {this.props.currentSourceType}/>
+              }
+
           </div>
         );
     }
@@ -61,7 +74,8 @@ export class ConfigurePane extends Component {
 function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
-        "sources": state.sourceResults
+        "sources": state.sourceResults,
+        "sourcesAuthenticationInfo": state.sourcesAuthenticationInfo
     };
 }
 
@@ -69,7 +83,8 @@ ConfigurePane.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "sources": PropTypes.object.isRequired,
-    "currentSourceType": PropTypes.string.isRequired
+    "currentSourceType": PropTypes.string.isRequired,
+    "sourcesAuthenticationInfo": PropTypes.object
 };
 
 export default connect(mapToStore)(ConfigurePane);

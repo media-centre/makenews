@@ -251,3 +251,21 @@ button.disable {
   opacity: 0.5;
   cursor: auto;
 }
+
+.warning-icon {
+  background: lighten($secondary-color, 3%);
+  width: 2rem;
+  height: 2rem;
+  display: inline-block;
+  text-align: center;
+  border-radius: 100%;
+  padding: 0.4rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+
+  &:before {
+    content: '!';
+    display: inline-block;
+    font-style: normal;
+  }
+}

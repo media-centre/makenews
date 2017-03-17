@@ -1,0 +1,15 @@
+.sign-in-warning {
+  width: 33rem;
+  background: #2a1f3f;
+  margin: 20% auto 0;
+  padding: 2rem 4rem;
+  box-sizing: border-box;
+  color: white;
+  font-size: 1.3rem;
+  line-height: 2rem;
+  text-align: center;
+
+  .message {
+    padding-top: 1rem;
+  }
+}

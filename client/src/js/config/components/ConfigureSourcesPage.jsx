@@ -43,7 +43,6 @@ export class ConfigureSourcesPage extends Component {
     _showTwitterLogin(dispatch) {
         if(!this.props.sourcesAuthenticationInfo.twitter) {
             TwitterLogin.instance().login().then((authenticated) => {
-                this.isPopUpDisplayed = false;
                 dispatch(twitterTokenInformation(authenticated));
             });
         }
@@ -51,27 +50,24 @@ export class ConfigureSourcesPage extends Component {
 
     showLoginPrompt(sourceType, dispatch) {
         if(sourceType === "facebook" && !this.props.sourcesAuthenticationInfo.facebook) {
-            this.isPopUpDisplayed = true;
             this._showFBLogin(dispatch);
         } else if (sourceType === "twitter" && !this.props.sourcesAuthenticationInfo.twitter) {
-            this.isPopUpDisplayed = true;
             this._showTwitterLogin(dispatch);
-        } else {
-            this.isPopUpDisplayed = false;
         }
     }
 
     sourceTab(params, dispatch) {
         dispatch(SourceConfigActions.clearSources);
-        this.showLoginPrompt(params.sourceType, dispatch);
         dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
         dispatch(SourceConfigActions.getSources(params.sourceSubType || params.sourceType));
     }
 
     render() {
-        let sourceType = this.props.params.sourceType;
-        return (this.isPopUpDisplayed ? <div className="configure-container">{`Please login to ${sourceType}`}</div>
-            : <div className="configure-container"><ConfiguredSources /><ConfigurePane currentSourceType={this.props.params.sourceType}/></div>);
+        return (
+            <div className="configure-container">
+                <ConfiguredSources />
+                <ConfigurePane currentSourceType={this.props.params.sourceType}/>
+            </div>);
     }
 }
 
