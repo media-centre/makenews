@@ -90,31 +90,54 @@ describe("TwitterRequestHandler", () => {
     });
 
     describe("fetchFollowings", () => {
+        let twitterClient = null, twitterHandler = null, fetchFollowingMock = null;
+        userName = "userName";
+        const nextCursor = -1;
+        const authSession = "authSession";
+
+        beforeEach("fetchFollowings", () => {
+            const user = {
+                "userName": userName
+            };
+
+            twitterClient = TwitterClient.instance();
+            sandbox = sinon.sandbox.create();
+            twitterHandler = TwitterRequestHandler.instance();
+            sandbox.stub(TwitterClient, "instance").returns(twitterClient);
+            sandbox.stub(userDetails, "getUser").returns(user);
+            fetchFollowingMock = sandbox.mock(twitterClient).expects("fetchFollowings")
+                .withExactArgs(userName, nextCursor);
+        });
+
+        afterEach("fetchFollowings", () => {
+            sandbox.restore();
+        });
+
         it("should return twitter followings", async() => {
-            const nextCursor = -1;
-            const authSession = "authSession";
+
             const expectedData = {
                 "docs": [],
                 "paging": {
                     "page": 0
                 }
             };
-            const user = {
-                "userName": "userName"
-            };
-            const twitterClient = TwitterClient.instance();
-            sandbox = sinon.sandbox.create();
-            const twitterHandler = TwitterRequestHandler.instance();
-            sandbox.stub(TwitterClient, "instance").returns(twitterClient);
-            sandbox.stub(userDetails, "getUser").returns(user);
-            const fetchFollowingMock = sandbox.mock(twitterClient).expects("fetchFollowings")
-                .withExactArgs(user.userName, nextCursor).returns(expectedData);
+
+            fetchFollowingMock.returns(Promise.resolve(expectedData));
 
             const response = await twitterHandler.fetchFollowings(authSession, nextCursor);
 
             fetchFollowingMock.verify();
             assert.deepEqual(response, expectedData);
-            sandbox.restore();
+        });
+
+        it("should throw could not get more when error status code is 429", async () => {
+            fetchFollowingMock.returns(Promise.reject({ "statusCode": 429, "message": "too many requests" }));
+            try {
+                await twitterHandler.fetchFollowings(authSession, nextCursor);
+                assert.fail();
+            } catch(error) {
+                assert.deepEqual(error, { "message": "Could not get more handles" });
+            }
         });
     });
 });

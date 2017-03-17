@@ -101,40 +101,21 @@ export default class TwitterClient {
     }
 
     async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
-        let tokenInfo = await this.getAccessTokenAndSecret(userName);
-        return new Promise((resolve, reject) => {
-            let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
-            let oauth = TwitterLogin.createOAuthInstance();
-            let handlesApi = "/friends/list.json";
-            let handlesWithKeyApi = `/users/search.json?q=${keyword}&page=${page}`;
-            let getHandles = keyword ? `${this._baseUrl()}${handlesWithKeyApi}` : `${this._baseUrl()}${handlesApi}`;
+        let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}`;
+        const parsedData = await this._getParsedData(handlesWithKeyApi, userName);
 
-            oauth.get(getHandles, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
-                if (error) {
-                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter handles for ${getHandles}, Error: ${error}`);
-                    reject(error);
-                } else {
-                    let jsonParsedData = JSON.parse(data);
-                    if (jsonParsedData.length) {
-                        if (preFirstId === jsonParsedData[0].id_str) { //eslint-disable-line no-magic-numbers
-                            TwitterClient.logger().error(`TwitterClient:: no more results ${getHandles}`);
-                            resolve({ "docs": [] });
-                        }
-                        let parseData = TwitterParser.instance().parseHandle(jsonParsedData);
-                        let resultData = {
-                            "docs": parseData,
-                            "paging": { "page": page + 1 }, //eslint-disable-line no-magic-numbers
-                            "twitterPreFirstId": parseData[0].id //eslint-disable-line no-magic-numbers
-                        };
-                        TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
-                        resolve(resultData);
-                    } else {
-                        TwitterClient.logger().error(`TwitterClient:: no sources for ${getHandles}`);
-                        resolve({ "docs": [] });
-                    }
-                }
-            });
-        });
+        if (parsedData.length && preFirstId !== parsedData[0].id_str) { //eslint-disable-line no-magic-numbers
+            let parseData = TwitterParser.instance().parseHandle(parsedData);
+            let resultData = {
+                "docs": parseData,
+                "paging": { "page": page + 1 }, //eslint-disable-line no-magic-numbers
+                "twitterPreFirstId": parseData[0].id //eslint-disable-line no-magic-numbers
+            };
+            TwitterClient.logger().debug(`TwitterClient:: successfully fetched twitter handles for ${keyword}`);
+            return resultData;
+        }
+        TwitterClient.logger().error(`TwitterClient:: no sources for ${handlesWithKeyApi}`);
+        return { "docs": [] };
     }
 
     async fetchFollowings(userName, nextCursor = -1) { //eslint-disable-line no-magic-numbers
@@ -144,30 +125,34 @@ export default class TwitterClient {
                 "paging": { "page": 0 }
             };
         }
+        const handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
+        const parsedData = await this._getParsedData(handlesApi, userName);
+        if (parsedData.users.length) {
+            let parseData = TwitterParser.instance().parseHandle(parsedData.users);
+            let resultData = {
+                "docs": parseData,
+                "paging": { "page": parsedData.next_cursor }
+            };
+            TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followings");
+            return resultData;
+        }
+        TwitterClient.logger().error(`TwitterClient:: no sources for ${handlesApi}`);
+        return { "docs": [] };
+    }
+
+    async _getParsedData(url, userName) {
         let tokenInfo = await this.getAccessTokenAndSecret(userName);
         return new Promise((resolve, reject) => {
             let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
             let oauth = TwitterLogin.createOAuthInstance();
-            let handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
 
-            oauth.get(handlesApi, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
+            oauth.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
-                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter followings for ${handlesApi}, Error: ${error}`);
+                    TwitterClient.logger().error(`TwitterClient:: error fetching twitter data for ${url}, Error: ${error}`);
                     reject(error);
                 } else {
                     let jsonParsedData = JSON.parse(data);
-                    if (jsonParsedData.users.length) {
-                        let parseData = TwitterParser.instance().parseHandle(jsonParsedData.users);
-                        let resultData = {
-                            "docs": parseData,
-                            "paging": { "page": jsonParsedData.next_cursor }
-                        };
-                        TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followings");
-                        resolve(resultData);
-                    } else {
-                        TwitterClient.logger().error(`TwitterClient:: no sources for ${handlesApi}`);
-                        resolve({ "docs": [] });
-                    }
+                    resolve(jsonParsedData);
                 }
             });
         });
