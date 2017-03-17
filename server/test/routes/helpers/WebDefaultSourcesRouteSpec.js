@@ -5,15 +5,19 @@ import { assert } from "chai";
 
 describe("WebDefaultSourcesRoute", () => {
     it("should get web default sources", async () => {
+        const skip = 0;
         const expectedData = {
             "docs": []
         };
-        const webRoute = new WebDefaultSourcesRoute({}, {}, {});
+        const request = {
+            "query": { "offset": skip }
+        };
+        const webRoute = new WebDefaultSourcesRoute(request, {}, {});
         const rssHanlderInstance = RssRequestHandler.instance();
         const sandbox = sinon.sandbox.create();
         sandbox.stub(RssRequestHandler, "instance").returns(rssHanlderInstance);
         const defaultSourcesMock = sandbox.mock(rssHanlderInstance).expects("fetchDefaultSources")
-            .returns(Promise.resolve(expectedData));
+            .withExactArgs(skip).returns(Promise.resolve(expectedData));
 
         const response = await webRoute.handle();
 

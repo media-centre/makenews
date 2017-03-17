@@ -42,7 +42,6 @@ describe("WebConfigureActions", () => {
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();
             ajaxClient = new AjaxClient("/web-sources");
-            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock = sandbox.mock(ajaxClient).expects("get").withArgs({ keyword });
         });
 
@@ -63,6 +62,7 @@ describe("WebConfigureActions", () => {
                     "offset": "25"
                 }
             };
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock.returns(Promise.resolve(result));
 
             const gotWebSourcesActionObj = {
@@ -93,6 +93,7 @@ describe("WebConfigureActions", () => {
                     "offset": "25"
                 }
             };
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock.returns(Promise.resolve(result));
 
             const gotWebSourcesActionObj = {
@@ -131,6 +132,7 @@ describe("WebConfigureActions", () => {
 
         it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if sources are empty`, (done) => {
             const result = { "docs": [], "paging": { "offset": "25" } };
+            sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock.returns(Promise.resolve(result));
 
             const actions = [
@@ -140,6 +142,13 @@ describe("WebConfigureActions", () => {
 
             const store = mockStore({}, actions, done);
             store.dispatch(fetchWebSources(keyword));
+        });
+
+        it("should create instance with web-default-sources when there is no keyword", () => {
+            const ajaxMInstanceMock = sandbox.mock(AjaxClient).expects("instance").withExactArgs("/web-default-sources");
+            fetchWebSources();
+
+            ajaxMInstanceMock.verify();
         });
     });
 });

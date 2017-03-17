@@ -164,6 +164,7 @@ describe("Rss Request Handler", () => {
 
     describe("fetchDefaultSources", () => {
         let sandbox = sinon.sandbox.create();
+        const skip = 0;
         const adminDetails = {
             "username": "test",
             "password": "test",
@@ -178,7 +179,7 @@ describe("Rss Request Handler", () => {
                     "$eq": "web"
                 }
             },
-            "limit": 50
+            "skip": skip
         };
         let adminDbInstanceMock = null, adminDetailsMock = null, couchClient = null, rssRequestHanlder = null;
 
@@ -215,27 +216,28 @@ describe("Rss Request Handler", () => {
                 }
             ];
             const expectedData = {
-                "docs": sources
+                "docs": sources,
+                "paging": { "offset": 25 }
             };
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
                 .withExactArgs(query).returns(Promise.resolve(expectedData));
 
-            const response = await rssRequestHanlder.fetchDefaultSources();
+            const response = await rssRequestHanlder.fetchDefaultSources(skip);
 
             adminDbInstanceMock.verify();
             adminDetailsMock.verify();
             findMock.verify();
-            assert.deepEqual(response, sources);
+            assert.deepEqual(response, expectedData);
         });
 
         it("should return empty results when db throws an error", async () => {
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
                 .withExactArgs(query).returns(Promise.reject("error"));
 
-            const respone = await rssRequestHanlder.fetchDefaultSources();
+            const respone = await rssRequestHanlder.fetchDefaultSources(skip);
 
             findMock.verify();
-            assert.deepEqual(respone, []);
+            assert.deepEqual(respone, { "docs": [] });
         });
     });
 });

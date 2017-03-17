@@ -2,6 +2,7 @@ import RssClient from "./RssClient";
 import Logger from "../logging/Logger";
 import ApplicationConfig from "../config/ApplicationConfig";
 import AdminDbClient from "../db/AdminDbClient";
+import { DOCS_PER_REQUEST } from "../util/Constants";
 
 export default class RssRequestHandler {
 
@@ -56,7 +57,7 @@ export default class RssRequestHandler {
         }
     }
 
-    async fetchDefaultSources() {
+    async fetchDefaultSources(skipValue) { //eslint-disable-line no-magic-numbers
         const adminDetais = ApplicationConfig.instance().adminDetails();
         const adminInstance = await AdminDbClient.instance(adminDetais.username, adminDetais.password, adminDetais.db);
         const query = {
@@ -68,13 +69,17 @@ export default class RssRequestHandler {
                     "$eq": "web"
                 }
             },
-            "limit": 50
+            "skip": skipValue
         };
+
         try {
             const sources = await adminInstance.findDocuments(query);
-            return sources.docs;
+            return {
+                "docs": sources.docs,
+                "paging": { "offset": skipValue + DOCS_PER_REQUEST }
+            };
         }catch(error) {
-            return [];
+            return { "docs": [] };
         }
     }
 }

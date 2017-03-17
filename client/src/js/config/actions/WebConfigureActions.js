@@ -16,7 +16,7 @@ export function gotWebSourceResults(sources, keyword) {
 }
 
 export function fetchWebSources(keyword, params = {}) {
-    let ajaxClient = AjaxClient.instance("/web-sources");
+    let ajaxClient = keyword ? AjaxClient.instance("/web-sources") : AjaxClient.instance("/web-default-sources");
 
     return async (dispatch, getState) => {
         dispatch(fetchingSources);
