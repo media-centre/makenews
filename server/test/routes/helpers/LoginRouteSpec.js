@@ -1,8 +1,5 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
-
 import LoginRoute from "../../../src/routes/helpers/LoginRoute";
-import UserRequest from "../../../src/login/UserRequest";
+import * as UserRequest from "../../../src/login/UserRequest";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
 import { userDetails } from "../../../src/Factory";
@@ -24,7 +21,7 @@ describe("LoginRoute", () => {
 
     describe("handle", () => {
         let token = null, authSessionCookie = null, next = null,
-            userReqGetAuthSessionCookieMock = null, userRequest = null, deleteHashMock = null;
+            userReqGetAuthSessionCookieMock = null, deleteHashMock = null;
         beforeEach("handle", () => {
             request = {
                 "body": {
@@ -34,18 +31,16 @@ describe("LoginRoute", () => {
             };
             token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
             authSessionCookie = `AuthSession=${token}; Version=1; Path=/; HttpOnly`;
-            userRequest = new UserRequest(userName, password);
-            sandbox.stub(UserRequest, "instance").withArgs(userName, password).returns(userRequest);
             let deleteHanlder = DeleteSourceHandler.instance();
             sandbox.mock(DeleteSourceHandler).expects("instance").returns(deleteHanlder);
             deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteSources")
                 .returns(Promise.resolve({ "ok": true }));
-            userReqGetAuthSessionCookieMock = sandbox.mock(userRequest).expects("getAuthSessionCookie");
+            userReqGetAuthSessionCookieMock = sandbox.mock(UserRequest).expects("getAuthSessionCookie");
         });
 
         it("should respond with authsession cookie and json data if login is successful", (done) => {
             const updateUserMock = sandbox.mock(userDetails).expects("updateUser");
-            sandbox.stub(userRequest, "getUserDetails").returns(Promise.resolve({
+            sandbox.stub(UserRequest, "getUserDetails").returns(Promise.resolve({
                 "_id": "org.couchdb.user:minion",
                 "name": "minion",
                 "visitedUser": true
@@ -117,7 +112,7 @@ describe("LoginRoute", () => {
 
         it("should set firstTimeUser in response if user is not visited before", (done) => {
             sandbox.mock(userDetails).expects("updateUser");
-            sinon.stub(userRequest, "getUserDetails").returns(Promise.resolve({
+            sandbox.stub(UserRequest, "getUserDetails").returns(Promise.resolve({
                 "_id": "org.couchdb.user:minion",
                 "name": "minion"
             }));
@@ -166,7 +161,7 @@ describe("LoginRoute", () => {
 
         it("should not set firstTimeUser in response if user has visited before", (done) => {
             sandbox.mock(userDetails).expects("updateUser");
-            sinon.stub(userRequest, "getUserDetails").returns(Promise.resolve({
+            sandbox.stub(UserRequest, "getUserDetails").returns(Promise.resolve({
                 "_id": "org.couchdb.user:minion",
                 "name": "minion",
                 "visitedUser": true
@@ -214,7 +209,7 @@ describe("LoginRoute", () => {
         });
 
         it("should respond with unauthorized if fetching user details fails", (done) => {
-            const userDetailsMock = sinon.mock(userRequest).expects("getUserDetails");
+            const userDetailsMock = sandbox.mock(UserRequest).expects("getUserDetails");
             userDetailsMock.returns(Promise.reject("error"));
             response = {
                 "status": (statusCode) => {

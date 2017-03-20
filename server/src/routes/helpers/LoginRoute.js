@@ -1,4 +1,4 @@
-import UserRequest from "../../../src/login/UserRequest";
+import { getAuthSessionCookie, getUserDetails } from "../../../src/login/UserRequest";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import ClientConfig from "../../../src/config/ClientConfig";
 import RouteLogger from "../RouteLogger";
@@ -28,11 +28,10 @@ export default class LoginRoute extends Route {
             }
             RouteLogger.instance().info("LoginRoute::handle Login request received for the user = %s", this.request.body.username);
 
-            const userRequest = UserRequest.instance(this.userName, this.password);
-            userRequest.getAuthSessionCookie().then(async authSessionCookie => {
+            getAuthSessionCookie(this.userName, this.password).then(async authSessionCookie => {
                 const [authSession] = authSessionCookie.split(";");
                 const [, token] = authSession.split("=");
-                const userData = await userRequest.getUserDetails(token, this.userName);
+                const userData = await getUserDetails(token, this.userName);
                 await this._handleLoginSuccess(authSessionCookie, token, userData);
             }).catch(error => {
                 RouteLogger.instance().error(`LoginRoute::handle Failed while fetching auth session cookie, Error: ${JSON.stringify(error)}`);
