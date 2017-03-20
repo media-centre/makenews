@@ -25,13 +25,26 @@
     }
   }
 
-  &__next {
+  nav.secondary-nav {
     float: right;
+  }
+
+  .btn {
     padding: 14px 25px;
-    background: $secondary-color;
-    color: white;
     font-size: 1.3rem;
     text-transform: uppercase;
     height: 100%;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: $secondary-color;
+    color: white;
+  }
+
+  .btn-secondary {
+    color: $primary-color;
+    opacity: .5;
+    font-size: 1.1rem;
   }
 }

@@ -35,7 +35,6 @@ export class ConfigureSourcesPage extends Component {
 
     _showFBLogin(dispatch) {
         this.facebookLogin.login().then(expiresAfter => {
-            this.isPopUpDisplayed = false;
             dispatch(updateTokenExpiredInfo(expiresAfter));
         });
     }
@@ -45,14 +44,6 @@ export class ConfigureSourcesPage extends Component {
             TwitterLogin.instance().login().then((authenticated) => {
                 dispatch(twitterTokenInformation(authenticated));
             });
-        }
-    }
-
-    showLoginPrompt(sourceType, dispatch) {
-        if(sourceType === "facebook" && !this.props.sourcesAuthenticationInfo.facebook) {
-            this._showFBLogin(dispatch);
-        } else if (sourceType === "twitter" && !this.props.sourcesAuthenticationInfo.twitter) {
-            this._showTwitterLogin(dispatch);
         }
     }
 
@@ -66,7 +57,14 @@ export class ConfigureSourcesPage extends Component {
         return (
             <div className="configure-container">
                 <ConfiguredSources />
-                <ConfigurePane currentSourceType={this.props.params.sourceType}/>
+                <ConfigurePane currentSourceType={this.props.params.sourceType}
+                    fbLogin={() => {
+                        this._showFBLogin(this.props.dispatch);
+                    }}
+                    twitterLogin = {()=> {
+                        this._showTwitterLogin(this.props.dispatch);
+                    }}
+                />
             </div>);
     }
 }

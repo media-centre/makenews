@@ -72,7 +72,7 @@ input[type='text'], input[type='password'] {
   color: $body-font-color;
 }
 
-input[type='text'], input[type='password'], button {
+input[type='text'], input[type='password'] {
   outline: none;
   padding: 6px;
   @extend .small-text;
@@ -89,28 +89,6 @@ button {
   cursor: pointer;
   border: 1px solid transparent;
   background: none;
-  &:hover {
-    color: $secondary-font-color;
-  }
-  
-  &.btn-primary {
-    color: $app-header-bg-color;
-    background: $primary-font-color;
-    border-color: $app-header-bg-color;
-  }
-
-  &.btn-secondary {
-    color: $primary-font-color;
-    background: $app-header-bg-color;
-  }
-
-  &.btn-primary, &.btn-secondary {
-    &:hover {
-      @extend .border-highlight;
-      color: $secondary-font-color;
-      background: $app-header-bg-color;
-    }
-  }
 }
 
 ::-webkit-input-placeholder {

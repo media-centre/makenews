@@ -45,7 +45,7 @@ export class ConfigurePane extends Component {
     render() {
         return (
           <div className="configure-sources">
-              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType}/>
+              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
               { (this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
@@ -84,7 +84,9 @@ ConfigurePane.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "sources": PropTypes.object.isRequired,
     "currentSourceType": PropTypes.string.isRequired,
-    "sourcesAuthenticationInfo": PropTypes.object
+    "sourcesAuthenticationInfo": PropTypes.object,
+    "fbLogin": PropTypes.func,
+    "twitterLogin": PropTypes.func
 };
 
 export default connect(mapToStore)(ConfigurePane);
