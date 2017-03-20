@@ -101,11 +101,10 @@ describe("ConfigPaneNavigation", () => {
         assert.isTrue(fbLogin.called);
     });
 
-    it("should have a done button with newsboard link if current source is twitter and user has logged into twitter", () => {
+    it("should have a done button if current source is twitter and user has logged into twitter", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="twitter" sourcesAuthenticationInfo={{ "twitter": true }} />);
         const nextLink = wrapper.find(".sources-nav__next");
-        assert.strictEqual(nextLink.node.type.displayName, "Link");
-        assert.strictEqual(nextLink.node.props.to, "/newsBoard");
+        assert.strictEqual(nextLink.node.type, "button");
         assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
 
         const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
@@ -113,11 +112,10 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(icon.props.className, "fa fa-check");
     });
 
-    it("should have a skip button with /newsBoard link if current source is twitter and user has not logged into twitter", () => {
+    it("should have a skip button link if current source is twitter and user has not logged into twitter", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="twitter" sourcesAuthenticationInfo={{ "twitter": false }} />);
         const skipLink = wrapper.find(".sources-nav__skip");
-        assert.strictEqual(skipLink.node.type.displayName, "Link");
-        assert.strictEqual(skipLink.node.props.to, "/newsBoard");
+        assert.strictEqual(skipLink.node.type, "button");
         assert.strictEqual(skipLink.node.props.children, "Skip"); //eslint-disable-line no-magic-numbers
     });
 

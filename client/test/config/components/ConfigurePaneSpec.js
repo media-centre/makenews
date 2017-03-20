@@ -12,6 +12,8 @@ import sinon from "sinon";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
+import { shallow } from "enzyme";
+import History from "./../../../src/js/History";
 
 describe("Configure Pane", () => {
 
@@ -164,5 +166,91 @@ describe("Configure Pane", () => {
 
             getSourceMock.verify();
         });
+    });
+
+    describe("Configuration warning", () => {
+        let wrapper = null;
+        const sandbox = sinon.sandbox.create();
+        const dispatch = () => {};
+        const store = {
+            "getState": ()=> {
+                return {
+                    "currentSourceTab": "",
+                    "sourceResults": {
+                        "data": []
+                    }
+                };
+            }
+        };
+        const currentTab = SourceConfigActions.WEB;
+        beforeEach("Configuration warning", () => {
+            wrapper = shallow(
+                <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab} sources = {{ "data": [] }} searchKeyword = "search" currentSourceType="web"/>);
+        });
+
+        afterEach("Configuration warning", () => {
+            sandbox.restore();
+        });
+
+        it("should have a configuration warning with three children", () => {
+            wrapper.setState({ "showConfigurationWarning": true });
+            const configWarn = wrapper.find(".configuration-warning");
+            expect(configWarn.node.type).to.equals("div");
+            expect(configWarn.node.props.children).to.have.lengthOf(3);//eslint-disable-line no-magic-numbers
+        });
+
+        it("should have a configuration warning icon with class name warning-icon", () => {
+            wrapper.setState({ "showConfigurationWarning": true });
+            const configWarn = wrapper.find(".configuration-warning");
+            const [warnIcon] = configWarn.node.props.children;
+            expect(warnIcon.type).to.equals("i");
+            expect(warnIcon.props.className).to.equals("warning-icon");
+        });
+
+        it("should have a configuration warning message with class name warning-message", () => {
+            wrapper.setState({ "showConfigurationWarning": true });
+            const configWarn = wrapper.find(".configuration-warning");
+            const [, warnMessage] = configWarn.node.props.children;
+            expect(warnMessage.type).to.equals("span");
+            expect(warnMessage.props.children).to.equals("Please select at least one source either from Web Urls or Facebook or Twitter");
+        });
+
+        it("should have a configuration warning message with class name warning-message", () => {
+            wrapper.setState({ "showConfigurationWarning": true });
+            const configWarn = wrapper.find(".configuration-warning");
+            const [,, close] = configWarn.node.props.children;
+            expect(close.type).to.equals("span");
+            expect(close.props.children).to.equals("×");
+        });
+
+        it("should have a configuration warning message with class name warning-message", () => {
+            wrapper.setState({ "showConfigurationWarning": true });
+            const configWarn = wrapper.find(".configuration-warning");
+            configWarn.find(".close").simulate("click");
+            expect(wrapper.state().showConfigurationWarning).to.be.false; //eslint-disable-line no-unused-expressions
+        });
+
+        it("should show the warning messages if no configured sources are there", () => {
+            wrapper.instance().checkConfiguredSources();
+
+            expect(wrapper.state().showConfigurationWarning).to.be.true; //eslint-disable-line no-unused-expressions
+        });
+
+        it("should go to /newsBoard page if it has configured sources", () => {
+            wrapper = shallow(
+                <ConfigurePane dispatch={dispatch} store={store}
+                    currentTab={currentTab} sources = {{ "data": [] }}
+                    searchKeyword = "search" currentSourceType="web"
+                    configuredSources={{ "web": [{ "name": "web Url" }] }}
+                />);
+            const history = History.getHistory();
+            sandbox.stub(History, "getHistory").returns(history);
+            const historyPushMock = sandbox.mock(history).expects("push").withExactArgs("/newsBoard");
+
+            wrapper.instance().checkConfiguredSources();
+
+            historyPushMock.verify();
+        });
+
     });
 });

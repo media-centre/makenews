@@ -8,8 +8,17 @@ import { handleMessages } from "../actions/AddUrlActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 import AddUrl from "./AddUrl";
 import SignInWarning from "./SignInWarning";
+import History from "./../../History";
+import R from "ramda"; //eslint-disable-line id-length
 
 export class ConfigurePane extends Component {
+
+    constructor() {
+        super();
+        this.state = { "showConfigurationWarning": false };
+        this.checkConfiguredSources = this.checkConfiguredSources.bind(this);
+        this._closeConfigurationWarning = this._closeConfigurationWarning.bind(this);
+    }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.currentTab !== this.props.currentTab) {
@@ -20,6 +29,23 @@ export class ConfigurePane extends Component {
     componentWillUnmount() {
         this.props.dispatch(SourceConfigActions.clearSources);
         this.props.dispatch(SourceConfigActions.fetchingSourcesFailed(""));
+    }
+
+    _closeConfigurationWarning() {
+        this.setState({ "showConfigurationWarning": false });
+    }
+
+    checkConfiguredSources() {
+        const hasConfiguredSources = R.pipe(
+            R.values,
+            R.any(sources => sources.length)
+        )(this.props.configuredSources);
+
+        if (hasConfiguredSources) {
+            History.getHistory().push("/newsBoard");
+        } else {
+            this.setState({ "showConfigurationWarning": true });
+        }
     }
 
     checkEnterKey(event) {
@@ -45,7 +71,14 @@ export class ConfigurePane extends Component {
     render() {
         return (
           <div className="configure-sources">
-              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
+              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin} checkConfiguredSources={this.checkConfiguredSources}/>
+              { this.state.showConfigurationWarning &&
+                  <div className="configuration-warning">
+                      <i className="warning-icon" />
+                      <span className="warning-message">Please select at least one source either from Web Urls or Facebook or Twitter</span>
+                      <span className="close" onClick={this._closeConfigurationWarning}>&times;</span>
+                  </div>
+              }
               { (this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
@@ -75,7 +108,8 @@ function mapToStore(state) {
     return {
         "currentTab": state.currentSourceTab,
         "sources": state.sourceResults,
-        "sourcesAuthenticationInfo": state.sourcesAuthenticationInfo
+        "sourcesAuthenticationInfo": state.sourcesAuthenticationInfo,
+        "configuredSources": state.configuredSources
     };
 }
 
@@ -86,7 +120,8 @@ ConfigurePane.propTypes = {
     "currentSourceType": PropTypes.string.isRequired,
     "sourcesAuthenticationInfo": PropTypes.object,
     "fbLogin": PropTypes.func,
-    "twitterLogin": PropTypes.func
+    "twitterLogin": PropTypes.func,
+    "configuredSources": PropTypes.object
 };
 
 export default connect(mapToStore)(ConfigurePane);

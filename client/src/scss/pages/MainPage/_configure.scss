@@ -66,6 +66,27 @@
   .configure-sources {
     margin-left: $configured-source-panel-width;
 
+    .configuration-warning {
+      background: $primary-color-dark;
+      color: white;
+      padding: 12px;
+
+      .warning-icon {
+        width: 1.7rem;
+        height: 1.7rem;
+        padding: 0;
+        font-size: 1.3rem;
+        margin-right: 10px;
+      }
+
+      .close {
+        float: right;
+        font-size: 1.6rem;
+        cursor: pointer;
+        padding: 0 10px;
+      }
+    }
+
     .input-box {
       border-bottom-width: 2px;
       margin-left: 20%;

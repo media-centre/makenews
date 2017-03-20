@@ -4,25 +4,17 @@ import { connect } from "react-redux";
 
 export class ConfigPaneNavigation extends Component {
     render() {
-        const nextPage = () => {
-            switch (this.props.currentSourceType) {
-            case "web": return "/configure/facebook";
-            case "facebook": return "/configure/twitter";
-            default: return "/newsBoard";
-            }
-        };
-
         const navButtons = () => {
             if(this.props.currentSourceType === "facebook") {
                 if (this.props.sourcesAuthenticationInfo.facebook) {
                     return (
-                        <Link to={nextPage()} className="sources-nav__next btn btn-primary">
+                        <Link to="/configure/twitter" className="sources-nav__next btn btn-primary">
                             <i className="fa fa-arrow-right"/> Next
                         </Link>);
                 }
                 return (
                     <div>
-                        <Link to={nextPage()} className="sources-nav__skip btn btn-secondary">
+                        <Link to="/configure/twitter" className="sources-nav__skip btn btn-secondary">
                             Skip
                         </Link>
                         <button onClick={this.props.fbLogin} className="sources-nav__next btn btn-primary">
@@ -33,21 +25,21 @@ export class ConfigPaneNavigation extends Component {
             } else if(this.props.currentSourceType === "twitter") {
                 if (this.props.sourcesAuthenticationInfo.twitter) {
                     return (
-                            <Link to={nextPage()} className="sources-nav__next btn btn-primary">
-                                <i className="fa fa-check"/> Done
-                            </Link>);
+                        <button className="sources-nav__next btn btn-primary" onClick={this.props.checkConfiguredSources}>
+                            <i className="fa fa-check"/> Done
+                        </button>);
                 }
                 return (
                     <div>
-                        <Link to={nextPage()} className="sources-nav__skip btn btn-secondary">
+                        <button className="sources-nav__skip btn btn-secondary" onClick={this.props.checkConfiguredSources}>
                             Skip
-                        </Link>
+                        </button>
                         <button onClick={this.props.twitterLogin} className="sources-nav__next btn btn-primary">
                             <i className="fa fa-arrow-right"/> Sign in
                         </button>
                     </div>);
             }
-            return (<Link to={nextPage()} className="sources-nav__next btn btn-primary">
+            return (<Link to="/configure/facebook" className="sources-nav__next btn btn-primary">
                 <i className="fa fa-arrow-right"/> Next
             </Link>);
         };
@@ -76,7 +68,8 @@ ConfigPaneNavigation.propTypes = {
     "currentSourceType": PropTypes.string,
     "sourcesAuthenticationInfo": PropTypes.object,
     "fbLogin": PropTypes.func,
-    "twitterLogin": PropTypes.func
+    "twitterLogin": PropTypes.func,
+    "checkConfiguredSources": PropTypes.func
 };
 
 const mapToStore = (store) => ({
