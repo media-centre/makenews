@@ -133,5 +133,46 @@ describe("UserRequest", () => {
             await isRejected(UserRequest.getUserDetails(token, name), "error");
         });
     });
-});
+    
+    describe("MarkAsVisitedUser", () => {
+        const token = "token";
+        let couchClient = null;
+        const updatedUserDetails = { "_id": "testId", "visitedUser": true };
+        beforeEach("MarkAsVisitedUser", () => {
+            sandbox = sinon.sandbox.create();
+            couchClient = new CouchClient(token, "_users");
+            sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
+        });
 
+        afterEach("MarkAsVisitedUser", () => {
+            sandbox.restore();
+        });
+
+        it("should update the userDetails document with visitedUser as true and return success response", async () => {
+            const expectedResponse = { "ok": true };
+            const userDetails = { "_id": "testId" };
+
+            sandbox.mock(couchClient).expects("updateDocument")
+                .withExactArgs(updatedUserDetails).returns(Promise.resolve(expectedResponse));
+            sandbox.mock(couchClient).expects("get").returns(Promise.resolve(userDetails));
+
+            const response = await UserRequest.markAsVisitedUser(token, userName);
+
+            assert.deepEqual(response, expectedResponse);
+        });
+
+        it("should reject with error if getUserDetails returns an error", async () => {
+            sandbox.mock(couchClient).expects("get").returns(Promise.reject("Error"));
+
+            await isRejected(UserRequest.markAsVisitedUser(token, userName), { "message": "not able to update" });
+        });
+
+        it("should reject with an error if update document returns with an error", async () => {
+            sandbox.mock(couchClient).expects("updateDocument")
+                .withExactArgs(updatedUserDetails).returns(Promise.reject("Error"));
+            sandbox.mock(couchClient).expects("get").returns(Promise.resolve({ "_id": "testId" }));
+
+            await isRejected(UserRequest.markAsVisitedUser(token, userName), { "message": "not able to update" });
+        });
+    });
+});

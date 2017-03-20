@@ -63,3 +63,16 @@ export async function getUserDetails(token, userName) {
     }
 }
 
+export async function markAsVisitedUser(token, userName) {
+    try {
+        let userData = await getUserDetails(token, userName);
+        userData.visitedUser = true;
+        const couchClient = CouchClient.instance(token, "_users");
+        await couchClient.updateDocument(userData);
+        return { "ok": true };
+    } catch (err) {
+        logger().error("UserRequest:MarkAsVistedUser fatal error %s", err);
+        const errMessage = { "message": "not able to update" };
+        throw errMessage;
+    }
+}
