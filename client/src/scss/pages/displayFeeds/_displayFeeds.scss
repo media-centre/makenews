@@ -168,8 +168,7 @@
     .feeds {
       display: flex;
       flex-wrap: wrap;
-      min-height: 100px;
-      align-items: flex-start;
+      padding-bottom: 60px;
     }
 
     .feed {
