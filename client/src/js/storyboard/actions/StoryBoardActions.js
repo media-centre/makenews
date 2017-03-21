@@ -31,7 +31,7 @@ export function deleteStory(id) {
         };
         AjaxClient.instance("/delete-story").post(headers, { id }).then(() => {
             dispatch(removeStory(id));
-            Toast.show("Story deleted successfully");
+            Toast.show("Story deleted successfully", "success");
         });
     };
 }
