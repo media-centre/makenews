@@ -20,12 +20,12 @@ export default class AddURLDocumentRoute extends Route {
                 RouteLogger.instance().warn("AddURLDocument:: invalid URL Document %s.", this.url);
                 return this._handleInvalidRequest({ "message": "missing parameters" });
             }
-            let rssRequestHandler = RssRequestHandler.instance();
-            let response = await rssRequestHandler.addURL(this.url, this.accessToken);
+            const rssRequestHandler = RssRequestHandler.instance();
+            const response = await rssRequestHandler.addURL(this.url, this.accessToken);
             RouteLogger.instance().debug("AddURLDocument:: successfully saved the document");
             return this._handleSuccess(response);
-        } catch (error) { //eslint-disable-line
-            RouteLogger.instance().debug("AddURLDocument:: failed to save the document Error: %j", error);
+        } catch (error) {
+            RouteLogger.instance().debug(`AddURLDocument:: failed to save the document Error: ${JSON.stringify(error)}`);
             throw this._handleInvalidRequest({ "message": error.message });
         }
     }

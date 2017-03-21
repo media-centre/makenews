@@ -1,6 +1,4 @@
-/* eslint max-nested-callbacks: [2, 5] max-len:0*/
-
-
+/* eslint max-len:0*/
 import RssParser from "../../src/rss/RssParser";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import CryptUtil from "../../src/util/CryptUtil";

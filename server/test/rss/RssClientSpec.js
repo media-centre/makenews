@@ -307,12 +307,12 @@ describe("RssClient", () => {
         it("it should return feeds when parser returns feeds", async() => {
             nock(url)
                 .get("/")
-                .reply(HttpResponseHandler.codes.OK, { "data": "sucess" });
+                .reply(HttpResponseHandler.codes.OK, { "data": "success" });
             const since = 1234123412;
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(since);
 
-            const expectedFeeds = { "docs": feed, "paging": { "since": since } };
-            sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve({ "items": feed }));
+            const expectedFeeds = { "docs": feed, "title": "title", "paging": { "since": since } };
+            sandbox.stub(RssParser.prototype, "parse", () => Promise.resolve({ "items": feed, "meta": { "title": "title" } }));
 
             const res = await rssClientMock.getRssData(url);
 
@@ -375,7 +375,7 @@ describe("RssClient", () => {
             };
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
-            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "title": name }));
             let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added to Database"));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.resolve("URL added to Database"));
             let response = await rssClient.addURL(url, accessToken);
@@ -412,7 +412,7 @@ describe("RssClient", () => {
             };
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
-            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "title": name }));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.reject("URL is not a proper feed"));
             try {
                 await rssClient.addURL(url, accessToken);
@@ -436,7 +436,7 @@ describe("RssClient", () => {
             };
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
-            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "title": name }));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve("URL added successfully"));
             let addURLtoCommonMock = sandbox.mock(rssClient).expects("addURLToUser").withArgs(document, accessToken).returns(Promise.reject("Unexpected response from the db"));
             try {
@@ -462,7 +462,7 @@ describe("RssClient", () => {
             };
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
-            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "title": name }));
             let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve({ "status": "confilct" }));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").returns(Promise.reject("URL already exist"));
             try {
@@ -488,7 +488,7 @@ describe("RssClient", () => {
             };
             let rssClient = RssClient.instance();
             let fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
-            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "meta": { "title": name } }));
+            fetchRssFeedsMock.withArgs(url).returns(Promise.resolve({ "title": name }));
             let addURLtoCommonMock = sandbox.mock(rssClient).expects("addUrlToCommon").withArgs(document).returns(Promise.resolve({ "status": "confilct" }));
             let addURLtoUserMock = sandbox.mock(rssClient).expects("addURLToUser").returns(Promise.resolve("URL added successfully"));
             try {

@@ -23,24 +23,6 @@ export default class RssClient {
         return new RssClient();
     }
 
-    async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
-        try {
-            return await this.getRssData(url);
-        } catch (error) {
-            if (error.message === FEEDS_NOT_FOUND) {
-                let root = cheerio.load(error.data);
-                let rssLink = root("link[type ^= 'application/rss+xml']");
-                let rssUrl = rssLink.attr("href");
-                if (rssLink && rssLink.length) {
-                    return await this.getFeedsFromRssUrl(rssUrl, url);
-                }
-                return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
-            } else {  //eslint-disable-line no-else-return
-                this.handleUrlError(url, error);
-            }
-        }
-    }
-
     async getFeedsFromRssUrl(rssUrl, url) {
 
         if (rssUrl.startsWith("//")) {
@@ -136,7 +118,7 @@ export default class RssClient {
                     let rssParser = new RssParser(this);
                     rssParser.parse(url).then(feeds => {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
-                        resolve({ "docs": feeds.items, "paging": { "since": DateUtil.getCurrentTimeInSeconds() } });
+                        resolve({ "docs": feeds.items, "title": feeds.meta.title, "paging": { "since": DateUtil.getCurrentTimeInSeconds() } });
                     }).catch(error => {
                         RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}.`);
                         reject({ "message": FEEDS_NOT_FOUND, "data": data });
@@ -150,10 +132,28 @@ export default class RssClient {
         });
     }
 
+    async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
+        try {
+            return await this.getRssData(url);
+        } catch (error) {
+            if (error.message === FEEDS_NOT_FOUND) {
+                let root = cheerio.load(error.data);
+                let rssLink = root("link[type ^= 'application/rss+xml']");
+                let rssUrl = rssLink.attr("href");
+                if (rssLink && rssLink.length) {
+                    return await this.getFeedsFromRssUrl(rssUrl, url);
+                }
+                return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
+            } else {  //eslint-disable-line no-else-return
+                this.handleUrlError(url, error);
+            }
+        }
+    }
+
     async addURL(url, accessToken) {
-        let response = await this.fetchRssFeeds(url);
-        let name = response.meta.title;
-        let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+        const response = await this.fetchRssFeeds(url);
+        const name = response.title;
+        const document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
         await this.addUrlToCommon(document);
         await this.addURLToUser(document, accessToken);
         return { name, url };

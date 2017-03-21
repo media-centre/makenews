@@ -41,7 +41,7 @@ export default class RssRequestHandler {
     }
 
     async addURL(url, accessToken) {
-        let response = await this.rssClient().addURL(url, accessToken);
+        const response = await this.rssClient().addURL(url, accessToken);
         RssRequestHandler.logger().debug("RssRequestHandler:: successfully added Document to database.");
         return response;
     }
