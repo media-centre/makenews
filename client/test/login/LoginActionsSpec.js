@@ -53,7 +53,6 @@ describe("LoginActions", () => {
         let appSessionStorage = null;
         beforeEach("userLogin", () => {
             appSessionStorage = new AppSessionStorage();
-            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
             userSessionMock = sandbox.mock(userSession).expects("init");
@@ -67,6 +66,7 @@ describe("LoginActions", () => {
         });
 
         it("should dispatch login successful action if the login is successful", (done) => {
+            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
             sandbox.stub(appSessionStorage, "setValue");
 
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve(response));
@@ -81,6 +81,7 @@ describe("LoginActions", () => {
         });
 
         it("should redirect to onboard page for first time user", (done) => {
+            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
             sandbox.stub(appSessionStorage, "setValue");
 
             const responseWithFirstTimeUser = Object.assign({}, response, { "firstTimeUser": true });
@@ -101,12 +102,16 @@ describe("LoginActions", () => {
                 .returns(Promise.resolve(responseWithFirstTimeUser));
             historyMock.withArgs("/onboard");
 
-            const appSessionStoreMock = sandbox.mock(appSessionStorage).expects("setValue");
-            appSessionStoreMock.withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
+            const setValueSpy = sandbox.spy();
+            appSessionStorage = { "setValue": setValueSpy };
+            sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
+
+            setValueSpy.withArgs(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
 
             await userLogin(history, userName, password)(()=>{});
 
-            appSessionStoreMock.verify();
+            //eslint-disable-next-line no-unused-expressions
+            expect(setValueSpy.withArgs(AppSessionStorage.KEYS.FIRST_TIME_USER, true).calledOnce).to.be.true;
         });
     });
 

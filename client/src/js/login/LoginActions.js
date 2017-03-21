@@ -18,9 +18,10 @@ export function userLogin(history, userName, password) {
             const userSession = UserSession.instance();
             userSession.init(dispatch);
             dispatch(loginSuccess());
+            const sessionStorage = AppSessionStorage.instance();
+            sessionStorage.setValue(AppSessionStorage.KEYS.USER_NAME, userName);
             if(response.firstTimeUser) {
                 history.push("/onboard");
-                const sessionStorage = AppSessionStorage.instance();
                 sessionStorage.setValue(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
             } else {
                 history.push("/newsBoard");
