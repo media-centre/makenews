@@ -7,6 +7,7 @@ import { expect } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { findAllWithType } from "react-shallow-testutils";
+import { shallow } from "enzyme";
 
 describe("Header component", () => {
     let result = null, currentHeaderTab = null, mainHeaderStrings = null, header = null; //eslint-disable-line no-unused-vars
@@ -41,5 +42,11 @@ describe("Header component", () => {
     it("should have UserProfileTab element", () => {
         let renderedSources = findAllWithType(result, UserProfileTab);
         expect(renderedSources).to.have.lengthOf(1);
+    });
+
+    it("should not render anything if currentHeaderTab is Configure", () => {
+        const headerDOM = shallow(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab="Configure"/>);
+
+        expect(headerDOM.get(0)).to.be.null; //eslint-disable-line no-unused-expressions
     });
 });
