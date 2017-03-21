@@ -1,20 +1,27 @@
 /* eslint max-nested-callbacks: [2, 5] */
 import ConfirmPopup from "../../../../src/js/utils/components/ConfirmPopup/ConfirmPopup";
+import Locale from "../../../../src/js/utils/Locale";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import "../../../helper/TestHelper";
+import sinon from "sinon";
 
 let confirmPop = null, cancelCalled = null;
 describe("ConfirmPopup", ()=> {
 
     function confirmCallback(event) {
-        cancelCalled = event ? event.OK : null;
+        cancelCalled = event;
         return "Test Result";
     }
 
     before(()=> {
+        sinon.stub(Locale, "applicationStrings").returns({ "messages": { "confirmPopup": {
+            "ok": "OK",
+            "confirm": "CONFIRM",
+            "cancel": "CANCEL"
+        } } });
         confirmPop = TestUtils.renderIntoDocument(
         <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
         );

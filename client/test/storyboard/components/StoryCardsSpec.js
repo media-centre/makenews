@@ -22,6 +22,7 @@ describe("StoryCards", () => {
     it("should have the remove icon", () => {
         let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i.delete-icon");
         assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
+        assert.isNull(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
     });
 
     it("onclick of remove icon should dispatch event", () => {
@@ -33,6 +34,7 @@ describe("StoryCards", () => {
         let [story1] = storiesList;
         let deleteMock = sinon.mock(storyBoardCards1).expects("deleteStory");
         TestUtils.Simulate.click(story1);
+        assert.isDefined(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
         assert.strictEqual(story1.className, "fa fa-remove icon delete-icon");
         deleteMock.verify();
     });

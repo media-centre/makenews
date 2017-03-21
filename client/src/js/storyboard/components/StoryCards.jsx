@@ -2,10 +2,16 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import * as StoryBoardActions from "../actions/StoryBoardActions";
+import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 import { Link } from "react-router";
+import Locale from "../../utils/Locale";
 
 export class StoryCards extends Component {
 
+    constructor() {
+        super();
+        this.state = { "showDeleteConfirm": false, "currentId": 0 };
+    }
     componentDidMount() {
         this.props.dispatch(StoryBoardActions.getStories());
     }
@@ -33,7 +39,7 @@ export class StoryCards extends Component {
     deleteStory(id, event) {
         event.stopPropagation();
         event.preventDefault();
-        this.props.dispatch(StoryBoardActions.deleteStory(id));
+        this.setState({ "showDeleteConfirm": true, "currentId": id });
     }
 
     _renderStoriesList() {
@@ -74,6 +80,18 @@ export class StoryCards extends Component {
                     <ul className="story-cards">
                         {this._renderStoriesList()}
                     </ul>
+                    {this.state.showDeleteConfirm
+                        ? <ConfirmPopup
+                            description={Locale.applicationStrings().messages.storyBoard.confirmDelete}
+                            callback={(isConfirmed) => {
+                                if(isConfirmed) {
+                                    this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));
+                                }
+                                this.setState({ "showDeleteConfirm": false });
+                            }
+                            }
+                          /> : null}
+
                 </div>
             </div>
         );

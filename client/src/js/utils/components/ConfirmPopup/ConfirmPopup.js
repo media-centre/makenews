@@ -1,24 +1,25 @@
 /* eslint react/jsx-wrap-multilines:0 */
 import React, { Component, PropTypes } from "react";
+import Locale from "../../Locale";
 
 export default class ConfirmPopup extends Component {
 
     handleClick(event, isConfirm) {
         this.refs.confirmButton.disabled = true;
         this.refs.cancelButton.disabled = true;
-        event.OK = isConfirm || false;
-        this.props.callback(event);
+        this.props.callback(isConfirm || false);
     }
 
     render() {
+        let confirmMessages = Locale.applicationStrings().messages.confirmPopup;
         return (
             <div className="confirm-mask mask">
                 <div className="confirm-popup bottom-box-shadow">
                     <div className="container">
                         <p className="description" ref="description">{this.props.description}</p>
                         <div className="button-container t-right">
-                            <button className={this.props.hide ? "confirmButton btn-primary hide" : "confirmButton btn-primary"} ref="confirmButton" onClick={(event)=> this.handleClick(event, true)} >{"Confirm"}</button>
-                            <button className="cancelButton btn-primary" ref="cancelButton" onClick={(event)=> this.handleClick(event)}>{this.props.hide ? "OK" : "Cancel"}</button>
+                            <button className={this.props.hide ? "confirmButton hide" : "confirmButton"} ref="confirmButton" onClick={(event)=> this.handleClick(event, true)} >{confirmMessages.confirm}</button>
+                            <button className="cancelButton" ref="cancelButton" onClick={(event)=> this.handleClick(event)}>{this.props.hide ? confirmMessages.ok : confirmMessages.cancel}</button>
                         </div>
                     </div>
                 </div>

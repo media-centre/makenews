@@ -97,6 +97,9 @@ window.mediaCenter.appEn = {
             "logout": "Logout",
             "help": "Help"
         },
+        "storyBoard": {
+            "confirmDelete": "Are you sure you want to delete the story?"
+        },
         "applicationTour": {
             "description": "Find HELP in the above options",
             "gotItText": "Got It"
@@ -111,6 +114,11 @@ window.mediaCenter.appEn = {
             "configure": {
                 "Name": "Configure"
             }
+        },
+        "confirmPopup": {
+            "ok": "OK",
+            "confirm": "CONFIRM",
+            "cancel": "CANCEL"
         }
     }
 };
