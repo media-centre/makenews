@@ -1,4 +1,3 @@
-/* eslint max-nested-callbacks: [2, 5] react/jsx-wrap-multilines:0 */
 /* eslint handle-callback-err: 0 no-magic-numbers:0  */
 import request from "supertest";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
@@ -10,12 +9,16 @@ let cookies = "";
 let env = argv.client_environment || "default";
 describe("UserLoginTests", () => {
     describe("UserLoginPage", () => {
-        it("response to /login with correct username and correct password ", (done) => {
+        it("response to /login with correct username and correct password ", () => {
             let user = { "username": "test", "password": "test" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
-                .expect(HttpResponseHandler.codes.OK, "{\"userName\":\"test\",\"dbParameters\":{\"serverUrl\":\"http://localhost:5000\",\"remoteDbUrl\":\"http://localhost:5984\"}}", done);
+                .expect(HttpResponseHandler.codes.OK)
+                .then(response => {
+                    expect(response.body.serverUrl).to.equals("http://localhost:5000");
+                    expect(response.body.remoteDbUrl).to.equals("http://localhost:5984");
+                });
 
 
         });
