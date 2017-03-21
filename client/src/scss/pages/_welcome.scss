@@ -42,10 +42,12 @@
     background-color: lighten($primary-color-dark, 8%);
     text-align: right;
 
-    a {
+    a,
+    button {
       text-decoration: none;
       background-color: $secondary-color;
       height: 100%;
+      cursor: pointer;
       display: inline-flex;
       justify-content: flex-end;
       align-items: center;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
+import { markAsVisitedUser } from "./FirstTimeUserActions";
 
 export default class ConfigurationIntro extends Component {
     render() {
@@ -27,9 +27,9 @@ export default class ConfigurationIntro extends Component {
                     </div>
                 </main>
                 <footer>
-                    <Link to="/configure/web" className="makenews-desc-link">
+                    <button className="makenews-desc-link" onClick={markAsVisitedUser}>
                         <span> <i className="fa fa-arrow-right" /> Get Started </span>
-                    </Link>
+                    </button>
                 </footer>
             </div>
         );

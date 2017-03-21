@@ -1,7 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
 import { expect } from "chai";
-import { Link } from "react-router";
 import ConfigurationIntro from "./../../src/js/welcome/ConfigurationIntro";
 
 describe("ConfigurationIntro", () => {
@@ -59,13 +58,16 @@ describe("ConfigurationIntro", () => {
         expect(text).to.equals(" Twitter");
     });
 
-    it("should have a Link to /configure/web", () => {
-        const link = wrapper.find(Link);
-        expect(link.props().to).to.equals("/configure/web");
+    it("should have a button for Get Started", () => {
+        const link = wrapper.find(".makenews-desc-link");
+        expect(link.node.type).to.equals("button");
+
+        const [,, text] = link.node.props.children.props.children;
+        expect(text).to.equals(" Get Started ");
     });
 
     it("should have a arrow icon in the footer link", () => {
-        const icon = wrapper.find("footer i");
+        const icon = wrapper.find("footer .makenews-desc-link i");
         expect(icon.node.props.className).to.equals("fa fa-arrow-right");
     });
 });

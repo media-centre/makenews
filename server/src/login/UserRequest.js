@@ -71,7 +71,7 @@ export async function markAsVisitedUser(token, userName) {
         await couchClient.updateDocument(userData);
         return { "ok": true };
     } catch (err) {
-        logger().error("UserRequest:MarkAsVistedUser fatal error %s", err);
+        logger().error(`UserRequest:MarkAsVistedUser fatal error ${JSON.stringify(err)}`);
         const errMessage = { "message": "not able to update" };
         throw errMessage;
     }
