@@ -54,8 +54,6 @@ describe("LoginActions", () => {
         beforeEach("userLogin", () => {
             appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-            sandbox.stub(appSessionStorage, "setValue");
-
             let userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
             userSessionMock = sandbox.mock(userSession).expects("init");
@@ -69,6 +67,8 @@ describe("LoginActions", () => {
         });
 
         it("should dispatch login successful action if the login is successful", (done) => {
+            sandbox.stub(appSessionStorage, "setValue");
+
             ajaxPostMock.withArgs(headers, data).returns(Promise.resolve(response));
             historyMock.withArgs("/newsBoard");
 
@@ -81,6 +81,8 @@ describe("LoginActions", () => {
         });
 
         it("should redirect to onboard page for first time user", (done) => {
+            sandbox.stub(appSessionStorage, "setValue");
+
             const responseWithFirstTimeUser = Object.assign({}, response, { "firstTimeUser": true });
             ajaxPostMock.withArgs(headers, data)
                 .returns(Promise.resolve(responseWithFirstTimeUser));
@@ -101,8 +103,7 @@ describe("LoginActions", () => {
 
             const appSessionStoreMock = sandbox.mock(appSessionStorage).expects("setValue");
             appSessionStoreMock.withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
-            appSessionStorage.something = false;
-            
+
             await userLogin(history, userName, password)(()=>{});
 
             appSessionStoreMock.verify();

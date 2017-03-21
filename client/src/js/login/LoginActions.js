@@ -17,7 +17,6 @@ export function userLogin(history, userName, password) {
             const response = await ajax.post(headers, data);
             const userSession = UserSession.instance();
             userSession.init(dispatch);
-            localStorage.setItem("userName", userName);
             dispatch(loginSuccess());
             if(response.firstTimeUser) {
                 history.push("/onboard");
