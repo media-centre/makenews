@@ -1,4 +1,4 @@
-import * as UserRequest from "../../src/login/UserRequest";
+import * as UserRequest from "./../../src/login/UserRequest";
 import CouchSession from "../../src/CouchSession";
 import CouchClient from "./../../src/CouchClient";
 import sinon from "sinon";
@@ -19,9 +19,8 @@ describe("UserRequest", () => {
     });
 
     describe("getToken", () => {
-        let sessionCooke = null, token = null, couchSessionLoginMock = null;
+        let sessionCooke = null, couchSessionLoginMock = null;
         beforeEach("getToken", () => {
-            token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
             sessionCooke = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
             couchSessionLoginMock = sandbox.mock(CouchSession).expects("login");
         });
@@ -35,7 +34,7 @@ describe("UserRequest", () => {
 
             const actualToken = await UserRequest.getToken(userName, password);
 
-            assert.strictEqual(token, actualToken);
+            assert.strictEqual(sessionCooke, actualToken);
             couchSessionLoginMock.verify();
         });
 
@@ -70,36 +69,39 @@ describe("UserRequest", () => {
     });
 
     describe("updatePassword", () => {
-        let couchSessionUpdatePasswordStub = null, username = null, newPassword = null;
+        let username = null, newPassword = null, currentPassword = null;
+        const token = "test_token";
         beforeEach("updatePassword", () => {
             sandbox = sinon.sandbox.create();
             username = "test";
             newPassword = "new_password";
+            currentPassword = "current_password";
         });
         afterEach("updatePassword", () => {
             sandbox.restore();
         });
         it("should update the password if old passwords is correct", async () => {
-            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
-            sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve("test_token"));
-            const response = await UserRequest.updatePassword(username, newPassword);
+            const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
+            sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.resolve("test_token"));
+            sandbox.mock(CouchSession).expects("updatePassword").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
+            const response = await UserRequest.updatePassword(username, newPassword, currentPassword);
             assert.deepEqual(response.body.ok, true);
+            couchSessionLogin.verify();
         });
 
         it("should not update the password if old password is incorrect", async () => {
-            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            sandbox.mock(UserRequest).expects("getToken").returns(Promise.reject("error"));
+            sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.reject("error"));
+            sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.reject("error"));
 
-            await isRejected(UserRequest.updatePassword(username, newPassword), "error");
+            await isRejected(UserRequest.updatePassword(username, newPassword, currentPassword), "login failed");
         });
 
         it("should not update the password when couchdb password updation fails", async () => {
-            couchSessionUpdatePasswordStub = sandbox.stub(CouchSession, "updatePassword");
-            const getTokenMock = sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve("test_token"));
-            couchSessionUpdatePasswordStub.withArgs(username, newPassword, "test_token").returns(Promise.reject("Updation failed"));
-            await isRejected(UserRequest.updatePassword(username, newPassword), "Updation failed");
-            getTokenMock.verify();
+            const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
+            sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve("test_token"));
+            sandbox.mock(CouchSession).expects("updatePassword").withArgs(username, newPassword, token).returns(Promise.reject("Updation failed"));
+            await isRejected(UserRequest.updatePassword(username, newPassword, currentPassword), "Updation failed");
+            couchSessionLogin.verify();
         });
     });
 

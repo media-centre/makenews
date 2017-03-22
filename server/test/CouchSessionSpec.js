@@ -1,12 +1,10 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
-
 import CouchSession from "../src/CouchSession";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../src/config/ApplicationConfig";
 import LogTestHelper from "./helpers/LogTestHelper";
 import CouchClient from "../src/CouchClient";
-
+import { isRejected } from "./helpers/AsyncTestHelper";
 import nock from "nock";
 import { expect, assert } from "chai";
 import sinon from "sinon";
@@ -163,9 +161,8 @@ describe("CouchSessionSpec", () => {
             sandbox.restore();
         });
 
-        it("should update the password for the given user", (done) => {
-
-            let getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
+        it("should update the password for the given user", async () => {
+            const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + username,
                 "_rev": "12345",
@@ -177,29 +174,24 @@ describe("CouchSessionSpec", () => {
                 "salt": "123324124124",
                 "type": "user"
             }));
-            let saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
+            const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocumentMock.returns(Promise.resolve({
                 "ok": true,
                 "id": "org.couchdb.user:test",
                 "rev": "new revision"
             }));
-            CouchSession.updatePassword(username, newPassword, token).then((response) => {
-                assert.equal(response.ok, true);
-                getDocumentMock.verify();
-                saveDocumentMock.verify();
-                done();
-            });
+            const response = await CouchSession.updatePassword(username, newPassword, token);
+            assert.equal(response.ok, true);
+            getDocumentMock.verify();
+            saveDocumentMock.verify();
         });
 
-        it("should reject with error if there is an issue while getting the user document", (done) => {
+        it("should reject with error if there is an issue while getting the user document", async () => {
             sandbox.stub(couchClient, "getDocument").returns(Promise.reject("error"));
-            CouchSession.updatePassword(username, newPassword, token).catch((error) => {
-                assert.equal("error", error);
-                done();
-            });
+            await isRejected(CouchSession.updatePassword(username, newPassword, token), "error");
         });
 
-        it("should reject with error if there is an issue while updating the user document", (done) => {
+        it("should reject with error if there is an issue while updating the user document", async () => {
             sandbox.stub(couchClient, "getDocument").returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + username,
                 "_rev": "12345",
@@ -212,10 +204,7 @@ describe("CouchSessionSpec", () => {
                 "type": "user"
             }));
             sandbox.stub(couchClient, "saveDocument").returns(Promise.reject("error"));
-            CouchSession.updatePassword(username, newPassword, token).catch((error) => {
-                assert.equal("error", error);
-                done();
-            });
+            await isRejected(CouchSession.updatePassword(username, newPassword, token), "error");
         });
     });
 });

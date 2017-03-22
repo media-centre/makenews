@@ -1,13 +1,13 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import ChangePasswordRoute from "../../../src/routes/helpers/ChangePasswordRoute";
-import UserRequest from "../../../src/login/UserRequest";
+import * as UserRequest from "../../../src/login/UserRequest";
 import sinon from "sinon";
 import { assert } from "chai";
+import { userDetails } from "./../../../src/Factory";
+import { mockResponse } from "./../../helpers/MockResponse";
 
-
-xdescribe("ChangePasswordRoute", () => {
+describe("ChangePasswordRoute", () => {
     let request = null, userName = "test1", sandbox = null, currentPassword = null, newPassword = null;
     beforeEach("ChangePasswordRoute", () => {
         currentPassword = "current_password";
@@ -19,166 +19,108 @@ xdescribe("ChangePasswordRoute", () => {
         sandbox.restore();
     });
 
+    describe("validate", () => {
+        it("should respond with bad request for empty current password", () =>{
+            request = {
+                "body": {
+                    "currentPassword": "",
+                    "newPassword": newPassword
+                },
+                "cookies": {
+                    "AuthSession": "auth_session"
+                }
+            };
+            const response = {};
+            const changePasswordRoute = new ChangePasswordRoute(request, response);
+
+            assert.strictEqual(changePasswordRoute.validate(), "missing parameters");
+        });
+
+        it("should respond with bad request for empty new password", () =>{
+            request = {
+                "body": {
+                    currentPassword,
+                    "newPassword": ""
+                },
+                "cookies": {
+                    "AuthSession": "auth_session"
+                }
+            };
+            const response = {};
+            const changePasswordRoute = new ChangePasswordRoute(request, response);
+
+            assert.strictEqual(changePasswordRoute.validate(), "missing parameters");
+        });
+    });
+
     describe("handle", () => {
-        beforeEach("handle", () => {
-        });
-
-        afterEach("handle", () => {
-        });
-
-        describe("invalid", () => {
-            it("should respond with bad request for empty user name", (done) =>{
-                let response = {
-                    "status": (status) => {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        return response;
-                    },
-                    "json": (json) => {
-                        assert.deepEqual({ "message": "bad request" }, json);
-                        done();
-                    }
-                };
-                request = {
-                    "body": {
-                        "userName": "",
-                        "currentPassword": currentPassword,
-                        "newPassword": newPassword
-                    }
-                };
-
-                let changePasswordRoute = new ChangePasswordRoute(request, response);
-                changePasswordRoute.handle();
-            });
-
-            it("should respond with bad request for empty current password", (done) =>{
-                let response = {
-                    "status": (status) => {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        return response;
-                    },
-                    "json": (json) => {
-                        assert.deepEqual({ "message": "bad request" }, json);
-                        done();
-                    }
-                };
-                request = {
-                    "body": {
-                        "userName": userName,
-                        "currentPassword": "",
-                        "newPassword": newPassword
-                    }
-                };
-
-                let changePasswordRoute = new ChangePasswordRoute(request, response);
-                changePasswordRoute.handle();
-            });
-
-            it("should respond with bad request for empty new password", (done) =>{
-                let response = {
-                    "status": (status) => {
-                        assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
-                        return response;
-                    },
-                    "json": (json) => {
-                        assert.deepEqual({ "message": "bad request" }, json);
-                        done();
-                    }
-                };
-                request = {
-                    "body": {
-                        "userName": userName,
-                        "currentPassword": currentPassword,
-                        "newPassword": ""
-                    }
-                };
-
-                let changePasswordRoute = new ChangePasswordRoute(request, response);
-                changePasswordRoute.handle();
-            });
-        });
-
-        it("should update with new password", (done) => {
-            let userRequest = new UserRequest(userName, currentPassword);
-            let updatePasswordMock = sandbox.mock(userRequest).expects("updatePassword");
-            let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.OK, status);
-                    return response;
-                },
-                "json": (json) => {
-                    assert.deepEqual({ "message": "Password updation successful" }, json);
-                    updatePasswordMock.verify();
-                    done();
-                }
-            };
+        it("should update with new password", async () => {
+            const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
+            const response = mockResponse();
             request = {
                 "body": {
-                    "userName": userName,
                     "currentPassword": currentPassword,
                     "newPassword": newPassword
+                },
+                "cookies": {
+                    "AuthSession": "auth_session"
                 }
             };
-            sandbox.stub(UserRequest, "instance").returns(userRequest);
-            updatePasswordMock.withArgs(newPassword).returns(Promise.resolve("successful"));
-            let changePasswordRoute = new ChangePasswordRoute(request, response);
-            changePasswordRoute.handle();
 
+            sandbox.stub(userDetails, "getUser").returns({ userName });
+            updatePasswordMock.withArgs(userName, newPassword, currentPassword).returns(Promise.resolve("successful"));
+
+            const changePasswordRoute = new ChangePasswordRoute(request, response);
+            await changePasswordRoute.handle();
+
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
+            assert.deepEqual(response.json(), { "message": "Password updation successful" });
         });
 
-        it("should respond with error when password updation failed", (done) => {
-            let userRequest = new UserRequest(userName, currentPassword);
-            let updatePasswordMock = sandbox.mock(userRequest).expects("updatePassword");
-            let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR, status);
-                    return response;
-                },
-                "json": (json) => {
-                    assert.deepEqual({ "message": "Password updation failed" }, json);
-                    updatePasswordMock.verify();
-                    done();
-                }
-            };
+        it("should respond with error when password updation failed", async () => {
+            const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
+            const response = mockResponse();
             request = {
                 "body": {
-                    "userName": userName,
                     "currentPassword": currentPassword,
                     "newPassword": newPassword
+                },
+                "cookies": {
+                    "AuthSession": "auth_session"
                 }
             };
-            sandbox.stub(UserRequest, "instance").returns(userRequest);
-            updatePasswordMock.withArgs(newPassword).returns(Promise.reject("error"));
-            let changePasswordRoute = new ChangePasswordRoute(request, response);
-            changePasswordRoute.handle();
 
+            sandbox.stub(userDetails, "getUser").returns({ userName });
+            updatePasswordMock.withArgs(userName, newPassword, currentPassword).returns(Promise.reject("error"));
+
+            const changePasswordRoute = new ChangePasswordRoute(request, response);
+            await changePasswordRoute.handle();
+
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.INTERNAL_SERVER_ERROR);
+            assert.deepEqual(response.json(), { "message": "Password updation failed" });
         });
 
-        it("should respond with authorization error when user current credentials are incorrect", (done) => {
-            let userRequest = new UserRequest(userName, currentPassword);
-            let updatePasswordMock = sandbox.mock(userRequest).expects("updatePassword");
-            let response = {
-                "status": (status) => {
-                    assert.strictEqual(HttpResponseHandler.codes.UNAUTHORIZED, status);
-                    return response;
-                },
-                "json": (json) => {
-                    assert.deepEqual({ "message": "Incorrect user credentials" }, json);
-                    updatePasswordMock.verify();
-                    done();
-                }
-            };
+        it("should respond with authorization error when user current credentials are incorrect", async () => {
+            const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
+            const response = mockResponse();
             request = {
                 "body": {
-                    "userName": userName,
                     "currentPassword": currentPassword,
                     "newPassword": newPassword
+                },
+                "cookies": {
+                    "AuthSession": "auth_session"
                 }
             };
-            sandbox.stub(UserRequest, "instance").returns(userRequest);
-            updatePasswordMock.withArgs(newPassword).returns(Promise.reject("login failed"));
-            let changePasswordRoute = new ChangePasswordRoute(request, response);
-            changePasswordRoute.handle();
 
+            sandbox.stub(userDetails, "getUser").returns({ userName });
+            updatePasswordMock.withArgs(userName, newPassword, currentPassword).returns(Promise.reject("login failed"));
+
+            const changePasswordRoute = new ChangePasswordRoute(request, response);
+            await changePasswordRoute.handle();
+
+            assert.strictEqual(response.status(), HttpResponseHandler.codes.UNAUTHORIZED);
+            assert.deepEqual(response.json(), { "message": "Incorrect user credentials" });
         });
     });
 

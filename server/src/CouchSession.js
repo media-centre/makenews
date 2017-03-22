@@ -76,21 +76,12 @@ export default class CouchSession {
         });
     }
 
-    static updatePassword(username, newPassword, token) {
-        return new Promise((resolve, reject) => {
-            let couchClient = CouchClient.instance(token, "_users");
-            let documentId = "org.couchdb.user:" + username;
-            let documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
-            couchClient.getDocument(documentId).then((userDocument) => {
-                couchClient.saveDocument(documentId, documentBody, { "If-Match": userDocument._rev }).then(response =>{
-                    resolve(response);
-                }).catch(error =>{
-                    reject(error);
-                });
-            }).catch(error => {
-                reject(error);
-            });
-        });
+    static async updatePassword(username, newPassword, token) {
+        const couchClient = CouchClient.instance(token, "_users");
+        const documentId = "org.couchdb.user:" + username;
+        const documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
+        const userDocument = await couchClient.getDocument(documentId);
+        return await couchClient.saveDocument(documentId, documentBody, { "if-match": userDocument._rev });
     }
 
     static requestSuccessful(error, response) {

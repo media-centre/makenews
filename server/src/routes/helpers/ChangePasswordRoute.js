@@ -1,45 +1,33 @@
-/* eslint consistent-this:0*/
-import StringUtil from "../../../../common/src/util/StringUtil";
 import Route from "./Route";
 import RouteLogger from "../RouteLogger";
-import UserRequest from "../../login/UserRequest";
-import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import { updatePassword } from "../../login/UserRequest";
+import { userDetails } from "./../../Factory";
 
 export default class ChangePasswordRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        /*TODO: read this from user Map*/ //eslint-disable-line
-        this.userName = this.request.body.userName;
+        this.accessToken = this.request.cookies.AuthSession;
         this.currentPassword = this.request.body.currentPassword;
         this.newPassword = this.request.body.newPassword;
     }
 
-    valid() {
-        return !(StringUtil.isEmptyString(this.userName) || StringUtil.isEmptyString(this.currentPassword) || StringUtil.isEmptyString(this.newPassword));
-
+    validate() {
+        return super.validate(this.currentPassword, this.currentPassword, this.newPassword);
     }
 
-    handle() {  //eslint-disable-line consistent-return
-        if(!this.valid()) {
-            RouteLogger.instance().warn("ChangePasswordRoute:: invalid user name %s.", this.userName);
-            return this._handleInvalidRoute();
-        }
-        UserRequest.instance(this.userName, this.currentPassword).updatePassword(this.newPassword).then(response => { //eslint-disable-line
+    async handle() {
+        try {
+            const username = userDetails.getUser(this.accessToken).userName;
+            await updatePassword(username, this.newPassword, this.currentPassword);
             RouteLogger.instance().debug("ChangePasswordRoute:: password updated succesfully for user %s.", this.userName);
             this._handleSuccess({ "message": "Password updation successful" });
-        }).catch(error => {
+        } catch(error) {
             RouteLogger.instance().debug("ChangePasswordRoute:: password updation failed for user %s with error %s", this.userName, error);
             if(error === "login failed") {
                 this._handleLoginFailure();
             } else {
                 this._handleFailure({ "message": "Password updation failed" });
             }
-        });
-
-    }
-
-    _handleLoginFailure() {
-        this.response.status(HttpResponseHandler.codes.UNAUTHORIZED);
-        this.response.json({ "message": "Incorrect user credentials" });
+        }
     }
 }

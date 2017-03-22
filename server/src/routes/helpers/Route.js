@@ -83,6 +83,11 @@ export default class Route {
         this.response.status(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
         this.response.json(error);
     }
+    
+    _handleLoginFailure() {
+        this.response.status(HttpResponseHandler.codes.UNAUTHORIZED);
+        this.response.json({ "message": "Incorrect user credentials" });
+    }
 
     _handleSuccess(json) {
         this.response.status(HttpResponseHandler.codes.OK);

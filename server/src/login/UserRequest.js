@@ -4,18 +4,13 @@ import CouchClient from "../CouchClient";
 
 const logger = () => Logger.instance("UserRequest");
 
-export function getToken(username, password) {
-    return new Promise((resolve, reject) => {
-        CouchSession.login(username, password)
-        .then((authSessionCookieHeader) => {
-            let token = this.extractToken(authSessionCookieHeader);
-            resolve(token);
-        })
-        .catch((error) => {
-            logger().error("UserRequest:getToken fatal error = %s", error);
-            reject("login failed");
-        });
-    });
+export async function getToken(username, password) {
+    try{
+        return await CouchSession.login(username, password);
+    }catch(error) {
+        logger().error("UserRequest:getToken fatal error = %s", error);
+        throw "login failed"; //eslint-disable-line no-throw-literal
+    }
 }
 
 export function getAuthSessionCookie(userName, password) {
@@ -33,23 +28,18 @@ export function getAuthSessionCookie(userName, password) {
 }
 
 export function extractToken(authSessionCookie) {
-    return authSessionCookie.split("=")[1].split(";")[0];       // eslint-disable-line no-magic-numbers
+    // eslint-disable-next-line no-magic-numbers
+    return authSessionCookie.split("=")[1].split(";")[0];
 }
 
-export function updatePassword(username, newPassword) {
-    return new Promise((resolve, reject) => {
-        this.getToken().then((token) => {
-            CouchSession.updatePassword(username, newPassword, token).then(response => {
-                resolve(response);
-            }).catch((error) => {
-                logger().error("UserRequest:password updation error = %s", error);
-                reject(error);
-            });
-        }).catch((error) => {
-            logger().error("UserRequest:getToken fatal error = %s", error);
-            reject(error);
-        });
-    });
+export async function updatePassword(username, newPassword, currentPassword) {
+    try {
+        const token = await getToken(username, currentPassword);
+        return await CouchSession.updatePassword(username, newPassword, token);
+    }catch(error) {
+        logger().error("UserRequest:password updation error = %s", error);
+        throw error;
+    }
 }
 
 export async function getUserDetails(token, userName) {
