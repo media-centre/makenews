@@ -8,6 +8,7 @@ import {
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import { FB_DEFAULT_SOURCES } from "./../../src/js/utils/Constants";
 
 describe("Facebook Configure Actions", () => {
     describe("fetch facebook sources", () => {
@@ -48,7 +49,7 @@ describe("Facebook Configure Actions", () => {
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
             ];
-            let store = mockStore({ "configuredSources": { "profiles": [] } }, actions, done);
+            let store = mockStore({ "configuredSources": { "profiles": [] }, "sourceResults": { "data": [] } }, actions, done);
             store.dispatch(FBActions.fetchFacebookSources("testProfile", "profile", FBActions.PROFILES));
         });
 
@@ -70,7 +71,7 @@ describe("Facebook Configure Actions", () => {
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
             ];
-            let store = mockStore(() => ({ "configuredSources": { "pages": [] } }), actions, done);
+            let store = mockStore(() => ({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }), actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
@@ -84,8 +85,8 @@ describe("Facebook Configure Actions", () => {
             };
             let sources = {
                 "data":
-                [{ "id": 1, "name": "testProfile", "added": true },
-                { "id": 2, "name": "testProfile2" }],
+                    [{ "id": 1, "name": "testProfile", "added": true },
+                        { "id": 2, "name": "testProfile2" }],
                 "paging": {},
                 "keyword": pageName
             };
@@ -106,6 +107,9 @@ describe("Facebook Configure Actions", () => {
                         { "_id": 1 },
                         { "_id": 3 }
                     ]
+                },
+                "sourceResults": {
+                    "data": []
                 }
             });
 
@@ -134,11 +138,28 @@ describe("Facebook Configure Actions", () => {
                         { "_id": 1 },
                         { "_id": 3 }
                     ]
+                },
+                "sourceResults": {
+                    "data": []
                 }
             });
 
             let store = mockStore(getStore, actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
+        });
+
+        it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES} for Default results`, (done) => {
+            const type = "page";
+            let paging; //eslint-disable-line init-declarations
+            const keyword = "";
+            const sources = { "data": FB_DEFAULT_SOURCES[type].data, paging, keyword };
+            let actions = [
+                { "type": FETCHING_SOURCE_RESULTS },
+                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
+            ];
+
+            let store = mockStore({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }, actions, done);
+            store.dispatch(FBActions.fetchFacebookSources(keyword, "page", FBActions.PAGES));
         });
     });
 });

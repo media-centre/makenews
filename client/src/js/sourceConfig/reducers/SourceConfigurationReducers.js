@@ -71,11 +71,12 @@ export const sourceResults = (state = sourceResultsInitialState, action = {}) =>
     case UNMARK_DELETED_SOURCE: {
         return Object.assign({}, state, { "data": unmarkDeletedSource(state.data, action.source) });
     }
-        
+
     case CLEAR_SOURCES: {
         return Object.assign({}, state,
             { "data": [],
-                "nextPage": {}
+                "nextPage": {},
+                "hasMoreSourceResults": true
             });
     }
 

@@ -95,7 +95,7 @@ describe("Configure Pane", () => {
         let currentTab = null, getSourceMock = null;
 
         beforeEach("search input box", () => {
-            currentTab = "Profiles";
+            currentTab = "web";
             store = createStore(() => ({
                 "currentSourceTab": currentTab,
                 "sourceResults": { "data": [] },
@@ -110,45 +110,44 @@ describe("Configure Pane", () => {
             sandbox.restore();
         });
 
-        it("should not dispatch if the enter key is not pressed", () => {
-            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
-                .never();
+        it("should dispatch getSources when keyword is empty", () => {
+            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources").twice()
+                .returns({ "type": "" });
 
             configurePane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfigurePaneConnected currentSourceType="web"/>
+                <ConfigurePaneConnected currentSourceType="web"/>
                 </Provider>
             );
 
             let configurePaneDOM = ReactDOM.findDOMNode(configurePane);
             let inputBox = configurePaneDOM.querySelectorAll(".search-sources")[0]; //eslint-disable-line no-magic-numbers
-
-            TestUtils.Simulate.keyUp(inputBox, { "key": "a" });
+            TestUtils.Simulate.keyUp(inputBox, { "key": "" });
 
             getSourceMock.verify();
         });
 
-        it("should not dispatch if there is no value in input box", () => {
+        it("should not dispatch if there is value in input box and not entered", () => {
             getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
-                .never();
+                .once().returns({ "type": "" });
 
             configurePane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfigurePaneConnected currentSourceType="web" />
+                <ConfigurePaneConnected currentSourceType="web" />
                 </Provider>
             );
 
             let configurePaneDOM = ReactDOM.findDOMNode(configurePane);
             let inputBox = configurePaneDOM.querySelectorAll(".search-sources")[0]; //eslint-disable-line no-magic-numbers
-
-            TestUtils.Simulate.keyUp(inputBox, { "keyCode": 13 });
+            inputBox.value = "some";
+            TestUtils.Simulate.keyUp(inputBox, { "value": "some" });
 
             getSourceMock.verify();
         });
 
-        it("should dispatch the getSources with the search value", () => {
+        it("should dispatch the getSources with the search value on enter", () => {
             getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
-                .once().withArgs(currentTab).returns({
+                .twice().withArgs(currentTab).returns({
                     "type": ""
                 });
 

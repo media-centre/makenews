@@ -36,6 +36,7 @@ export class ConfigureSourcesPage extends Component {
     _showFBLogin(dispatch) {
         this.facebookLogin.login().then(expiresAfter => {
             dispatch(updateTokenExpiredInfo(expiresAfter));
+            dispatch(SourceConfigActions.clearSources);
         });
     }
 
@@ -43,14 +44,13 @@ export class ConfigureSourcesPage extends Component {
         if(!this.props.sourcesAuthenticationInfo.twitter) {
             TwitterLogin.instance().login().then((authenticated) => {
                 dispatch(twitterTokenInformation(authenticated));
+                dispatch(SourceConfigActions.clearSources);
             });
         }
     }
 
     sourceTab(params, dispatch) {
-        dispatch(SourceConfigActions.clearSources);
         dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
-        dispatch(SourceConfigActions.getSources(params.sourceSubType || params.sourceType));
     }
 
     render() {

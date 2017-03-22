@@ -39,7 +39,7 @@ export class ConfigPaneNavigation extends Component {
                         </button>
                     </div>);
             }
-            return (<Link to="/configure/facebook" className="sources-nav__next btn btn-primary">
+            return (<Link to="/configure/facebook/pages" className="sources-nav__next btn btn-primary">
                 <i className="fa fa-arrow-right"/> Next
             </Link>);
         };
@@ -50,7 +50,7 @@ export class ConfigPaneNavigation extends Component {
                     <i className="fa fa-globe"/>
                     Web URLs
                 </Link>
-                <Link to="/configure/facebook/profiles" className={this.props.currentSourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>
+                <Link to="/configure/facebook/pages" className={this.props.currentSourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>
                     <i className="fa fa-facebook-square"/>Facebook
                 </Link>
                 <Link to="/configure/twitter" className={this.props.currentSourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>

@@ -4,7 +4,6 @@ import SourcePane from "./SourcePane";
 import ConfigPaneNavigation from "./ConfigPaneNavigation";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
-import { handleMessages } from "../actions/AddUrlActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
 import AddUrl from "./AddUrl";
 import SignInWarning from "./SignInWarning";
@@ -20,15 +19,21 @@ export class ConfigurePane extends Component {
         this._closeConfigurationWarning = this._closeConfigurationWarning.bind(this);
     }
 
+    componentWillMount() {
+        this.fetchSources(this.props.currentTab);
+    }
+
     componentWillReceiveProps(nextProps) {
-        if(nextProps.currentTab !== this.props.currentTab) {
-            this.fetchSources(nextProps.currentTab);
+        if(nextProps.currentSourceType === SourceConfigActions.WEB || nextProps.sourcesAuthenticationInfo[nextProps.currentSourceType]) {
+            const value = this.refs.searchSources ? this.refs.searchSources.value : "";
+            if(nextProps.currentTab !== this.props.currentTab) {
+                this.fetchSources(nextProps.currentTab, value);
+            }
         }
     }
 
     componentWillUnmount() {
         this.props.dispatch(SourceConfigActions.clearSources);
-        this.props.dispatch(SourceConfigActions.fetchingSourcesFailed(""));
     }
 
     _closeConfigurationWarning() {
@@ -49,22 +54,20 @@ export class ConfigurePane extends Component {
     }
 
     checkEnterKey(event) {
+        const value = this.refs.searchSources.value;
         const ENTERKEY = 13;
-        if (event.keyCode === ENTERKEY) {
-            this.fetchSources();
+
+        if (StringUtils.isEmptyString(value) || event.keyCode === ENTERKEY) {
+            this.fetchSources(this.props.currentTab, value);
         }
     }
 
-    fetchSources(currentTab = this.props.currentTab) {
-        if ((this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
-                (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
-                (this.props.currentSourceType === "web")) {
-            const value = this.refs.searchSources.value;
-            if (!StringUtils.isEmptyString(value)) {
-                this.props.dispatch(handleMessages(""));
-                this.props.dispatch(SourceConfigActions.clearSources);
-                this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
-            }
+    fetchSources(currentTab, value = "") {
+        if (((currentTab === "pages" || currentTab === "groups") && this.props.sourcesAuthenticationInfo.facebook) ||
+            (currentTab === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
+            (currentTab === "web")) {
+            this.props.dispatch(SourceConfigActions.clearSources);
+            this.props.dispatch(SourceConfigActions.getSources(currentTab, value));
         }
     }
 

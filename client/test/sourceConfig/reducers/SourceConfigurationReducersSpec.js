@@ -216,7 +216,7 @@ describe("SourceConfigurationReducers", () => {
                     { "id": 456, "name": "mera bharath" }]);
         });
 
-        it(`should clear the sources and next page when ${CLEAR_SOURCES} is action is performed`, () => {
+        it(`should clear the sources, next page and hasMoreSourceResults should be true when ${CLEAR_SOURCES} is action is performed`, () => {
             let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": { "offset": 50 } };
             let action = {
                 "type": CLEAR_SOURCES
@@ -224,6 +224,7 @@ describe("SourceConfigurationReducers", () => {
             let sources = sourceResults(state, action);
             expect(sources.data).to.deep.equal([]);
             expect(sources.nextPage).to.deep.equal({});
+            expect(sources.hasMoreSourceResults).to.be.true; //eslint-disable-line no-unused-expressions
         });
 
         it(`should return the isFetchingSources as true when ${FETCHING_SOURCE_RESULTS} action is performed`, () => {

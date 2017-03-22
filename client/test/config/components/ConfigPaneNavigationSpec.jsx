@@ -32,11 +32,11 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(webLink.props.children[1], "Web URLs"); //eslint-disable-line no-magic-numbers
     });
 
-    it("should have /configure/facebook/profiles link for facebook", () => {
+    it("should have /configure/facebook/pages link for facebook", () => {
         const configureUrl = TestUtils.renderIntoDocument(
             <ConfigPaneNavigation currentSourceType="facebook" sourcesAuthenticationInfo={{ "facebook": true, "twitter": false }} />);
         const [, facebookLink] = TestUtils.scryRenderedComponentsWithType(configureUrl, Link);
-        assert.strictEqual(facebookLink.props.to, "/configure/facebook/profiles");
+        assert.strictEqual(facebookLink.props.to, "/configure/facebook/pages");
         assert.strictEqual(facebookLink.props.className, "sources-nav__item active");
         assert.strictEqual(facebookLink.props.children[1], "Facebook"); //eslint-disable-line no-magic-numbers
     });
@@ -54,7 +54,7 @@ describe("ConfigPaneNavigation", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="web" />);
         const nextLink = wrapper.find(".sources-nav__next");
         assert.strictEqual(nextLink.node.type.displayName, "Link");
-        assert.strictEqual(nextLink.node.props.to, "/configure/facebook");
+        assert.strictEqual(nextLink.node.props.to, "/configure/facebook/pages");
         assert.strictEqual(nextLink.node.props.children[1], " Next"); //eslint-disable-line no-magic-numbers
 
         const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers

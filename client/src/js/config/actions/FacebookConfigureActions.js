@@ -3,6 +3,7 @@ import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 import {
     fetchingSources,
     fetchingSourcesFailed } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { FB_DEFAULT_SOURCES } from "../../utils/Constants";
 
 export const FACEBOOK_GOT_SOURCES = "FACEBOOK_GOT_SOURCES";
 export const FACEBOOK_ADD_PROFILE = "FACEBOOK_ADD_PROFILE";
@@ -23,20 +24,13 @@ export function facebookSourcesReceived(response, keyword) {
     };
 }
 
-export function fetchFacebookSources(keyword = "Murali", type, sourceType, props = {}) {
-    let ajaxClient = AjaxClient.instance("/facebook-sources", false);
-    const headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    };
+export function fetchFacebookSources(keyword, type, sourceType, props = {}) {
+
     return async (dispatch, getState) => {
         dispatch(fetchingSources);
         try {
-            let response = await ajaxClient.post(headers, {
-                keyword,
-                type,
-                "paging": props
-            });
+            const sources = getState().sourceResults.data;
+            const response = await _getFbSources(keyword, type, sources, props);
             if (response.data.length) {
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 const cmp = (first, second) => first.id === second._id;
@@ -49,4 +43,28 @@ export function fetchFacebookSources(keyword = "Murali", type, sourceType, props
             dispatch(fetchingSourcesFailed(keyword));
         }
     };
+}
+
+async function _getFbSources(keyword, type, sources, props) {
+    let response = { "data": [] };
+    if (keyword) {
+        let ajaxClient = AjaxClient.instance("/facebook-sources", false);
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        response = await
+            ajaxClient.post(headers, {
+                keyword,
+                type,
+                "paging": props
+            });
+    } else {
+        const updateSources = FB_DEFAULT_SOURCES[type];
+        if(!sources.length || (updateSources.data)[0].id !== sources[0].id) { //eslint-disable-line no-magic-numbers
+            response = updateSources;
+        }
+    }
+
+    return response;
 }
