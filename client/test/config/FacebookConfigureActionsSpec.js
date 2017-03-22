@@ -85,8 +85,8 @@ describe("Facebook Configure Actions", () => {
             };
             let sources = {
                 "data":
-                    [{ "id": 1, "name": "testProfile", "added": true },
-                        { "id": 2, "name": "testProfile2" }],
+                [{ "id": 1, "name": "testProfile", "added": true },
+                    { "id": 2, "name": "testProfile2" }],
                 "paging": {},
                 "keyword": pageName
             };
