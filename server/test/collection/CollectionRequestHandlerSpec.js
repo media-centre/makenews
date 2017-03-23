@@ -85,6 +85,20 @@ describe("CollectionRequestHandler", () => {
             createCollectionMock.verify();
             assert.deepEqual(response, { "ok": true, "_id": "1234" });
         });
+
+        it("should create collection feed doc with the selected Text if it exists", async () => {
+            const collectionId = "123455";
+            const selectedText = "adding something";
+            const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
+                .withExactArgs(collectionName).returns({ "docs": [{ "_id": collectionId }] });
+            const docMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedWithSelectedText")
+                .withExactArgs(collectionId, docId, selectedText);
+            const response = await collectionRequestHandler.updateCollection(collectionName, false, docId, sourceId, selectedText);
+
+            getCollectionMock.verify();
+            docMock.verify();
+            assert.deepEqual(response, { "ok": true, "_id": "123455" });
+        });
     });
 
     describe("createCollection", () =>{
@@ -266,6 +280,52 @@ describe("CollectionRequestHandler", () => {
             await isRejected(collectionRequestHandler.renameCollection(collectionId, collectionName),
                 "unable to rename the collection new collection name");
 
+        });
+    });
+
+    describe("createCollectionFeedWithSelectedText", () => {
+        const feedId = "feedId";
+        const collectionId = "collectionId";
+        const selectedText = "selectedText";
+
+        afterEach("createCollectionFeedWithSelectedText", () => {
+            sandbox.restore();
+        });
+
+        it("should create collectionFeed doc with selectedText", async () => {
+            const feedDoc = {
+                "_id": feedId,
+                "title": "title of the feed",
+                "description": "description of the feed",
+                "sourceType": "web",
+                "link": "http://www.link.com",
+                "pubDate": "28-10-1994T 00-00-00z",
+                "tags": [
+                    "The Hindu - Home"
+                ]
+            };
+            const collectionFeedDoc = {
+                "docType": "collectionFeed",
+                "description": selectedText,
+                "title": feedDoc.title,
+                "sourceType": feedDoc.sourceType,
+                "link": feedDoc.link,
+                "pubDate": feedDoc.pubDate,
+                "tags": feedDoc.tags,
+                collectionId,
+                "selectText": true
+            };
+
+            const getDocMock = sandbox.mock(couchClient).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+
+            const updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
+                .withExactArgs(collectionFeedDoc).returns(Promise.resolve({ "ok": true }));
+
+            await collectionRequestHandler.createCollectionFeedWithSelectedText(collectionId, feedId, selectedText);
+
+            getDocMock.verify();
+            updateDocMock.verify();
         });
     });
 });

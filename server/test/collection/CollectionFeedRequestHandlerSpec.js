@@ -92,24 +92,7 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database when one of the promise is rejected", async() => {
-            const feedIDs = {
-                "docs": [
-                    {
-                        "_id": "id",
-                        "docType": "collectionFeed",
-                        "feedId": "feedId",
-                        "collection": collection
-                    },
-                    {
-                        "_id": "id2",
-                        "docType": "collectionFeed",
-                        "feedId": "feedId2",
-                        "collection": collection
-                    }
-                ]
-            };
-
-            const feeds = [
+            const expectedFeeds = [
                 {
                     "_id": "id",
                     "title": "title",
@@ -139,7 +122,7 @@ describe("CollectionFeedsRequestHandler", () => {
             findDocumentsMock.verify();
             getFirstFeedMock.verify();
             getSecondFeedMock.verify();
-            assert.deepEqual(docs, feeds);
+            assert.deepEqual(docs, expectedFeeds);
         });
 
         it("should reject with error when database throws unexpected response while getting feedIds", async() => {
@@ -184,7 +167,7 @@ describe("CollectionFeedsRequestHandler", () => {
                 feedDoc
             ];
 
-            sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector).returns(Promise.resolve(collectionFeeds))
+            sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector).returns(Promise.resolve(collectionFeeds));
             sandbox.mock(couchClient).expects("getDocument").withExactArgs("feedId").returns(Promise.resolve(feedDoc));
 
             const collectedFeeds = await getCollectedFeeds(authSession, collection, offset);

@@ -5,6 +5,7 @@ import RouteLogger from "../routes/RouteLogger";
 
 export async function getCollectedFeeds(authSession, collection, offset) {
     const couchClient = CouchClient.instance(authSession);
+
     const feedIds = await getFeedIds(couchClient, collection, offset);
     return await getFeeds(couchClient, feedIds.docs);
 }
@@ -12,7 +13,7 @@ export async function getCollectedFeeds(authSession, collection, offset) {
 async function getFeeds(couchClient, feedIds) {
     const feedPromises = feedIds.map(async (collection) => {
         try {
-            return await couchClient.getDocument(collection.feedId);
+            return collection.selectText ? collection : await couchClient.getDocument(collection.feedId);
         } catch(error) {
             return {};
         }
@@ -108,16 +109,21 @@ async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
 
 export async function deleteFeedFromCollection(authSession, feedId, collectionId) {
     const couchClient = CouchClient.instance(authSession);
-
     try {
-        const collectionFeedDoc = await couchClient.getDocument(feedId + collectionId);
         const feedDoc = await couchClient.getDocument(feedId);
+        let docsToDelete = [];
 
-        let docsToDelete = [collectionFeedDoc];
+        if (feedDoc.selectText) {
+            docsToDelete = [feedDoc];
+        } else {
+            const collectionFeedDoc = await couchClient.getDocument(feedId + collectionId);
+            docsToDelete = [collectionFeedDoc];
+            if (feedDoc.sourceDeleted) {
+                docsToDelete.push(feedDoc);
+            }
 
-        if (feedDoc.sourceDeleted) {
-            docsToDelete.push(feedDoc);
         }
+
         await couchClient.deleteBulkDocuments(docsToDelete);
         RouteLogger.instance().info("CollectionFeedRequestHandler:: Successfully deleted article from collection");
         return { "ok": true };

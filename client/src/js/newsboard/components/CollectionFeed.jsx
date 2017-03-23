@@ -24,7 +24,7 @@ export default class CollectionFeed extends Component {
     render() {
         const feed = this.props.feed;
         let [video] = feed.videos || [];
-        let [image] = feed.images;
+        let [image] = feed.images || [];
         let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         return (<div className={feedClass}>
                     { this.props.tab !== WRITE_A_STORY &&
