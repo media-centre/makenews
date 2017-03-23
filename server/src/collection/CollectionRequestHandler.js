@@ -10,7 +10,7 @@ export default class CollectionRequestHandler {
         return new CollectionRequestHandler(couchClient);
     }
 
-    async updateCollection(collectionName, isNewCollection, docId, sourceId) {
+    async updateCollection(collectionName, isNewCollection, docId, sourceId, selectedText = "") {
         let collectionDocs = await this.getCollectionDoc(collectionName);
         let collectionDocId = "";
         if(collectionDocs.docs.length) {
@@ -22,6 +22,8 @@ export default class CollectionRequestHandler {
             return { "message": "collection already exists with this name" };
         } else if(!docId && !collectionDocId) {
             collectionDocId = await this.createCollection(collectionName);
+        } else if(selectedText && docId && collectionDocId) {
+            await this.createCollectionFeedWithSelectedText(collectionDocId, docId, selectedText);
         } else if(docId && collectionDocId) {
             await this.createCollectionFeedDoc(collectionDocId, docId, sourceId);
         } else {
@@ -113,5 +115,22 @@ export default class CollectionRequestHandler {
             "skip": skipValue
         };
         return await this.couchClient.findDocuments(selector);
+    }
+
+    async createCollectionFeedWithSelectedText(collectionId, feedId, selectedText) {
+        const feedDocument = await this.couchClient.getDocument(feedId);
+        const collectionFeedDoc = {
+            "docType": "collectionFeed",
+            "description": selectedText,
+            "title": feedDocument.title,
+            "sourceType": feedDocument.sourceType,
+            "link": feedDocument.link,
+            "pubDate": feedDocument.pubDate,
+            "tags": feedDocument.tags,
+            "selectText": true,
+            collectionId
+        };
+
+        await this.couchClient.updateDocument(collectionFeedDoc);
     }
 }

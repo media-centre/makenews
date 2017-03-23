@@ -14,6 +14,34 @@ describe("CollectionFeedsRequestHandler", () => {
     describe("getCollectedFeeds", () => {
         let sandbox = null, authSession = null, couchClient = null, selector = null;
         let offset = 0, collection = "bzfuwlajfuea_ali2nfaliwean";
+        const feedIDs = {
+            "docs": [
+                {
+                    "_id": "id",
+                    "docType": "collectionFeed",
+                    "feedId": "feedId",
+                    "collectionId": collection
+                },
+                {
+                    "_id": "id2",
+                    "docType": "collectionFeed",
+                    "feedId": "feedId2",
+                    "collectionId": collection
+                }
+            ]
+        };
+        const feeds = [
+            {
+                "_id": "id",
+                "title": "title",
+                "description": "description"
+            },
+            {
+                "_id": "id2",
+                "title": "title2",
+                "description": "description2"
+            }
+        ];
 
         beforeEach("getCollectedFeeds", () => {
             sandbox = sinon.sandbox.create();
@@ -38,34 +66,6 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database", async() => {
-            const feedIDs = {
-                "docs": [
-                    {
-                        "_id": "id",
-                        "docType": "collectionFeed",
-                        "feedId": "feedId",
-                        "collectionId": collection
-                    },
-                    {
-                        "_id": "id2",
-                        "docType": "collectionFeed",
-                        "feedId": "feedId2",
-                        "collectionId": collection
-                    }
-                ]
-            };
-            const feeds = [
-                {
-                    "_id": "id",
-                    "title": "title",
-                    "description": "description"
-                },
-                {
-                    "_id": "id2",
-                    "title": "title2",
-                    "description": "description2"
-                }
-            ];
 
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withExactArgs(selector).returns(Promise.resolve(feedIDs));
@@ -151,6 +151,45 @@ describe("CollectionFeedsRequestHandler", () => {
             } catch (error) {
                 assert.strictEqual(error, "unexpected response from the db");
             }
+        });
+
+        it("should get collection feeds from db if the collection feed contains selected text", async () => {
+            const selectedTextIntermediateDoc = {
+                "_id": "id",
+                "docType": "collectionFeed",
+                "collectionId": collection,
+                "title": "title",
+                "description": "description",
+                "selectText": true
+            };
+            const collectionFeeds = {
+                "docs": [
+                    selectedTextIntermediateDoc,
+                    {
+                        "_id": "id",
+                        "docType": "collectionFeed",
+                        "collectionId": collection,
+                        "feedId": "feedId"
+                    }
+                ]
+            };
+            const feedDoc = {
+                "title": "title",
+                "description": "description",
+                "sourceType": "twitter",
+                "tags": []
+            };
+            const expectedDocs = [
+                selectedTextIntermediateDoc,
+                feedDoc
+            ];
+
+            sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector).returns(Promise.resolve(collectionFeeds))
+            sandbox.mock(couchClient).expects("getDocument").withExactArgs("feedId").returns(Promise.resolve(feedDoc));
+
+            const collectedFeeds = await getCollectedFeeds(authSession, collection, offset);
+
+            assert.deepEqual(collectedFeeds, expectedDocs);
         });
     });
 
@@ -287,8 +326,8 @@ describe("CollectionFeedsRequestHandler", () => {
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
             const getMock = sandbox.mock(couchClientInstance).expects("getDocument").twice();
-            getMock.onFirstCall().returns(Promise.resolve(collectionFeedDoc));
-            getMock.onSecondCall().returns(Promise.resolve(feedDoc));
+            getMock.onFirstCall().returns(Promise.resolve(feedDoc));
+            getMock.onSecondCall().returns(Promise.resolve(collectionFeedDoc));
             const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
                 .withExactArgs([collectionFeedDoc]).returns(Promise.resolve({ "ok": true }));
 
@@ -321,8 +360,9 @@ describe("CollectionFeedsRequestHandler", () => {
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
             const getMock = sandbox.mock(couchClientInstance).expects("getDocument").twice();
-            getMock.onFirstCall().returns(Promise.resolve(collectionFeedDoc));
-            getMock.onSecondCall().returns(Promise.resolve(feedDoc));
+            getMock.onFirstCall().returns(Promise.resolve(feedDoc));
+            getMock.onSecondCall().returns(Promise.resolve(collectionFeedDoc));
+
             const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
                 .withExactArgs(docsToDelete).returns(Promise.resolve({ "ok": true }));
             const loggerMock = sandbox.mock(RouteLogger).expects("instance").returns(routeLogger);
@@ -343,7 +383,7 @@ describe("CollectionFeedsRequestHandler", () => {
             const instanceMock = sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
             const getMock = sandbox.mock(couchClientInstance).expects("getDocument")
-                .withExactArgs(feedId + collectionId).returns(Promise.reject({ "message": "Unexpected response from db" }));
+                .withExactArgs(feedId).returns(Promise.reject({ "message": "Unexpected response from db" }));
             const loggerMock = sandbox.mock(RouteLogger).expects("instance").returns(routeLogger);
             const debugMock = sandbox.mock(routeLogger).expects("error")
                 .withExactArgs(`CollectionFeedRequestHandler:: Failed deleting article from collection with error ${JSON.stringify({ "message": "Unexpected response from db" })}`);
@@ -357,6 +397,30 @@ describe("CollectionFeedsRequestHandler", () => {
                 debugMock.verify();
                 assert.deepEqual(error, { "message": "Unexpected response from db" });
             }
+        });
+
+        it("should delete only intermediate doc if there is selected true", async () => {
+            const intermediateDocWithSelectedText = {
+                "_id": feedId,
+                "docType": "collectionFeed",
+                collectionId,
+                "title": "title",
+                "description": "des of the feed",
+                "selectText": true
+            };
+            sandbox.mock(CouchClient).expects("instance")
+                .withExactArgs(authSession).returns(couchClientInstance);
+            const feedGetMock = sandbox.mock(couchClientInstance).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(intermediateDocWithSelectedText));
+            const deleteMock = sandbox.mock(couchClientInstance).expects("deleteBulkDocuments")
+                .returns(Promise.resolve({ "ok": true }));
+            const response = await deleteFeedFromCollection(authSession, feedId, collectionId);
+
+            feedGetMock.verify();
+            deleteMock.verify();
+
+            assert.deepEqual(response, { "ok": true });
+
         });
     });
 });
