@@ -4,32 +4,48 @@ import CollectionRequestHandler from "../../../src/collection/CollectionRequestH
 import sinon from "sinon";
 import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
+import CouchClient from "../../../src/CouchClient";
 
 describe("CollectionRoute", () => {
+    let couchClient = null, authSession = null, sandbox = null, collectionRequestHandler = null;
+
+    beforeEach("CollectionRoute", () => {
+        sandbox = sinon.sandbox.create();
+        authSession = "auth session";
+        couchClient = new CouchClient(authSession);
+        sandbox.mock(CouchClient).expects("instance").withExactArgs(authSession).returns(couchClient);
+        collectionRequestHandler = new CollectionRequestHandler(couchClient);
+        sandbox.mock(CollectionRequestHandler).expects("instance").withExactArgs(couchClient).returns(collectionRequestHandler);
+    });
+
+    afterEach("CollectionRoute", () => {
+
+    });
+
     describe("addToCollection", () => {
         let request = null, response = null, docId = null, collectionName = null;
-        let authSession = null, collectionRoute = null, collectionRequestHandler = null, sandbox = null;
+        let collectionRoute = null, selectedText = null;
         const sourceId = "http://www.thehindu.com/?service=rss";
+
 
         beforeEach("addToCollection", () => {
             docId = "docId";
+            selectedText = "random text";
             collectionName = "collection name";
-            authSession = "auth session";
             response = mockResponse();
             request = {
                 "body": {
-                    "docId": docId,
+                    docId,
                     "collection": collectionName,
                     "isNewCollection": true,
-                    "sourceId": sourceId
+                    sourceId,
+                    selectedText
                 },
                 "cookies": {
                     "AuthSession": authSession
                 }
             };
             collectionRoute = new CollectionRoute(request, response, {});
-            collectionRequestHandler = new CollectionRequestHandler();
-            sandbox = sinon.sandbox.create();
         });
 
         afterEach("addToCollection", () => {
@@ -37,9 +53,9 @@ describe("CollectionRoute", () => {
         });
 
         it("should return success response when collection is successfully updated", async() => {
-            sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
+
             const updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, collectionName, true, docId, sourceId)
+                .withExactArgs(collectionName, true, docId, sourceId, selectedText)
                 .returns(Promise.resolve({ "ok": true }));
             
             await collectionRoute.addToCollection();
@@ -67,9 +83,8 @@ describe("CollectionRoute", () => {
         });
 
         it("should throw bad request when collection is not updated", async() => {
-            sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(authSession, collectionName, true, docId, sourceId)
+                .withExactArgs(collectionName, true, docId, sourceId, selectedText)
                 .returns(Promise.reject({ "error": "failed to update" }));
             try {
                 await collectionRoute.addToCollection();
@@ -82,8 +97,7 @@ describe("CollectionRoute", () => {
     });
 
     describe("getAllCollections", () => {
-        let collectionRequestHandler = null, response = null, request = null, collectionName = null,
-            authSession = "auth session", collectionRoute = null, sandbox = null;
+        let collectionRoute = null, response = null, request = null, collectionName = null;
 
         beforeEach("getAllCollections", () => {
             response = mockResponse();
@@ -96,8 +110,6 @@ describe("CollectionRoute", () => {
                 }
             };
             collectionRoute = new CollectionRoute(request, response, {});
-            collectionRequestHandler = new CollectionRequestHandler();
-            sandbox = sinon.sandbox.create();
         });
 
         afterEach("addToCollection", () => {
@@ -106,9 +118,9 @@ describe("CollectionRoute", () => {
 
         it("should return all collections", async () => {
             let collection = { "docs": ["first", "second"] };
-            sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
-            getCollectionsMock.withExactArgs(authSession).returns(Promise.resolve(collection));
+            getCollectionsMock.returns(Promise.resolve(collection));
+
             try {
                 await collectionRoute.getAllCollections();
                 assert.strictEqual(response.json(), collection);
@@ -119,7 +131,6 @@ describe("CollectionRoute", () => {
         });
 
         it("should throw error when fetching collection failed", async () => {
-            sandbox.mock(CollectionRequestHandler).expects("instance").returns(collectionRequestHandler);
             let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.reject({ "error": "unexpected response from db" }));
             try {

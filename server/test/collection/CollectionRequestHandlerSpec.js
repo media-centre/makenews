@@ -7,17 +7,25 @@ import * as Constants from "./../../src/util/Constants";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("CollectionRequestHandler", () => {
+    let authSession = null, couchClient = null, collectionRequestHandler = null, sandbox = null;
+
+    beforeEach("CollectionRequestHandler", () => {
+        authSession = "auth session";
+        couchClient = new CouchClient(authSession);
+        collectionRequestHandler = new CollectionRequestHandler(couchClient);
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach("CollectionRequestHandler", () => {
+        sandbox.restore();
+    });
+
     describe("updateCollection", () => {
-        let collectionRequestHandler = null, authSession = null, docId = null, collectionName = null;
-        let sandbox = null, couchClient = null, sourceId = "http://www.thehindu.com/?service=rss";
+        let docId = null, collectionName = null, sourceId = "http://www.thehindu.com/?service=rss";
+
         beforeEach("updateCollection", () => {
-            authSession = "auth session";
             docId = "doc id";
             collectionName = "collection name";
-            collectionRequestHandler = new CollectionRequestHandler();
-            sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient(authSession);
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
         });
 
         afterEach("updateCollection", () => {
@@ -29,18 +37,19 @@ describe("CollectionRequestHandler", () => {
             const findDocMock = sandbox.mock(couchClient).expects("findDocuments")
                 .returns(Promise.resolve({ "docs": collectionDoc }));
 
-            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, true, docId, "");
+            const response = await collectionRequestHandler.updateCollection(collectionName, true, docId, "");
+
             assert.deepEqual(response, { "message": "collection already exists with this name" });
             findDocMock.verify();
         });
 
         it("should create collectionDoc", async () => {
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
-                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [] }));
+                .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [] }));
             const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
-                .withExactArgs(couchClient, collectionName).returns(Promise.resolve("1234"));
+                .withExactArgs(collectionName).returns(Promise.resolve("1234"));
 
-            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, "", "");
+            const response = await collectionRequestHandler.updateCollection(collectionName, false, "", "");
 
             getCollectionMock.verify();
             createCollectionMock.verify();
@@ -50,11 +59,11 @@ describe("CollectionRequestHandler", () => {
         it("should create collectionFeedDoc when the collection already exists", async () => {
 
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
-                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [{ "_id": "123455" }] }));
+                .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [{ "_id": "123455" }] }));
             const collectionFeedDocMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedDoc")
                 .returns(Promise.resolve({ "ok": true }));
 
-            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, docId, sourceId);
+            const response = await collectionRequestHandler.updateCollection(collectionName, false, docId, sourceId);
 
             getCollectionMock.verify();
             collectionFeedDocMock.verify();
@@ -63,13 +72,13 @@ describe("CollectionRequestHandler", () => {
 
         it("should create collectionDoc and collectionFeedDoc", async () => {
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
-                .withExactArgs(couchClient, collectionName).returns(Promise.resolve({ "docs": [] }));
+                .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [] }));
             const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
-                .withExactArgs(couchClient, collectionName).returns(Promise.resolve("1234"));
+                .withExactArgs(collectionName).returns(Promise.resolve("1234"));
             const collectionFeedDocMock = sandbox.mock(collectionRequestHandler).expects("createCollectionFeedDoc")
                 .returns(Promise.resolve({ "ok": true }));
 
-            const response = await collectionRequestHandler.updateCollection(authSession, collectionName, false, docId, sourceId);
+            const response = await collectionRequestHandler.updateCollection(collectionName, false, docId, sourceId);
 
             getCollectionMock.verify();
             collectionFeedDocMock.verify();
@@ -78,13 +87,7 @@ describe("CollectionRequestHandler", () => {
         });
     });
 
-    describe("createCollection", () => {
-        let sandbox = null, couchClient = null, collectionRequestHandler = null;
-        beforeEach("createCollection", () => {
-            collectionRequestHandler = new CollectionRequestHandler();
-            couchClient = new CouchClient("auth session");
-            sandbox = sinon.sandbox.create();
-        });
+    describe("createCollection", () =>{
 
         afterEach("createCollection", () => {
             sandbox.restore();
@@ -99,19 +102,14 @@ describe("CollectionRequestHandler", () => {
             const updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
                 .withExactArgs(collectionDoc).returns(Promise.resolve({ "id": "123" }));
 
-            const response = await collectionRequestHandler.createCollection(couchClient, collectionName); //eslint-disable-line no-magic-numbers
-            assert.deepEqual(response, "123");
+            const response = await collectionRequestHandler.createCollection(collectionName); //eslint-disable-line no-magic-numbers
+
             updateDocMock.verify();
+            assert.deepEqual(response, "123");
         });
     });
 
     describe("createCollectionFeedDoc", () => {
-        let sandbox = null, couchClient = null, collectionRequestHandler = null;
-        beforeEach("createCollectionFeedDoc", () => {
-            collectionRequestHandler = new CollectionRequestHandler();
-            couchClient = new CouchClient("auth session");
-            sandbox = sinon.sandbox.create();
-        });
 
         afterEach("createCollectionFeedDoc", () => {
             sandbox.restore();
@@ -133,9 +131,10 @@ describe("CollectionRequestHandler", () => {
                 .withExactArgs(collectionFeedId, collectionFeedDoc)
                 .returns(Promise.resolve({ "ok": true }));
 
-            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, feedId, sourceId);
-            assert.deepEqual(response, { "ok": true });
+            const response = await collectionRequestHandler.createCollectionFeedDoc(collectionId, feedId, sourceId);
+
             saveDocMock.verify();
+            assert.deepEqual(response, { "ok": true });
         });
 
         it("should return article already added if the article already added to same collection", async () => {
@@ -145,7 +144,7 @@ describe("CollectionRequestHandler", () => {
             const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
                 .returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT, "message": "conflict" }));
 
-            const response = await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, docId, sourceId);
+            const response = await collectionRequestHandler.createCollectionFeedDoc(collectionId, docId, sourceId);
             assert.deepEqual(response, { "message": "article already added to that collection" });
             saveDocumentMock.verify();
         });
@@ -157,7 +156,7 @@ describe("CollectionRequestHandler", () => {
             const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument")
                 .returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" }));
             try {
-                await collectionRequestHandler.createCollectionFeedDoc(couchClient, collectionId, docId, sourceId);
+                await collectionRequestHandler.createCollectionFeedDoc(collectionId, docId, sourceId);
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(error, { "status": HttpResponseHandler.codes.BAD_REQUEST, "message": "error from db" });
@@ -167,16 +166,9 @@ describe("CollectionRequestHandler", () => {
     });
 
     describe("getAllCollections", () => {
-        let collectionRequestHandler = null, authSession = null;
-        let sandbox = null, couchClient = null;
         const collectionsPerReqOriginal = Constants.COLLECTION_PER_REQUEST;
 
         beforeEach("getAllCollections", () => {
-            authSession = "auth session";
-            collectionRequestHandler = new CollectionRequestHandler();
-            sandbox = sinon.sandbox.create();
-            couchClient = new CouchClient("access token");
-            sandbox.mock(CouchClient).expects("instance").returns(couchClient);
             Constants.COLLECTION_PER_REQUEST = 4; //eslint-disable-line no-magic-numbers
         });
 
@@ -184,6 +176,7 @@ describe("CollectionRequestHandler", () => {
             Constants.COLLECTION_PER_REQUEST = collectionsPerReqOriginal;
             sandbox.restore();
         });
+
         it("should get all collections", async () => {
             const allCollections = { "docs": ["id1", "id2", "id3", "id4", "id5", "id6"] };
             const firstResponse = { "docs": ["id1", "id2", "id3", "id4"] };
@@ -199,15 +192,6 @@ describe("CollectionRequestHandler", () => {
     });
     
     describe("renameCollection", () => {
-        const sandbox = sinon.sandbox.create();
-        const collectionReqHandler = CollectionRequestHandler.instance();
-        let couchClient = null;
-        const authSession = "authSession";
-        
-        beforeEach("renameCollection", () => {
-            couchClient = new CouchClient(authSession);
-            sandbox.stub(CouchClient, "instance").returns(couchClient);
-        });
 
         afterEach("renameCollection", () => {
             sandbox.restore();
@@ -229,7 +213,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector)
                 .returns({ "docs": [{ "_id": 1231 }] });
 
-            await isRejected(collectionReqHandler.renameCollection(authSession, collectionId, collectionName),
+            await isRejected(collectionRequestHandler.renameCollection(collectionId, collectionName),
                 `There is already a collection with the name ${collectionName}`);
         });
         
@@ -253,7 +237,7 @@ describe("CollectionRequestHandler", () => {
             const updateMock = sandbox.mock(couchClient).expects("saveDocument")
                 .withExactArgs(collectionId, updatedCollection).returns(Promise.resolve({ "ok": true }));
 
-            const response = await collectionReqHandler.renameCollection(authSession, collectionId, collectionName);
+            const response = await collectionRequestHandler.renameCollection(collectionId, collectionName);
             
             updateMock.verify();
             assert.deepEqual(response, { "ok": true });
@@ -279,8 +263,9 @@ describe("CollectionRequestHandler", () => {
             sandbox.mock(couchClient).expects("saveDocument")
                 .withExactArgs(collectionId, updatedCollection).returns(Promise.reject({}));
 
-            await isRejected(collectionReqHandler.renameCollection(authSession, collectionId, collectionName),
+            await isRejected(collectionRequestHandler.renameCollection(collectionId, collectionName),
                 "unable to rename the collection new collection name");
+
         });
     });
 });

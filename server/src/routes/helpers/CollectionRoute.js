@@ -1,6 +1,7 @@
 import Route from "./Route";
 import CollectionRequestHandler from "../../collection/CollectionRequestHandler";
 import RouteLogger from "../RouteLogger";
+import CouchClient from "../../CouchClient";
 
 export default class CollectionRoute extends Route {
     constructor(request, response, next) {
@@ -11,6 +12,7 @@ export default class CollectionRoute extends Route {
         this.collection = body.collection;
         this.isNewCollection = body.isNewCollection;
         this.sourceId = body.sourceId;
+        this.selectedText = body.selectedText;
     }
 
     async addToCollection() {
@@ -19,7 +21,9 @@ export default class CollectionRoute extends Route {
                 this._handleBadRequest();
                 return;
             }
-            const response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.collection, this.isNewCollection, this.docId, this.sourceId);
+            const couchClient = CouchClient.instance(this.authSession);
+            const collectionHandler = CollectionRequestHandler.instance(couchClient);
+            const response = await collectionHandler.updateCollection(this.collection, this.isNewCollection, this.docId, this.sourceId, this.selectedText);
             RouteLogger.instance().debug(`CollectionRoute:: successfully updated the collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {
@@ -30,7 +34,8 @@ export default class CollectionRoute extends Route {
 
     async getAllCollections() {
         try {
-            const response = await CollectionRequestHandler.instance().getAllCollections(this.authSession);
+            const couchClient = CouchClient.instance(this.authSession);
+            const response = await CollectionRequestHandler.instance(couchClient).getAllCollections();
             RouteLogger.instance().debug(`CollectionRoute:: successfully fetched all collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {
