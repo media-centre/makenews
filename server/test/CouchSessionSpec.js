@@ -186,6 +186,44 @@ describe("CouchSessionSpec", () => {
             saveDocumentMock.verify();
         });
 
+        it("should update the password for the given user and preserve the visitedUser info", async () => {
+            const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
+            getDocumentMock.returns(Promise.resolve({
+                "_id": "org.couchdb.user:" + username,
+                "_rev": "12345",
+                "derived_key": "test derived key",
+                "iterations": 10,
+                "name": "test_user",
+                "password_scheme": "scheme",
+                "roles": [],
+                "salt": "123324124124",
+                "type": "user",
+                "visitedUser": true
+            }));
+            const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
+            saveDocumentMock.withExactArgs(
+                `org.couchdb.user:${username}`,
+                {
+                    "name": username,
+                    "roles": [],
+                    "type": "user",
+                    "password": newPassword,
+                    "visitedUser": true
+                },
+                {
+                    "if-match": "12345"
+                }
+            ).returns(Promise.resolve({
+                "ok": true,
+                "id": "org.couchdb.user:test",
+                "rev": "new revision"
+            }));
+            const response = await CouchSession.updatePassword(username, newPassword, token);
+            getDocumentMock.verify();
+            saveDocumentMock.verify();
+            assert.equal(response.ok, true);
+        });
+
         it("should reject with error if there is an issue while getting the user document", async () => {
             sandbox.stub(couchClient, "getDocument").returns(Promise.reject("error"));
             await isRejected(CouchSession.updatePassword(username, newPassword, token), "error");

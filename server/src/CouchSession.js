@@ -79,8 +79,11 @@ export default class CouchSession {
     static async updatePassword(username, newPassword, token) {
         const couchClient = CouchClient.instance(token, "_users");
         const documentId = "org.couchdb.user:" + username;
-        const documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
+        let documentBody = { "name": username, "roles": [], "type": "user", "password": newPassword };
         const userDocument = await couchClient.getDocument(documentId);
+        if(userDocument.visitedUser) {
+            documentBody.visitedUser = userDocument.visitedUser;
+        }
         return await couchClient.saveDocument(documentId, documentBody, { "if-match": userDocument._rev });
     }
 
