@@ -132,10 +132,12 @@
   display: none;
   list-style-type: none;
 
-  .user-profile--change-password, .user-profile--help, .user-profile--logout {
-    vertical-align: top;
-    padding: 12px 0;
-    padding-left: 26px;
+  li {
+    a {
+      color: #fff;
+      display: inline-block;
+      padding: 12px 0 12px 26px;
+    }
 
     &:hover {
       background-color: $secondary-color;

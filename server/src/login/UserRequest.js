@@ -35,7 +35,7 @@ export function extractToken(authSessionCookie) {
 export async function updatePassword(username, newPassword, currentPassword) {
     try {
         const token = await getToken(username, currentPassword);
-        return await CouchSession.updatePassword(username, newPassword, token);
+        return await CouchSession.updatePassword(username, newPassword, extractToken(token));
     }catch(error) {
         logger().error("UserRequest:password updation error = %s", error);
         throw error;

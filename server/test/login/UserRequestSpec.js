@@ -70,7 +70,7 @@ describe("UserRequest", () => {
 
     describe("updatePassword", () => {
         let username = null, newPassword = null, currentPassword = null;
-        const token = "test_token";
+        const token = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
         beforeEach("updatePassword", () => {
             sandbox = sinon.sandbox.create();
             username = "test";
@@ -82,7 +82,7 @@ describe("UserRequest", () => {
         });
         it("should update the password if old passwords is correct", async () => {
             const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
-            sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.resolve("test_token"));
+            sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.resolve("dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA"));
             sandbox.mock(CouchSession).expects("updatePassword").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
             const response = await UserRequest.updatePassword(username, newPassword, currentPassword);
             assert.deepEqual(response.body.ok, true);
@@ -98,8 +98,8 @@ describe("UserRequest", () => {
 
         it("should not update the password when couchdb password updation fails", async () => {
             const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
-            sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve("test_token"));
-            sandbox.mock(CouchSession).expects("updatePassword").withArgs(username, newPassword, token).returns(Promise.reject("Updation failed"));
+            sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve(token));
+            sandbox.mock(CouchSession).expects("updatePassword").withArgs(username, newPassword, "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA").returns(Promise.reject("Updation failed"));
             await isRejected(UserRequest.updatePassword(username, newPassword, currentPassword), "Updation failed");
             couchSessionLogin.verify();
         });

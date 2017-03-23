@@ -2,7 +2,7 @@ import App from "./App";
 import LoginPage from "./login/pages/LoginPage";
 import TwitterSuccess from "./main/pages/TwitterSuccess";
 import UserSession from "./user/UserSession";
-import UserProfile from "./user/UserProfile";
+import ChangePassword from "./user/ChangePassword";
 import React from "react";
 import { Route } from "react-router";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
@@ -36,7 +36,7 @@ export function renderRoutes(store) {
                         <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
                     </Route>
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
-                    <Route path="/profile" component={UserProfile} />
+                    <Route path="/change-password" component={ChangePassword} />
                 </Route>
             </Route>
         </Route>

@@ -1,4 +1,3 @@
-/* eslint react/jsx-wrap-multilines:0*/
 import { renderRoutes } from "./Routers";
 import { Provider } from "react-redux";
 import contentDiscoveryApp from "./Reducers";
