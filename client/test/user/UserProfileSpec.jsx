@@ -1,15 +1,20 @@
-import UserProfile from "../../../src/js/header/components/UserProfile";
+import { UserProfile } from "./../../src/js/user/UserProfile";
 import React from "react";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import LogoutActions from "./../../../src/js/login/LogoutActions";
+import LogoutActions from "./../../src/js/login/LogoutActions";
 
-describe.only("UserProfile", () => {
-    let userProfileDom = null;
+describe("UserProfile", () => {
+    let userProfileDom = null, userProfileStrings = null;
     const sandbox = sinon.sandbox.create();
     beforeEach("UserProfile", () => {
-        userProfileDom = shallow(<UserProfile />);
+        userProfileStrings = {
+            "changePassword": "Change Password",
+            "logout": "Logout",
+            "help": "Help & FAQs"
+        };
+        userProfileDom = shallow(<UserProfile userProfileStrings={userProfileStrings}/>);
     });
 
     afterEach("UserProfile", () => {
@@ -28,7 +33,7 @@ describe.only("UserProfile", () => {
         expect(changePassword.props.className).to.be.equals("user-profile--change-password");
         expect(link.type.displayName).to.be.equals("Link");
         expect(link.props.to).to.be.equals("/change-password");
-        expect(link.props.children).to.be.equals("Change Password");
+        expect(link.props.children).to.be.equals(userProfileStrings.changePassword);
     });
 
     it("should have help element", () => {
@@ -37,7 +42,7 @@ describe.only("UserProfile", () => {
         expect(help.props.className).to.be.equals("user-profile--help");
         expect(link.type.displayName).to.be.equals("Link");
         expect(link.props.to).to.be.equals("/help");
-        expect(link.props.children).to.be.equals("Help & FAQs");
+        expect(link.props.children).to.be.equals(userProfileStrings.help);
     });
 
     it("should have logout element", () => {
@@ -45,7 +50,7 @@ describe.only("UserProfile", () => {
         const link = logout.props.children;
         expect(logout.props.className).to.be.equals("user-profile--logout");
         expect(link.type).to.be.equals("a");
-        expect(link.props.children).to.be.equals("Logout");
+        expect(link.props.children).to.be.equals(userProfileStrings.logout);
     });
 
     it("should call logout if we click on logout", () => {

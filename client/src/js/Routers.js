@@ -15,6 +15,7 @@ import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
 import ConfigurationIntro from "./welcome/ConfigurationIntro";
+import Help from "./user/Help";
 
 export function renderRoutes(store) {
     return (
@@ -37,6 +38,7 @@ export function renderRoutes(store) {
                     </Route>
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
                     <Route path="/change-password" component={ChangePassword} />
+                    <Route path="/help" component={Help} />
                 </Route>
             </Route>
         </Route>

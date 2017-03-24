@@ -1,6 +1,6 @@
 /* eslint react/jsx-no-literals:0 brace-style:0 */
 import React, { Component } from "react";
-import UserProfile from "./UserProfile";
+import UserProfile from "./../../user/UserProfile";
 import AppSessionStorage from "./../../utils/AppSessionStorage";
 
 export default class UserProfileTab extends Component {

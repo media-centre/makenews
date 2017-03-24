@@ -41,24 +41,24 @@ export class ChangePassword extends Component {
         const popUp = this.props.changePasswordMessages.isSuccess
             ? (<ConfirmPopup
                 ref="confirmPopup"
-                description= {this.props.userProfileStrings.logoutConfirmMessage}
+                description= {this.props.changePasswordStrings.logoutConfirmMessage}
                 hide = {this.props.changePasswordMessages.isSuccess}
                 callback={() =>{ this._logout(); }} //eslint-disable-line brace-style
                />)
             : null;
 
-        const currentPasswordError = (errorMessage === this.props.userProfileStrings.invalidCredentials) ? "error-border " : "";
-        const newPasswordError = (errorMessage === this.props.userProfileStrings.newPwdShouldNotMatchCurrentPwd) ? "error-border " : "";
-        const confirmPasswordError = (errorMessage === this.props.userProfileStrings.newPwdConfirmPwdMismatch) ? "error-border " : "";
+        const currentPasswordError = (errorMessage === this.props.changePasswordStrings.invalidCredentials) ? "error-border " : "";
+        const newPasswordError = (errorMessage === this.props.changePasswordStrings.newPwdShouldNotMatchCurrentPwd) ? "error-border " : "";
+        const confirmPasswordError = (errorMessage === this.props.changePasswordStrings.newPwdConfirmPwdMismatch) ? "error-border " : "";
 
         return (
             <div className="change-password">
                 <form id="changePassword" onSubmit={(event) => this.submitProfile(event)}>
                     <h3>{"Change Password"}</h3>
                     <p className="error-msg small-text">{this.props.changePasswordMessages.errorMessage}</p>
-                    <input type="password" name="current password" placeholder={this.props.userProfileStrings.currentPassword} className={currentPasswordError} required ref="currentPassword"/>
-                    <input type="password" name="new password" placeholder={this.props.userProfileStrings.newPassword} className={newPasswordError} required ref="newPassword"/>
-                    <input type="password" name="confirm password" placeholder={this.props.userProfileStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
+                    <input type="password" name="current password" placeholder={this.props.changePasswordStrings.currentPassword} className={currentPasswordError} required ref="currentPassword"/>
+                    <input type="password" name="new password" placeholder={this.props.changePasswordStrings.newPassword} className={newPasswordError} required ref="newPassword"/>
+                    <input type="password" name="confirm password" placeholder={this.props.changePasswordStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
                     <button type="submit" className="primary">{"Submit"}</button>
                 </form>
                 {popUp}
@@ -69,12 +69,12 @@ export class ChangePassword extends Component {
 
 ChangePassword.propTypes = {
     "changePasswordMessages": PropTypes.object.isRequired,
-    "userProfileStrings": PropTypes.object.isRequired,
+    "changePasswordStrings": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired
 };
 
 
 function select(store) {
-    return { "changePasswordMessages": store.changePassword, "userProfileStrings": store.userProfileStrings };
+    return { "changePasswordMessages": store.changePassword, "changePasswordStrings": store.changePasswordStrings };
 }
 export default connect(select)(ChangePassword);

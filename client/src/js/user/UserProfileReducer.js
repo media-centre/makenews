@@ -6,22 +6,22 @@ export function changePassword(state = { "errorMessage": "", "isSuccess": false 
     switch(action.type) {
     case INCORRECT_USER_CREDENTIALS:
         return {
-            "errorMessage": appEn.messages.userProfile.invalidCredentials
+            "errorMessage": appEn.messages.changePassword.invalidCredentials
         };
 
     case PASSWORD_UPDATION_FAILED:
         return {
-            "errorMessage": appEn.messages.userProfile.passwordUpdateFailure
+            "errorMessage": appEn.messages.changePassword.passwordUpdateFailure
         };
 
     case NEW_PWD_CONFIRM_PWD_MISMATCH:
         return {
-            "errorMessage": appEn.messages.userProfile.newPwdConfirmPwdMismatch
+            "errorMessage": appEn.messages.changePassword.newPwdConfirmPwdMismatch
         };
 
     case NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD:
         return {
-            "errorMessage": appEn.messages.userProfile.newPwdShouldNotMatchCurrentPwd
+            "errorMessage": appEn.messages.changePassword.newPwdShouldNotMatchCurrentPwd
         };
 
     case CHANGE_PASSWORD_SUCCESSFUL:
@@ -32,7 +32,12 @@ export function changePassword(state = { "errorMessage": "", "isSuccess": false 
     }
 }
 
-export function userProfileStrings(state = {}, action = {}) { //eslint-disable-line
+export function changePasswordStrings(state = {}, action = {}) { //eslint-disable-line
     let appEn = Local.applicationStrings();
-    return appEn.messages.userProfile;
+    return appEn.messages.changePassword;
+}
+
+export function userProfileStrings(state = {}, action = {}) { //eslint-disable-line no-unused-vars
+    let appEn = Local.applicationStrings();
+    return appEn.messages.userProfileStrings;
 }

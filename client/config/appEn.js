@@ -79,7 +79,7 @@ window.mediaCenter.appEn = {
             },
             "configureTabName": "Configure"
         },
-        "userProfile": {
+        "changePassword": {
             "passwordUpdateFailure": "Password update failed",
             "invalidCredentials": "Incorrect Current Password",
             "newPwdConfirmPwdMismatch": "New Password and Confirm Password do not match",
@@ -91,11 +91,10 @@ window.mediaCenter.appEn = {
             "pwdShouldNotBeEmpty": "Passwords cannot be left blank",
             "logoutConfirmMessage": "Your password has been successfully changed. The application will now logout. Please re-login with your new password"
         },
-        "userProfileSettings": {
-            "settings": "Settings",
-            "profile": "Change Password",
+        "userProfileStrings": {
+            "changePassword": "Change Password",
             "logout": "Logout",
-            "help": "Help"
+            "help": "Help & FAQs"
         },
         "storyBoard": {
             "confirmDelete": "Are you sure you want to delete the story?"

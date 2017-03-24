@@ -1,5 +1,5 @@
 import UserProfileTab from "./../../../src/js/header/components/UserProfileTab";
-import UserProfile from "./../../../src/js/header/components/UserProfile";
+import UserProfile from "./../../../src/js/user/UserProfile";
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";

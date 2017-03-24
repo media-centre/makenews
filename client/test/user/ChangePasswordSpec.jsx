@@ -9,7 +9,7 @@ describe("Change Password", () => {
         const changePasswordMessages = {};
         const userProfileStrings = {};
         const dispatch = ()=>{};
-        changePasswordDom = shallow(<ChangePassword changePasswordMessages={changePasswordMessages} userProfileStrings={userProfileStrings} dispatch={dispatch}/>);
+        changePasswordDom = shallow(<ChangePassword changePasswordMessages={changePasswordMessages} changePasswordStrings={userProfileStrings} dispatch={dispatch}/>);
     });
 
     it("should have a change-password div", () => {

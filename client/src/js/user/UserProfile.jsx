@@ -1,9 +1,10 @@
 /* eslint react/jsx-no-literals:0 */
-import LogoutActions from "../../login/LogoutActions";
-import React, { Component } from "react";
+import LogoutActions from "./../../js/login/LogoutActions";
+import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";
+import { connect } from "react-redux";
 
-export default class UserProfile extends Component {
+export class UserProfile extends Component {
 
     _logout() {
         LogoutActions.instance().logout();
@@ -13,15 +14,25 @@ export default class UserProfile extends Component {
         return (
             <ul className="user-profile--dropdown">
                 <li className="user-profile--change-password">
-                    <Link to="/change-password">Change Password</Link>
+                    <Link to="/change-password">{this.props.userProfileStrings.changePassword}</Link>
                 </li>
                 <li className="user-profile--help">
-                    <Link to="/help">Help & FAQs</Link>
+                    <Link to="/help">{this.props.userProfileStrings.help}</Link>
                 </li>
                 <li className="user-profile--logout">
-                    <a onClick={this._logout}>Logout</a>
+                    <a onClick={this._logout}>{this.props.userProfileStrings.logout}</a>
                 </li>
             </ul>
         );
     }
 }
+
+UserProfile.propTypes = {
+    "userProfileStrings": PropTypes.object.isRequired
+};
+
+function select(store) {
+    return { "userProfileStrings": store.userProfileStrings };
+}
+export default connect(select)(UserProfile);
+

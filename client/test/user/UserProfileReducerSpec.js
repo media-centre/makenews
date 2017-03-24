@@ -2,7 +2,7 @@
 
 import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "../../src/js/user/UserProfileActions";
 import Locale from "../../src/js/utils/Locale";
-import { changePassword, userProfileStrings } from "../../src/js/user/UserProfileReducer";
+import { changePassword, changePasswordStrings, userProfileStrings } from "../../src/js/user/UserProfileReducer";
 import { assert } from "chai";
 import "../helper/TestHelper";
 import sinon from "sinon";
@@ -13,7 +13,7 @@ describe("UserProfileReducer", ()=> {
         sandbox = sinon.sandbox.create();
         appEn = {
             "messages": {
-                "userProfile": {
+                "changePassword": {
                     "passwordUpdateFailure": "Could not update the password",
                     "invalidCredentials": "Invalid credentials",
                     "newPwdConfirmPwdMismatch": "New password and confirm Password does not match",
@@ -75,10 +75,15 @@ describe("UserProfileReducer", ()=> {
         });
     });
 
-    describe("userProfileStrings", () => {
-        it("should return the user profile strings always", () => {
-            assert.deepEqual(appEn.messages.userProfile, userProfileStrings(undefined));
+    describe("changePasswordStrings", () => {
+        it("should return the change password strings always", () => {
+            assert.deepEqual(appEn.messages.changePassword, changePasswordStrings(undefined));
         });
     });
 
+    describe("userProfileStrings", () => {
+        it("should return user profile strings", () => {
+            assert.deepEqual(appEn.messages.userProfileStrings, userProfileStrings(undefined));
+        });
+    });
 });

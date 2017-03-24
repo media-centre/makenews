@@ -1,7 +1,7 @@
 import { login, loginPageLocale } from "./login/LoginReducers";
 import { combineReducers } from "redux";
 import { mainHeaderStrings } from "./main/reducers/MainReducer";
-import { changePassword, userProfileStrings } from "./user/UserProfileReducer";
+import { changePassword, changePasswordStrings, userProfileStrings } from "./user/UserProfileReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
 import { addUrlMessage } from "./config/reducers/AddUrlReducer";
 import { fetchedFeeds,
@@ -28,7 +28,7 @@ const contentDiscoveryApp = combineReducers({
     loginPageLocale,
     mainHeaderStrings,
     changePassword,
-    userProfileStrings,
+    changePasswordStrings,
     configuredSources,
     fetchedFeeds,
     addUrlMessage,
@@ -49,7 +49,8 @@ const contentDiscoveryApp = combineReducers({
     currentFilterSource,
     untitledIndex,
     fetchingFeeds,
-    deleteSourceStatus
+    deleteSourceStatus,
+    userProfileStrings
 });
 
 export default contentDiscoveryApp;
