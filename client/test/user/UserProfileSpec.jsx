@@ -5,7 +5,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import LogoutActions from "./../../../src/js/login/LogoutActions";
 
-describe("UserProfile", () => {
+describe.only("UserProfile", () => {
     let userProfileDom = null;
     const sandbox = sinon.sandbox.create();
     beforeEach("UserProfile", () => {
