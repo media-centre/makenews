@@ -8,6 +8,8 @@ import StringUtil from "../../../../../common/src/util/StringUtil";
 import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import JsPdf from "jspdf";
+import FileSaver from "file-saver";
 
 export class EditStory extends Component {
     constructor() {
@@ -77,6 +79,23 @@ export class EditStory extends Component {
         }
     }
 
+    _exportPdf(extension) {
+        const doc = new JsPdf();
+        const position = 15;
+        doc.fromHTML(`<html><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`, position, position);
+        doc.save(`${this.state.title}.${extension}`);
+    }
+
+    _exportHtml() {
+        let htmlString = `<html><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`;
+        let byteNumbers = new Uint8Array(htmlString.length);
+        [...htmlString].map((htmlChar, index) => {
+            byteNumbers[index] = htmlChar.charCodeAt();
+        });
+        let blob = new Blob([byteNumbers], { "type": "text/html" });
+        FileSaver.saveAs(blob, `${this.state.title}.html`);
+    }
+
     _onChange(body) {
         this.setState({ body });
     }
@@ -96,6 +115,14 @@ export class EditStory extends Component {
                     >
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
+                    <div className="export-container">
+                        <i className="fa fa-share export" />
+                        <div className="export-options">
+                            <button onClick={() => this._exportPdf("pdf")}>PDF</button>
+                            <button onClick={() => this._exportPdf("odt")}>ODT</button>
+                            <button onClick={() => this._exportHtml()}>HTML</button>
+                        </div>
+                    </div>
                 </div>
 
                 <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>

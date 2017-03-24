@@ -131,3 +131,33 @@
     display: none;
   }
 }
+
+
+.export-container {
+  margin-left: 80%;
+  margin-top: 15px;
+  color: $secondary-color;
+
+
+  .export-options {
+    display: none;
+  }
+
+  &:hover {
+    .export-options {
+      display: block;
+      button {
+        display: block;
+        color: $secondary-color;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .export {
+    background-color: black;
+    border-radius: 100%;
+    font-size: 1.5em;
+  }
+}
+
