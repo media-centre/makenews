@@ -24,13 +24,13 @@ describe("CollectionRoute", () => {
 
     describe("addToCollection", () => {
         let request = null, response = null, docId = null, collectionName = null;
-        let collectionRoute = null, selectedText = null;
+        let collectionRoute = null, selectedTextDoc = null;
         const sourceId = "http://www.thehindu.com/?service=rss";
 
 
         beforeEach("addToCollection", () => {
             docId = "docId";
-            selectedText = "random text";
+            selectedTextDoc = { "title": "title", "description": "description" };
             collectionName = "collection name";
             response = mockResponse();
             request = {
@@ -39,7 +39,7 @@ describe("CollectionRoute", () => {
                     "collection": collectionName,
                     "isNewCollection": true,
                     sourceId,
-                    selectedText
+                    selectedTextDoc
                 },
                 "cookies": {
                     "AuthSession": authSession
@@ -55,7 +55,7 @@ describe("CollectionRoute", () => {
         it("should return success response when collection is successfully updated", async() => {
 
             const updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(collectionName, true, docId, sourceId, selectedText)
+                .withExactArgs(collectionName, true, docId, sourceId, selectedTextDoc)
                 .returns(Promise.resolve({ "ok": true }));
             
             await collectionRoute.addToCollection();
@@ -84,7 +84,7 @@ describe("CollectionRoute", () => {
 
         it("should throw bad request when collection is not updated", async() => {
             let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
-                .withExactArgs(collectionName, true, docId, sourceId, selectedText)
+                .withExactArgs(collectionName, true, docId, sourceId, selectedTextDoc)
                 .returns(Promise.reject({ "error": "failed to update" }));
             try {
                 await collectionRoute.addToCollection();

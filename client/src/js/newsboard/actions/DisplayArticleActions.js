@@ -85,7 +85,8 @@ export function addToCollection(collection, article, isNewCollection = false) {
                 "collection": collection,
                 "docId": article.id,
                 "isNewCollection": isNewCollection,
-                "sourceId": article.sourceId
+                "sourceId": article.sourceId,
+                "selectedTextDoc": article.selectedTextDoc
             });
             if (response.ok === true && article.id) {
                 Toast.show(` Added to '${collection}' collection`, "collection");
@@ -102,13 +103,13 @@ export function addToCollection(collection, article, isNewCollection = false) {
         } catch (err) {
             Toast.show(isNewCollection ? "Failed to create collection" : "Failed to add feed to collection");
         }
-        dispatch(addArticleToCollection("", "", ""));
+        dispatch(addArticleToCollection("", "", "", {}));
     };
 }
 
-export function addArticleToCollection(articleId, sourceType, sourceId) {
+export function addArticleToCollection(articleId, sourceType, sourceId, selectedTextDoc = {}) {
     return {
         "type": ADD_ARTICLE_TO_COLLECTION,
-        "addArticleToCollection": { "id": articleId, sourceType, sourceId }
+        "addArticleToCollection": { "id": articleId, sourceType, sourceId, selectedTextDoc }
     };
 }

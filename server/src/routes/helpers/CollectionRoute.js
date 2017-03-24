@@ -12,7 +12,7 @@ export default class CollectionRoute extends Route {
         this.collection = body.collection;
         this.isNewCollection = body.isNewCollection;
         this.sourceId = body.sourceId;
-        this.selectedText = body.selectedText;
+        this.selectedTextDoc = body.selectedTextDoc;
     }
 
     async addToCollection() {
@@ -23,7 +23,8 @@ export default class CollectionRoute extends Route {
             }
             const couchClient = CouchClient.instance(this.authSession);
             const collectionHandler = CollectionRequestHandler.instance(couchClient);
-            const response = await collectionHandler.updateCollection(this.collection, this.isNewCollection, this.docId, this.sourceId, this.selectedText);
+
+            const response = await collectionHandler.updateCollection(this.collection, this.isNewCollection, this.docId, this.sourceId, this.selectedTextDoc);
             RouteLogger.instance().debug(`CollectionRoute:: successfully updated the collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {

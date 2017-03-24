@@ -10,7 +10,8 @@ export default class CollectionRequestHandler {
         return new CollectionRequestHandler(couchClient);
     }
 
-    async updateCollection(collectionName, isNewCollection, docId, sourceId, selectedText = "") {
+    async updateCollection(collectionName, isNewCollection, docId, sourceId, selectedText = {}) {
+        const selectedTextDocLength = Object.keys(selectedText).length;
         let collectionDocs = await this.getCollectionDoc(collectionName);
         let collectionDocId = "";
         if(collectionDocs.docs.length) {
@@ -22,13 +23,17 @@ export default class CollectionRequestHandler {
             return { "message": "collection already exists with this name" };
         } else if(!docId && !collectionDocId) {
             collectionDocId = await this.createCollection(collectionName);
-        } else if(selectedText && docId && collectionDocId) {
+        } else if(selectedTextDocLength && docId && collectionDocId) {
             await this.createCollectionFeedWithSelectedText(collectionDocId, docId, selectedText);
         } else if(docId && collectionDocId) {
             await this.createCollectionFeedDoc(collectionDocId, docId, sourceId);
         } else {
             collectionDocId = await this.createCollection(collectionName);
-            await this.createCollectionFeedDoc(collectionDocId, docId, sourceId);
+            if(selectedTextDocLength && docId) {
+                await this.createCollectionFeedWithSelectedText(collectionDocId, docId, selectedText);
+            } else {
+                await this.createCollectionFeedDoc(collectionDocId, docId, sourceId);
+            }
         }
         return { "ok": true, "_id": collectionDocId };
     }
@@ -118,19 +123,11 @@ export default class CollectionRequestHandler {
     }
 
     async createCollectionFeedWithSelectedText(collectionId, feedId, selectedText) {
-        const feedDocument = await this.couchClient.getDocument(feedId);
-        const collectionFeedDoc = {
-            "docType": "collectionFeed",
-            "description": selectedText,
-            "title": feedDocument.title,
-            "sourceType": feedDocument.sourceType,
-            "link": feedDocument.link,
-            "pubDate": feedDocument.pubDate,
-            "tags": feedDocument.tags,
-            "selectText": true,
-            collectionId
-        };
+        selectedText.docType = "collectionFeed";
+        selectedText.collectionId = collectionId;
+        selectedText.selectText = true;
+        selectedText.feedId = feedId;
 
-        await this.couchClient.updateDocument(collectionFeedDoc);
+        await this.couchClient.updateDocument(selectedText);
     }
 }

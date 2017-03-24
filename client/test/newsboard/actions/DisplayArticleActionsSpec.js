@@ -3,6 +3,7 @@ import {
     updateBookmarkStatus,
     displayWebArticle,
     addToCollection,
+    addArticleToCollection,
     UPDATE_BOOKMARK_STATUS,
     WEB_ARTICLE_RECEIVED,
     WEB_ARTICLE_REQUESTED,
@@ -138,8 +139,8 @@ describe("DisplayArticleActions", () => {
             sandbox = sinon.sandbox.create();
             collection = "collectionName";
             docId = "article id";
-            article = { "id": docId, "sourceType": "facebook", "sourceId": "177547780" };
-            body = { "collection": collection, "docId": docId, "isNewCollection": false, "sourceId": "177547780" };
+            article = { "id": docId, "sourceType": "facebook", "sourceId": "177547780", "selectedTextDoc": {} };
+            body = { "collection": collection, "docId": docId, "isNewCollection": false, "sourceId": "177547780", "selectedTextDoc": {} };
             ajaxClientInstance = AjaxClient.instance("/collection", true);
             headers = {
                 "Accept": "application/json",
@@ -162,7 +163,7 @@ describe("DisplayArticleActions", () => {
             const store = mockStore({}, [
                 { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }], done);
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "", "selectedTextDoc": {} } }], done);
 
             store.dispatch(addToCollection(collection, article));
             ajaxPutMock.verify();
@@ -198,18 +199,18 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch handleMessage, paginatedFeeds, addArticleToCollection on success response and there is no doc id", (done) => {
-            body = { "collection": collection, "docId": "", "isNewCollection": true, "sourceId": "" };
+            body = { "collection": collection, "docId": "", "isNewCollection": true, "sourceId": "", "selectedTextDoc": {} };
             const store = mockStore({}, [
                 { "type": PAGINATED_FETCHED_FEEDS, "feeds": [{ "collection": collection, "_id": "1234" }] },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "", "selectedTextDoc": {} } }
             ], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
                 .returns(response);
 
-            store.dispatch(addToCollection(collection, { "id": "", "sourceType": "", "sourceId": "" }, true));
+            store.dispatch(addToCollection(collection, { "id": "", "sourceType": "", "sourceId": "", "selectedTextDoc": {} }, true));
             ajaxPutMock.verify();
         });
 
@@ -218,7 +219,7 @@ describe("DisplayArticleActions", () => {
             const store = mockStore({}, [
                 { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "facebook" },
                 { "type": ADD_ARTICLE_TO_COLLECTION,
-                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "" } }
+                    "addArticleToCollection": { "id": "", "sourceType": "", "sourceId": "", "selectedTextDoc": {} } }
             ], done);
 
             const ajaxPutMock = sandbox.mock(ajaxClientInstance).expects("put")
@@ -227,6 +228,16 @@ describe("DisplayArticleActions", () => {
 
             store.dispatch(addToCollection(collection, article));
             ajaxPutMock.verify();
+        });
+    });
+
+    describe("addArticleToCollection", () => {
+        it("should dispatch addArticleToCollectionObject", () => {
+            const selectedTextDoc = { "title": "title", "description": "description" };
+            const expected = { "type": ADD_ARTICLE_TO_COLLECTION,
+                "addArticleToCollection": { "id": "id", "sourceType": "web", "sourceId": "sourceId", selectedTextDoc } };
+
+            expect(addArticleToCollection("id", "web", "sourceId", selectedTextDoc)).to.deep.equals(expected);
         });
     });
 });

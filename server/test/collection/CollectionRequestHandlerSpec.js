@@ -286,45 +286,28 @@ describe("CollectionRequestHandler", () => {
     describe("createCollectionFeedWithSelectedText", () => {
         const feedId = "feedId";
         const collectionId = "collectionId";
-        const selectedText = "selectedText";
+        let selectedText = { "title": "title", "description": "description", "sourceType": "web" };
 
         afterEach("createCollectionFeedWithSelectedText", () => {
             sandbox.restore();
         });
 
         it("should create collectionFeed doc with selectedText", async () => {
-            const feedDoc = {
-                "_id": feedId,
-                "title": "title of the feed",
-                "description": "description of the feed",
-                "sourceType": "web",
-                "link": "http://www.link.com",
-                "pubDate": "28-10-1994T 00-00-00z",
-                "tags": [
-                    "The Hindu - Home"
-                ]
-            };
             const collectionFeedDoc = {
                 "docType": "collectionFeed",
-                "description": selectedText,
-                "title": feedDoc.title,
-                "sourceType": feedDoc.sourceType,
-                "link": feedDoc.link,
-                "pubDate": feedDoc.pubDate,
-                "tags": feedDoc.tags,
+                "description": selectedText.description,
+                "title": selectedText.title,
+                "sourceType": selectedText.sourceType,
                 collectionId,
-                "selectText": true
+                "selectText": true,
+                feedId
             };
-
-            const getDocMock = sandbox.mock(couchClient).expects("getDocument")
-                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
 
             const updateDocMock = sandbox.mock(couchClient).expects("updateDocument")
                 .withExactArgs(collectionFeedDoc).returns(Promise.resolve({ "ok": true }));
 
             await collectionRequestHandler.createCollectionFeedWithSelectedText(collectionId, feedId, selectedText);
 
-            getDocMock.verify();
             updateDocMock.verify();
         });
     });

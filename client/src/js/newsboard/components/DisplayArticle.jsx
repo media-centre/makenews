@@ -9,12 +9,17 @@ import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export class DisplayArticle extends Component {
+    constructor() {
+        super();
+        this._getSelectedTextDoc = this._getSelectedTextDoc.bind(this);
+    }
 
     renderBody() {
         return (<main className="article">
             <h1 className="article__title">
                 { this.props.article.title }
             </h1>
+
 
             <div className="article__details">
                 <i className={`fa fa-${this.props.article.sourceType}`} />
@@ -39,7 +44,31 @@ export class DisplayArticle extends Component {
             <div className="article__original-source">
                 <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">Read the Original Article</a>
             </div>
+
+            <button onClick={this._CopyToClipboard}>Copy</button>
+            <button onClick={() => this._addToCollection()}>Add To Collection</button>
         </main>);
+    }
+
+    _getSelectedTextDoc() {
+        const feed = this.props.article;
+        return {
+            "title": feed.title,
+            "tags": feed.tags,
+            "description": window.getSelection().toString(),
+            "link": feed.link,
+            "sourceType": feed.sourceType,
+            "pubDate": feed.pubDate
+        };
+    }
+
+    _CopyToClipboard() {
+        document.execCommand("Copy");
+    }
+
+    _addToCollection() {
+        this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
+        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc()));
     }
 
     renderHeader() {
