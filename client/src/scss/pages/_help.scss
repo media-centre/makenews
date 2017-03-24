@@ -5,10 +5,16 @@
     color: $secondary-color;
   }
 
-  .help{
+  .help {
+    text-align: center;
+
+    h3 {
+      text-align: left;
+    }
+
     .video {
-      width: 500px;
-      height: 300px;
+      width: 600px;
+      display: inline-block;
       margin-bottom: 3rem;
       background-color: $dark-background-color;
 

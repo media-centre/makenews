@@ -1,4 +1,3 @@
-/* eslint react/jsx-wrap-multilines:0*/
 import AppWindow from "./AppWindow";
 
 export default class Locale {
@@ -18,5 +17,4 @@ export default class Locale {
 
 Locale.languages = {
     "ENGLISH": "en"
-}
-;
+};

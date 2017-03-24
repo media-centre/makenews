@@ -1,8 +1,8 @@
 import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "./UserProfileActions";
-import Local from "../utils/Locale";
+import Locale from "../utils/Locale";
 
 export function changePassword(state = { "errorMessage": "", "isSuccess": false }, action = {}) {
-    let appEn = Local.applicationStrings();
+    let appEn = Locale.applicationStrings();
     switch(action.type) {
     case INCORRECT_USER_CREDENTIALS:
         return {
@@ -33,11 +33,11 @@ export function changePassword(state = { "errorMessage": "", "isSuccess": false 
 }
 
 export function changePasswordStrings(state = {}, action = {}) { //eslint-disable-line
-    let appEn = Local.applicationStrings();
+    const appEn = Locale.applicationStrings();
     return appEn.messages.changePassword;
 }
 
 export function userProfileStrings(state = {}, action = {}) { //eslint-disable-line no-unused-vars
-    let appEn = Local.applicationStrings();
+    const appEn = Locale.applicationStrings();
     return appEn.messages.userProfileStrings;
 }
