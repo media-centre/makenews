@@ -1,7 +1,7 @@
 .sources-nav {
   background-color: $dark-background-color;
-  float: none;
-  clear: both;
+  display: flex;
+  height: $secondary-header-nav-height;
 
   &__item {
     display: inline-block;
@@ -26,11 +26,20 @@
   }
 
   nav.secondary-nav {
-    float: right;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  a.btn {
+    display: inline-flex;
+    padding: 1rem 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
 
   .btn {
-    padding: 14px 25px;
     font-size: 1.3rem;
     text-transform: uppercase;
     height: 100%;

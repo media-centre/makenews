@@ -13,7 +13,10 @@ export default class WelcomePage extends Component {
                 </header>
                 <main>
                     <div className="welcome-message">
-                        <p className="welcome-user">Hello {user},</p>
+                        <div className="welcome-user">
+                            Hello
+                            <span className="username"> {user}</span>,
+                        </div>
                         <p className="intro">
                             Welcome onboard. Hungry for news? Lets get started to collect and sort your news at one stop. Here are a few things you might want to know.
                         </p>

@@ -22,6 +22,10 @@
       font-size: 2rem;
       line-height: 2.9rem;
 
+      .username {
+        text-transform: capitalize;
+      }
+
       .sources {
         text-align: center;
 
