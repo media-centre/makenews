@@ -12,6 +12,14 @@ import JsPdf from "jspdf";
 import FileSaver from "file-saver";
 
 export class EditStory extends Component {
+    static jsPdfInstance() {
+        return new JsPdf();
+    }
+
+    static blobInstance(byteNumbers) {
+        return new Blob([byteNumbers], { "type": "text/html" });
+    }
+
     constructor() {
         super();
         this.state = { "title": "", "body": "" };
@@ -80,7 +88,7 @@ export class EditStory extends Component {
     }
 
     _exportPdf(extension) {
-        const doc = new JsPdf();
+        const doc = EditStory.jsPdfInstance();
         const position = 15;
         doc.fromHTML(`<html><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`, position, position);
         doc.save(`${this.state.title}.${extension}`);
@@ -92,7 +100,7 @@ export class EditStory extends Component {
         [...htmlString].map((htmlChar, index) => {
             byteNumbers[index] = htmlChar.charCodeAt();
         });
-        let blob = new Blob([byteNumbers], { "type": "text/html" });
+        let blob = EditStory.blobInstance(byteNumbers);
         FileSaver.saveAs(blob, `${this.state.title}.html`);
     }
 
@@ -116,12 +124,12 @@ export class EditStory extends Component {
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
                     <div className="export-container">
-                        <i className="fa fa-share export" />
                         <div className="export-options">
-                            <button onClick={() => this._exportPdf("pdf")}>PDF</button>
-                            <button onClick={() => this._exportPdf("odt")}>ODT</button>
-                            <button onClick={() => this._exportHtml()}>HTML</button>
+                            <button className="export-as-pdf" onClick={() => this._exportPdf("pdf")}>PDF</button>
+                            <button className="export-as-odt" onClick={() => this._exportPdf("odt")}>ODT</button>
+                            <button className="export-as-html" onClick={() => this._exportHtml()}>HTML</button>
                         </div>
+                        <i className="fa fa-share export-icon" />
                     </div>
                 </div>
 

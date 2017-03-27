@@ -113,6 +113,7 @@
   }
 
   .story-editor {
+    height: calc(100vh - 68px - 54px - 45px);
     .ql-snow.ql-toolbar {
       background-color: $dark-background-color;
       text-align: center;
@@ -134,29 +135,49 @@
 
 
 .export-container {
-  margin-left: 80%;
-  margin-top: 15px;
   color: $secondary-color;
-
+  position: fixed;
+  right: 500px;
+  bottom: 2rem;
+  clear: both;
+  float: none;
+  background: #ffffff;
 
   .export-options {
     display: none;
+    padding: 5px 10px;
+    text-align: center;
+  }
+
+  button {
+    display: block;
+    color: $secondary-color;
+    font-weight: bold;
+    font-size: .8rem;
+    box-shadow: 0 0 2px #5d5b5b;
+    margin: 10px;
+    width: 100%;
+    border-radius: 4px;
+
+    &:hover {
+      -webkit-box-shadow: -1px 1px 5px #5d5b5b;
+      -moz-box-shadow: -1px 1px 5px #5d5b5b;
+      box-shadow: -1px 1px 5px #5d5b5b;
+    }
   }
 
   &:hover {
     .export-options {
-      display: block;
-      button {
-        display: block;
-        color: $secondary-color;
-        font-weight: bold;
-      }
+      display: inherit;
     }
   }
 
-  .export {
-    background-color: black;
+  .export-icon {
+    padding: 10px;
+    float: right;
+    cursor: pointer;
     border-radius: 100%;
+    box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.53);
     font-size: 1.5em;
   }
 }
