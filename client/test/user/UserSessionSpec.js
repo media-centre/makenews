@@ -1,5 +1,3 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
-
 import UserSession from "../../src/js/user/UserSession";
 import AppSessionStorage from "../../src/js/utils/AppSessionStorage";
 import { assert } from "chai";
@@ -32,7 +30,6 @@ describe("UserSession", () => {
             assert.strictEqual(new Date(userSession.getLastAccessedTime()).getHours(), new Date(lastAccessedTime).getHours());
         });
     });
-
 
     describe("user activity", () => {
         let appSessionStorage = null, sandbox = null, appSessionStorageGetStub = null;
@@ -75,6 +72,5 @@ describe("UserSession", () => {
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
         });
-
     });
 });

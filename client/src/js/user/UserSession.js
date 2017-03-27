@@ -1,5 +1,3 @@
-/* eslint no-use-before-define:0, no-unused-expressions: 0 */
-
 import moment from "moment";
 import LogoutActions from "../login/LogoutActions";
 import AppSessionStorage from "../utils/AppSessionStorage";
@@ -7,12 +5,12 @@ import AjaxClient from "../utils/AjaxClient";
 import AppWindow from "../utils/AppWindow";
 import { getConfiguredSources } from "../sourceConfig/actions/SourceConfigurationActions";
 
-const leadTime = 120000, minuteToMilliSeconds = 60000;
+const leadTime = 120000;
 
 export default class UserSession {
 
     constructor() {
-        this.sessionTime = (AppWindow.instance().get("dbSessionInterval") * minuteToMilliSeconds) - leadTime;
+        this.sessionTime = AppWindow.instance().get("dbSessionInterval") - leadTime;
     }
 
     static instance() {
