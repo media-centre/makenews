@@ -1,5 +1,5 @@
 import { EditStory } from "../../../src/js/storyboard/components/EditStory";
-import TestUtils, { renderIntoDocument } from "react-addons-test-utils";
+import TestUtils from "react-addons-test-utils";
 import { shallow } from "enzyme";
 import React from "react";
 import ReactQuill from "react-quill";
@@ -8,7 +8,6 @@ import NewsBoardTabs from "./../../../src/js/newsboard/components/NewsBoardTabs"
 import { assert } from "chai";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 import sinon from "sinon";
-import JsPdf from "jspdf";
 import FileSaver from "file-saver";
 
 describe("EditStory", () => {
@@ -70,69 +69,6 @@ describe("EditStory", () => {
         assert.isDefined(source);
     });
 
-    it("should have export options", () => {
-        let source = findWithClass(renderedOutput, "export-options");
-        let exportOptions = renderIntoDocument(source);
-
-        assert.strictEqual(exportOptions.style.display, "");
-    });
-
-    it("should save the story in pdf format", () => {
-        const jsPdf = new JsPdf();
-        const store = {
-            "getState": () => {
-                return {
-                    "untitledIndex": "untitled1"
-                };
-            }
-        };
-        const position = 15;
-        const wrapper = shallow(
-            <EditStory story={story} dispatch={() => {}} store = {store}/>
-        );
-        wrapper.setState({ "title": "new title", "body": "body of the article" });
-        const options = wrapper.find(".export-as-pdf");
-
-        const jsPdfInstanceMock = sandbox.mock(EditStory).expects("jsPdfInstance").returns(jsPdf);
-        const fromHtmlMock = sandbox.mock(jsPdf).expects("fromHTML")
-            .withExactArgs("<html><body><h1>new title</h1>body of the article</body></html>", position, position);
-        const saveMock = sandbox.mock(jsPdf).expects("save").withExactArgs("new title.pdf");
-
-        options.simulate("click");
-
-        jsPdfInstanceMock.verify();
-        fromHtmlMock.verify();
-        saveMock.verify();
-    });
-
-    it("should save the story in odt format", () => {
-        const jsPdf = new JsPdf();
-        const store = {
-            "getState": () => {
-                return {
-                    "untitledIndex": "untitled1"
-                };
-            }
-        };
-        const position = 15;
-        const wrapper = shallow(
-            <EditStory story={story} dispatch={() => {}} store={store}/>
-        );
-        wrapper.setState({ "title": "new title", "body": "body of the article" });
-        const options = wrapper.find(".export-as-odt");
-
-        const jsPdfInstanceMock = sandbox.mock(EditStory).expects("jsPdfInstance").returns(jsPdf);
-        const fromHtmlMock = sandbox.mock(jsPdf).expects("fromHTML")
-            .withExactArgs("<html><body><h1>new title</h1>body of the article</body></html>", position, position);
-        const saveMock = sandbox.mock(jsPdf).expects("save").withExactArgs("new title.odt");
-
-        options.simulate("click");
-
-        jsPdfInstanceMock.verify();
-        fromHtmlMock.verify();
-        saveMock.verify();
-    });
-
     it("should save the story in html format", () => {
         const store = {
             "getState": () => {
@@ -145,7 +81,7 @@ describe("EditStory", () => {
             <EditStory story={story} dispatch={() => {}} store={store}/>
         );
         wrapper.setState({ "title": "new title", "body": "body of the article" });
-        const options = wrapper.find(".export-as-html");
+        const options = wrapper.find(".export-icon");
 
         const blobInstanceMock = sandbox.mock(EditStory).expects("blobInstance").returns({});
 

@@ -8,13 +8,9 @@ import StringUtil from "../../../../../common/src/util/StringUtil";
 import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
-import JsPdf from "jspdf";
 import FileSaver from "file-saver";
 
 export class EditStory extends Component {
-    static jsPdfInstance() {
-        return new JsPdf();
-    }
 
     static blobInstance(byteNumbers) {
         return new Blob([byteNumbers], { "type": "text/html" });
@@ -87,15 +83,8 @@ export class EditStory extends Component {
         }
     }
 
-    _exportPdf(extension) {
-        const doc = EditStory.jsPdfInstance();
-        const position = 15;
-        doc.fromHTML(`<html><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`, position, position);
-        doc.save(`${this.state.title}.${extension}`);
-    }
-
     _exportHtml() {
-        let htmlString = `<html><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`;
+        let htmlString = `<html style="line-height: 1.5rem;"><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`;
         let byteNumbers = new Uint8Array(htmlString.length);
         [...htmlString].map((htmlChar, index) => {
             byteNumbers[index] = htmlChar.charCodeAt();
@@ -124,12 +113,7 @@ export class EditStory extends Component {
                     { "SAVE" }</button>
                     <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
                     <div className="export-container">
-                        <div className="export-options">
-                            <button className="export-as-pdf" onClick={() => this._exportPdf("pdf")}>PDF</button>
-                            <button className="export-as-odt" onClick={() => this._exportPdf("odt")}>ODT</button>
-                            <button className="export-as-html" onClick={() => this._exportHtml()}>HTML</button>
-                        </div>
-                        <i className="fa fa-share export-icon" />
+                        <i className="fa fa-share export-icon" onClick={() => this._exportHtml()} />
                     </div>
                 </div>
 

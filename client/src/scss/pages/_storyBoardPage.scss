@@ -143,35 +143,6 @@
   float: none;
   background: #ffffff;
 
-  .export-options {
-    display: none;
-    padding: 5px 10px;
-    text-align: center;
-  }
-
-  button {
-    display: block;
-    color: $secondary-color;
-    font-weight: bold;
-    font-size: .8rem;
-    box-shadow: 0 0 2px #5d5b5b;
-    margin: 10px;
-    width: 100%;
-    border-radius: 4px;
-
-    &:hover {
-      -webkit-box-shadow: -1px 1px 5px #5d5b5b;
-      -moz-box-shadow: -1px 1px 5px #5d5b5b;
-      box-shadow: -1px 1px 5px #5d5b5b;
-    }
-  }
-
-  &:hover {
-    .export-options {
-      display: inherit;
-    }
-  }
-
   .export-icon {
     padding: 10px;
     float: right;
