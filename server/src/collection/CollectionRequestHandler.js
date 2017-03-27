@@ -1,6 +1,6 @@
 import CouchClient from "../CouchClient";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
-import { DOCS_PER_REQUEST } from "../util/Constants";
+import { COLLECTION_PER_REQUEST } from "../util/Constants";
 
 export default class CollectionRequestHandler {
     static instance() {
@@ -81,8 +81,8 @@ export default class CollectionRequestHandler {
         do { //eslint-disable-line no-loops/no-loops
             collectionsDoc = await this.getCollectionQuery(couchClient, skipValue);
             allCollections = allCollections.concat(collectionsDoc.docs);
-            skipValue += DOCS_PER_REQUEST;
-        } while(collectionsDoc.docs.length === DOCS_PER_REQUEST);
+            skipValue += COLLECTION_PER_REQUEST;
+        } while(collectionsDoc.docs.length === COLLECTION_PER_REQUEST);
 
         return { "docs": allCollections };
     }

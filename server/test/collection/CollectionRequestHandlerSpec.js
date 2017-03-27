@@ -3,6 +3,7 @@ import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
+import * as Constants from "./../../src/util/Constants";
 
 describe("CollectionRequestHandler", () => {
     describe("updateCollection", () => {
@@ -167,6 +168,7 @@ describe("CollectionRequestHandler", () => {
     describe("getAllCollections", () => {
         let collectionRequestHandler = null, authSession = null;
         let sandbox = null, couchClient = null;
+        const collectionsPerReqOriginal = Constants.COLLECTION_PER_REQUEST;
 
         beforeEach("getAllCollections", () => {
             authSession = "auth session";
@@ -174,26 +176,24 @@ describe("CollectionRequestHandler", () => {
             sandbox = sinon.sandbox.create();
             couchClient = new CouchClient("access token");
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
+            Constants.COLLECTION_PER_REQUEST = 4; //eslint-disable-line no-magic-numbers
         });
 
         afterEach("getAllCollections", () => {
+            Constants.COLLECTION_PER_REQUEST = collectionsPerReqOriginal;
             sandbox.restore();
         });
         it("should get all collections", async () => {
-            let allCollections = { "docs":
-                ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10", "id11", "id12", "id13", "id14", "id15", "id16", "id17", "id18", "id19", "id20", "id21", "id22", "id23", "id24", "id25", "id26", "id27"] };
-            let response = { "docs": ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10", "id11", "id12", "id13", "id14", "id15", "id16", "id17", "id18", "id19", "id20", "id21", "id22", "id23", "id24", "id25"] };
+            const allCollections = { "docs": ["id1", "id2", "id3", "id4", "id5", "id6"] };
+            const firstResponse = { "docs": ["id1", "id2", "id3", "id4"] };
+            const secondResponse = { "docs": ["id5", "id6"] };
 
-            let finDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
-            finDocsMock.onFirstCall().returns(Promise.resolve(response))
-                .onSecondCall().returns(Promise.resolve({ "docs": ["id26", "id27"] }));
+            const finDocsMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            finDocsMock.onFirstCall().returns(Promise.resolve(firstResponse))
+                .onSecondCall().returns(Promise.resolve(secondResponse));
 
-            try {
-                let collections = await collectionRequestHandler.getAllCollections(authSession);
-                assert.deepEqual(collections, allCollections);
-            } catch(error) {
-                assert.fail(error);
-            }
+            const collections = await collectionRequestHandler.getAllCollections(authSession);
+            assert.deepEqual(collections, allCollections);
         });
     });
 });
