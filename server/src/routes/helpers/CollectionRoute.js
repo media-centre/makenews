@@ -20,7 +20,7 @@ export default class CollectionRoute extends Route {
                 return;
             }
             const response = await CollectionRequestHandler.instance().updateCollection(this.authSession, this.collection, this.isNewCollection, this.docId, this.sourceId);
-            RouteLogger.instance().debug(`CollectionRoute:: successfully added feed ${this.docId} to the collection ${this.collection}`);
+            RouteLogger.instance().debug(`CollectionRoute:: successfully updated the collection ${this.collection}`);
             this._handleSuccess(response);
         } catch(error) {
             RouteLogger.instance().debug(`CollectionRoute:: Error in updating the collection. Error  ${error}`);

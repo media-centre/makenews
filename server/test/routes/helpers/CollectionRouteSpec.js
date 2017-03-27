@@ -6,7 +6,6 @@ import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 describe("CollectionRoute", () => {
-
     describe("addToCollection", () => {
         let request = null, response = null, docId = null, collectionName = null;
         let authSession = null, collectionRoute = null, collectionRequestHandler = null, sandbox = null;

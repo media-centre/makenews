@@ -2,6 +2,7 @@ import FetchAllConfiguredFeeds from "./helpers/FetchAllConfiguredFeedsRoute";
 import BookmarkRoute from "./helpers/BookmarkRoute";
 import BookmarkedFeedsRoute from "./helpers/BookmarkedFeedsRoute";
 import CollectionRoute from "./helpers/CollectionRoute";
+import RenameCollectionRoute from "./helpers/collections/RenameCollectionRoute";
 import RouteLogger from "./RouteLogger";
 import FetchArticleFromUrl from "./helpers/FetchArticleFromUrl";
 import CollectionFeedsRoute from "./helpers/CollectionFeedsRoute";
@@ -33,6 +34,11 @@ export default (app) => {
     app.put("/collection", (request, response) => {
         RouteLogger.instance().info("collectionRoute:: PUT /collection request received. url = %s", request.url);
         new CollectionRoute(request, response).addToCollection();
+    });
+
+    app.put("/rename-collection", (request, response) => {
+        RouteLogger.instance().info("RenameCollectionRoute:: PUT /rename-collection request received. url = %s", request.url);
+        new RenameCollectionRoute(request, response).process();
     });
 
     app.get("/collections", (request, response) => {

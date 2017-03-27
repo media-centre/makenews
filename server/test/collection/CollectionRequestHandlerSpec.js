@@ -4,6 +4,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 import * as Constants from "./../../src/util/Constants";
+import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("CollectionRequestHandler", () => {
     describe("updateCollection", () => {
@@ -194,6 +195,92 @@ describe("CollectionRequestHandler", () => {
 
             const collections = await collectionRequestHandler.getAllCollections(authSession);
             assert.deepEqual(collections, allCollections);
+        });
+    });
+    
+    describe("renameCollection", () => {
+        const sandbox = sinon.sandbox.create();
+        const collectionReqHandler = CollectionRequestHandler.instance();
+        let couchClient = null;
+        const authSession = "authSession";
+        
+        beforeEach("renameCollection", () => {
+            couchClient = new CouchClient(authSession);
+            sandbox.stub(CouchClient, "instance").returns(couchClient);
+        });
+
+        afterEach("renameCollection", () => {
+            sandbox.restore();
+        });
+
+        it("should throw an error if the collection is already exits with the same name", async () => {
+            const collectionId = 123456;
+            const collectionName = "new collection name";
+            const selector = {
+                "selector": {
+                    "docType": {
+                        "$eq": "collection"
+                    },
+                    "collection": {
+                        "$eq": collectionName
+                    }
+                }
+            };
+            sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector)
+                .returns({ "docs": [{ "_id": 1231 }] });
+
+            await isRejected(collectionReqHandler.renameCollection(authSession, collectionId, collectionName),
+                `There is already a collection with the name ${collectionName}`);
+        });
+        
+        it("should rename the collection", async () => {
+            const collectionId = 123456;
+            const collectionName = "new collection name";
+            sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
+            
+            sandbox.stub(couchClient, "getDocument").returns(Promise.resolve({
+                "_id": collectionId,
+                "docType": "collection",
+                "collection": "collection name"
+            }));
+            
+            const updatedCollection = {
+                "_id": collectionId,
+                "docType": "collection",
+                "collection": collectionName
+            };
+            
+            const updateMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(collectionId, updatedCollection).returns(Promise.resolve({ "ok": true }));
+
+            const response = await collectionReqHandler.renameCollection(authSession, collectionId, collectionName);
+            
+            updateMock.verify();
+            assert.deepEqual(response, { "ok": true });
+        });
+
+        it("should throw error if couchdb throws any error", async () => {
+            const collectionId = 123456;
+            const collectionName = "new collection name";
+            sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
+
+            sandbox.stub(couchClient, "getDocument").returns(Promise.resolve({
+                "_id": collectionId,
+                "docType": "collection",
+                "collection": "collection name"
+            }));
+
+            const updatedCollection = {
+                "_id": collectionId,
+                "docType": "collection",
+                "collection": collectionName
+            };
+
+            sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(collectionId, updatedCollection).returns(Promise.reject({}));
+
+            await isRejected(collectionReqHandler.renameCollection(authSession, collectionId, collectionName),
+                "unable to rename the collection new collection name");
         });
     });
 });

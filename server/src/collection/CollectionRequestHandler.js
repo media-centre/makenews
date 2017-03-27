@@ -59,6 +59,23 @@ export default class CollectionRequestHandler {
         }
     }
 
+    async renameCollection(authSession, collectionId, collectionName) {
+        const couchClient = CouchClient.instance(authSession);
+        const collections = await this.getCollectionDoc(couchClient, collectionName);
+        if (collections.docs.length) {
+            throw `There is already a collection with the name ${collectionName}`; //eslint-disable-line no-throw-literal
+        } else {
+            try {
+                const collection = await couchClient.getDocument(collectionId);
+                const updatedCollection = Object.assign({}, collection, { "collection": collectionName });
+                await couchClient.saveDocument(collectionId, updatedCollection);
+                return { "ok": true };
+            } catch (err) {
+                throw `unable to rename the collection ${collectionName}`; //eslint-disable-line no-throw-literal
+            }
+        }
+    }
+
     async getCollectionDoc(couchClient, collectionName) {
         const selector = {
             "selector": {
