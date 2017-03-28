@@ -89,7 +89,7 @@ describe("Display Collections", () => {
         let collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
 
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
-        assert.equal(collections[0].textContent, "politics×"); //eslint-disable-line no-magic-numbers
+        assert.equal(collections[0].textContent, "politics × "); //eslint-disable-line no-magic-numbers
     });
 
     describe("Display StoryBoard Collection", () => {

@@ -4,12 +4,14 @@ import {
     deleteCollection,
     clearFeeds,
     deleteCollectionFeed,
+    renameCollection,
     COLLECTION_FEEDS,
     NO_COLLECTION_FEEDS,
     CURRENT_COLLECTION,
     CLEAR_COLLECTION_FEEDS,
     DELETE_COLLECTION,
-    DELETE_COLLECTION_FEED
+    DELETE_COLLECTION_FEED,
+    RENAMED_COLLECTION
 } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import Toast from "../../../src/js/utils/custom_templates/Toast";
@@ -201,4 +203,49 @@ describe("DisplayCollectionAction", () => {
         });
     });
 
+    describe("rename Collection", () => {
+        const collectionId = "1234";
+        const newCollectionName = "test";
+
+        beforeEach("rename Collection", () => {
+            sandbox = sinon.sandbox.create();
+            ajaxClientInstance = AjaxClient.instance("/rename-collection");
+            sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
+        });
+
+        afterEach("rename Collection", () => {
+            sandbox.restore();
+        });
+
+        it("should dispatch rename Collection", (done) => {
+            const response = { "ok": true };
+            const headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            };
+
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put")
+               .withExactArgs(headers, { collectionId, newCollectionName }).returns(Promise.resolve(response));
+            const actions = [{ "type": RENAMED_COLLECTION, collectionId, newCollectionName }];
+            const store = mockStore([], actions, done);
+
+            store.dispatch(renameCollection(collectionId, newCollectionName));
+
+            putMock.verify();
+        });
+
+        it("should show toast message on failed to rename the collection", async() => {
+            const response = { "message": "unable to rename the Collection" };
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("unable to rename Collection");
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put")
+                .withExactArgs({ collectionId, newCollectionName }).returns(Promise.reject(response));
+
+            try {
+                await renameCollection({ collectionId, newCollectionName });
+            } catch(error) {
+                toastMock.verify();
+                putMock.verify();
+            }
+        });
+    });
 });

@@ -13,7 +13,7 @@ import {
     WEB_ARTICLE_RECEIVED,
     UNBOOKMARK_THE_ARTICLE
 } from "./../actions/DisplayArticleActions";
-import { DELETE_COLLECTION } from "../actions/DisplayCollectionActions";
+import { DELETE_COLLECTION, RENAMED_COLLECTION } from "../actions/DisplayCollectionActions";
 import { List } from "immutable";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 
@@ -37,6 +37,11 @@ export function fetchedFeeds(state = [], action = {}) {
     case DELETE_COLLECTION: {
         const updatedCollections = state.filter(collection => collection._id !== action.collection);
         return [].concat(updatedCollections);
+    }
+    case RENAMED_COLLECTION: {
+        let filteredCollection = state.find(feed => feed._id === action.collectionId);
+        filteredCollection.collection = action.newCollectionName;
+        return [].concat(state);
     }
     default:
         return state;

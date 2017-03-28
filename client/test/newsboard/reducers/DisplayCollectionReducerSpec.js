@@ -1,5 +1,10 @@
 import { displayCollection, currentCollection } from "./../../../src/js/newsboard/reducers/DisplayCollectionReducer";
-import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS, DELETE_COLLECTION_FEED } from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
+import {
+    COLLECTION_FEEDS,
+    CURRENT_COLLECTION,
+    CLEAR_COLLECTION_FEEDS,
+    DELETE_COLLECTION_FEED
+} from "./../../../src/js/newsboard/actions/DisplayCollectionActions";
 import { assert } from "chai";
 
 describe("DisplayCollectionReducer", () => {
