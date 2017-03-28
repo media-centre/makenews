@@ -1,9 +1,14 @@
-import { COLLECTION_FEEDS, CURRENT_COLLECTION, CLEAR_COLLECTION_FEEDS, DELETE_COLLECTION_FEED } from "./../actions/DisplayCollectionActions";
+import {
+    COLLECTION_FEEDS,
+    CURRENT_COLLECTION,
+    CLEAR_COLLECTION_FEEDS,
+    DELETE_COLLECTION_FEED
+} from "./../actions/DisplayCollectionActions";
 
 export function displayCollection(state = [], action = {}) {
     switch(action.type) {
     case COLLECTION_FEEDS: {
-        return Object.assign([], state.concat(action.feeds)); //eslint-disable-line new-cap
+        return Object.assign([], state.concat(action.feeds));
     }
     case CLEAR_COLLECTION_FEEDS: {
         return [];

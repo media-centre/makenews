@@ -5,7 +5,7 @@ import {
     fetchingWebArticle,
     fetchingFeeds
 } from "../../../src/js/newsboard/reducers/DisplayFeedReducers";
-import { DELETE_COLLECTION } from "../../../src/js/newsboard/actions/DisplayCollectionActions";
+import { DELETE_COLLECTION, RENAMED_COLLECTION } from "../../../src/js/newsboard/actions/DisplayCollectionActions";
 import {
     NEWS_BOARD_CURRENT_TAB,
     DISPLAY_ARTICLE,
@@ -114,6 +114,15 @@ describe("DisplayFeedReducer", () => {
             }];
             const action = { "type": DELETE_COLLECTION, "collection": "1234" };
             expect(fetchedFeeds(state, action)).to.deep.equal(updatedCollection);
+        });
+
+        it("should change the collection name when the RENAMED_COLLECTION action happens", () => {
+            const state = [{ "_id": 1, "collection": "title" }, { "_id": 2, "collection": "title2" }];
+            const expectedState = [{ "_id": 1, "collection": "new title" }, { "_id": 2, "collection": "title2" }];
+
+            const action = { "type": RENAMED_COLLECTION, "collectionId": 1, "newCollectionName": "new title" };
+
+            expect(fetchedFeeds(state, action)).to.deep.equal(expectedState);
         });
     });
 

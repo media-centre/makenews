@@ -7,6 +7,7 @@ export const CURRENT_COLLECTION = "CURRENT_COLLECTION";
 export const CLEAR_COLLECTION_FEEDS = "CLEAR_COLLECTION_FEEDS";
 export const DELETE_COLLECTION = "DELETE_COLLECTION";
 export const DELETE_COLLECTION_FEED = "DELETE_COLLECTION_FEED";
+export const RENAMED_COLLECTION = "RENAMED_COLLECTION";
 
 const noCollectionFeeds = { "type": NO_COLLECTION_FEEDS };
 
@@ -101,3 +102,20 @@ export function deleteCollectionFeed(event, feedId, collectionId) {
         button.innerHTML = "&times";
     };
 }
+
+export function renameCollection(collectionId, newCollectionName) {
+    return async dispatch => {
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        try {
+            const ajaxClient = AjaxClient.instance("/rename-collection");
+            await ajaxClient.put(headers, { collectionId, newCollectionName });
+            dispatch({ "type": RENAMED_COLLECTION, collectionId, newCollectionName });
+        } catch(err) {
+            Toast.show(err.message);
+        }
+    };
+}
+

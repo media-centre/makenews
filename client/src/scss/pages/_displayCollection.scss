@@ -13,12 +13,40 @@
   }
 
   .collection-name {
-    padding: 10px 15px;
+    padding: 5px 15px;
     font-size: 1.05rem;
     cursor: pointer;
     color: $primary-color-light;
     word-wrap: break-word;
     word-break: break-word;
+    display: flex;
+
+    &:focus {
+      outline: none;
+      background-color: #fff;
+    }
+
+    .title {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      padding-right: 5px;
+
+      button {
+        font-size: .9rem;
+        padding: 0;
+        color: $primary-color-light;
+      }
+
+      span {
+        flex-grow: 1;
+      }
+    }
+
+    input {
+      flex-grow: 1;
+    }
+
     .spinner {
       padding: 0;
       border: none;
@@ -33,12 +61,11 @@
     }
 
     .delete-collection {
-      font-size: 1.3em;
+      font-size: 1.7rem;
       font-weight: 400;
       font-style: normal;
-      float: right;
       cursor: pointer;
-      padding: 0;
+      padding: 0 0 3px 0;
       border: none;
       color: $primary-color-light;
     }

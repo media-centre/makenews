@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from "react";
-import { setCurrentCollection, deleteCollection } from "./../actions/DisplayCollectionActions";
+import { setCurrentCollection, deleteCollection, renameCollection } from "./../actions/DisplayCollectionActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import StringUtil from "./../../../../../common/src/util/StringUtil";
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
-import R from "ramda"; //eslint-disable-line id-length
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
+import InlineEdit from "./../../utils/components/InlineEdit";
+import R from "ramda"; //eslint-disable-line id-length
 
 export class DisplayCollection extends Component {
     constructor() {
@@ -25,12 +26,25 @@ export class DisplayCollection extends Component {
     collectionClick(event, collection) {
         this.setState({ "isClicked": true });
         this.refs.collectionList.querySelector(".collection-name.active").className = "collection-name";
-        event.target.className = "collection-name active";
+        if(event.target.tagName === "SPAN") {
+            event.target.parentNode.parentNode.className = "collection-name active";
+        } else if(event.target.tagName === "LI") {
+            event.target.className = "collection-name active";
+        } else {
+            event.target.parentNode.className = "collection-name active";
+        }
         this.props.dispatch(setCurrentCollection(collection));
         if(this.props.addArticleToCollection.id) {
             this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
         }
     }
+
+    _deleteCollectionEvent(event, collectionId) {
+        event.stopPropagation();
+        const firstCollection = this.refs.collectionList.querySelector(".collection-name");
+        this.props.dispatch(deleteCollection(event, collectionId, firstCollection));
+    }
+
     _renderCollections() {
         const searchKey = this.state.searchKey;
         let filteredCollections = [];
@@ -46,14 +60,19 @@ export class DisplayCollection extends Component {
         let [first, ...rest] = filteredCollections;
         let collectionItems = [];
         const getCollectionItem = (collection, className) =>
-            (<li className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>{ collection.collection }
-                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) => {
-                        event.stopPropagation();
-                        const firstCollection = this.refs.collectionList.querySelector(".collection-name");
-                        this.props.dispatch(deleteCollection(event, collection._id, firstCollection));
-                    }}
-                    >
-                        &times;</button>
+            (<li tabIndex="0" className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>
+                    <InlineEdit
+                        text={collection.collection}
+                        paramName="newCollectionName"
+                        className="title"
+                        stopPropagation="true"
+                        change={(value) => {
+                            this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
+                        }}
+                    />
+                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) =>
+                        this._deleteCollectionEvent(event, collection._id)}
+                    > &times; </button>
                 </li>
             );
 
