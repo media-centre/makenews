@@ -13,3 +13,4 @@ server/logs/
 .vagrant/
 server/config/application.json
 npm-debug.log
+yarn.lock
