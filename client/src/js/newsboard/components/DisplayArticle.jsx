@@ -14,7 +14,51 @@ export class DisplayArticle extends Component {
         this._getSelectedTextDoc = this._getSelectedTextDoc.bind(this);
     }
 
+    _showOptions() {
+
+        event.preventDefault();
+        let selection = window.getSelection(), range = selection.getRangeAt(0), rect = range.getBoundingClientRect();  //eslint-disable-line
+        let text = selection.toString();
+
+        let div = document.getElementById("toolTip");
+        div.style.display = "block";
+        let copy = document.getElementById("copy");
+        let add = document.getElementById("add");
+
+
+        copy.setAttribute("class", "icon fa fa-copy");
+        copy.setAttribute("aria-hidden", true);
+        copy.setAttribute("title", "Copy to Clipboard");
+
+        add.setAttribute("class", "icon fa fa-folder-o");
+        add.setAttribute("aria-hidden", true);
+
+        add.addEventListener("click", (event) => {
+            event.stopPropagation();
+            div.style.display = "none";
+
+            this._addToCollection(text);
+        });
+
+        copy.addEventListener("click", (event) => {
+            event.stopPropagation();
+            div.style.display = "none";
+
+            this._copyToClipboard();
+        });
+
+
+        div.setAttribute("class", "toolTip");
+
+        div.style.top = rect.top-50 + "px"; //eslint-disable-line
+        div.style.left = rect.left + "px";
+    }
+
     renderBody() {
+        let toolTip = (<div className="toolTip" id="toolTip">
+            <button id="add" className="icon fa fa-folder-o">Add To Collection</button>
+            <button id="copy" className="icon fa fa-copy"/>
+        </div>);
         return (<main className="article">
             <h1 className="article__title">
                 { this.props.article.title }
@@ -34,9 +78,9 @@ export class DisplayArticle extends Component {
                 { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
             </div>
 
-            {this.props.article.sourceType === "web"
-                ? <DisplayWebArticle />
-                : <div className="article__desc">
+            {this.props.article.sourceType === "web" && !this.props.article.selectText
+                ? <DisplayWebArticle toolTip={this._showOptions.bind(this)}/>
+                : <div className="article__desc" onMouseUp={() => { this._showOptions(); }}>
                 { this.props.article.description }
             </div>
             }
@@ -44,31 +88,29 @@ export class DisplayArticle extends Component {
             <div className="article__original-source">
                 <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">Read the Original Article</a>
             </div>
-
-            <button onClick={this._CopyToClipboard}>Copy</button>
-            <button onClick={() => this._addToCollection()}>Add To Collection</button>
+            {toolTip}
         </main>);
     }
 
-    _getSelectedTextDoc() {
+    _getSelectedTextDoc(selectedText) {
         const feed = this.props.article;
         return {
             "title": feed.title,
             "tags": feed.tags,
-            "description": window.getSelection().toString(),
+            "description": selectedText,
             "link": feed.link,
             "sourceType": feed.sourceType,
             "pubDate": feed.pubDate
         };
     }
 
-    _CopyToClipboard() {
+    _copyToClipboard() {
         document.execCommand("Copy");
     }
 
-    _addToCollection() {
+    _addToCollection(selectedText) {
         this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc()));
+        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc(selectedText)));
     }
 
     renderHeader() {

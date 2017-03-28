@@ -96,3 +96,34 @@
   flex: 0;
   flex-basis: 420px;
 }
+
+.toolTip {
+  display: none;
+  background-color: #ffffff;
+  border: 1px solid #917fa9;
+  position: fixed;
+  height: 42px;
+  padding: 3px;
+  cursor: pointer;
+  box-shadow: 2px -1px 4px #917fa9;
+
+  #add {
+    border-right: 2px solid #917fa9;
+  }
+
+  .icon {
+
+    &:before {
+      vertical-align: sub;
+      margin-right: 4px;
+      font-size: 1.5rem;
+      padding: 10px;
+    }
+  }
+
+  button {
+    color: #3a0e5f;
+    text-transform: none;
+    padding: 6px;
+  }
+}

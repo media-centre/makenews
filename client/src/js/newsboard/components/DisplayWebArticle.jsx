@@ -17,8 +17,8 @@ export class DisplayWebArticle extends Component {
 
     _renderDescription() {
         return this.props.article.isHTML
-            ? <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article.markup }}/>
-            : <div className="article__desc">{this.props.selectedArticle.description}</div>;
+            ? <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article.markup }} onMouseUp={() => this.props.toolTip()}/>
+            : <div className="article__desc" onMouseUp={() => this.props.toolTip()}>{this.props.selectedArticle.description}</div>;
     }
 
     render() {
@@ -34,7 +34,8 @@ DisplayWebArticle.propTypes = {
     "article": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "selectedArticle": PropTypes.object.isRequired,
-    "isFetchingArticle": PropTypes.bool.isRequired
+    "isFetchingArticle": PropTypes.bool.isRequired,
+    "toolTip": PropTypes.func
 };
 
 function mapToStore(store) {
