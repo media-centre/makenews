@@ -7,7 +7,7 @@ export default class SignInWarning extends Component {
                 <i className="warning-icon"/>
                 <div className="message">
                     { this.props.currentSourceType === "facebook"
-                        ? "Please, sign into your facebook account to add Facebook Profiles, Groups, Pages as your sources"
+                        ? "Please, sign into your facebook account to add Facebook Groups, Pages as your sources"
                         : "Please, sign into your twitter account"
                     }
                 </div>

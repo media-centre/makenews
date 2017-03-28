@@ -51,7 +51,7 @@ describe("SourceConfigurationActions", () => {
 
     describe("switch current Tab", () => {
         it("should return the FACEBOOK_CHANGE_CURRENT_TAB action", () => {
-            let currentTab = "Profiles";
+            let currentTab = "Pages";
             let facebookSourceTabSwitch = sourceConfigActions.switchSourceTab(currentTab);
             expect(facebookSourceTabSwitch.type).to.equal(sourceConfigActions.CHANGE_CURRENT_SOURCE_TAB);
             expect(facebookSourceTabSwitch.currentTab).to.equal(currentTab);

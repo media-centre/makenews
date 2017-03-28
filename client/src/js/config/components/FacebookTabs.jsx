@@ -1,7 +1,7 @@
 /* eslint react/jsx-no-literals:0, brace-style:0 react/jsx-closing-bracket-location:0*/
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { PROFILES, PAGES, GROUPS } from "../actions/FacebookConfigureActions";
+import { PAGES, GROUPS } from "../actions/FacebookConfigureActions";
 import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import { Link } from "react-router";
 
@@ -20,7 +20,6 @@ export class FacebookTabs extends Component {
     render() {
         return (
             <nav className="fb-sources-tab">
-                { this._renderTab(PROFILES, "Profiles") }
                 { this._renderTab(PAGES, "Pages") }
                 { this._renderTab(GROUPS, "Groups") }
             </nav>

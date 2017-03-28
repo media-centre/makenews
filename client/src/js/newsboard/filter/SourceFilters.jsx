@@ -33,7 +33,6 @@ export default class SourceFilters extends Component {
 
         return (
             <div className="list-sources-block">
-                { this._listSourcesGroup("Facebook Profiles", "profiles", this.props.searchKeyword) }
                 { this._listSourcesGroup("Facebook Pages", "pages", this.props.searchKeyword) }
                 { this._listSourcesGroup("Facebook Groups", "groups", this.props.searchKeyword) }
             </div>

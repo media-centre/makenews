@@ -68,7 +68,7 @@ describe("Configured Sources", () => {
         it("should return all matched sources of facebook with name matching the search key ", () => {
             let store = createStore(() => ({
                 "currentSourceTab": "facebook",
-                "configuredSources": { "profiles": [{ "_id": "123", "name": "helloFb" }, { "_id": "1234", "name": "test" }], "pages": [{ "_id": "1235", "name": "helloFb" }, { "_id": "1236", "name": "test" }],
+                "configuredSources": { "pages": [{ "_id": "1235", "name": "helloFb" }, { "_id": "1236", "name": "test" }],
                     "groups": [{ "_id": "1237", "name": "helloFb" }, { "_id": "1238", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
@@ -80,7 +80,7 @@ describe("Configured Sources", () => {
             );
             let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
-            expect(source.length).to.equal(3); //eslint-disable-line no-magic-numbers
+            expect(source.length).to.equal(2); //eslint-disable-line no-magic-numbers
 
         });
     });

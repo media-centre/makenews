@@ -23,7 +23,7 @@ describe("SignInWarning", () => {
         wrapper = shallow(<SignInWarning currentSourceType="facebook"/>);
         const [, message] = wrapper.node.props.children;
         expect(message.props.className).to.equals("message");
-        expect(message.props.children).to.equals("Please, sign into your facebook account to add Facebook Profiles, Groups, Pages as your sources");
+        expect(message.props.children).to.equals("Please, sign into your facebook account to add Facebook Groups, Pages as your sources");
         expect(message.type).to.equals("div");
     });
 

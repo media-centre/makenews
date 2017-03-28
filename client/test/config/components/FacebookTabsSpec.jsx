@@ -19,21 +19,20 @@ describe("Facebook Tabs", () => {
         } };
 
         let renderer = TestUtils.createRenderer();
-        nav = renderer.render(<FacebookTabs dispatch={() => {}} store={store} currentTab="profiles"/>);
+        nav = renderer.render(<FacebookTabs dispatch={() => {}} store={store} currentTab="pages"/>);
     });
 
     it("should have nav tabs to switch between facebook sources", () => {
         expect(nav.type).to.equal("nav");
 
         let tabLinks = nav.props.children;
-        expect(tabLinks).to.have.lengthOf(3); //eslint-disable-line no-magic-numbers
-        let [firstTab, secondTab, thirdTab] = tabLinks;
-        expect(firstTab.props.children).to.equal("Profiles");
-        expect(secondTab.props.children).to.equal("Pages");
-        expect(thirdTab.props.children).to.equal("Groups");
+        expect(tabLinks).to.have.lengthOf(2); //eslint-disable-line no-magic-numbers
+        let [firstTab, secondTab] = tabLinks;
+        expect(firstTab.props.children).to.equal("Pages");
+        expect(secondTab.props.children).to.equal("Groups");
     });
 
-    it("Profiles link should be highlighted by default", () => {
+    it("Pages link should be highlighted by default", () => {
         let [firstTab] = nav.props.children;
         expect(firstTab.props.className).to.have.string("active");
     });
@@ -44,8 +43,7 @@ describe("Facebook Tabs", () => {
                 <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab={PROFILES}/>)} />
             </Router>
         );
-        let [profiles, pages, groups] = TestUtils.scryRenderedComponentsWithType(nav, Link);
-        expect(profiles.props.to).to.equal("/configure/facebook/profiles");
+        let [pages, groups] = TestUtils.scryRenderedComponentsWithType(nav, Link);
         expect(pages.props.to).to.equal("/configure/facebook/pages");
         expect(groups.props.to).to.equal("/configure/facebook/groups");
     });
@@ -55,10 +53,10 @@ describe("Facebook Tabs", () => {
         let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("pages");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
-                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Profiles"/>)} />
+                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Groups"/>)} />
             </Router>
         );
-        let [, pagesLink] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
+        let [pagesLink] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
         TestUtils.Simulate.click(pagesLink);
         fbSourceTabSwitch.verify();
         sandbox.restore();
@@ -69,10 +67,10 @@ describe("Facebook Tabs", () => {
         let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("groups");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
-                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Groups"/>)} />
+                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Pages"/>)} />
             </Router>
         );
-        let [, , groupsTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
+        let [, groupsTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
         TestUtils.Simulate.click(groupsTab);
         fbSourceTabSwitch.verify();
         sandbox.restore();
