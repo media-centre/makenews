@@ -14,51 +14,26 @@ export class DisplayArticle extends Component {
         this._getSelectedTextDoc = this._getSelectedTextDoc.bind(this);
     }
 
-    _showOptions() {
-
-        event.preventDefault();
-        let selection = window.getSelection(), range = selection.getRangeAt(0), rect = range.getBoundingClientRect();  //eslint-disable-line
-        let text = selection.toString();
-
+    _showToolTip() {
         let div = document.getElementById("toolTip");
-        div.style.display = "block";
-        let copy = document.getElementById("copy");
-        let add = document.getElementById("add");
+        if(window.getSelection().toString()) {
+            let selection = window.getSelection(), range = selection.getRangeAt(0), rect = range.getBoundingClientRect();  //eslint-disable-line no-magic-numbers
 
-
-        copy.setAttribute("class", "icon fa fa-copy");
-        copy.setAttribute("aria-hidden", true);
-        copy.setAttribute("title", "Copy to Clipboard");
-
-        add.setAttribute("class", "icon fa fa-folder-o");
-        add.setAttribute("aria-hidden", true);
-
-        add.addEventListener("click", (event) => {
-            event.stopPropagation();
+            div.style.top = rect.top - 50 + "px"; //eslint-disable-line no-magic-numbers
+            div.style.display = "block";
+            div.style.left = rect.left + "px";
+        }
+        else {
             div.style.display = "none";
-
-            this._addToCollection(text);
-        });
-
-        copy.addEventListener("click", (event) => {
-            event.stopPropagation();
-            div.style.display = "none";
-
-            this._copyToClipboard();
-        });
-
-
-        div.setAttribute("class", "toolTip");
-
-        div.style.top = rect.top-50 + "px"; //eslint-disable-line
-        div.style.left = rect.left + "px";
+        }
     }
 
     renderBody() {
         let toolTip = (<div className="toolTip" id="toolTip">
-            <button id="add" className="icon fa fa-folder-o">Add To Collection</button>
-            <button id="copy" className="icon fa fa-copy"/>
+            <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>Add To Collection</button>
+            <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}/>
         </div>);
+
         return (<main className="article">
             <h1 className="article__title">
                 { this.props.article.title }
@@ -79,8 +54,8 @@ export class DisplayArticle extends Component {
             </div>
 
             {this.props.article.sourceType === "web" && !this.props.article.selectText
-                ? <DisplayWebArticle toolTip={this._showOptions.bind(this)}/>
-                : <div className="article__desc" onMouseUp={() => { this._showOptions(); }}>
+                ? <DisplayWebArticle toolTip={this._showToolTip.bind(this)}/>
+                : <div className="article__desc" onMouseUp={() => { this._showToolTip(); }}>
                 { this.props.article.description }
             </div>
             }
@@ -92,25 +67,31 @@ export class DisplayArticle extends Component {
         </main>);
     }
 
-    _getSelectedTextDoc(selectedText) {
+    _getSelectedTextDoc() {
         const feed = this.props.article;
         return {
             "title": feed.title,
             "tags": feed.tags,
-            "description": selectedText,
+            "description": window.getSelection().toString(),
             "link": feed.link,
             "sourceType": feed.sourceType,
             "pubDate": feed.pubDate
         };
     }
 
+    _toolTipStyle(event) {
+        event.stopPropagation();
+        let parentDiv = document.getElementById("toolTip");
+        parentDiv.style.display = "none";
+    }
+
     _copyToClipboard() {
         document.execCommand("Copy");
     }
 
-    _addToCollection(selectedText) {
+    _addToCollection() {
         this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc(selectedText)));
+        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc()));
     }
 
     renderHeader() {

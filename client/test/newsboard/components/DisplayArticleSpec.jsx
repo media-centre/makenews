@@ -272,4 +272,45 @@ describe("DisplayArticle", () => {
             expect(name).to.be.equal(" back");
         });
     });
+
+   /* TODO: unable to mock window getSelction, getRangeAt methods */ //eslint-disable-line
+    xdescribe("ToolTip", () => {
+        it("should dispatch addToCollection when there is selectedText and click on add To collection option", () => {
+            let article = { "_id": "article id", "description": "article description", "selectText": true };
+            let currentTab = "facebook";
+            let store = createStore(() => ({
+                "selectedArticle": article,
+                "newsBoardCurrentSourceTab": currentTab
+            }), applyMiddleware(thunkMiddleware));
+            let displayArticle = TestUtils.renderIntoDocument(
+                <Provider store = {store}>
+                    <DisplayArticle article={article} dispatch={()=>{}} newsBoardCurrentSourceTab="facebook"/>
+                </Provider>
+            );
+            let range = {
+                "getBoundingClientRect": () => {
+                    return { "left": 1, "right": 3, "top": 4 };
+                }
+            };
+            let selection = {
+                "getRangeAt": () => {
+                    return range;
+                }
+            };
+            global.window = {
+                "getSelection": () => {
+                    return selection;
+                }
+            };
+            sinon.stub(window, "getSelection").returns("SelectedData");
+
+            let toolTip = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "article__desc");
+
+            TestUtils.Simulate.mouseUp(toolTip);
+
+            let addToCollection = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "icon fa fa-folder-o");
+            TestUtils.Simulate.click(addToCollection);
+
+        });
+    });
 });
