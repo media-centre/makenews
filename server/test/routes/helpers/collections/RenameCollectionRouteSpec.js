@@ -1,12 +1,21 @@
 import RenameCollectionRoute from "../../../../src/routes/helpers/collections/RenameCollectionRoute";
 import CollectionRequestHandler from "./../../../../src/collection/CollectionRequestHandler";
+import CouchClient from "../../../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
 
 describe("RenameCollectionRoute", () => {
-    const sandbox = sinon.sandbox.create();
-    const accessToken = "accessToken";
+    let couchClient = null, authSession = null, sandbox = null, collectionReqHandler = null;
     let renameCollection = null, request = null;
+
+    beforeEach("CollectionRoute", () => {
+        sandbox = sinon.sandbox.create();
+        authSession = "auth session";
+        couchClient = new CouchClient(authSession);
+        sandbox.mock(CouchClient).expects("instance").withExactArgs(authSession).returns(couchClient);
+        collectionReqHandler = new CollectionRequestHandler(couchClient);
+        sandbox.mock(CollectionRequestHandler).expects("instance").withExactArgs(couchClient).returns(collectionReqHandler);
+    });
 
     afterEach("RenameCollectionRoute", () => {
         sandbox.restore();
@@ -16,7 +25,7 @@ describe("RenameCollectionRoute", () => {
         it("should return empty string if all parameters are there", () => {
             request = {
                 "cookies": {
-                    "AuthSession": accessToken
+                    "AuthSession": authSession
                 },
                 "body": {
                     "newCollectionName": "collection",
@@ -31,7 +40,7 @@ describe("RenameCollectionRoute", () => {
         it("should return missing parameters message", () => {
             request = {
                 "cookies": {
-                    "AuthSession": accessToken
+                    "AuthSession": authSession
                 },
                 "body": {
                     "collectionId": "12343"
@@ -46,12 +55,10 @@ describe("RenameCollectionRoute", () => {
 
     describe("handle", () => {
         it("should rename the collection", async () => {
-            const collectionReqHandler = CollectionRequestHandler.instance();
-            sandbox.stub(CollectionRequestHandler, "instance").returns(collectionReqHandler);
 
             request = {
                 "cookies": {
-                    "AuthSession": accessToken
+                    "AuthSession": authSession
                 },
                 "body": {
                     "newCollectionName": "collection",
@@ -59,7 +66,7 @@ describe("RenameCollectionRoute", () => {
                 }
             };
             const renameMock = sandbox.mock(collectionReqHandler).expects("renameCollection")
-                .withExactArgs(accessToken, "12343", "collection").returns(Promise.resolve({ "ok": true }));
+                .withExactArgs("12343", "collection").returns(Promise.resolve({ "ok": true }));
             renameCollection = new RenameCollectionRoute(request, {});
 
             const response = await renameCollection.handle();

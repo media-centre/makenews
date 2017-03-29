@@ -1,10 +1,11 @@
 import Route from "./../Route";
 import CollectionRequestHandler from "./../../../collection/CollectionRequestHandler";
+import CouchClient from "../../../CouchClient";
 
 export default class RenameCollectionRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
-        this.accessToken = this.request.cookies.AuthSession;
+        this.authSession = this.request.cookies.AuthSession;
         this.newCollectionName = this.request.body.newCollectionName;
         this.collectionId = this.request.body.collectionId;
     }
@@ -14,7 +15,9 @@ export default class RenameCollectionRoute extends Route {
     }
 
     async handle() {
-        const collectionReqHandler = CollectionRequestHandler.instance();
-        return await collectionReqHandler.renameCollection(this.accessToken, this.collectionId, this.newCollectionName);
+        const couchClient = CouchClient.instance(this.authSession);
+        const collectionReqHandler = CollectionRequestHandler.instance(couchClient);
+
+        return await collectionReqHandler.renameCollection(this.collectionId, this.newCollectionName);
     }
 }
