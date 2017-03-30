@@ -4,6 +4,7 @@ import { userDetails } from "../../src/Factory";
 import sinon from "sinon";
 import { assert } from "chai";
 import { isRejected } from "./../helpers/AsyncTestHelper";
+import SourceConfigRequestHandler from "./../../src/sourceConfig/SourceConfigRequestHandler";
 
 describe("TwitterRequestHandler", () => {
     let sandbox = null, userName = null, userObj = null, keyword = null, page = null, preFirstId = null;
@@ -38,6 +39,70 @@ describe("TwitterRequestHandler", () => {
             sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(handles));
             let data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
             assert.strictEqual(data, handles);
+        });
+    });
+
+    describe("configureTwitterHandle", () => {
+        const handle = "testUser";
+        const authSession = "test_token";
+        let twitterRequestHandler = null, twitterClientInstance = null;
+        beforeEach("configureTwitterHandle", () => {
+            sandbox = sinon.sandbox.create();
+            userName = "testUser";
+            userObj = { "userName": userName };
+            keyword = "keyword";
+            page = 1;  //eslint-disable-line no-magic-numbers
+            preFirstId = 123; //eslint-disable-line no-magic-numbers
+            sandbox.mock(userDetails).expects("getUser").returns(userObj);
+            twitterRequestHandler = new TwitterRequestHandler();
+            twitterClientInstance = new TwitterClient();
+            sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
+        });
+
+        afterEach("configureTwitterHandle", () => {
+            sandbox.restore();
+        });
+
+        it("should configure Twitter handle", async() => {
+            const userInfo = {
+                "id": "test",
+                "name": handle
+            };
+            sandbox.mock(twitterClientInstance).expects("fetchUserInfoFromHandle")
+                .withExactArgs(userName, handle).returns(Promise.resolve(userInfo));
+            const sourceConfigReq = new SourceConfigRequestHandler();
+            sandbox.stub(SourceConfigRequestHandler, "instance").returns(sourceConfigReq);
+            const addConfigureMock = sandbox.mock(sourceConfigReq).expects("addConfiguredSource")
+                .withArgs("twitter", [userInfo], authSession).returns(Promise.resolve({ "ok": true }));
+
+            const data = await twitterRequestHandler.configureTwitterHandle(authSession, handle);
+
+            addConfigureMock.verify();
+            assert.deepEqual(data, { "ok": true });
+        });
+
+        it("should throw an error if unable to get the user info", async() => {
+            sandbox.mock(twitterClientInstance).expects("fetchUserInfoFromHandle")
+                .withExactArgs(userName, handle).returns(Promise.reject(`Requested user ${handle} not found`));
+
+            await isRejected(twitterRequestHandler.configureTwitterHandle(authSession, handle), `Requested user ${handle} not found`);
+        });
+
+        it("should throw an error if unable to configured the url", async() => {
+            const userInfo = {
+                "id": "test",
+                "name": handle
+            };
+            sandbox.mock(twitterClientInstance).expects("fetchUserInfoFromHandle")
+                .withExactArgs(userName, handle).returns(Promise.resolve(userInfo));
+            const sourceConfigReq = new SourceConfigRequestHandler();
+            sandbox.stub(SourceConfigRequestHandler, "instance").returns(sourceConfigReq);
+            const addConfigureMock = sandbox.mock(sourceConfigReq).expects("addConfiguredSource")
+                .withArgs("twitter", [userInfo], authSession).returns(Promise.reject("error"));
+
+            await isRejected(twitterRequestHandler.configureTwitterHandle(authSession, handle), `Unable to add user ${handle} to configuration`);
+
+            addConfigureMock.verify();
         });
     });
 

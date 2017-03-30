@@ -1,6 +1,7 @@
 import TwitterClient from "./TwitterClient";
 import Logger from "../logging/Logger";
 import { userDetails } from "../Factory";
+import SourceConfigRequestHandler from "../sourceConfig/SourceConfigRequestHandler";
 
 export default class TwitterRequestHandler {
     static instance() {
@@ -27,6 +28,19 @@ export default class TwitterRequestHandler {
         const handles = await this.twitterClient().fetchHandles(userName, keyword, page, preFirstId);
         TwitterRequestHandler.logger().debug("TwitterRequestHandler:: successfully fetched handles for user");
         return handles;
+    }
+    
+    async configureTwitterHandle(authSession, handle) {
+        const username = userDetails.getUser(authSession).userName;
+        
+        const handleInfo = await this.twitterClient().fetchUserInfoFromHandle(username, handle);
+
+        const sourceConfigReq = SourceConfigRequestHandler.instance();
+        try {
+            return await sourceConfigReq.addConfiguredSource("twitter", [handleInfo], authSession);
+        } catch (err) {
+            throw `Unable to add user ${handle} to configuration`; //eslint-disable-line no-throw-literal
+        }
     }
 
     async fetchFollowings(authSession, nextCursor) {

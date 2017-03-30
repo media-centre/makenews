@@ -90,7 +90,6 @@ export default class TwitterClient {
         }
     }
 
-
     _baseUrl() {
         return ApplicationConfig.instance().twitter().url;
     }
@@ -100,9 +99,24 @@ export default class TwitterClient {
         return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
     }
 
+    async fetchUserInfoFromHandle(username, handle) {
+        const api = `${this._baseUrl()}/users/show.json?screen_name=${encodeURIComponent(handle)}`;
+        try {
+            const parsedData = await this._getTwitterData(api, username);
+            TwitterClient.logger().debug(`TwitterClient:: successfully fetched user info for handle:: ${handle}`);
+            return {
+                "name": parsedData.name,
+                "url": parsedData.id_str
+            };
+        } catch (err) {
+            TwitterClient.logger().error(`TwitterClient:: failed to fetch user info for handle:: ${handle}`);
+            throw `Requested user ${handle} not found`; //eslint-disable-line no-throw-literal
+        }
+    }
+    
     async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
         let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}`;
-        const parsedData = await this._getParsedData(handlesWithKeyApi, userName);
+        const parsedData = await this._getTwitterData(handlesWithKeyApi, userName);
 
         if (parsedData.length && preFirstId !== parsedData[0].id_str) { //eslint-disable-line no-magic-numbers
             let parseData = TwitterParser.instance().parseHandle(parsedData);
@@ -126,7 +140,7 @@ export default class TwitterClient {
             };
         }
         const handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
-        const parsedData = await this._getParsedData(handlesApi, userName);
+        const parsedData = await this._getTwitterData(handlesApi, userName);
         if (parsedData.users.length) {
             const parseData = TwitterParser.instance().parseHandle(parsedData.users);
             const resultData = {
@@ -140,19 +154,18 @@ export default class TwitterClient {
         return { "docs": [] };
     }
 
-    async _getParsedData(url, userName) {
-        let tokenInfo = await this.getAccessTokenAndSecret(userName);
+    async _getTwitterData(url, userName) {
+        const tokenInfo = await this.getAccessTokenAndSecret(userName);
         return new Promise((resolve, reject) => {
-            let [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
-            let oauth = TwitterLogin.createOAuthInstance();
+            const [oauthAccessToken, oauthAccessTokenSecret] = tokenInfo;
+            const oauth = TwitterLogin.createOAuthInstance();
 
             oauth.get(url, oauthAccessToken, oauthAccessTokenSecret, (error, data) => {
                 if (error) {
                     TwitterClient.logger().error(`TwitterClient:: error fetching twitter data for ${url}, Error: ${error}`);
                     reject(error);
                 } else {
-                    let jsonParsedData = JSON.parse(data);
-                    resolve(jsonParsedData);
+                    resolve(JSON.parse(data));
                 }
             });
         });
