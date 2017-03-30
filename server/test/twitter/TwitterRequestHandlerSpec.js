@@ -78,7 +78,7 @@ describe("TwitterRequestHandler", () => {
             const data = await twitterRequestHandler.configureTwitterHandle(authSession, handle);
 
             addConfigureMock.verify();
-            assert.deepEqual(data, { "ok": true });
+            assert.deepEqual(data, [userInfo]);
         });
 
         it("should throw an error if unable to get the user info", async() => {

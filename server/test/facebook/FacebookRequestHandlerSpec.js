@@ -450,7 +450,7 @@ describe("FacebookRequestHandler", () => {
             const response = await facebookReqHandler.configureFacebookPage(pageUrl, accessToken);
 
             configMock.verify();
-            expect(response).to.deep.equals({ "ok": true });
+            expect(response).to.deep.equals([{ "name": "test_id", "url": "12345678" }]);
         });
 
         it("should throw an error if it is unable to add the page to configured list", async () => {

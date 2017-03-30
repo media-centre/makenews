@@ -47,7 +47,8 @@ export default class FacebookRequestHandler {
             }];
 
             const sourceConfigReq = SourceConfigRequestHandler.instance();
-            return await sourceConfigReq.addConfiguredSource("fb_page", source, authSession);
+            await sourceConfigReq.addConfiguredSource("fb_page", source, authSession);
+            return source;
         } catch (err) {
             FacebookRequestHandler.logger().error(`FacebookReqHandler:: error adding page to configured sources. Error:: ${JSON.stringify(err)}`);
             throw `Unable to add the page: ${pageUrl}`; //eslint-disable-line no-throw-literal
