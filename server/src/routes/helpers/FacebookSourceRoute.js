@@ -1,4 +1,3 @@
-/* eslint consistent-this:0*/
 import FacebookRequestHandler from "../../facebook/FacebookRequestHandler";
 import FacebookAccessToken from "../../facebook/FacebookAccessToken";
 import Route from "./Route";

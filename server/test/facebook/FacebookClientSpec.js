@@ -201,7 +201,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return the feeds recursively only till the maxlimit of iterations", async () => {
+        it("should return the feeds recursively till the maxlimit of iterations", async () => {
             const fbResponseFirst = {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
@@ -395,18 +395,17 @@ describe("FacebookClient", () => {
         });
     });
 
-    describe("getFacebookId", () => {
+    describe("getFacebookPageInfo", () => {
         let accessToken1 = null, appSecretProof1 = null, facebookUrl1 = null, remainingUrl = null;
-        before("getFacebookId", () => {
+        before("getFacebookPageInfo", () => {
             accessToken1 = "test_token";
             appSecretProof1 = "test_secret_proof";
             facebookUrl1 = "http://www.facebook.com/test";
             remainingUrl = "/v2.8/" + facebookUrl1 + "/?access_token=" + accessToken1 + "&appsecret_proof=" + appSecretProof1;
         });
 
-        it("should return id for a public page", (done) => {
-
-            let response = {
+        it("should return id for a public page", async () => {
+            const response = {
                 "name": "test_id",
                 "id": "12345678"
             };
@@ -416,47 +415,42 @@ describe("FacebookClient", () => {
                 .reply(HttpResponseHandler.codes.OK, response);
 
             let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
-            facebookClient.getFacebookId(facebookUrl1).then((id) => {
-                assert.deepEqual(response.id, id);
-                done();
-            });
+            const pageInfo = await facebookClient.getFacebookPageInfo(facebookUrl1);
+            assert.deepEqual(pageInfo, response);
         });
 
-        it("should return id for wrong url", (done) => {
-
-            let response = {
+        it("should reject with can't get the pageId if invalid page url is given", async () => {
+            const response = {
                 "og_object": {
                     "id": "12345678",
                     "type": "website",
                     "updated_time": "2015-12-22T11:06:53+0000",
-                    "url": "http://www.facebook.com/asfdjs"
+                    "url": facebookUrl1
                 },
                 "share": {
                     "comment_count": 0,
                     "share_count": 0
                 },
-                "id": "http://www.facebook.com/asfdjs"
+                "id": facebookUrl1
             };
 
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
-            facebookClient.getFacebookId(facebookUrl1).then((id) => {
-                assert.deepEqual(response.id, id);
-                done();
-            });
-        });
-        it("should rejet if fetching facebook id is taking too longer", (done) => {
+            const facebookClient = new FacebookClient(accessToken1, appSecretProof1);
 
+            await isRejected(facebookClient.getFacebookPageInfo(facebookUrl1), `Unable to get the facebookId for ${facebookUrl1}`);
+        });
+
+        it("should reject if fetching facebook id is taking too longer", (done) => {
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
-                .socketDelay(2000)
+                .delayConnection(200)
                 .reply(HttpResponseHandler.codes.OK, {});
 
             let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
-            facebookClient.getFacebookId(facebookUrl1).catch((error) => { //eslint-disable-line
+            facebookClient.getFacebookPageInfo(facebookUrl1).catch((error) => { //eslint-disable-line
                 done();
             });
         });

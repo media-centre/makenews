@@ -1,6 +1,7 @@
 /* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 import FacebookClient from "../../src/facebook/FacebookClient";
 import FacebookRequestHandler from "../../src/facebook/FacebookRequestHandler";
+import SourceConfigRequestHandler from "./../../src/sourceConfig/SourceConfigRequestHandler";
 import CryptUtil from "../../src/util/CryptUtil";
 import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
@@ -13,12 +14,9 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
-    let accessToken = null, appSecretKey = null, appSecretProof = null, appId = null;
+    const accessToken = "test_token", appSecretKey = "test_secret",
+        appSecretProof = "test_secret_proof", appId = "test_app_id";
     before("FacebookRequestHandler", () => {
-        accessToken = "test_token";
-        appSecretKey = "test_secret";
-        appSecretProof = "test_secret_proof";
-        appId = "test_app_id";
         sinon.stub(FacebookRequestHandler, "logger").returns(LogTestHelper.instance());
     });
 
@@ -422,6 +420,45 @@ describe("FacebookRequestHandler", () => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.resolve("successfully saved"));
             let response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             assert.equal(tokenDocument.expired_after, response);
+        });
+    });
+
+    describe("configureFacebookPage", () => {
+        const sandbox = sinon.sandbox.create();
+        let facebookClient = null;
+        const pageUrl = "https://facebook.com/test";
+        const facebookReqHandler = new FacebookRequestHandler(accessToken);
+        beforeEach("configureFacebookPage", () => {
+            facebookClient = new FacebookClient(accessToken, appSecretProof, appId);
+            sandbox.stub(FacebookClient, "instance").returns(facebookClient);
+        });
+
+        afterEach("configureFacebookPage", () => {
+            sandbox.restore();
+        });
+
+        it("should return ok true after saving the page", async () => {
+            sandbox.stub(facebookClient, "getFacebookPageInfo")
+                .returns(Promise.resolve({ "name": "test_id", "id": "12345678" }));
+
+            const sourceConfigReq = new SourceConfigRequestHandler();
+            sandbox.stub(SourceConfigRequestHandler, "instance").returns(sourceConfigReq);
+
+            const configMock = sandbox.mock(sourceConfigReq).expects("addConfiguredSource");
+            configMock.withExactArgs("fb_page", [{ "name": "test_id", "url": "12345678" }], accessToken).returns(Promise.resolve({ "ok": true }));
+
+            const response = await facebookReqHandler.configureFacebookPage(pageUrl, accessToken);
+
+            configMock.verify();
+            expect(response).to.deep.equals({ "ok": true });
+        });
+
+        it("should throw an error if it is unable to add the page to configured list", async () => {
+            sandbox.stub(facebookClient, "getFacebookPageInfo")
+                .returns(Promise.reject());
+
+            await isRejected(facebookReqHandler.configureFacebookPage(pageUrl, accessToken),
+                `Unable to add the page: ${pageUrl}`);
         });
     });
 });

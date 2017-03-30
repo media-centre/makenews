@@ -20,4 +20,3 @@ export default (app) => {
         new FacebookTokenDocumentRoute(request, response, next).isExpired();
     });
 };
-

@@ -126,28 +126,27 @@ export default class FacebookClient {
         throw responseJson;
     }
 
-    getFacebookId(facebookPageUrl) {
-        return new Promise((resolve, reject) => {
-            request.get({
-                "url": this.facebookParameters.url + "/" + facebookPageUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof,
+    async getFacebookPageInfo(facebookPageUrl) {
+        let response = null;
+        try {
+            response = await fetch(this.facebookParameters.url + "/" + facebookPageUrl + "/?access_token=" + this.accessToken + "&appsecret_proof=" + this.appSecretProof, {
                 "timeout": this.facebookParameters.timeOut
-            }, (error, response, body) => { //eslint-disable-line no-unused-vars
-                if (NodeErrorHandler.noError(error)) {
-                    if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        const facebookId = JSON.parse(response.body).id;
-                        FacebookClient.logger().debug("FacebookClient:: successfully fetched facebook id '%s' for url %s.", facebookId, facebookPageUrl);
-                        resolve(facebookId);
-                    } else {
-                        let errorInfo = JSON.parse(body);
-                        FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error %s", facebookPageUrl, JSON.stringify(errorInfo));
-                        reject(errorInfo.error);
-                    }
-                } else {
-                    FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error: %s", facebookPageUrl, JSON.stringify(error));
-                    reject(error);
-                }
             });
-        });
+        } catch (err) {
+            throw `Timeout fetching facebookId for ${facebookPageUrl}`; //eslint-disable-line no-throw-literal
+        }
+
+        if (response.status === HttpResponseHandler.codes.OK) {
+            const responseJSON = await response.json();
+            if(responseJSON.og_object) {
+                throw `Unable to get the facebookId for ${facebookPageUrl}`; //eslint-disable-line no-throw-literal
+            }
+            FacebookClient.logger().debug("FacebookClient:: successfully fetched facebook id '%s' for url %s.", responseJSON.id, facebookPageUrl);
+            return responseJSON;
+        }
+        const errorInfo = response.json();
+        FacebookClient.logger().error("FacebookClient:: error fetching facebook id for url %s. Error %s", facebookPageUrl, JSON.stringify(errorInfo));
+        throw errorInfo.error;
     }
 
     getLongLivedToken() {

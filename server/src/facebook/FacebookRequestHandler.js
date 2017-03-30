@@ -1,5 +1,6 @@
 import StringUtil from "../../../common/src/util/StringUtil";
 import FacebookClient from "./FacebookClient";
+import SourceConfigRequestHandler from "./../sourceConfig/SourceConfigRequestHandler";
 import CryptUtil from "../../src/util/CryptUtil";
 import DateUtil from "../../src/util/DateUtil";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
@@ -34,6 +35,22 @@ export default class FacebookRequestHandler {
             FacebookRequestHandler.logger().error("FacebookRequestHandler:: error fetching facebook id of web url = %s. Error: %s", sourceId, error);
             let err = "error fetching facebook feeds of web url = " + sourceId;
             throw (err);
+        }
+    }
+
+    async configureFacebookPage(pageUrl, authSession) {
+        try {
+            const pageInfo = await this.facebookClient().getFacebookPageInfo(pageUrl);
+            const source = [{
+                "name": pageInfo.name,
+                "url": pageInfo.id
+            }];
+
+            const sourceConfigReq = SourceConfigRequestHandler.instance();
+            return await sourceConfigReq.addConfiguredSource("fb_page", source, authSession);
+        } catch (err) {
+            FacebookRequestHandler.logger().error(`FacebookReqHandler:: error adding page to configured sources. Error:: ${JSON.stringify(err)}`);
+            throw `Unable to add the page: ${pageUrl}`; //eslint-disable-line no-throw-literal
         }
     }
 
