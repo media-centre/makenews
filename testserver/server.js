@@ -2,6 +2,8 @@
 /*eslint consistent-return:0 */
 var express = require("express");
 var facebookRoutes = require("./Facebook/FacebookRoutes");
+var twitterRoutes = require("./Twitter/TwitterRoutes");
+var fetchFeedsRoutes = require("./FetchFeedsRoutes");
 
 const PORT = 3000;
 
@@ -10,8 +12,9 @@ var app = express();
 
 console.log("listening on port " + PORT); //eslint-disable-line no-console
 app.listen(PORT);
-
 facebookRoutes(app);
+twitterRoutes(app);
+fetchFeedsRoutes(app);
 
 
 app.get("/thehindu/rss-feeds/", (request, response, next) => {
