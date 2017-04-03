@@ -124,17 +124,23 @@
 
     .configure-actions {
       float: right;
+      display: flex;
 
       button {
         font-weight: 700;
         text-transform: uppercase;
         font-size: 15px;
         color: $primary-color;
-        padding-top: 0;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
       }
 
       .icon {
         padding-right: 5px;
+        font-size: 1.4rem;
       }
 
       .add-all {
@@ -152,6 +158,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
 
     .source {
       background: $dark-background-color;

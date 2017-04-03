@@ -92,9 +92,9 @@ describe("SourcePane", () => {
             const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB}/>);
             const addAllBtn = wrapper.find(".add-all");
 
-            const [img, text] = addAllBtn.node.props.children;
+            const [icon, text] = addAllBtn.node.props.children;
 
-            expect(img.props.src).to.equals("./images/add-btn-dark.png");
+            expect(icon.props.className).to.equals("icon fa fa-plus-circle");
             expect(text).to.equals("Add All");
         });
 

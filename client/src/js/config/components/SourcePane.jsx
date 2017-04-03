@@ -29,7 +29,7 @@ export class SourcePane extends Component {
                         this.props.dispatch(addAllSources());
                     }}
                     >
-                        <img src="./images/add-btn-dark.png"/>
+                        <i className="icon fa fa-plus-circle"/>
                         Add All
                     </button>
                 </div>
