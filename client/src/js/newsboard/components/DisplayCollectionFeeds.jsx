@@ -16,10 +16,6 @@ export class DisplayCollectionFeeds extends Component {
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
     }
 
-    componentWillMount() {
-        this.getMoreFeedsCallback(this.props.collection);
-    }
-
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.dom = ReactDOM.findDOMNode(this);
