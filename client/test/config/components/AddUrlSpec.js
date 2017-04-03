@@ -13,6 +13,7 @@ import { expect } from "chai";
 import { WEB, TWITTER } from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { PAGES } from "./../../../src/js/config/actions/FacebookConfigureActions";
 import { mount } from "enzyme";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("Add Url", () => {
     let store = null;
@@ -21,6 +22,18 @@ describe("Add Url", () => {
 
     beforeEach("Add Url", () => {
         sandbox = sinon.sandbox.create();
+        const addUrlExamples = {
+            "messages": {
+                "configurePage": {
+                    "addUrlExamples": {
+                        "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+                        "pages": "https://www.facebook.com/TimesofIndia",
+                        "twitter": "@timesofindia"
+                    }
+                }
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns(addUrlExamples);
         store = createStore(() => ({
             "currentSourceTab": WEB
         }), applyMiddleware(thunkMiddleware));
@@ -32,15 +45,15 @@ describe("Add Url", () => {
     });
 
     it("should wrap with the proper class name when there is no response message", () => {
-        const addUrlClass = TestUtils.findRenderedDOMComponentWithClass(addUrlDom, "addurl").className;
-        expect(addUrlClass).to.equal("addurl");
+        const addUrlClass = TestUtils.findRenderedDOMComponentWithClass(addUrlDom, "add-url").className;
+        expect(addUrlClass).to.equal("add-url");
     });
 
     it("should dispatch addRSSUrl with url input ", () => {
         const addRSSUrlMock = sandbox.mock(AddUrlActions).expects("addRssUrl").once()
             .withArgs("http://www.test.com").returns({ "type": "" });
         const addurlDOMNode = ReactDOM.findDOMNode(addUrlDom);
-        const inputbox = addurlDOMNode.querySelectorAll(".addurlinput")[0];
+        const inputbox = addurlDOMNode.querySelectorAll(".add-url__input")[0];
         inputbox.value = "http://www.test.com";
         TestUtils.Simulate.keyDown(inputbox, { "keyCode": 13 });
 
@@ -51,7 +64,7 @@ describe("Add Url", () => {
         const toastMock = sandbox.mock(Toast).expects("show")
             .withExactArgs("Please enter proper url");
         const addurlDOMNode = ReactDOM.findDOMNode(addUrlDom);
-        const inputbox = addurlDOMNode.querySelectorAll(".addurlinput")[0];
+        const inputbox = addurlDOMNode.querySelectorAll(".add-url__input")[0];
         inputbox.value = "test";
         TestUtils.Simulate.keyDown(inputbox, { "keyCode": 13 });
 
@@ -61,7 +74,7 @@ describe("Add Url", () => {
     it("should not dispatch addRSSUrl if invalid url input ", () => {
         const addRSSUrlMock = sandbox.mock(AddUrlActions).expects("addRssUrl").never();
         const addurlDOMNode = ReactDOM.findDOMNode(addUrlDom);
-        const inputbox = addurlDOMNode.querySelectorAll(".addurlinput")[0];
+        const inputbox = addurlDOMNode.querySelectorAll(".add-url__input")[0];
         inputbox.value = "test";
         TestUtils.Simulate.keyDown(inputbox, { "keyCode": 13 });
 
@@ -71,11 +84,33 @@ describe("Add Url", () => {
     it("should not dispatch addRSSUrl if the ENTER key is not pressed ", () => {
         const addRSSUrlMock = sandbox.mock(AddUrlActions).expects("addRssUrl").never();
         const addurlDOMNode = ReactDOM.findDOMNode(addUrlDom);
-        const inputbox = addurlDOMNode.querySelectorAll(".addurlinput")[0];
+        const inputbox = addurlDOMNode.querySelectorAll(".add-url__input")[0];
         inputbox.value = "http://www.test.com";
         TestUtils.Simulate.keyDown(inputbox, { "keyCode": "a" });
 
         addRSSUrlMock.verify();
+    });
+
+    it("should dispatch showAddUrl false when we click on close icon", () => {
+        const dispatchSpy = sandbox.spy();
+        const showAddUrl = sandbox.spy();
+        sandbox.stub(AddUrlActions, "showAddUrl").returns(showAddUrl);
+
+        store = {
+            "getState": () => ({
+                "currentSourceTab": PAGES
+            }),
+            "dispatch": dispatchSpy,
+            "subscribe": () => {}
+        };
+
+        addUrlDom = mount(<AddUrl dispatch={dispatchSpy} store={store}/>);
+
+        const closeBtn = addUrlDom.find(".close");
+        closeBtn.node.value = "https://www.facebook.com/test";
+        closeBtn.simulate("click");
+
+        expect(dispatchSpy.calledWith(showAddUrl)).to.be.true; //eslint-disable-line no-unused-expressions
     });
 
     it("should dispatch addFacebookPage if source tab is pages and we try to add url", () => {
@@ -93,7 +128,7 @@ describe("Add Url", () => {
 
         addUrlDom = mount(<AddUrl dispatch={dispatchSpy} store={store}/>);
 
-        const input = addUrlDom.find("input.addurlinput");
+        const input = addUrlDom.find(".add-url__input");
         input.node.value = "https://www.facebook.com/test";
         input.simulate("keyDown", { "keyCode": 13 });
 
@@ -115,7 +150,7 @@ describe("Add Url", () => {
 
         addUrlDom = mount(<AddUrl dispatch={dispatchSpy} store={store}/>);
 
-        const input = addUrlDom.find("input.addurlinput");
+        const input = addUrlDom.find("input.add-url__input");
         input.node.value = "@test";
         input.simulate("keyDown", { "keyCode": 13 });
 

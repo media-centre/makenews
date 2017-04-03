@@ -1,5 +1,6 @@
 .configure-container {
   $configured-source-panel-width: 360px;
+
   .configured-sources {
     &-container {
       background-color: $background-color;
@@ -87,7 +88,7 @@
       }
     }
 
-    .input-box {
+    .input-box.configure-source {
       border-bottom-width: 2px;
       margin-left: 20%;
       margin-right: 20%;
@@ -130,6 +131,10 @@
         font-size: 15px;
         color: $primary-color;
         padding-top: 0;
+      }
+
+      .icon {
+        padding-right: 5px;
       }
 
       .add-all {

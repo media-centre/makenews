@@ -8,6 +8,7 @@ import StringUtils from "../../../../../common/src/util/StringUtil";
 import SignInWarning from "./SignInWarning";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
+import { showAddUrl } from "./../actions/AddUrlActions";
 
 export class ConfigurePane extends Component {
 
@@ -27,6 +28,7 @@ export class ConfigurePane extends Component {
             const value = this.refs.searchSources ? this.refs.searchSources.value : "";
             if(nextProps.currentTab !== this.props.currentTab) {
                 this.fetchSources(nextProps.currentTab, value);
+                this.props.dispatch(showAddUrl(false));
             }
         }
     }
@@ -85,7 +87,7 @@ export class ConfigurePane extends Component {
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
                   ? <div>
-                      <div className="input-box">
+                      <div className="input-box configure-source">
                           <div className="input-container">
                               <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
                           <span className="input-addon">

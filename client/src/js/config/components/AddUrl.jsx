@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Toast from "../../utils/custom_templates/Toast";
 import { PAGES } from "./../../config/actions/FacebookConfigureActions";
 import { WEB, TWITTER } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import Locale from "./../../utils/Locale";
 
 export class AddUrl extends Component {
 
@@ -39,21 +40,33 @@ export class AddUrl extends Component {
     }
 
     render() {
+        const locale = Locale.applicationStrings().messages.configurePage.addUrlExamples;
         return (
-            <div className="addurl">
-                <div className="addurl-helpmessage">
+            <div className="add-url">
+                <div className="add-url__message">
                     <span className="image"><img src="./../../../images/warning-icon.png"/></span>
                     <span className="text">
-                        Sorry we are unable to find what your looking for.<br/>
-                        Please enter the rss feed link below to add a new web news source.
+                        Please enter the link below to add a new {this.props.currentTab} source.
                     </span>
+                    <button className="close" onClick={() => {
+                        this.props.dispatch(AddUrlActions.showAddUrl(false));
+                    }}
+                    >
+                        &times;
+                    </button>
                 </div>
-                <div className="addurl-inputcontainer">
-                    <div className="addurl-input">
-                        <input type="text" ref="url" onKeyDown={(event) => this._onKeyDownInputBox(event)} className="addurlinput"/>
-                        <div className="addurl-icon">
+                <div className="input-box">
+                    <div className="input-container">
+                        <input
+                            type="text"
+                            ref="url"
+                            onKeyDown={(event) => this._onKeyDownInputBox(event)}
+                            className="add-url__input"
+                            placeholder={`Ex: ${locale[this.props.currentTab]}`}
+                        />
+                        <span className="input-addon">
                             <img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>

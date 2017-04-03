@@ -77,7 +77,12 @@ window.mediaCenter.appEn = {
                     "categoryNameCantBeEmpty": "Category name can not be empty"
                 }
             },
-            "configureTabName": "Configure"
+            "configureTabName": "Configure",
+            "addUrlExamples": {
+                "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+                "pages": "https://www.facebook.com/TimesofIndia",
+                "twitter": "@timesofindia"
+            }
         },
         "changePassword": {
             "passwordUpdateFailure": "Password update failed",

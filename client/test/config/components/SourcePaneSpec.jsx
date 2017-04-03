@@ -6,7 +6,7 @@ import Sources from "../../../src/js/config/components/Sources";
 import AddUrl from "./../../../src/js/config/components/AddUrl";
 import FacebookTabs from "../../../src/js/config/components/FacebookTabs";
 import { findAllWithType } from "react-shallow-testutils";
-import { PROFILES } from "./../../../src/js/config/actions/FacebookConfigureActions";
+import { PROFILES, GROUPS } from "./../../../src/js/config/actions/FacebookConfigureActions";
 import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import * as AddUrlActions from "./../../../src/js/config/actions/AddUrlActions";
 import { shallow } from "enzyme";
@@ -39,7 +39,6 @@ describe("SourcePane", () => {
             const renderedSources = findAllWithType(result, Sources);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
-
     });
 
     describe("configure-actions", () => {
@@ -54,6 +53,13 @@ describe("SourcePane", () => {
             const customUrl = wrapper.find(".add-custom-url");
 
             expect(customUrl.text()).to.equals("Add custom url");
+        });
+
+        it("should not have a button add-custom-url if current-source type is GROUPS", () => {
+            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={GROUPS}/>);
+            const customUrl = wrapper.find(".add-custom-url");
+
+            expect(customUrl.get(0)).to.be.undefined; //eslint-disable-line
         });
 
         it("should render Add url component if showAddUrl is true", () => {

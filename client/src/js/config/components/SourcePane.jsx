@@ -3,29 +3,28 @@ import Sources from "./Sources";
 import AddUrl from "./AddUrl";
 import FacebookTabs from "./FacebookTabs";
 import { WEB, TWITTER, addAllSources } from "./../../sourceConfig/actions/SourceConfigurationActions";
+import { GROUPS } from "./../../config/actions/FacebookConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { showAddUrl } from "./../actions/AddUrlActions";
 
 export class SourcePane extends Component {
 
-    componentWillReceiveProps(nextProps) {
-        if(this.props.currentTab !== nextProps.currentTab) {
-            this.props.dispatch(showAddUrl(false));
-        }
-    }
-
     render() {
         return (
             <div className="sources-suggestions">
                 {!(R.contains(this.props.currentTab, [WEB, TWITTER])) && <FacebookTabs />}
                 <div className="configure-actions">
-                    <button className="add-custom-url" onClick= {() => {
-                        this.props.dispatch(showAddUrl(true));
-                    }}
-                    >
-                        Add custom url
-                    </button>
+                    {
+                        (this.props.currentTab !== GROUPS) &&
+                        <button className="add-custom-url" onClick={() => {
+                            this.props.dispatch(showAddUrl(true));
+                        }}
+                        >
+                            <i className="icon fa fa-book" aria-hidden="true"/>
+                            Add custom url
+                        </button>
+                    }
                     <button className="add-all" onClick= {() => {
                         this.props.dispatch(addAllSources());
                     }}
