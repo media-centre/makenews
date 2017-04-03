@@ -12,7 +12,7 @@ export default class BookmarkIndex {
             Migration.logger(this.dbName).info("BookmarkIndex::up - started");
             let nameIdIndex = {
                 "index": {
-                    "fields": ["bookmark"]
+                    "fields": ["bookmarkedDate", "bookmark"]
                 },
                 "name": "BookmarkIndex"
             };

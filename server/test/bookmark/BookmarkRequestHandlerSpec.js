@@ -1,5 +1,6 @@
 import { bookmarkTheDocument, getBookmarkedFeeds } from "../../src/bookmark/BookmarkRequestHandler";
 import CouchClient from "../../src/CouchClient";
+import DateUtil from "../../src/util/DateUtil";
 import sinon from "sinon";
 import { assert } from "chai";
 
@@ -127,6 +128,38 @@ describe("BookmarkRequestHandler", () => {
             saveMock.verify();
             assert.deepEqual(respone, { "ok": true });
         });
+
+        it("should add the new field with current time when the bookmark status true", async () => {
+            const feedId = "feedId";
+            const currentTime = 12345;
+            const feedDoc = {
+                "_id": feedId,
+                "title": "feed title",
+                "sourceType": "web"
+            };
+
+            const updatedDoc = {
+                ...feedDoc,
+                "bookmark": true,
+                "bookmarkedDate": currentTime
+            };
+
+            sandbox.stub(CouchClient, "instance").returns(couchClient);
+            const getMock = sandbox.mock(couchClient).expects("getDocument")
+                .withExactArgs(feedId).returns(Promise.resolve(feedDoc));
+            const currentTimeMock = sandbox.mock(DateUtil).expects("getCurrentTime").returns(currentTime);
+
+            const saveMock = sandbox.mock(couchClient).expects("saveDocument")
+                .withExactArgs(feedId, updatedDoc).returns(Promise.resolve({ "ok": true }));
+
+            const response = await bookmarkTheDocument(authSession, feedId);
+
+            getMock.verify();
+            currentTimeMock.verify();
+            saveMock.verify();
+
+            assert.deepEqual(response, { "ok": true });
+        });
     });
 
     describe("getFeeds", () => {
@@ -140,8 +173,12 @@ describe("BookmarkRequestHandler", () => {
                     },
                     "bookmark": {
                         "$eq": true
+                    },
+                    "bookmarkedDate": {
+                        "$gt": null
                     }
                 },
+                "sort": [{ "bookmarkedDate": "desc" }],
                 "skip": 50
             };
             authSession = "test_session";
