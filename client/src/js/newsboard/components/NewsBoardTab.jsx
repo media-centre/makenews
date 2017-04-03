@@ -11,15 +11,14 @@ export class NewsBoardTab extends Component {
 
     render() {
         return (
-            <div className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
+            <a className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
                 title={this.props.title}
                 id={this.props.id}
+                onClick={() => { this.displayFeeds(this.props.sourceType); }}
             >
-                <i className={`icon fa fa-${this.props.sourceIcon}`}
-                    onClick={() => { this.displayFeeds(this.props.sourceType); }}
-                />
+                <i className={`icon fa fa-${this.props.sourceIcon}`} />
                 {this.props.children}
-            </div>
+            </a>
         );
     }
 }

@@ -12,6 +12,8 @@
       height: 1.5em;
       text-align: center;
       margin: 10px 5px;
+      display: block;
+      cursor: pointer;
 
       &.active {
         background-color: #fff;

@@ -25,7 +25,6 @@ describe("NewsBoardTab", () => {
     });
 
     it("should have onclick function", () => {
-
         sandbox = sinon.sandbox.create();
         const newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions).expects("newsBoardTabSwitch").returns({
             "type": ""
@@ -49,13 +48,13 @@ describe("NewsBoardTab", () => {
     });
 
     it("should have title attribute", () => {
-        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab");
-        expect(newsBoardTabClass.title).to.be.equals("bookmarked feeds");
+        const newsBoardTabDOM = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab");
+        expect(newsBoardTabDOM.title).to.be.equals("bookmarked feeds");
     });
 
     it("current tab should highlight if both sourcetype and current tabs are equal", () => {
         newsBoardTab = TestUtils.renderIntoDocument(<Provider store={store}><NewsBoard sourceIcon="web" sourceType={"web"}/></Provider>);
-        const newsBoardTabClass = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
-        expect(newsBoardTabClass).to.be.equals("news-board-tab active");
+        const newsBoardTabDOM = TestUtils.findRenderedDOMComponentWithClass(newsBoardTab, "news-board-tab").className;
+        expect(newsBoardTabDOM).to.be.equals("news-board-tab active");
     });
 });
