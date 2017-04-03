@@ -4,7 +4,7 @@ import Toast from "../../utils/custom_templates/Toast";
 import { FACEBOOK_ADD_PAGE } from "./../actions/FacebookConfigureActions";
 import { TWITTER_ADD_SOURCE } from "./../actions/TwitterConfigureActions";
 
-export const RSS_ADD_URL_STATUS = "RSS_ADD_URL_STATUS";
+export const ADD_URL_STATUS = "ADD_URL_STATUS";
 
 export function addRssUrl(url) {
     return (dispatch) => {
@@ -19,18 +19,18 @@ export function addRssUrl(url) {
                 "sources": [response]
             });
             Toast.show("Added successfully", "success");
-            return dispatch(handleMessages(true));
+            return dispatch(showAddUrl(false));
         }).catch((error) => {
             Toast.show(error.message);
-            return dispatch(handleMessages(false));
+            return dispatch(showAddUrl(true));
         });
     };
 }
 
-export function handleMessages(added) {
+export function showAddUrl(added) {
     return {
-        "type": RSS_ADD_URL_STATUS,
-        "status": { added }
+        "type": ADD_URL_STATUS,
+        "status": added
     };
 }
 
@@ -43,9 +43,12 @@ export function addFacebookPage(pageUrl) {
                 "Content-Type": "application/json"
             };
             const response = await ajax.put(headers, { pageUrl });
+            Toast.show(`Page ${response.name} added successfully`, "success");
             dispatch({ "type": FACEBOOK_ADD_PAGE, "sources": [response] });
+            return dispatch(showAddUrl(false));
         } catch(err) {
             Toast.show(err.message);
+            return dispatch(showAddUrl(true));
         }
     };
 }
@@ -59,9 +62,12 @@ export function addTwitterHandle(twitterHandle) {
                 "Content-Type": "application/json"
             };
             const response = await ajax.put(headers, { twitterHandle });
+            Toast.show(`Twitter handle ${twitterHandle} added successfully`, "success");
             dispatch({ "type": TWITTER_ADD_SOURCE, "sources": [response] });
+            return dispatch(showAddUrl(false));
         } catch(err) {
             Toast.show(err.message);
+            return dispatch(showAddUrl(true));
         }
     };
 }

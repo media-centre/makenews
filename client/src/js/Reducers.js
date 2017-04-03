@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import { mainHeaderStrings } from "./main/reducers/MainReducer";
 import { changePassword, changePasswordStrings, userProfileStrings } from "./user/UserProfileReducer";
 import { currentHeaderTab } from "./header/HeaderReducer";
-import { addUrlMessage } from "./config/reducers/AddUrlReducer";
+import { showAddUrl } from "./config/reducers/AddUrlReducer";
 import { fetchedFeeds,
     newsBoardCurrentSourceTab,
     selectedArticle,
@@ -31,7 +31,7 @@ const contentDiscoveryApp = combineReducers({
     changePasswordStrings,
     configuredSources,
     fetchedFeeds,
-    addUrlMessage,
+    showAddUrl,
     sourceResults,
     searchInConfiguredSources,
     currentSourceTab,

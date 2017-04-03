@@ -10,6 +10,9 @@ import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
 import sinon from "sinon";
 import { expect } from "chai";
+import { WEB, TWITTER } from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import { PAGES } from "./../../../src/js/config/actions/FacebookConfigureActions";
+import { mount } from "enzyme";
 
 describe("Add Url", () => {
     let store = null;
@@ -18,9 +21,8 @@ describe("Add Url", () => {
 
     beforeEach("Add Url", () => {
         sandbox = sinon.sandbox.create();
-        const addUrlStatus = { "added": false };
         store = createStore(() => ({
-            "addUrlMessage": addUrlStatus
+            "currentSourceTab": WEB
         }), applyMiddleware(thunkMiddleware));
         addUrlDom = TestUtils.renderIntoDocument(<Provider store={store}><AddUrl /></Provider>);
     });
@@ -74,6 +76,50 @@ describe("Add Url", () => {
         TestUtils.Simulate.keyDown(inputbox, { "keyCode": "a" });
 
         addRSSUrlMock.verify();
+    });
+
+    it("should dispatch addFacebookPage if source tab is pages and we try to add url", () => {
+        const dispatchSpy = sandbox.spy();
+        const addFacebookPageSpy = sandbox.spy();
+        sandbox.stub(AddUrlActions, "addFacebookPage").returns(addFacebookPageSpy);
+
+        store = {
+            "getState": () => ({
+                "currentSourceTab": PAGES
+            }),
+            "dispatch": dispatchSpy,
+            "subscribe": () => {}
+        };
+
+        addUrlDom = mount(<AddUrl dispatch={dispatchSpy} store={store}/>);
+
+        const input = addUrlDom.find("input.addurlinput");
+        input.node.value = "https://www.facebook.com/test";
+        input.simulate("keyDown", { "keyCode": 13 });
+
+        expect(dispatchSpy.calledWith(addFacebookPageSpy)).to.be.true; //eslint-disable-line no-unused-expressions
+    });
+
+    it("should dispatch addTwitterHandle if source tab is twitter and we try to add url", () => {
+        const dispatchSpy = sandbox.spy();
+        const addTwitterHandleSpy = sandbox.spy();
+        sandbox.stub(AddUrlActions, "addTwitterHandle").returns(addTwitterHandleSpy);
+
+        store = {
+            "getState": () => ({
+                "currentSourceTab": TWITTER
+            }),
+            "dispatch": dispatchSpy,
+            "subscribe": () => {}
+        };
+
+        addUrlDom = mount(<AddUrl dispatch={dispatchSpy} store={store}/>);
+
+        const input = addUrlDom.find("input.addurlinput");
+        input.node.value = "@test";
+        input.simulate("keyDown", { "keyCode": 13 });
+
+        expect(dispatchSpy.calledWith(addTwitterHandleSpy)).to.be.true; //eslint-disable-line no-unused-expressions
     });
 });
 

@@ -121,18 +121,23 @@
       }
     }
 
-    .add-all {
+    .configure-actions {
       float: right;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 15px;
-      color: $primary-color;
-      padding-top: 0;
 
-      img {
-        width: 30px;
-        vertical-align: middle;
-        padding-right: 5px;
+      button {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 15px;
+        color: $primary-color;
+        padding-top: 0;
+      }
+
+      .add-all {
+        img {
+          width: 30px;
+          vertical-align: middle;
+          padding-right: 5px;
+        }
       }
     }
   }

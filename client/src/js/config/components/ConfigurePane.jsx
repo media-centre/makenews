@@ -5,7 +5,6 @@ import ConfigPaneNavigation from "./ConfigPaneNavigation";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import StringUtils from "../../../../../common/src/util/StringUtil";
-import AddUrl from "./AddUrl";
 import SignInWarning from "./SignInWarning";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
@@ -94,10 +93,7 @@ export class ConfigurePane extends Component {
                           </span>
                           </div>
                       </div>
-                      { this.props.currentTab === SourceConfigActions.WEB &&
-                      !this.props.sources.data.length && !this.props.sources.isFetchingSources
-                          ? <AddUrl/>
-                          : <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/> }
+                      <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
                   </div>
                   : <SignInWarning currentSourceType = {this.props.currentSourceType}/>
               }

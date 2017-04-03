@@ -5,7 +5,6 @@ import ConfigPaneNavigation from "./../../../src/js/config/components/ConfigPane
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
-import AddUrl from "../../../src/js/config/components/AddUrl";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
 import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import sinon from "sinon";
@@ -68,12 +67,6 @@ describe("Configure Pane", () => {
 
             let img = addon.props.children;
             expect(img.props.src).to.equal("./images/search-icon.png");
-        });
-
-        it("should have AddUrl if there are no sources", () => {
-            let result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, AddUrl);
-            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
         });
 
         it("should have SourcePane if there are sources", () => {

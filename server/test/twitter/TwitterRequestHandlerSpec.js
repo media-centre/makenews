@@ -65,7 +65,7 @@ describe("TwitterRequestHandler", () => {
 
         it("should configure Twitter handle", async() => {
             const userInfo = {
-                "id": "test",
+                "url": "test",
                 "name": handle
             };
             sandbox.mock(twitterClientInstance).expects("fetchUserInfoFromHandle")
@@ -78,7 +78,7 @@ describe("TwitterRequestHandler", () => {
             const data = await twitterRequestHandler.configureTwitterHandle(authSession, handle);
 
             addConfigureMock.verify();
-            assert.deepEqual(data, [userInfo]);
+            assert.deepEqual(data, { "id": userInfo.url, "name": userInfo.name });
         });
 
         it("should throw an error if unable to get the user info", async() => {

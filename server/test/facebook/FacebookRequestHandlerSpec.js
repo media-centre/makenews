@@ -437,7 +437,7 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return ok true after saving the page", async () => {
+        it("should return page info after saving the page", async () => {
             sandbox.stub(facebookClient, "getFacebookPageInfo")
                 .returns(Promise.resolve({ "name": "test_id", "id": "12345678" }));
 
@@ -450,7 +450,7 @@ describe("FacebookRequestHandler", () => {
             const response = await facebookReqHandler.configureFacebookPage(pageUrl, accessToken);
 
             configMock.verify();
-            expect(response).to.deep.equals([{ "name": "test_id", "url": "12345678" }]);
+            expect(response).to.deep.equals({ "name": "test_id", "id": "12345678" });
         });
 
         it("should throw an error if it is unable to add the page to configured list", async () => {

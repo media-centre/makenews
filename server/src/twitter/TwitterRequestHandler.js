@@ -38,7 +38,7 @@ export default class TwitterRequestHandler {
         const sourceConfigReq = SourceConfigRequestHandler.instance();
         try {
             await sourceConfigReq.addConfiguredSource("twitter", [handleInfo], authSession);
-            return [handleInfo];
+            return { "name": handleInfo.name, "id": handleInfo.url };
         } catch (err) {
             throw `Unable to add user ${handle} to configuration`; //eslint-disable-line no-throw-literal
         }
