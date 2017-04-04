@@ -108,7 +108,7 @@ describe("SourceConfigurationReducers", () => {
                 "keyword": "key"
             };
             const action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources };
-            const state = sourceResults([], action);
+            const state = sourceResults({ "data": [], "nextPage": {} }, action);
 
             const expectedResults = {
                 "data": sources.data,
@@ -129,7 +129,7 @@ describe("SourceConfigurationReducers", () => {
                 "keyword": "key"
             };
             const action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources };
-            const state = sourceResults([], action);
+            const state = sourceResults({ "data": [], "nextPage": {} }, action);
 
             const expectedResults = {
                 "data": sources.data,
@@ -151,7 +151,7 @@ describe("SourceConfigurationReducers", () => {
                 "twitterPreFirstId": 12345
             };
             const action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources };
-            const state = sourceResults([], action);
+            const state = sourceResults({ "data": [], "nextPage": {} }, action);
             const expectedResuls = {
                 "data": sources.data,
                 "nextPage": sources.paging,

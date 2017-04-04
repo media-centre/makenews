@@ -5,7 +5,6 @@ import {
     FACEBOOK_GOT_SOURCES
 } from "./../../config/actions/FacebookConfigureActions";
 import { markSourcesAsAdded, unmarkDeletedSource } from "./../../sourceConfig/reducers/SourceConfiguraionReducersUtils";
-import { List } from "immutable";
 import {
     GOT_CONFIGURED_SOURCES,
     CHANGE_CURRENT_SOURCE_TAB,
@@ -33,12 +32,35 @@ const sourceResultsInitialState = {
 
 export const sourceResults = (state = sourceResultsInitialState, action = {}) => {
     switch(action.type) {
-    case FACEBOOK_GOT_SOURCES:
-    case TWITTER_GOT_SOURCE_RESULTS:
-    case WEB_GOT_SOURCE_RESULTS: {
+    case FACEBOOK_GOT_SOURCES: {
+        state.data = (state.nextPage.after) ? state.data : [];
         return Object.assign({}, state,
             {
-                "data": List(state.data).concat(action.sources.data).toArray(), //eslint-disable-line new-cap
+                "data": state.data.concat(action.sources.data),
+                "nextPage": action.sources.paging,
+                "twitterPreFirstId": action.sources.twitterPreFirstId,
+                "isFetchingSources": false,
+                "keyword": action.sources.keyword,
+                "hasMoreSourceResults": true
+            });
+    }
+    case TWITTER_GOT_SOURCE_RESULTS: {
+        state.data = (state.nextPage.page) ? state.data : [];
+        return Object.assign({}, state,
+            {
+                "data": state.data.concat(action.sources.data),
+                "nextPage": action.sources.paging,
+                "twitterPreFirstId": action.sources.twitterPreFirstId,
+                "isFetchingSources": false,
+                "keyword": action.sources.keyword,
+                "hasMoreSourceResults": true
+            });
+    }
+    case WEB_GOT_SOURCE_RESULTS: {
+        state.data = (state.nextPage.offset) ? state.data : [];
+        return Object.assign({}, state,
+            {
+                "data": state.data.concat(action.sources.data),
                 "nextPage": action.sources.paging,
                 "twitterPreFirstId": action.sources.twitterPreFirstId,
                 "isFetchingSources": false,
