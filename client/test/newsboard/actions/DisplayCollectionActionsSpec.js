@@ -88,9 +88,11 @@ describe("DisplayCollectionAction", () => {
     describe("deleteCollection", () => {
         collection = "testID";
         const event = { "target": {
-            "parentNode": "collection-name"
-        } };
-        const firstCollection = {};
+            "parentNode": {
+                "className": "collection-name active"
+            }
+        }
+        };
 
         beforeEach("deleteCollection", () => {
             sandbox = sinon.sandbox.create();
@@ -102,15 +104,33 @@ describe("DisplayCollectionAction", () => {
             sandbox.restore();
         });
 
-        it("should dispatch deletecCollection when successfully delete collection", (done) => {
+        it("should dispatch deleteCollection and clearFeeds when active collection is deleted", (done) => {
             let response = { "ok": true };
 
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ collection }).returns(Promise.resolve(response));
-            let store = mockStore([], [{ "type": DELETE_COLLECTION, "collection": collection },
-                { "type": CLEAR_COLLECTION_FEEDS }
+            let store = mockStore([], [{ "type": CLEAR_COLLECTION_FEEDS },
+                { "type": DELETE_COLLECTION, "collection": collection }
             ], done);
-            store.dispatch(deleteCollection(event, collection, firstCollection));
+            store.dispatch(deleteCollection(event, collection));
+
+            deleteMock.verify();
+        });
+
+        it("should dispatch deleteCollection when successfully delete collection", (done) => {
+            let response = { "ok": true };
+            let collectionEvent = {
+                "target": {
+                    "parentNode": {
+                        "className": "collection-name"
+                    }
+                }
+            };
+
+            const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
+                .withExactArgs({ collection }).returns(Promise.resolve(response));
+            let store = mockStore([], [{ "type": DELETE_COLLECTION, "collection": collection }], done);
+            store.dispatch(deleteCollection(collectionEvent, collection));
 
             deleteMock.verify();
         });
@@ -123,7 +143,7 @@ describe("DisplayCollectionAction", () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
 
             try {
-                let dispatchFunc = deleteCollection(event, collection, firstCollection);
+                let dispatchFunc = deleteCollection(event, collection);
                 await dispatchFunc();
                 assert.fail();
             } catch(error) {
@@ -139,7 +159,7 @@ describe("DisplayCollectionAction", () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
 
             try {
-                let dispatchFunc = deleteCollection(event, collection, firstCollection);
+                let dispatchFunc = deleteCollection(event, collection);
                 await dispatchFunc();
                 assert.fail();
             } catch(error) {

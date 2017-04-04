@@ -54,21 +54,21 @@ export const clearFeeds = () => ({
     "type": CLEAR_COLLECTION_FEEDS
 });
 
-export function deleteCollection(event, collection, firstCollection) {
+export function deleteCollection(event, collection) {
     return async dispatch => {
         const ajax = AjaxClient.instance("/collection");
         const button = event.target;
-        const currentCollectionClass = event.target.parentNode.className;
+        const currentCollection = event.target.parentNode;
         button.className = "spinner";
         button.textContent = "";
         try {
             let response = await ajax.deleteRequest({ collection });
             if(response.ok) {
-                dispatch({ "type": DELETE_COLLECTION, collection });
-                dispatch(clearFeeds());
-                if(currentCollectionClass.endsWith("active")) {
-                    firstCollection.className = "collection-name active";
+                if((currentCollection.className).endsWith("active")) {
+                    dispatch(clearFeeds());
+                    currentCollection.className = "collection-name";
                 }
+                dispatch({ "type": DELETE_COLLECTION, collection });
             } else {
                 throw new Error();
             }

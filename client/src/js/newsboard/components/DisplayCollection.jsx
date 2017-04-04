@@ -16,8 +16,14 @@ export class DisplayCollection extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        const currentCollection = this.refs.collectionList.querySelector(".collection-name.active");
         const [firstCollection] = nextProps.feeds;
-        if(firstCollection) {
+
+        if((!currentCollection && firstCollection)) {
+            let setCollection = this.refs.collectionList.querySelector(".collection-name");
+            if(setCollection) {
+                setCollection.className = "collection-name active";
+            }
             this.props.dispatch(setCurrentCollection(firstCollection));
         }
     }
@@ -41,8 +47,7 @@ export class DisplayCollection extends Component {
 
     _deleteCollectionEvent(event, collectionId) {
         event.stopPropagation();
-        const firstCollection = this.refs.collectionList.querySelector(".collection-name");
-        this.props.dispatch(deleteCollection(event, collectionId, firstCollection));
+        this.props.dispatch(deleteCollection(event, collectionId));
     }
 
     _renderCollections() {
@@ -94,7 +99,8 @@ export class DisplayCollection extends Component {
     createCollection(event) {
         const ENTERKEY = 13;
         if (event.keyCode === ENTERKEY) {
-            this.props.dispatch(addToCollection(this.refs.collectionName.value, this.props.addArticleToCollection, true));
+            const collectionName = (this.refs.collectionName.value).trim();
+            this.props.dispatch(addToCollection(collectionName, this.props.addArticleToCollection, true));
             this.setState({ "showCollectionPopup": false });
         }
     }
