@@ -160,13 +160,13 @@ export class DisplayFeeds extends Component {
     }
 
     _search() {
-        const key = this.refs.searchFeeds.value;
+        const key = this.refs.searchFeeds.value.trim();
         if(!StringUtils.isEmptyString(key) && key.length >= MIN_SEARCH_KEY_LENGTH) {
             this.updateSearchState(true);
             this.clearState();
             this.searchFeeds(this.props.sourceType);
         } else {
-            Toast.show("Please enter a keyword minimum of 3 characters");
+            Toast.show("Please enter a keyword minimum of 3 characters", "search-warning");
         }
     }
 
@@ -207,7 +207,12 @@ export class DisplayFeeds extends Component {
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <div className="search-bar">
                     <div className="input-box">
-                        <input type="text" ref="searchFeeds" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={"Search Keywords,Articles etc."}/>
+                        <input type="text" ref="searchFeeds"
+                            onKeyUp={(event) => { this.checkEnterKey(event); }}
+                            className="search-sources"
+                            placeholder="Search Keywords, Articles etc."
+                            title="Search Keywords, Articles etc."
+                        />
                         {this.state.searchToggle
                             ? <span className="input-addon" onClick={() => { this._cancel(); }}>&times;</span>
                             : <span className="input-addon" onClick={() => { this._search(); }}><i className="fa fa-search" aria-hidden="true"/></span>

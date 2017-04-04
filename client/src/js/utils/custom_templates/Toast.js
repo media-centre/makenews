@@ -8,7 +8,8 @@ export default class Toast {
             toastDOM = document.createElement("div");
             toastDOM.className = "custom-toast bottom-box-shadow hide clear-fix";
             toastDOM.id = "custom-toast";
-            toastDOM.innerHTML = "<i></i><span class='message'></span><button>&times;</button>";
+            toastDOM.setAttribute("role", "alert");
+            toastDOM.innerHTML = "<i></i><span class='message'></span><button class='close' title='close message' aria-label='close message' tabindex='1'>&times;</button>";
             document.body.appendChild(toastDOM);
 
             toastDOM.getElementsByTagName("button")[0].addEventListener("click", ()=> { //eslint-disable-line no-magic-numbers
@@ -16,9 +17,7 @@ export default class Toast {
             });
         }
         if(toastDOM.classList.contains("hide")) {
-            toastDOM.classList.remove("hide");
-            toastDOM.classList.remove("collection");
-            toastDOM.classList.remove("bookmark");
+            toastDOM.className = "custom-toast bottom-box-shadow clear-fix";
         }
         let icon = "fa fa-exclamation";
         if(type === "success") {
@@ -29,9 +28,10 @@ export default class Toast {
         } else if (type === "bookmark") {
             icon = "fa fa-bookmark";
             toastDOM.classList.add("bookmark");
+        } else if (type === "search-warning") {
+            toastDOM.classList.add("search-warning");
         } else {
-            toastDOM.classList.remove("collection");
-            toastDOM.classList.remove("bookmark");
+            toastDOM.className = "custom-toast bottom-box-shadow clear-fix";
         }
 
         toastDOM.getElementsByTagName("i")[0].classList = icon; //eslint-disable-line no-magic-numbers
@@ -51,9 +51,7 @@ export default class Toast {
         }
         const toastDOM = document.getElementById("custom-toast");
         if(!toastDOM.classList.contains("hide")) {
-            toastDOM.classList.add("hide");
-            toastDOM.classList.remove("collection");
-            toastDOM.classList.remove("bookmark");
+            toastDOM.className = "custom-toast bottom-box-shadow hide clear-fix";
         }
     }
 }

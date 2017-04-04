@@ -105,7 +105,7 @@ export function searchFeeds(sourceType, searchKey, offset, callback) {
                 dispatch(searchedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             }else {
-                Toast.show(`No Search results found for this keyword "${searchKey}"`);
+                Toast.show(`No Search results found for this keyword "${searchKey}"`, "search-warning");
             }
             result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
             return callback(result);
