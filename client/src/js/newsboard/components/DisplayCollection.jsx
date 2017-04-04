@@ -12,7 +12,9 @@ import R from "ramda"; //eslint-disable-line id-length
 export class DisplayCollection extends Component {
     constructor() {
         super();
-        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false };
+        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false, "showConfirmationPopup": false };
+        this.buttonEvent = {};
+        this.deleteCollection = {};
     }
 
     componentWillReceiveProps(nextProps) {
@@ -45,9 +47,9 @@ export class DisplayCollection extends Component {
         }
     }
 
-    _deleteCollectionEvent(event, collectionId) {
-        event.stopPropagation();
-        this.props.dispatch(deleteCollection(event, collectionId));
+    _deleteCollectionEvent() {
+        this.setState({ "showConfirmationPopup": false });
+        this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
     }
 
     _renderCollections() {
@@ -75,8 +77,12 @@ export class DisplayCollection extends Component {
                             this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
                         }}
                     />
-                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) =>
-                        this._deleteCollectionEvent(event, collection._id)}
+                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) => {
+                        event.stopPropagation();
+                        this.buttonEvent = Object.assign({}, event);
+                        this.deleteCollection = collection;
+                        this.setState({ "showConfirmationPopup": true });
+                    }}
                     > &times; </button>
                 </li>
             );
@@ -136,6 +142,24 @@ export class DisplayCollection extends Component {
         );
     }
 
+    showConfirmationPopup() {
+        return (
+            <div className="confirmation-popup-overlay">
+                <div className="delete-confirmation-popup">
+                    <div className="confirmation-text"> Do you really want to delete collection <b>{this.deleteCollection.collection}</b>?</div>
+                    <button className="cancel-collection" onClick={() =>
+                        this.setState({ "showConfirmationPopup": false })
+                    }
+                    >NO</button>
+                    <button className="delete-confirmed" onClick={() =>
+                        this._deleteCollectionEvent()
+                    }
+                    >YES</button>
+                </div>
+            </div>
+        );
+    }
+
     createNewCollection() {
         return (
             <div className="create_collection" onClick={() => {
@@ -158,6 +182,7 @@ export class DisplayCollection extends Component {
             </div>
             {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">SELECT A COLLECTION</div> : this.createNewCollection()}
             {this.state.showCollectionPopup ? this.showPopup() : null}
+            {this.state.showConfirmationPopup ? this.showConfirmationPopup() : null}
             <div className="feeds">
                 <ul className="configured-sources" ref="collectionList">
                     { this._renderCollections() }

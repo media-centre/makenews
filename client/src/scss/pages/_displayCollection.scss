@@ -93,7 +93,8 @@
     border-bottom: 2px solid $primary-color-light;
   }
 
-  .save-collection {
+  .save-collection,
+  .delete-confirmed {
     background-color: $secondary-color;
     color: white;
     margin-right: 15px;
@@ -103,17 +104,23 @@
     color: $primary-color-light;
     margin-right: 15px;
   }
-  .collection-popup-overlay {
+
+  .collection-popup-overlay,
+  .confirmation-popup-overlay {
     background-color: rgba(70, 65, 74, 0.6);
     top: 68px;
     position: fixed;
     left: 0;
     height: 100%;
     width: 100%;
+    z-index: 1;
+
     &:target {
       opacity: 1;
     }
-    .new-collection {
+
+    .new-collection,
+    .delete-confirmation-popup {
       text-align: right;
       background-color: white;
       position: absolute;
@@ -122,6 +129,12 @@
       left: 65px;
       width: 395px;
       top: 5%;
+    }
+
+    .confirmation-text {
+      height: 4rem;
+      text-align: center;
+      padding-top: 40px;
     }
   }
 }
