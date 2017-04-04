@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { assert } from "chai";
 import sinon from "sinon";
 import * as DisplayArticleActions from "../../../src/js/newsboard/actions/DisplayArticleActions";
+import * as DisplayCollectionActions from "../../../src/js/newsboard/actions/DisplayCollectionActions";
 
 describe("Display Collections", () => {
     let feeds = null, store = null, result = null;
@@ -90,6 +91,44 @@ describe("Display Collections", () => {
 
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
         assert.equal(collections[0].textContent, "politics × "); //eslint-disable-line no-magic-numbers
+    });
+
+    it("should dispatch deleteCollection after confirmation", () => {
+        const collectionsDOM = ReactDOM.findDOMNode(result);
+        const deleteCollectionMock = sandbox.mock(DisplayCollectionActions).expects("deleteCollection")
+            .returns({ "type": "" });
+
+        const deleteIcon = collectionsDOM.querySelector(".delete-collection");
+        TestUtils.Simulate.click(deleteIcon);
+
+        const showPopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+
+        const confirmationPopup = collectionsDOM.querySelector(".delete-confirmed");
+        TestUtils.Simulate.click(confirmationPopup);
+
+        const closePopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+
+        deleteCollectionMock.verify();
+
+        assert.isNotNull(showPopup);
+        assert.isNull(closePopup);
+    });
+
+    it("should close popup when 'No' is clicked", () => {
+        const collectionsDOM = ReactDOM.findDOMNode(result);
+
+        const deleteIcon = collectionsDOM.querySelector(".delete-collection");
+        TestUtils.Simulate.click(deleteIcon);
+
+        const showPopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+
+        const confirmationPopup = collectionsDOM.querySelector(".cancel-collection");
+        TestUtils.Simulate.click(confirmationPopup);
+
+        const closePopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+
+        assert.isNotNull(showPopup);
+        assert.isNull(closePopup);
     });
 
     describe("Display StoryBoard Collection", () => {

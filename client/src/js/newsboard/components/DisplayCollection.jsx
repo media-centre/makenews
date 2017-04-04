@@ -77,7 +77,7 @@ export class DisplayCollection extends Component {
                             this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
                         }}
                     />
-                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick = {(event) => {
+                    <button className="delete-collection" title={`Delete ${collection.collection}`} onClick={(event) => {
                         event.stopPropagation();
                         this.buttonEvent = Object.assign({}, event);
                         this.deleteCollection = collection;
