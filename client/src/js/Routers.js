@@ -1,6 +1,7 @@
 import App from "./App";
 import LoginPage from "./login/pages/LoginPage";
 import TwitterSuccess from "./main/pages/TwitterSuccess";
+import TwitterFailed from "./main/pages/TwitterFailed";
 import UserSession from "./user/UserSession";
 import ChangePassword from "./user/ChangePassword";
 import React from "react";
@@ -37,6 +38,7 @@ export function renderRoutes(store) {
                         <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
                     </Route>
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
+                    <Route path="/twitterFailed" component={TwitterFailed} />
                     <Route path="/change-password" component={ChangePassword} />
                     <Route path="/help" component={Help} />
                 </Route>
