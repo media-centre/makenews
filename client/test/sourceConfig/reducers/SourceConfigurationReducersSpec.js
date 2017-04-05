@@ -19,7 +19,8 @@ import {
     FETCHING_SOURCE_RESULTS,
     FETCHING_SOURCE_RESULTS_FAILED,
     SOURCE_DELETED,
-    UNMARK_DELETED_SOURCE
+    UNMARK_DELETED_SOURCE,
+    TWITTER
 } from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import { WEB_GOT_SOURCE_RESULTS, WEB_ADD_SOURCE } from "./../../../src/js/config/actions/WebConfigureActions";
 import { TWITTER_GOT_SOURCE_RESULTS, TWITTER_ADD_SOURCE } from "./../../../src/js/config/actions/TwitterConfigureActions";
@@ -97,6 +98,14 @@ describe("SourceConfigurationReducers", () => {
     });
 
     describe("Sources Results", () => {
+        const sourceResultsInitialState = {
+            "data": [],
+            "nextPage": {},
+            "isFetchingSources": false,
+            "twitterPreFirstId": 0,
+            "keyword": "",
+            "hasMoreSourceResults": true
+        };
         it("should return an empty list by default when asked sources", () => {
             expect({ "data": [], "nextPage": {}, "twitterPreFirstId": 0, "isFetchingSources": false, "keyword": "", "hasMoreSourceResults": true }).to.deep.equal(sourceResults());
         });
@@ -107,8 +116,10 @@ describe("SourceConfigurationReducers", () => {
                 "paging": {},
                 "keyword": "key"
             };
-            const action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources };
-            const state = sourceResults({ "data": [], "nextPage": {} }, action);
+            const currentTab = PAGES;
+            currentSourceTab("", { "type": CHANGE_CURRENT_SOURCE_TAB, currentTab });
+            const action = { "type": FACEBOOK_GOT_SOURCES, "sources": sources, currentTab };
+            const state = sourceResults(sourceResultsInitialState, action);
 
             const expectedResults = {
                 "data": sources.data,
@@ -128,8 +139,10 @@ describe("SourceConfigurationReducers", () => {
                 "paging": {},
                 "keyword": "key"
             };
-            const action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources };
-            const state = sourceResults({ "data": [], "nextPage": {} }, action);
+            const currentTab = WEB;
+            currentSourceTab("", { "type": CHANGE_CURRENT_SOURCE_TAB, currentTab });
+            const action = { "type": WEB_GOT_SOURCE_RESULTS, "sources": sources, currentTab };
+            const state = sourceResults(sourceResultsInitialState, action);
 
             const expectedResults = {
                 "data": sources.data,
@@ -150,8 +163,10 @@ describe("SourceConfigurationReducers", () => {
                 "keyword": "key",
                 "twitterPreFirstId": 12345
             };
-            const action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources };
-            const state = sourceResults({ "data": [], "nextPage": {} }, action);
+            const currentTab = TWITTER;
+            currentSourceTab("", { "type": CHANGE_CURRENT_SOURCE_TAB, currentTab });
+            const action = { "type": TWITTER_GOT_SOURCE_RESULTS, "sources": sources, currentTab };
+            const state = sourceResults(sourceResultsInitialState, action);
             const expectedResuls = {
                 "data": sources.data,
                 "nextPage": sources.paging,
