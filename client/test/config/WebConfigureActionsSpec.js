@@ -9,11 +9,12 @@ import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "../helper/ActionHelper";
 import {
     FETCHING_SOURCE_RESULTS,
-    FETCHING_SOURCE_RESULTS_FAILED
+    FETCHING_SOURCE_RESULTS_FAILED,
+    WEB
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("WebConfigureActions", () => {
-
+    const currentTab = WEB;
     describe("gotWebSourceResults", () => {
         it("should return source and type object", () => {
             let sources = {
@@ -67,7 +68,8 @@ describe("WebConfigureActions", () => {
 
             const gotWebSourcesActionObj = {
                 "type": WEB_GOT_SOURCE_RESULTS,
-                "sources": { "data": result.docs, "paging": result.paging, "keyword": keyword }
+                "sources": { "data": result.docs, "paging": result.paging, "keyword": keyword },
+                currentTab
             };
 
             const actions = [
@@ -109,7 +111,8 @@ describe("WebConfigureActions", () => {
                     }],
                     "paging": result.paging,
                     "keyword": keyword
-                }
+                },
+                currentTab
             };
 
             const getStore = { "configuredSources": {

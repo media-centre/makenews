@@ -13,14 +13,15 @@ export const PROFILES = "profiles";
 export const PAGES = "pages";
 export const GROUPS = "groups";
 
-export function facebookSourcesReceived(response, keyword) {
+export function facebookSourcesReceived(response, keyword, currentTab) {
     return {
         "type": FACEBOOK_GOT_SOURCES,
         "sources": {
             "data": response.data,
             "paging": response.paging,
             "keyword": keyword
-        }
+        },
+        currentTab
     };
 }
 
@@ -35,7 +36,7 @@ export function fetchFacebookSources(keyword, type, sourceType, props = {}) {
                 let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
-                dispatch(facebookSourcesReceived(response, keyword));
+                dispatch(facebookSourcesReceived(response, keyword, sourceType));
             } else {
                 dispatch(fetchingSourcesFailed(keyword));
             }

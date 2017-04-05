@@ -13,18 +13,20 @@ import { FB_DEFAULT_SOURCES } from "./../../src/js/utils/Constants";
 describe("Facebook Configure Actions", () => {
     describe("fetch facebook sources", () => {
         it("should return type FACEBOOK_GOT_SOURCES action", () => {
-            let response = {
+            const response = {
                 "data": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "paging": {}
             };
-            let sources = { "data": [{ "name": "Profile1" }, { "name": "Profile2" }], "paging": {}, "keyword": "keyword" };
-            let facebookConfigureAction = { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources };
-            expect(facebookConfigureAction).to.deep.equal(FBActions.facebookSourcesReceived(response, "keyword"));
+            const currentTab = FBActions.PAGES;
+            const sources = { "data": [{ "name": "Profile1" }, { "name": "Profile2" }], "paging": {}, "keyword": "keyword" };
+            const facebookConfigureAction = { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources, currentTab };
+            expect(facebookConfigureAction).to.deep.equal(FBActions.facebookSourcesReceived(response, "keyword", currentTab));
         });
     });
 
     describe("fetchFacebookSources", () => {
         let sandbox = sinon.sandbox.create(), ajaxClient = null, ajaxClientMock = null;
+        const currentTab = FBActions.PAGES;
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -35,9 +37,9 @@ describe("Facebook Configure Actions", () => {
         });
 
         it(`should dispatch ${FBActions.FACEBOOK_GOT_SOURCES} action after getting fb profiles`, (done) => {
-            let serverUrl = "/facebook-sources";
-            let response = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {} };
-            let sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {}, "keyword": "testProfile" };
+            const serverUrl = "/facebook-sources";
+            const response = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {} };
+            const sources = { "data": [{ "name": "testProfile" }, { "name": "testProfile2" }], "paging": {}, "keyword": "testProfile" };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
@@ -45,20 +47,20 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.withArgs(headers, { "keyword": "testProfile", "type": "profile", "paging": {} })
                 .returns(Promise.resolve(response));
 
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
+                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources, currentTab }
             ];
-            let store = mockStore({ "configuredSources": { "profiles": [] }, "sourceResults": { "data": [] } }, actions, done);
-            store.dispatch(FBActions.fetchFacebookSources("testProfile", "profile", FBActions.PROFILES));
+            const store = mockStore({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }, actions, done);
+            store.dispatch(FBActions.fetchFacebookSources("testProfile", "profile", FBActions.PAGES));
         });
 
         it("fetch pages when requested source type is pages", (done) => {
-            let serverUrl = "/facebook-sources";
-            let pageName = "testPage";
-            let data = [{ "name": "testProfile" }, { "name": "testProfile2" }];
-            let response = { "data": data, "paging": {} };
-            let sources = { "data": data, "paging": {}, "keyword": pageName };
+            const serverUrl = "/facebook-sources";
+            const pageName = "testPage";
+            const data = [{ "name": "testProfile" }, { "name": "testProfile2" }];
+            const response = { "data": data, "paging": {} };
+            const sources = { "data": data, "paging": {}, "keyword": pageName };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
@@ -67,11 +69,11 @@ describe("Facebook Configure Actions", () => {
             });
             ajaxClientMock.returns(Promise.resolve(response));
 
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources, currentTab }
             ];
-            let store = mockStore(() => ({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }), actions, done);
+            const store = mockStore(() => ({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }), actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
@@ -98,7 +100,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock.returns(Promise.resolve(fbResponse));
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources }
+                { "type": "FACEBOOK_GOT_SOURCES", "sources": sources, currentTab }
             ];
 
             const getStore = () => ({
@@ -155,7 +157,7 @@ describe("Facebook Configure Actions", () => {
             const sources = { "data": FB_DEFAULT_SOURCES[type].data, paging, keyword };
             let actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
-                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources }
+                { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources, currentTab }
             ];
 
             let store = mockStore({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }, actions, done);

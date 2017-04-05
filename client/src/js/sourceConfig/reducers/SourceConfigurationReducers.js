@@ -29,11 +29,11 @@ const sourceResultsInitialState = {
     "keyword": "",
     "hasMoreSourceResults": true
 };
-
+let tab = WEB;
 export const sourceResults = (state = sourceResultsInitialState, action = {}) => {
     switch(action.type) {
     case FACEBOOK_GOT_SOURCES: {
-        state.data = (state.nextPage.after) ? state.data : [];
+        state.data = (state.nextPage.after && action.currentTab === tab) ? state.data : [];
         return Object.assign({}, state,
             {
                 "data": state.data.concat(action.sources.data),
@@ -45,7 +45,7 @@ export const sourceResults = (state = sourceResultsInitialState, action = {}) =>
             });
     }
     case TWITTER_GOT_SOURCE_RESULTS: {
-        state.data = (state.nextPage.page) ? state.data : [];
+        state.data = (state.nextPage.page && action.currentTab === tab) ? state.data : [];
         return Object.assign({}, state,
             {
                 "data": state.data.concat(action.sources.data),
@@ -57,7 +57,7 @@ export const sourceResults = (state = sourceResultsInitialState, action = {}) =>
             });
     }
     case WEB_GOT_SOURCE_RESULTS: {
-        state.data = (state.nextPage.offset) ? state.data : [];
+        state.data = (state.nextPage.offset && action.currentTab === tab) ? state.data : [];
         return Object.assign({}, state,
             {
                 "data": state.data.concat(action.sources.data),
@@ -142,6 +142,7 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
 export const currentSourceTab = (state = WEB, action = {}) => {
     switch(action.type) {
     case CHANGE_CURRENT_SOURCE_TAB: {
+        tab = action.currentTab;
         return action.currentTab;
     }
     default: return state;

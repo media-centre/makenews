@@ -10,10 +10,12 @@ import mockStore from "../helper/ActionHelper";
 import * as SearchResultsSetOperations from "../../src/js/utils/SearchResultsSetOperations";
 import {
     FETCHING_SOURCE_RESULTS,
-    FETCHING_SOURCE_RESULTS_FAILED
+    FETCHING_SOURCE_RESULTS_FAILED,
+    TWITTER
 } from "./../../src/js/sourceConfig/actions/SourceConfigurationActions";
 
 describe("TwitterConfigureActions", () => {
+    const currentTab = TWITTER;
     describe("gotTwitterSourceResults", () => {
         it("should return source and type object", () => {
             let pageNumber = 1, twitterPreFirstId = 123, keyword = "india";
@@ -31,7 +33,7 @@ describe("TwitterConfigureActions", () => {
                 "paging": pageNumber,
                 "twitterPreFirstId": twitterPreFirstId
             };
-            const result = gotTwitterSourceResults(sources, keyword);
+            const result = gotTwitterSourceResults(sources, keyword, currentTab);
             assert.equal(result.type, TWITTER_GOT_SOURCE_RESULTS);
             assert.deepEqual(result.sources.data, data);
             assert.equal(result.sources.paging, pageNumber);
@@ -81,7 +83,8 @@ describe("TwitterConfigureActions", () => {
                     "paging": paging,
                     "twitterPreFirstId": twitterPreFirstId,
                     "keyword": keyword
-                }
+                },
+                currentTab
             };
 
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
@@ -106,7 +109,8 @@ describe("TwitterConfigureActions", () => {
                     "paging": paging,
                     "twitterPreFirstId": twitterPreFirstId,
                     "keyword": keyword
-                }
+                },
+                currentTab
             };
 
             const getStore = {

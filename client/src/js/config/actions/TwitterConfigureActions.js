@@ -8,14 +8,15 @@ import { intersectionWith } from "../../utils/SearchResultsSetOperations";
 export const TWITTER_GOT_SOURCE_RESULTS = "TWITTER_GOT_SOURCE_RESULTS";
 export const TWITTER_ADD_SOURCE = "TWITTER_ADD_SOURCE";
 
-export function gotTwitterSourceResults(sources, keyword) {
+export function gotTwitterSourceResults(sources, keyword, currentTab) {
     return {
         "type": TWITTER_GOT_SOURCE_RESULTS,
         "sources": { "data": sources.docs,
             "paging": sources.paging,
             "twitterPreFirstId": sources.twitterPreFirstId,
             "keyword": keyword
-        }
+        },
+        currentTab
     };
 }
 
@@ -29,7 +30,7 @@ export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0)
                 let configuredSources = getState().configuredSources.twitter;
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
-                dispatch(gotTwitterSourceResults(data, keyword));
+                dispatch(gotTwitterSourceResults(data, keyword, "twitter"));
             } else {
                 dispatch(fetchingSourcesFailed(keyword));
             }
