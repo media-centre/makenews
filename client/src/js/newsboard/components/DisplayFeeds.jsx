@@ -190,6 +190,7 @@ export class DisplayFeeds extends Component {
         };
 
         if(this.hasMoreSearchFeeds && !StringUtils.isEmptyString(keyword)) {
+            this.props.dispatch(DisplayFeedActions.fetchingFeeds(true));
             this.props.dispatch(DisplayFeedActions.searchFeeds(sourceType, keyword, this.searchOffset, callback));
         }
     }

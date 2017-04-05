@@ -45,7 +45,6 @@ export function displayFeedsByPage(pageIndex, filter = {}, callback = () => {}) 
     return _getFeeds(ajaxClient, { "offset": pageIndex, "filter": JSON.stringify(filter) }, callback);
 }
 
-
 export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
     let ajaxClient = AjaxClient.instance("/bookmarks", true);
 
@@ -104,14 +103,16 @@ export function searchFeeds(sourceType, searchKey, offset, callback) {
             if(feeds.docs.length) {
                 dispatch(searchedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
-            }else {
+            } else {
                 Toast.show(`No Search results found for this keyword "${searchKey}"`, "search-warning");
             }
             result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
             return callback(result);
         } catch (err) {
-            Toast.show(err.message);
+            Toast.show(`No Search results found for this keyword "${searchKey}"`, "search-warning");
             return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
+        } finally {
+            dispatch(fetchingFeeds(false));
         }
     };
 }

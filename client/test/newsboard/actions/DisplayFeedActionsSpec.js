@@ -117,7 +117,7 @@ describe("DisplayFeedActions", () => {
                 sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
                 let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(feeds));
 
-                let store = mockStore([], [{ "type": SEARCHED_FEEDS, "feeds": feeds.docs }], done);
+                const store = mockStore([], [{ "type": SEARCHED_FEEDS, "feeds": feeds.docs }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
                 store.dispatch(searchFeeds(sourceType, keyword, offset, (result) => {
                     try {
                         assert.strictEqual(result.docsLength, 2); //eslint-disable-line no-magic-numbers
@@ -139,9 +139,9 @@ describe("DisplayFeedActions", () => {
                 const getMock = sandbox.mock(ajaxClientInstance).expects("get").withArgs({ sourceType, searchKey, offset })
                     .returns(Promise.reject({ "message": `No Search results found for this keyword "${searchKey}"` }));
                 const toastMock = sandbox.mock(Toast).expects("show")
-                    .withExactArgs(`No Search results found for this keyword "${searchKey}"`);
+                    .withExactArgs(`No Search results found for this keyword "${searchKey}"`, "search-warning");
 
-                await searchFeeds(sourceType, searchKey, offset, () => {})();
+                await searchFeeds(sourceType, searchKey, offset, () => {})(()=>{});
 
                 toastMock.verify();
                 getMock.verify();
