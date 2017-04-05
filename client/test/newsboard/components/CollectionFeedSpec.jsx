@@ -110,7 +110,7 @@ describe("CollectionFeed", () => {
             expect(button.props.className).to.equals("collection-feed__readmore-button");
         });
 
-        it("should be visible when when article contain video", ()=> {
+        it("should be visible when article contain video", ()=> {
             feed.videos = [{ "thumbnail": "video image url" }];
             feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
             let [,, readMore] = feedDom.props.children;
@@ -121,8 +121,23 @@ describe("CollectionFeed", () => {
             expect(button.props.className).to.equals("collection-feed__readmore-button");
         });
 
-        it("should be visible when when article contain image", ()=> {
+        it("should be visible when article contain image", ()=> {
             feed.images = [{ "url": "image url", "thumbnail": "image url" }];
+            feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
+            let [,, readMore] = feedDom.props.children;
+            let button = readMore.props.children;
+
+            expect(readMore.type).to.equals("div");
+            expect(button.type).to.equals("button");
+            expect(button.props.className).to.equals("collection-feed__readmore-button");
+        });
+
+        it("should be visible when article description more than Four lines", ()=> {
+            feed.description = "NEEDED: Videographer/Animator We have been working with a young creative " +
+                "who has an idea for a website that helps overcome the barriers people face when " +
+                "starting their own clothing brand. He needs some help with conveying his business " +
+                "proposal through film/animation for an upcoming competition and is looking for an animator " +
+                "that can help with this.";
             feedDom = renderer.render(<CollectionFeed collectionId={collectionId} active={active} feed={feed} toggle={onToggle}/>);
             let [,, readMore] = feedDom.props.children;
             let button = readMore.props.children;

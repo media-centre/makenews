@@ -235,6 +235,9 @@
         padding:9px;
         color: $primary-color;
         font-size: $small-font-size;
+        line-height: 26px;
+        max-height: 100px;
+        overflow: hidden;
       }
 
       &__readmore {

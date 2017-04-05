@@ -5,6 +5,7 @@ import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import { deleteCollectionFeed } from "../actions/DisplayCollectionActions";
+const MAX_DESCRIPTION_LENGTH = 300;
 
 export default class CollectionFeed extends Component {
 
@@ -23,8 +24,9 @@ export default class CollectionFeed extends Component {
 
     render() {
         const feed = this.props.feed;
-        let [video] = feed.videos || [];
-        let [image] = feed.images || [];
+        const [video] = feed.videos || [];
+        const [image] = feed.images || [];
+        const description = feed.description || "";
         let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         return (<div className={feedClass}>
                     { this.props.tab !== WRITE_A_STORY &&
@@ -47,7 +49,7 @@ export default class CollectionFeed extends Component {
                         </div>
                     </div>
                     <div className={`${feedClass}__readmore`}>
-                        {feed.sourceType === "web" || video || image
+                        {feed.sourceType === "web" || video || image || description.length > MAX_DESCRIPTION_LENGTH
                         ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
                     </div>
               </div>);
