@@ -22,6 +22,7 @@ export class DisplayFeeds extends Component {
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.key = "";
+        this.comingFromCollections = false;
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
@@ -63,6 +64,22 @@ export class DisplayFeeds extends Component {
             if (!firstArticle) {
                 this.props.dispatch(DisplayFeedActions.clearArticle());
             }
+        }
+
+        if(nextProps.sourceType === "collections" && this.props.sourceType !== nextProps.sourceType) {
+            if(this.feedsDOM) {
+                this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
+            }
+        }
+
+        if(this.props.sourceType === "collections" && this.props.sourceType !== nextProps.sourceType) {
+            this.comingFromCollections = true;
+        }
+
+        if(this.comingFromCollections && this.refs.feeds) {
+            this.comingFromCollections = false;
+            this.feedsDOM = this.refs.feeds;
+            this.feedsDOM.addEventListener("scroll", this.getFeedsCallBack);
         }
     }
 
