@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import ReactDOM from "react-dom";
 import DisplayArticle from "./DisplayArticle";
 import CollectionFeed from "./CollectionFeed";
 import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollectionActions";
@@ -24,7 +23,7 @@ export class DisplayCollectionFeeds extends Component {
 
     componentDidMount() {
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
-        this.dom = ReactDOM.findDOMNode(this);
+        this.dom = this.refs.collection;
         this.dom.addEventListener("scroll", this.getMoreFeeds);
         this.props.dispatch(displayArticle());
     }
@@ -50,7 +49,8 @@ export class DisplayCollectionFeeds extends Component {
             const scrollTimeInterval = 250;
             this.timer = setTimeout(() => {
                 this.timer = null;
-                if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
+                const scrollTop = this.dom.scrollTop;
+                if (scrollTop && scrollTop + this.dom.clientHeight >= this.dom.scrollHeight) {
                     this.getMoreFeedsCallback(this.props.collection);
                 }
             }, scrollTimeInterval);
