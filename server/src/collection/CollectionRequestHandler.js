@@ -117,7 +117,8 @@ export default class CollectionRequestHandler {
                     "$eq": "collection"
                 }
             },
-            "skip": skipValue
+            "skip": skipValue,
+            "limit": COLLECTION_PER_REQUEST
         };
         return await this.couchClient.findDocuments(selector);
     }
