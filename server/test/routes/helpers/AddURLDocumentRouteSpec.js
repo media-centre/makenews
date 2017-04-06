@@ -62,4 +62,32 @@ describe("Add URL Document Route", () => {
         sandbox.restore();
     });
 
+    it("should reject with error if add document throws an error", async() => {
+        let sandbox = sinon.sandbox.create();
+        let request = {
+            "body": {
+                "url": "http://test.com/rss"
+            },
+            "cookies": {
+                "AuthSession": "test_session"
+            }
+        };
+
+        let response = mockResponse();
+
+        let rssRequestHandlerInstance = new RssRequestHandler();
+        sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
+        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
+        requestHandlerMock.withArgs(request.body.url).returns(Promise.reject("URL already exists"));
+
+        try {
+            await new AddURLDocumentRoute(request, response, {}).handle();
+            requestHandlerMock.verify();
+            assert.fail();
+        } catch(err) {
+            assert.deepEqual(response.json(), { "message": "URL already exists" });
+            sandbox.restore();
+        }
+    });
+
 });

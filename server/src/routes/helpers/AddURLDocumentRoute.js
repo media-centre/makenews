@@ -26,7 +26,7 @@ export default class AddURLDocumentRoute extends Route {
             return this._handleSuccess(response);
         } catch (error) {
             RouteLogger.instance().debug(`AddURLDocument:: failed to save the document Error: ${JSON.stringify(error)}`);
-            throw this._handleInvalidRequest({ "message": error.message });
+            throw this._handleInvalidRequest({ "message": error });
         }
     }
 }
