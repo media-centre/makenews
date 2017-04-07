@@ -2,13 +2,11 @@
 
 # This is the ssh client system-wide configuration file.
 # See sshd_config(5) for more information on any settings used. Comments will be added only to clarify why a configuration was chosen.
-#
-# Created for OpenSSH v5.9
 
 # Basic configuration
 # ===================
 
-# Either disable or only allow root login via certificates.
+# Either disable or only allowssh root login via certificates.
 PermitRootLogin {{ 'without-password' if ssh_allow_root_with_key else 'no' }}
 
 # Define which port sshd should listen to. Default to `22`.
@@ -51,16 +49,16 @@ LogLevel VERBOSE
 # -- see: (http://net-ssh.github.com/net-ssh/classes/Net/SSH/Transport/CipherFactory.html)
 #
 {% if ssh_server_cbc_required -%}
-    {% if ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04' -%}
-        Ciphers {{ciphers_66_weak}}
+    {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04') or (ansible_distribution == 'Debian' and ansible_distribution_version >= '8') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version >= '7') -%}
+        Ciphers {{ ssh_ciphers_66_weak | join(',') }}
     {% else %}
-        Ciphers {{ciphers_53_weak}}
+        Ciphers {{ ssh_ciphers_53_weak | join(',') }}
     {% endif %}
 {% else -%}
-    {% if ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04' -%}
-        Ciphers {{ciphers_66_default}}
+    {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04') or (ansible_distribution == 'Debian' and ansible_distribution_version >= '8') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version >= '7') -%}
+        Ciphers {{ ssh_ciphers_66_default | join(',') }}
     {% else -%}
-        Ciphers {{ciphers_53_default}}
+        Ciphers {{ ssh_ciphers_53_default | join(',') }}
     {% endif %}
 {% endif %}
 
@@ -70,24 +68,18 @@ LogLevel VERBOSE
 #
 
 {% if ssh_server_weak_hmac -%}
-    {% if ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04' -%}
-        MACs {{macs_66_weak}}
+    {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04') or (ansible_distribution == 'Debian' and ansible_distribution_version >= '8') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version >= '7') -%}
+        MACs {{ ssh_macs_66_weak | join(',') }}
     {% elif ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version <= '6' -%}
-        MACs {{macs_53_default}}
-    {% elif ansible_distribution == 'Debian' and ansible_distribution_major_version <= '6' -%}
-        MACs {{macs_53_default}}
-    {% else -%}
-        MACs {{macs_59_weak}}
+        MACs {{ ssh_macs_53_default | join(',') }}
     {% endif %}
 {% else -%}
-    {% if ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04' -%}
-        MACs {{macs_66_default}}
+    {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04') or (ansible_distribution == 'Debian' and ansible_distribution_version >= '8') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version >= '7') -%}
+        MACs {{ ssh_macs_66_default | join(',') }}
     {% elif ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version <= '6' -%}
-        MACs {{macs_53_default}}
-    {% elif ansible_distribution == 'Debian' and ansible_distribution_major_version <= '6' -%}
-        MACs {{macs_53_default}}
+        MACs {{ ssh_macs_53_default | join(',') }}
     {% else -%}
-        MACs {{macs_59_default}}
+        MACs {{ ssh_macs_59_default | join(',') }}
     {% endif %}
 {% endif %}
 
@@ -98,17 +90,19 @@ LogLevel VERBOSE
 # Weak kex is sometimes required if older package versions are used
 # eg ruby's Net::SSH at around 2.2.* doesn't support sha2 for kex, so this will have to be set true in this case.
 # based on: https://bettercrypto.org/static/applied-crypto-hardening.pdf
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04' -%}
-    {% if ssh_client_weak_kex -%}
-        KexAlgorithms {{kex_66_weak}}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '14.04') or (ansible_distribution == 'Debian' and ansible_distribution_version >= '8') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version >= '7') -%}
+    {% if ssh_server_weak_kex -%}
+        KexAlgorithms {{ ssh_kex_66_weak | join(',') }}
     {% else -%}
-        KexAlgorithms {{kex_66_default}}
+        KexAlgorithms {{ ssh_kex_66_default | join(',') }}
     {% endif %}
 {% else -%}
-    {% if ansible_os_family in ['Oracle Linux', 'RedHat'] or (ansible_distribution == 'Debian' and ansible_distribution_major_version <= '6') -%}
+    {% if ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version <= '6' -%}
         #KexAlgorithms
+    {% elif ssh_server_weak_kex -%}
+        KexAlgorithms {{ sshd_kex_59_weak | join(',') }}
     {% else -%}
-        KexAlgorithms {{kex_59_default}}
+        KexAlgorithms {{ ssh_kex_59_default | join(',') }}
     {% endif %}
 {% endif %}
 
@@ -117,7 +111,7 @@ LogLevel VERBOSE
 
 # Secure Login directives.
 UseLogin no
-UsePrivilegeSeparation {% if (ansible_distribution == 'Debian' and ansible_distribution_major_version <= '6') or ansible_os_family in ['Oracle Linux', 'RedHat'] -%}{{ssh_ps53}}{% else %}{{ssh_ps59}}{% endif %}
+UsePrivilegeSeparation {% if (ansible_distribution == 'Debian' and ansible_distribution_major_version <= '6') or (ansible_os_family in ['Oracle Linux', 'RedHat'] and ansible_distribution_major_version <= '6') -%}{{ssh_ps53}}{% else %}{{ssh_ps59}}{% endif %}
 
 PermitUserEnvironment no
 LoginGraceTime 30s
@@ -204,10 +198,11 @@ PrintMotd {{ 'yes' if ssh_print_motd else 'no' }}
 
 PrintLastLog {{ 'yes' if ssh_print_last_log else 'no' }}
 
-#Banner /etc/ssh/banner.txt
-#UseDNS yes
-#PidFile /var/run/sshd.pid
-#MaxStartups 10
+Banner {{ '/etc/ssh/banner.txt' if ssh_banner else 'none' }}
+
+{% if ansible_os_family == 'Debian' %}
+DebianBanner {{ 'yes' if ssh_print_debian_banner else 'no' }}
+{% endif %}
 
 {% if sftp_enabled %}
 # Configuration, in case SFTP is used

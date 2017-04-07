@@ -1,26 +1,26 @@
 - hosts: web
   become: True
   become_method: sudo
-  vars_prompt:
-    - name: "go_password_hash"
-      prompt: "Enter hash for go user"
-      private: yes
-      confirm: yes
-  vars:
-    - go_server_ip: 46.101.245.151
-    - go_server: https:\/\/46.101.245.151:8154\/go
-    - letsEncrypt: True
+#  vars_prompt:
+#    - name: "go_password_hash"
+#      prompt: "Enter hash for go user"
+#      private: yes
+#      confirm: yes
+#  vars:
+#    - go_server_ip: 46.101.245.151
+#    - go_server: https:\/\/46.101.245.151:8154\/go
+#    - letsEncrypt: True
   roles:
-    - PreInstallationTasks
-    - couchdb-dump
-    - ANXS.build-essential
-    - couchdb2.0
-    - gotansible.nodejs
-    - PostInstallationTasks
-    - goagent
-    - nginx
-    - ssl
-    - nginx-hardening
-    - dev-sec.os-hardening
+#    - PreInstallationTasks
+#    - couchdb-dump
+#    - ANXS.build-essential
+#    - couchdb2.0
+#    - gotansible.nodejs
+#    - PostInstallationTasks
+#    - goagent
+#    - nginx
+#    - ssl
+#    - nginx-hardening
+#    - dev-sec.os-hardening
     - ansible-ssh-hardening
-    - couchdb-lucene
+#    - couchdb-lucene
