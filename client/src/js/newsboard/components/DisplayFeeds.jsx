@@ -158,15 +158,19 @@ export class DisplayFeeds extends Component {
     }
 
     _showMoreFeedsButton() {
-        return (
-            <button className="newsfeeds-notify" onClick={() => {
-                this.setState({ "gotNewFeeds": false });
-                this.offset = 0;
-                this.hasMoreFeeds = true;
-                this.props.dispatch(DisplayFeedActions.clearFeeds());
-                this.getMoreFeeds(this.props.sourceType);
-            }}
-            > {"Show new feeds"} </button>);
+        if(!["collections", "bookmark"].includes(this.props.sourceType)) {
+            return (
+                <button className="newsfeeds-notify" onClick={() => {
+                    this.setState({ "gotNewFeeds": false });
+                    this.offset = 0;
+                    this.hasMoreFeeds = true;
+                    this.props.dispatch(DisplayFeedActions.clearFeeds());
+                    this.getMoreFeeds(this.props.sourceType);
+                }
+            }
+                > {"Show new feeds"} </button>);
+        }
+        return null;
     }
 
     checkEnterKey(event) {
