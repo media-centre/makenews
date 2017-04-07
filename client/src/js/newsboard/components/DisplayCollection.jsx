@@ -68,6 +68,8 @@ export class DisplayCollection extends Component {
         let collectionItems = [];
         const getCollectionItem = (collection, className) =>
             (<li tabIndex="0" className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>
+                    {this.props.mainHeaderTab === "Write a Story" && collection.collection}
+                    {this.props.mainHeaderTab !== "Write a Story" &&
                     <InlineEdit
                         text={collection.collection}
                         paramName="newCollectionName"
@@ -76,14 +78,15 @@ export class DisplayCollection extends Component {
                         change={(value) => {
                             this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
                         }}
-                    />
+                    />}
+                    {this.props.mainHeaderTab !== "Write a Story" &&
                     <button className="delete-collection" title={`Delete ${collection.collection}`} onClick={(event) => {
                         event.stopPropagation();
                         this.buttonEvent = Object.assign({}, event);
                         this.deleteCollection = collection;
                         this.setState({ "showConfirmationPopup": true });
                     }}
-                    > &times; </button>
+                    > &times; </button>}
                 </li>
             );
 
