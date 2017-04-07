@@ -21,6 +21,6 @@
     - nginx
     - ssl
     - nginx-hardening
-    - ansible-os-hardening
+    - dev-sec.os-hardening
     - ansible-ssh-hardening
     - couchdb-lucene
