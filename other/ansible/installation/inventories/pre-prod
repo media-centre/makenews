@@ -1,5 +1,5 @@
 [web]
-release.pp.contentdiscovery.in
+pp.makenews.in
 [web:vars]
-nginx_domain=release.pp.contentdiscovery.in
+nginx_domain=pp.makenews.in
 project_environment=pre-prod
