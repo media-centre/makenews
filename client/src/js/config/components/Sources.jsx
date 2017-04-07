@@ -38,7 +38,8 @@ export class Sources extends Component {
 
     _getMoreFeeds() {
         if(this.props.sources.hasMoreSourceResults && !this.timer) {
-            const scrollTimeInterval = 250;
+
+            const scrollTimeInterval = 1500;
             this.timer = setTimeout(() => {
                 this.timer = null;
                 if (Math.abs(document.body.scrollHeight - (pageYOffset + innerHeight)) < 1) { //eslint-disable-line no-magic-numbers
