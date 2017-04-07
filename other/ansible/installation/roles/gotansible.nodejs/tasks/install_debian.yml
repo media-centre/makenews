@@ -1,7 +1,7 @@
 ---
 
 - name: setup nodesouce apt
-  shell: curl -sL https://deb.nodesource.com/setup_4.x | bash -
+  shell: curl -sL https://deb.nodesource.com/setup_6.x | bash -
   args:
     creates: /etc/apt/sources.list.d/nodesource.list
 

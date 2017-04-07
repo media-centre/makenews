@@ -5,3 +5,4 @@ ssl_state: DL
 ssl_locality: DL
 ssl_organization: mediacenter
 lets_encrypt_email: mediacenter@thoughtworks.com
+nginx_domain: makenews.in

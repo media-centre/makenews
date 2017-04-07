@@ -18,7 +18,6 @@ try {
 
     console.log("started admin migration");
     AdminDbClient.instance(adminUserName, adminPassword, adminDb).then(adminDbClient => {
-        console.log(adminDbClient.accessToken);
         let migrationInstance = Migration.instance(adminDb, adminDbClient.accessToken, true);
         migrationInstance.start().then(() => {
             console.log("completed admin migration");

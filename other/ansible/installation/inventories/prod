@@ -1,4 +1,5 @@
 [web]
 46.101.164.127
 [web:vars]
-nginx_domain=46.101.164.127
+nginx_domain=makenews.in
+project_environment=production
