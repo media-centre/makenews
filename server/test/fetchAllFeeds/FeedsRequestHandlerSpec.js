@@ -165,7 +165,7 @@ describe("FeedsRequestHandler", () => {
         let feedRequestHandler = null;
         const authSession = "AuthSession", dbName = "dbName";
         let sourceType = "web", searchKey = "test", skip = 5;
-        const response = {
+        let response = {
             "q": "+sourceType:web +title:test* description:test*",
             "fetch_duration": 0,
             "total_rows": 14,
@@ -277,6 +277,74 @@ describe("FeedsRequestHandler", () => {
             assert.deepEqual(result, expectedResult);
         });
 
+        it("should not return the feeds when sourceDeleted is true", async() => {
+            sourceType = "web";
+            const response1 = {
+                "q": "+sourceType:web +title:test* description:test*",
+                "fetch_duration": 0,
+                "total_rows": 14,
+                "limit": 25,
+                "search_duration": 0,
+                "etag": "1358a6ef5569e8",
+                "skip": 0,
+                "rows": [{
+                    "score": 0.03390154987573624,
+                    "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
+                    "doc": {
+                        "sourceType": "web",
+                        "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
+                        "title": "Trump signs executive order on black colleges",
+                        "sourceDeleted": true
+                    }
+                }]
+            };
+
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").returns(Promise.resolve(response1));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result.docs, []);
+        });
+
+        it("should return the feeds when source type is bookmark and sourceDeleted is true", async() => {
+            response = {
+                "q": "+sourceType:web +title:test* description:test*",
+                "fetch_duration": 0,
+                "total_rows": 14,
+                "limit": 25,
+                "search_duration": 0,
+                "etag": "1358a6ef5569e8",
+                "skip": 0,
+                "rows": [{
+                    "score": 0.03390154987573624,
+                    "id": "2e8e560b4bce1793c7fab1889d78ac7ff60d8cefcb92dcb808775b5d04b26ad9",
+                    "doc": {
+                        "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
+                        "title": "Trump signs executive order on black colleges",
+                        "sourceDeleted": true
+                    }
+                }]
+            };
+            sourceType = "bookmark";
+            const docs = [{
+                "description": "President Donald Trump signed an executive order Tuesday aimed at signaling his commitment to historically black colleges",
+                "title": "Trump signs executive order on black colleges",
+                "sourceDeleted": true
+            }];
+            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+
+            sandbox.stub(userDetails, "getUser").returns({ dbName });
+            const searchDocumentMock = sandbox.mock(LuceneClient)
+                .expects("searchDocuments").returns(Promise.resolve(response));
+
+            const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
+
+            searchDocumentMock.verify();
+            assert.deepEqual(result, expectedResult);
+        });
 
         it("should reject with error if search documents reject with error", async () => {
             let searchDocumentMock = null;

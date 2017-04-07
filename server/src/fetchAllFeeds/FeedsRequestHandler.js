@@ -85,7 +85,17 @@ export default class FeedsRequestHandler {
             const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
             let result = {};
-            result.docs = R.map(row => row.doc)(response.rows);
+            result.docs = response.rows.map((row) => {
+                if(sourceType === NEWSBOARD_SOURCE_TYPES.bookmark) {
+                    return row.doc;
+                }else if(row.doc.sourceDeleted !== true) {
+                    return row.doc;
+                }
+                return {};
+            });
+
+            let empty = doc => !R.isEmpty(doc);
+            result.docs = R.filter(empty, result.docs);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
             return result;
         } catch (error) {
