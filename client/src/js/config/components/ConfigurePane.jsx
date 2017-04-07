@@ -55,7 +55,7 @@ export class ConfigurePane extends Component {
     }
 
     checkEnterKey(event) {
-        const value = this.refs.searchSources.value;
+        const value = (this.refs.searchSources.value).trim();
         const ENTERKEY = 13;
 
         if (StringUtils.isEmptyString(value) || event.keyCode === ENTERKEY) {
