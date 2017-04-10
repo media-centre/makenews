@@ -18,7 +18,7 @@ export class DisplayFeeds extends Component {
 
     constructor() {
         super();
-        this.state = { "expandView": false, "showCollectionPopup": false, "isClicked": false, "gotNewFeeds": false, "searchToggle": false };
+        this.state = { "expandView": false, "showCollectionPopup": false, "isFeedSelected": false, "gotNewFeeds": false, "searchToggle": false };
         this.hasMoreFeeds = true;
         this.offset = 0;
         this.key = "";
@@ -46,7 +46,7 @@ export class DisplayFeeds extends Component {
     componentWillReceiveProps(nextProps) {
         if(this.props.sourceType !== nextProps.sourceType) {
             this.clearState();
-            this.setState({ "isClicked": false });
+            this.setState({ "isFeedSelected": false });
             this.state.searchToggle && nextProps.sourceType !== "collections" ? this.searchFeeds(nextProps.sourceType) : this.getMoreFeeds(nextProps.sourceType);//eslint-disable-line no-unused-expressions
             nextProps.sourceType === "collections" ? this.setState({ "searchToggle": false }) : ""; //eslint-disable-line no-unused-expressions
         }
@@ -154,7 +154,7 @@ export class DisplayFeeds extends Component {
         }
     }
     _isClicked() {
-        this.setState({ "isClicked": !this.state.isClicked });
+        this.setState({ "isFeedSelected": !this.state.isFeedSelected });
     }
 
     _showMoreFeedsButton() {
@@ -165,6 +165,7 @@ export class DisplayFeeds extends Component {
                     this.offset = 0;
                     this.hasMoreFeeds = true;
                     this.props.dispatch(DisplayFeedActions.clearFeeds());
+                    this.setState({ "searchToggle": false });
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }
@@ -224,8 +225,8 @@ export class DisplayFeeds extends Component {
     }
 
     displayFeeds() {
-        return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isClicked
-            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
+        return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
+            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
                 <div className="search-bar">
                     <div className="input-box">
