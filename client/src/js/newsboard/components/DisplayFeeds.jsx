@@ -233,7 +233,7 @@ export class DisplayFeeds extends Component {
     }
     displayFeeds() {
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
-            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
+            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>
                 <div className="search-bar">
                     <div className="input-box">

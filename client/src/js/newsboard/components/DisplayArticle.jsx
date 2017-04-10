@@ -7,6 +7,7 @@ import { bookmarkArticle, addArticleToCollection } from "./../actions/DisplayArt
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
+import { SCAN_NEWS } from "../../header/HeaderActions";
 
 export class DisplayArticle extends Component {
     constructor() {
@@ -16,7 +17,7 @@ export class DisplayArticle extends Component {
 
     _showToolTip() {
         let div = document.getElementById("toolTip");
-        if(window.getSelection().toString()) {
+        if(this.props.currentHeaderTab === SCAN_NEWS && window.getSelection().toString()) {
             let selection = window.getSelection(), range = selection.getRangeAt(0), rect = range.getBoundingClientRect();  //eslint-disable-line no-magic-numbers
 
             div.style.top = rect.top - 50 + "px"; //eslint-disable-line no-magic-numbers
@@ -165,13 +166,15 @@ DisplayArticle.propTypes = {
     "collectionDOM": PropTypes.object,
     "collectionName": PropTypes.string,
     "articleOpen": PropTypes.func,
-    "isStoryBoard": PropTypes.bool
+    "isStoryBoard": PropTypes.bool,
+    "currentHeaderTab": PropTypes.string
 };
 
 function mapToStore(store) {
     return {
         "article": store.selectedArticle,
-        "newsBoardCurrentSourceTab": store.newsBoardCurrentSourceTab
+        "newsBoardCurrentSourceTab": store.newsBoardCurrentSourceTab,
+        "currentHeaderTab": store.currentHeaderTab
     };
 }
 
