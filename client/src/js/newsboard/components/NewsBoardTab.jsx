@@ -6,7 +6,9 @@ import { connect } from "react-redux";
 export class NewsBoardTab extends Component {
 
     displayFeeds(sourceType) {
-        this.props.dispatch(newsBoardTabSwitch(sourceType));
+        if(!this.props.isFetchingFeeds) {
+            this.props.dispatch(newsBoardTabSwitch(sourceType));
+        }
     }
 
     render() {
@@ -25,7 +27,8 @@ export class NewsBoardTab extends Component {
 
 function mapToStore(store) {
     return {
-        "currentNewsBoard": store.newsBoardCurrentSourceTab
+        "currentNewsBoard": store.newsBoardCurrentSourceTab,
+        "isFetchingFeeds": store.fetchingFeeds
     };
 }
 
@@ -36,7 +39,8 @@ NewsBoardTab.propTypes = {
     "currentNewsBoard": PropTypes.string.isRequired,
     "title": PropTypes.string,
     "children": PropTypes.object,
-    "id": PropTypes.string
+    "id": PropTypes.string,
+    "isFetchingFeeds": PropTypes.bool
 };
 
 export default connect(mapToStore)(NewsBoardTab);

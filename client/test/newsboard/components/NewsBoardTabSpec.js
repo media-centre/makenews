@@ -15,7 +15,8 @@ describe("NewsBoardTab", () => {
     beforeEach("NewsBoardTab", () => {
         currentTab = "web";
         store = createStore(() => ({
-            "newsBoardCurrentSourceTab": currentTab
+            "newsBoardCurrentSourceTab": currentTab,
+            "fetchingFeeds": false
         }), applyMiddleware(thunkMiddleware));
         newsBoardTab = TestUtils.renderIntoDocument(
             <Provider store={store}>
@@ -24,14 +25,38 @@ describe("NewsBoardTab", () => {
         );
     });
 
-    it("should have onclick function", () => {
+    it("should dispatch newsBoardTabSwitch if we click when fetchingFeeds is false", () => {
         sandbox = sinon.sandbox.create();
         const newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions).expects("newsBoardTabSwitch").returns({
             "type": ""
         });
         const newsBoardTabDOM = ReactDOM.findDOMNode(newsBoardTab);
         const [icon] = newsBoardTabDOM.getElementsByClassName("icon");
+        
         TestUtils.Simulate.click(icon);
+        
+        newsBoardTabSwitchMock.verify();
+        sandbox.restore();
+    });
+
+    it("should not dispatch newsBoardTabSwitch if we click when fetchingFeeds is true", () => {
+        sandbox = sinon.sandbox.create();
+        store = createStore(() => ({
+            "newsBoardCurrentSourceTab": currentTab,
+            "fetchingFeeds": true
+        }), applyMiddleware(thunkMiddleware));
+        newsBoardTab = TestUtils.renderIntoDocument(
+            <Provider store={store}>
+                <NewsBoard sourceIcon="twitter" sourceType={"twitter"} title="bookmarked feeds"/>
+            </Provider>
+        );
+
+        const newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions).expects("newsBoardTabSwitch").never();
+        const newsBoardTabDOM = ReactDOM.findDOMNode(newsBoardTab);
+        const [icon] = newsBoardTabDOM.getElementsByClassName("icon");
+
+        TestUtils.Simulate.click(icon);
+
         newsBoardTabSwitchMock.verify();
         sandbox.restore();
     });
