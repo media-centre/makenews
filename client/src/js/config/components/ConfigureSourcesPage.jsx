@@ -13,6 +13,7 @@ export class ConfigureSourcesPage extends Component {
     constructor() {
         super();
         this.facebookLogin = FacebookLogin.instance();
+        this.login = false;
     }
 
     async componentDidMount() {
@@ -34,10 +35,15 @@ export class ConfigureSourcesPage extends Component {
     }
 
     _showFBLogin(dispatch) {
-        this.facebookLogin.login().then(expiresAfter => {
-            dispatch(updateTokenExpiredInfo(expiresAfter));
-            dispatch(SourceConfigActions.clearSources);
-        });
+        if(!this.login) {
+            this.facebookLogin.login().then(expiresAfter => {
+                dispatch(updateTokenExpiredInfo(expiresAfter));
+                dispatch(SourceConfigActions.clearSources);
+            }).catch(() => {
+                this.login = false;
+            });
+            this.login = true;
+        }
     }
 
     _showTwitterLogin(dispatch) {
