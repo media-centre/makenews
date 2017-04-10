@@ -20,7 +20,9 @@ export class ConfigurePane extends Component {
     }
 
     componentWillMount() {
-        this.fetchSources(this.props.currentTab);
+        if(this.props.currentTab === SourceConfigActions.WEB) {
+            this.fetchSources(this.props.currentTab);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
