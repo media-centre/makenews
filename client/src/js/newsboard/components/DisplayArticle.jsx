@@ -28,6 +28,13 @@ export class DisplayArticle extends Component {
         }
     }
 
+    _hideToolTip() {
+        const toolTip = document.getElementById("toolTip");
+        if(toolTip && !window.getSelection().toString()) {
+            toolTip.style.display = "none";
+        }
+    }
+
     renderBody() {
         let toolTip = (<div className="toolTip" id="toolTip">
             <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>Add To Collection</button>
@@ -141,7 +148,7 @@ export class DisplayArticle extends Component {
                 this.props.collectionDOM.style.display = "none";
             }
             return (
-                <article className={this.articleClass}>
+                <article className={this.articleClass} onClick={() => { this._hideToolTip(); }}>
                     { this.renderHeader() }
                     { this.renderBody() }
                 </article>

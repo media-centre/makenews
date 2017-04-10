@@ -141,7 +141,8 @@ export class DisplayFeeds extends Component {
         }
     }
 
-    _toggleFeedsView() {
+    _toggleFeedsView(event) {
+        event.stopPropagation();
         this.setState({ "expandFeedsView": !this.state.expandFeedsView });
     }
 
@@ -224,10 +225,16 @@ export class DisplayFeeds extends Component {
         this.getMoreFeeds(this.props.sourceType);
     }
 
+    _hide() {
+        const toolTip = document.getElementById("toolTip");
+        if (toolTip) {
+            toolTip.style.display = "none";
+        }
+    }
     displayFeeds() {
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
-            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
-            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
+            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isClicked} />
+            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>
                 <div className="search-bar">
                     <div className="input-box">
                         <input type="text" ref="searchFeeds"
@@ -243,7 +250,7 @@ export class DisplayFeeds extends Component {
                     </div>
                 </div>
                 { this.state.gotNewFeeds && this._showMoreFeedsButton() }
-                <i onClick={() => { this._toggleFeedsView(); }} className="expand-icon" />
+                <i onClick={(event) => { this._toggleFeedsView(event); }} className="expand-icon" />
                 <div className="feeds-container" ref="feeds">
                     <div className="feeds">
                         { this.props.feeds.map((feed, index) =>
