@@ -65,9 +65,9 @@ export default class FeedsRequestHandler {
         case NEWSBOARD_SOURCE_TYPES.trending:
             return `title:${queryString} OR description:${queryString}`;
         case NEWSBOARD_SOURCE_TYPES.bookmark:
-            return `bookmark:true AND title:${queryString} OR description:${queryString}`;
+            return `bookmark:true AND (title:${queryString} OR description:${queryString})`;
         default:
-            return `sourceType:${sourceType} AND title:${queryString} OR description:${queryString}`;
+            return `sourceType:${sourceType} AND (title:${queryString} OR description:${queryString})`;
         }
     }
 

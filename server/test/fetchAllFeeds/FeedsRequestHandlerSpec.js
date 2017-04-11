@@ -166,7 +166,7 @@ describe("FeedsRequestHandler", () => {
         const authSession = "AuthSession", dbName = "dbName";
         let sourceType = "web", searchKey = "test", skip = 5;
         let response = {
-            "q": "+sourceType:web +title:test* description:test*",
+            "q": "+sourceType:web +(title:test* description:test*)",
             "fetch_duration": 0,
             "total_rows": 14,
             "limit": 25,
@@ -204,7 +204,7 @@ describe("FeedsRequestHandler", () => {
             const docs = R.map(row => row.doc)(response.rows);
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
             const query = {
-                "q": `sourceType:${sourceType} AND title:${searchKey}* OR description:${searchKey}*`,
+                "q": `sourceType:${sourceType} AND (title:${searchKey}* OR description:${searchKey}*)`,
                 "sort": "\\pubDate<date>",
                 "limit": 25,
                 skip,
@@ -246,7 +246,7 @@ describe("FeedsRequestHandler", () => {
             sourceType = "bookmark";
             const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
             const query = {
-                "q": `bookmark:true AND title:${searchKey}* OR description:${searchKey}*`,
+                "q": `bookmark:true AND (title:${searchKey}* OR description:${searchKey}*)`,
                 "sort": "\\pubDate<date>",
                 "limit": 25,
                 skip,
@@ -280,7 +280,7 @@ describe("FeedsRequestHandler", () => {
         it("should not return the feeds when sourceDeleted is true", async() => {
             sourceType = "web";
             const response1 = {
-                "q": "+sourceType:web +title:test* description:test*",
+                "q": "+sourceType:web +(title:test* description:test*)",
                 "fetch_duration": 0,
                 "total_rows": 14,
                 "limit": 25,
@@ -311,7 +311,7 @@ describe("FeedsRequestHandler", () => {
 
         it("should return the feeds when source type is bookmark and sourceDeleted is true", async() => {
             response = {
-                "q": "+sourceType:web +title:test* description:test*",
+                "q": "+sourceType:web +(title:test* description:test*)",
                 "fetch_duration": 0,
                 "total_rows": 14,
                 "limit": 25,
