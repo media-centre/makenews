@@ -5,13 +5,13 @@ describe("sanitizeHTML", () => {
     it("should remove the script tags", () => {
         let html = `<div id="content-body-14269002-17086264"><script type="text/javascript">alert("hello");</script>
                             <p>Australia’s player of the year David Warner has welcomed a rest before touring India next month, saying it’s
-                                tough preparing for subcontinental conditions.</p><span>
+                                tough preparing for subcontinental conditions.</p><span>hello
                         </span></div>`;
 
         let expectedHTML = `<div>
                             <p>Australia’s player of the year David Warner has welcomed a rest before touring India next month, saying it’s
-                                tough preparing for subcontinental conditions.</p>
-                        </div>`;
+                                tough preparing for subcontinental conditions.</p><span>hello
+                        </span></div>`;
 
         expect(sanitizeHTML(html)).equal(expectedHTML);
     });
@@ -28,22 +28,6 @@ describe("sanitizeHTML", () => {
         let html = "<img src=\"http://some/images.jpg\" alt=\"image\" class=\"img\"/>";
 
         let expectedHTML = "<img src=\"http://some/images.jpg\" alt=\"image\" />";
-
-        expect(sanitizeHTML(html)).equal(expectedHTML);
-    });
-
-    it("should remove the span tags but keep its text content", () => {
-        let html = `<div id="content-body-14269002-17086264">
-                            <p>Australia’s player of the year David Warner has welcomed a rest before touring India next month, saying it’s
-                                tough preparing for subcontinental conditions.</p>
-                            <span class="span" id="something"> inline span text </span>
-                        </div>`;
-
-        let expectedHTML = `<div>
-                            <p>Australia’s player of the year David Warner has welcomed a rest before touring India next month, saying it’s
-                                tough preparing for subcontinental conditions.</p>
-                             inline span text 
-                        </div>`;
 
         expect(sanitizeHTML(html)).equal(expectedHTML);
     });

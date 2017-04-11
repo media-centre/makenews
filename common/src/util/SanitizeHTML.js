@@ -2,7 +2,7 @@ import sanitize from "sanitize-html";
 
 export function sanitizeHTML(html) {
     return sanitize(html, {
-        "allowedTags": sanitize.defaults.allowedTags.concat(["img"]),
+        "allowedTags": sanitize.defaults.allowedTags.concat(["img", "span"]),
         "allowedAttributes": {
             "a": ["href", "target", "rel"],
             "img": ["src", "alt"]
@@ -12,7 +12,7 @@ export function sanitizeHTML(html) {
                 return {
                     tagName,
                     "attribs": {
-                        "href": attribs.href,
+                        "href": attribs.href ? attribs.href : "#",
                         "target": "_blank",
                         "rel": "nofollow noopener noreferrer"
                     }
