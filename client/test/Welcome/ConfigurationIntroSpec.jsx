@@ -2,6 +2,8 @@ import React from "react";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import ConfigurationIntro from "./../../src/js/welcome/ConfigurationIntro";
+import History from "./../../src/js/History";
+import sinon from "sinon";
 
 describe("ConfigurationIntro", () => {
     const wrapper = shallow(<ConfigurationIntro />);
@@ -64,6 +66,20 @@ describe("ConfigurationIntro", () => {
 
         const [,, text] = link.node.props.children.props.children;
         expect(text).to.equals(" Get Started ");
+    });
+
+    it("should go to /configure/web after clicking on Get Started button", () => {
+        const sandbox = sinon.sandbox.create();
+        const historyPushSpy = sandbox.spy();
+        sandbox.stub(History, "getHistory").returns({ "push": historyPushSpy });
+        const configIntroDOM = shallow(<ConfigurationIntro />);
+        const link = configIntroDOM.find(".makenews-desc-link");
+
+        link.simulate("click");
+
+        expect(historyPushSpy.calledWith("/configure/web")).to.be.true; //eslint-disable-line no-unused-expressions
+
+        sandbox.restore();
     });
 
     it("should have a arrow icon in the footer link", () => {

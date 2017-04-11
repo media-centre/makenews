@@ -1,40 +1,30 @@
 import { markAsVisitedUser } from "../../src/js/welcome/FirstTimeUserActions";
 import AjaxClient from "./../../src/js/utils/AjaxClient";
 import sinon from "sinon";
-import History from "./../../src/js/History";
+import AppSessionStorage from "./../../src/js/utils/AppSessionStorage";
 
 describe("FirstTimeUser", () => {
     const sandbox = sinon.sandbox.create();
+    const sessionStorage = AppSessionStorage.instance();
 
     afterEach("FirstTimeUser", () => {
         sandbox.restore();
     });
 
-    it("should return success response", async() => {
+    it("should remove first time user in the session storage on success response", async() => {
         const expectedResponse = { "ok": true };
         const ajaxClientInstance = new AjaxClient();
 
         sandbox.mock(AjaxClient).expects("instance").withExactArgs("/visited-user", true).returns(ajaxClientInstance);
         const putMock = sandbox.mock(ajaxClientInstance).expects("put").returns(expectedResponse);
 
+        sandbox.mock(AppSessionStorage).expects("instance").returns(sessionStorage);
+        const removeMock = sandbox.mock(sessionStorage).expects("remove")
+            .withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER);
+
         await markAsVisitedUser();
 
         putMock.verify();
-    });
-
-    it("should redirect to the /configure/web after marking user as visited", async () => {
-        const expectedResponse = { "ok": true };
-        const ajaxClientInstance = new AjaxClient();
-
-        sandbox.mock(AjaxClient).expects("instance").withExactArgs("/visited-user", true).returns(ajaxClientInstance);
-        sandbox.mock(ajaxClientInstance).expects("put").returns(expectedResponse);
-        
-        const history = History.getHistory();
-        sandbox.stub(History, "getHistory").returns(history);
-        const historyPushMock = sandbox.mock(history).expects("push").withExactArgs("/configure/web");
-
-        await markAsVisitedUser();
-
-        historyPushMock.verify();
+        removeMock.verify();
     });
 });

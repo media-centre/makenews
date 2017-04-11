@@ -13,6 +13,8 @@ import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { shallow } from "enzyme";
 import History from "./../../../src/js/History";
+import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
+import * as FirstTimeUser from "./../../../src/js/welcome/FirstTimeUserActions";
 
 describe("Configure Pane", () => {
 
@@ -229,20 +231,30 @@ describe("Configure Pane", () => {
         });
 
         it("should go to /newsBoard page if it has configured sources", () => {
+            const appStore = AppSessionStorage.instance();
+            sandbox.stub(AppSessionStorage, "instance").returns(appStore);
+
             wrapper = shallow(
                 <ConfigurePane dispatch={dispatch} store={store}
                     currentTab={currentTab} sources = {{ "data": [] }}
                     searchKeyword = "search" currentSourceType="web"
                     configuredSources={{ "web": [{ "name": "web Url" }] }}
                 />);
+
             const history = History.getHistory();
             sandbox.stub(History, "getHistory").returns(history);
             const historyPushMock = sandbox.mock(history).expects("push").withExactArgs("/newsBoard");
+            const isFirstTimeUserMock = sandbox.mock(appStore).expects("getValue")
+                .withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER)
+                .returns(true);
+
+            const markAsVisitedUserMock = sandbox.mock(FirstTimeUser).expects("markAsVisitedUser");
 
             wrapper.instance().checkConfiguredSources();
 
+            isFirstTimeUserMock.verify();
+            markAsVisitedUserMock.verify();
             historyPushMock.verify();
         });
-
     });
 });

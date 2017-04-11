@@ -1,5 +1,5 @@
 import AjaxClient from "./../utils/AjaxClient";
-import History from "./../History";
+import AppSessionStorage from "./../utils/AppSessionStorage";
 
 export async function markAsVisitedUser() {
     const ajaxClient = AjaxClient.instance("/visited-user", true);
@@ -10,7 +10,7 @@ export async function markAsVisitedUser() {
 
     try {
         await ajaxClient.put(headers, {});
-        History.getHistory().push("/configure/web");
+        AppSessionStorage.instance().remove(AppSessionStorage.KEYS.FIRST_TIME_USER);
     } catch (err) { //eslint-disable-line
 
     }

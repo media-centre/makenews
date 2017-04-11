@@ -9,6 +9,8 @@ import SignInWarning from "./SignInWarning";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
 import { showAddUrl } from "./../actions/AddUrlActions";
+import AppSessionStorage from "../../utils/AppSessionStorage";
+import { markAsVisitedUser } from "../../welcome/FirstTimeUserActions";
 
 export class ConfigurePane extends Component {
 
@@ -17,6 +19,7 @@ export class ConfigurePane extends Component {
         this.state = { "showConfigurationWarning": false };
         this.checkConfiguredSources = this.checkConfiguredSources.bind(this);
         this._closeConfigurationWarning = this._closeConfigurationWarning.bind(this);
+        this.appSessionStorage = AppSessionStorage.instance();
     }
 
     componentWillMount() {
@@ -44,12 +47,17 @@ export class ConfigurePane extends Component {
     }
 
     checkConfiguredSources() {
+        const isFirstTimeUser = this.appSessionStorage.getValue(AppSessionStorage.KEYS.FIRST_TIME_USER);
+
         const hasConfiguredSources = R.pipe(
             R.values,
             R.any(sources => sources.length)
         )(this.props.configuredSources);
 
         if (hasConfiguredSources) {
+            if(isFirstTimeUser) {
+                markAsVisitedUser();
+            }
             History.getHistory().push("/newsBoard");
         } else {
             this.setState({ "showConfigurationWarning": true });

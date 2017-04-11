@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { markAsVisitedUser } from "./FirstTimeUserActions";
+import History from "../History";
 
 export default class ConfigurationIntro extends Component {
     render() {
@@ -27,7 +27,7 @@ export default class ConfigurationIntro extends Component {
                     </div>
                 </main>
                 <footer>
-                    <button className="makenews-desc-link" onClick={markAsVisitedUser}>
+                    <button className="makenews-desc-link" onClick={() => History.getHistory().push("/configure/web")}>
                         <span> <i className="fa fa-arrow-right" /> Get Started </span>
                     </button>
                 </footer>
