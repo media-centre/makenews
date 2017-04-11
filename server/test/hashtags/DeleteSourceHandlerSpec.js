@@ -3,6 +3,7 @@ import * as CollectionFeedsRequestHandler from "../../src/collection/CollectionF
 import sinon from "sinon";
 import { assert } from "chai";
 import CouchClient from "../../src/CouchClient";
+import DateUtil from "../../src/util/DateUtil";
 import * as Constants from "./../../src/util/Constants";
 
 describe("DeleteSourceHandler", () => {
@@ -23,6 +24,7 @@ describe("DeleteSourceHandler", () => {
         let getCollectionFeedIdsMock = null, collectionFeedIds = null;
         const feedsLimitOriginal = Constants.FEED_LIMIT_TO_DELETE_IN_QUERY;
 
+
         beforeEach("deleteSources", () => {
             collectionFeedIds = ["id2", "id3"];
             sandbox.mock(CouchClient).expects("instance").withExactArgs(accessToken).returns(couchClient);
@@ -39,9 +41,9 @@ describe("DeleteSourceHandler", () => {
             let feedDocs = { "docs": [{ "_id": "id29" }, { "_id": "id30" }] };
 
             let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
-            findMock.onFirstCall().returns(Promise.resolve(feedDocs));
-            findMock.onSecondCall().returns(Promise.resolve(sourcesDoc));
-
+            findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
+            findMock.onSecondCall().returns(Promise.resolve(feedDocs));
+            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
             let saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
@@ -63,6 +65,7 @@ describe("DeleteSourceHandler", () => {
             findMock.onFirstCall().returns(Promise.resolve(hashtagSources));
             findMock.onSecondCall().returns(Promise.resolve(feeds));
             findMock.onThirdCall().returns(Promise.resolve(sourcesDoc));
+            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
 
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, ["hashtag1"]).returns(Promise.resolve(collectionFeedIds));
@@ -87,6 +90,7 @@ describe("DeleteSourceHandler", () => {
             findDocs.onFirstCall().returns(Promise.resolve(firstResponse));
             findDocs.onSecondCall().returns(Promise.resolve(secondResponse));
             findDocs.onThirdCall().returns(Promise.resolve(sourcesDoc));
+            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
 
             getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
                 .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
@@ -98,6 +102,46 @@ describe("DeleteSourceHandler", () => {
             saveDocs.verify();
             getCollectionFeedIdsMock.verify();
             assert.deepEqual(response, { "ok": true });
+        });
+    });
+
+    describe("deleteOldFeeds", () => {
+        it("should delete all feeds whose published date is older than 30 days from the present day", async () => {
+            let docs = [
+                {
+                    "images": [{ "url": "image url" }],
+                    "videos": [{ "thumbnail": "video image url" }],
+                    "title": "Some Title",
+                    "description": "Some Description",
+                    "sourceType": "facebook",
+                    "tags": ["Hindu"],
+                    "pubDate": "2017-01-31T06:58:27.000Z",
+                    "bookmark": false,
+                    "_id": "123"
+                },
+                {
+                    "images": [{ "url": "image url" }],
+                    "videos": [{ "thumbnail": "video image url" }],
+                    "title": "Some Title",
+                    "description": "Some Description",
+                    "sourceType": "facebook",
+                    "tags": ["Hindu"],
+                    "pubDate": "2017-01-31T06:58:27.000Z",
+                    "bookmark": false,
+                    "_id": "123"
+                }];
+            let data = {
+                "docs": docs
+            };
+            let getUTCDateAndTimeMock = sandbox.stub(DateUtil, "getUTCDateAndTime");
+            getUTCDateAndTimeMock.returns("2017-03-27T14:07:37.000Z");
+            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            findMock.onFirstCall().returns(Promise.resolve(data));
+            findMock.onSecondCall().returns(Promise.resolve({ "docs": [] }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs(docs).once();
+            await deleteSourceHandler.deleteOldFeeds(couchClient);
+            findMock.verify();
+            deleteMock.verify();
         });
     });
 });

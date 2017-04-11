@@ -1,6 +1,7 @@
 import CouchClient from "../CouchClient";
 import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
+import DateUtil from "../util/DateUtil";
 import R from "ramda"; //eslint-disable-line id-length
 import Logger from "../logging/Logger";
 
@@ -28,6 +29,7 @@ export default class DeleteSourceHandler {
         const feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
         const docsToBeDeleted = feedDocuments.concat(sourceDocuments);
         await couchClient.deleteBulkDocuments(docsToBeDeleted);
+        await this.deleteOldFeeds(couchClient);
         try {
             await this.markAsSourceDeleted(couchClient, sources);
         } catch(err) {
@@ -128,5 +130,28 @@ export default class DeleteSourceHandler {
         })(feeds);
 
         return await couchClient.saveBulkDocuments({ "docs": markedFeeds });
+    }
+
+    async deleteOldFeeds(couchClient) {
+        let selector = null, docsObject = {}, docs = [], MONTH_DAYS = 30;
+        let currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() - MONTH_DAYS);
+        let deleteDate = DateUtil.getUTCDateAndTime(currentDate);
+        do { //eslint-disable-line no-loops/no-loops
+            selector = {
+                "selector": {
+                    "pubDate": {
+                        "$lt": deleteDate
+                    }
+                }
+            };
+            docsObject = await couchClient.findDocuments(selector);
+            docs = docsObject.docs;
+
+            if(docs.length) {
+                await couchClient.deleteBulkDocuments(docs);
+            }
+        }
+        while (docs.length);
     }
 }
