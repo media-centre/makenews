@@ -92,33 +92,42 @@
 .story-board {
   display: flex;
 
+  $storyborad-title-height: 50px;
+
   .editor-container {
     flex-basis: 0;
     flex-grow: 1;
+    border-right: 1px solid lighten($primary-color, 35%);
+
+    .title-bar {
+      display: flex;
+      height: $storyborad-title-height;
+
+      .story-title {
+        color: $secondary-color;
+        font-size: 2rem;
+        margin: 5px 0;
+        padding: 0 20px;
+        border: 0;
+        border-bottom: $primary-color-light 2px solid;
+        flex-grow: 1;
+      }
+
+      .story-save {
+        height: 36px;
+        margin: 2px;
+      }
+    }
   }
 
-  .story-title {
-    height: 30px;
-    color: $secondary-color;
-    font-size: larger;
-    margin: 5px;
-    border: 0;
-    width: 70%;
-    border-bottom: $primary-color-light 1px solid;
-  }
-
-  .story-save {
-    font-weight: bold;
-    color: $secondary-color;
+  .ql-snow.ql-toolbar {
+    background-color: $dark-background-color;
+    text-align: center;
+    padding: 15px;
   }
 
   .story-editor {
-    height: calc(100vh - 68px - 54px - 45px);
-    .ql-snow.ql-toolbar {
-      background-color: $dark-background-color;
-      text-align: center;
-      padding: 15px;
-    }
+    height: calc(100vh - #{$main-header-height} - #{$secondary-header-nav-height} - #{$storyborad-title-height});
 
     .quill-contents {
       min-height: 300px;

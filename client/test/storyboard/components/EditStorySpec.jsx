@@ -38,8 +38,10 @@ describe("EditStory", () => {
 
     it("should have input element with story-title as class", () => {
         let [editor] = renderedOutput.props.children;
-        let [inputElement] = editor.props.children;
+        let [, inputContainer] = editor.props.children;
+        const [inputElement] = inputContainer.props.children;
 
+        assert.equal(inputContainer.props.className, "title-bar");
         assert.equal(inputElement.ref, "title");
         assert.equal(inputElement.props.className, "story-title");
         assert.equal(inputElement.props.placeholder, "please enter title");
@@ -48,7 +50,8 @@ describe("EditStory", () => {
 
     it("should have button element with story-save as class", () => {
         let [editor] = renderedOutput.props.children;
-        let [, button] = editor.props.children;
+        let [, inputContainer] = editor.props.children;
+        let [, button] = inputContainer.props.children;
 
         assert.equal(button.type, "button");
         assert.equal(button.ref, "saveButton");

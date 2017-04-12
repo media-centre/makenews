@@ -26,7 +26,7 @@ export class EditStory extends Component {
     }
 
     componentDidMount() {
-        let path = this.props.location.pathname; //eslint-disable-line react/prop-types
+        const path = this.props.location.pathname;
         this.storyId = path.slice(path.lastIndexOf("/") + 1, path.length); //eslint-disable-line no-magic-numbers
         if(this.storyId && this.storyId !== "story") {
             this._getStory(this.storyId);
@@ -34,7 +34,7 @@ export class EditStory extends Component {
     }
 
     _getStory(storyId) {
-        let ajax = AjaxClient.instance("/story");
+        const ajax = AjaxClient.instance("/story");
         ajax.get({ "id": storyId }).then((response) => {
             this.story = response;
             this._onChange(this.story.body);
@@ -97,21 +97,24 @@ export class EditStory extends Component {
         this.setState({ body });
     }
 
-    _onTitleChange(event) {
-        this.setState({ "title": event.target.value });
+    _onTitleChange() {
+        this.setState({ "title": this.refs.title.value });
     }
 
     render() {
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
-                    <input className = "story-title" ref = "title" placeholder = "please enter title" value = {this.state.title} onChange={this._onTitleChange}/>
-                    <button ref="saveButton" type="submit" className="story-save" value="save" onClick={() => {
-                        this._saveStory();
-                    }}
-                    >
-                    { "SAVE" }</button>
-                    <ReactQuill className = "story-editor" placeholder = "Write a story" value={this.state.body} theme="snow" onChange={this._onChange}/>
+                    <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow" />
+                    <div className="title-bar">
+                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
+                        <button ref="saveButton" type="submit" className="story-save btn primary" value="save" onClick={() => {
+                            this._saveStory();
+                        }}
+                        >
+                            { "SAVE" }</button>
+                    </div>
+                    <ReactQuill className="story-editor" theme="snow" onChange={this._onChange} modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={() => this._exportHtml()} />
                     </div>
@@ -129,9 +132,15 @@ export class EditStory extends Component {
 
 EditStory.propTypes = {
     "dispatch": PropTypes.func.isRequired,
-    "untitledIndex": PropTypes.string
+    "untitledIndex": PropTypes.string,
+    "location": PropTypes.object
 };
 
+EditStory.modules = {
+    "toolbar": {
+        "container": ".ql-toolbar"
+    }
+};
 
 function mapToStore(store) {
     return {
