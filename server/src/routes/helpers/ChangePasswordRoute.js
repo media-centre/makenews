@@ -12,7 +12,7 @@ export default class ChangePasswordRoute extends Route {
     }
 
     validate() {
-        return super.validate(this.currentPassword, this.currentPassword, this.newPassword);
+        return super.validate(this.currentPassword, this.newPassword);
     }
 
     async handle() {
