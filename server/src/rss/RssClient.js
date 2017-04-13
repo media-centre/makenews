@@ -163,28 +163,66 @@ export default class RssClient {
         const adminDetails = ApplicationConfig.instance().adminDetails();
         let dbInstance = await
             AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-        try {
-            await dbInstance.saveDocument(encodeURIComponent(document.url), document);
-            RssClient.logger().debug("RssClient:: successfully added Document to common database.");
-        } catch (error) {
-            if(error.status !== HttpResponseHandler.codes.CONFLICT) {
-                RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-                throw "Unable to add the url"; //eslint-disable-line no-throw-literal
+
+        const selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                },
+                "sourceType": {
+                    "$eq": "web"
+                },
+                "name": {
+                    "$eq": document.name
+                }
+            }
+        };
+
+        const sourceDocument = await dbInstance.findDocuments(selector);
+
+        if(!((sourceDocument.docs).length)) {
+            try {
+                await dbInstance.saveDocument(encodeURIComponent(document.url), document);
+                RssClient.logger().debug("RssClient:: successfully added Document to common database.");
+            } catch (error) {
+                if(error.status !== HttpResponseHandler.codes.CONFLICT) {
+                    RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+                    throw "Unable to add the url"; //eslint-disable-line no-throw-literal
+                }
             }
         }
     }
 
     async addURLToUser(document, accessToken) {
         let couchClient = CouchClient.instance(accessToken);
-        try {
-            await couchClient.saveDocument(encodeURIComponent(document.url), document);
-            RssClient.logger().debug("RssClient:: successfully added Document to user database.");
-        } catch (error) {
-            RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
-            if(error.status === HttpResponseHandler.codes.CONFLICT) {
-                throw "URL already exist"; //eslint-disable-line no-throw-literal
+        const selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                },
+                "sourceType": {
+                    "$eq": "web"
+                },
+                "name": {
+                    "$eq": document.name
+                }
             }
-            throw "Unable to add the url"; //eslint-disable-line no-throw-literal
+        };
+        const sourceDocument = await couchClient.findDocuments(selector);
+
+        if(!((sourceDocument.docs).length)) { //eslint-disable-line no-negated-condition
+            try {
+                await couchClient.saveDocument(encodeURIComponent(document.url), document);
+                RssClient.logger().debug("RssClient:: successfully added Document to user database.");
+            } catch (error) {
+                RssClient.logger().error("RssClient:: Unexpected Error from Db. Error: %j", error);
+                if(error.status === HttpResponseHandler.codes.CONFLICT) {
+                    throw "URL already exist"; //eslint-disable-line no-throw-literal
+                }
+                throw "Unable to add the url"; //eslint-disable-line no-throw-literal
+            }
+        } else {
+            throw `You already configured source ${document.name}`; //eslint-disable-line no-throw-literal
         }
     }
 
