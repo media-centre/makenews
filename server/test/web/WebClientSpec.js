@@ -2,8 +2,19 @@ import { fetchArticleData } from "./../../src/web/WebClient";
 import { expect } from "chai";
 import nock from "nock";
 import { isRejected } from "./../helpers/AsyncTestHelper";
+import { articleConfig } from "./../../src/Factory";
+import sinon from "sinon";
 
 describe("fetchArticleData", () => {
+
+    before("fetchArticleData", () => {
+        sinon.stub(articleConfig, "getSelectors").returns({});
+    });
+
+    after("fetchArticleData", () => {
+        sinon.restore(articleConfig);
+    });
+
     it("should fetch the article data when given a url", async () => {
         let url = "http://www.thehindu.com/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true";
         let successCode = 200;
@@ -22,7 +33,7 @@ describe("fetchArticleData", () => {
                 "content-type": "text/html"
             });
 
-        let expectedData = "<p>Australias player of the year David Warner has welcomed a rest before touring India next month, saying its tough preparing for subcontinental conditions.</p>";
+        let expectedData = "<div><p>Australias player of the year David Warner has welcomed a rest before touring India next month, saying its tough preparing for subcontinental conditions.</p></div>";
 
         let content = await fetchArticleData(url);
         expect(content).to.deep.equal(expectedData);
