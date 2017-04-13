@@ -155,6 +155,12 @@ export class DisplayArticle extends Component {
                 </article>
             );
         }
+        if(this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection) {
+            return (
+                <div className="display-article">
+                        <div className="default-message">No article to display</div>
+                </div>);
+        }
         return null;
     }
 }

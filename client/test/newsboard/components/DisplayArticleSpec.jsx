@@ -39,9 +39,9 @@ describe("DisplayArticle", () => {
         expect(displayArticleDom.props.className).to.equals("display-article");
     });
 
-    it("should not render if article is not passed", () => {
+    it("should have a div with default-message class if article is not passed", () => {
         let noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={()=>{}} newsBoardCurrentSourceTab="web"/>);
-        expect(noArticleDom).to.be.a("null");
+        expect(noArticleDom.props.children.props.className).to.equals("default-message");
     });
 
     describe("main tag", () => {
@@ -273,7 +273,7 @@ describe("DisplayArticle", () => {
         });
     });
 
-   /* TODO: unable to mock window getSelction, getRangeAt methods */ //eslint-disable-line
+   /* TODO: unable to mock window getSelection, getRangeAt methods */ //eslint-disable-line
     xdescribe("ToolTip", () => {
         it("should dispatch addToCollection when there is selectedText and click on add To collection option", () => {
             let article = { "_id": "article id", "description": "article description", "selectText": true };

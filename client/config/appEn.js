@@ -101,6 +101,13 @@ window.mediaCenter.appEn = {
             "logout": "Logout",
             "help": "Help & FAQs"
         },
+        "newsBoard": {
+            "trending": "Please configure sources on configure page",
+            "web": "Please configure web sources on configure page",
+            "facebook": "Please configure facebook sources on configure page",
+            "twitter": "Please configure twitter sources on configure page",
+            "bookmark": "Please bookmark the feeds"
+        },
         "storyBoard": {
             "confirmDelete": "Are you sure you want to delete the story?"
         },

@@ -85,12 +85,12 @@ export class DisplayCollectionFeeds extends Component {
             <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
                 <DisplayArticle collectionDOM={this.refs.collection} collectionName={this.props.collection.name} />
                 <div ref="collection" className="display-collection">
-                    {this.displayHeader()}
+                    { this.props.feeds.length ? this.displayHeader() : null }
                     <div className="collection-feeds">
-                        {
-                            this.props.feeds.map((feed, index) =>
-                                <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)
-                        }
+                        {this.props.feeds.map((feed, index) =>
+                                <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)}
+                        {!this.props.feeds.length && <div className="default-message">No feeds added to collection</div>}
+
                     </div>
                 </div>
             </div>

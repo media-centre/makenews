@@ -11,11 +11,23 @@ import DisplayCollection from "../../../src/js/newsboard/components/DisplayColle
 import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
 import { SCAN_NEWS, WRITE_A_STORY } from "./../../../src/js/header/HeaderActions";
 import * as DisplayFeedActions from "./../../../src/js/newsboard/actions/DisplayFeedActions";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
     let sandbox = sinon.sandbox.create();
     beforeEach("DisplayFeeds", () => {
+        let message = {
+            "messages": {
+                "newsBoard": {
+                    "trending": "Please configure sources on configure page",
+                    "web": "Please configure web sources on configure page",
+                    "facebook": "Please configure facebook sources on configure page",
+                    "twitter": "Please configure twitter sources on configure page",
+                    "bookmark": "Please bookmark the feeds"
+                }
+            }
+        };
         feeds = [
             { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
             { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
@@ -30,7 +42,7 @@ describe("DisplayFeeds", () => {
         }), applyMiddleware(thunkMiddleware));
 
         sandbox.useFakeTimers();
-
+        sandbox.stub(Locale, "applicationStrings").returns(message);
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
                 <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>

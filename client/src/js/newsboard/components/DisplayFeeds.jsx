@@ -11,6 +11,7 @@ import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayArticle from "./DisplayArticle";
 import StringUtils from "./../../../../../common/src/util/StringUtil";
 import Toast from "./../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 const MIN_SEARCH_KEY_LENGTH = 3;
 
@@ -232,6 +233,7 @@ export class DisplayFeeds extends Component {
         }
     }
     displayFeeds() {
+        const locale = Locale.applicationStrings().messages.newsBoard;
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>
@@ -258,7 +260,13 @@ export class DisplayFeeds extends Component {
                                 isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
                             />)
                         }
-                        { this.props.isFetchingFeeds ? <Spinner /> : null }
+                        { this.props.isFetchingFeeds
+                            ? <Spinner />
+                            : !this.props.feeds.length && <div className="default-message">
+                                {locale[this.props.sourceType]}
+                                { this.props.sourceType !== "bookmark" && <i className="fa fa-cog"/> }
+                            </div>
+                        }
                     </div>
                 </div>
             </div>);
