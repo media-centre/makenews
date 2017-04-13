@@ -2,6 +2,7 @@ import { expect } from "chai";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import mockStore from "../../helper/ActionHelper";
 import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
+import { REMOVE_SOURCE } from "./../../../src/js/newsboard/filter/FilterActions";
 import * as WebConfigActions from "./../../../src/js/config/actions/WebConfigureActions";
 import * as FbActions from "./../../../src/js/config/actions/FacebookConfigureActions";
 import * as TwitterConfigureActions from "./../../../src/js/config/actions/TwitterConfigureActions";
@@ -293,7 +294,8 @@ describe("SourceConfigurationActions", () => {
 
             let event = { "target": {} };
             const actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete._id },
-                { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" }];
+                { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" },
+                { "type": REMOVE_SOURCE, "sourceId": "tid2", "sourceType": "twitter" }];
 
             const store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType, event));

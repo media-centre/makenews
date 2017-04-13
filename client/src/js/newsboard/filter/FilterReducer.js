@@ -1,5 +1,6 @@
-import { CURRENT_FILTER, FILTERED_SOURCES } from "./FilterActions";
+import { CURRENT_FILTER, FILTERED_SOURCES, REMOVE_SOURCE } from "./FilterActions";
 import { icons, newsBoardSourceTypes } from "../../utils/Constants";
+import R from "ramda"; //eslint-disable-line id-length
 
 export const currentFilter = (state = "", action = { }) => {
     switch(action.type) {
@@ -18,6 +19,10 @@ export const currentFilterSource = (state = { "web": [], "facebook": [], "twitte
     switch(action.type) {
     case FILTERED_SOURCES: {
         return Object.assign({}, action.sources);
+    }
+    case REMOVE_SOURCE: {
+        state[action.sourceType] = R.filter(source => source !== action.sourceId, state[action.sourceType]);
+        return Object.assign({}, state);
     }
     default: return state;
     }

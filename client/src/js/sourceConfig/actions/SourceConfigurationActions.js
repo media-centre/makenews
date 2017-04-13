@@ -1,6 +1,7 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import * as FbActions from "./../../config/actions/FacebookConfigureActions";
 import * as WebConfigActions from "./../../config/actions/WebConfigureActions";
+import { removeSource } from "./../../newsboard/filter/FilterActions";
 import * as TwitterConfigureActions from "./../../config/actions/TwitterConfigureActions";
 import fetch from "isomorphic-fetch";
 import AppWindow from "../../utils/AppWindow";
@@ -162,6 +163,7 @@ export function deleteSource(sourceId, sourceType, event) {
             if(response.ok) {
                 dispatch(unmarkSource(sourceId));
                 dispatch(deletedSource(sourceId, sourceType));
+                dispatch(removeSource(sourceId, sourceType));
             } else {
                 throw new Error();
             }

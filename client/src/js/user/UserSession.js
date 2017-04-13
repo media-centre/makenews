@@ -21,7 +21,7 @@ export default class UserSession {
     }
 
     init(dispatch) {
-        if(!this.initialized) {
+        if(!this.initialized || !this.getLastAccessedTime()) {
             dispatch(getConfiguredSources());
             this.setLastAccessedTime();
             this.sessionTimer = setInterval(() => this.renewSession(), this.sessionTime);

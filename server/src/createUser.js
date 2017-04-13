@@ -16,21 +16,22 @@ let migrateDb = (dbName, token) => {
     });
 };
 
-let setPermissions = (dbInstance, userName, dbName) => {
-    console.log("setting permissions...");
-    dbInstance.setPermissions(userName, dbName).then(() => {
-        console.log("user permissions are set to database");
-        migrateDb(dbName, dbInstance.accessToken);
-    }).catch(error => {
-        console.log(`set permissions failed with error ${JSON.stringify(error)}`);
-    });
-};
+// let setPermissions = (dbInstance, userName, dbName) => {
+//     console.log("setting permissions...");
+//     dbInstance.setPermissions(userName, dbName).then(() => {
+//         console.log("user permissions are set to database");
+//         migrateDb(dbName, dbInstance.accessToken);
+//     }).catch(error => {
+//         console.log(`set permissions failed with error ${JSON.stringify(error)}`);
+//     });
+// };
 
 let createDb = (dbInstance, userName, dbName) => {
     console.log("creating user database...");
     dbInstance.createDb(dbName).then(() => {
         console.log("created user db.");
-        setPermissions(dbInstance, userName, dbName);
+        // setPermissions(dbInstance, userName, dbName);
+        migrateDb(dbName, dbInstance.accessToken);
     }).catch(error => {
         console.log(`database creation failed with error ${JSON.stringify(error)}`);
     });
