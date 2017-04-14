@@ -7,6 +7,9 @@ import { connect } from "react-redux";
 import { updateTokenExpiredInfo, isFBTokenExpired } from "./../../facebook/FacebookAction";
 import { twitterAuthentication, twitterTokenInformation } from "./../../twitter/TwitterTokenActions";
 import TwitterLogin from "./../../twitter/TwitterLogin";
+import { sourceTypes } from "./../../utils/Constants";
+import History from "./../../History";
+import R from "ramda"; //eslint-disable-line id-length
 
 export class ConfigureSourcesPage extends Component {
 
@@ -56,7 +59,12 @@ export class ConfigureSourcesPage extends Component {
     }
 
     sourceTab(params, dispatch) {
-        dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
+        const currentSource = params.sourceSubType || params.sourceType;
+        if (R.any(source => source === currentSource)(sourceTypes)) {
+            dispatch(SourceConfigActions.switchSourceTab(params.sourceSubType || params.sourceType));
+        } else {
+            History.getHistory().push("/configure/web");
+        }
     }
 
     render() {

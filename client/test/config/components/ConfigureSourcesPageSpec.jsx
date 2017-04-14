@@ -8,6 +8,7 @@ import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/Sou
 import ConfiguredSources from "./../../../src/js/config/components/ConfiguredSources";
 import ConfigurePane from "./../../../src/js/config/components/ConfigurePane";
 import { expect } from "chai";
+import History from "./../../../src/js/History";
 
 describe("ConfigureSourcesPage", () => {
     let ZERO = 0, ONE = 1;
@@ -39,15 +40,26 @@ describe("ConfigureSourcesPage", () => {
             switchTabsMock.verify();
         });
 
-        it("should dispatch switchSourceTab with PROFILES if configure sourceType is facebook and subType is PROFILE", () => {
+        it("should dispatch switchSourceTab with GROUPS if configure sourceType is facebook and subType is groups", () => {
             const switchTabsMock = sandbox.mock(SourceConfigActions)
-                .expects("switchSourceTab").withArgs("profiles");
+                .expects("switchSourceTab").withArgs("groups");
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "profiles" }} dispatch={()=>{}}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={()=>{}}/>
             );
 
             switchTabsMock.verify();
+        });
+
+        it("should redirect to /configure/web if currentSource type is some random", () => {
+            const historyPushSpy = sandbox.spy();
+            sandbox.stub(History, "getHistory").returns({ "push": historyPushSpy });
+
+            renderer.render(
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "random" }} dispatch={()=>{}}/>
+            );
+
+            expect(historyPushSpy.calledWith("/configure/web")).to.be.true; //eslint-disable-line no-unused-expressions
         });
     });
 

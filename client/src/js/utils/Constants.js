@@ -1,5 +1,6 @@
 export const newsBoardSourceTypes = { "trending": "trending", "web": "web", "facebook": "facebook", "twitter": "twitter", "bookmark": "bookmark", "collection": "collections" };
 export const icons = { "web": "globe", "facebook": "facebook-square", "twitter": "twitter" };
+export const sourceTypes = ["web", "twitter", "pages", "groups"];
 export const FB_DEFAULT_SOURCES = {
     "page": {
         "data": [

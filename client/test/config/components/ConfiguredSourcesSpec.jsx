@@ -67,7 +67,7 @@ describe("Configured Sources", () => {
 
         it("should return all matched sources of facebook with name matching the search key ", () => {
             let store = createStore(() => ({
-                "currentSourceTab": "facebook",
+                "currentSourceTab": "pages",
                 "configuredSources": { "pages": [{ "_id": "1235", "name": "helloFb" }, { "_id": "1236", "name": "test" }],
                     "groups": [{ "_id": "1237", "name": "helloFb" }, { "_id": "1238", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
