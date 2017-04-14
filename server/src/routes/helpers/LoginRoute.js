@@ -46,7 +46,7 @@ export default class LoginRoute extends Route {
     async _handleLoginSuccess(authSessionCookie, token, userData) {
         const dbJson = ClientConfig.instance().db();
         userDetails.updateUser(token, this.userName);
-        await DeleteSourceHandler.instance().deleteSources([], token);
+        DeleteSourceHandler.instance().deleteSources([], token);
         let responseData = { "userName": this.userName, "dbParameters": dbJson };
         if(!userData.visitedUser) {
             responseData.firstTimeUser = true;
