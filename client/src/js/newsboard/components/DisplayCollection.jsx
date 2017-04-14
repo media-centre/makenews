@@ -74,7 +74,7 @@ export class DisplayCollection extends Component {
                         text={collection.collection}
                         paramName="newCollectionName"
                         className="title"
-                        stopPropagation="true"
+                        stopPropagation
                         change={(value) => {
                             this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
                         }}
