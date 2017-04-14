@@ -11,7 +11,6 @@ import Main from "./header/components/Main";
 import ScanNews from "./newsboard/components/ScanNews";
 import StoryBoard from "./storyboard/components/StoryBoard";
 import ConfigureURLs from "./../js/config/components/ConfigureURLs";
-import AddUrl from "./../js/config/components/AddUrl";
 import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
@@ -27,7 +26,6 @@ export function renderRoutes(store) {
                 <Route path="/configure-intro" component={ConfigurationIntro}/>
                 <Route component={Main}>
                     <Route path="/configure" component={ConfigureURLs}>
-                        <Route path="/configure/addurl" component={AddUrl} />
                         <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
                     </Route>
 
