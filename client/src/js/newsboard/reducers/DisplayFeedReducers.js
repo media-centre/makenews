@@ -14,15 +14,14 @@ import {
     UNBOOKMARK_THE_ARTICLE
 } from "./../actions/DisplayArticleActions";
 import { DELETE_COLLECTION, RENAMED_COLLECTION } from "../actions/DisplayCollectionActions";
-import { List } from "immutable";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 
 export function fetchedFeeds(state = [], action = {}) {
     switch (action.type) {
     case PAGINATED_FETCHED_FEEDS:
-        return Object.assign([], List(state).concat(action.feeds).toArray());  //eslint-disable-line new-cap
+        return state.concat(action.feeds);
     case SEARCHED_FEEDS:
-        return Object.assign([], List(state).concat(action.feeds).toArray()); //eslint-disable-line new-cap
+        return state.concat(action.feeds);
     case CLEAR_NEWS_BOARD_FEEDS:
         return [];
     case UPDATE_BOOKMARK_STATUS: {

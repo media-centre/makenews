@@ -1,10 +1,9 @@
 import { ADD_STORY_TITLE, CLEAR_STORIES, UNTITLED_NUMBER, REMOVE_STORY } from "../actions/StoryBoardActions";
-import { List } from "immutable";
 
 export const stories = (state = [], action = {}) => {
     switch(action.type) {
     case ADD_STORY_TITLE: {
-        return List(state).concat(action.story).toArray();  //eslint-disable-line new-cap
+        return state.concat(action.story);
     }
     case CLEAR_STORIES:
         return [];
