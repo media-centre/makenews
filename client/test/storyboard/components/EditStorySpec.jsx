@@ -36,10 +36,20 @@ describe("EditStory", () => {
         assert.equal(renderedOutput.props.children.length, 3); //eslint-disable-line no-magic-numbers
     });
 
+    it("should have button element with story-back as class", () => {
+        let [editor] = renderedOutput.props.children;
+        let [, inputContainer] = editor.props.children;
+        let [button] = inputContainer.props.children;
+
+        assert.equal(button.type, "button");
+        assert.equal(button.props.className, "story-back btn primary");
+        assert.equal(button.props.children, "Back");
+    });
+
     it("should have input element with story-title as class", () => {
         let [editor] = renderedOutput.props.children;
         let [, inputContainer] = editor.props.children;
-        const [inputElement] = inputContainer.props.children;
+        const [, inputElement] = inputContainer.props.children;
 
         assert.equal(inputContainer.props.className, "title-bar");
         assert.equal(inputElement.ref, "title");
@@ -51,7 +61,7 @@ describe("EditStory", () => {
     it("should have button element with story-save as class", () => {
         let [editor] = renderedOutput.props.children;
         let [, inputContainer] = editor.props.children;
-        let [, button] = inputContainer.props.children;
+        let [, , button] = inputContainer.props.children;
 
         assert.equal(button.type, "button");
         assert.equal(button.ref, "saveButton");

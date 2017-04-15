@@ -9,6 +9,7 @@ import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
+const AUTO_SAVE_TIME_INTERVAL = 30000;
 
 export class EditStory extends Component {
 
@@ -33,53 +34,54 @@ export class EditStory extends Component {
         }
     }
 
-    _getStory(storyId) {
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    autoSave() {
+        this.interval = setInterval(async() => { this._saveStory(); }, AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
+    }
+
+    async _getStory(storyId) {
         const ajax = AjaxClient.instance("/story");
-        ajax.get({ "id": storyId }).then((response) => {
+        await ajax.get({ "id": storyId }).then((response) => {
             this.story = response;
             this._onChange(this.story.body);
             this.setState({ "title": this.story.title });
         });
+        this.autoSave();
     }
 
-    _saveStory() {
-        let story = {};
-        if(this.story._id) {
-            story = this.story;
-        }
-
+    async _saveStory() {
         let title = this.state.title;
         if(this.state.body && !title) {
-            title = this.props.untitledIndex;
+            this.story.title = this.props.untitledIndex;
+        }else {
+            this.story.title = this.state.title;
         }
-        story.title = title;
-        story.body = this.state.body;
+        this.story.body = this.state.body;
 
-        let history = History.getHistory();
-
-        if(StringUtil.isEmptyString(story.title) && StringUtil.isEmptyString(story.body)) {
+        if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
             Toast.show("Cannot save empty story");
-            history.push("/story-board/stories");
         } else {
             let ajax = AjaxClient.instance("/save-story");
             const headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             };
-
-            ajax.put(headers, { story }).then(() => {
+            try{
+                let response = await ajax.put(headers, { "story": this.story });
+                this.story._rev = response.rev;
                 Toast.show("Story saved successfully", "success");
-                history.push("/story-board/stories");
-            }).catch((error) => {
+            } catch(error) {
                 if(error.message === "Please add title") {
                     Toast.show(error.message);
                 } else if(error.message === "Title Already exists") {
                     Toast.show(error.message);
                 } else {
                     Toast.show("Not able to save");
-                    history.push("/story-board/stories");
                 }
-            });
+            }
         }
     }
 
@@ -101,12 +103,18 @@ export class EditStory extends Component {
         this.setState({ "title": this.refs.title.value });
     }
 
+    _back() {
+        let history = History.getHistory();
+        history.push("/story-board/stories");
+    }
+
     render() {
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
                     <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow" />
                     <div className="title-bar">
+                        <button className="story-back btn primary" onClick={this._back}>Back</button>
                         <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
                         <button ref="saveButton" type="submit" className="story-save btn primary" value="save" onClick={() => {
                             this._saveStory();
