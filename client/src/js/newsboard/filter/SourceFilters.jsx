@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { TWITTER, WEB } from "../../sourceConfig/actions/SourceConfigurationActions";
 
 export default class SourceFilters extends Component {

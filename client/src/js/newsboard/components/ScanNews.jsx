@@ -1,4 +1,3 @@
-/* eslint react/jsx-no-literals:0 */
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import DisplayFeeds from "./DisplayFeeds";
 import DisplayArticle from "./DisplayArticle";
@@ -8,7 +7,8 @@ import { newsBoardSourceTypes } from "./../../utils/Constants";
 import FilterTabs from "../filter/FilterTabs";
 import { filterTabSwitch } from "../filter/FilterActions";
 import DisplayFilters from "../filter/DisplayFilters";
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 export class ScanNews extends Component {

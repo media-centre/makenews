@@ -1,5 +1,6 @@
 /* eslint no-magic-numbers:0*/
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import * as StoryBoardActions from "../actions/StoryBoardActions";
 import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";

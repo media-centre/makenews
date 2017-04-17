@@ -1,5 +1,6 @@
 /* eslint brace-style:0  no-unused-expressions:0*/
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import DateTimeUtil from "../../utils/DateTimeUtil";
 import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";

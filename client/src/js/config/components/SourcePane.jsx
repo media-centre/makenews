@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Sources from "./Sources";
 import AddUrl from "./AddUrl";
 import FacebookTabs from "./FacebookTabs";

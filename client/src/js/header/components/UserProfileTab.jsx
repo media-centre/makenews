@@ -1,4 +1,3 @@
-/* eslint react/jsx-no-literals:0 brace-style:0 */
 import React, { Component } from "react";
 import UserProfile from "./../../user/UserProfile";
 import AppSessionStorage from "./../../utils/AppSessionStorage";

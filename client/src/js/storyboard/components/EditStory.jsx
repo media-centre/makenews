@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
 import { connect } from "react-redux";
 import AjaxClient from "../../utils/AjaxClient";

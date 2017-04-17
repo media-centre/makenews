@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { setCurrentCollection, deleteCollection, renameCollection } from "./../actions/DisplayCollectionActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import StringUtil from "./../../../../../common/src/util/StringUtil";

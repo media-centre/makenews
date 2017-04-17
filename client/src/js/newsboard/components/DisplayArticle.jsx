@@ -1,5 +1,6 @@
 /* eslint brace-style:0 */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import DisplayWebArticle from "./DisplayWebArticle";
 import DateTimeUtil from "../../utils/DateTimeUtil";

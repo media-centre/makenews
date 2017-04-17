@@ -1,5 +1,6 @@
 /* eslint react/jsx-wrap-multilines:0 */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Locale from "../../Locale";
 
 export default class ConfirmPopup extends Component {

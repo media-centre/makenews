@@ -1,5 +1,6 @@
 /* eslint react/jsx-no-literals:0, brace-style:0 react/jsx-closing-bracket-location:0*/
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { PAGES, GROUPS } from "../actions/FacebookConfigureActions";
 import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";

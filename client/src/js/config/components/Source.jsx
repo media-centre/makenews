@@ -1,5 +1,6 @@
 /* eslint-disable operator-linebreak */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { addSourceToConfigureList, WEB } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export default class Source extends Component {

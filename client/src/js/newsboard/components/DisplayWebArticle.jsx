@@ -1,5 +1,6 @@
 /* eslint react/no-danger:0 */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { displayWebArticle } from "./../actions/DisplayArticleActions";
 import Spinner from "./../../utils/components/Spinner";

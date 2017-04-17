@@ -1,5 +1,6 @@
 /* eslint brace-style:0 */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import * as AddUrlActions from "../actions/AddUrlActions";
 import { connect } from "react-redux";
 import Toast from "../../utils/custom_templates/Toast";
