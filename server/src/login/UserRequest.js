@@ -55,9 +55,10 @@ export async function getUserDetails(token, userName) {
 
 export async function markAsVisitedUser(token, userName) {
     try {
-        let userData = await getUserDetails(token, userName);
-        userData.visitedUser = true;
         const couchClient = CouchClient.instance(token, "_users");
+        const documentId = "org.couchdb.user:" + userName;
+        let userData = await couchClient.getDocument(documentId);
+        userData.visitedUser = true;
         await couchClient.updateDocument(userData);
         return { "ok": true };
     } catch (err) {

@@ -139,7 +139,18 @@ describe("UserRequest", () => {
     describe("MarkAsVisitedUser", () => {
         const token = "token";
         let couchClient = null;
-        const updatedUserDetails = { "_id": "testId", "visitedUser": true };
+        const updatedUserDetails = {
+            "_id": "org.couchdb.user:test_user_name",
+            "_rev": "12345",
+            "derived_key": "test derived key",
+            "iterations": 10,
+            "name": "test_user",
+            "password_scheme": "scheme",
+            "roles": [],
+            "salt": "123324124124",
+            "type": "user",
+            "visitedUser": true
+        };
         beforeEach("MarkAsVisitedUser", () => {
             sandbox = sinon.sandbox.create();
             couchClient = new CouchClient(token, "_users");
@@ -152,27 +163,48 @@ describe("UserRequest", () => {
 
         it("should update the userDetails document with visitedUser as true and return success response", async () => {
             const expectedResponse = { "ok": true };
-            const userDetails = { "_id": "testId" };
+            const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
+            getDocumentMock.returns(Promise.resolve({
+                "_id": "org.couchdb.user:" + userName,
+                "_rev": "12345",
+                "derived_key": "test derived key",
+                "iterations": 10,
+                "name": "test_user",
+                "password_scheme": "scheme",
+                "roles": [],
+                "salt": "123324124124",
+                "type": "user"
+            }));
 
             sandbox.mock(couchClient).expects("updateDocument")
                 .withExactArgs(updatedUserDetails).returns(Promise.resolve(expectedResponse));
-            sandbox.mock(couchClient).expects("get").returns(Promise.resolve(userDetails));
 
             const response = await UserRequest.markAsVisitedUser(token, userName);
 
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should reject with error if getUserDetails returns an error", async () => {
-            sandbox.mock(couchClient).expects("get").returns(Promise.reject("Error"));
+        it("should reject with error if getDocument returns an error", async () => {
+            sandbox.mock(couchClient).expects("getDocument").returns(Promise.reject("Error"));
 
             await isRejected(UserRequest.markAsVisitedUser(token, userName), { "message": "not able to update" });
         });
 
         it("should reject with an error if update document returns with an error", async () => {
+            const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
+            getDocumentMock.returns(Promise.resolve({
+                "_id": "org.couchdb.user:" + userName,
+                "_rev": "12345",
+                "derived_key": "test derived key",
+                "iterations": 10,
+                "name": "test_user",
+                "password_scheme": "scheme",
+                "roles": [],
+                "salt": "123324124124",
+                "type": "user"
+            }));
             sandbox.mock(couchClient).expects("updateDocument")
                 .withExactArgs(updatedUserDetails).returns(Promise.reject("Error"));
-            sandbox.mock(couchClient).expects("get").returns(Promise.resolve({ "_id": "testId" }));
 
             await isRejected(UserRequest.markAsVisitedUser(token, userName), { "message": "not able to update" });
         });
