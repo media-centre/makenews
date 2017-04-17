@@ -1,4 +1,3 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] */
 import CouchSession from "../src/CouchSession";
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "../src/config/ApplicationConfig";
@@ -201,17 +200,20 @@ describe("CouchSessionSpec", () => {
                 "visitedUser": true
             }));
             const saveDocumentMock = sandbox.mock(couchClient).expects("saveDocument");
-            saveDocumentMock.withExactArgs(
+            saveDocumentMock.withArgs(
                 `org.couchdb.user:${username}`,
                 {
-                    "name": username,
+                    "_id": "org.couchdb.user:" + username,
+                    "_rev": "12345",
+                    "derived_key": "test derived key",
+                    "iterations": 10,
+                    "name": "test_user",
+                    "password_scheme": "scheme",
                     "roles": [],
+                    "salt": "123324124124",
                     "type": "user",
-                    "password": newPassword,
-                    "visitedUser": true
-                },
-                {
-                    "if-match": "12345"
+                    "visitedUser": true,
+                    "password": newPassword
                 }
             ).returns(Promise.resolve({
                 "ok": true,
