@@ -660,7 +660,7 @@ describe("RssClient", () => {
                 await RssClient.instance().addURLToUser(document, accessToken);
                 assert.fail("expected error");
             } catch(err) {
-                assert.strictEqual(err, "Unable to add the url", );
+                assert.strictEqual(err, "Unable to add the url");
             } finally {
                 saveDocMock.verify();
             }
