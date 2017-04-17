@@ -2,6 +2,7 @@ import TwitterClient from "./TwitterClient";
 import Logger from "../logging/Logger";
 import { userDetails } from "../Factory";
 import SourceConfigRequestHandler from "../sourceConfig/SourceConfigRequestHandler";
+import HttpResponseHandler from "./../../../common/src/HttpResponseHandler";
 
 export default class TwitterRequestHandler {
     static instance() {
@@ -52,7 +53,7 @@ export default class TwitterRequestHandler {
             return followings;
         } catch(error) {
             TwitterRequestHandler.logger().error(`TwitterRequestHandler:: Failed to fetch the followings ${error}`);
-            if(error.statusCode === 429) { //eslint-disable-line no-magic-numbers
+            if(error.statusCode === HttpResponseHandler.codes.TOO_MANY_REQUESTS) { //eslint-disable-line no-magic-numbers
                 const message = { "message": "Could not get more handles" };
                 throw message;
             }

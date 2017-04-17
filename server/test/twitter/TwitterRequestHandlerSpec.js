@@ -5,6 +5,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 import SourceConfigRequestHandler from "./../../src/sourceConfig/SourceConfigRequestHandler";
+import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 
 describe("TwitterRequestHandler", () => {
     let sandbox = null, userName = null, userObj = null, keyword = null, page = null, preFirstId = null;
@@ -194,8 +195,8 @@ describe("TwitterRequestHandler", () => {
             assert.deepEqual(response, expectedData);
         });
 
-        it("should throw could not get more when error status code is 429", async () => {
-            fetchFollowingMock.returns(Promise.reject({ "statusCode": 429, "message": "too many requests" }));
+        it("should throw could not get more when the requests are exceed", async () => {
+            fetchFollowingMock.returns(Promise.reject({ "statusCode": HttpResponseHandler.codes.TOO_MANY_REQUESTS, "message": "too many requests" }));
             await isRejected(twitterHandler.fetchFollowings(authSession, nextCursor), { "message": "Could not get more handles" });
         });
     });
