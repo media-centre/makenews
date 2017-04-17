@@ -154,10 +154,10 @@ export default class RssClient {
         const response = await this.fetchRssFeeds(url);
         const name = response.title;
         let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-        let existedUrl = await this.addUrlToCommon(document);
+        let existingUrl = await this.addUrlToCommon(document);
 
-        if(existedUrl) {
-            document.url = existedUrl;
+        if(existingUrl) {
+            document.url = existingUrl;
         }
         await this.addURLToUser(document, accessToken);
         return { name, "url": document.url };
@@ -165,14 +165,14 @@ export default class RssClient {
 
     async addUrlToCommon(document) { //eslint-disable-line consistent-return
         let url = document.url;
-        const urlLength = url.length;
 
-        url = url.slice(url.indexOf("//") + 2, urlLength);  //eslint-disable-line no-magic-numbers
-        url = url.startsWith("www.") ? url.slice(4, urlLength) : url; //eslint-disable-line no-magic-numbers
-        url = url.endsWith("/") ? url.slice(0, urlLength - 1) : url; //eslint-disable-line no-magic-numbers
+        let strippedUrl = url.replace(/.*:?\/\/(www.)?/, "");
+        if(url.endsWith("/")) {
+            strippedUrl = strippedUrl.slice(0, strippedUrl.length - 1); //eslint-disable-line no-magic-numbers
+        }
 
-        const urlCombinations = [`http://${url}`, `http://${url}/`, `http://www.${url}`, `http://www.${url}/`,
-            `https://${url}`, `https://${url}/`, `https://www.${url}`, `https://www.${url}/`];
+        const urlCombinations = [`http://${strippedUrl}`, `http://${strippedUrl}/`, `http://www.${strippedUrl}`, `http://www.${strippedUrl}/`,
+            `https://${strippedUrl}`, `https://${strippedUrl}/`, `https://www.${strippedUrl}`, `https://www.${strippedUrl}/`];
 
         const adminDetails = ApplicationConfig.instance().adminDetails();
         let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
@@ -199,7 +199,7 @@ export default class RssClient {
         }
 
         try {
-            await dbInstance.saveDocument(encodeURIComponent(document.url), document);
+            await dbInstance.saveDocument(encodeURIComponent(url), document);
             RssClient.logger().debug("RssClient:: successfully added Document to common database.");
         } catch (error) {
             if(error.status !== HttpResponseHandler.codes.CONFLICT) {
