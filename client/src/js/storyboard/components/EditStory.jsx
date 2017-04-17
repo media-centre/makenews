@@ -113,9 +113,9 @@ export class EditStory extends Component {
             <div className="story-board story-collections">
                 <div className="editor-container">
                     <div className="editor-toolbar">
-                        <button className="story-back" onClick={this._back}>Back</button>
-                        <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow" />
-                        <button ref="saveButton" type="submit" className="story-save" value="save" onClick={() => {
+                        <button className="back" onClick={this._back}>Back</button>
+                        <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
+                        <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
                             this._saveStory();
                         }}
                         >
@@ -147,6 +147,8 @@ EditStory.propTypes = {
 };
 
 EditStory.modules = {
+    "link-tooltip": true,
+    "image-tooltip": true,
     "toolbar": {
         "container": ".ql-toolbar"
     }
