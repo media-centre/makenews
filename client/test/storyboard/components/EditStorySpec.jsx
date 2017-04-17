@@ -38,35 +38,37 @@ describe("EditStory", () => {
 
     it("should have button element with story-back as class", () => {
         let [editor] = renderedOutput.props.children;
-        let [, inputContainer] = editor.props.children;
-        let [button] = inputContainer.props.children;
+        let [toolbar] = editor.props.children;
+        let [button] = toolbar.props.children;
+
+        assert.equal(toolbar.props.className, "editor-toolbar");
+        assert.equal(button.type, "button");
+        assert.equal(button.props.className, "story-back");
+        assert.equal(button.props.children, "Back");
+    });
+
+    it("should have button element with story-save as class", () => {
+        let [editor] = renderedOutput.props.children;
+        let [toolbar] = editor.props.children;
+        let [, , button] = toolbar.props.children;
 
         assert.equal(button.type, "button");
-        assert.equal(button.props.className, "story-back btn primary");
-        assert.equal(button.props.children, "Back");
+        assert.equal(button.ref, "saveButton");
+        assert.equal(button.props.type, "submit");
+        assert.equal(button.props.value, "save");
     });
 
     it("should have input element with story-title as class", () => {
         let [editor] = renderedOutput.props.children;
         let [, inputContainer] = editor.props.children;
-        const [, inputElement] = inputContainer.props.children;
+        const inputElement = inputContainer.props.children;
+
 
         assert.equal(inputContainer.props.className, "title-bar");
         assert.equal(inputElement.ref, "title");
         assert.equal(inputElement.props.className, "story-title");
         assert.equal(inputElement.props.placeholder, "please enter title");
         assert.equal(inputElement.props.value, "");
-    });
-
-    it("should have button element with story-save as class", () => {
-        let [editor] = renderedOutput.props.children;
-        let [, inputContainer] = editor.props.children;
-        let [, , button] = inputContainer.props.children;
-
-        assert.equal(button.type, "button");
-        assert.equal(button.ref, "saveButton");
-        assert.equal(button.props.type, "submit");
-        assert.equal(button.props.value, "save");
     });
 
     it("should have React quill element", () => {

@@ -99,6 +99,19 @@
     flex-grow: 1;
     border-right: 1px solid lighten($primary-color, 35%);
 
+    .editor-toolbar {
+      display: inline-flex;
+      background-color: #e9e3e7;
+      width: 100%;
+      justify-content: center;
+
+      .story-save, .story-back {
+        margin: 10px 15px 10px 0;
+        color: $secondary-color;
+        font-size: 1rem;
+      }
+    }
+
     .title-bar {
       display: flex;
       height: $storyborad-title-height;
@@ -112,12 +125,8 @@
         border-bottom: $primary-color-light 2px solid;
         flex-grow: 1;
       }
-
-      .story-save, .story-back {
-        height: 36px;
-        margin: 2px;
-      }
     }
+
   }
 
   .ql-snow.ql-toolbar {

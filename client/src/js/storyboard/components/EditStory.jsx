@@ -9,7 +9,7 @@ import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
-const AUTO_SAVE_TIME_INTERVAL = 30000;
+import { STORY_AUTO_SAVE_TIME_INTERVAL } from "./../../../../config/config";
 
 export class EditStory extends Component {
 
@@ -39,7 +39,7 @@ export class EditStory extends Component {
     }
 
     autoSave() {
-        this.interval = setInterval(async() => { this._saveStory(); }, AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
+        this.interval = setInterval(async() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
     }
 
     async _getStory(storyId) {
@@ -112,15 +112,17 @@ export class EditStory extends Component {
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
-                    <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow" />
-                    <div className="title-bar">
-                        <button className="story-back btn primary" onClick={this._back}>Back</button>
-                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
-                        <button ref="saveButton" type="submit" className="story-save btn primary" value="save" onClick={() => {
+                    <div className="editor-toolbar">
+                        <button className="story-back" onClick={this._back}>Back</button>
+                        <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow" />
+                        <button ref="saveButton" type="submit" className="story-save" value="save" onClick={() => {
                             this._saveStory();
                         }}
                         >
-                            { "SAVE" }</button>
+                        { "SAVE" }</button>
+                    </div>
+                    <div className="title-bar">
+                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
                     </div>
                     <ReactQuill className="story-editor" theme="snow" onChange={this._onChange} modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">
