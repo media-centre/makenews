@@ -34,7 +34,7 @@ export class DisplayFeeds extends Component {
     }
 
     async componentDidMount() {
-        await this.fetchFeedsFromSources(false);
+        this.fetchFeedsFromSources(false);
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.feedsDOM = this.refs.feeds;
         if(this.feedsDOM) {
@@ -150,9 +150,7 @@ export class DisplayFeeds extends Component {
     autoRefresh() {
         const AUTO_REFRESH_INTERVAL = AppWindow.instance().get("autoRefreshSurfFeedsInterval");
         if (!AppWindow.instance().get("autoRefreshTimer")) {
-            AppWindow.instance().set("autoRefreshTimer", setInterval(async() => {
-                await this.fetchFeedsFromSources(true);
-            }, AUTO_REFRESH_INTERVAL));
+            AppWindow.instance().set("autoRefreshTimer", setInterval(this.fetchFeedsFromSources, AUTO_REFRESH_INTERVAL));
         }
     }
     _isClicked() {
@@ -171,7 +169,7 @@ export class DisplayFeeds extends Component {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }
-                > {"Show new feeds"} </button>);
+                > Show new feeds </button>);
         }
         return null;
     }

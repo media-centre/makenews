@@ -164,12 +164,12 @@ describe("DisplayFeedActions", () => {
         });
 
         it("should call /fetch-feeds", async () => {
-            const ajaxClient = new AjaxClient("/fetch-feeds", false);
+            const ajaxClient = new AjaxClient("/fetch-feeds", true);
             const ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
-                .withExactArgs("/fetch-feeds", false).returns(ajaxClient);
+                .withExactArgs("/fetch-feeds", true).returns(ajaxClient);
             const postMock = sandbox.mock(ajaxClient).expects("post");
 
-            await fetchFeedsFromSources(false);
+            await fetchFeedsFromSources();
 
             ajaxClientMock.verify();
             postMock.verify();
@@ -178,21 +178,21 @@ describe("DisplayFeedActions", () => {
         it("should return status true after fetching the sources", async () => {
             const ajaxClient = new AjaxClient("/fetch-feeds", false);
             sandbox.stub(AjaxClient, "instance")
-                .withArgs("/fetch-feeds", false).returns(ajaxClient);
+                .withArgs("/fetch-feeds", true).returns(ajaxClient);
             sandbox.stub(ajaxClient, "post").returns(Promise.resolve({ "status": true }));
 
-            const response = await fetchFeedsFromSources(false);
+            const response = await fetchFeedsFromSources();
 
             assert.isTrue(response);
         });
 
-        it("should return status true after fetching the sources", async () => {
-            const ajaxClient = new AjaxClient("/fetch-feeds", false);
+        it("should return status false after fetching the sources", async () => {
+            const ajaxClient = new AjaxClient("/fetch-feeds", true);
             sandbox.stub(AjaxClient, "instance")
-                .withArgs("/fetch-feeds", false).returns(ajaxClient);
+                .withArgs("/fetch-feeds", true).returns(ajaxClient);
             sandbox.stub(ajaxClient, "post").returns(Promise.reject({ "status": false }));
 
-            const response = await fetchFeedsFromSources(false);
+            const response = await fetchFeedsFromSources();
 
             assert.isFalse(response);
         });

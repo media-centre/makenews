@@ -56,12 +56,12 @@ export function getAllCollections(pageIndex, callback = () => {}) {
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
-export async function fetchFeedsFromSources(isAuto = false) {
+export async function fetchFeedsFromSources() {
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    const ajaxClient = AjaxClient.instance("/fetch-feeds", isAuto);
+    const ajaxClient = AjaxClient.instance("/fetch-feeds", true);
     try {
         const response = await ajaxClient.post(headers, {});
         return response.status;
