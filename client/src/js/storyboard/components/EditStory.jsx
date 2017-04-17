@@ -9,7 +9,7 @@ import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
 import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
-import { STORY_AUTO_SAVE_TIME_INTERVAL } from "./../../../../config/config";
+import AppWindow from "./../../utils/AppWindow";
 
 export class EditStory extends Component {
 
@@ -39,6 +39,7 @@ export class EditStory extends Component {
     }
 
     autoSave() {
+        const STORY_AUTO_SAVE_TIME_INTERVAL = AppWindow.instance().get("storyAutoSaveTimeInterval");
         this.interval = setInterval(async() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
     }
 

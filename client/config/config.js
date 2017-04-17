@@ -9,4 +9,4 @@ window.mediaCenter.maxSurfFeedsLifeInDays = 30;
 window.mediaCenter.autoRefreshSurfFeedsInterval = 300000;
 window.mediaCenter.numberOfDaysToBackUp = 2;
 window.mediaCenter.dbSessionInterval = 600000;
-export const STORY_AUTO_SAVE_TIME_INTERVAL = 300000;
+window.mediaCenter.storyAutoSaveTimeInterval = 10000;
