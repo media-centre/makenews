@@ -229,7 +229,7 @@ export default class RssClient {
         let queryString = keyword === "" ? "*/*" : `${keyword}*`;
         try {
             let query = {
-                "q": `name:${queryString}`,
+                "q": `name:${queryString} OR url:${queryString}`,
                 "limit": LIMIT_VALUE,
                 skip
             };

@@ -1,5 +1,3 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5] max-len:0, init-declarations:0*/
-
 import RssClient from "../../src/rss/RssClient";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -16,7 +14,7 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 import DateUtil from "../../src/util/DateUtil";
 
 describe("RssClient", () => {
-    let sandbox, rssClientMock, feed, error, url = null;
+    let sandbox = null, rssClientMock = null, feed = null, error = null, url = null;
 
     beforeEach("RssClient", () => {
         sandbox = sinon.sandbox.create();
@@ -55,7 +53,7 @@ describe("RssClient", () => {
             sinon.mock(rssClientMock).expects("getRssData").withArgs(url).returns(feed);
 
             try {
-                let result = await rssClientMock.fetchRssFeeds(url);
+                const result = await rssClientMock.fetchRssFeeds(url);
                 assert.deepEqual(result, feed);
             } catch (err) {
                 assert.fail();
@@ -65,7 +63,7 @@ describe("RssClient", () => {
         });
 
         it("should call handleError when error message is other than FEEDS_NOT_FOUND ", async() => {
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
             getrssMock.returns(Promise.reject({ "message": "Bad status code" }));
 
             try {
@@ -79,9 +77,9 @@ describe("RssClient", () => {
         });
 
         it("should call crawlForRssUrl when error message is FEEDS_NOT_FOUND and rss link not present", async() => {
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
             getrssMock.returns(Promise.reject({ "message": "feeds_not_found", "data": [] }));
-            let crawlForRssUrlMock = sinon.mock(rssClientMock).expects("crawlForRssUrl");
+            const crawlForRssUrlMock = sinon.mock(rssClientMock).expects("crawlForRssUrl");
             crawlForRssUrlMock.returns(Promise.reject("error"));
 
             try {
@@ -96,16 +94,16 @@ describe("RssClient", () => {
 
         it("should call getFeedsFromRssUrl when feeds are  present", async() => {
             url = "www.example.com";
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
             getrssMock.returns(Promise.reject({
                 "message": "feeds_not_found",
                 "data": "<link type='application/rss+xml' href='http://www.example.com'> <a href='http://www.example.com' ></a>"
             }));
-            let getrssMockNew = sinon.mock(rssClientMock).expects("getFeedsFromRssUrl");
+            const getrssMockNew = sinon.mock(rssClientMock).expects("getFeedsFromRssUrl");
             getrssMockNew.returns(feed);
 
             try {
-                let result = await rssClientMock.fetchRssFeeds(url);
+                const result = await rssClientMock.fetchRssFeeds(url);
                 assert.deepEqual(result, feed);
             } catch (err) {
                 assert.fail();
@@ -118,7 +116,7 @@ describe("RssClient", () => {
 
     describe("getFeedsFromUrl", () => {
         it("should call handleRequestError when rss data is not present", async() => {
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs(url);
             getrssMock.returns(Promise.reject(error));
 
             try {
@@ -132,11 +130,11 @@ describe("RssClient", () => {
         });
 
         it("should return feeds when rss data is  present", async() => {
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("http://www.example.com");
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("http://www.example.com");
             getrssMock.returns(Promise.resolve(feed));
 
             try {
-                let result = await rssClientMock.getFeedsFromRssUrl("http://www.example.com", "www.rss.com");
+                const result = await rssClientMock.getFeedsFromRssUrl("http://www.example.com", "www.rss.com");
                 assert.deepEqual(result, feed);
             } catch (err) {
                 assert.fail();
@@ -149,7 +147,7 @@ describe("RssClient", () => {
 
     describe("crawlForRssUrl", () => {
         it("should return error when rss links are not present", async() => {
-            let root = cheerio.load(error.data);
+            const root = cheerio.load(error.data);
 
             try {
                 await rssClientMock.crawlForRssUrl(root, url);
@@ -161,8 +159,8 @@ describe("RssClient", () => {
 
         it("should return error when rss links are present and no rss feeds ", async() => {
             error = { "message": "feeds_not_found", "data": "<a href='/abc'></a>" };
-            let root = cheerio.load(error.data);
-            let getrssMock = sinon.mock(rssClientMock).expects("getCrawledRssData");
+            const root = cheerio.load(error.data);
+            const getrssMock = sinon.mock(rssClientMock).expects("getCrawledRssData");
             getrssMock.returns(Promise.reject("error"));
 
             try {
@@ -182,57 +180,57 @@ describe("RssClient", () => {
         });
 
         it("should return feeds when rss links are present and no rss feeds", async() => {
-            let getrssMock = sandbox.mock(rssClientMock).expects("getRssData").once();
+            const getrssMock = sandbox.mock(rssClientMock).expects("getRssData").once();
             getrssMock.returns(Promise.resolve({ "data": "xyz" }));
-            let links = new Set();
+            const links = new Set();
             links.add("/a1");
             links.add("/a2");
             links.add("/a3");
 
-            let data = await rssClientMock.getCrawledRssData(links, url);
+            const data = await rssClientMock.getCrawledRssData(links, url);
             assert.deepEqual(data, { "data": "xyz", "url": "/a1" });
             getrssMock.verify();
         });
 
         it("should resolve data from crawl list when rss links are not present and no rss feeds ", async() => {
-            let getrssMock = sandbox.mock(rssClientMock).expects("getRssData").once();
+            const getrssMock = sandbox.mock(rssClientMock).expects("getRssData").once();
             getrssMock.returns(Promise.reject("error"));
-            let crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").once();
+            const crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").once();
             crawlRssListMock.returns(Promise.resolve({ "data": "xyz", "url": "/a1sub" }));
-            let links = new Set();
+            const links = new Set();
             links.add("/a1");
             links.add("/a2");
             links.add("/a3");
 
-            let data = await rssClientMock.getCrawledRssData(links, url);
+            const data = await rssClientMock.getCrawledRssData(links, url);
             assert.deepEqual(data, { "data": "xyz", "url": "/a1sub" });
             getrssMock.verify();
             crawlRssListMock.verify();
         });
 
         it("should resolve data for second link from crawl list when rss links are not present and no rss feeds for first link and rss links are present for second link ", async() => {
-            let getrssMock = sandbox.mock(rssClientMock).expects("getRssData").twice();
+            const getrssMock = sandbox.mock(rssClientMock).expects("getRssData").twice();
             getrssMock.onFirstCall().returns(Promise.reject("error"))
                 .onSecondCall().returns(Promise.resolve({ "data": "xyz" }));
-            let crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").once();
+            const crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").once();
             crawlRssListMock.returns(Promise.reject("error"));
-            let links = new Set();
+            const links = new Set();
             links.add("/a1");
             links.add("/a2");
             links.add("/a3");
 
-            let data = await rssClientMock.getCrawledRssData(links, url);
+            const data = await rssClientMock.getCrawledRssData(links, url);
             assert.deepEqual(data, { "data": "xyz", "url": "/a2" });
             getrssMock.verify();
             crawlRssListMock.verify();
         });
 
         it("should reject data when no rss links are present and no rss feeds for all links", async() => {
-            let getrssMock = sandbox.mock(rssClientMock).expects("getRssData").thrice();
+            const getrssMock = sandbox.mock(rssClientMock).expects("getRssData").thrice();
             getrssMock.returns(Promise.reject("error"));
-            let crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").thrice();
+            const crawlRssListMock = sandbox.mock(rssClientMock).expects("crawlRssList").thrice();
             crawlRssListMock.returns(Promise.reject("error"));
-            let links = new Set();
+            const links = new Set();
             links.add("/a1");
             links.add("/a2");
             links.add("/a3");
@@ -254,11 +252,11 @@ describe("RssClient", () => {
         });
 
         it("should fetch feeds if the link contains an href", async() => {
-            let getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("/abc-rss");
+            const getrssMock = sinon.mock(rssClientMock).expects("getRssData").withArgs("/abc-rss");
             getrssMock.returns(Promise.resolve(feed));
 
             try {
-                let data = await rssClientMock.crawlRssList("/abc-rss", error, "http://www.example.com/abc-rss");
+                const data = await rssClientMock.crawlRssList("/abc-rss", error, "http://www.example.com/abc-rss");
                 assert.deepEqual(data, feed);
             } finally {
                 rssClientMock.getRssData.restore();
@@ -345,7 +343,7 @@ describe("RssClient", () => {
 
     describe("handleRequestError", () => {
         it("should throw request failed for url error when handle_request_error is called", async() => {
-            let errorMessage = { "error": "error message" };
+            const errorMessage = { "error": "error message" };
             try {
                 rssClientMock.handleRequestError(url, errorMessage);
             } catch (err) {
@@ -370,7 +368,7 @@ describe("RssClient", () => {
             "url": sourceUrl + "/"
         };
 
-        let rssClient = RssClient.instance();
+        const rssClient = RssClient.instance();
 
         beforeEach("addURL", () => {
             sandbox = sinon.sandbox.create();
@@ -536,7 +534,7 @@ describe("RssClient", () => {
 
         beforeEach("addUrlToCommon", () => {
             sandbox = sinon.sandbox.create();
-            let applicationConfig = new ApplicationConfig();
+            const applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             adminDetailsMock = sandbox.mock(applicationConfig).expects("adminDetails").returns({
                 "username": "adminUser",
@@ -573,7 +571,7 @@ describe("RssClient", () => {
         });
 
         it("should not save the document if it exists", async () => {
-            let document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
+            const document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
             const existedDoc = { "name": urlName, "url": sourceUrl + "/", "docType": "source", "sourceType": "web" };
 
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
@@ -589,13 +587,13 @@ describe("RssClient", () => {
         });
 
         it("should return the error response when server throws error while saving the document", async () => {
-            let document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
+            const document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
 
 
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
                 .withExactArgs(selector).returns(Promise.resolve({ "docs": [] }));
 
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            const saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST, "message": { "error": "unexpected response from db" } }));
             try {
                 await RssClient.instance().addUrlToCommon(document);
@@ -635,9 +633,9 @@ describe("RssClient", () => {
 
         it("should save the document if it is not exists", async () => {
             url = "http://www.test.com/rss";
-            let document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
+            const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            const saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.resolve({
                 "ok": "true",
                 "id": "test_name",
@@ -652,9 +650,9 @@ describe("RssClient", () => {
 
         it("should return the error response when server throws error while saving the document", async () => {
             url = "http://www.test.com/rss";
-            let document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
+            const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            const saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject({ "status": HttpResponseHandler.codes.BAD_REQUEST }));
             try {
                 await RssClient.instance().addURLToUser(document, accessToken);
@@ -668,9 +666,9 @@ describe("RssClient", () => {
 
         it("should throw error if url already exists in the user db", async () => {
             url = "http://www.test.com/rss";
-            let document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
+            const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
-            let saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
+            const saveDocMock = sandbox.mock(couchClient).expects("saveDocument");
             saveDocMock.withArgs(encodeURIComponent(document.url), document).returns(Promise.reject({ "status": HttpResponseHandler.codes.CONFLICT }));
             try {
                 await RssClient.instance().addURLToUser(document, accessToken);
@@ -684,33 +682,30 @@ describe("RssClient", () => {
     });
 
     describe("Search URLS", () => {
-        let limit = 25;
+        const limit = 25;
         beforeEach("RssClient", () => {
             sandbox = sinon.sandbox.create();
-            let applicationConfig = new ApplicationConfig();
+            const applicationConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
             sandbox.stub(applicationConfig, "adminDetails").returns({
-                // "username": "adminUser",
-                // "password": "adminPwd",
                 "db": "adminDb"
             });
             sandbox.stub(applicationConfig, "searchEngineUrl").returns({
                 "db": "http://188.166.166.121:5986/_fti/local"
             });
-            // sandbox.stub(AdminDbClient, "instance").withArgs("adminUser", "adminPwd", "adminDb").returns(Promise.resolve(couchClient));
         });
 
         afterEach("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should return the searched URL Documents", async () => {
-            let key = "The Hindu";
-            let skip = 100;
+        it("should return the searched URL Documents if the keyword is in name", async () => {
+            const key = "Hindu";
+            const skip = 100;
 
-            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
-            let rssClient = RssClient.instance();
-            let response = {
+            const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
+            const rssClient = RssClient.instance();
+            const response = {
                 "rows": [
                     {
                         "score": 1.326035976409912,
@@ -730,7 +725,7 @@ describe("RssClient", () => {
                 ]
             };
 
-            let expectedOutput = {
+            const expectedOutput = {
                 "docs": [
                     { "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss" },
                     {
@@ -741,48 +736,93 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, skip };
+            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, skip);
+            const document = await rssClient.searchURL(key, skip);
+            searchDocumentsMock.verify();
+            assert.deepEqual(document, expectedOutput);
+        });
+
+        it("should return the searched URL Documents if the keyword is in url", async () => {
+            const key = "thehindu";
+            const skip = 100;
+
+            const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
+            const rssClient = RssClient.instance();
+            const response = {
+                "rows": [
+                    {
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss"
+                        }
+                    },
+                    {
+                        "score": 1.326035976409912,
+                        "id": "http://www.thehindu.com/news/international/?service=rss",
+                        "fields": {
+                            "name": "The Hindu - International",
+                            "url": "http://www.thehindu.com/news/international/?service=rss"
+                        }
+                    }
+                ]
+            };
+
+            const expectedOutput = {
+                "docs": [
+                    { "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss" },
+                    {
+                        "name": "The Hindu - International",
+                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                    }
+                ],
+                "paging": { "offset": (skip + limit) }
+            };
+
+            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
+            searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
+            const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should return empty document if No documents found for the key", async() => {
-            let key = "The Hindu";
-            let skip = 100;
+            const key = "The Hindu";
+            const skip = 100;
 
-            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
-            let rssClient = RssClient.instance();
-            let response = {
+            const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
+            const rssClient = RssClient.instance();
+            const response = {
                 "rows": [
 
                 ]
             };
 
-            let expectedOutput = {
+            const expectedOutput = {
                 "docs": [
 
                 ],
                 "paging": { "offset": (skip + limit) }
             };
 
-            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, skip };
+            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, skip);
+            const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should return all documents when they enter for empty string", async() => {
-            let key = "";
-            let skip = 100;
+            const key = "";
+            const skip = 100;
 
-            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
-            let rssClient = RssClient.instance();
-            let response = {
+            const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
+            const rssClient = RssClient.instance();
+            const response = {
                 "rows": [
                     {
                         "score": 1.326035976409912,
@@ -802,7 +842,7 @@ describe("RssClient", () => {
                 ]
             };
 
-            let expectedOutput = {
+            const expectedOutput = {
                 "docs": [
                     { "name": "The Hindu - Home", "url": "http://www.thehindu.com/?service=rss" },
                     {
@@ -813,23 +853,23 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": "name:*/*", limit, skip };
+            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": "name:*/* OR url:*/*", limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
-            let document = await rssClient.searchURL(key, skip);
+            const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
             assert.deepEqual(document, expectedOutput);
         });
 
         it("should reject with an error when couchdb throws an error", async() => {
-            let key = "The Hindu";
-            let skip = 100;
+            const key = "The Hindu";
+            const skip = 100;
 
-            let searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
-            let rssClient = RssClient.instance();
+            const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
+            const rssClient = RssClient.instance();
 
-            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}*`, limit, skip };
+            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.reject("Unexpected Repsonse from DB"));
 
             await isRejected(rssClient.searchURL(key, skip), { "message": `Request failed for url: ${key}, error: "Unexpected Repsonse from DB"` });
