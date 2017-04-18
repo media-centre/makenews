@@ -2,9 +2,6 @@
 import RssRequestHandler from "../../../server/src/rss/RssRequestHandler";
 import { assert, expect } from "chai";
 import RssClient from "../../src/rss/RssClient";
-import ApplicationConfig from "./../../src/config/ApplicationConfig";
-import AdminDbClient from "./../../src/db/AdminDbClient";
-import CouchClient from "./../../src/CouchClient";
 import sinon from "sinon";
 
 describe("Rss Request Handler", () => {
@@ -159,85 +156,6 @@ describe("Rss Request Handler", () => {
             }catch(error) {
                 assert.strictEqual("unexpected response from the db", error);
             }
-        });
-    });
-
-    describe("fetchDefaultSources", () => {
-        const sandbox = sinon.sandbox.create();
-        const skip = 0;
-        const adminDetails = {
-            "username": "test",
-            "password": "test",
-            "db": "test_db"
-        };
-        const query = {
-            "selector": {
-                "docType": {
-                    "$eq": "source"
-                },
-                "sourceType": {
-                    "$eq": "web"
-                }
-            },
-            "skip": skip
-        };
-        let adminDbInstanceMock = null, adminDetailsMock = null, couchClient = null, rssRequestHanlder = null;
-
-        beforeEach("fetchDefaultSources", () => {
-            const appConfigInstance = ApplicationConfig.instance();
-            couchClient = CouchClient.instance();
-            rssRequestHanlder = RssRequestHandler.instance();
-
-            sandbox.stub(ApplicationConfig, "instance").returns(appConfigInstance);
-            adminDetailsMock = sandbox.mock(appConfigInstance).expects("adminDetails").returns(adminDetails);
-
-            adminDbInstanceMock = sandbox.mock(AdminDbClient).expects("instance")
-                .withExactArgs(adminDetails.username, adminDetails.password, adminDetails.db)
-                .returns(Promise.resolve(couchClient));
-        });
-
-        afterEach("fetchDefaultSources", () => {
-            sandbox.restore();
-        });
-
-        it("should return web sources", async () => {
-            const sources = [
-                {
-                    "_id": "www.hindu.com",
-                    "sourceType": "web",
-                    "name": "hindu",
-                    "docType": "source"
-                },
-                {
-                    "_id": "www.timesofIndia.com",
-                    "sourceType": "web",
-                    "name": "TOI",
-                    "docType": "source"
-                }
-            ];
-            const expectedData = {
-                "docs": sources,
-                "paging": { "offset": 25 }
-            };
-            const findMock = sandbox.mock(couchClient).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.resolve(expectedData));
-
-            const response = await rssRequestHanlder.fetchDefaultSources(skip);
-
-            adminDbInstanceMock.verify();
-            adminDetailsMock.verify();
-            findMock.verify();
-            assert.deepEqual(response, expectedData);
-        });
-
-        it("should return empty results when db throws an error", async () => {
-            const findMock = sandbox.mock(couchClient).expects("findDocuments")
-                .withExactArgs(query).returns(Promise.reject("error"));
-
-            const response = await rssRequestHanlder.fetchDefaultSources(skip);
-
-            findMock.verify();
-            assert.deepEqual(response, { "docs": [] });
         });
     });
 });

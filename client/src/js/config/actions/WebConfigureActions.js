@@ -16,8 +16,8 @@ export function gotWebSourceResults(sources, keyword, currentTab) {
     };
 }
 
-export function fetchWebSources(keyword, params = {}) {
-    const ajaxClient = keyword ? AjaxClient.instance("/web-sources") : AjaxClient.instance("/web-default-sources");
+export function fetchWebSources(keyword = "", params = {}) {
+    const ajaxClient = AjaxClient.instance("/web-sources");
 
     return async (dispatch, getState) => {
         dispatch(fetchingSources);

@@ -853,8 +853,8 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": "name:*/* OR url:*/*", limit, skip };
+            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
+                query = { "q": "*:*", limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();

@@ -11,7 +11,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import DateUtil from "../util/DateUtil";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
-const NOT_FOUND_INDEX = -1, LIMIT_VALUE = 25;
+const NOT_FOUND_INDEX = -1, DOCS_PER_REQUEST = 25;
 
 export default class RssClient {
 
@@ -225,19 +225,19 @@ export default class RssClient {
     }
 
     async searchURL(keyword, skip) {
-        let result = { };
-        let queryString = keyword === "" ? "*/*" : `${keyword}*`;
+        let result = {};
+        let queryString = keyword ? `name:${keyword}* OR url:${keyword}*` : "*:*";
         try {
             let query = {
-                "q": `name:${queryString} OR url:${queryString}`,
-                "limit": LIMIT_VALUE,
+                "q": queryString,
+                "limit": DOCS_PER_REQUEST,
                 skip
             };
             let dbName = ApplicationConfig.instance().adminDetails().db;
             let response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
 
             result.docs = R.map(row => row.fields)(response.rows);
-            result.paging = { "offset": (skip + LIMIT_VALUE) };
+            result.paging = { "offset": (skip + DOCS_PER_REQUEST) };
         
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
         } catch (error) {

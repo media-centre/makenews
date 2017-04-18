@@ -146,12 +146,5 @@ describe("WebConfigureActions", () => {
             const store = mockStore({}, actions, done);
             store.dispatch(fetchWebSources(keyword));
         });
-
-        it("should create instance with web-default-sources when there is no keyword", () => {
-            const ajaxMInstanceMock = sandbox.mock(AjaxClient).expects("instance").withExactArgs("/web-default-sources");
-            fetchWebSources();
-
-            ajaxMInstanceMock.verify();
-        });
     });
 });

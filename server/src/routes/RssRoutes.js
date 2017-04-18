@@ -1,8 +1,6 @@
-//import RssBatchFeedsRoute from "./helpers/RssBatchFeedsRoute";
 import RouteLogger from "./RouteLogger";
 import SearchURLsRoute from "./helpers/SearchURLsRoute";
 import AddURLDocumentRoute from "./helpers/AddURLDocumentRoute";
-import WebDefaultSourcesRoute from "./helpers/WebDefaultSourcesRoute";
 
 export default (app) => {
 
@@ -13,11 +11,6 @@ export default (app) => {
 
     app.get("/web-sources", (request, response, next) => {
         RouteLogger.instance().info(`WebURLS:: /search-all-urls request received. url = ${request.url}`);
-        new SearchURLsRoute(request, response, next).handle();
-    });
-
-    app.get("/web-default-sources", (request, response, next) => {
-        RouteLogger.instance().info(`WebURLS:: /web-default-sources request received. url = ${request.url}`);
-        new WebDefaultSourcesRoute(request, response, next).process();
+        new SearchURLsRoute(request, response, next).process();
     });
 };

@@ -1,35 +1,19 @@
 import RssRequestHandler from "../../rss/RssRequestHandler";
 import Route from "./Route";
-import RouteLogger from "../RouteLogger";
-import StringUtils from "../../../../common/src/util/StringUtil";
 
 export default class SearchURLsRoute extends Route {
     constructor(request, response, next) {
         super(request, response, next);
         this.keyword = this.request.query.keyword;
-        this.offset = this.request.query.offset;
+        this.offset = super.validateNumber(this.request.query.offset);
     }
 
-    offsetValue() {
-        let ZERO = 0;
-        let offset = Number.parseInt(this.offset, 10);
-        return (Number.isInteger(offset) && offset >= ZERO) ? offset : ZERO;
+    validate() {
+        return typeof this.keyword === "undefined" || this.keyword === null ? "keyword should be present" : null;
     }
 
     async handle() {
-        if (StringUtils.isEmptyString(this.keyword)) {
-            RouteLogger.instance().warn("SearchURLsRoute:: invalid rss feed url %s.", this.keyword);
-            return this._handleInvalidRequest({ "message": "keyword missing" });
-        }
-
-        let rssRequestHandler = RssRequestHandler.instance();
-        try {
-            let feeds = await rssRequestHandler.searchUrl(this.keyword, this.offsetValue());
-            RouteLogger.instance().debug(`SearchURLsRoute:: successfully searched for the url ${this.keyword}.`);
-            return this._handleSuccess(feeds);
-        } catch (error) {
-            RouteLogger.instance().debug(`SearchURLsRoute:: failed to search for keyword ${this.keyword}. Error: ${JSON.stringify(error)}`);
-            throw this._handleBadRequest();
-        }
+        const rssRequestHandler = RssRequestHandler.instance();
+        return await rssRequestHandler.searchUrl(this.keyword, this.offset);
     }
 }
