@@ -54,6 +54,7 @@ describe("ConfigPaneNavigation", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="web" />);
         const nextLink = wrapper.find(".sources-nav__next");
         assert.strictEqual(nextLink.node.type.displayName, "Link");
+        assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-secondary");
         assert.strictEqual(nextLink.node.props.to, "/configure/facebook/pages");
         assert.strictEqual(nextLink.node.props.children[1], " Next"); //eslint-disable-line no-magic-numbers
 
@@ -62,11 +63,25 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
     });
 
+    it("should have a Done button with newsBoard link if current source is web and there are configured Sources", () => {
+        const wrapper = shallow(<ConfigPaneNavigation currentSourceType="web" configuredSources={{ "web": [{ "_id": "url", "name": "title" }] }}/>);
+        const nextLink = wrapper.find(".sources-nav__next.btn-primary");
+        assert.strictEqual(nextLink.node.type.displayName, "Link");
+        assert.strictEqual(nextLink.node.props.to, "/newsBoard");
+        assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-primary");
+        assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
+
+        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        assert.strictEqual(icon.type, "i");
+        assert.strictEqual(icon.props.className, "fa fa-check");
+    });
+
     it("should have a next button with twitter link if current source is facebook and user has logged into facebook", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="facebook" sourcesAuthenticationInfo={{ "facebook": true }} />);
         const nextLink = wrapper.find(".sources-nav__next");
         assert.strictEqual(nextLink.node.type.displayName, "Link");
         assert.strictEqual(nextLink.node.props.to, "/configure/twitter");
+        assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-secondary");
         assert.strictEqual(nextLink.node.props.children[1], " Next"); //eslint-disable-line no-magic-numbers
 
         const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
@@ -74,11 +89,25 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
     });
 
+    it("should have a Done button with newsBoard link if current source is facebook and user has logged into facebook and if there are any configured sources", () => {
+        const wrapper = shallow(<ConfigPaneNavigation currentSourceType="facebook" sourcesAuthenticationInfo={{ "facebook": true }} configuredSources={{ "web": [{ "_id": "url", "name": "title" }] }}/>);
+        const nextLink = wrapper.find(".sources-nav__next.btn-primary");
+        assert.strictEqual(nextLink.node.type.displayName, "Link");
+        assert.strictEqual(nextLink.node.props.to, "/newsBoard");
+        assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-primary");
+        assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
+
+        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        assert.strictEqual(icon.type, "i");
+        assert.strictEqual(icon.props.className, "fa fa-check");
+    });
+
     it("should have a skip button with twitter link if current source is facebook and user has not logged into facebook", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="facebook" sourcesAuthenticationInfo={{ "facebook": false }} />);
         const skipLink = wrapper.find(".sources-nav__skip");
         assert.strictEqual(skipLink.node.type.displayName, "Link");
         assert.strictEqual(skipLink.node.props.to, "/configure/twitter");
+        assert.strictEqual(skipLink.node.props.className, "sources-nav__skip btn btn-secondary");
         assert.strictEqual(skipLink.node.props.children, "Skip"); //eslint-disable-line no-magic-numbers
     });
 
