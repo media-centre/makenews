@@ -22,7 +22,7 @@ export default class FacebookTokenDocument {
             const document = await adminDbInstance.getDocument(tokenDocumentId);
             return document.expired_after < DateUtil.getCurrentTime();
         } catch (error) {
-            FacebookTokenDocument.logger().debug(`FacebookTokenDocument:: error while getting the user document ${error}. `);
+            FacebookTokenDocument.logger().debug(`FacebookTokenDocument:: error while getting the user document ${JSON.stringify(error)}. `);
             return true;
         }
     }

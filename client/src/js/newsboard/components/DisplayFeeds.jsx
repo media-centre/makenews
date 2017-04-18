@@ -231,8 +231,30 @@ export class DisplayFeeds extends Component {
             toolTip.style.display = "none";
         }
     }
-    displayFeeds() {
+
+    _defaultMessage() {
         const locale = Locale.applicationStrings().messages.newsBoard;
+        const searchKey = this.refs.searchFeeds && this.refs.searchFeeds.value;
+        const filter = R.pipe(
+            R.values,
+            R.any(sources => sources.length)
+        )(this.props.currentFilterSource);
+
+        if(!this.props.feeds.length) {
+            return((!searchKey && !filter)
+                ? <div className="default-message">
+                    {locale[this.props.sourceType]}
+                    { this.props.sourceType !== "bookmark" && <i className="fa fa-cog"/> }
+                </div>
+                : <div className="default-message">
+                    {this.props.sourceType === "bookmark" ? locale.bookmark : locale.noFeeds}
+                </div>);
+        }
+
+        return null;
+    }
+
+    displayFeeds() {
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>
@@ -261,10 +283,7 @@ export class DisplayFeeds extends Component {
                         }
                         { this.props.isFetchingFeeds
                             ? <Spinner />
-                            : !this.props.feeds.length && <div className="default-message">
-                                {locale[this.props.sourceType]}
-                                { this.props.sourceType !== "bookmark" && <i className="fa fa-cog"/> }
-                            </div>
+                            : this._defaultMessage()
                         }
                     </div>
                 </div>

@@ -12,7 +12,6 @@ export default class FacebookSourceRoute extends Route {
         this.type = this.request.body.type;
         this.paging = this.request.body.paging;
         this.accessToken = this.request.cookies.AuthSession;
-        this.options = {};
     }
 
     validate() {

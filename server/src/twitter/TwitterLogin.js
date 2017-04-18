@@ -84,11 +84,9 @@ export default class TwitterLogin {
             let tokenDocument = await adminDbInstance.getDocument(tokenDocumentId);
             TwitterLogin.logger().debug("TwitterLogin:: successfully fetched existing twitter token from db.");
             await adminDbInstance.saveDocument(tokenDocumentId, Object.assign({}, tokenDocument, document));
-            return;
         } catch (error) {
             TwitterLogin.logger().debug("TwitterLogin:: creating twitter token document.");
             await adminDbInstance.saveDocument(tokenDocumentId, document);
-            return;
         }
     }
 

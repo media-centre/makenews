@@ -106,7 +106,8 @@ window.mediaCenter.appEn = {
             "web": "Please configure web sources on configure page",
             "facebook": "Please configure facebook sources on configure page",
             "twitter": "Please configure twitter sources on configure page",
-            "bookmark": "Please bookmark the feeds"
+            "bookmark": "Please bookmark the feeds",
+            "noFeeds": "No feeds to display"
         },
         "storyBoard": {
             "confirmDelete": "Are you sure you want to delete the story?"

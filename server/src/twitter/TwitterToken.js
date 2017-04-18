@@ -18,7 +18,7 @@ export default class TwitterToken {
             await adminDbInstance.getDocument(tokenDocumentId);
             return true;
         } catch (error) {
-            TwitterToken.logger().debug(`TwitterToken:: error while getting the user document ${error}. `);
+            TwitterToken.logger().debug(`TwitterToken:: error while getting the user document ${JSON.stringify(error)}. `);
             return false;
         }
     }
