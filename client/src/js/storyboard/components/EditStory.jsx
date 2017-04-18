@@ -55,13 +55,15 @@ export class EditStory extends Component {
     }
 
     async _saveStory() {
-        let title = this.state.title;
-        if(this.state.body && !title) {
-            this.story.title = this.props.untitledIndex;
-        }else {
-            this.story.title = this.state.title;
+        if(this.storyId) {
+            let title = this.state.title;
+            if (this.state.body && !title) {
+                this.story.title = this.props.untitledIndex;
+            } else {
+                this.story.title = this.state.title;
+            }
+            this.story.body = this.state.body;
         }
-        this.story.body = this.state.body;
 
         if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
             Toast.show("Cannot save empty story");
@@ -74,6 +76,7 @@ export class EditStory extends Component {
             try{
                 let response = await ajax.put(headers, { "story": this.story });
                 this.story._rev = response.rev;
+                this.story._id = response.id;
                 Toast.show("Story saved successfully", "success");
             } catch(error) {
                 if(error.message === "Please add title") {
@@ -117,7 +120,7 @@ export class EditStory extends Component {
                     <div className="editor-toolbar">
                         <button className="back" onClick={this._back}>Back</button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
-                        <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
+                        <button ref="saveButton" type="submit" className="save" value="save" onClick={async() => {
                             this._saveStory();
                         }}
                         >
