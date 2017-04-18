@@ -11,7 +11,7 @@ export default class TwitterOauthCallbackRoute extends Route {
         this.denied = this.request.query.denied;
     }
 
-    handle() { //eslint-disable-line consistent-return
+    async handle() { //eslint-disable-line consistent-return
         if(this.denied) {
             return this.response.redirect(`${this.request.secure ? "https" : "http"}://${this.request.headers.host}/#/twitterFailed`);
         }
@@ -21,12 +21,10 @@ export default class TwitterOauthCallbackRoute extends Route {
             return this._handleInvalidRequest({ "message": "authentication failed" });
         }
 
-        TwitterLogin.instance({ "previouslyFetchedOauthToken": this.oauth_token, "accessToken": this.accessToken }).then((twitterLoginInstance) => {
-            twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier).then((clientRedirectUrl) => {
-                RouteLogger.instance().debug("TwitterOauthCallbackRoute:: OAuth token fetched successfully.");
-                this._handleSuccess(clientRedirectUrl);
-            });
-        });
+        const twitterLoginInstance = await TwitterLogin.instance({ "previouslyFetchedOauthToken": this.oauth_token, "accessToken": this.accessToken });
+        const clientRedirectUrl = await twitterLoginInstance.accessTokenFromTwitter(this.request.query.oauth_verifier);
+        RouteLogger.instance().debug("TwitterOauthCallbackRoute:: OAuth token fetched successfully.");
+        this._handleSuccess(clientRedirectUrl);
     }
 
     _handleSuccess(clientRedirectUrl) {

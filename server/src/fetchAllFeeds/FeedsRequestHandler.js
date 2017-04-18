@@ -1,6 +1,5 @@
 import CouchClient from "../CouchClient";
 import { searchDocuments } from "./../LuceneClient";
-import R from "ramda"; //eslint-disable-line id-length
 import { userDetails } from "./../Factory";
 import { NEWSBOARD_SOURCE_TYPES } from "./../util/Constants";
 import RouteLogger from "./../routes/RouteLogger";
@@ -85,17 +84,13 @@ export default class FeedsRequestHandler {
             const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
             let result = {};
-            result.docs = response.rows.map((row) => {
-                if(sourceType === NEWSBOARD_SOURCE_TYPES.bookmark) {
-                    return row.doc;
-                }else if(row.doc.sourceDeleted !== true) {
-                    return row.doc;
+            result.docs = response.rows.reduce((acc, row) => {
+                if (sourceType === NEWSBOARD_SOURCE_TYPES.bookmark || !row.doc.sourceDeleted) {
+                    acc.push(row.doc);
                 }
-                return {};
-            });
+                return acc;
+            }, []);
 
-            let empty = doc => !R.isEmpty(doc);
-            result.docs = R.filter(empty, result.docs);
             result.paging = { "offset": (skip + LIMIT_VALUE) };
             return result;
         } catch (error) {
