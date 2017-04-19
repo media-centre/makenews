@@ -59,14 +59,13 @@ export default class FeedsRequestHandler {
     }
 
     getQuery(sourceType, searchKey) {
-        const queryString = searchKey === "" ? "*/*" : `${searchKey}*`;
         switch(sourceType) {
         case NEWSBOARD_SOURCE_TYPES.trending:
-            return `title:${queryString} OR description:${queryString}`;
+            return `title:${searchKey}* OR description:${searchKey}*`;
         case NEWSBOARD_SOURCE_TYPES.bookmark:
-            return `bookmark:true AND (title:${queryString} OR description:${queryString})`;
+            return `bookmark:true AND (title:${searchKey}* OR description:${searchKey}*)`;
         default:
-            return `sourceType:${sourceType} AND (title:${queryString} OR description:${queryString})`;
+            return `sourceType:${sourceType} AND (title:${searchKey}* OR description:${searchKey}*)`;
         }
     }
 
