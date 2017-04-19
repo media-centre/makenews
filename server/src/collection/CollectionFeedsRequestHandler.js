@@ -5,25 +5,31 @@ import RouteLogger from "../routes/RouteLogger";
 
 export async function getCollectedFeeds(authSession, collection, offset) {
     const couchClient = CouchClient.instance(authSession);
+    const intermediateFeeds = await getIntermediateDocs(couchClient, collection, offset);
+    const feedIds = getFeedIds(intermediateFeeds.docs);
+    return await getFeeds(couchClient, feedIds);
+}
 
-    const feedIds = await getFeedIds(couchClient, collection, offset);
-    return await getFeeds(couchClient, feedIds.docs);
+function getFeedIds(intermediateFeeds) {
+    return intermediateFeeds.map((intermediateDoc) => {
+        return intermediateDoc.selectText ? intermediateDoc._id : intermediateDoc.feedId;
+    });
 }
 
 async function getFeeds(couchClient, feedIds) {
-    const feedPromises = feedIds.map(async (collection) => {
-        try {
-            return collection.selectText ? collection : await couchClient.getDocument(collection.feedId);
-        } catch(error) {
-            return {};
+    const query = {
+        "selector": {
+            "_id": {
+                "$in": feedIds
+            }
         }
-    });
-    const feeds = await Promise.all(feedPromises);
-    return R.reject(R.isEmpty, feeds);
+    };
+
+    const response = await couchClient.findDocuments(query);
+    return response.docs;
 }
 
-/*TODO: rename this functions to resemble it's original responsibility*/ //eslint-disable-line
-async function getFeedIds(couchClient, collection, offset) {
+async function getIntermediateDocs(couchClient, collection, offset) {
     const selector = {
         "selector": {
             "docType": {

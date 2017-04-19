@@ -12,50 +12,87 @@ import { assert } from "chai";
 describe("CollectionFeedsRequestHandler", () => {
 
     describe("getCollectedFeeds", () => {
-        let sandbox = null, authSession = null, couchClient = null, selector = null;
-        let offset = 0, collection = "bzfuwlajfuea_ali2nfaliwean";
-        const feedIDs = {
+        let sandbox = null, authSession = null, couchClient = null;
+        const offset = 0, collection = "ff49851eb7078d30c9019d0dce00099c";
+        const intermediateDocs = {
             "docs": [
                 {
-                    "_id": "id",
+                    "_id": "0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5daff49851eb7078d30c9019d0dce00099c",
+                    "_rev": "1-637824d000abd687ebccf4c753a33ce2",
                     "docType": "collectionFeed",
-                    "feedId": "feedId",
-                    "collectionId": collection
+                    "feedId": "0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                    "collectionId": "ff49851eb7078d30c9019d0dce00099c",
+                    "sourceId": "http://www.thehindu.com/?service=rss"
                 },
                 {
-                    "_id": "id2",
+                    "_id": "ff49851eb7078d30c9019d0dce002687",
+                    "_rev": "1-f265bc8f516e7a6d70e99a22c5976631",
+                    "title": "Gayle first to hit 10,000 Twenty20 runs",
+                    "tags": [
+                        "The Hindu - Home"
+                    ],
+                    "description": "",
+                    "link": "http://www.thehindu.com/sport/cricket/gayle-first-to-hit-10000-twenty20-runs/article18132189.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication",
+                    "sourceType": "web",
+                    "pubDate": "2017-04-19T05:18:29.000Z",
                     "docType": "collectionFeed",
-                    "feedId": "feedId2",
-                    "collectionId": collection
+                    "collectionId": "ff49851eb7078d30c9019d0dce00099c",
+                    "selectText": true,
+                    "feedId": "c14d7a8585c62b06a20cac6830c9be64e05d78036c6a97ec74ba50540e8d81a7"
                 }
             ]
         };
-        const feeds = [
-            {
-                "_id": "id",
-                "title": "title",
-                "description": "description"
+        const feeds = {
+            "docs": [
+                {
+                    "_id": "0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                    "_rev": "1-532f9595d51afe7ca2bd7cceac662a4a",
+                    "guid": "0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                    "title": "Rupee recoups 8 paise after dollar stumbles",
+                    "link": "http://www.thehindu.com/business/markets/rupee-recoups-8-paise-after-dollar-stumbles/article18131850.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication",
+                    "description": "The rupee made a mild comeback as it recovered 8 paise to 64.55 against the dollar today after fresh selling of the US currency amid a higher opening in domestic equities.A weak dollar overseas suppor...",
+                    "pubDate": "2017-04-19T05:05:00.000Z",
+                    "enclosures": [],
+                    "docType": "feed",
+                    "sourceType": "web",
+                    "sourceId": "http://www.thehindu.com/?service=rss",
+                    "tags": [
+                        "The Hindu - Home"
+                    ],
+                    "images": []
+                },
+                {
+                    "_id": "ff49851eb7078d30c9019d0dce002687",
+                    "_rev": "1-f265bc8f516e7a6d70e99a22c5976631",
+                    "title": "Gayle first to hit 10,000 Twenty20 runs",
+                    "tags": [
+                        "The Hindu - Home"
+                    ],
+                    "description": "",
+                    "link": "http://www.thehindu.com/sport/cricket/gayle-first-to-hit-10000-twenty20-runs/article18132189.ece?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication",
+                    "sourceType": "web",
+                    "pubDate": "2017-04-19T05:18:29.000Z",
+                    "docType": "collectionFeed",
+                    "collectionId": "ff49851eb7078d30c9019d0dce00099c",
+                    "selectText": true,
+                    "feedId": "c14d7a8585c62b06a20cac6830c9be64e05d78036c6a97ec74ba50540e8d81a7"
+                }
+            ]
+        };
+        const intermediateDocsQuery = {
+            "selector": {
+                "docType": {
+                    "$eq": "collectionFeed"
+                },
+                "collectionId": {
+                    "$eq": collection
+                }
             },
-            {
-                "_id": "id2",
-                "title": "title2",
-                "description": "description2"
-            }
-        ];
+            "skip": offset
+        };
 
         beforeEach("getCollectedFeeds", () => {
             sandbox = sinon.sandbox.create();
-            selector = {
-                "selector": {
-                    "docType": {
-                        "$eq": "collectionFeed"
-                    },
-                    "collectionId": {
-                        "$eq": collection
-                    }
-                },
-                "skip": offset
-            };
             authSession = "test_session";
             couchClient = new CouchClient();
             sandbox.stub(CouchClient, "instance").returns(couchClient);
@@ -66,113 +103,55 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should get Collection Feeds from the database", async() => {
-
-            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
-            findDocumentsMock.withExactArgs(selector).returns(Promise.resolve(feedIDs));
-
-            let getDocsMock = sandbox.mock(couchClient);
-
-            let getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
-                "_id": "id",
-                "title": "title",
-                "description": "description"
-            }));
-
-            let getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.resolve({
-                "_id": "id2",
-                "title": "title2",
-                "description": "description2"
-            }));
-
-            let docs = await getCollectedFeeds(authSession, collection, offset);
-            assert.deepEqual(docs, feeds);
-            findDocumentsMock.verify();
-            getFirstFeedMock.verify();
-            getSecondFeedMock.verify();
-        });
-
-        it("should get Collection Feeds from the database when one of the promise is rejected", async() => {
-            const expectedFeeds = [
-                {
-                    "_id": "id",
-                    "title": "title",
-                    "description": "description"
+            const feedsQuery = {
+                "selector": {
+                    "_id": {
+                        "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                            "ff49851eb7078d30c9019d0dce002687"]
+                    }
                 }
-            ];
+            };
+            const getDocsMock = sandbox.mock(couchClient);
+            const getFirstFeedMock = getDocsMock.expects("findDocuments").withArgs(intermediateDocsQuery).returns(Promise.resolve(intermediateDocs));
+            const getSecondFeedMock = getDocsMock.expects("findDocuments").withArgs(feedsQuery).returns(Promise.resolve(feeds));
+            let docs = await getCollectedFeeds(authSession, collection, offset);
 
-            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
-            findDocumentsMock.withArgs(selector).returns(Promise.resolve(feedIDs));
-
-            let getDocsMock = sandbox.mock(couchClient);
-
-            const getFirstFeedMock = getDocsMock.expects("getDocument").withArgs("feedId").returns(Promise.resolve({
-                "_id": "id",
-                "title": "title",
-                "description": "description"
-            }));
-
-            const getSecondFeedMock = getDocsMock.expects("getDocument").withArgs("feedId2").returns(Promise.reject({
-                "_id": "id2",
-                "title": "title2",
-                "description": "description2"
-            }));
-
-            const docs = await getCollectedFeeds(authSession, collection, offset);
-
-            findDocumentsMock.verify();
+            assert.deepEqual(docs, feeds.docs);
             getFirstFeedMock.verify();
             getSecondFeedMock.verify();
-            assert.deepEqual(docs, expectedFeeds);
+
         });
 
-        it("should reject with error when database throws unexpected response while getting feedIds", async() => {
+        it("should reject with error when database throws unexpected response while getting feeds", async() => {
+            const feedsQuery = {
+                "selector": {
+                    "_id": {
+                        "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                            "ff49851eb7078d30c9019d0dce002687"]
+                    }
+                }
+            };
+            const getDocsMock = sandbox.mock(couchClient);
+            const getFirstFeedMock = getDocsMock.expects("findDocuments").withArgs(intermediateDocsQuery).returns(Promise.resolve(intermediateDocs));
+            const getSecondFeedMock = getDocsMock.expects("findDocuments").withArgs(feedsQuery).returns(Promise.reject("unexpected response from the db"));
+            try {
+                await getCollectedFeeds(authSession, collection, offset);
+                getFirstFeedMock.verify();
+                getSecondFeedMock.verify();
+            } catch (error) {
+                assert.strictEqual(error, "unexpected response from the db");
+            }
+        });
+
+        it("should reject with error when database throws unexpected response while getting intermediate docs", async() => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
-            findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
+            findDocumentsMock.withArgs(intermediateDocsQuery).returns(Promise.reject("unexpected response from the db"));
             try {
                 await getCollectedFeeds(authSession, collection, offset);
                 findDocumentsMock.verify();
             } catch (error) {
                 assert.strictEqual(error, "unexpected response from the db");
             }
-        });
-
-        it("should get collection feeds from db if the collection feed contains selected text", async () => {
-            const selectedTextIntermediateDoc = {
-                "_id": "id",
-                "docType": "collectionFeed",
-                "collectionId": collection,
-                "title": "title",
-                "description": "description",
-                "selectText": true
-            };
-            const collectionFeeds = {
-                "docs": [
-                    selectedTextIntermediateDoc,
-                    {
-                        "_id": "id",
-                        "docType": "collectionFeed",
-                        "collectionId": collection,
-                        "feedId": "feedId"
-                    }
-                ]
-            };
-            const feedDoc = {
-                "title": "title",
-                "description": "description",
-                "sourceType": "twitter",
-                "tags": []
-            };
-            const expectedDocs = [
-                selectedTextIntermediateDoc,
-                feedDoc
-            ];
-
-            sandbox.mock(couchClient).expects("findDocuments").withExactArgs(selector).returns(Promise.resolve(collectionFeeds));
-            sandbox.mock(couchClient).expects("getDocument").withExactArgs("feedId").returns(Promise.resolve(feedDoc));
-
-            const collectedFeeds = await getCollectedFeeds(authSession, collection, offset);
-
-            assert.deepEqual(collectedFeeds, expectedDocs);
         });
     });
 
