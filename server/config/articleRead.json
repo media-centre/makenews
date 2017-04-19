@@ -1,3 +1,5 @@
 {
-  "newsclick.in": ".content,.story-details"
+  "newsclick.in": ".content,.story-details",
+  "www.ndtv.com": ".ins_storybody",
+  "feedproxy.google.com": ".ins_storybody,.fullContent,div[itemprop='articleBody']"
 }
