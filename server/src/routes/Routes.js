@@ -6,7 +6,6 @@ import fetchAllFeedsRoutes from "../fetchAllFeeds/FetchFeedsFromAllSourcesRoutes
 import configurationRoutes from "./ConfigurationRoutes";
 import newsBoardRoutes from "./NewsBoardRoutes";
 import storyBoardRoute from "./StoryBoardRoute";
-import deleteRoute from "./DeleteRoute";
 
 export default function(app) {
     authorizationRoutes(app);
@@ -17,5 +16,4 @@ export default function(app) {
     fetchAllFeedsRoutes(app);
     newsBoardRoutes(app);
     storyBoardRoute(app);
-    deleteRoute(app);
 }
