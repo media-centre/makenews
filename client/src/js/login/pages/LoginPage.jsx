@@ -1,17 +1,11 @@
 /* eslint react/self-closing-comp:0 */
 import Login from "../components/Login";
 import { userLogin } from "../LoginActions";
-import AppSessionStorage from "../../../js/utils/AppSessionStorage";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 export class LoginPage extends Component {
-
-    static getUserName() {
-        return AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.USERNAME);
-    }
-
     render() {
         const { dispatch } = this.props;
         const { featuresHelp } = this.props.loginPageStrings;

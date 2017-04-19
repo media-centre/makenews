@@ -8,7 +8,7 @@ export function updateTokenExpiredInfo(isValid) {
     };
 }
 
-export async function isFBTokenExpired() { //eslint-disable-line
+export async function isFBTokenExpired() {
     let ajaxClient = AjaxClient.instance("/facebook-token-expired");
     let isExpired = false;
     try {

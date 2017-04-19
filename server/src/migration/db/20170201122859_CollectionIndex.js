@@ -12,7 +12,7 @@ export default class CollectionIndex {
             Migration.logger(this.dbName).info("CollectionIndex::up - started");
             let nameIdIndex = {
                 "index": {
-                    "fields": ["collection"]
+                    "fields": ["collection", "collectionId"]
                 },
                 "name": "CollectionIndex"
             };
