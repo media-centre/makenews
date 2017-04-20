@@ -86,7 +86,7 @@ export class DisplayCollectionFeeds extends Component {
             <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
                 <DisplayArticle collectionDOM={this.refs.collection} collectionName={this.props.collection.name} />
                 <div ref="collection" className="display-collection">
-                    { this.props.feeds.length ? this.displayHeader() : null }
+                    { this.displayHeader() }
                     <div className="collection-feeds">
                         {this.props.feeds.map((feed, index) =>
                                 <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)}
