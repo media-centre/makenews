@@ -1,4 +1,3 @@
-/* eslint brace-style:0*/
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -13,7 +12,9 @@ export class FilterTab extends Component {
     render() {
         return (
             <div className={this.props.currentFilter === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
-                onClick={() => { this.displayConfiguredSources(this.props.sourceType); }}
+                onClick={() => {
+                    this.displayConfiguredSources(this.props.sourceType);
+                }}
             >
                 <i className={`icon fa fa-${this.props.sourceIcon}`} />
             </div>

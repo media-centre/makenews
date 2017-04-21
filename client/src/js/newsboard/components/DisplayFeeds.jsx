@@ -30,11 +30,11 @@ export class DisplayFeeds extends Component {
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
     }
 
-    async componentWillMount() {
-        await this.autoRefresh();
+    componentWillMount() {
+        this.autoRefresh();
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.fetchFeedsFromSources(false);
         window.scrollTo(0, 0); //eslint-disable-line no-magic-numbers
         this.feedsDOM = this.refs.feeds;

@@ -10,7 +10,7 @@ import Toast from "../../utils/custom_templates/Toast";
 
 const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 
-let selectedSources = { "web": new Set([]), "facebook": new Set([]), "twitter": new Set([]) };
+let selectedSources = { "web": new Set(), "facebook": new Set(), "twitter": new Set() };
 export class DisplayFilters extends Component {
     constructor() {
         super();
@@ -22,9 +22,7 @@ export class DisplayFilters extends Component {
     componentDidMount() {
         this.props.dispatch(getConfiguredSources());
         this.props.dispatch(searchInConfiguredSources(""));
-        this.hashtags = this.props.sources.twitter.map((source) => {
-            return source.name;
-        });
+        this.hashtags = this.props.sources.twitter.map((source) => source.name);
         this.initSelectedSources();
     }
 
@@ -74,10 +72,9 @@ export class DisplayFilters extends Component {
         let sourceFilters = {};
         sourceFilters.web = [...selectedSources.web];
         sourceFilters.facebook = [...selectedSources.facebook];
-        sourceFilters.twitter = [...selectedSources.twitter];
-        sourceFilters.twitter = sourceFilters.twitter.map((source) => {
+        sourceFilters.twitter = [...selectedSources.twitter].map((source) => {
             if(source.startsWith("#")) {
-                source = encodeURIComponent(source); //eslint-disable-line no-param-reassign
+                return encodeURIComponent(source);
             }
             return source;
         });
@@ -135,7 +132,7 @@ export class DisplayFilters extends Component {
                     <div className="hashtag-container">
                        <div className="add-hashtag" onClick={() => this.setState({ "hashtagInputBox": !this.state.hashtagInputBox })}>
                            <i className="fa fa-plus-circle" />
-                           <span>  ADD HASHTAG </span>
+                           <span> ADD HASHTAG </span>
                        </div>
                         { this.state.hashtagInputBox &&
                         <div className="hashtag-box">
