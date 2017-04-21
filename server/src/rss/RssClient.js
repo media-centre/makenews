@@ -9,9 +9,10 @@ import CouchClient from "../CouchClient";
 import { searchDocuments } from "../LuceneClient";
 import R from "ramda"; //eslint-disable-line id-length
 import DateUtil from "../util/DateUtil";
+import { SOURCES_PER_REQUEST } from "./../util/Constants";
 
 const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
-const NOT_FOUND_INDEX = -1, DOCS_PER_REQUEST = 25;
+const NOT_FOUND_INDEX = -1;
 
 export default class RssClient {
 
@@ -230,14 +231,14 @@ export default class RssClient {
         try {
             let query = {
                 "q": queryString,
-                "limit": DOCS_PER_REQUEST,
+                "limit": SOURCES_PER_REQUEST,
                 skip
             };
             let dbName = ApplicationConfig.instance().adminDetails().db;
             let response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
 
             result.docs = R.map(row => row.fields)(response.rows);
-            result.paging = { "offset": (skip + DOCS_PER_REQUEST) };
+            result.paging = { "offset": (skip + SOURCES_PER_REQUEST) };
         
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
         } catch (error) {

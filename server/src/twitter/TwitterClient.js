@@ -115,7 +115,7 @@ export default class TwitterClient {
     }
     
     async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
-        let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}`;
+        let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}&count=12`;
         const parsedData = await this._getTwitterData(handlesWithKeyApi, userName);
 
         if (parsedData.length && preFirstId !== parsedData[0].id_str) { //eslint-disable-line no-magic-numbers

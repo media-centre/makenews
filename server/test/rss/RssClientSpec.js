@@ -682,7 +682,7 @@ describe("RssClient", () => {
     });
 
     describe("Search URLS", () => {
-        const limit = 25;
+        const limit = 24;
         beforeEach("RssClient", () => {
             sandbox = sinon.sandbox.create();
             const applicationConfig = new ApplicationConfig();

@@ -10,6 +10,7 @@ import Logger from "../logging/Logger";
 import R from "ramda"; //eslint-disable-line id-length
 import { parseFacebookPosts } from "./FacebookFeedParser.js";
 import DateUtil from "./../util/DateUtil";
+import { SOURCES_PER_REQUEST } from "./../util/Constants";
 
 export default class FacebookClient {
 
@@ -108,6 +109,7 @@ export default class FacebookClient {
 
     async fetchSourceUrls(parameters, paging = {}) {
         parameters.fields = "id,name,picture";
+        parameters.limit = SOURCES_PER_REQUEST;
         let params = R.merge(parameters, paging);
         this._addDefaultParameters(params);
         let response = null;

@@ -593,7 +593,7 @@ describe("FacebookClient", () => {
 
             let paging = {
                 "__after_id": "enc_AdClDCor0",
-                "limit": "25",
+                "limit": "24",
                 "offset": "25"
             };
 
@@ -607,7 +607,7 @@ describe("FacebookClient", () => {
             };
 
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${params.q}&type=user&fields=id,name,picture&__after_id=${paging.__after_id}&limit=${paging.limit}&offset=${paging.offset}&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${params.q}&type=user&fields=id,name,picture&limit=${paging.limit}&__after_id=${paging.__after_id}&offset=${paging.offset}&access_token=test_token&appsecret_proof=test_secret_proof`)
                 .reply(HttpResponseHandler.codes.BAD_REQUEST, response);
 
             await isRejected(facebookClient.fetchSourceUrls(params, paging), response);
@@ -626,12 +626,12 @@ describe("FacebookClient", () => {
 
             let paging = {
                 "__after_id": "enc_AdClDCor0",
-                "limit": "25",
+                "limit": "24",
                 "offset": "25"
             };
 
             nock("https://graph.facebook.com")
-                .get(`/v2.8/search?q=${params.q}&type=user&fields=id,name,picture&__after_id=${paging.__after_id}&limit=${paging.limit}&offset=${paging.offset}&access_token=test_token&appsecret_proof=test_secret_proof`)
+                .get(`/v2.8/search?q=${params.q}&type=user&fields=id,name,picture&limit=${paging.limit}&__after_id=${paging.__after_id}&offset=${paging.offset}&access_token=test_token&appsecret_proof=test_secret_proof`)
                 .reply(HttpResponseHandler.codes.OK, pages);
 
             facebookClient.fetchSourceUrls(params, paging).then(data => {

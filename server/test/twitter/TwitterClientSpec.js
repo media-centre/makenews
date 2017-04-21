@@ -59,7 +59,7 @@ describe("TwitterClient", () => {
             sandbox.mock(twitterParser).expects("parseHandle").returns(parsedData);
 
             nock("https://api.twitter.com/1.1")
-                .get("/users/search.json?q=keyword&page=1")
+                .get("/users/search.json?q=keyword&page=1&count=12")
                 .reply(HttpResponseHanlder.codes.OK, [{
                     "id": 1277389,
                     "id_str": 1277389,
@@ -84,7 +84,7 @@ describe("TwitterClient", () => {
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
             nock("https://api.twitter.com/1.1")
-                .get("/users/search.json?q=india&page=1")
+                .get("/users/search.json?q=india&page=1&count=12")
                 .reply(HttpResponseHanlder.codes.OK, [{
                     "id": 1277389,
                     "id_str": 1277389,
@@ -106,7 +106,7 @@ describe("TwitterClient", () => {
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
             nock("https://api.twitter.com/1.1")
-                .get("/users/search.json?q=india&page=1")
+                .get("/users/search.json?q=india&page=1&count=12")
                 .reply(HttpResponseHanlder.codes.BAD_REQUEST, "no result");
 
             try {
