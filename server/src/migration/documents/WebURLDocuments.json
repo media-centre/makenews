@@ -1,70 +1,1061 @@
 {
   "docs": [
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hoot - Media Watch",
+      "url": "http://www.thehoot.org/RSSfeed/detail/1",
+      "_id": "http://www.thehoot.org/RSSfeed/detail/1"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - International","url":"http://www.thehindu.com/news/international/?service=rss","_id":"http://www.thehindu.com/news/international/?service=rss"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hoot - Free Speech",
+      "url": "http://www.thehoot.org/RSSfeed/detail/2",
+      "_id": "http://www.thehoot.org/RSSfeed/detail/2"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Sport","url":"http://www.thehindu.com/sport/?service=rss","_id":"http://www.thehindu.com/sport/?service=rss"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hoot - Resources",
+      "url": "http://www.thehoot.org/RSSfeed/detail/4",
+      "_id": "http://www.thehoot.org/RSSfeed/detail/4"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Economic Times","url":"http://economictimes.indiatimes.com/rssfeedsdefault.cms","_id":"http://economictimes.indiatimes.com/rssfeedsdefault.cms"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hoot - Media Watch Briefs",
+      "url": "http://www.thehoot.org/RSSfeed/detail/32",
+      "_id": "http://www.thehoot.org/RSSfeed/detail/32"
     },
     {
-      "docType":"source","sourceType":"web","name":"Hindustan Times - topnews","url":"http://www.hindustantimes.com/rss/topnews/rssfeed.xml","_id":"http://www.hindustantimes.com/rss/topnews/rssfeed.xml"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Latest Stories",
+      "url": "http://indiatoday.intoday.in/rss/homepage-topstories.jsp",
+      "_id": "http://indiatoday.intoday.in/rss/homepage-topstories.jsp"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Indian Express","url":"http://indianexpress.com/print/front-page/feed/","_id":"http://indianexpress.com/print/front-page/feed/"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Nation",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=36",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=36"
     },
     {
-      "docType":"source","sourceType":"web","name":"NYT > Home Page","url":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml","_id":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Leisure",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=85",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=85"
     },
     {
-      "docType":"source","sourceType":"web","name":"india","url":"http://newsclick.in/taxonomy/term/india/feed","_id":"http://newsclick.in/taxonomy/term/india/feed"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - The Big Story",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=150",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=150"
     },
     {
-      "docType":"source","sourceType":"web","name":"RSS - Feeds","url":"https://sabrangindia.in/rssfeeds","_id":"http://https://sabrangindia.in/rssfeeds"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Cover Story",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=30",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=30"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Sci-Tech","url":"http://www.thehindu.com/sci-tech/?service=rss","_id":"http://www.thehindu.com/sci-tech/?service=rss"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Glass House",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=146",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=146"
     },
     {
-      "docType":"source","sourceType":"web","name":"India The Indian Express","url":"http://indianexpress.com/section/india/feed/","_id":"http://indianexpress.com/section/india/feed/"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Eye Catchers",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=2",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=2"
     },
     {
-      "docType":"source","sourceType":"web","name":"Top Tv News- News18.com","url":"http://www.news18.com/rss/tv.xml","_id":"http://www.news18.com/rss/tv.xml"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Glossary",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=149",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=149"
     },
     {
-      "docType":"source","sourceType":"web","name":"DO NOT USE Asia The Indian Express","url":"http://indianexpress.com/section/world/asia/feed/","_id":"http://indianexpress.com/section/world/asia/feed/"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Top Stories",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=120",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=120"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - Home","url":"http://www.thehindu.com/?service=rss","_id":"http://www.thehindu.com/?service=rss"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - States",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=21",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=21"
     },
     {
-      "docType":"source","sourceType":"web","name":"Zee News :India National","url":"http://zeenews.india.com/rss/india-national-news.xml","_id":"http://zeenews.india.com/rss/india-national-news.xml"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Economy",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=34",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=34"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - International",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=61",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=61"
     },
     {
-      "docType":"source","sourceType":"web","name":"India Today NATION ","url":"http://indiatoday.intoday.in/rss/article.jsp?sid=36","_id":"http://indiatoday.intoday.in/rss/article.jsp?sid=36"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Sport",
+      "url": "http://indiatoday.intoday.in/rss/article.jsp?sid=41",
+      "_id": "http://indiatoday.intoday.in/rss/article.jsp?sid=41"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-TopStories","url":"http://feeds.feedburner.com/NdtvNews-TopStories","_id":"http://feeds.feedburner.com/NdtvNews-TopStories"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Magazine",
+      "url": "http://www.outlookindia.com/rss/main/magazine",
+      "_id": "http://www.outlookindia.com/rss/main/magazine"
     },
     {
-      "docType":"source","sourceType":"web","name":"The Hindu - National","url":"http://www.thehindu.com/news/national/?service=rss","_id":"http://www.thehindu.com/news/national/?service=rss"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Web",
+      "url": "http://www.outlookindia.com/rss/main/website",
+      "_id": "http://www.outlookindia.com/rss/main/website"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - News",
+      "url": "http://www.outlookindia.com/rss/main/newswire",
+      "_id": "http://www.outlookindia.com/rss/main/newswire"
     },
     {
-      "docType":"source","sourceType":"web","name":"Lucknow &#8211; The Indian Express","url":"http://indianexpress.com/section/cities/lucknow/feed/","_id":"http://indianexpress.com/section/cities/lucknow/feed/"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Cover Stories",
+      "url": "http://www.outlookindia.com/rss/subsection/2",
+      "_id": "http://www.outlookindia.com/rss/subsection/2"
     },
     {
-      "docType":"source","sourceType":"web","name":"NDTV-LatestNews","url":"http://feeds.feedburner.com/NDTV-LatestNews","_id":"http://feeds.feedburner.com/NDTV-LatestNews"
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Essays",
+      "url": "http://www.outlookindia.com/rss/subsection/3",
+      "_id": "http://www.outlookindia.com/rss/subsection/3"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Interviews",
+      "url": "http://www.outlookindia.com/rss/subsection/4",
+      "_id": "http://www.outlookindia.com/rss/subsection/4"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Outlook India - Opinion",
+      "url": "http://www.outlookindia.com/rss/subsection/5",
+      "_id": "http://www.outlookindia.com/rss/subsection/5"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "News18 - Politics",
+      "url": "http://www.news18.com/rss/politics.xml",
+      "_id": "http://www.news18.com/rss/politics.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "News18 - Top TV News",
+      "url": "http://www.news18.com/rss/tv.xml",
+      "_id": "http://www.news18.com/rss/tv.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "News18 - Business",
+      "url": "http://www.news18.com/rss/business.xml",
+      "_id": "http://www.news18.com/rss/business.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "News18 - World",
+      "url": "http://www.news18.com/rss/world.xml",
+      "_id": "http://www.news18.com/rss/world.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - Analysis",
+      "url": "http://www.dnaindia.com/feeds/analysis.xml",
+      "_id": "http://www.dnaindia.com/feeds/analysis.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - India",
+      "url": "http://www.dnaindia.com/feeds/india.xml",
+      "_id": "http://www.dnaindia.com/feeds/india.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - World",
+      "url": "http://www.dnaindia.com/feeds/world.xml",
+      "_id": "http://www.dnaindia.com/feeds/world.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - Sports",
+      "url": "http://www.dnaindia.com/feeds/sport.xml",
+      "_id": "http://www.dnaindia.com/feeds/sport.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - Science & Technology",
+      "url": "http://www.dnaindia.com/feeds/scitech.xml",
+      "_id": "http://www.dnaindia.com/feeds/scitech.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - Money",
+      "url": "http://www.dnaindia.com/feeds/money.xml",
+      "_id": "http://www.dnaindia.com/feeds/money.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "DNA - Entertainment",
+      "url": "http://www.dnaindia.com/feeds/entertainment.xml",
+      "_id": "http://www.dnaindia.com/feeds/entertainment.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Latest",
+      "url": "http://www.deccanchronicle.com/rss_feed/",
+      "_id": "http://www.deccanchronicle.com/rss_feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Nation",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=1",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=1"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - World",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=2",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=2"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - South",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=3",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=3"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Entertainment",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=4",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=4"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Sports",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=5",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=5"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Business",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=6",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=6"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Technology",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=7",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=7"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Opinion",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=59",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=59"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Deccan Chronicle - Editor's Picks",
+      "url": "http://www.deccanchronicle.com/rss_feed/?sectionId=106",
+      "_id": "http://www.deccanchronicle.com/rss_feed/?sectionId=106"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Industry",
+      "url": "http://economictimes.indiatimes.com/industry/rssfeeds/13352306.cms",
+      "_id": "http://economictimes.indiatimes.com/industry/rssfeeds/13352306.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Jobs",
+      "url": "http://economictimes.indiatimes.com/jobs/rssfeeds/107115.cms",
+      "_id": "http://economictimes.indiatimes.com/jobs/rssfeeds/107115.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Magazines",
+      "url": "http://economictimes.indiatimes.com/magazines/rssfeeds/1466318837.cms",
+      "_id": "http://economictimes.indiatimes.com/magazines/rssfeeds/1466318837.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Markets",
+      "url": "http://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms",
+      "_id": "http://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Mutual FUnds",
+      "url": "http://economictimes.indiatimes.com/mf/rssfeeds/359241701.cms",
+      "_id": "http://economictimes.indiatimes.com/mf/rssfeeds/359241701.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - News",
+      "url": "http://economictimes.indiatimes.com/news/rssfeeds/1715249553.cms",
+      "_id": "http://economictimes.indiatimes.com/news/rssfeeds/1715249553.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - NRI",
+      "url": "http://economictimes.indiatimes.com/nri/rssfeeds/7771250.cms",
+      "_id": "http://economictimes.indiatimes.com/nri/rssfeeds/7771250.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Opinion",
+      "url": "http://economictimes.indiatimes.com/opinion/rssfeeds/897228639.cms",
+      "_id": "http://economictimes.indiatimes.com/opinion/rssfeeds/897228639.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Latest News",
+      "url": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+      "_id": "http://economictimes.indiatimes.com/rssfeedsdefault.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Top Stories",
+      "url": "http://economictimes.indiatimes.com/rssfeedstopstories.cms",
+      "_id": "http://economictimes.indiatimes.com/rssfeedstopstories.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Small Biz",
+      "url": "http://economictimes.indiatimes.com/small-biz/rssfeeds/5575607.cms",
+      "_id": "http://economictimes.indiatimes.com/small-biz/rssfeeds/5575607.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Technology",
+      "url": "http://economictimes.indiatimes.com/tech/rssfeeds/13357270.cms",
+      "_id": "http://economictimes.indiatimes.com/tech/rssfeeds/13357270.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Economic Times - Wealth",
+      "url": "http://economictimes.indiatimes.com/wealth/rssfeeds/837555174.cms",
+      "_id": "http://economictimes.indiatimes.com/wealth/rssfeeds/837555174.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Scroll.in",
+      "url": "http://feeds.feedburner.com/ScrollinArticles.rss",
+      "_id": "http://feeds.feedburner.com/ScrollinArticles.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "India Today - Latest Stories",
+      "url": "http://indiatoday.intoday.in/rss/homepage-topstories.jsp",
+      "_id": "http://indiatoday.intoday.in/rss/homepage-topstories.jsp"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Most Commented",
+      "url": "http://timesofindia.indiatimes.com/rssfeedmostcommented.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeedmostcommented.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Most Emailed",
+      "url": "http://timesofindia.indiatimes.com/rssfeedmostemailed.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeedmostemailed.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Most Read",
+      "url": "http://timesofindia.indiatimes.com/rssfeedmostread.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeedmostread.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Editorial",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/-2128669051.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/-2128669051.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Science",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/-2128672765.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/-2128672765.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - India",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Entertainment",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/1081479906.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/1081479906.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Top Headlines",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/1221656.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/1221656.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Business",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/1898055.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Interviews",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/1898408.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/1898408.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Sunday Times",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/1945062111.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/1945062111.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Environment",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/2647163.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/2647163.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Lifestyle",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/2886704.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/2886704.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - World",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/296589292.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Health & Fitness",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/3908999.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/3908999.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Sports",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/4719148.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/4719148.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Cricket",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/4719161.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/4719161.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Technology",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/5880659.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/5880659.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - NRI",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/7098551.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/7098551.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Opinion",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/784865811.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/784865811.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Education",
+      "url": "http://timesofindia.indiatimes.com/rssfeeds/913168846.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeeds/913168846.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Times of India - Top Stories",
+      "url": "http://timesofindia.indiatimes.com/rssfeedstopstories.cms",
+      "_id": "http://timesofindia.indiatimes.com/rssfeedstopstories.cms"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "frontline - Home",
+      "url": "http://www.frontline.in/?service=rss",
+      "_id": "http://www.frontline.in/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Analysis",
+      "url": "http://www.hindustantimes.com/rss/analysis/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/analysis/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Business",
+      "url": "http://www.hindustantimes.com/rss/business/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/business/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Columns",
+      "url": "http://www.hindustantimes.com/rss/columns/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/columns/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Cricket",
+      "url": "http://www.hindustantimes.com/rss/cricket/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/cricket/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Editorials",
+      "url": "http://www.hindustantimes.com/rss/editorials/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/editorials/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Education",
+      "url": "http://www.hindustantimes.com/rss/education/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/education/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Entertainment",
+      "url": "http://www.hindustantimes.com/rss/entertainment/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/entertainment/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Football",
+      "url": "http://www.hindustantimes.com/rss/football/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/football/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - India",
+      "url": "http://www.hindustantimes.com/rss/india/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/india/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Opinion",
+      "url": "http://www.hindustantimes.com/rss/opinion/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/opinion/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Other Sports",
+      "url": "http://www.hindustantimes.com/rss/othersports/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/othersports/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Sports",
+      "url": "http://www.hindustantimes.com/rss/sports/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/sports/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Technology",
+      "url": "http://www.hindustantimes.com/rss/tech/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/tech/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Tennis",
+      "url": "http://www.hindustantimes.com/rss/tennis/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/tennis/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Top News",
+      "url": "http://www.hindustantimes.com/rss/topnews/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/topnews/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - World",
+      "url": "http://www.hindustantimes.com/rss/world/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/world/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Home",
+      "url": "http://www.thehindu.com/?service=rss",
+      "_id": "http://www.thehindu.com/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Books",
+      "url": "http://www.thehindu.com/books/?service=rss",
+      "_id": "http://www.thehindu.com/books/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Business",
+      "url": "http://www.thehindu.com/business/?service=rss",
+      "_id": "http://www.thehindu.com/business/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Entertainment",
+      "url": "http://www.thehindu.com/entertainment/?service=rss",
+      "_id": "http://www.thehindu.com/entertainment/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Life & Style",
+      "url": "http://www.thehindu.com/life-and-style/?service=rss",
+      "_id": "http://www.thehindu.com/life-and-style/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Cities",
+      "url": "http://www.thehindu.com/news/cities/?service=rss",
+      "_id": "http://www.thehindu.com/news/cities/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - International",
+      "url": "http://www.thehindu.com/news/international/?service=rss",
+      "_id": "http://www.thehindu.com/news/international/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - National",
+      "url": "http://www.thehindu.com/news/national/?service=rss",
+      "_id": "http://www.thehindu.com/news/national/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - States",
+      "url": "http://www.thehindu.com/news/states/?service=rss",
+      "_id": "http://www.thehindu.com/news/states/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Opinion",
+      "url": "http://www.thehindu.com/opinion/?service=rss",
+      "_id": "http://www.thehindu.com/opinion/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Editorial",
+      "url": "http://www.thehindu.com/opinion/editorial/?service=rss",
+      "_id": "http://www.thehindu.com/opinion/editorial/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Sci-Tech",
+      "url": "http://www.thehindu.com/sci-tech/?service=rss",
+      "_id": "http://www.thehindu.com/sci-tech/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Science",
+      "url": "http://www.thehindu.com/sci-tech/science/?service=rss",
+      "_id": "http://www.thehindu.com/sci-tech/science/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Technology",
+      "url": "http://www.thehindu.com/sci-tech/technology/?service=rss",
+      "_id": "http://www.thehindu.com/sci-tech/technology/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Society",
+      "url": "http://www.thehindu.com/society/?service=rss",
+      "_id": "http://www.thehindu.com/society/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Hindu - Sport",
+      "url": "http://www.thehindu.com/sport/?service=rss",
+      "_id": "http://www.thehindu.com/sport/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Firstpost",
+      "url": "https://feeds.feedburner.com/firstpost/xfJh?format=xml",
+      "_id": "https://feeds.feedburner.com/firstpost/xfJh?format=xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Wire",
+      "url": "https://thewire.in/feed/",
+      "_id": "https://thewire.in/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Top Stories",
+      "url": "http://www.business-standard.com/rss/home_page_top_stories.rss",
+      "_id": "http://www.business-standard.com/rss/home_page_top_stories.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Latest",
+      "url": "http://www.business-standard.com/rss/latest.rss",
+      "_id": "http://www.business-standard.com/rss/latest.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - General News",
+      "url": "http://www.business-standard.com/rss/general-news.rss",
+      "_id": "http://www.business-standard.com/rss/general-news.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Today's Paper",
+      "url": "http://www.business-standard.com/rss/todays-paper.rss",
+      "_id": "http://www.business-standard.com/rss/todays-paper.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Markets",
+      "url": "http://www.business-standard.com/rss/markets-106.rss",
+      "_id": "http://www.business-standard.com/rss/markets-106.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Most Viewed",
+      "url": "http://www.business-standard.com/rss/most-viewed.rss",
+      "_id": "http://www.business-standard.com/rss/most-viewed.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Standard - Editor's Pick",
+      "url": "http://www.business-standard.com/rss/bsrss.xml",
+      "_id": "http://www.business-standard.com/rss/bsrss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Financial Express - Latest News",
+      "url": "http://www.financialexpress.com/feed/",
+      "_id": "http://www.financialexpress.com/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Financial Express - Economy",
+      "url": "http://www.financialexpress.com/economy/feed/",
+      "_id": "http://www.financialexpress.com/economy/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Financial Express - Industry",
+      "url": "http://www.financialexpress.com/industry/feed/",
+      "_id": "http://www.financialexpress.com/industry/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Business Line - From The Hindu",
+      "url": "http://www.thehindubusinessline.com/?service=rss",
+      "_id": "http://www.thehindubusinessline.com/?service=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Indian Express",
+      "url": "http://indianexpress.com/print/front-page/feed/",
+      "_id": "http://indianexpress.com/print/front-page/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Indian Express - India",
+      "url": "http://indianexpress.com/section/india/feed/",
+      "_id": "http://indianexpress.com/section/india/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Indian Express - World",
+      "url": "http://indianexpress.com/section/world/feed/",
+      "_id": "http://indianexpress.com/section/world/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Indian Express - Editorials",
+      "url": "http://indianexpress.com/section/opinion/editorials/feed/",
+      "_id": "http://indianexpress.com/section/opinion/editorials/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Analysis",
+      "url": "http://www.hindustantimes.com/rss/analysis/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/analysis/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Sports",
+      "url": "http://www.hindustantimes.com/rss/sports/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/sports/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Entertainment",
+      "url": "http://www.hindustantimes.com/rss/entertainment/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/entertainment/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Top News",
+      "url": "http://www.hindustantimes.com/rss/topnews/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/topnews/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - India",
+      "url": "http://www.hindustantimes.com/rss/india/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/india/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - World",
+      "url": "http://www.hindustantimes.com/rss/world/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/world/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Opinion",
+      "url": "http://www.hindustantimes.com/rss/opinion/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/opinion/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hindustan Times - Editorials",
+      "url": "http://www.hindustantimes.com/rss/editorials/rssfeed.xml",
+      "_id": "http://www.hindustantimes.com/rss/editorials/rssfeed.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Mid Day - National",
+      "url": "http://www.mid-day.com/Resources/midday/rss/news-national.xml",
+      "_id": "http://www.mid-day.com/Resources/midday/rss/news-national.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Mid Day - International",
+      "url": "http://www.mid-day.com/Resources/midday/rss/news-international.xml",
+      "_id": "http://www.mid-day.com/Resources/midday/rss/news-international.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New Indian Express - Opinions/Editorials",
+      "url": "http://www.newindianexpress.com/Opinions/Editorials/rssfeed/?id=219&getXmlFeed=true",
+      "_id": "http://www.newindianexpress.com/Opinions/Editorials/rssfeed/?id=219&getXmlFeed=true"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New Indian Express - Nation",
+      "url": "http://www.newindianexpress.com/Nation/rssfeed/?id=170&getXmlFeed=true",
+      "_id": "http://www.newindianexpress.com/Nation/rssfeed/?id=170&getXmlFeed=true"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New Indian Express - World",
+      "url": "http://www.newindianexpress.com/World/rssfeed/?id=171&getXmlFeed=true",
+      "_id": "http://www.newindianexpress.com/World/rssfeed/?id=171&getXmlFeed=true"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "NDTV - Top Stories",
+      "url": "https://feeds.feedburner.com/ndtvnews-top-stories",
+      "_id": "https://feeds.feedburner.com/ndtvnews-top-stories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "NDTV - Latest News",
+      "url": "https://feeds.feedburner.com/ndtvnews-latest",
+      "_id": "https://feeds.feedburner.com/ndtvnews-latest"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "NDTV - India",
+      "url": "https://feeds.feedburner.com/ndtvnews-india-news",
+      "_id": "https://feeds.feedburner.com/ndtvnews-india-news"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "NDTV - World",
+      "url": "https://feeds.feedburner.com/ndtvnews-world-news",
+      "_id": "https://feeds.feedburner.com/ndtvnews-world-news"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Wire",
+      "url": "https://thewire.in/feed/",
+      "_id": "https://thewire.in/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Sabrang",
+      "url": "https://sabrangindia.in/rssfeeds",
+      "_id": "https://sabrangindia.in/rssfeeds"
     }
   ]
 }
