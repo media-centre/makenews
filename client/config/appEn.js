@@ -117,15 +117,9 @@ window.mediaCenter.appEn = {
             "gotItText": "Got It"
         },
         "mainHeaderStrings": {
-            "newsBoard": {
-                "Name": "Scan News"
-            },
-            "storyBoard": {
-                "Name": "Write a Story"
-            },
-            "configure": {
-                "Name": "Configure"
-            }
+            "newsBoard": "Scan News",
+            "storyBoard": "Write a Story",
+            "configure": "Configure"
         },
         "confirmPopup": {
             "ok": "OK",

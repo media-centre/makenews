@@ -9,14 +9,14 @@ export default class Header extends Component {
         const renderedDOM = this.props.currentHeaderTab === "Configure"
             ? null
             : (<div>
-                <HeaderTab url="/newsBoard" name={this.props.mainHeaderStrings.newsBoard.Name}
+                <HeaderTab url="/newsBoard" name={this.props.mainHeaderStrings.newsBoard}
                     currentHeaderTab={this.props.currentHeaderTab}
                 />
-                <HeaderTab url="/story-board/stories" name={this.props.mainHeaderStrings.storyBoard.Name}
+                <HeaderTab url="/story-board/stories" name={this.props.mainHeaderStrings.storyBoard}
                     currentHeaderTab={this.props.currentHeaderTab}
                 />
                 <div className="header-tabs-right">
-                    <ConfigureTab url="/configure/web" name={this.props.mainHeaderStrings.configure.Name}
+                    <ConfigureTab url="/configure/web" name={this.props.mainHeaderStrings.configure}
                         currentHeaderTab={this.props.currentHeaderTab}
                     />
                     <UserProfileTab/>

@@ -1,9 +1,10 @@
-import { UserProfile } from "./../../src/js/user/UserProfile";
+import UserProfile from "./../../src/js/user/UserProfile";
 import React from "react";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import LogoutActions from "./../../src/js/login/LogoutActions";
+import Locale from "./../../src/js/utils/Locale";
 
 describe("UserProfile", () => {
     let userProfileDom = null, userProfileStrings = null;
@@ -14,7 +15,13 @@ describe("UserProfile", () => {
             "logout": "Logout",
             "help": "Help & FAQs"
         };
-        userProfileDom = shallow(<UserProfile userProfileStrings={userProfileStrings}/>);
+
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "userProfileStrings": userProfileStrings
+            }
+        });
+        userProfileDom = shallow(<UserProfile />);
     });
 
     afterEach("UserProfile", () => {
