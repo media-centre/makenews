@@ -4,10 +4,10 @@
 # Then bundle the exported files.
 # copy folders from etc, lib, log and zip
 
-backup_path="/tmp/couchdb_backup/"
+backup_path="/usr/local/lib/couchdb-backup"
 mkdir -p $backup_path
 
-filename="/tmp/couchdb_backup/couchdb_backup"
+filename="/usr/local/lib/couchdb-backup/couchdb_backup"
 current_date=$(date "+%Y-%m-%d")
 
 new_filename=$filename"_"$current_date
