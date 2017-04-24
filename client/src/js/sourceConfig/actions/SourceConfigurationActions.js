@@ -3,8 +3,6 @@ import * as FbActions from "./../../config/actions/FacebookConfigureActions";
 import * as WebConfigActions from "./../../config/actions/WebConfigureActions";
 import { removeSource } from "./../../newsboard/filter/FilterActions";
 import * as TwitterConfigureActions from "./../../config/actions/TwitterConfigureActions";
-import fetch from "isomorphic-fetch";
-import AppWindow from "../../utils/AppWindow";
 import R from "ramda"; //eslint-disable-line id-length
 import Toast from "../../utils/custom_templates/Toast";
 
@@ -74,15 +72,14 @@ export function addSourceToConfigureList(sourceType, ...sources) {
 }
 
 async function addToConfiguredSources(dispatch, sources, sourceType, eventType) {
-    let data = await fetch(`${AppWindow.instance().get("serverUrl")}/configure-sources`, {
-        "method": "PUT",
-        "headers": {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        "credentials": "same-origin",
-        "body": JSON.stringify({ "sources": sources, "type": sourceType })
-    });
+
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    };
+    const ajaxClient = AjaxClient.instance("/configure-sources");
+    const data = await ajaxClient.put(headers, { sources, "type": sourceType });
+
     if (data.ok) {
         dispatch({
             "type": eventType,

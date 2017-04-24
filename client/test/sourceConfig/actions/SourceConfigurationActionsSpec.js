@@ -101,12 +101,20 @@ describe("SourceConfigurationActions", () => {
     });
 
     describe("add source to configured list", () => {
-        let sandbox = null, sources = null, configuredSources = null;
+        let sandbox = null, sources = null, configuredSources = null, ajaxClient = null;
+
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
 
         beforeEach("add source to configred list", () => {
             sources = [{ "name": "something", "id": "432455" }];
             configuredSources = [{ "name": "something", "id": "432455", "url": "432455" }];
             sandbox = sinon.sandbox.create();
+            ajaxClient = AjaxClient.instance("/configure-sources");
+            sandbox.mock(AjaxClient).expects("instance")
+                .withExactArgs("/configure-sources").returns(ajaxClient);
         });
 
         afterEach("add source to configred list", () => {
@@ -114,70 +122,53 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} when requested for adding profile`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            nock("http://localhost")
-                .put("/configure-sources")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
+                .withExactArgs(headers, { "sources": configuredSources, "type": "fb_profile" }).returns({ "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.PROFILES, ...sources));
+
+            ajaxPutMock.verify();
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} when requested for adding page`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            nock("http://localhost")
-                .put("/configure-sources")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
+                .withExactArgs(headers, { "sources": configuredSources, "type": "fb_page" }).returns({ "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.PAGES, ...sources));
+
+            ajaxPutMock.verify();
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} when requested for adding group`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            nock("http://localhost")
-                .put("/configure-sources")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
+                .withExactArgs(headers, { "sources": configuredSources, "type": "fb_group" }).returns({ "ok": true });
 
             let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.GROUPS, ...sources));
+
+            ajaxPutMock.verify();
         });
 
         it(`should dispatch ${WebConfigActions.WEB_ADD_SOURCE} when requested for adding group`, (done) => {
-            let appWindow = new AppWindow();
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            nock("http://localhost")
-                .put("/configure-sources")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
+                .withExactArgs(headers, { sources, "type": "web" }).returns({ "ok": true });
 
             let store = mockStore({}, [{ "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.WEB, ...sources));
+
+            ajaxPutMock.verify();
         });
 
         it(`should dispatch ${TwitterConfigureActions.TWITTER_ADD_SOURCE} when requested for adding group`, (done) => {
-            let appWindow = new AppWindow();
-            sources = [{ "name": "something", "id": "432455" }];
-            configuredSources = [{ "name": "something", "id": "432455", "url": "432455" }];
-            sandbox.mock(AppWindow).expects("instance").returns(appWindow);
-            sandbox.stub(appWindow, "get").withArgs("serverUrl").returns("http://localhost");
-
-            nock("http://localhost")
-                .put("/configure-sources")
-                .reply(HttpResponseHandler.codes.OK, { "ok": true });
+            const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
+                .withExactArgs(headers, { "sources": configuredSources, "type": "twitter" }).returns({ "ok": true });
 
             let store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.TWITTER, ...sources));
+
+            ajaxPutMock.verify();
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} by default`, () => {
