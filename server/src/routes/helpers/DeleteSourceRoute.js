@@ -9,7 +9,7 @@ export default class DeleteSourceRoute extends Route {
     }
 
     async handle() {
-        const deleteSourcesHandler = DeleteSourceHandler.instance();
-        return await deleteSourcesHandler.deleteSources(this.sources, this.accessToken);
+        const deleteSourcesHandler = DeleteSourceHandler.instance(this.accessToken);
+        return await deleteSourcesHandler.deleteSources(this.sources);
     }
 }

@@ -21,7 +21,7 @@ describe("LoginRoute", () => {
 
     describe("handle", () => {
         let token = null, authSessionCookie = null, next = null,
-            userReqGetAuthSessionCookieMock = null, deleteHashMock = null;
+            userReqGetAuthSessionCookieMock = null, deleteHashMock = null, deleteOldFeedsMock = null;
         beforeEach("handle", () => {
             request = {
                 "body": {
@@ -31,9 +31,11 @@ describe("LoginRoute", () => {
             };
             token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
             authSessionCookie = `AuthSession=${token}; Version=1; Path=/; HttpOnly`;
-            let deleteHanlder = DeleteSourceHandler.instance();
+            let deleteHanlder = DeleteSourceHandler.instance(token);
             sandbox.mock(DeleteSourceHandler).expects("instance").returns(deleteHanlder);
-            deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteSources")
+            deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteHashTags")
+                .returns(Promise.resolve({ "ok": true }));
+            deleteOldFeedsMock = sandbox.mock(deleteHanlder).expects("deleteOldFeeds")
                 .returns(Promise.resolve({ "ok": true }));
             userReqGetAuthSessionCookieMock = sandbox.mock(UserRequest).expects("getAuthSessionCookie");
         });
@@ -68,6 +70,7 @@ describe("LoginRoute", () => {
                         userReqGetAuthSessionCookieMock.verify();
                         updateUserMock.verify();
                         deleteHashMock.verify();
+                        deleteOldFeedsMock.verify();
                         done();
                     } catch(err) {
                         done(err);

@@ -1,48 +1,66 @@
 import CouchClient from "../CouchClient";
-import { getCollectionFeedIds } from "../collection/CollectionFeedsRequestHandler";
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 import DateUtil from "../util/DateUtil";
 import R from "ramda"; //eslint-disable-line id-length
 import Logger from "../logging/Logger";
 
 export default class DeleteSourceHandler {
-    static instance() {
-        return new DeleteSourceHandler();
+    constructor(accessToken) {
+        this.couchClient = CouchClient.instance(accessToken);
+    }
+    static instance(accessToken) {
+        return new DeleteSourceHandler(accessToken);
     }
 
     static logger() {
         return Logger.instance("DeleteSourceHandler");
     }
 
-    async deleteSources(sources = [], accessToken) {
-        const couchClient = CouchClient.instance(accessToken);
+    async deleteSources(sources = []) {
         let sourceDocuments = [];
-
         if (sources.length) {
-            sourceDocuments = await this.fetchSourceDocuments(couchClient, sources);
-        } else {
-            sourceDocuments = await this._fetchHashtagSources(couchClient);
-            sources = sourceDocuments.map(hashtag => hashtag._id); //eslint-disable-line no-param-reassign
-        }
-        const collectionFeedIds = await getCollectionFeedIds(couchClient, sources);
-
-        const feedDocuments = await this._getFeedsFromSources(couchClient, sources, collectionFeedIds);
-        const docsToBeDeleted = feedDocuments.concat(sourceDocuments);
-        await couchClient.deleteBulkDocuments(docsToBeDeleted);
-        await this.deleteOldFeeds(couchClient);
-        try {
-            await this.markAsSourceDeleted(couchClient, sources);
-        } catch(err) {
-            DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
+            sourceDocuments = await this.fetchSourceDocuments(sources);
+            await this.deleteFeeds(sourceDocuments);
         }
         return { "ok": true };
     }
 
-    async _getFeedsFromSources(couchClient, sources, collectionFeedIds) {
+    async deleteHashTags() {
+        let sourceDocuments = await this._fetchHashtagSources();
+        await this.deleteFeeds(sourceDocuments);
+    }
+
+    async deleteFeeds(sources) {
+        let sourceIds = sources.map(source => source._id);
+        const feedDocuments = await this._getFeedsFromSources(sourceIds);
+        let toBeDeleted = [];
+        let toBeMarked = [];
+        let feedsLength = feedDocuments.length;
+        feedDocuments.forEach((feedDoc, index) => {
+            if(feedDoc.docType === "feed") {
+                if(index < feedsLength - 1) { //eslint-disable-line no-magic-numbers
+                    feedDocuments[index + 1].feedId === feedDoc._id ? toBeMarked.push(feedDoc) : toBeDeleted.push(feedDoc); //eslint-disable-line no-magic-numbers, no-unused-expressions
+                } else {
+                    toBeDeleted.push(feedDoc);
+                }
+            } else {
+                return;
+            }
+        });
+        let docsToBeDeleted = toBeDeleted.concat(sources);
+        await this.couchClient.deleteBulkDocuments(docsToBeDeleted);
+        try {
+            await this.markAsSourceDeleted(toBeMarked);
+        } catch(err) {
+            DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
+        }
+    }
+
+    async _getFeedsFromSources(sources) {
         const selector = {
             "selector": {
                 "docType": {
-                    "$eq": "feed"
+                    "$in": ["feed", "collectionFeed"]
                 },
                 "sourceId": {
                     "$in": sources
@@ -57,19 +75,16 @@ export default class DeleteSourceHandler {
                             "$eq": false
                         }
                     ]
-                },
-                "_id": {
-                    "$nin": collectionFeedIds
                 }
             },
             "skip": 0,
             "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
         };
 
-        return await this._findDocuments(couchClient, selector);
+        return await this._findDocuments(selector);
     }
 
-    async _fetchHashtagSources(couchClient) {
+    async _fetchHashtagSources() {
         const selector = {
             "selector": {
                 "docType": {
@@ -82,10 +97,10 @@ export default class DeleteSourceHandler {
             "skip": 0
         };
 
-        return await this._findDocuments(couchClient, selector);
+        return await this._findDocuments(selector);
     }
 
-    async fetchSourceDocuments(couchClient, sources) {
+    async fetchSourceDocuments(sources) {
         const selector = {
             "selector": {
                 "docType": {
@@ -97,42 +112,28 @@ export default class DeleteSourceHandler {
             },
             "skip": 0
         };
-
-        return await this._findDocuments(couchClient, selector);
+        return await this._findDocuments(selector);
     }
 
-    async _findDocuments(couchClient, selector, docs = []) {
-        const docsInReq = await couchClient.findDocuments(selector);
-
+    async _findDocuments(selector, docs = []) {
+        const docsInReq = await this.couchClient.findDocuments(selector);
         if(docsInReq.docs.length === FEED_LIMIT_TO_DELETE_IN_QUERY) {
             const updatedSelector = Object.assign({}, selector, { "skip": selector.skip + FEED_LIMIT_TO_DELETE_IN_QUERY });
-            return await this._findDocuments(couchClient, updatedSelector, docs.concat(docsInReq.docs));
+            return await this._findDocuments(updatedSelector, docs.concat(docsInReq.docs));
         }
-
         return docs.concat(docsInReq.docs);
     }
 
-    async markAsSourceDeleted(couchClient, sources) {
-        const selector = {
-            "selector": {
-                "sourceId": {
-                    "$in": sources
-                }
-            },
-            "skip": 0,
-            "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
-        };
-
-        const feeds = await this._findDocuments(couchClient, selector);
+    async markAsSourceDeleted(feeds) {
         const markedFeeds = R.map(feed => {
             feed.sourceDeleted = true;
             return feed;
         })(feeds);
 
-        return await couchClient.saveBulkDocuments({ "docs": markedFeeds });
+        return await this.couchClient.saveBulkDocuments({ "docs": markedFeeds });
     }
 
-    async deleteOldFeeds(couchClient) {
+    async deleteOldFeeds() {
         let selector = null, docsObject = {}, docs = [], MONTH_DAYS = 30;
         let currentDate = new Date();
         currentDate.setDate(currentDate.getDate() - MONTH_DAYS);
@@ -145,11 +146,11 @@ export default class DeleteSourceHandler {
                     }
                 }
             };
-            docsObject = await couchClient.findDocuments(selector);
+            docsObject = await this.couchClient.findDocuments(selector);
             docs = docsObject.docs;
 
             if(docs.length) {
-                await couchClient.deleteBulkDocuments(docs);
+                await this.couchClient.deleteBulkDocuments(docs);
             }
         }
         while (docs.length);

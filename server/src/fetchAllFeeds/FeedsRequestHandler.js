@@ -47,10 +47,10 @@ export default class FeedsRequestHandler {
     }
 
     prepareSourceFilter(sourceType, sources = {}, sourceFilters) {
-        var sourceIds = sources[sourceType];
+        const sourceIds = sources[sourceType];
         if(sourceIds) {
             let sourceFilter = { "sourceType": { "$eq": sourceType } };
-            let [sourceId] = sourceIds;
+            const [sourceId] = sourceIds;
             if(sourceId) {
                 sourceFilter.sourceId = { "$in": sourceIds };
             }

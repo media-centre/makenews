@@ -15,10 +15,10 @@ describe("DeleteSourceRoute", () => {
             }
         };
         let sandbox = sinon.sandbox.create();
-        let deleteHandler = DeleteHashtagHandler.instance();
+        let deleteHandler = DeleteHashtagHandler.instance("test_session");
         sandbox.mock(DeleteHashtagHandler).expects("instance").returns(deleteHandler);
         let deleteHashtsgMock = sandbox.mock(deleteHandler).expects("deleteSources")
-            .withExactArgs(sources, "test_session").returns(Promise.resolve({ "ok": true }));
+            .withExactArgs(sources).returns(Promise.resolve({ "ok": true }));
         let deleteHashtagRoute = new DelteHashtagRoute(request, {});
         try {
             await deleteHashtagRoute.handle();

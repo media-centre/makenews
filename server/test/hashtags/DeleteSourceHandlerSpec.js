@@ -1,5 +1,4 @@
 import DeleteSourceHandler from "../../src/hashtags/DeleteSourceHandler";
-import * as CollectionFeedsRequestHandler from "../../src/collection/CollectionFeedsRequestHandler";
 import sinon from "sinon";
 import { assert } from "chai";
 import CouchClient from "../../src/CouchClient";
@@ -10,10 +9,11 @@ describe("DeleteSourceHandler", () => {
     let deleteSourceHandler = null, sandbox = null, couchClient = null, accessToken = null;
 
     beforeEach("DeleteSourceHandler", () => {
-        deleteSourceHandler = DeleteSourceHandler.instance();
-        sandbox = sinon.sandbox.create();
         accessToken = "accessToken";
+        sandbox = sinon.sandbox.create();
         couchClient = CouchClient.instance(accessToken);
+        sandbox.mock(CouchClient).expects("instance").withExactArgs(accessToken).returns(couchClient);
+        deleteSourceHandler = DeleteSourceHandler.instance(accessToken);
     });
 
     afterEach("DeleteSourceHandler", () => {
@@ -21,13 +21,9 @@ describe("DeleteSourceHandler", () => {
     });
 
     describe("deleteSources", () => {
-        let getCollectionFeedIdsMock = null, collectionFeedIds = null;
         const feedsLimitOriginal = Constants.FEED_LIMIT_TO_DELETE_IN_QUERY;
 
-
         beforeEach("deleteSources", () => {
-            collectionFeedIds = ["id2", "id3"];
-            sandbox.mock(CouchClient).expects("instance").withExactArgs(accessToken).returns(couchClient);
             Constants.FEED_LIMIT_TO_DELETE_IN_QUERY = 25;
         });
 
@@ -38,43 +34,20 @@ describe("DeleteSourceHandler", () => {
         it("should delete feeds of the given sources", async () => {
             let sources = ["newsClick"];
             let sourcesDoc = { "docs": [{ "_id": "source1" }] };
-            let feedDocs = { "docs": [{ "_id": "id29" }, { "_id": "id30" }] };
-
+            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
+                { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" }, { "_id": "id30", "docType": "feed" }] };
             let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedDocs));
-            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
-            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
-                .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
-            let saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
-
-            let res = await deleteSourceHandler.deleteSources(sources, accessToken);
-
-            getCollectionFeedIdsMock.verify();
+            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs([{ "_id": "id30", "docType": "feed" }, { "_id": "source1" }]).returns(Promise.resolve({ "ok": true }));
+            let res = await deleteSourceHandler.deleteSources(sources);
             findMock.verify();
             saveMock.verify();
+            deleteMock.verify();
             assert.deepEqual(res, { "ok": true });
         });
 
-        it("should delete hashtag feed when the sources are empty", async () => {
-            let hashtagSources = { "docs": [{ "_id": "hashtag1" }] };
-            let feeds = { "docs": [{ "_id": "id29" }, { "_id": "id30" }] };
-            let sourcesDoc = { "docs": [{ "_id": "source1" }] };
-
-            let findMock = sandbox.mock(couchClient).expects("findDocuments").thrice();
-            findMock.onFirstCall().returns(Promise.resolve(hashtagSources));
-            findMock.onSecondCall().returns(Promise.resolve(feeds));
-            findMock.onThirdCall().returns(Promise.resolve(sourcesDoc));
-            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
-
-            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
-                .withExactArgs(couchClient, ["hashtag1"]).returns(Promise.resolve(collectionFeedIds));
-            let saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
-
-            const response = await deleteSourceHandler.deleteSources([], accessToken);
-            assert.deepEqual(response, { "ok": true });
-            saveMock.verify();
-        });
 
         it("should iterate the findDocuments if the current result is 25 ", async () => {
             let sources = ["newsClick"];
@@ -90,18 +63,30 @@ describe("DeleteSourceHandler", () => {
             findDocs.onFirstCall().returns(Promise.resolve(firstResponse));
             findDocs.onSecondCall().returns(Promise.resolve(secondResponse));
             findDocs.onThirdCall().returns(Promise.resolve(sourcesDoc));
-            sandbox.stub(deleteSourceHandler, "deleteOldFeeds");
-
-            getCollectionFeedIdsMock = sandbox.mock(CollectionFeedsRequestHandler).expects("getCollectionFeedIds")
-                .withExactArgs(couchClient, sources).returns(Promise.resolve(collectionFeedIds));
-            let saveDocs = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
-
-            const response = await deleteSourceHandler.deleteSources(sources, accessToken);
-
+            let saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            const response = await deleteSourceHandler.deleteSources(sources);
+            deleteMock.verify();
             findDocs.verify();
             saveDocs.verify();
-            getCollectionFeedIdsMock.verify();
             assert.deepEqual(response, { "ok": true });
+        });
+    });
+
+    describe("deleteHashtags", () => {
+        it("should delete feeds of the hashtags sources", async () => {
+            let sourcesDoc = { "docs": [{ "_id": "#abc" }] };
+            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
+                { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" }, { "_id": "id30", "docType": "feed" }] };
+            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
+            findMock.onSecondCall().returns(Promise.resolve(feedDocs));
+            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs([{ "_id": "id30", "docType": "feed" }, { "_id": "#abc" }]).returns(Promise.resolve({ "ok": true }));
+            await deleteSourceHandler.deleteHashTags();
+            findMock.verify();
+            saveMock.verify();
+            deleteMock.verify();
         });
     });
 
