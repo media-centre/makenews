@@ -10,7 +10,6 @@ import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
 import Main from "./header/components/Main";
 import ScanNews from "./newsboard/components/ScanNews";
 import StoryBoard from "./storyboard/components/StoryBoard";
-import ConfigureURLs from "./../js/config/components/ConfigureURLs";
 import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
@@ -25,9 +24,7 @@ export function renderRoutes(store) {
                 <Route path="/onboard" component={WelcomePage} />
                 <Route path="/configure-intro" component={ConfigurationIntro}/>
                 <Route component={Main}>
-                    <Route path="/configure" component={ConfigureURLs}>
-                        <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
-                    </Route>
+                    <Route path="/configure/:sourceType(/:sourceSubType)" component={ConfigureSourcesPage}/>
 
                     <Route path="/newsBoard" component={ScanNews} />
                     <Route path="/story-board" component={StoryBoard}>

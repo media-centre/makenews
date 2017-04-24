@@ -11,6 +11,7 @@ import TwitterLogin from "./../../twitter/TwitterLogin";
 import { sourceTypes } from "./../../utils/Constants";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
+import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 
 export class ConfigureSourcesPage extends Component {
 
@@ -18,6 +19,10 @@ export class ConfigureSourcesPage extends Component {
         super();
         this.facebookLogin = FacebookLogin.instance();
         this.login = false;
+    }
+
+    componentWillMount() {
+        this.props.dispatch(setCurrentHeaderTab("Configure"));
     }
 
     async componentDidMount() {
