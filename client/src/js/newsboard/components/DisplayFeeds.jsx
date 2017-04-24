@@ -177,6 +177,12 @@ export class DisplayFeeds extends Component {
 
     checkEnterKey(event) {
         const ENTERKEY = 13;
+        if(this.refs.searchFeeds.value === "") {
+            this.setState({ "searchToggle": false });
+            this.clearState();
+            this.getMoreFeeds(this.props.sourceType);
+        }
+
         if (event.keyCode === ENTERKEY) {
             this._search();
         }

@@ -38,7 +38,9 @@ export default class DeleteSourceHandler {
         let feedsLength = feedDocuments.length;
         feedDocuments.forEach((feedDoc, index) => {
             if(feedDoc.docType === "feed") {
-                if(index < feedsLength - 1) { //eslint-disable-line no-magic-numbers
+                if(feedDoc.bookmark) {
+                    toBeMarked.push(feedDoc);
+                } else if(index < feedsLength - 1) { //eslint-disable-line no-magic-numbers
                     feedDocuments[index + 1].feedId === feedDoc._id ? toBeMarked.push(feedDoc) : toBeDeleted.push(feedDoc); //eslint-disable-line no-magic-numbers, no-unused-expressions
                 } else {
                     toBeDeleted.push(feedDoc);
@@ -64,17 +66,6 @@ export default class DeleteSourceHandler {
                 },
                 "sourceId": {
                     "$in": sources
-                },
-                "bookmark": {
-                    "$or": [
-                        {
-                            "$exists": false
-                        },
-                        {
-                            "$exists": true,
-                            "$eq": false
-                        }
-                    ]
                 }
             },
             "skip": 0,
