@@ -16,6 +16,4 @@ seven_days_back=$(date -d "-7 days" +%Y-%m-%d)
 rm -rf $filename"_"$seven_days_back
 
 #echo $new_filename
-cp -r /usr/local/etc/couchdb $new_filename
-cp -r /usr/local/var/lib/couchdb $new_filename
-cp -r /usr/local/var/lib/couchdb $new_filename
+cp -r /opt/couchdb/data $new_filename
