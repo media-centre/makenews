@@ -28,7 +28,7 @@ class ConfiguredSources extends Component {
 
         if(searchKey) {
             const key = searchKey.toUpperCase();
-            const configuredSources = source => source.name.toUpperCase().match(key) && source;
+            const configuredSources = source => source && source.name && source.name.toUpperCase().match(key);
             return R.pipe(
                 R.filter(configuredSources),
                 R.map(configuredSourceDOM)

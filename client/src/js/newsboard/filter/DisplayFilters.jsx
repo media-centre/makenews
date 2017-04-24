@@ -41,7 +41,7 @@ export class DisplayFilters extends Component {
             </li>;
         if(searchKey) {
             let key = searchKey.toUpperCase();
-            let configuredSources = source => source.name.toUpperCase().match(key) && source;
+            let configuredSources = source => source && source.name && source.name.toUpperCase().match(key);
             return R.pipe(
                 R.filter(configuredSources),
                 R.map(configuredSourceDOM)
