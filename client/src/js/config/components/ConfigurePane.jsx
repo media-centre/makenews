@@ -99,9 +99,9 @@ export class ConfigurePane extends Component {
                       <div className="input-box configure-source">
                           <div className="input-container">
                               <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
-                          <span className="input-addon">
-                            <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
-                          </span>
+                              <span className="input-addon">
+                                <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
+                              </span>
                           </div>
                       </div>
                       <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>

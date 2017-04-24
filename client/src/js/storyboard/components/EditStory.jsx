@@ -41,7 +41,7 @@ export class EditStory extends Component {
 
     autoSave() {
         const STORY_AUTO_SAVE_TIME_INTERVAL = AppWindow.instance().get("storyAutoSaveTimeInterval");
-        this.interval = setInterval(async() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
+        this.interval = setInterval(() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
     }
 
     async _getStory(storyId) {
@@ -120,7 +120,7 @@ export class EditStory extends Component {
                     <div className="editor-toolbar">
                         <button className="back" onClick={this._back}>Back</button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
-                        <button ref="saveButton" type="submit" className="save" value="save" onClick={async() => {
+                        <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
                             this._saveStory();
                         }}
                         >

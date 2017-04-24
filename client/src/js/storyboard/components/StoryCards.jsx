@@ -91,7 +91,8 @@ export class StoryCards extends Component {
                                 this.setState({ "showDeleteConfirm": false });
                             }
                             }
-                          /> : null}
+                          /> : null
+                    }
 
                 </div>
             </div>
