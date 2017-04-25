@@ -3,6 +3,7 @@ import mockStore from "./../../helper/ActionHelper";
 import AjaxClient from "../../../src/js/utils/AjaxClient";
 import sinon from "sinon";
 import { assert } from "chai";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("StoryBoardActions", () => {
     const sandbox = sinon.sandbox.create();
@@ -57,6 +58,16 @@ describe("StoryBoardActions", () => {
 
     describe("deleteStory", () => {
         it("should dispatch REMOVE_STORY action with id", (done) => {
+            const storyBoardMessages = {
+                "successMessages": {
+                    "deleteStory": "Story deleted successfully"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "storyBoard": storyBoardMessages
+                }
+            });
             const id = 2;
             let action = [{ "type": StoryBoardActions.REMOVE_STORY, id }];
             const store = mockStore([{ "_id": 1 }, { "_id": id }, { "_id": 3 }], action, done);

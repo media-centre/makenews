@@ -1,5 +1,7 @@
 import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
+
 export const ADD_STORY_TITLE = "Story title";
 export const REMOVE_STORY = "REMOVE_STORY";
 export const CLEAR_STORIES = "CLEAR_STORIES";
@@ -31,7 +33,8 @@ export function deleteStory(id) {
         };
         AjaxClient.instance("/delete-story").post(headers, { id }).then(() => {
             dispatch(removeStory(id));
-            Toast.show("Story deleted successfully", "success");
+            const storyBoard = Locale.applicationStrings().messages.storyBoard;
+            Toast.show(storyBoard.successMessages.deleteStory, "success");
         });
     };
 }

@@ -4,14 +4,31 @@ import { assert } from "chai";
 import React from "react";
 import ReactDOM from "react-dom";
 import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("StoryCards", () => {
     let storyBoardCards = null, stories = null;
+    const sandbox = sinon.sandbox.create();
+
     beforeEach("StoryCards", () => {
+        const storyBoardMessages = {
+            "createStory": "Create New Story",
+            "untitledStory": "Untitled",
+            "confirmDelete": "Are you sure you want to delete the story?"
+        };
         stories = [{ "_id": "id1", "title": "title1" }, { "_id": "id2", "title": "title2" }];
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "storyBoard": storyBoardMessages
+            }
+        });
         storyBoardCards = TestUtils.renderIntoDocument(
           <StoryCards stories = {stories} dispatch={()=>{}}/>
         );
+    });
+
+    afterEach("StoryCards", () => {
+        sandbox.restore();
     });
 
     it("should have the stories based on props input", () => {

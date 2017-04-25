@@ -26,10 +26,11 @@ export class StoryCards extends Component {
     }
 
     _untitledNumber(stories) {
+        const storyBoard = Locale.applicationStrings().messages.storyBoard;
         let untitled = [];
         let storyTitles = stories.map((value) => value.title);
         untitled = Array(storyTitles.length + 1).fill().map((value, index) => { //eslint-disable-line consistent-return
-            let untitledNo = "Untitled" + (index + 1);
+            let untitledNo = storyBoard.untitledStory + (index + 1);
             if(storyTitles.indexOf(untitledNo) === -1) {
                 return untitledNo;
             }
@@ -44,12 +45,13 @@ export class StoryCards extends Component {
     }
 
     _renderStoriesList() {
+        const storyBoard = Locale.applicationStrings().messages.storyBoard;
         let storiesArray = [];
         storiesArray.push(<li className="add-card" key="0">
             <Link ref="newStoryCard" className="navigation-link" to="/story-board/story">
                 <div className="card">
                 <i className="fa fa-plus-circle icon" aria-hidden="true"/>
-                { "Create New Story" }
+                {storyBoard.createStory}
                 </div>
             </Link>
         </li>);
@@ -69,12 +71,13 @@ export class StoryCards extends Component {
     }
 
     render() {
+        const storyBoard = Locale.applicationStrings().messages.storyBoard;
         return (
             <div>
                 <div className="create-story-tab">
                     <Link ref="newStoryBar" className="create-story-icon" to="/story-board/story">
                         <i className="fa fa-folder icon" aria-hidden="true"/>
-                        { "Create New Story" }
+                        {storyBoard.createStory}
                     </Link>
                 </div>
                 <div className="story-board-container">
@@ -83,7 +86,7 @@ export class StoryCards extends Component {
                     </ul>
                     {this.state.showDeleteConfirm
                         ? <ConfirmPopup
-                            description={Locale.applicationStrings().messages.storyBoard.confirmDelete}
+                            description={storyBoard.confirmDelete}
                             callback={(isConfirmed) => {
                                 if(isConfirmed) {
                                     this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));

@@ -2,11 +2,13 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
+import Locale from "./../../utils/Locale";
 
 export class StoryBoard extends Component {
 
     componentWillMount() {
-        this.props.dispatch(setCurrentHeaderTab("Write a Story"));
+        const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
+        this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.storyBoard));
     }
 
     render() {

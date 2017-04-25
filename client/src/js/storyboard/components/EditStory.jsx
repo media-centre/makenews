@@ -12,6 +12,7 @@ import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
 import AppWindow from "./../../utils/AppWindow";
 import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
+import Locale from "./.././../utils/Locale";
 
 export class EditStory extends Component {
 
@@ -56,6 +57,7 @@ export class EditStory extends Component {
     }
 
     async _saveStory() {
+        const storyboard = Locale.applicationStrings().messages.storyBoard;
         if(this.storyId) {
             let title = this.state.title;
             if (this.state.body && !title) {
@@ -67,7 +69,7 @@ export class EditStory extends Component {
         }
 
         if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
-            Toast.show("Cannot save empty story");
+            Toast.show(storyboard.warningMessages.emptyStory);
         } else {
             let ajax = AjaxClient.instance("/save-story");
             const headers = {
@@ -78,14 +80,14 @@ export class EditStory extends Component {
                 let response = await ajax.put(headers, { "story": this.story });
                 this.story._rev = response.rev;
                 this.story._id = response.id;
-                Toast.show("Story saved successfully", "success");
+                Toast.show(storyboard.successMessages.saveStory, "success");
             } catch(error) {
                 if(error.message === "Please add title") {
                     Toast.show(error.message);
                 } else if(error.message === "Title Already exists") {
                     Toast.show(error.message);
                 } else {
-                    Toast.show("Not able to save");
+                    Toast.show(storyboard.errorMessages.saveStoryFailure);
                 }
             }
         }
@@ -119,11 +121,14 @@ export class EditStory extends Component {
     }
 
     render() {
+        const storyboard = Locale.applicationStrings().messages.storyBoard;
         let popup = this.state.showPopup
             ? (<ConfirmPopup
                 ref = "confirmPopup"
-                description = "All the unsaved changes will be removed. Are you sure you want to go back?"
-                callback = {(goBack) => { this._back(goBack); }} //eslint-disable-line brace-style
+                description = {storyboard.confirmStoryBack}
+                callback = {(goBack) => {
+                    this._back(goBack);
+                }}
                />) : null;
         return (
             <div className="story-board story-collections">
@@ -131,14 +136,14 @@ export class EditStory extends Component {
                     <div className="editor-toolbar">
                         <button className="back" onClick={() =>
                         this.setState({ "showPopup": true })}
-                        >Back
+                        >{storyboard.backButton}
                         </button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
                             this._saveStory();
                         }}
                         >
-                        { "SAVE" }</button>
+                        {storyboard.saveButton}</button>
                     </div>
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>

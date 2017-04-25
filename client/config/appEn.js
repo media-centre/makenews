@@ -59,7 +59,22 @@ window.mediaCenter.appEn = {
             "noFeeds": "No feeds to display"
         },
         "storyBoard": {
-            "confirmDelete": "Are you sure you want to delete the story?"
+            "createStory": "Create New Story",
+            "untitledStory": "Untitled",
+            "backButton": "Back",
+            "saveButton": "SAVE",
+            "confirmDelete": "Are you sure you want to delete the story?",
+            "confirmStoryBack": "All the unsaved changes will be removed. Are you sure you want to go back?",
+            "successMessages": {
+                "saveStory": "Story saved successfully",
+                "deleteStory": "Story deleted successfully"
+            },
+            "warningMessages": {
+                "emptyStory": "Cannot save empty story"
+            },
+            "errorMessages": {
+                "saveStoryFailure": "Not able to save"
+            }
         },
         "mainHeaderStrings": {
             "newsBoard": "Scan News",
