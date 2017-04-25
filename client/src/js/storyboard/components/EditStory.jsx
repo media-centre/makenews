@@ -11,6 +11,7 @@ import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
 import AppWindow from "./../../utils/AppWindow";
+import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
 
 export class EditStory extends Component {
 
@@ -20,7 +21,7 @@ export class EditStory extends Component {
 
     constructor() {
         super();
-        this.state = { "title": "", "body": "" };
+        this.state = { "title": "", "body": "", "showPopup": false };
         this._onChange = this._onChange.bind(this);
         this._onTitleChange = this._onTitleChange.bind(this);
         this.storyId = "";
@@ -108,17 +109,30 @@ export class EditStory extends Component {
         this.setState({ "title": this.refs.title.value });
     }
 
-    _back() {
+    _back(goBack) {
         let history = History.getHistory();
-        history.push("/story-board/stories");
+        if(goBack) {
+            history.push("/story-board/stories");
+        } else {
+            this.setState({ "showPopup": false });
+        }
     }
 
     render() {
+        let popup = this.state.showPopup
+            ? (<ConfirmPopup
+                ref = "confirmPopup"
+                description = "All the unsaved changes will be removed. Are you sure you want to go back?"
+                callback = {(goBack) => { this._back(goBack); }} //eslint-disable-line brace-style
+               />) : null;
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
                     <div className="editor-toolbar">
-                        <button className="back" onClick={this._back}>Back</button>
+                        <button className="back" onClick={() =>
+                        this.setState({ "showPopup": true })}
+                        >Back
+                        </button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
                             this._saveStory();
@@ -133,6 +147,7 @@ export class EditStory extends Component {
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={() => this._exportHtml()} />
                     </div>
+                    {popup}
                 </div>
 
                 <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>
