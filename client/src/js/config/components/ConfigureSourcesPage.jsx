@@ -12,6 +12,7 @@ import { sourceTypes } from "./../../utils/Constants";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
+import Locale from "./../../utils/Locale";
 
 export class ConfigureSourcesPage extends Component {
 
@@ -22,7 +23,8 @@ export class ConfigureSourcesPage extends Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(setCurrentHeaderTab("Configure"));
+        const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
+        this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.configure));
     }
 
     async componentDidMount() {

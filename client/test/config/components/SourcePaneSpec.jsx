@@ -11,12 +11,33 @@ import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/Sou
 import * as AddUrlActions from "./../../../src/js/config/actions/AddUrlActions";
 import { shallow } from "enzyme";
 import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("SourcePane", () => {
+    const sandbox = sinon.sandbox.create();
+
+    beforeEach("SourcePane", () => {
+        const configurePage = {
+            "header": {},
+            "addCustomUrl": {
+                "name": "Add custom url"
+            },
+            "addAll": "Add All"
+        };
+
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+    });
+
+    afterEach("sourcePane", () => {
+        sandbox.restore();
+    });
 
     describe("Sources", () => {
         let result = null;
-        const sandbox = sinon.sandbox.create();
 
         beforeEach("Sources", () => {
             let renderer = TestUtils.createRenderer();
@@ -42,7 +63,6 @@ describe("SourcePane", () => {
     });
 
     describe("configure-actions", () => {
-        const sandbox = sinon.sandbox.create();
 
         afterEach("configure-actions", () => {
             sandbox.restore();

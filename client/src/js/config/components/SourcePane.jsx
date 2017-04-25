@@ -8,10 +8,12 @@ import { GROUPS } from "./../../config/actions/FacebookConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { showAddUrl } from "./../actions/AddUrlActions";
+import Locale from "./../../utils/Locale";
 
 export class SourcePane extends Component {
 
     render() {
+        const configurePageStrings = Locale.applicationStrings().messages.configurePage;
         return (
             <div className="sources-suggestions">
                 {!(R.contains(this.props.currentTab, [WEB, TWITTER])) && <FacebookTabs />}
@@ -23,7 +25,7 @@ export class SourcePane extends Component {
                         }}
                         >
                             <i className="icon fa fa-book" aria-hidden="true"/>
-                            Add custom url
+                            {configurePageStrings.addCustomUrl.name}
                         </button>
                     }
                     <button className="add-all" onClick= {() => {
@@ -31,7 +33,7 @@ export class SourcePane extends Component {
                     }}
                     >
                         <i className="icon fa fa-plus-circle"/>
-                        Add All
+                        {configurePageStrings.addAll}
                     </button>
                 </div>
                 { this.props.showAddUrl ? <AddUrl currentTab={this.props.currentTab}/> : <Sources /> }

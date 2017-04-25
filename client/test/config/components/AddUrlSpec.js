@@ -22,18 +22,33 @@ describe("Add Url", () => {
 
     beforeEach("Add Url", () => {
         sandbox = sinon.sandbox.create();
-        const addUrlExamples = {
-            "messages": {
-                "configurePage": {
-                    "addUrlExamples": {
-                        "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
-                        "pages": "https://www.facebook.com/TimesofIndia",
-                        "twitter": "@timesofindia"
-                    }
+        const configurePage = {
+            "header": {},
+            "addCustomUrl": {
+                "name": "Add custom url",
+                "description": {
+                    "web": "Please enter the link below to add a new web source.",
+                    "pages": "Please enter the link below to add a new page source.",
+                    "twitter": "Please enter the link below to add a new twitter source."
+                },
+                "exampleUrls": {
+                    "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+                    "pages": "https://www.facebook.com/TimesofIndia",
+                    "twitter": "@timesofindia"
+                },
+                "messages": {
+                    "validateUrl": "Please enter proper url",
+                    "success": "Added Successfully"
                 }
             }
         };
-        sandbox.stub(Locale, "applicationStrings").returns(addUrlExamples);
+
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+
         store = createStore(() => ({
             "currentSourceTab": WEB
         }), applyMiddleware(thunkMiddleware));

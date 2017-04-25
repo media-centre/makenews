@@ -5,6 +5,7 @@ import { searchInConfiguredSources, deleteSource } from "../../sourceConfig/acti
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
 import SourceFilters from "./../../newsboard/filter/SourceFilters";
+import Locale from "./../../utils/Locale";
 
 class ConfiguredSources extends Component {
 
@@ -45,9 +46,10 @@ class ConfiguredSources extends Component {
     }
 
     render() {
+        const configureHeader = Locale.applicationStrings().messages.configurePage.header;
         return (
             <aside className="configured-sources-container">
-                <h3 className="heading">My Sources</h3>
+                <h3 className="heading">{configureHeader.mySources}</h3>
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
                 <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => {
                     this._searchInSources(event);

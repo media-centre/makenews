@@ -15,6 +15,7 @@ import { shallow } from "enzyme";
 import History from "./../../../src/js/History";
 import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
 import * as FirstTimeUser from "./../../../src/js/welcome/FirstTimeUserActions";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("Configure Pane", () => {
 
@@ -99,6 +100,26 @@ describe("Configure Pane", () => {
             }), applyMiddleware(thunkMiddleware));
 
             sandbox = sinon.sandbox.create();
+            const configurePage = {
+                "header": {
+                    "mySources": "My Sources",
+                    "web": "Web URLs",
+                    "facebook": "Facebook",
+                    "twitter": "Twitter",
+                    "next": "Next",
+                    "done": "Done",
+                    "signIn": "Sign in"
+                },
+                "addAll": "Add All",
+                "addCustomUrl": {
+                    "name": "Add custom url"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "configurePage": configurePage
+                }
+            });
         });
 
         afterEach("search input box", () => {

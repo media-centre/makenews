@@ -5,9 +5,34 @@ import TestUtils from "react-addons-test-utils";
 import { assert } from "chai";
 import { shallow } from "enzyme";
 import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("ConfigPaneNavigation", () => {
     const sandbox = sinon.sandbox.create();
+    const configurePage = {
+        "header": {
+            "mySources": "My Sources",
+            "web": "Web URLs",
+            "facebook": {
+                "name": "Facebook",
+                "tabs": {
+                    "pages": "",
+                    "groups": ""
+                }
+            },
+            "twitter": "Twitter",
+            "next": "Next",
+            "done": "Done",
+            "signIn": "Sign in"
+        }
+    };
+    beforeEach("ConfigPaneNavigation", () => {
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+    });
 
     afterEach("ConfigPaneNavigation", () => {
         sandbox.restore();
@@ -29,7 +54,8 @@ describe("ConfigPaneNavigation", () => {
         const [webLink] = TestUtils.scryRenderedComponentsWithType(configureUrl, Link);
         assert.strictEqual(webLink.props.to, "/configure/web");
         assert.strictEqual(webLink.props.className, "sources-nav__item active");
-        assert.strictEqual(webLink.props.children[1], "Web URLs"); //eslint-disable-line no-magic-numbers
+        const [, text] = webLink.props.children;
+        assert.strictEqual(text, "Web URLs");
     });
 
     it("should have /configure/facebook/pages link for facebook", () => {
@@ -38,7 +64,8 @@ describe("ConfigPaneNavigation", () => {
         const [, facebookLink] = TestUtils.scryRenderedComponentsWithType(configureUrl, Link);
         assert.strictEqual(facebookLink.props.to, "/configure/facebook/pages");
         assert.strictEqual(facebookLink.props.className, "sources-nav__item active");
-        assert.strictEqual(facebookLink.props.children[1], "Facebook"); //eslint-disable-line no-magic-numbers
+        const [, text] = facebookLink.props.children;
+        assert.strictEqual(text, "Facebook");
     });
 
     it("should have /configure/twitter link for twitter", () => {
@@ -47,7 +74,8 @@ describe("ConfigPaneNavigation", () => {
         const [, , twitterLink] = TestUtils.scryRenderedComponentsWithType(configureUrl, Link);
         assert.strictEqual(twitterLink.props.to, "/configure/twitter");
         assert.strictEqual(twitterLink.props.className, "sources-nav__item active");
-        assert.strictEqual(twitterLink.props.children[1], "Twitter"); //eslint-disable-line no-magic-numbers
+        const [, text] = twitterLink.props.children;
+        assert.strictEqual(text, "Twitter");
     });
 
     it("should have a next button with facebook link if current source is web", () => {
@@ -56,9 +84,9 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(nextLink.node.type.displayName, "Link");
         assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-secondary");
         assert.strictEqual(nextLink.node.props.to, "/configure/facebook/pages");
-        assert.strictEqual(nextLink.node.props.children[1], " Next"); //eslint-disable-line no-magic-numbers
 
-        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        const [icon, , text] = nextLink.node.props.children;
+        assert.strictEqual(text, "Next");
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
     });
@@ -69,9 +97,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(nextLink.node.type.displayName, "Link");
         assert.strictEqual(nextLink.node.props.to, "/newsBoard");
         assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-primary");
-        assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
-
-        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        const [icon, , text] = nextLink.node.props.children;
+        assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-check");
     });
@@ -82,9 +109,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(nextLink.node.type.displayName, "Link");
         assert.strictEqual(nextLink.node.props.to, "/configure/twitter");
         assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-secondary");
-        assert.strictEqual(nextLink.node.props.children[1], " Next"); //eslint-disable-line no-magic-numbers
-
-        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        const [icon, , text] = nextLink.node.props.children;
+        assert.strictEqual(text, "Next");
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
     });
@@ -95,9 +121,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(nextLink.node.type.displayName, "Link");
         assert.strictEqual(nextLink.node.props.to, "/newsBoard");
         assert.strictEqual(nextLink.node.props.className, "sources-nav__next btn btn-primary");
-        assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
-
-        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        const [icon, , text] = nextLink.node.props.children;
+        assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-check");
     });
@@ -108,7 +133,7 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(skipLink.node.type.displayName, "Link");
         assert.strictEqual(skipLink.node.props.to, "/configure/twitter");
         assert.strictEqual(skipLink.node.props.className, "sources-nav__skip btn btn-secondary");
-        assert.strictEqual(skipLink.node.props.children, "Skip"); //eslint-disable-line no-magic-numbers
+        assert.strictEqual(skipLink.node.props.children, "Skip");
     });
 
     it("should have a sign in button if current source is facebook and user has not logged into facebook", () => {
@@ -116,10 +141,10 @@ describe("ConfigPaneNavigation", () => {
         const signInBtn = wrapper.find(".sources-nav__next");
         assert.strictEqual(signInBtn.node.type, "button");
 
-        const [icon, text] = signInBtn.node.props.children;
+        const [icon,, text] = signInBtn.node.props.children;
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
-        assert.strictEqual(text, " Sign in");
+        assert.strictEqual(text, "Sign in");
     });
 
     it("should open fbLogin after clicking on signin", () => {
@@ -134,9 +159,8 @@ describe("ConfigPaneNavigation", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="twitter" sourcesAuthenticationInfo={{ "twitter": true }} />);
         const nextLink = wrapper.find(".sources-nav__next");
         assert.strictEqual(nextLink.node.type, "button");
-        assert.strictEqual(nextLink.node.props.children[1], " Done"); //eslint-disable-line no-magic-numbers
-
-        const icon = nextLink.node.props.children[0]; //eslint-disable-line no-magic-numbers
+        const [icon, , text] = nextLink.node.props.children;
+        assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-check");
     });
@@ -145,7 +169,7 @@ describe("ConfigPaneNavigation", () => {
         const wrapper = shallow(<ConfigPaneNavigation currentSourceType="twitter" sourcesAuthenticationInfo={{ "twitter": false }} />);
         const skipLink = wrapper.find(".sources-nav__skip");
         assert.strictEqual(skipLink.node.type, "button");
-        assert.strictEqual(skipLink.node.props.children, "Skip"); //eslint-disable-line no-magic-numbers
+        assert.strictEqual(skipLink.node.props.children, "Skip");
     });
 
     it("should have a sign in button if current source is twitter and user has not logged into twiiter", () => {
@@ -153,10 +177,10 @@ describe("ConfigPaneNavigation", () => {
         const signInBtn = wrapper.find(".sources-nav__next");
         assert.strictEqual(signInBtn.node.type, "button");
 
-        const [icon, text] = signInBtn.node.props.children;
+        const [icon,, text] = signInBtn.node.props.children;
         assert.strictEqual(icon.type, "i");
         assert.strictEqual(icon.props.className, "fa fa-arrow-right");
-        assert.strictEqual(text, " Sign in");
+        assert.strictEqual(text, "Sign in");
     });
 
     it("should open twitterLogin after clicking on signin", () => {

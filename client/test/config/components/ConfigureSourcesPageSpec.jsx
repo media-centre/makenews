@@ -9,15 +9,25 @@ import ConfiguredSources from "./../../../src/js/config/components/ConfiguredSou
 import ConfigurePane from "./../../../src/js/config/components/ConfigurePane";
 import { expect } from "chai";
 import History from "./../../../src/js/History";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("ConfigureSourcesPage", () => {
     let ZERO = 0, ONE = 1;
+    const mainHeaderStrings = {
+        "newsBoard": "Scan News",
+        "storyBoard": "Write a Story",
+        "configure": "Configure"
+    };
     describe("switchSourceTab", () => {
         let sandbox = null, renderer = null;
-
         beforeEach("switchSourceTab", () => {
             sandbox = sinon.sandbox.create();
             sandbox.stub(FacebookLogin, "instance").returns({});
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "mainHeaderStrings": mainHeaderStrings
+                }
+            });
             renderer = TestUtils.createRenderer();
             /* we have to render it twice inorder to trigger componentwillreviceprops because of shallow rendering*/ // eslint-disable-line
             renderer.render(
@@ -70,6 +80,11 @@ describe("ConfigureSourcesPage", () => {
         beforeEach("children", () => {
             sandbox = sinon.sandbox.create();
             sandbox.stub(FacebookLogin, "instance").returns({});
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "mainHeaderStrings": mainHeaderStrings
+                }
+            });
         });
 
         afterEach("children", () => {

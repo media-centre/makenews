@@ -33,57 +33,6 @@ window.mediaCenter.appEn = {
                 }
             }
         },
-        "configurePage": {
-            "allCategories": {
-                "allCategoriesHeading": "All Categories",
-                "addNewCategoryLabel": "Add new category"
-            },
-            "categoryDetailsPage": {
-                "allCategoriesLinkLabel": "All Categories",
-                "deleteCategoryLinkLabel": "Delete Category",
-                "addRSSUrlLinkLabel": "Add RSS feed URL",
-                "addFacebookUrlLinkLabel": "Add Facebook public page URL",
-                "addTwitterUrlLinkLabel": "Add Twitter Handle / Hash tag",
-                "categoryDeletionConfirm": "will be deleted and you will no longer receive feeds from its URLs. Parked items will remain unaffected. Are you sure you want to continue?",
-                "deleteURLConfirm": "You will no longer receive feeds from this URL. Parked items will remain unaffected. Are you sure you want to continue?",
-                "hintMessages": {
-                    "RSSHintMessage": "Please Enter RSS URL Here",
-                    "FacebookHintMessage": "Please Enter Facebook URL Here",
-                    "TwitterHintMessage": "Please Enter Twitter Handle Here",
-                    "categoryTitle": "Invalid category name. Use only space or - or _"
-                },
-                "exampleMessages": {
-                    "RSSExampleURL": "Example: http://www.thehindu.com/opinion/?service=rss",
-                    "TwitterExampleURL": "Example: @the_hindu or #standwithjnu",
-                    "FacebookExampleURL": "Example: https://www.facebook.com/thehindu"
-                },
-                "successMessages": {
-                    "categoryDeleteSuccess": "is successfully deleted",
-                    "categoryUpdated": "Category name is updated to",
-                    "urlDeleteSuccess": "Feed URL successfully deleted",
-                    "urlSuccess": "URL is successfully added"
-                },
-                "errorMessages": {
-                    "emptyUrl": "URL cannot be empty",
-                    "validatingUrl": "Validating the URL...",
-                    "alreadyAdded": "URL is already added",
-                    "invalidRssUrl": "Invalid RSS URL. Please check the URL",
-                    "invalidTwitterUrl": "Invalid twitter handle or hashtag",
-                    "noSuchTag": "No such hashtag or handle found",
-                    "invalidFacebookUrl": "Invalid facebook URL. Please check the URL",
-                    "noFbAccess": "No such link or no access to the profile",
-                    "urlDeleteFailed": "URL deletion failed",
-                    "categoryNameExists": "Category name already exists",
-                    "categoryNameCantBeEmpty": "Category name can not be empty"
-                }
-            },
-            "configureTabName": "Configure",
-            "addUrlExamples": {
-                "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
-                "pages": "https://www.facebook.com/TimesofIndia",
-                "twitter": "@timesofindia"
-            }
-        },
         "changePassword": {
             "passwordUpdateFailure": "Password update failed",
             "invalidCredentials": "Incorrect Current Password",
@@ -131,6 +80,41 @@ window.mediaCenter.appEn = {
                 "question": "What is the purpose of the application?",
                 "answer": "To act as an aggregator for news items from different sources like RSS feeds, Facebook Page and Twitter Handles or Hashtags"
             }
-        ]
+        ],
+        "configurePage": {
+            "header": {
+                "mySources": "My Sources",
+                "web": "Web URLs",
+                "facebook": {
+                    "name": "Facebook",
+                    "tabs": {
+                        "pages": "Pages",
+                        "groups": "Groups"
+                    }
+                },
+                "twitter": "Twitter",
+                "next": "Next",
+                "done": "Done",
+                "signIn": "Sign in"
+            },
+            "addAll": "Add All",
+            "addCustomUrl": {
+                "name": "Add custom url",
+                "description": {
+                    "web": "Please enter the link below to add a new web source.",
+                    "pages": "Please enter the link below to add a new page source.",
+                    "twitter": "Please enter the link below to add a new twitter source."
+                },
+                "exampleUrls": {
+                    "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+                    "pages": "https://www.facebook.com/TimesofIndia",
+                    "twitter": "@timesofindia"
+                },
+                "messages": {
+                    "validateUrl": "Please enter proper url",
+                    "success": "Added Successfully"
+                }
+            }
+        }
     }
 };

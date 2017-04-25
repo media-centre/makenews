@@ -6,8 +6,28 @@ import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { expect } from "chai";
+import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("Configured Sources", () => {
+    const sandbox = sinon.sandbox.create();
+
+    beforeEach("Configured Sources", () => {
+        const configurePage = {
+            "header": {
+                "mySources": "My Sources"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+    });
+
+    afterEach("Configured Sources", () => {
+        sandbox.restore();
+    });
 
     describe("display configured sources", () => {
         it("should render twitter sources when the current source tab is TWITTER", () => {

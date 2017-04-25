@@ -16,13 +16,14 @@ export class AddUrl extends Component {
     }
 
     _addUrl() {
+        const addCustomUrl = Locale.applicationStrings().messages.configurePage.addCustomUrl;
         const url = this.refs.url.value.trim();
         if(url) {
             if (this.props.currentTab === WEB) {
                 if (url.match(this.urlRegex)) {
                     this.props.dispatch(AddUrlActions.addRssUrl(url));
                 } else {
-                    Toast.show("Please enter proper url");
+                    Toast.show(addCustomUrl.messages.validateUrl);
                 }
             } else if (this.props.currentTab === PAGES) {
                 this.props.dispatch(AddUrlActions.addFacebookPage(url));
@@ -41,13 +42,13 @@ export class AddUrl extends Component {
     }
 
     render() {
-        const locale = Locale.applicationStrings().messages.configurePage.addUrlExamples;
+        const addCustomUrl = Locale.applicationStrings().messages.configurePage.addCustomUrl;
         return (
             <div className="add-url">
                 <div className="add-url__message">
                     <span className="image"><img src="./../../../images/warning-icon.png"/></span>
                     <span className="text">
-                        Please enter the link below to add a new {this.props.currentTab} source.
+                        {addCustomUrl.description[this.props.currentTab]}
                     </span>
                     <button className="close" onClick={() => {
                         this.props.dispatch(AddUrlActions.showAddUrl(false));
@@ -63,7 +64,7 @@ export class AddUrl extends Component {
                             ref="url"
                             onKeyDown={(event) => this._onKeyDownInputBox(event)}
                             className="add-url__input"
-                            placeholder={`Ex: ${locale[this.props.currentTab]}`}
+                            placeholder={`Ex: ${addCustomUrl.exampleUrls[this.props.currentTab]}`}
                         />
                         <span className="input-addon">
                             <img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/>

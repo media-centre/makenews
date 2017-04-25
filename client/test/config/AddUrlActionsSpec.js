@@ -6,6 +6,7 @@ import AjaxClient from "./../../src/js/utils/AjaxClient";
 import mockStore from "./../helper/ActionHelper";
 import sinon from "sinon";
 import Toast from "./../../src/js/utils/custom_templates/Toast";
+import Locale from "./../../src/js/utils/Locale";
 
 describe("AddUrl Actions", () => {
     const headers = {
@@ -13,10 +14,34 @@ describe("AddUrl Actions", () => {
         "Content-Type": "application/json"
     };
     let showAddurlPopup = true;
+    const sandbox = sinon.sandbox.create();
+    beforeEach("AddUrl Actions", () => {
+        const configurePage = {
+            "header": {},
+            "addCustomUrl": {
+                "name": "Add custom url",
+                "messages": {
+                    "validateUrl": "Please enter proper url",
+                    "success": "Added Successfully"
+                }
+            },
+            "addAll": "Add All"
+        };
+
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+    });
+
+    afterEach("AddUrl Actions", () => {
+        sandbox.restore();
+    });
+
     describe("AddRssUrl", () => {
         let message = null, url = null;
         let ajaxClientInstance = null, ajaxClientMock = null, postMock = null;
-        const sandbox = sinon.sandbox.create();
 
         beforeEach("AddRssUrl", () => {
             ajaxClientInstance = AjaxClient.instance("/add-url", true);
@@ -74,7 +99,6 @@ describe("AddUrl Actions", () => {
 
     describe("AddFacebookPage", () => {
         let ajaxClientInstance = null;
-        const sandbox = sinon.sandbox.create();
 
         afterEach("AddFacebookPage", () => {
             sandbox.restore();
@@ -115,7 +139,6 @@ describe("AddUrl Actions", () => {
 
     describe("AddTwitterHandle", () => {
         let ajaxClientInstance = null;
-        const sandbox = sinon.sandbox.create();
 
         afterEach("AddTwitterHandle", () => {
             sandbox.restore();
