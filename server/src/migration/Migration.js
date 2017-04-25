@@ -59,7 +59,7 @@ export default class Migration {
                                 finishedCount += 1; // eslint-disable-line no-magic-numbers
                                 resolveStatus(finishedCount, failedCount, dbNames.length);
                             }).catch(error => { //eslint-disable-line
-                                allDbMigrationLogger.info("%s migration failed", dbName);
+                                allDbMigrationLogger.error("%s migration failed", dbName);
                                 failedCount += 1; // eslint-disable-line no-magic-numbers
                                 resolveStatus(finishedCount, failedCount, dbNames.length);
                             });
