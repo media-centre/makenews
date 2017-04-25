@@ -11,6 +11,7 @@ import AppWindow from "../../../src/js/utils/AppWindow";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import nock from "nock";
 import Toast from "../../../src/js/utils/custom_templates/Toast";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("SourceConfigurationActions", () => {
     describe("configured sources", () => {
@@ -293,6 +294,16 @@ describe("SourceConfigurationActions", () => {
         });
 
         it("should show a Toast message when the source could not be deleted", async () => {
+            const configurePage = {
+                "errorMessages": {
+                    "sourceDeletedFailed": "Could not delete source"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "configurePage": configurePage
+                }
+            });
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve({ "ok": false }));
 
             const toastMock = sandbox.mock(Toast).expects("show")

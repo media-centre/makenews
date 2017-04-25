@@ -61,10 +61,6 @@ window.mediaCenter.appEn = {
         "storyBoard": {
             "confirmDelete": "Are you sure you want to delete the story?"
         },
-        "applicationTour": {
-            "description": "Find HELP in the above options",
-            "gotItText": "Got It"
-        },
         "mainHeaderStrings": {
             "newsBoard": "Scan News",
             "storyBoard": "Write a Story",
@@ -114,7 +110,22 @@ window.mediaCenter.appEn = {
                     "validateUrl": "Please enter proper url",
                     "success": "Added Successfully"
                 }
+            },
+            "errorMessages": {
+                "sourceDeletedFailed": "Could not delete source"
+            },
+            "warningMessages": {
+                "configureAtLeastOneSource": "Please select at least one source either from Web Urls or Facebook or Twitter"
             }
+
+        },
+        "facebook": {
+            "signInWarning": "Please, sign into your facebook account to add Facebook Groups, Pages as your sources"
+        },
+        "twitter": {
+            "signInWarning": "Please, sign into your twitter account",
+            "loginSuccess": "Login successful",
+            "loginFailure": "Login failed"
         }
     }
 };

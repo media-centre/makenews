@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Locale from "./../../utils/Locale";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {
@@ -6,6 +7,7 @@ export default class TwitterSuccess extends Component {
     }
 
     render() {
-        return (<div>Login failed</div>);
+        const twitter = Locale.applicationStrings().twitter;
+        return (<div>{twitter.loginFailure}</div>);
     }
 }

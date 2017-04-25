@@ -2,12 +2,30 @@ import SignInWarning from "../../../src/js/config/components/SignInWarning";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import React from "react";
+import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("SignInWarning", () => {
     let wrapper = null;
+    const sandbox = sinon.sandbox.create();
+
     beforeEach("SignInWarning", () => {
+        const messages = {
+            "facebook": {
+                "signInWarning": "Please, sign into your facebook account to add Facebook Groups, Pages as your sources"
+            },
+            "twitter": {
+                "signInWarning": "Please, sign into your twitter account"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({ messages });
         wrapper = shallow(<SignInWarning currentSourceType="Twitter"/>);
     });
+
+    afterEach("SignInWarning", () => {
+        sandbox.restore();
+    });
+
     it("should have div with className sign-in-warning", () => {
         expect(wrapper.node.type).to.equals("div");
         expect(wrapper.node.props.className).to.equals("sign-in-warning");

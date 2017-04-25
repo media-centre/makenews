@@ -12,6 +12,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import { showAddUrl } from "./../actions/AddUrlActions";
 import AppSessionStorage from "../../utils/AppSessionStorage";
 import { markAsVisitedUser } from "../../welcome/FirstTimeUserActions";
+import Locale from "./../../utils/Locale";
 
 export class ConfigurePane extends Component {
 
@@ -82,13 +83,14 @@ export class ConfigurePane extends Component {
     }
 
     render() {
+        const configurePage = Locale.applicationStrings().messages.configurePage;
         return (
           <div className="configure-sources">
               <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin} checkConfiguredSources={this.checkConfiguredSources}/>
               { this.state.showConfigurationWarning &&
                   <div className="configuration-warning">
                       <i className="warning-icon" />
-                      <span className="warning-message">Please select at least one source either from Web Urls or Facebook or Twitter</span>
+                      <span className="warning-message">{configurePage.warningMessages.configureAtLeastOneSource}</span>
                       <span className="close" onClick={this._closeConfigurationWarning}>&times;</span>
                   </div>
               }

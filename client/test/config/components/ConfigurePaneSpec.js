@@ -18,6 +18,37 @@ import * as FirstTimeUser from "./../../../src/js/welcome/FirstTimeUserActions";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("Configure Pane", () => {
+    const sandbox = sinon.sandbox.create();
+
+    beforeEach("Configure Pane", () => {
+        const configurePage = {
+            "header": {
+                "mySources": "My Sources",
+                "web": "Web URLs",
+                "facebook": "Facebook",
+                "twitter": "Twitter",
+                "next": "Next",
+                "done": "Done",
+                "signIn": "Sign in"
+            },
+            "addAll": "Add All",
+            "addCustomUrl": {
+                "name": "Add custom url"
+            },
+            "warningMessages": {
+                "configureAtLeastOneSource": "Please select at least one source either from Web Urls or Facebook or Twitter"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurePage": configurePage
+            }
+        });
+    });
+
+    afterEach("Configure Pane", () => {
+        sandbox.restore();
+    });
 
     describe("config pane", () => {
         let store = null, renderer = null, configurePaneDOM = null, dispatch = null;
@@ -86,7 +117,6 @@ describe("Configure Pane", () => {
     });
 
     describe("search input box", () => {
-        let sandbox = null;
         let store = null, configurePane = null;
         let currentTab = null, getSourceMock = null;
 
@@ -98,28 +128,6 @@ describe("Configure Pane", () => {
                 "sourceSearchKeyword": "something",
                 "addUrlMessage": {}
             }), applyMiddleware(thunkMiddleware));
-
-            sandbox = sinon.sandbox.create();
-            const configurePage = {
-                "header": {
-                    "mySources": "My Sources",
-                    "web": "Web URLs",
-                    "facebook": "Facebook",
-                    "twitter": "Twitter",
-                    "next": "Next",
-                    "done": "Done",
-                    "signIn": "Sign in"
-                },
-                "addAll": "Add All",
-                "addCustomUrl": {
-                    "name": "Add custom url"
-                }
-            };
-            sandbox.stub(Locale, "applicationStrings").returns({
-                "messages": {
-                    "configurePage": configurePage
-                }
-            });
         });
 
         afterEach("search input box", () => {
@@ -185,7 +193,6 @@ describe("Configure Pane", () => {
 
     describe("Configuration warning", () => {
         let wrapper = null;
-        const sandbox = sinon.sandbox.create();
         const dispatch = () => {};
         const store = {
             "getState": ()=> {

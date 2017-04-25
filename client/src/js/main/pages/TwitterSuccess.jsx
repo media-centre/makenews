@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Locale from "./../../utils/Locale";
 
 export default class TwitterSuccess extends Component {
     componentWillMount() {
@@ -7,7 +8,8 @@ export default class TwitterSuccess extends Component {
     }
 
     render() {
-        return (<div>Login successful</div>); //eslint-disable-line react/jsx-no-literals
+        const twitter = Locale.applicationStrings().twitter;
+        return (<div>{twitter.loginSuccess}</div>);
     }
 }
 

@@ -5,6 +5,7 @@ import { removeSource } from "./../../newsboard/filter/FilterActions";
 import * as TwitterConfigureActions from "./../../config/actions/TwitterConfigureActions";
 import R from "ramda"; //eslint-disable-line id-length
 import Toast from "../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 export const GOT_CONFIGURED_SOURCES = "GOT_CONFIGURED_SOURCES";
 export const CLEAR_SOURCES = "CLEAR_SOURCES";
@@ -167,7 +168,8 @@ export function deleteSource(sourceId, sourceType, event) {
         } catch(err) {
             button.className = "delete-source";
             button.innerHTML = "&times";
-            Toast.show("Could not delete source");
+            const configurePage = Locale.applicationStrings().messages.configurePage;
+            Toast.show(configurePage.errorMessages.sourceDeletedFailed);
         }
     };
 }
