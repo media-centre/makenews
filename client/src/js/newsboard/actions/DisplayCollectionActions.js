@@ -80,7 +80,7 @@ export function deleteCollection(event, collection) {
     };
 }
 
-export function deleteCollectionFeed(event, feedId, collectionId) {
+export function deleteCollectionFeed(event, intermediateDocId, feedId) {
 
     return async dispatch => {
         const ajaxClient = AjaxClient.instance("/collection-feed");
@@ -88,9 +88,9 @@ export function deleteCollectionFeed(event, feedId, collectionId) {
         button.className = "spinner";
         button.textContent = "";
         try {
-            const response = await ajaxClient.deleteRequest({ feedId, collectionId });
+            const response = await ajaxClient.deleteRequest({ intermediateDocId, feedId });
             if(response.ok) {
-                dispatch({ "type": DELETE_COLLECTION_FEED, feedId });
+                dispatch({ "type": DELETE_COLLECTION_FEED, "deleteFeed": response.deleteFeed });
             } else {
                 throw new Error();
             }

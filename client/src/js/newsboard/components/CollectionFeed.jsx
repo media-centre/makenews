@@ -32,7 +32,15 @@ export default class CollectionFeed extends Component {
         return (<div className={feedClass}>
                     { this.props.tab !== WRITE_A_STORY &&
                         <button className="delete-feed" onClick={(event) => {
-                            this.props.dispatch(deleteCollectionFeed(event, feed._id, this.props.collectionId));
+                            let docId = feed._id;
+                            let feedId = null;
+                            if(!feed.selectText) {
+                                if(feed.sourceDeleted) {
+                                    feedId = feed._id;
+                                }
+                                docId += this.props.collectionId;
+                            }
+                            this.props.dispatch(deleteCollectionFeed(event, docId, feedId));
                         }}
                         >&times;
                         </button>

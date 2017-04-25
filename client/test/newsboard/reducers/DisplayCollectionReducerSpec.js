@@ -32,7 +32,7 @@ describe("DisplayCollectionReducer", () => {
             const state = [{ "_id": 1 }, { "_id": 2 }, { "_id": 3 }];
             const expectedState = [{ "_id": 1 }, { "_id": 3 }];
             const feedId = 2;
-            const action = { "type": DELETE_COLLECTION_FEED, feedId };
+            const action = { "type": DELETE_COLLECTION_FEED, "deleteFeed": feedId };
 
             assert.deepEqual(displayCollection(state, action), expectedState);
         });

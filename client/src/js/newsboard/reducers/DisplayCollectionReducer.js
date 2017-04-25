@@ -14,7 +14,7 @@ export function displayCollection(state = [], action = {}) {
         return [];
     }
     case DELETE_COLLECTION_FEED: {
-        const filteredCollection = state.filter(feed => feed._id !== action.feedId);
+        const filteredCollection = state.filter(feed => feed._id !== action.deleteFeed);
         return [].concat(filteredCollection);
     }
     default: return state;

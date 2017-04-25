@@ -7,7 +7,7 @@ describe("DeleteCollectionFeedRoute", () => {
     const sandbox = sinon.sandbox.create();
     const accessToken = "accessToken";
     const feedId = "feedId";
-    const collectionId = "collectionId";
+    const intermediateDocId = "intermediateDocId";
     let deleteFeed = null, request = null;
     beforeEach("DeleteCollectionFeedRoute", () => {
         request = {
@@ -15,8 +15,8 @@ describe("DeleteCollectionFeedRoute", () => {
                 "AuthSession": accessToken
             },
             "query": {
-                "feedId": feedId,
-                "collectionId": collectionId
+                intermediateDocId,
+                feedId
             }
         };
 
@@ -35,7 +35,7 @@ describe("DeleteCollectionFeedRoute", () => {
         });
 
         it("should return missing parameters message", () => {
-            request.query.feedId = "";
+            request.query.intermediateDocId = "";
 
             deleteFeed = new DeleteCollectionFeedRoute(request, {});
 
@@ -47,7 +47,7 @@ describe("DeleteCollectionFeedRoute", () => {
 
         it("should delete feed from collection", async () => {
             let deleteArticleMock = sandbox.mock(CollectionFeedsRequestHandler).expects("deleteFeedFromCollection")
-               .withExactArgs(accessToken, feedId, collectionId).returns(Promise.resolve({ "ok": true }));
+               .withExactArgs(accessToken, intermediateDocId, feedId).returns(Promise.resolve({ "ok": true }));
 
             deleteFeed = new DeleteCollectionFeedRoute(request, {});
 

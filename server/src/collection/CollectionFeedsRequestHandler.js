@@ -113,26 +113,49 @@ async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
     return deletedFeeds.docs;
 }
 
-export async function deleteFeedFromCollection(authSession, feedId, collectionId) {
+export async function deleteFeedFromCollection(authSession, intermediateDocId, feedId) {
     const couchClient = CouchClient.instance(authSession);
     try {
-        const feedDoc = await couchClient.getDocument(feedId);
-        let docsToDelete = [];
+        let response = { "ok": true, "deleteFeed": intermediateDocId };
 
-        if (feedDoc.selectText) {
-            docsToDelete = [feedDoc];
-        } else {
-            const collectionFeedDoc = await couchClient.getDocument(feedId + collectionId);
-            docsToDelete = [collectionFeedDoc];
-            if (feedDoc.sourceDeleted) {
-                docsToDelete.push(feedDoc);
-            }
+        const intermediateDoc = await couchClient.getDocument(intermediateDocId);
+        let docsToDelete = [intermediateDoc];
 
+        if(!intermediateDoc.selectText) {
+            response.deleteFeed = intermediateDoc.feedId;
         }
 
+        if(feedId) {
+            const selector = {
+                "selector": {
+                    "docType": {
+                        "$in": ["collectionFeed", "feed"]
+                    },
+                    "$or": [
+                        {
+                            "feedId": {
+                                "$eq": feedId
+                            }
+                        },
+                        {
+                            "_id": {
+                                "$eq": feedId
+                            }
+                        }
+                    ]
+                }
+            };
+
+            const allDocs = await couchClient.findDocuments(selector);
+
+            if(allDocs.docs.length === 2) { //eslint-disable-line no-magic-numbers
+                const [feedDoc] = allDocs.docs.filter(doc => doc._id === feedId);
+                docsToDelete.push(feedDoc);
+            }
+        }
         await couchClient.deleteBulkDocuments(docsToDelete);
         RouteLogger.instance().info("CollectionFeedRequestHandler:: Successfully deleted article from collection");
-        return { "ok": true };
+        return response;
     } catch (err) {
         const error = { "message": "Unexpected response from db" };
         RouteLogger.instance().error(`CollectionFeedRequestHandler:: Failed deleting article from collection with error ${JSON.stringify(err)}`);
