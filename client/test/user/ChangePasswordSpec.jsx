@@ -2,14 +2,37 @@ import { ChangePassword } from "./../../src/js/user/ChangePassword";
 import React from "react";
 import { expect } from "chai";
 import { shallow } from "enzyme";
+import Locale from "./../../src/js/utils/Locale";
+import sinon from "sinon";
 
 describe("Change Password", () => {
     let changePasswordDom = null;
+    const sandbox = sinon.sandbox.create();
+
     beforeEach("Change Password", () => {
         const changePasswordMessages = {};
-        const userProfileStrings = {};
         const dispatch = ()=>{};
-        changePasswordDom = shallow(<ChangePassword changePasswordMessages={changePasswordMessages} changePasswordStrings={userProfileStrings} dispatch={dispatch}/>);
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "changePassword": {
+                    "passwordUpdateFailure": "Password update failed",
+                    "invalidCredentials": "Incorrect Current Password",
+                    "newPwdConfirmPwdMismatch": "New Password and Confirm Password do not match",
+                    "currentPassword": "current password",
+                    "newPassword": "new password",
+                    "confirmPassword": "confirm password",
+                    "newPwdShouldNotMatchCurrentPwd": "New Password should not be same as the Current Password",
+                    "pwdChangeSuccessful": "Password successfully changed",
+                    "pwdShouldNotBeEmpty": "Passwords cannot be left blank",
+                    "logoutConfirmMessage": "Your password has been successfully changed. The application will now logout. Please re-login with your new password"
+                }
+            }
+        });
+        changePasswordDom = shallow(<ChangePassword changePasswordMessages={changePasswordMessages} dispatch={dispatch}/>);
+    });
+
+    afterEach("Change Password", () => {
+        sandbox.restore();
     });
 
     it("should have a change-password div", () => {
@@ -43,7 +66,7 @@ describe("Change Password", () => {
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("current password");
         expect(input.props.required).to.be.true; //eslint-disable-line no-unused-expressions
-        expect(input.props.className).to.equals("error-border ");
+        expect(input.props.className).to.equals("");
     });
 
     it("should have input box for new password", () => {
@@ -52,16 +75,7 @@ describe("Change Password", () => {
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("new password");
         expect(input.props.required).to.be.true; //eslint-disable-line no-unused-expressions
-        expect(input.props.className).to.equals("error-border ");
-    });
-
-    it("should have input box for new password", () => {
-        const [form] = changePasswordDom.node.props.children;
-        const [,,, input] = form.props.children;
-        expect(input.type).to.equals("input");
-        expect(input.props.name).to.equals("new password");
-        expect(input.props.required).to.be.true; //eslint-disable-line no-unused-expressions
-        expect(input.props.className).to.equals("error-border ");
+        expect(input.props.className).to.equals("");
     });
 
     it("should have input box for confirm new password", () => {
@@ -70,7 +84,7 @@ describe("Change Password", () => {
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("confirm password");
         expect(input.props.required).to.be.true; //eslint-disable-line no-unused-expressions
-        expect(input.props.className).to.equals("error-border ");
+        expect(input.props.className).to.equals("");
     });
 
     it("should have a submit button", () => {

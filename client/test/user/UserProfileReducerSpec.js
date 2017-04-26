@@ -1,8 +1,6 @@
-/* eslint no-unused-expressions:0, max-nested-callbacks: [2, 5], no-undefined: 0 */
-
 import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_PWD_MISMATCH, NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD, CHANGE_PASSWORD_SUCCESSFUL } from "../../src/js/user/UserProfileActions";
 import Locale from "../../src/js/utils/Locale";
-import { changePassword, changePasswordStrings, userProfileStrings } from "../../src/js/user/UserProfileReducer";
+import { changePassword } from "../../src/js/user/UserProfileReducer";
 import { assert } from "chai";
 import "../helper/TestHelper";
 import sinon from "sinon";
@@ -41,7 +39,7 @@ describe("UserProfileReducer", ()=> {
         });
 
         it("should set the error message as empty by default", () => {
-            assert.deepEqual(defaultState, changePassword(undefined));
+            assert.deepEqual(defaultState, changePassword(undefined)); //eslint-disable-line no-undefined
         });
 
         it("should set the error message as empty if the change password is successful", () => {
@@ -72,18 +70,6 @@ describe("UserProfileReducer", ()=> {
         it("should set the new password should not match with current password error message", () => {
             const action = { "type": NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD };
             assert.deepEqual({ "errorMessage": "New password should not be same as the current password" }, changePassword(defaultState, action));
-        });
-    });
-
-    describe("changePasswordStrings", () => {
-        it("should return the change password strings always", () => {
-            assert.deepEqual(appEn.messages.changePassword, changePasswordStrings(undefined));
-        });
-    });
-
-    describe("userProfileStrings", () => {
-        it("should return user profile strings", () => {
-            assert.deepEqual(appEn.messages.userProfileStrings, userProfileStrings(undefined));
         });
     });
 });

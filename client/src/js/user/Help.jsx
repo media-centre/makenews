@@ -10,21 +10,22 @@ export default class Help extends Component {
                 <p className="answer">{faq.answer}</p>
             </div>);
         const mapIndex = R.addIndex(R.map);
-        const appEn = Locale.applicationStrings();
-        return mapIndex(faqDom, appEn.messages.FAQs);
+
+        return mapIndex(faqDom, this.messages.FAQs);
     }
 
     render() {
+        this.messages = Locale.applicationStrings().messages.helpFAQs;
         return(
             <div className="help-FAQs">
                 <div className="help">
-                    <h3>Help</h3>
+                    <h3>{this.messages.help}</h3>
                     <div className="video">
                         <i className="icon fa fa-play" aria-hidden="true"/>
                     </div>
                 </div>
                 <div className="FAQs">
-                    <h3>FAQs</h3>
+                    <h3>{this.messages.FAQsHeading}</h3>
                     {this.displayFAQs()}
                 </div>
             </div>);

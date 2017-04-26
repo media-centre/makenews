@@ -15,10 +15,16 @@ describe("Help", () => {
         }];
         sandbox.stub(Locale, "applicationStrings").returns({
             "messages": {
-                "FAQs": [{
-                    "question": "question",
-                    "answer": "answer"
-                }]
+                "helpFAQs": {
+                    "help": "Help",
+                    "FAQsHeading": "FAQs",
+                    "FAQs": [
+                        {
+                            "question": "What is the purpose of the application?",
+                            "answer": "To act as an aggregator for news items from different sources like RSS feeds, Facebook Page and Twitter Handles or Hashtags"
+                        }
+                    ]
+                }
             }
         });
         helpDom = shallow(<Help FAQs={FAQs}/>);

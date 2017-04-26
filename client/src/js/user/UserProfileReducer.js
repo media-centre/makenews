@@ -31,13 +31,3 @@ export function changePassword(state = { "errorMessage": "", "isSuccess": false 
         return state;
     }
 }
-
-export function changePasswordStrings(state = {}, action = {}) { //eslint-disable-line
-    const appEn = Locale.applicationStrings();
-    return appEn.messages.changePassword;
-}
-
-export function userProfileStrings(state = {}, action = {}) { //eslint-disable-line no-unused-vars
-    const appEn = Locale.applicationStrings();
-    return appEn.messages.userProfileStrings;
-}

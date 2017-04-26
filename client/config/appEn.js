@@ -131,12 +131,16 @@ window.mediaCenter.appEn = {
             "confirm": "CONFIRM",
             "cancel": "CANCEL"
         },
-        "FAQs": [
-            {
-                "question": "What is the purpose of the application?",
-                "answer": "To act as an aggregator for news items from different sources like RSS feeds, Facebook Page and Twitter Handles or Hashtags"
-            }
-        ],
+        "helpFAQs": {
+            "help": "Help",
+            "FAQsHeading": "FAQs",
+            "FAQs": [
+                {
+                    "question": "What is the purpose of the application?",
+                    "answer": "To act as an aggregator for news items from different sources like RSS feeds, Facebook Page and Twitter Handles or Hashtags"
+                }
+            ]
+        },
         "configurePage": {
             "header": {
                 "mySources": "My Sources",
