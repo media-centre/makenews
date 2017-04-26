@@ -16,6 +16,7 @@ var source = require("vinyl-source-stream");
 var babelRegister = null;
 var uglify = require("gulp-uglify");
 var buffer = require("vinyl-buffer");
+var envify = require("gulp-envify");
 
 
 var development = environments.development; //eslint-disable-line no-unused-vars
@@ -54,6 +55,7 @@ gulp.task("client:build-sources", function() {
         })
         .pipe(source("app-min.js"))
         .pipe(buffer())
+        .pipe(production(envify()))
         .pipe(production(uglify()))
         .pipe(gulp.dest(parameters.client.distFolder));
 });
