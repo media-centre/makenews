@@ -3,6 +3,7 @@ import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 import DateUtil from "../util/DateUtil";
 import R from "ramda"; //eslint-disable-line id-length
 import Logger from "../logging/Logger";
+import { FEED_DOCTYPE } from "./../util/Constants";
 
 export default class DeleteSourceHandler {
     constructor(accessToken) {
@@ -39,7 +40,7 @@ export default class DeleteSourceHandler {
         let updatedCollectionFeedDocs = [];
 
         feedDocuments.forEach((feedDoc) => {
-            if(feedDoc.docType === "feed") {
+            if(feedDoc.docType === FEED_DOCTYPE) {
                 currentFeedDoc = feedDoc;
 
                 if(feedDoc.bookmark) {
@@ -48,19 +49,17 @@ export default class DeleteSourceHandler {
                     toBeDeleted.push(feedDoc);
                 }
             } else {
-                delete feedDoc.sourceId;
-                delete feedDoc.feedId;
+                const { _id, collectionId } = feedDoc;
+                const { title, description, link,
+                tags, sourceType, pubDate } = currentFeedDoc;
+                const sourceDeleted = true;
+                const selectText = true;
 
-                feedDoc.title = currentFeedDoc.title;
-                feedDoc.description = currentFeedDoc.description;
-                feedDoc.link = currentFeedDoc.link;
-                feedDoc.tags = currentFeedDoc.tags;
-                feedDoc.sourceType = currentFeedDoc.sourceType;
-                feedDoc.pubDate = currentFeedDoc.pubDate;
-                feedDoc.selectText = true;
-                feedDoc.sourceDeleted = true;
+                const updatedCollectionFeedDoc = { _id, collectionId, title,
+                    description, link, tags, sourceType,
+                    pubDate, selectText, sourceDeleted };
 
-                updatedCollectionFeedDocs.push(feedDoc);
+                updatedCollectionFeedDocs.push(updatedCollectionFeedDoc);
             }
         });
 
@@ -68,7 +67,7 @@ export default class DeleteSourceHandler {
         await this.couchClient.deleteBulkDocuments(docsToBeDeleted);
         try {
             const markedFeeds = await this.markAsSourceDeleted(toBeMarked);
-            updatedCollectionFeedDocs.concat(markedFeeds);
+            updatedCollectionFeedDocs.push(...markedFeeds);
             await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
         } catch(err) {
             DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
@@ -133,12 +132,10 @@ export default class DeleteSourceHandler {
     }
 
     async markAsSourceDeleted(feeds) {
-        const markedFeeds = R.map(feed => {
+        return R.map(feed => {
             feed.sourceDeleted = true;
             return feed;
         })(feeds);
-
-        return markedFeeds;
     }
 
     async deleteOldFeeds() {

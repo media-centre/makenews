@@ -1,5 +1,4 @@
 import CouchClient from "../CouchClient";
-import R from "ramda"; //eslint-disable-line id-length
 import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
 import RouteLogger from "../routes/RouteLogger";
 
@@ -43,44 +42,13 @@ async function getIntermediateDocs(couchClient, collection, offset) {
     return await couchClient.findDocuments(selector);
 }
 
-export async function getCollectionFeedIds(couchClient, sourceIds, feeds = [], skipValue = 0) { // eslint-disable-line no-magic-numbers
-    const collectionFeedDocs = await getCollectionFeedDocs(couchClient, skipValue, sourceIds);
-    const feedsAccumulator = feeds.concat(collectionFeedDocs);
-
-    if(collectionFeedDocs.length === FEED_LIMIT_TO_DELETE_IN_QUERY) {
-        return await getCollectionFeedIds(couchClient, sourceIds, feedsAccumulator, skipValue + FEED_LIMIT_TO_DELETE_IN_QUERY);
-    }
-
-    return R.map(feed => feed.feedId, feedsAccumulator);
-}
-
-async function getCollectionFeedDocs(couchClient, skipValue, sources) {
-    const selector = {
-        "selector": {
-            "docType": {
-                "$eq": "collectionFeed"
-            },
-            "sourceId": {
-                "$in": sources
-            }
-        },
-        "fields": ["feedId"],
-        "skip": skipValue,
-        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
-    };
-    const collectionFeedDocs = await couchClient.findDocuments(selector);
-    return collectionFeedDocs.docs;
-}
-
 export async function deleteCollection(authSession, collectionId) {
     const couchClient = CouchClient.instance(authSession);
+
     const collectionFeedDocs = await _getCollectionFeedDocs(couchClient, collectionId);
     const collectionDoc = await couchClient.getDocument(collectionId);
 
-    const feedsToDelete = R.map(collectionFeed => collectionFeed.feedId)(collectionFeedDocs);
-    const deletedFeeds = await _getSourceDeletedFeeds(couchClient, feedsToDelete);
-
-    await couchClient.deleteBulkDocuments([...collectionFeedDocs, collectionDoc, ...deletedFeeds]);
+    await couchClient.deleteBulkDocuments([...collectionFeedDocs, collectionDoc]);
     return { "ok": true };
 }
 
@@ -97,63 +65,14 @@ async function _getCollectionFeedDocs(couchClient, collectionId) {
     return collectionFeedDocs.docs;
 }
 
-async function _getSourceDeletedFeeds(couchClient, feedsToDelete) {
-    const feedsToDeleteQuery = {
-        "selector": {
-            "_id": {
-                "$in": feedsToDelete
-            },
-            "sourceDeleted": {
-                "$eq": true
-            }
-        },
-        "limit": FEED_LIMIT_TO_DELETE_IN_QUERY
-    };
-    const deletedFeeds = await couchClient.findDocuments(feedsToDeleteQuery);
-    return deletedFeeds.docs;
-}
-
-export async function deleteFeedFromCollection(authSession, intermediateDocId, feedId) {
+export async function deleteFeedFromCollection(authSession, intermediateDocId) {
     const couchClient = CouchClient.instance(authSession);
     try {
         let response = { "ok": true, "deleteFeed": intermediateDocId };
 
         const intermediateDoc = await couchClient.getDocument(intermediateDocId);
-        let docsToDelete = [intermediateDoc];
+        await couchClient.deleteDocument(intermediateDocId, intermediateDoc._rev);
 
-        if(!intermediateDoc.selectText) {
-            response.deleteFeed = intermediateDoc.feedId;
-        }
-
-        if(feedId) {
-            const selector = {
-                "selector": {
-                    "docType": {
-                        "$in": ["collectionFeed", "feed"]
-                    },
-                    "$or": [
-                        {
-                            "feedId": {
-                                "$eq": feedId
-                            }
-                        },
-                        {
-                            "_id": {
-                                "$eq": feedId
-                            }
-                        }
-                    ]
-                }
-            };
-
-            const allDocs = await couchClient.findDocuments(selector);
-
-            if(allDocs.docs.length === 2) { //eslint-disable-line no-magic-numbers
-                const [feedDoc] = allDocs.docs.filter(doc => doc._id === feedId);
-                docsToDelete.push(feedDoc);
-            }
-        }
-        await couchClient.deleteBulkDocuments(docsToDelete);
         RouteLogger.instance().info("CollectionFeedRequestHandler:: Successfully deleted article from collection");
         return response;
     } catch (err) {

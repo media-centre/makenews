@@ -6,7 +6,6 @@ import { assert } from "chai";
 describe("DeleteCollectionFeedRoute", () => {
     const sandbox = sinon.sandbox.create();
     const accessToken = "accessToken";
-    const feedId = "feedId";
     const intermediateDocId = "intermediateDocId";
     let deleteFeed = null, request = null;
     beforeEach("DeleteCollectionFeedRoute", () => {
@@ -15,8 +14,7 @@ describe("DeleteCollectionFeedRoute", () => {
                 "AuthSession": accessToken
             },
             "query": {
-                intermediateDocId,
-                feedId
+                intermediateDocId
             }
         };
 
@@ -47,7 +45,7 @@ describe("DeleteCollectionFeedRoute", () => {
 
         it("should delete feed from collection", async () => {
             let deleteArticleMock = sandbox.mock(CollectionFeedsRequestHandler).expects("deleteFeedFromCollection")
-               .withExactArgs(accessToken, intermediateDocId, feedId).returns(Promise.resolve({ "ok": true }));
+               .withExactArgs(accessToken, intermediateDocId).returns(Promise.resolve({ "ok": true }));
 
             deleteFeed = new DeleteCollectionFeedRoute(request, {});
 

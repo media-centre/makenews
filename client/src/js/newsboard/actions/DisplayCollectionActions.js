@@ -90,9 +90,9 @@ export function deleteCollectionFeed(event, intermediateDocId, feedId) {
         button.className = "spinner";
         button.textContent = "";
         try {
-            const response = await ajaxClient.deleteRequest({ intermediateDocId, feedId });
+            const response = await ajaxClient.deleteRequest({ intermediateDocId });
             if(response.ok) {
-                dispatch({ "type": DELETE_COLLECTION_FEED, "deleteFeed": response.deleteFeed });
+                dispatch({ "type": DELETE_COLLECTION_FEED, "deleteFeed": feedId ? feedId : intermediateDocId });
             } else {
                 throw new Error();
             }

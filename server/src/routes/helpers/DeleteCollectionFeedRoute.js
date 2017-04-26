@@ -6,7 +6,6 @@ export default class DeleteCollectionFeedRoute extends Route {
         super(request, response, next);
         this.authSession = this.request.cookies. AuthSession;
         this.intermediateDocId = this.request.query.intermediateDocId;
-        this.feedId = this.request.query.feedId;
     }
 
     validate() {
@@ -14,6 +13,6 @@ export default class DeleteCollectionFeedRoute extends Route {
     }
 
     async handle() {
-        return await deleteFeedFromCollection(this.authSession, this.intermediateDocId, this.feedId);
+        return await deleteFeedFromCollection(this.authSession, this.intermediateDocId);
     }
 }

@@ -181,7 +181,6 @@ describe("DisplayCollectionAction", () => {
     });
 
     describe("deleteCollectionFeed", () => {
-        const feedId = "feedId";
         const intermediateDocId = "intermediateDocId";
         const event = { "target": {} };
 
@@ -207,12 +206,12 @@ describe("DisplayCollectionAction", () => {
 
         it("should delete selected feed from the collection", (done) => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
-                .withExactArgs({ intermediateDocId, feedId }).returns(Promise.resolve({ "ok": true, "deleteFeed": feedId }));
+                .withExactArgs({ intermediateDocId }).returns(Promise.resolve({ "ok": true, "deleteFeed": intermediateDocId }));
 
-            const actions = [{ "type": DELETE_COLLECTION_FEED, "deleteFeed": feedId }];
+            const actions = [{ "type": DELETE_COLLECTION_FEED, "deleteFeed": intermediateDocId }];
             const store = mockStore([], actions, done);
 
-            store.dispatch(deleteCollectionFeed(event, intermediateDocId, feedId));
+            store.dispatch(deleteCollectionFeed(event, intermediateDocId));
 
             deleteMock.verify();
         });
@@ -220,10 +219,10 @@ describe("DisplayCollectionAction", () => {
         it("should show toast message on failure", async () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
-                .withExactArgs({ intermediateDocId, feedId }).returns(Promise.reject());
+                .withExactArgs({ intermediateDocId }).returns(Promise.reject());
 
             try {
-                const dispatchFn = deleteCollectionFeed(event, intermediateDocId, feedId);
+                const dispatchFn = deleteCollectionFeed(event, intermediateDocId);
                 await dispatchFn();
             } catch(error) {
                 toastMock.verify();
@@ -234,10 +233,10 @@ describe("DisplayCollectionAction", () => {
         it("should show toast message when there is no response from db", async () => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
-                .withExactArgs({ intermediateDocId, feedId }).returns(Promise.resolve({}));
+                .withExactArgs({ intermediateDocId }).returns(Promise.resolve({}));
 
             try {
-                const dispatchFn = deleteCollectionFeed(event, intermediateDocId, feedId);
+                const dispatchFn = deleteCollectionFeed(event, intermediateDocId);
                 await dispatchFn();
             } catch(error) {
                 toastMock.verify();

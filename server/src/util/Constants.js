@@ -8,3 +8,4 @@ export const maxFeedsPerRequest = { "facebook": 100, "twitter": 100 };
 export let FEED_LIMIT_TO_DELETE_IN_QUERY = 1000;
 export const NEWSBOARD_SOURCE_TYPES = { "trending": "trending", "web": "web", "facebook": "facebook", "twitter": "twitter", "bookmark": "bookmark", "collection": "collections" };
 export const SOURCES_PER_REQUEST = 24;
+export const FEED_DOCTYPE = "feed";
