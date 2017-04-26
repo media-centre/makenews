@@ -18,6 +18,7 @@ import Toast from "../../../src/js/utils/custom_templates/Toast";
 import mockStore from "../../helper/ActionHelper";
 import sinon from "sinon";
 import { assert } from "chai";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayCollectionAction", () => {
     let sandbox = null, collection = null;
@@ -96,6 +97,16 @@ describe("DisplayCollectionAction", () => {
 
         beforeEach("deleteCollection", () => {
             sandbox = sinon.sandbox.create();
+            const newsBoardStrings = {
+                "collection": {
+                    "deleteFailure": "Could not able to delete collection"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "newsBoard": newsBoardStrings
+                }
+            });
             ajaxClientInstance = AjaxClient.instance("/collection");
             sandbox.mock(AjaxClient).expects("instance").withExactArgs("/collection").returns(ajaxClientInstance);
         });
@@ -136,11 +147,10 @@ describe("DisplayCollectionAction", () => {
         });
 
         it("should display toast message on failure", async () => {
-
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ collection }).returns(Promise.reject());
 
-            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete collection");
 
             try {
                 let dispatchFunc = deleteCollection(event, collection);
@@ -156,7 +166,7 @@ describe("DisplayCollectionAction", () => {
         it("should display toast when there is no response", async () => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ collection }).returns(Promise.resolve({}));
-            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not delete collection");
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete collection");
 
             try {
                 let dispatchFunc = deleteCollection(event, collection);
@@ -177,6 +187,16 @@ describe("DisplayCollectionAction", () => {
 
         beforeEach("deleteCollectionFeed", () => {
             sandbox = sinon.sandbox.create();
+            const newsBoardStrings = {
+                "article": {
+                    "deleteFailure": "Could not able to delete article"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "newsBoard": newsBoardStrings
+                }
+            });
             ajaxClientInstance = AjaxClient.instance("/collection-feed");
             sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
         });
@@ -198,8 +218,7 @@ describe("DisplayCollectionAction", () => {
         });
 
         it("should show toast message on failure", async () => {
-            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not to delete article");
-
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ intermediateDocId, feedId }).returns(Promise.reject());
 
@@ -213,8 +232,7 @@ describe("DisplayCollectionAction", () => {
         });
 
         it("should show toast message when there is no response from db", async () => {
-            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not to delete article");
-
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ intermediateDocId, feedId }).returns(Promise.resolve({}));
 

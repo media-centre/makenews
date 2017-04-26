@@ -17,8 +17,52 @@ import mockStore from "../../helper/ActionHelper";
 import { expect, assert } from "chai";
 import Toast from "./../../../src/js/utils/custom_templates/Toast";
 import { newsBoardSourceTypes } from "./../../../src/js/utils/Constants";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayArticleActions", () => {
+    const sandbox = sinon.sandbox.create();
+
+    beforeEach("DisplayArticleActions", () => {
+        const newsBoardStrings = {
+            "collection": {
+                "defaultMessage": "No feeds added to collection",
+                "allCollections": "All Collections",
+                "selectCollection": "SELECT A COLLECTION",
+                "createCollection": "Create new collection",
+                "readMoreButton": "Read More",
+                "backButton": "BACK",
+                "saveButton": "SAVE",
+                "confirmDelete": "Do you really want to delete collection",
+                "deleteFaliure": "Could not able to delete collection",
+                "addToCollectionMessages": {
+                    "createCollectionSuccess": "Successfully created collection",
+                    "createCollectionFailure": "Failed to create collection",
+                    "addFeedToCollectionFailure": "Failed to add feed to collection",
+                    "addFeedToCollectionSuccess": "Added to"
+                }
+            },
+            "article": {
+                "defaultMessage": "",
+                "backButton": "back",
+                "addToCollection": "Add to Collection",
+                "bookmark": "Bookmark",
+                "bookmarked": "Bookmarked",
+                "readOriginalArticle": "Read the Original Article",
+                "deleteFaliure": "Could not able to delete article",
+                "fetchingArticleFailure": "Unable to get the article contents"
+            },
+            "bookmarkSuccess": "Successfully bookmarked"
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
+    });
+
+    afterEach("DisplayArticleActions", () => {
+        sandbox.restore();
+    });
 
     describe("updateBookmarkStatus", () => {
         it("should dispatch articleId and bookmarkStatus", () => {
@@ -28,7 +72,6 @@ describe("DisplayArticleActions", () => {
     });
 
     describe("bookmarkArticle", () => {
-        let sandbox = sinon.sandbox.create();
         const article = {
             "_id": "id",
             "title": "title"
@@ -82,10 +125,8 @@ describe("DisplayArticleActions", () => {
     });
 
     describe("displayWebArticle", () => {
-        let sandbox = null;
 
         beforeEach("displayWebArticle", () => {
-            sandbox = sinon.sandbox.create();
             sandbox.useFakeTimers();
         });
 
@@ -132,11 +173,10 @@ describe("DisplayArticleActions", () => {
     });
 
     describe("addToCollection", () => {
-        let sandbox = null, collection = null, docId = null, article = null, body = null, ajaxClientInstance = null,
+        let collection = null, docId = null, article = null, body = null, ajaxClientInstance = null,
             headers = null, response = null;
 
         beforeEach("addToCollection", () => {
-            sandbox = sinon.sandbox.create();
             collection = "collectionName";
             docId = "article id";
             article = { "id": docId, "sourceType": "facebook", "sourceId": "177547780", "selectedTextDoc": {} };

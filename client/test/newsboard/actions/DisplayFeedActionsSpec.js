@@ -18,6 +18,7 @@ import mockStore from "../../helper/ActionHelper";
 import { assert } from "chai";
 import sinon from "sinon";
 import Toast from "../../../src/js/utils/custom_templates/Toast";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayFeedActions", () => {
     describe("paginatedFeeds", () => {
@@ -95,11 +96,23 @@ describe("DisplayFeedActions", () => {
         });
 
         describe("searchFeeds", ()=> {
+            sandbox = sinon.sandbox.create();
+            const newsBoardStrings = {
+                "search": {
+                    "validateKey": "Please enter a keyword minimum of 3 characters",
+                    "errorMessage": "No Search results found for this keyword"
+                }
+            };
+
             beforeEach("searchFeeds", () => {
-                sandbox = sinon.sandbox.create();
+                sandbox.stub(Locale, "applicationStrings").returns({
+                    "messages": {
+                        "newsBoard": newsBoardStrings
+                    }
+                });
             });
 
-            afterEach("searchFeeds", () => {
+            afterEach("DisplayFeedActions", () => {
                 sandbox.restore();
             });
 
@@ -137,9 +150,9 @@ describe("DisplayFeedActions", () => {
                 const ajaxClientInstance = AjaxClient.instance("/search-feeds");
                 sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
                 const getMock = sandbox.mock(ajaxClientInstance).expects("get").withArgs({ sourceType, searchKey, offset })
-                    .returns(Promise.reject({ "message": `No Search results found for this keyword "${searchKey}"` }));
+                    .returns(Promise.reject({ "message": `${newsBoardStrings.search.errorMessage} "${searchKey}"` }));
                 const toastMock = sandbox.mock(Toast).expects("show")
-                    .withExactArgs(`No Search results found for this keyword "${searchKey}"`, "search-warning");
+                    .withExactArgs(`${newsBoardStrings.search.errorMessage} "${searchKey}"`, "search-warning");
 
                 await searchFeeds(sourceType, searchKey, offset, () => {})(()=>{});
 

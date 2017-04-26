@@ -70,7 +70,8 @@ window.mediaCenter.appEn = {
                 "noFeeds": "No feeds to display"
             },
             "search": {
-                "validateKey": "Please enter a keyword minimum of 3 characters"
+                "validateKey": "Please enter a keyword minimum of 3 characters",
+                "errorMessage": "No Search results found for this keyword"
             },
             "showMoreFeedsButton": "Show new feeds",
             "collection": {
@@ -81,7 +82,14 @@ window.mediaCenter.appEn = {
                 "readMoreButton": "Read More",
                 "backButton": "BACK",
                 "saveButton": "SAVE",
-                "confirmDelete": "Do you really want to delete collection"
+                "confirmDelete": "Do you really want to delete collection",
+                "deleteFailure": "Could not able to delete collection",
+                "addToCollectionMessages": {
+                    "createCollectionSuccess": "Successfully created collection",
+                    "createCollectionFailure": "Failed to create collection",
+                    "addFeedToCollectionFailure": "Failed to add feed to collection",
+                    "addFeedToCollectionSuccess": "Added to"
+                }
             },
             "article": {
                 "defaultMessage": "",
@@ -89,8 +97,11 @@ window.mediaCenter.appEn = {
                 "addToCollection": "Add to Collection",
                 "bookmark": "Bookmark",
                 "bookmarked": "Bookmarked",
-                "readOriginalArticle": "Read the Original Article"
-            }
+                "readOriginalArticle": "Read the Original Article",
+                "deleteFailure": "Could not able to delete article",
+                "fetchingArticleFailure": "Unable to get the article contents"
+            },
+            "bookmarkSuccess": "Successfully bookmarked"
         },
         "storyBoard": {
             "createStory": "Create New Story",

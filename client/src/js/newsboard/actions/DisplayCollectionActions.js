@@ -1,5 +1,6 @@
 import AjaxClient from "./../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 export const COLLECTION_FEEDS = "COLLECTION_FEEDS";
 export const NO_COLLECTION_FEEDS = "NO_COLLECTION_FEEDS";
@@ -75,7 +76,8 @@ export function deleteCollection(event, collection) {
         } catch(error) {
             button.className = "delete-collection";
             button.innerHTML = "&times";
-            Toast.show("Could not delete collection");
+            const collectionStrings = Locale.applicationStrings().messages.newsBoard.collection;
+            Toast.show(collectionStrings.deleteFailure);
         }
     };
 }
@@ -95,7 +97,8 @@ export function deleteCollectionFeed(event, intermediateDocId, feedId) {
                 throw new Error();
             }
         } catch(error) {
-            Toast.show("Could not to delete article");
+            const articleStrings = Locale.applicationStrings().messages.newsBoard.article;
+            Toast.show(articleStrings.deleteFailure);
         }
 
         button.className = "delete-feed";

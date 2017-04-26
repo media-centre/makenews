@@ -2,6 +2,7 @@ import AjaxClient from "./../../utils/AjaxClient";
 import { newsBoardTabSwitch, paginatedFeeds } from "./DisplayFeedActions";
 import { newsBoardSourceTypes } from "../../utils/Constants";
 import Toast from "./../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 export const UPDATE_BOOKMARK_STATUS = "UPDATE_BOOKMARK_STATUS";
 export const WEB_ARTICLE_RECEIVED = "WEB_ARTICLE_RECEIVED";
@@ -34,7 +35,8 @@ export function bookmarkArticle(article, currentTab) {
 
         if(response.ok) {
             if(!article.bookmark) {
-                Toast.show("Successfully bookmarked", "bookmark");
+                const newBoardStrings = Locale.applicationStrings().messages.newsBoard;
+                Toast.show(newBoardStrings.bookmarkSuccess, "bookmark");
             }
             dispatch(currentTab === newsBoardSourceTypes.bookmark
                 ? unbookmarkArticle(article._id)
@@ -53,7 +55,8 @@ export function displayWebArticle(feed) {
             const article = await ajaxClient.get({ "url": feed.link });
             dispatch(articleReceived(article.markup, true));
         } catch (err) {
-            Toast.show("Unable to get the article contents");
+            const articleStrings = Locale.applicationStrings().messages.newsBoard.article;
+            Toast.show(articleStrings.fetchingArticleFailure);
             dispatch(articleReceived(feed.description));
         }
     };
@@ -80,6 +83,7 @@ export function addToCollection(collection, article, isNewCollection = false) {
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
+        const collectionStrings = Locale.applicationStrings().messages.newsBoard.collection.addToCollectionMessages;
         try {
             const response = await ajaxClient.put(headers, {
                 "collection": collection,
@@ -89,19 +93,19 @@ export function addToCollection(collection, article, isNewCollection = false) {
                 "selectedTextDoc": article.selectedTextDoc
             });
             if (response.ok === true && article.id) {
-                Toast.show(` Added to '${collection}' collection`, "collection");
+                Toast.show(`${collectionStrings.addFeedToCollectionSuccess}'${collection}'`, "collection");
                 dispatch(newsBoardTabSwitch(article.sourceType));
             } else if (response.ok === true) {
                 dispatch(paginatedFeeds([{ "collection": collection, "_id": response._id }]));
-                Toast.show("Successfully created collection", "success");
+                Toast.show(collectionStrings.createCollectionSuccess, "success");
             } else if (response.message) {
                 dispatch(newsBoardTabSwitch(article.sourceType || newsBoardSourceTypes.collection));
                 Toast.show(response.message);
             } else {
-                Toast.show(isNewCollection ? "Failed to create collection" : "Failed to add feed to collection");
+                Toast.show(isNewCollection ? collectionStrings.createCollectionFailure : collectionStrings.addFeedToCollectionFailure);
             }
         } catch (err) {
-            Toast.show(isNewCollection ? "Failed to create collection" : "Failed to add feed to collection");
+            Toast.show(isNewCollection ? collectionStrings.createCollectionFailure : collectionStrings.addFeedToCollectionFailure);
         }
         dispatch(addArticleToCollection("", "", "", {}));
     };

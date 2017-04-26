@@ -1,5 +1,6 @@
 import AjaxClient from "../../../js/utils/AjaxClient";
 import Toast from "./../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 export const PAGINATED_FETCHED_FEEDS = "PAGINATED_FETCHED_FEEDS";
 export const NEWS_BOARD_CURRENT_TAB = "NEWS_BOARD_CURRENT_TAB";
@@ -98,18 +99,19 @@ export function searchFeeds(sourceType, searchKey, offset, callback) {
             "docsLength": 0
         };
         const ajax = AjaxClient.instance("/search-feeds");
+        const searchStrings = Locale.applicationStrings().messages.newsBoard.search;
         try {
             const feeds = await ajax.get({ sourceType, searchKey, offset });
             if(feeds.docs.length) {
                 dispatch(searchedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
             } else {
-                Toast.show(`No Search results found for this keyword "${searchKey}"`, "search-warning");
+                Toast.show(`${searchStrings.errorMessage} "${searchKey}"`, "search-warning");
             }
             result.hasMoreFeeds = feeds.docs.length === DEFAULT_PAGE_SIZE;
             return callback(result);
         } catch (err) {
-            Toast.show(`No Search results found for this keyword "${searchKey}"`, "search-warning");
+            Toast.show(`${searchStrings.errorMessage} "${searchKey}"`, "search-warning");
             return callback(Object.assign({}, result, { "hasMoreFeeds": false }));
         } finally {
             dispatch(fetchingFeeds(false));
