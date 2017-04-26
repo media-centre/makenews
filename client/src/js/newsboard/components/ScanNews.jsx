@@ -10,11 +10,13 @@ import DisplayFilters from "../filter/DisplayFilters";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Locale from "./../../utils/Locale";
 
 export class ScanNews extends Component {
 
     componentWillMount() {
-        this.props.dispatch(setCurrentHeaderTab("Scan News"));
+        const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
+        this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.newsBoard));
     }
 
     renderFilter() {

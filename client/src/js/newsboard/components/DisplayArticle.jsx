@@ -9,6 +9,7 @@ import { displayArticle } from "./../actions/DisplayFeedActions";
 import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 import { SCAN_NEWS } from "../../header/HeaderActions";
+import Locale from "./../../utils/Locale";
 
 export class DisplayArticle extends Component {
     constructor() {
@@ -39,7 +40,7 @@ export class DisplayArticle extends Component {
 
     renderBody() {
         let toolTip = (<div className="toolTip" id="toolTip">
-            <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>Add To Collection</button>
+            <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>{this.articleMessages.addToCollection}</button>
             <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}/>
         </div>);
 
@@ -70,7 +71,7 @@ export class DisplayArticle extends Component {
             }
 
             <div className="article__original-source">
-                <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">Read the Original Article</a>
+                <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">{this.articleMessages.readOriginalArticle}</a>
             </div>
             {toolTip}
         </main>);
@@ -119,7 +120,7 @@ export class DisplayArticle extends Component {
             this.props.isStoryBoard
                 ? <header className={`${this.articleClass}__header back`}>
                     <button className="back__button" onClick={() => { this.props.articleOpen(); }}>
-                        <i className="icon fa fa-arrow-left" aria-hidden="true"/> back
+                        <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
                     </button>
                   </header>
 
@@ -128,22 +129,23 @@ export class DisplayArticle extends Component {
                     this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
                 }}
                 >
-                    <i className="icon fa fa-folder-o"/> Add to collection
+                    <i className="icon fa fa-folder-o"/> {this.articleMessages.addToCollection}
                 </div>
 
                 {
                     this.props.article.bookmark
                         ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
-                        <i className="icon fa fa-bookmark"/> Bookmarked
+                        <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmarked}
                     </div>
                         : <div className="bookmark" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
-                        <i className="icon fa fa-bookmark"/> Bookmark
+                        <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmark}
                     </div>
                 }
             </header>);
     }
 
     render() {
+        this.articleMessages = Locale.applicationStrings().messages.newsBoard.article;
         this.articleClass = this.props.isStoryBoard ? "story-display-article display-article" : "display-article";
         if(this.props.article && this.props.article._id) {
             if(this.props.collectionDOM) {
@@ -159,7 +161,7 @@ export class DisplayArticle extends Component {
         if(this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection) {
             return (
                 <div className="display-article">
-                        <div className="default-message">No article to display</div>
+                        <div className="default-message">{this.articleMessages.defaultMessage}</div>
                 </div>);
         }
         return null;

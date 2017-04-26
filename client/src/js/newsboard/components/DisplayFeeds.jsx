@@ -170,7 +170,7 @@ export class DisplayFeeds extends Component {
                     this.getMoreFeeds(this.props.sourceType);
                 }
             }
-                > Show new feeds </button>);
+                >{this.newsboardStrings.showMoreFeedsButton}</button>);
         }
         return null;
     }
@@ -195,7 +195,7 @@ export class DisplayFeeds extends Component {
             this.clearState();
             this.searchFeeds(this.props.sourceType);
         } else {
-            Toast.show("Please enter a keyword minimum of 3 characters", "search-warning");
+            Toast.show(this.newsboardStrings.search.validateKey, "search-warning");
         }
     }
 
@@ -239,7 +239,6 @@ export class DisplayFeeds extends Component {
     }
 
     _defaultMessage() {
-        const locale = Locale.applicationStrings().messages.newsBoard;
         const searchKey = this.refs.searchFeeds && this.refs.searchFeeds.value;
         const filter = R.pipe(
             R.values,
@@ -249,11 +248,11 @@ export class DisplayFeeds extends Component {
         if(!this.props.feeds.length) {
             return((!searchKey && !filter)
                 ? <div className="default-message">
-                    {locale[this.props.sourceType]}
+                    {this.newsboardStrings.defaultMessages[this.props.sourceType]}
                     { this.props.sourceType !== "bookmark" && <i className="fa fa-cog"/> }
                 </div>
                 : <div className="default-message">
-                    {this.props.sourceType === "bookmark" ? locale.bookmark : locale.noFeeds}
+                    {this.props.sourceType === "bookmark" ? this.newsboardStrings.defaultMessages.bookmark : this.newsboardStrings.defaultMessages.noFeeds}
                 </div>);
         }
 
@@ -261,6 +260,7 @@ export class DisplayFeeds extends Component {
     }
 
     displayFeeds() {
+        this.newsboardStrings = Locale.applicationStrings().messages.newsBoard;
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
             ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
             : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>

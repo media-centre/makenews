@@ -9,10 +9,11 @@ import { assert } from "chai";
 import sinon from "sinon";
 import * as DisplayArticleActions from "../../../src/js/newsboard/actions/DisplayArticleActions";
 import * as DisplayCollectionActions from "../../../src/js/newsboard/actions/DisplayCollectionActions";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("Display Collections", () => {
     let feeds = null, store = null, result = null;
-    let sandbox = null;
+    const sandbox = sinon.sandbox.create();
 
     beforeEach("Display Collection", () => {
         feeds = [
@@ -26,12 +27,28 @@ describe("Display Collections", () => {
 
         }), applyMiddleware(thunkMiddleware));
 
+        const newsBoardStrings = {
+            "collection": {
+                "defaultMessage": "No feeds added to collection",
+                "allCollections": "All Collections",
+                "selectCollection": "SELECT A COLLECTION",
+                "createCollection": "Create new collection",
+                "readMoreButton": "Read More",
+                "backButton": "BACK",
+                "saveButton": "SAVE",
+                "confirmDelete": "Do you really want to delete collection"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
+
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
                 <DisplayCollection dispatch={()=> {}}/>
             </Provider>);
-
-        sandbox = sinon.sandbox.create();
     });
 
     afterEach("Display Collections", () => {

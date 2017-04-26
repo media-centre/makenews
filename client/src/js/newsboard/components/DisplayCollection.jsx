@@ -9,6 +9,7 @@ import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 import InlineEdit from "./../../utils/components/InlineEdit";
 import R from "ramda"; //eslint-disable-line id-length
+import Locale from "./../../utils/Locale";
 
 export class DisplayCollection extends Component {
     constructor() {
@@ -129,7 +130,7 @@ export class DisplayCollection extends Component {
                     <button className="cancel-collection" onClick={() => {
                         this.setState({ "showCollectionPopup": false });
                     }}
-                    >CANCEL
+                    >{this.collectionMessages.cancelButton}
                     </button>
 
                     <button className="save-collection" onClick={() => {
@@ -138,7 +139,7 @@ export class DisplayCollection extends Component {
                         }
                         this.setState({ "showCollectionPopup": false });
                     }}
-                    >SAVE
+                    >{this.collectionMessages.saveButton}
                     </button>
                 </div>
                 }
@@ -150,7 +151,7 @@ export class DisplayCollection extends Component {
         return (
             <div className="confirmation-popup-overlay">
                 <div className="delete-confirmation-popup">
-                    <div className="confirmation-text"> Do you really want to delete collection <b>{this.deleteCollection.collection}</b>?</div>
+                    <div className="confirmation-text">{this.collectionMessages.confirmDelete}<b>{this.deleteCollection.collection}</b>?</div>
                     <button className="cancel-collection" onClick={() =>
                         this.setState({ "showConfirmationPopup": false })
                     }
@@ -170,7 +171,7 @@ export class DisplayCollection extends Component {
                 this.setState({ "showCollectionPopup": true });
             }}
             >
-                <i className="fa fa-plus-circle"/> Create new collection
+                <i className="fa fa-plus-circle"/> {this.collectionMessages.createCollection}
             </div>
         );
 
@@ -184,7 +185,7 @@ export class DisplayCollection extends Component {
                 } }} addonSrc="./images/search-icon.png"
                 />
             </div>
-            {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">SELECT A COLLECTION</div> : this.createNewCollection()}
+            {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">{this.collectionMessages.selectCollection}</div> : this.createNewCollection()}
             {this.state.showCollectionPopup ? this.showPopup() : null}
             {this.state.showConfirmationPopup ? this.showConfirmationPopup() : null}
             <div className="feeds">
@@ -200,6 +201,7 @@ export class DisplayCollection extends Component {
     }
 
     render() {
+        this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
                 ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/>

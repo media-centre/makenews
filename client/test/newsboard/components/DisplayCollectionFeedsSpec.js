@@ -5,6 +5,8 @@ import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { findAllWithType } from "react-shallow-testutils";
 import { assert } from "chai";
+import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayCollectionFeeds", () => {
     let result = null;
@@ -12,6 +14,31 @@ describe("DisplayCollectionFeeds", () => {
                 { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
                 { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }];
     const collectionName = "test";
+    const sandbox = sinon.sandbox.create();
+
+    beforeEach("DisplayCollectionFeeds", () => {
+        const newsBoardStrings = {
+            "collection": {
+                "defaultMessage": "No feeds added to collection",
+                "allCollections": "All Collections",
+                "selectCollection": "SELECT A COLLECTION",
+                "createCollection": "Create new collection",
+                "readMoreButton": "Read More",
+                "backButton": "BACK",
+                "saveButton": "SAVE",
+                "confirmDelete": "Do you really want to delete collection"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
+    });
+
+    afterEach("DisplayCollectionFeeds", () => {
+        sandbox.restore();
+    });
 
     describe("Feeds", () => {
         let renderer = null;

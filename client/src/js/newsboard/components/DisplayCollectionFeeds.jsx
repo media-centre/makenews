@@ -7,6 +7,7 @@ import { displayCollectionFeeds, clearFeeds } from "./../actions/DisplayCollecti
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import R from "ramda"; //eslint-disable-line id-length
+import Locale from "./../../utils/Locale";
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -75,13 +76,14 @@ export class DisplayCollectionFeeds extends Component {
                 <button className="all-collections" onClick={() => {
                     this.props.isClicked();
                 }}
-                ><i className="fa fa-arrow-left" aria-hidden="true"/>All Collections</button>
+                ><i className="fa fa-arrow-left" aria-hidden="true"/>{this.collectionMessages.allCollections}</button>
               </header>
             : <header className="collection-header" />);
 
     }
 
     render() {
+        this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
                 <DisplayArticle collectionDOM={this.refs.collection} collectionName={this.props.collection.name} />
@@ -90,7 +92,7 @@ export class DisplayCollectionFeeds extends Component {
                     <div className="collection-feeds">
                         {this.props.feeds.map((feed, index) =>
                                 <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)}
-                        {!this.props.feeds.length && <div className="default-message">No feeds added to collection</div>}
+                        {!this.props.feeds.length && <div className="default-message">{this.collectionMessages.defaultMessage}</div>}
 
                     </div>
                 </div>

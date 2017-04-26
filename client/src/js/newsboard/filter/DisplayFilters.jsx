@@ -7,6 +7,7 @@ import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureLi
 import SourceFilters from "./SourceFilters";
 import Input from "./../../utils/components/Input";
 import Toast from "../../utils/custom_templates/Toast";
+import Locale from "./../../utils/Locale";
 
 const sourceTypes = { "web": "web", "twitter": "twitter", "profiles": "facebook", "pages": "facebook", "groups": "facebook" };
 
@@ -112,15 +113,16 @@ export class DisplayFilters extends Component {
                 selectedSources.twitter.add(hashtag);
                 this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
             } else {
-                Toast.show("Hashtag already exists");
+                Toast.show(this.filterStrings.hashTag.alreadyExist);
             }
         } else {
-            Toast.show("Hashtag cannot be Empty");
+            Toast.show(this.filterStrings.hashTag.emptyHashTag);
         }
     }
 
     render() {
         let hashtagValue = "";
+        this.filterStrings = Locale.applicationStrings().messages.newsBoard.filters;
         return (
             <aside ref="sources" className="filters-container">
                 <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => { //eslint-disable-line react/jsx-boolean-value
@@ -132,7 +134,7 @@ export class DisplayFilters extends Component {
                     <div className="hashtag-container">
                        <div className="add-hashtag" onClick={() => this.setState({ "hashtagInputBox": !this.state.hashtagInputBox })}>
                            <i className="fa fa-plus-circle" />
-                           <span> ADD HASHTAG </span>
+                           <span>{this.filterStrings.addHashTags}</span>
                        </div>
                         { this.state.hashtagInputBox &&
                         <div className="hashtag-box">
@@ -142,7 +144,7 @@ export class DisplayFilters extends Component {
                                 this.onEnterKeyPressed(event);
                             } }}
                             />
-                            <div className="add-tag" onClick={() => this.addHashtag(hashtagValue)} >ADD TAG</div>
+                            <div className="add-tag" onClick={() => this.addHashtag(hashtagValue)} >{this.filterStrings.addTag}</div>
                         </div> }
                     </div>
                 }
@@ -150,8 +152,8 @@ export class DisplayFilters extends Component {
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
                 <div className="controls">
-                    <button id="cancelBtn" className="cancel-btn secondary" onClick={() => this.cancelFilter()}>Cancel</button>
-                    <button id="applyBtn" className="apply-btn primary" onClick={() => this.applyFilter()}>Apply</button>
+                    <button id="cancelBtn" className="cancel-btn secondary" onClick={() => this.cancelFilter()}>{this.filterStrings.cancelButton}</button>
+                    <button id="applyBtn" className="apply-btn primary" onClick={() => this.applyFilter()}>{this.filterStrings.applyButton}</button>
                 </div>
             </aside>
         );

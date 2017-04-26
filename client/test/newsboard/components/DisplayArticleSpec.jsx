@@ -10,9 +10,12 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import { findAllWithType } from "react-shallow-testutils";
 import sinon from "sinon";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayArticle", () => {
-    let feed = null, renderer = null, displayArticleDom = null, active = null, sandbox = null;
+    let feed = null, renderer = null, displayArticleDom = null, active = null;
+    const sandbox = sinon.sandbox.create();
+
     beforeEach("DisplayArticle", () => {
         feed = {
             "images": [{ "url": "image url" }],
@@ -26,7 +29,22 @@ describe("DisplayArticle", () => {
             "_id": "123"
         };
         active = false;
-        sandbox = sinon.sandbox.create();
+        const newsBoardStrings = {
+            "article": {
+                "defaultMessage": "",
+                "backButton": "back",
+                "addToCollection": "Add to Collection",
+                "bookmark": "Bookmark",
+                "bookmarked": "Bookmarked",
+                "readOriginalArticle": "Read the Original Article"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
+
         renderer = TestUtils.createRenderer();
         displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab="web" collectionName="test" />);
     });
@@ -260,7 +278,7 @@ describe("DisplayArticle", () => {
             displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={()=>{}} newsBoardCurrentSourceTab={"web"} articleOpen={()=>{}} isStoryBoard={isSelected}/>);
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
-            let [arrowIcon, name] = backButton.props.children;
+            let [arrowIcon,, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("story-display-article display-article__header back");
@@ -269,7 +287,7 @@ describe("DisplayArticle", () => {
             expect(backButton.props.className).to.be.equal("back__button");
             expect(arrowIcon.type).to.be.equal("i");
             expect(arrowIcon.props.className).to.be.equal("icon fa fa-arrow-left");
-            expect(name).to.be.equal(" back");
+            expect(name).to.be.equal("back");
         });
     });
 

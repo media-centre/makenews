@@ -3,10 +3,14 @@ import CollectionFeed from "./../../../src/js/newsboard/components/CollectionFee
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
+import Locale from "./../../../src/js/utils/Locale";
+import sinon from "sinon";
 
 describe("CollectionFeed", () => {
     let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
     const collectionId = "collectionId";
+    const sandbox = sinon.sandbox.create();
+
     beforeEach("CollectionFeed", () => {
         feed = {
             "images": [{ "thumbnail": "some link" }],
@@ -20,8 +24,29 @@ describe("CollectionFeed", () => {
         active = 0;
         onToggle = () => {
         };
+        const newsBoardStrings = {
+            "collection": {
+                "defaultMessage": "No feeds added to collection",
+                "allCollections": "All Collections",
+                "selectCollection": "SELECT A COLLECTION",
+                "createCollection": "Create new collection",
+                "readMoreButton": "Read More",
+                "backButton": "BACK",
+                "saveButton": "SAVE",
+                "confirmDelete": "Do you really want to delete collection"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
         renderer = TestUtils.createRenderer();
         feedDom = renderer.render(<CollectionFeed collectionId = {collectionId} active={active} feed={feed} toggle={onToggle} tab="Scan News"/>);
+    });
+
+    afterEach("CollectionFeed", () => {
+        sandbox.restore();
     });
 
     it("should have a div with feed class", () => {

@@ -11,9 +11,11 @@ import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import sinon from "sinon";
 import { assert } from "chai";
+import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayFilters", () => {
-    let displayFilters = null, displayFiltersDOM = null, sandbox = null;
+    let displayFilters = null, displayFiltersDOM = null;
+    const sandbox = sinon.sandbox.create();
 
     beforeEach("DisplayFilters", () => {
         let store = createStore(() => ({
@@ -26,12 +28,29 @@ describe("DisplayFilters", () => {
             "currentFilterSource": { "web": [{ "_id": "id1", "name": "name1" }], "facebook": [], "twitter": [] }
         }), applyMiddleware(thunkMiddleware));
 
+        const newsBoardStrings = {
+            "filters": {
+                "addHashTags": "ADD HASHTAG",
+                "addTag": "ADD TAG",
+                "cancelButton": "Cancel",
+                "applyButton": "Apply",
+                "hashTag": {
+                    "alreadyExist": "Hashtag already exists",
+                    "emptyHashTag": "Hashtag cannot be Empty"
+                }
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
         displayFilters = TestUtils.renderIntoDocument(
             <Provider store= {store}>
                 <DisplayFilters dispatch={() => {}} callback={() => {}} />
             </Provider>);
         displayFiltersDOM = ReactDOM.findDOMNode(displayFilters);
-        sandbox = sinon.sandbox.create();
+
     });
 
     afterEach("DisplayFilters", () => {

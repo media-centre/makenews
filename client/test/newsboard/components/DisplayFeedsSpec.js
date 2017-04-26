@@ -17,17 +17,6 @@ describe("DisplayFeeds", () => {
     let result = null, feeds = null, store = null;
     let sandbox = sinon.sandbox.create();
     beforeEach("DisplayFeeds", () => {
-        let message = {
-            "messages": {
-                "newsBoard": {
-                    "trending": "Please configure sources on configure page",
-                    "web": "Please configure web sources on configure page",
-                    "facebook": "Please configure facebook sources on configure page",
-                    "twitter": "Please configure twitter sources on configure page",
-                    "bookmark": "Please bookmark the feeds"
-                }
-            }
-        };
         feeds = [
             { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
             { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }
@@ -42,7 +31,28 @@ describe("DisplayFeeds", () => {
         }), applyMiddleware(thunkMiddleware));
 
         sandbox.useFakeTimers();
-        sandbox.stub(Locale, "applicationStrings").returns(message);
+        const newsBoardStrings = {
+            "defaultMessages": {
+                "trending": "Please configure sources on configure page",
+                "web": "Please configure web sources on configure page",
+                "facebook": "Please configure facebook sources on configure page",
+                "twitter": "Please configure twitter sources on configure page",
+                "bookmark": "Please bookmark the feeds",
+                "noFeeds": "No feeds to display"
+            },
+            "search": {
+                "validateKey": "Please enter a keyword minimum of 3 characters"
+            },
+            "showMoreFeedsButton": "Show new feeds",
+            "collection": {
+                "createCollection": "Create new collection"
+            }
+        };
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "newsBoard": newsBoardStrings
+            }
+        });
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
                 <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>

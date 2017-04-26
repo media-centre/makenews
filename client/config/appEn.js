@@ -51,12 +51,46 @@ window.mediaCenter.appEn = {
             "help": "Help & FAQs"
         },
         "newsBoard": {
-            "trending": "Please configure sources on configure page",
-            "web": "Please configure web sources on configure page",
-            "facebook": "Please configure facebook sources on configure page",
-            "twitter": "Please configure twitter sources on configure page",
-            "bookmark": "Please bookmark the feeds",
-            "noFeeds": "No feeds to display"
+            "filters": {
+                "addHashTags": "ADD HASHTAG",
+                "addTag": "ADD TAG",
+                "cancelButton": "Cancel",
+                "applyButton": "Apply",
+                "hashTag": {
+                    "alreadyExist": "Hashtag already exists",
+                    "emptyHashTag": "Hashtag cannot be Empty"
+                }
+            },
+            "defaultMessages": {
+                "trending": "Please configure sources on configure page",
+                "web": "Please configure web sources on configure page",
+                "facebook": "Please configure facebook sources on configure page",
+                "twitter": "Please configure twitter sources on configure page",
+                "bookmark": "Please bookmark the feeds",
+                "noFeeds": "No feeds to display"
+            },
+            "search": {
+                "validateKey": "Please enter a keyword minimum of 3 characters"
+            },
+            "showMoreFeedsButton": "Show new feeds",
+            "collection": {
+                "defaultMessage": "No feeds added to collection",
+                "allCollections": "All Collections",
+                "selectCollection": "SELECT A COLLECTION",
+                "createCollection": "Create new collection",
+                "readMoreButton": "Read More",
+                "backButton": "BACK",
+                "saveButton": "SAVE",
+                "confirmDelete": "Do you really want to delete collection"
+            },
+            "article": {
+                "defaultMessage": "",
+                "backButton": "back",
+                "addToCollection": "Add to Collection",
+                "bookmark": "Bookmark",
+                "bookmarked": "Bookmarked",
+                "readOriginalArticle": "Read the Original Article"
+            }
         },
         "storyBoard": {
             "createStory": "Create New Story",

@@ -6,6 +6,7 @@ import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import { deleteCollectionFeed } from "../actions/DisplayCollectionActions";
+import Locale from "./../../utils/Locale";
 const MAX_DESCRIPTION_LENGTH = 300;
 
 export default class CollectionFeed extends Component {
@@ -29,6 +30,7 @@ export default class CollectionFeed extends Component {
         const [image] = feed.images || [];
         const description = feed.description || "";
         let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
+        const collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (<div className={feedClass}>
                     { this.props.tab !== WRITE_A_STORY &&
                         <button className="delete-feed" onClick={(event) => {
@@ -59,7 +61,7 @@ export default class CollectionFeed extends Component {
                     </div>
                     <div className={`${feedClass}__readmore`}>
                         {feed.sourceType === "web" || video || image || description.length > MAX_DESCRIPTION_LENGTH
-                        ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>Read more ></button> : ""}
+                        ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>{collectionMessages.readMoreButton}></button> : ""}
                     </div>
               </div>);
     }
