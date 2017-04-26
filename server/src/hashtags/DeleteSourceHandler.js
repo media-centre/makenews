@@ -35,24 +35,41 @@ export default class DeleteSourceHandler {
         const feedDocuments = await this._getFeedsFromSources(sourceIds);
         let toBeDeleted = [];
         let toBeMarked = [];
-        let feedsLength = feedDocuments.length;
-        feedDocuments.forEach((feedDoc, index) => {
+        let currentFeedDoc = {};
+        let updatedCollectionFeedDocs = [];
+
+        feedDocuments.forEach((feedDoc) => {
             if(feedDoc.docType === "feed") {
+                currentFeedDoc = feedDoc;
+
                 if(feedDoc.bookmark) {
                     toBeMarked.push(feedDoc);
-                } else if(index < feedsLength - 1) { //eslint-disable-line no-magic-numbers
-                    feedDocuments[index + 1].feedId === feedDoc._id ? toBeMarked.push(feedDoc) : toBeDeleted.push(feedDoc); //eslint-disable-line no-magic-numbers, no-unused-expressions
                 } else {
                     toBeDeleted.push(feedDoc);
                 }
             } else {
-                return;
+                delete feedDoc.sourceId;
+                delete feedDoc.feedId;
+
+                feedDoc.title = currentFeedDoc.title;
+                feedDoc.description = currentFeedDoc.description;
+                feedDoc.link = currentFeedDoc.link;
+                feedDoc.tags = currentFeedDoc.tags;
+                feedDoc.sourceType = currentFeedDoc.sourceType;
+                feedDoc.pubDate = currentFeedDoc.pubDate;
+                feedDoc.selectText = true;
+                feedDoc.sourceDeleted = true;
+
+                updatedCollectionFeedDocs.push(feedDoc);
             }
         });
+
         let docsToBeDeleted = toBeDeleted.concat(sources);
         await this.couchClient.deleteBulkDocuments(docsToBeDeleted);
         try {
-            await this.markAsSourceDeleted(toBeMarked);
+            const markedFeeds = await this.markAsSourceDeleted(toBeMarked);
+            updatedCollectionFeedDocs.concat(markedFeeds);
+            await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
         } catch(err) {
             DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
         }
@@ -121,7 +138,7 @@ export default class DeleteSourceHandler {
             return feed;
         })(feeds);
 
-        return await this.couchClient.saveBulkDocuments({ "docs": markedFeeds });
+        return markedFeeds;
     }
 
     async deleteOldFeeds() {

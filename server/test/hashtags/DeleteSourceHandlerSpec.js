@@ -34,14 +34,21 @@ describe("DeleteSourceHandler", () => {
         it("should delete feeds of the given sources", async () => {
             let sources = ["newsClick"];
             let sourcesDoc = { "docs": [{ "_id": "source1" }] };
-            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
-                { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" }, { "_id": "id30", "docType": "feed" }] };
+            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" },
+                { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
+                { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" },
+                { "_id": "id30", "docType": "feed" }] };
+
             let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedDocs));
+
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs([{ "_id": "id30", "docType": "feed" }, { "_id": "source1" }]).returns(Promise.resolve({ "ok": true }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
+                .withExactArgs([{ "_id": "id29", "docType": "feed" }, { "_id": "id30", "docType": "feed" }, { "_id": "source1" }]).returns(Promise.resolve({ "ok": true }));
+
             let res = await deleteSourceHandler.deleteSources(sources);
+
             findMock.verify();
             saveMock.verify();
             deleteMock.verify();
@@ -82,7 +89,8 @@ describe("DeleteSourceHandler", () => {
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedDocs));
             let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs([{ "_id": "id30", "docType": "feed" }, { "_id": "#abc" }]).returns(Promise.resolve({ "ok": true }));
+            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
+                .withExactArgs([{ "_id": "id29", "docType": "feed" }, { "_id": "id30", "docType": "feed" }, { "_id": "#abc" }]).returns(Promise.resolve({ "ok": true }));
             await deleteSourceHandler.deleteHashTags();
             findMock.verify();
             saveMock.verify();

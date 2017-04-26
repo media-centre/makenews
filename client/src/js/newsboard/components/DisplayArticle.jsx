@@ -63,7 +63,7 @@ export class DisplayArticle extends Component {
                 { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
             </div>
 
-            {this.props.article.sourceType === "web" && !this.props.article.selectText
+            {this.props.article.sourceType === "web" && (!this.props.article.selectText || this.props.article.sourceDeleted)
                 ? <DisplayWebArticle toolTip={this._showToolTip.bind(this)}/>
                 : <div className="article__desc" onMouseUp={() => { this._showToolTip(); }}>
                 { this.props.article.description }
