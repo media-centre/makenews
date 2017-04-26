@@ -28,8 +28,18 @@ export class StoryCards extends Component {
 
     _renderStoriesList() {
         const storyBoard = Locale.applicationStrings().messages.storyBoard;
-        let storiesArray = [];
-        storiesArray.push(<li className="add-card" key="0">
+        const storiesArray = this.props.stories.map((story, index) => {
+            const inc = 1;
+            return (<li key={index + inc} className="added-card">
+                <i className="fa fa-remove icon delete-icon" onClick={(event) => this.deleteStory(story._id, event)}/>
+                <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
+                    <div className="card">
+                        <i ref={`title${story.title}`}>{story.title}</i>
+                    </div>
+                </Link>
+            </li>);
+        });
+        storiesArray.unshift(<li className="add-card" key="0">
             <Link ref="newStoryCard" className="navigation-link" to="/story-board/story">
                 <div className="card">
                 <i className="fa fa-plus-circle icon" aria-hidden="true"/>
@@ -37,18 +47,6 @@ export class StoryCards extends Component {
                 </div>
             </Link>
         </li>);
-        this.props.stories.map((story, index) =>
-            storiesArray.push(
-                <li key={index + 1} className="added-card">
-                    <i className="fa fa-remove icon delete-icon" onClick={(event) => this.deleteStory(story._id, event)}/>
-                    <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
-                        <div className="card">
-                            <i ref={`title${story.title}`}>{story.title}</i>
-                        </div>
-                    </Link>
-                </li>
-            )
-        );
         return storiesArray;
     }
 

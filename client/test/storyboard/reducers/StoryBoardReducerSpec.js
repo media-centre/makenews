@@ -1,6 +1,6 @@
-import { stories, untitledIndex } from "../../../src/js/storyboard/reducers/StoryBoardReducer";
+import { stories } from "../../../src/js/storyboard/reducers/StoryBoardReducer";
 import { assert } from "chai";
-import { ADD_STORY_TITLE, CLEAR_STORIES, UNTITLED_NUMBER, REMOVE_STORY } from "../../../src/js/storyboard/actions/StoryBoardActions";
+import { ADD_STORY_TITLE, CLEAR_STORIES, REMOVE_STORY } from "../../../src/js/storyboard/actions/StoryBoardActions";
 
 describe("StoryBoardReducers", () => {
     describe("stories", () => {
