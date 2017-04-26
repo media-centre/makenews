@@ -48,14 +48,6 @@ describe("StoryBoardActions", () => {
         });
     });
 
-    describe("addDefaultTitle", () => {
-        it("should dispatch UNTITLED_NUMBER action with index", (done) => {
-            let action = [{ "type": StoryBoardActions.UNTITLED_NUMBER, "untitledIndex": "Untitled2" }];
-            let store = mockStore("Untitled1", action, done);
-            store.dispatch(StoryBoardActions.addDefaultTitle("Untitled2"));
-        });
-    });
-
     describe("deleteStory", () => {
         it("should dispatch REMOVE_STORY action with id", (done) => {
             const storyBoardMessages = {

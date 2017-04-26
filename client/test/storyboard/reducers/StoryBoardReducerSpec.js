@@ -24,16 +24,4 @@ describe("StoryBoardReducers", () => {
             assert.deepEqual([{ "_id": 1 }, { "_id": 3 }], stories([{ "_id": 1 }, { "_id": 2 }, { "_id": 3 }], action));
         });
     });
-
-    describe("untitledIndex", () => {
-        it("should return default index", () => {
-            assert.deepEqual("Untitled1", untitledIndex());
-        });
-
-        it("should return index if action type is UNTITLED_INDEX", () => {
-            let index = "Untitled2";
-            let action = { "type": UNTITLED_NUMBER, "untitledIndex": index };
-            assert.deepEqual("Untitled2", untitledIndex("Untitled1", action));
-        });
-    });
 });

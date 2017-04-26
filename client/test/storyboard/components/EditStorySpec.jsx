@@ -1,4 +1,4 @@
-import { EditStory } from "../../../src/js/storyboard/components/EditStory";
+import EditStory from "../../../src/js/storyboard/components/EditStory";
 import TestUtils from "react-addons-test-utils";
 import { shallow } from "enzyme";
 import React from "react";
@@ -41,7 +41,7 @@ describe("EditStory", () => {
             }
         });
         renderer = TestUtils.createRenderer();
-        renderer.render(<EditStory story={story} dispatch={() => {}}/>);
+        renderer.render(<EditStory story={story} />);
         renderedOutput = renderer.getRenderOutput();
     });
 

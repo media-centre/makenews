@@ -5,7 +5,6 @@ import Locale from "./../../utils/Locale";
 export const ADD_STORY_TITLE = "Story title";
 export const REMOVE_STORY = "REMOVE_STORY";
 export const CLEAR_STORIES = "CLEAR_STORIES";
-export const UNTITLED_NUMBER = "UNTITLED_NUMBER";
 
 export const clearStories = {
     "type": CLEAR_STORIES
@@ -48,10 +47,5 @@ export function getStories() {
                 dispatch(setStoryTitle(doc));
             });
         });
-    };
-}
-export function addDefaultTitle(untitledIndex) {
-    return (dispatch) => {
-        dispatch({ "type": UNTITLED_NUMBER, untitledIndex });
     };
 }

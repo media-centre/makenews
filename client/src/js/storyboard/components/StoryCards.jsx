@@ -1,4 +1,3 @@
-/* eslint no-magic-numbers:0*/
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -17,25 +16,8 @@ export class StoryCards extends Component {
         this.props.dispatch(StoryBoardActions.getStories());
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.props.dispatch(StoryBoardActions.addDefaultTitle(this._untitledNumber(nextProps.stories)));
-    }
-
     componentWillUnmount() {
         this.props.dispatch(StoryBoardActions.clearStories);
-    }
-
-    _untitledNumber(stories) {
-        const storyBoard = Locale.applicationStrings().messages.storyBoard;
-        let untitled = [];
-        let storyTitles = stories.map((value) => value.title);
-        untitled = Array(storyTitles.length + 1).fill().map((value, index) => { //eslint-disable-line consistent-return
-            let untitledNo = storyBoard.untitledStory + (index + 1);
-            if(storyTitles.indexOf(untitledNo) === -1) {
-                return untitledNo;
-            }
-        });
-        return untitled.sort()[0];
     }
 
     deleteStory(id, event) {

@@ -19,7 +19,7 @@ import { configuredSources,
 import { sourcesAuthenticationInfo } from "./config/reducers/SourcesAuthenticationInfo";
 import { webArticleMarkup } from "./newsboard/reducers/DisplayArticleReducers";
 import { addArticleToCollection } from "./newsboard/reducers/DisplayArticleReducers";
-import { stories, untitledIndex } from "./storyboard/reducers/StoryBoardReducer";
+import { stories } from "./storyboard/reducers/StoryBoardReducer";
 import { displayCollection, currentCollection } from "./newsboard/reducers/DisplayCollectionReducer";
 import { currentFilter, currentFilterSource } from "./newsboard/filter/FilterReducer";
 
@@ -46,7 +46,6 @@ const contentDiscoveryApp = combineReducers({
     stories,
     currentFilter,
     currentFilterSource,
-    untitledIndex,
     fetchingFeeds,
     deleteSourceStatus
 });

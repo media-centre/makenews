@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
-import { connect } from "react-redux";
 import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
@@ -14,7 +13,7 @@ import AppWindow from "./../../utils/AppWindow";
 import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
 import Locale from "./.././../utils/Locale";
 
-export class EditStory extends Component {
+export default class EditStory extends Component {
 
     static blobInstance(byteNumbers) {
         return new Blob([byteNumbers], { "type": "text/html" });
@@ -30,9 +29,8 @@ export class EditStory extends Component {
     }
 
     componentDidMount() {
-        const path = this.props.location.pathname;
-        this.storyId = path.slice(path.lastIndexOf("/") + 1, path.length); //eslint-disable-line no-magic-numbers
-        if(this.storyId && this.storyId !== "story") {
+        this.storyId = this.props.params.storyId;
+        if(this.storyId) {
             this._getStory(this.storyId);
         }
     }
@@ -58,15 +56,12 @@ export class EditStory extends Component {
 
     async _saveStory() {
         const storyboard = Locale.applicationStrings().messages.storyBoard;
-        if(this.storyId) {
-            let title = this.state.title;
-            if (this.state.body && !title) {
-                this.story.title = this.props.untitledIndex;
-            } else {
-                this.story.title = this.state.title;
-            }
-            this.story.body = this.state.body;
+        let title = this.state.title;
+        if (this.state.body && !title && !this.storyId) {
+            title = `Untitled_${new Date().getTime()}`;
         }
+        this.story.title = title;
+        this.story.body = this.state.body;
 
         if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
             Toast.show(storyboard.warningMessages.emptyStory);
@@ -80,6 +75,11 @@ export class EditStory extends Component {
                 let response = await ajax.put(headers, { "story": this.story });
                 this.story._rev = response.rev;
                 this.story._id = response.id;
+                if(!this.storyId) {
+                    this.storyId = response.id;
+                    this.setState({ "title": this.story.title,
+                        "body": this.story.body });
+                }
                 Toast.show(storyboard.successMessages.saveStory, "success");
             } catch(error) {
                 if(error.message === "Please add title") {
@@ -166,9 +166,7 @@ export class EditStory extends Component {
 }
 
 EditStory.propTypes = {
-    "dispatch": PropTypes.func.isRequired,
-    "untitledIndex": PropTypes.string,
-    "location": PropTypes.object
+    "params": PropTypes.object
 };
 
 EditStory.modules = {
@@ -178,10 +176,3 @@ EditStory.modules = {
         "container": ".ql-toolbar"
     }
 };
-
-function mapToStore(store) {
-    return {
-        "untitledIndex": store.untitledIndex
-    };
-}
-export default connect(mapToStore)(EditStory);
