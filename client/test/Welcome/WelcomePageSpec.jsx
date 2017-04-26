@@ -5,9 +5,28 @@ import { expect } from "chai";
 import { shallow } from "enzyme";
 import { Link } from "react-router";
 import sinon from "sinon";
+import Locale from "./../../src/js/utils/Locale";
 
 describe("WelcomePage", () => {
-    const welcomeDOM = shallow(<WelcomePage />);
+    const sandbox = sinon.sandbox.create();
+    let welcomeDOM = null;
+
+    beforeEach("WelcomePage", () => {
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "welcomePage": {
+                    "heading": "Hello",
+                    "message": "Welcome onboard. Hungry for news? Lets get started to collect and sort your news at one stop. Here are a few things you might want to know.",
+                    "nextButton": "Next"
+                }
+            }
+        });
+        welcomeDOM = shallow(<WelcomePage />);
+    });
+
+    afterEach("WelcomePage", () => {
+        sandbox.restore();
+    });
 
     it("should have a root div with welcome-page class", () => {
         expect(welcomeDOM.node.type).to.equals("div");

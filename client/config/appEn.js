@@ -190,6 +190,18 @@ window.mediaCenter.appEn = {
             "signInWarning": "Please, sign into your twitter account",
             "loginSuccess": "Login successful",
             "loginFailure": "Login failed"
+        },
+        "welcomePage": {
+            "heading": "Hello",
+            "message": "Welcome onboard. Hungry for news? Lets get started to collect and sort your news at one stop. Here are a few things you might want to know.",
+            "nextButton": "Next"
+        },
+        "configurationIntro": {
+            "introMessage": "To view your news at one stop you can configure all your key sources and aggregate them on Makenews.",
+            "web": "Web",
+            "facebook": "Facebook",
+            "twitter": "Twitter",
+            "getStarted": "Get Started"
         }
     }
 };

@@ -4,9 +4,30 @@ import { expect } from "chai";
 import ConfigurationIntro from "./../../src/js/welcome/ConfigurationIntro";
 import History from "./../../src/js/History";
 import sinon from "sinon";
+import Locale from "./../../src/js/utils/Locale";
 
 describe("ConfigurationIntro", () => {
-    const wrapper = shallow(<ConfigurationIntro />);
+    const sandbox = sinon.sandbox.create();
+    let wrapper = null;
+
+    beforeEach("WelcomePage", () => {
+        sandbox.stub(Locale, "applicationStrings").returns({
+            "messages": {
+                "configurationIntro": {
+                    "introMessage": "To view your news at one stop you can configure all your key sources and aggregate them on Makenews.",
+                    "web": "Web",
+                    "facebook": "Facebook",
+                    "twitter": "Twitter",
+                    "getStarted": "Get Started"
+                }
+            }
+        });
+        wrapper = shallow(<ConfigurationIntro />);
+    });
+
+    afterEach("WelcomePage", () => {
+        sandbox.restore();
+    });
 
     it("should have a root div with welcome-page class", () => {
         expect(wrapper.node.type).to.equals("div");
@@ -37,39 +58,38 @@ describe("ConfigurationIntro", () => {
         const [web] = wrapper.find(".source").nodes;
         expect(web.type).to.equals("span");
 
-        const [icon, text] = web.props.children;
+        const [icon,, text] = web.props.children;
         expect(icon.props.className).to.equals("fa fa-web");
-        expect(text).to.equals(" Web");
+        expect(text).to.equals("Web");
     });
 
     it("should have facebook source icon and text", () => {
         const [, facebook] = wrapper.find(".source").nodes;
         expect(facebook.type).to.equals("span");
 
-        const [icon, text] = facebook.props.children;
+        const [icon,, text] = facebook.props.children;
         expect(icon.props.className).to.equals("fa fa-facebook");
-        expect(text).to.equals(" Facebook");
+        expect(text).to.equals("Facebook");
     });
 
     it("should have twitter source icon and text", () => {
         const [, , twitter] = wrapper.find(".source").nodes;
         expect(twitter.type).to.equals("span");
 
-        const [icon, text] = twitter.props.children;
+        const [icon,, text] = twitter.props.children;
         expect(icon.props.className).to.equals("fa fa-twitter");
-        expect(text).to.equals(" Twitter");
+        expect(text).to.equals("Twitter");
     });
 
     it("should have a button for Get Started", () => {
         const link = wrapper.find(".makenews-desc-link");
         expect(link.node.type).to.equals("button");
 
-        const [,, text] = link.node.props.children.props.children;
-        expect(text).to.equals(" Get Started ");
+        const [,,, text] = link.node.props.children.props.children;
+        expect(text).to.equals("Get Started");
     });
 
     it("should go to /configure/web after clicking on Get Started button", () => {
-        const sandbox = sinon.sandbox.create();
         const historyPushSpy = sandbox.spy();
         sandbox.stub(History, "getHistory").returns({ "push": historyPushSpy });
         const configIntroDOM = shallow(<ConfigurationIntro />);
