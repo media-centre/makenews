@@ -4,5 +4,10 @@
     ["transform-runtime", {
       "polyfill": false
     }]
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": ["react-optimize"]
+    }
+  }
 }
