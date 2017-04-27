@@ -48,7 +48,7 @@ gulp.task("client:build-sources", function() {
         .pipe(gulp.dest(parameters.client.distFolder + "/config"));
 
     return browserify({ "entries": parameters.client.srcPath + "/index.jsx", "extensions": [".jsx", ".js"], "debug": development() })
-        .transform(babelify, { "presets": ["es2015", "react"] })
+        .transform(babelify)
         .bundle()
         .on("error", function(err) {
             console.log("Error : " + err.message);
