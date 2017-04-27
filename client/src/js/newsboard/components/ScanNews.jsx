@@ -14,6 +14,11 @@ import Locale from "./../../utils/Locale";
 
 export class ScanNews extends Component {
 
+    constructor() {
+        super();
+        this.filterCallBack = this.filterCallBack.bind(this);
+    }
+
     componentWillMount() {
         const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
         this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.newsBoard));
@@ -23,19 +28,16 @@ export class ScanNews extends Component {
         this.props.dispatch(filterTabSwitch(this.props.currentTab));
     }
 
-    getTabs() {
-        if (this.props.currentFilter !== "") {
-            return <FilterTabs />;
-        }
-        return <NewsBoardTabs />;
+    filterCallBack() {
+        this.props.dispatch(filterTabSwitch(""));
     }
 
     render() {
         if(this.props.currentFilter !== "") {
             return(
                 <div className="news-board-container">
-                    <FilterTabs currentTab = {this.props.currentTab} />
-                    <DisplayFilters callback={() => this.hideFilter()} />
+                    <FilterTabs callback={this.filterCallBack} currentTab = {this.props.currentTab} />
+                    <DisplayFilters />
                 </div>
             );
         }

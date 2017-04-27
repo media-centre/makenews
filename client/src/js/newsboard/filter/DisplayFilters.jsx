@@ -27,6 +27,10 @@ export class DisplayFilters extends Component {
         this.initSelectedSources();
     }
 
+    componentWillUnmount() {
+        this.initSelectedSources();
+    }
+
     initSelectedSources() {
         let { web, facebook, twitter } = this.props.currentFilterSource;
         selectedSources = { "web": new Set(web), "facebook": new Set(facebook), "twitter": new Set(twitter) };
@@ -174,7 +178,6 @@ DisplayFilters.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "searchKeyword": PropTypes.string,
     "currentTab": PropTypes.string.isRequired,
-    "callback": PropTypes.func,
     "currentFilterSource": PropTypes.object
 };
 
