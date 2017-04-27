@@ -135,7 +135,7 @@ export class DisplayCollection extends Component {
 
                     <button className="save-collection" onClick={() => {
                         if (!StringUtil.isEmptyString(this.refs.collectionName.value)) {
-                            this.props.dispatch(addToCollection(this.refs.collectionName.value, this.props.addArticleToCollection, true));
+                            this.props.dispatch(addToCollection(this.refs.collectionName.value.trim(), this.props.addArticleToCollection, true));
                         }
                         this.setState({ "showCollectionPopup": false });
                     }}

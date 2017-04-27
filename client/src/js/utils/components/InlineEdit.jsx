@@ -80,7 +80,7 @@ export default class InlineEdit extends React.Component {
     commitEditing() {
         this.setState({ "editing": false, "text": this.state.text });
         let newProp = {};
-        newProp[this.props.paramName] = this.state.text;
+        newProp[this.props.paramName] = this.state.text.trim();
         this.props.change(newProp);
     }
 
