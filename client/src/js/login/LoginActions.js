@@ -24,6 +24,9 @@ export function userLogin(history, userName, password) {
                 history.push("/onboard");
                 sessionStorage.setValue(AppSessionStorage.KEYS.FIRST_TIME_USER, true);
             } else {
+                if(sessionStorage.getValue(AppSessionStorage.KEYS.FIRST_TIME_USER)) {
+                    sessionStorage.remove(AppSessionStorage.KEYS.FIRST_TIME_USER);
+                }
                 history.push("/newsBoard");
             }
         } catch(errorData) {

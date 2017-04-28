@@ -7,6 +7,7 @@ import { assert } from "chai";
 import sinon from "sinon";
 import DeleteSourceHandler from "../../../src/hashtags/DeleteSourceHandler";
 
+
 describe("LoginRoute", () => {
     let request = null, response = null, userName = null, password = null,
         sandbox = sinon.sandbox.create();
@@ -119,6 +120,7 @@ describe("LoginRoute", () => {
                 "_id": "org.couchdb.user:minion",
                 "name": "minion"
             }));
+            sandbox.stub(UserRequest, "markAsVisitedUser").returns(Promise.resolve(false));
             response = {
                 "status": () => {
                     return response;

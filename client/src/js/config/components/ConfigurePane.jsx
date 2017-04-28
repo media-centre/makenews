@@ -11,7 +11,6 @@ import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
 import { showAddUrl } from "./../actions/AddUrlActions";
 import AppSessionStorage from "../../utils/AppSessionStorage";
-import { markAsVisitedUser } from "../../welcome/FirstTimeUserActions";
 import Locale from "./../../utils/Locale";
 
 export class ConfigurePane extends Component {
@@ -47,21 +46,18 @@ export class ConfigurePane extends Component {
     }
 
     checkConfiguredSources() {
-        const isFirstTimeUser = this.appSessionStorage.getValue(AppSessionStorage.KEYS.FIRST_TIME_USER);
-
+        this.appSessionStorage.remove(AppSessionStorage.KEYS.FIRST_TIME_USER);
         const hasConfiguredSources = R.pipe(
             R.values,
             R.any(sources => sources.length)
         )(this.props.configuredSources);
 
         if (hasConfiguredSources) {
-            if(isFirstTimeUser) {
-                markAsVisitedUser();
-            }
             History.getHistory().push("/newsBoard");
         } else {
             this.setState({ "showConfigurationWarning": true });
         }
+
     }
 
     checkEnterKey(event) {

@@ -138,7 +138,7 @@ describe("UserRequest", () => {
     
     describe("MarkAsVisitedUser", () => {
         const token = "token";
-        let couchClient = null;
+        let couchClient = null, couchClientUser = null;
         const updatedUserDetails = {
             "_id": "org.couchdb.user:test_user_name",
             "_rev": "12345",
@@ -154,7 +154,10 @@ describe("UserRequest", () => {
         beforeEach("MarkAsVisitedUser", () => {
             sandbox = sinon.sandbox.create();
             couchClient = new CouchClient(token, "_users");
-            sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
+            couchClientUser = new CouchClient(token);
+            let couchInstanceMock = sandbox.mock(CouchClient).expects("instance").twice();
+            couchInstanceMock.onFirstCall().returns(couchClient);
+            couchInstanceMock.onSecondCall().returns(couchClientUser);
         });
 
         afterEach("MarkAsVisitedUser", () => {
@@ -162,8 +165,8 @@ describe("UserRequest", () => {
         });
 
         it("should update the userDetails document with visitedUser as true and return success response", async () => {
-            const expectedResponse = { "ok": true };
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
+            const findDocumentMock = sandbox.mock(couchClientUser).expects("findDocuments");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + userName,
                 "_rev": "12345",
@@ -175,13 +178,18 @@ describe("UserRequest", () => {
                 "salt": "123324124124",
                 "type": "user"
             }));
+            findDocumentMock.returns(Promise.resolve({ "docs": [{
+                "_id": "newsclick.in",
+                "docType": "source",
+                "sourceType": "web"
+            }] }));
 
             sandbox.mock(couchClient).expects("updateDocument")
-                .withExactArgs(updatedUserDetails).returns(Promise.resolve(expectedResponse));
+                .returns(Promise.resolve(true));
 
             const response = await UserRequest.markAsVisitedUser(token, userName);
 
-            assert.deepEqual(response, expectedResponse);
+            assert.deepEqual(response, true);
         });
 
         it("should reject with error if getDocument returns an error", async () => {

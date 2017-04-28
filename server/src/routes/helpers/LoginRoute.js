@@ -5,6 +5,7 @@ import RouteLogger from "../RouteLogger";
 import Route from "./Route";
 import StringUtil from "../../../../common/src/util/StringUtil";
 import { userDetails } from "../../Factory";
+import { markAsVisitedUser } from "../../login/UserRequest";
 import DeleteSourceHandler from "../../../src/hashtags/DeleteSourceHandler";
 
 export default class LoginRoute extends Route {
@@ -51,7 +52,8 @@ export default class LoginRoute extends Route {
         deleteSourceHandler.deleteOldFeeds();
         let responseData = { "userName": this.userName, "dbParameters": dbJson };
         if(!userData.visitedUser) {
-            responseData.firstTimeUser = true;
+            let visited = await markAsVisitedUser(token, this.userName);
+            responseData.firstTimeUser = !visited;
         }
         this.response.status(HttpResponseHandler.codes.OK)
             .append("Set-Cookie", authSessionCookie)

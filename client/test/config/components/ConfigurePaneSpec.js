@@ -14,7 +14,6 @@ import thunkMiddleware from "redux-thunk";
 import { shallow } from "enzyme";
 import History from "./../../../src/js/History";
 import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
-import * as FirstTimeUser from "./../../../src/js/welcome/FirstTimeUserActions";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("Configure Pane", () => {
@@ -272,16 +271,11 @@ describe("Configure Pane", () => {
             const history = History.getHistory();
             sandbox.stub(History, "getHistory").returns(history);
             const historyPushMock = sandbox.mock(history).expects("push").withExactArgs("/newsBoard");
-            const isFirstTimeUserMock = sandbox.mock(appStore).expects("getValue")
+            const isFirstTimeUserMock = sandbox.mock(appStore).expects("remove")
                 .withExactArgs(AppSessionStorage.KEYS.FIRST_TIME_USER)
                 .returns(true);
-
-            const markAsVisitedUserMock = sandbox.mock(FirstTimeUser).expects("markAsVisitedUser");
-
             wrapper.instance().checkConfiguredSources();
-
             isFirstTimeUserMock.verify();
-            markAsVisitedUserMock.verify();
             historyPushMock.verify();
         });
     });

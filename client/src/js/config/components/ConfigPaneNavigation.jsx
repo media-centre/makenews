@@ -4,9 +4,11 @@ import { Link } from "react-router";
 import { connect } from "react-redux";
 import R from "ramda"; //eslint-disable-line id-length
 import Locale from "./../../utils/Locale";
+import AppSessionStorage from "../../utils/AppSessionStorage";
 
 export class ConfigPaneNavigation extends Component {
     navButtons() {
+        const firstTimeUser = AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.FIRST_TIME_USER);
         const hasConfiguredSources = R.pipe(
             R.values,
             R.any(sources => sources.length)
@@ -20,7 +22,7 @@ export class ConfigPaneNavigation extends Component {
                             <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.next}
                         </Link>
                         {
-                            hasConfiguredSources &&
+                            hasConfiguredSources && !firstTimeUser &&
                             <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
                                 <i className="fa fa-check"/> {this.configureHeaderStrings.done}
                             </Link>
@@ -60,7 +62,7 @@ export class ConfigPaneNavigation extends Component {
                     <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.next}
                 </Link>
                 {
-                    hasConfiguredSources &&
+                    hasConfiguredSources && !firstTimeUser &&
                     <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
                         <i className="fa fa-check"/> {this.configureHeaderStrings.done}
                     </Link>

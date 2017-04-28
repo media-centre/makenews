@@ -4,7 +4,6 @@ import LogoutRoute from "./helpers/LogoutRoute";
 import RenewSessionRoute from "./helpers/RenewSessionRoute";
 import ChangePasswordRoute from "./helpers/ChangePasswordRoute";
 import RouteLogger from "./RouteLogger";
-import MarkVisitedUserRoute from "./helpers/MarkVisitedUserRoute";
 
 export default (app) => {
     app.post("/login", (request, response, next) => {
@@ -49,10 +48,5 @@ export default (app) => {
         } catch(error) {
             RouteLogger.instance().error("/change_password error. Error: %s", error);
         }
-    });
-
-    app.put("/visited-user", (request, response, next) => {
-        RouteLogger.instance().info("AuthorizationRoutes:: /visited-user received. url = %s", request.url);
-        new MarkVisitedUserRoute(request, response, next).process();
     });
 };

@@ -57,10 +57,22 @@ export async function markAsVisitedUser(token, userName) {
     try {
         const couchClient = CouchClient.instance(token, "_users");
         const documentId = "org.couchdb.user:" + userName;
-        let userData = await couchClient.getDocument(documentId);
-        userData.visitedUser = true;
-        await couchClient.updateDocument(userData);
-        return { "ok": true };
+        const couchClientUser = CouchClient.instance(token);
+        let selector = {
+            "selector": {
+                "docType": {
+                    "$eq": "source"
+                }
+            }
+        };
+        let configuredSources = await couchClientUser.findDocuments(selector);
+        if(configuredSources.docs.length) {
+            let userData = await couchClient.getDocument(documentId);
+            userData.visitedUser = true;
+            await couchClient.updateDocument(userData);
+            return true;
+        }
+        return false;
     } catch (err) {
         logger().error(`UserRequest:MarkAsVisitedUser fatal error ${JSON.stringify(err)}`);
         const errMessage = { "message": "not able to update" };
