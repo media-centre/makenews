@@ -27,7 +27,6 @@ export class StoryCards extends Component {
     }
 
     _renderStoriesList() {
-        const storyBoard = Locale.applicationStrings().messages.storyBoard;
         const storiesArray = this.props.stories.map((story, index) => {
             const inc = 1;
             return (<li key={index + inc} className="added-card">
@@ -43,7 +42,7 @@ export class StoryCards extends Component {
             <Link ref="newStoryCard" className="navigation-link" to="/story-board/story">
                 <div className="card">
                 <i className="fa fa-plus-circle icon" aria-hidden="true"/>
-                {storyBoard.createStory}
+                {this.storyBoardStrings.createStory}
                 </div>
             </Link>
         </li>);
@@ -51,13 +50,13 @@ export class StoryCards extends Component {
     }
 
     render() {
-        const storyBoard = Locale.applicationStrings().messages.storyBoard;
+        this.storyBoardStrings = Locale.applicationStrings().messages.storyBoard;
         return (
             <div>
                 <div className="create-story-tab">
                     <Link ref="newStoryBar" className="create-story-icon" to="/story-board/story">
                         <i className="fa fa-folder icon" aria-hidden="true"/>
-                        {storyBoard.createStory}
+                        {this.storyBoardStrings.createStory}
                     </Link>
                 </div>
                 <div className="story-board-container">
@@ -66,7 +65,7 @@ export class StoryCards extends Component {
                     </ul>
                     {this.state.showDeleteConfirm
                         ? <ConfirmPopup
-                            description={storyBoard.confirmDelete}
+                            description={this.storyBoardStrings.confirmDelete}
                             callback={(isConfirmed) => {
                                 if(isConfirmed) {
                                     this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));

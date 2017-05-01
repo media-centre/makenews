@@ -41,7 +41,7 @@ export default class EditStory extends Component {
 
     autoSave() {
         const STORY_AUTO_SAVE_TIME_INTERVAL = AppWindow.instance().get("storyAutoSaveTimeInterval");
-        this.interval = setInterval(() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
+        this.interval = setInterval(async() => { this._saveStory(); }, STORY_AUTO_SAVE_TIME_INTERVAL); //eslint-disable-line brace-style
     }
 
     async _getStory(storyId) {
@@ -55,7 +55,6 @@ export default class EditStory extends Component {
     }
 
     async _saveStory() {
-        const storyboard = Locale.applicationStrings().messages.storyBoard;
         let title = this.state.title;
         if (this.state.body && !title && !this.storyId) {
             title = `Untitled_${new Date().getTime()}`;
@@ -64,7 +63,7 @@ export default class EditStory extends Component {
         this.story.body = this.state.body;
 
         if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
-            Toast.show(storyboard.warningMessages.emptyStory);
+            Toast.show(this.storyboardStrings.warningMessages.emptyStory);
         } else {
             let ajax = AjaxClient.instance("/save-story");
             const headers = {
@@ -80,14 +79,14 @@ export default class EditStory extends Component {
                     this.setState({ "title": this.story.title,
                         "body": this.story.body });
                 }
-                Toast.show(storyboard.successMessages.saveStory, "success");
+                Toast.show(this.storyboardStrings.successMessages.saveStory, "success");
             } catch(error) {
                 if(error.message === "Please add title") {
                     Toast.show(error.message);
                 } else if(error.message === "Title Already exists") {
                     Toast.show(error.message);
                 } else {
-                    Toast.show(storyboard.errorMessages.saveStoryFailure);
+                    Toast.show(this.storyboardStrings.errorMessages.saveStoryFailure);
                 }
             }
         }
@@ -121,11 +120,11 @@ export default class EditStory extends Component {
     }
 
     render() {
-        const storyboard = Locale.applicationStrings().messages.storyBoard;
+        this.storyboardStrings = Locale.applicationStrings().messages.storyBoard;
         let popup = this.state.showPopup
             ? (<ConfirmPopup
                 ref = "confirmPopup"
-                description = {storyboard.confirmStoryBack}
+                description = {this.storyboard.confirmStoryBack}
                 callback = {(goBack) => {
                     this._back(goBack);
                 }}
@@ -136,14 +135,14 @@ export default class EditStory extends Component {
                     <div className="editor-toolbar">
                         <button className="back" onClick={() =>
                         this.setState({ "showPopup": true })}
-                        >{storyboard.backButton}
+                        >{this.storyboardStrings.backButton}
                         </button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
-                        <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
+                        <button ref="saveButton" type="submit" className="save" value="save" onClick={async() => {
                             this._saveStory();
                         }}
                         >
-                        {storyboard.saveButton}</button>
+                        {this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
