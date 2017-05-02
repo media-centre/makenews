@@ -39,42 +39,44 @@ export class DisplayArticle extends Component {
     }
 
     renderBody() {
-        let toolTip = (<div className="toolTip" id="toolTip">
-            <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>{this.articleMessages.addToCollection}</button>
-            <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}/>
-        </div>);
+        const toolTip = (
+            <div className="toolTip" id="toolTip">
+                <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>{this.articleMessages.addToCollection}</button>
+                <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}/>
+            </div>);
 
-        return (<main className="article">
-            <h1 className="article__title">
-                { this.props.article.title }
-            </h1>
+        return (
+            <main className="article">
+                <h1 className="article__title">
+                    { this.props.article.title }
+                </h1>
 
+                <div className="article__details">
+                    <i className={`fa fa-${this.props.article.sourceType}`} />
+                    <span>{` | ${DateTimeUtil.getLocalTime(this.props.article.pubDate)}`}</span>
+                    {
+                        this.props.article.tags &&
+                        this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)
+                    }
+                </div>
 
-            <div className="article__details">
-                <i className={`fa fa-${this.props.article.sourceType}`} />
-                <span>{` | ${DateTimeUtil.getLocalTime(this.props.article.pubDate)}`}</span>
-                {
-                    this.props.article.tags &&
-                    this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)
+                <div className="article__images">
+                    { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
+                </div>
+
+                {this.props.article.sourceType === "web" && (!this.props.article.selectText || this.props.article.sourceDeleted)
+                    ? <DisplayWebArticle toolTip={this._showToolTip.bind(this)}/>
+                    : <div className="article__desc" onMouseUp={() => { this._showToolTip(); }}>
+                    { this.props.article.description }
+                </div>
                 }
-            </div>
 
-            <div className="article__images">
-                { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
-            </div>
-
-            {this.props.article.sourceType === "web" && (!this.props.article.selectText || this.props.article.sourceDeleted)
-                ? <DisplayWebArticle toolTip={this._showToolTip.bind(this)}/>
-                : <div className="article__desc" onMouseUp={() => { this._showToolTip(); }}>
-                { this.props.article.description }
-            </div>
-            }
-
-            <div className="article__original-source">
-                <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">{this.articleMessages.readOriginalArticle}</a>
-            </div>
-            {toolTip}
-        </main>);
+                <div className="article__original-source">
+                    <a href={this.props.article.link} target="_blank" rel="nofollow noopener noreferrer">{this.articleMessages.readOriginalArticle}</a>
+                </div>
+                {toolTip}
+            </main>
+        );
     }
 
     _getSelectedTextDoc() {
@@ -107,9 +109,9 @@ export class DisplayArticle extends Component {
     renderHeader() {
         return(this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
                 ? <header className="display-article__header back">
-                <button className="back__button" onClick={() => { this.props.collectionDOM.style.display = "block"; this.props.dispatch(displayArticle()); }}>
-                    <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
-            </header>
+                    <button className="back__button" onClick={() => { this.props.collectionDOM.style.display = "block"; this.props.dispatch(displayArticle()); }}>
+                        <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
+                  </header>
                 : this.renderArticleHeader()
         );
 
@@ -125,23 +127,22 @@ export class DisplayArticle extends Component {
                   </header>
 
                 : <header className={`${this.articleClass}__header`}>
-                <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-                    this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
-                }}
-                >
-                    <i className="icon fa fa-folder-o"/> {this.articleMessages.addToCollection}
-                </div>
+                    <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
+                        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
+                    }}
+                    >
+                        <i className="icon fa fa-folder"/> {this.articleMessages.addToCollection}
+                    </div>
 
-                {
-                    this.props.article.bookmark
+                    {this.props.article.bookmark
                         ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
-                        <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmarked}
-                    </div>
+                            <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmarked}
+                          </div>
                         : <div className="bookmark" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
-                        <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmark}
-                    </div>
-                }
-            </header>);
+                            <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmark}
+                          </div>
+                    }
+                  </header>);
     }
 
     render() {
@@ -161,7 +162,7 @@ export class DisplayArticle extends Component {
         if(this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection) {
             return (
                 <div className="display-article">
-                        <div className="default-message">{this.articleMessages.defaultMessage}</div>
+                    <div className="default-message">{this.articleMessages.defaultMessage}</div>
                 </div>);
         }
         return null;

@@ -174,11 +174,24 @@ describe("DisplayArticle", () => {
             addArticleToCollectionMock.verify();
         });
 
+        it("should have add to collection button", () => {
+            const [headerDOM] = displayArticleDom.props.children;
+            const [collectionDOM] = headerDOM.props.children;
+            expect(collectionDOM.props.className).to.equal("collection");
+            expect(collectionDOM.type).to.equal("div");
+
+            const [icon] = collectionDOM.props.children;
+            expect(icon.props.className).to.equal("icon fa fa-folder");
+        });
+
         it("should have bookmark class when article is not bookmarked", () => {
             let [headerDOM] = displayArticleDom.props.children;
             let [, bookmarkDOM] = headerDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark");
             expect(bookmarkDOM.type).to.equal("div");
+
+            const [icon] = bookmarkDOM.props.children;
+            expect(icon.props.className).to.equal("icon fa fa-bookmark");
         });
 
         it("should have bookmark & active classes when article is boomarked", () => {
