@@ -13,6 +13,7 @@ import DisplayArticle from "./DisplayArticle";
 import StringUtils from "./../../../../../common/src/util/StringUtil";
 import Toast from "./../../utils/custom_templates/Toast";
 import Locale from "./../../utils/Locale";
+import { Link } from "react-router";
 
 const MIN_SEARCH_KEY_LENGTH = 3;
 
@@ -249,7 +250,7 @@ export class DisplayFeeds extends Component {
             return((!searchKey && !filter)
                 ? <div className="default-message">
                     {this.newsboardStrings.defaultMessages[this.props.sourceType]}
-                    { this.props.sourceType !== "bookmark" && <i className="fa fa-cog"/> }
+                    { this.props.sourceType !== "bookmark" && <Link to="/configure/web"><i className="fa fa-cog"/> </Link> }
                 </div>
                 : <div className="default-message">
                     {this.props.sourceType === "bookmark" ? this.newsboardStrings.defaultMessages.bookmark : this.newsboardStrings.defaultMessages.noFeeds}

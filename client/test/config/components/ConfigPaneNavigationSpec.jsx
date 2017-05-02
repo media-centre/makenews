@@ -88,7 +88,7 @@ describe("ConfigPaneNavigation", () => {
         const [icon, , text] = nextLink.node.props.children;
         assert.strictEqual(text, "Next");
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-arrow-right");
+        assert.strictEqual(icon.props.className, "fa fa-arrow-right right-arrow");
     });
 
     it("should have a Done button with newsBoard link if current source is web and there are configured Sources", () => {
@@ -100,7 +100,7 @@ describe("ConfigPaneNavigation", () => {
         const [icon, , text] = nextLink.node.props.children;
         assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-check");
+        assert.strictEqual(icon.props.className, "fa fa-check check-icon");
     });
 
     it("should have a next button with twitter link if current source is facebook and user has logged into facebook", () => {
@@ -112,7 +112,7 @@ describe("ConfigPaneNavigation", () => {
         const [icon, , text] = nextLink.node.props.children;
         assert.strictEqual(text, "Next");
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-arrow-right");
+        assert.strictEqual(icon.props.className, "fa fa-arrow-right right-arrow");
     });
 
     it("should have a Done button with newsBoard link if current source is facebook and user has logged into facebook and if there are any configured sources", () => {
@@ -124,7 +124,7 @@ describe("ConfigPaneNavigation", () => {
         const [icon, , text] = nextLink.node.props.children;
         assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-check");
+        assert.strictEqual(icon.props.className, "fa fa-check check-icon");
     });
 
     it("should have a skip button with twitter link if current source is facebook and user has not logged into facebook", () => {
@@ -143,7 +143,7 @@ describe("ConfigPaneNavigation", () => {
 
         const [icon,, text] = signInBtn.node.props.children;
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-arrow-right");
+        assert.strictEqual(icon.props.className, "fa fa-arrow-right right-arrow");
         assert.strictEqual(text, "Sign in");
     });
 
@@ -162,7 +162,7 @@ describe("ConfigPaneNavigation", () => {
         const [icon, , text] = nextLink.node.props.children;
         assert.strictEqual(text, "Done");
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-check");
+        assert.strictEqual(icon.props.className, "fa fa-check check-icon");
     });
 
     it("should have a skip button link if current source is twitter and user has not logged into twitter", () => {
@@ -179,7 +179,7 @@ describe("ConfigPaneNavigation", () => {
 
         const [icon,, text] = signInBtn.node.props.children;
         assert.strictEqual(icon.type, "i");
-        assert.strictEqual(icon.props.className, "fa fa-arrow-right");
+        assert.strictEqual(icon.props.className, "fa fa-arrow-right right-arrow");
         assert.strictEqual(text, "Sign in");
     });
 

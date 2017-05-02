@@ -19,12 +19,12 @@ export class ConfigPaneNavigation extends Component {
                 return (
                     <div>
                         <Link to="/configure/twitter" className="sources-nav__next btn btn-secondary">
-                            <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.next}
+                            <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.next}
                         </Link>
                         {
                             hasConfiguredSources && !firstTimeUser &&
                             <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
-                                <i className="fa fa-check"/> {this.configureHeaderStrings.done}
+                                <i className="fa fa-check check-icon"/> {this.configureHeaderStrings.done}
                             </Link>
                         }
                     </div>);
@@ -35,7 +35,7 @@ export class ConfigPaneNavigation extends Component {
                         Skip
                     </Link>
                     <button onClick={this.props.fbLogin} className="sources-nav__next btn btn-primary">
-                        <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.signIn}
+                        <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.signIn}
                     </button>
                 </div>);
 
@@ -43,7 +43,7 @@ export class ConfigPaneNavigation extends Component {
             if (this.props.sourcesAuthenticationInfo.twitter) {
                 return (
                     <button className="sources-nav__next btn btn-primary" onClick={this.props.checkConfiguredSources}>
-                        <i className="fa fa-check"/> {this.configureHeaderStrings.done}
+                        <i className="fa fa-check check-icon"/> {this.configureHeaderStrings.done}
                     </button>);
             }
             return (
@@ -52,19 +52,19 @@ export class ConfigPaneNavigation extends Component {
                         Skip
                     </button>
                     <button onClick={this.props.twitterLogin} className="sources-nav__next btn btn-primary">
-                        <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.signIn}
+                        <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.signIn}
                     </button>
                 </div>);
         }
         return (
             <div>
                 <Link to="/configure/facebook/pages" className="sources-nav__next btn btn-secondary">
-                    <i className="fa fa-arrow-right"/> {this.configureHeaderStrings.next}
+                    <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.next}
                 </Link>
                 {
                     hasConfiguredSources && !firstTimeUser &&
                     <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
-                        <i className="fa fa-check"/> {this.configureHeaderStrings.done}
+                        <i className="fa fa-check check-icon"/> {this.configureHeaderStrings.done}
                     </Link>
                 }
             </div>
