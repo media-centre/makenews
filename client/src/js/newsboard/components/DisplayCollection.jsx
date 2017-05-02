@@ -171,7 +171,7 @@ export class DisplayCollection extends Component {
                 this.setState({ "showCollectionPopup": true });
             }}
             >
-                <i className="fa fa-plus-circle"/> {this.collectionMessages.createCollection}
+                <i className="fa fa-plus-circle icon"/> {this.collectionMessages.createCollection}
             </div>
         );
 

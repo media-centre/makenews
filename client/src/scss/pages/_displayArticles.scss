@@ -8,10 +8,13 @@
     &__button {
       color: $primary-color-light;
       font-size: $mid-font-size;
-      border: 0
+      border: 0;
+      padding-top: 4px;
     }
     .icon{
-      vertical-align: text-bottom;
+      vertical-align: baseline;
+      font-size: 1.3rem;
+      margin-right: 5px;
     }
   }
 

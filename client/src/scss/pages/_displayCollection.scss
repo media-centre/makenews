@@ -83,6 +83,14 @@
     text-transform: uppercase;
     padding: 20px 10px;
     cursor: pointer;
+    margin-left: 5px;
+
+    .icon {
+      font-size: 25px;
+      margin-right: 5px;
+      vertical-align: middle;
+      padding-bottom: 3px;
+    }
   }
 
   .new-collection-input-box {
