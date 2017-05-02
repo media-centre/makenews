@@ -72,7 +72,10 @@ describe("SourcePane", () => {
             const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB}/>);
             const customUrl = wrapper.find(".add-custom-url");
 
-            expect(customUrl.text()).to.equals("Add custom url");
+            const [icon, text] = customUrl.node.props.children;
+
+            expect(icon.props.className).to.equals("icon fa fa-plus");
+            expect(text).to.equals("Add custom url");
         });
 
         it("should not have a button add-custom-url if current-source type is GROUPS", () => {

@@ -1,4 +1,4 @@
-/* TODO: Try removing these confings from window and make them local to their resp. functions*/ //eslint-disable-line
+/* TODO: Try removing these configs from window and make them local to their resp. functions*/ //eslint-disable-line
 
 if(!window.mediaCenter) {
     window.mediaCenter = {};

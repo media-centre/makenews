@@ -24,7 +24,7 @@ export class SourcePane extends Component {
                             this.props.dispatch(showAddUrl(true));
                         }}
                         >
-                            <i className="icon fa fa-book" aria-hidden="true"/>
+                            <i className="icon fa fa-plus" aria-hidden="true"/>
                             {configurePageStrings.addCustomUrl.name}
                         </button>
                     }
