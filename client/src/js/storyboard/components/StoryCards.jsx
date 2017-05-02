@@ -53,12 +53,6 @@ export class StoryCards extends Component {
         this.storyBoardStrings = Locale.applicationStrings().messages.storyBoard;
         return (
             <div>
-                <div className="create-story-tab">
-                    <Link ref="newStoryBar" className="create-story-icon" to="/story-board/story">
-                        <i className="fa fa-folder icon" aria-hidden="true"/>
-                        {this.storyBoardStrings.createStory}
-                    </Link>
-                </div>
                 <div className="story-board-container">
                     <ul className="story-cards">
                         {this._renderStoriesList()}

@@ -74,11 +74,5 @@ describe("StoryCards", () => {
 
     it("should have the new story card link to /story-board/story", () => {
         assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryCard.props.to);
-        assert.strictEqual("/story-board/story", storyBoardCards.refs.newStoryBar.props.to);
     });
-
-    it("should display the CreateNewStory", () => {
-        assert.strictEqual("Create New Story", storyBoardCards.refs.newStoryBar.props.children[1]);   //eslint-disable-line no-magic-numbers
-    });
-
 });
