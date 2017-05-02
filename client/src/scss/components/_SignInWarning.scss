@@ -11,5 +11,14 @@
 
   .message {
     padding-top: 1rem;
+
+    .sign-in {
+      background: $secondary-color;
+      height: 3rem;
+      width: 7rem;
+      margin-top: 1rem;
+      color: white;
+      font-size: 0.9rem;
+    }
   }
 }

@@ -104,7 +104,7 @@ export class ConfigurePane extends Component {
                       </div>
                       <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
                   </div>
-                  : <SignInWarning currentSourceType = {this.props.currentSourceType}/>
+                  : <SignInWarning currentSourceType = {this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
               }
 
           </div>

@@ -42,7 +42,7 @@ export class DisplayArticle extends Component {
         const toolTip = (
             <div className="toolTip" id="toolTip">
                 <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>{this.articleMessages.addToCollection}</button>
-                <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}/>
+                <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}>{this.articleMessages.copy}</button>
             </div>);
 
         return (
@@ -59,7 +59,6 @@ export class DisplayArticle extends Component {
                         this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)
                     }
                 </div>
-
                 <div className="article__images">
                     { this.props.article.images && this.props.article.images.map((image, index) => <img key={index} src={image.url} />) }
                 </div>

@@ -99,7 +99,8 @@ window.mediaCenter.appEn = {
                 "bookmarked": "Bookmarked",
                 "readOriginalArticle": "Read the Original Article",
                 "deleteFailure": "Could not able to delete article",
-                "fetchingArticleFailure": "Unable to get the article contents"
+                "fetchingArticleFailure": "Unable to get the article contents",
+                "copy": "Copy"
             },
             "bookmarkSuccess": "Successfully bookmarked"
         },

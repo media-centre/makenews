@@ -25,9 +25,11 @@
       display: block;
       margin: 2rem 0 0;
       color:$primary-color-light;
+      text-decoration: underline $primary-color-light;
 
       .arrow{
         font-size: large;
+        padding-right: 0.2rem
       }
     }
   }

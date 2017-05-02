@@ -16,6 +16,11 @@ describe("SignInWarning", () => {
             },
             "twitter": {
                 "signInWarning": "Please, sign into your twitter account"
+            },
+            "configurePage": {
+                "header": {
+                    "signIn": "sign in"
+                }
             }
         };
         sandbox.stub(Locale, "applicationStrings").returns({ messages });
@@ -38,18 +43,27 @@ describe("SignInWarning", () => {
     });
 
     it("should have a warning message for facebook with className message", () => {
-        wrapper = shallow(<SignInWarning currentSourceType="facebook"/>);
+        const buttonClicked = () => "buttonClicked";
+        wrapper = shallow(<SignInWarning currentSourceType="facebook" fbLogin={() => buttonClicked}/>);
         const [, message] = wrapper.node.props.children;
+        const messageChildren = message.props.children;
+        const [messageContent, button] = messageChildren.props.children;
         expect(message.props.className).to.equals("message");
-        expect(message.props.children).to.equals("Please, sign into your facebook account to add Facebook Groups, Pages as your sources");
-        expect(message.type).to.equals("div");
+        expect(messageContent.props.children).to.equals("Please, sign into your facebook account to add Facebook Groups, Pages as your sources");
+        expect(messageContent.type).to.equals("div");
+        expect(button.type).to.equals("button");
+        expect(button.props.className).to.equals("sign-in");
     });
 
     it("should have a warning message for twitter with className message", () => {
         const [, message] = wrapper.node.props.children;
+        const messageChildren = message.props.children;
+        const [messageContent, button] = messageChildren.props.children;
         expect(message.props.className).to.equals("message");
-        expect(message.props.children).to.equals("Please, sign into your twitter account");
-        expect(message.type).to.equals("div");
+        expect(messageContent.props.children).to.equals("Please, sign into your twitter account");
+        expect(messageContent.type).to.equals("div");
+        expect(button.type).to.equals("button");
+        expect(button.props.className).to.equals("sign-in");
     });
 });
 
