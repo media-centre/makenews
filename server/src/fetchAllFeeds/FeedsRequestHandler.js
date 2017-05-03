@@ -3,7 +3,7 @@ import { searchDocuments } from "./../LuceneClient";
 import { userDetails } from "./../Factory";
 import { NEWSBOARD_SOURCE_TYPES } from "./../util/Constants";
 import RouteLogger from "./../routes/RouteLogger";
-const LIMIT_VALUE = 25;
+const LIMIT_VALUE = 24;
 
 export default class FeedsRequestHandler {
     static instance() {
@@ -32,6 +32,7 @@ export default class FeedsRequestHandler {
                     "$gt": null
                 }
             },
+            "limit": LIMIT_VALUE,
             "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
             "sort": [{ "pubDate": "desc" }],
             "skip": offset

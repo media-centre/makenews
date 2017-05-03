@@ -9,7 +9,7 @@ export const DISPLAY_ARTICLE = "DISPLAY_ARTICLE";
 export const FETCHING_FEEDS = "FETCHING_FEEDS";
 export const SEARCHED_FEEDS = "SEARCHED_FEEDS";
 export const CLEAR_ARTICLE = "CLEAR_ARTICLE";
-const DEFAULT_PAGE_SIZE = 25;
+const DEFAULT_PAGE_SIZE = 24;
 
 export const paginatedFeeds = feeds => ({
     "type": PAGINATED_FETCHED_FEEDS, feeds

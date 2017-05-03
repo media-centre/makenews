@@ -9,6 +9,8 @@ chai.use(chaiAsPromised);
 import R from "ramda"; //eslint-disable-line id-length
 
 describe("FeedsRequestHandler", () => {
+    const LIMIT_VALUE = 24;
+
     describe("fetch feeds", () => {
         let feed = null, authSession = null, feedsRequestHandler = null;
         let couchClientInstanceMock = null;
@@ -47,6 +49,7 @@ describe("FeedsRequestHandler", () => {
                         "$gt": null
                     }
                 },
+                "limit": LIMIT_VALUE,
                 "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
                 "sort": [{ "pubDate": "desc" }]
@@ -107,6 +110,7 @@ describe("FeedsRequestHandler", () => {
                         }
                     }]
                 },
+                "limit": LIMIT_VALUE,
                 "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
                 "sort": [{ "pubDate": "desc" }]
@@ -146,6 +150,7 @@ describe("FeedsRequestHandler", () => {
                         }
                     }]
                 },
+                "limit": LIMIT_VALUE,
                 "fields": ["_id", "title", "description", "link", "sourceType", "bookmark", "tags", "pubDate", "videos", "images", "sourceId"],
                 "skip": 0,
                 "sort": [{ "pubDate": "desc" }]
@@ -169,7 +174,7 @@ describe("FeedsRequestHandler", () => {
             "q": "+sourceType:web +(title:test* description:test*)",
             "fetch_duration": 0,
             "total_rows": 14,
-            "limit": 25,
+            "limit": 24,
             "search_duration": 0,
             "etag": "1358a6ef5569e8",
             "skip": 0,
@@ -202,17 +207,17 @@ describe("FeedsRequestHandler", () => {
 
         it("should call searchDocuments with query on title, description and sourceType if the sourceType is web ", async () => {
             const docs = R.map(row => row.doc)(response.rows);
-            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const expectedResult = { "docs": docs, "paging": { "offset": skip + LIMIT_VALUE } };
             const query = {
                 "q": `sourceType:${sourceType} AND (title:${searchKey}* OR description:${searchKey}*)`,
                 "sort": "\\pubDate<date>",
-                "limit": 25,
+                "limit": 24,
                 skip,
                 "include_docs": true
             };
             sandbox.stub(userDetails, "getUser").returns({ dbName });
             const searchDocumentMock = sandbox.mock(LuceneClient)
-                .expects("searchDocuments").withArgs(dbName, "_design/feedSearch/by_document", query).returns(Promise.resolve(response));
+                .expects("searchDocuments").withExactArgs(dbName, "_design/feedSearch/by_document", query).returns(Promise.resolve(response));
 
             const result = await feedRequestHandler.searchFeeds(authSession, sourceType, searchKey, skip);
 
@@ -223,11 +228,11 @@ describe("FeedsRequestHandler", () => {
         it("should call searchDocuments with query on only title, description if the sourceType is trending ", async () => {
             const docs = R.map(row => row.doc)(response.rows);
             sourceType = "trending";
-            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const expectedResult = { "docs": docs, "paging": { "offset": skip + LIMIT_VALUE } };
             const query = {
                 "q": `title:${searchKey}* OR description:${searchKey}*`,
                 "sort": "\\pubDate<date>",
-                "limit": 25,
+                "limit": 24,
                 skip,
                 "include_docs": true
             };
@@ -244,11 +249,11 @@ describe("FeedsRequestHandler", () => {
         it("should call searchDocuments with query on only title, description with bookmark if the sourceType is bookmark ", async () => {
             const docs = R.map(row => row.doc)(response.rows);
             sourceType = "bookmark";
-            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const expectedResult = { "docs": docs, "paging": { "offset": skip + LIMIT_VALUE } };
             const query = {
                 "q": `bookmark:true AND (title:${searchKey}* OR description:${searchKey}*)`,
                 "sort": "\\pubDate<date>",
-                "limit": 25,
+                "limit": 24,
                 skip,
                 "include_docs": true
             };
@@ -265,7 +270,7 @@ describe("FeedsRequestHandler", () => {
         it("should return the feeds related to search key", async () => {
 
             const docs = R.map(row => row.doc)(response.rows);
-            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const expectedResult = { "docs": docs, "paging": { "offset": skip + LIMIT_VALUE } };
 
             sandbox.stub(userDetails, "getUser").returns({ dbName });
             const searchDocumentMock = sandbox.mock(LuceneClient)
@@ -283,7 +288,7 @@ describe("FeedsRequestHandler", () => {
                 "q": "+sourceType:web +(title:test* description:test*)",
                 "fetch_duration": 0,
                 "total_rows": 14,
-                "limit": 25,
+                "limit": 24,
                 "search_duration": 0,
                 "etag": "1358a6ef5569e8",
                 "skip": 0,
@@ -314,7 +319,7 @@ describe("FeedsRequestHandler", () => {
                 "q": "+sourceType:web +(title:test* description:test*)",
                 "fetch_duration": 0,
                 "total_rows": 14,
-                "limit": 25,
+                "limit": 24,
                 "search_duration": 0,
                 "etag": "1358a6ef5569e8",
                 "skip": 0,
@@ -334,7 +339,7 @@ describe("FeedsRequestHandler", () => {
                 "title": "Trump signs executive order on black colleges",
                 "sourceDeleted": true
             }];
-            const expectedResult = { "docs": docs, "paging": { "offset": 30 } };
+            const expectedResult = { "docs": docs, "paging": { "offset": skip + LIMIT_VALUE } };
 
             sandbox.stub(userDetails, "getUser").returns({ dbName });
             const searchDocumentMock = sandbox.mock(LuceneClient)

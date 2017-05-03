@@ -43,8 +43,7 @@ describe("SignInWarning", () => {
     });
 
     it("should have a warning message for facebook with className message", () => {
-        const buttonClicked = () => "buttonClicked";
-        wrapper = shallow(<SignInWarning currentSourceType="facebook" fbLogin={() => buttonClicked}/>);
+        wrapper = shallow(<SignInWarning currentSourceType="facebook"/>);
         const [, message] = wrapper.node.props.children;
         const messageChildren = message.props.children;
         const [messageContent, button] = messageChildren.props.children;
@@ -53,6 +52,14 @@ describe("SignInWarning", () => {
         expect(messageContent.type).to.equals("div");
         expect(button.type).to.equals("button");
         expect(button.props.className).to.equals("sign-in");
+    });
+
+    it("should call fbLogin after clicking sing in button in facebook", () => {
+        const fbLogin = sandbox.spy();
+        wrapper = shallow(<SignInWarning currentSourceType="facebook" fbLogin={fbLogin}/>);
+        const singInButton = wrapper.find(".sign-in");
+        singInButton.simulate("click");
+        expect(fbLogin.called).to.equals(true);
     });
 
     it("should have a warning message for twitter with className message", () => {
