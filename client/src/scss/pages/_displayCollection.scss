@@ -161,7 +161,18 @@
     flex-wrap: wrap;
 
     .collection-feed {
-      flex-basis: 50%;
+      @media (min-width: 1400px) {
+        width: 50%;
+      }
+
+      @media (max-width: 1024px) {
+        width: 50%;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+
       cursor: pointer;
       line-height: 24px;
       padding: 8px 13px 13px 16px;

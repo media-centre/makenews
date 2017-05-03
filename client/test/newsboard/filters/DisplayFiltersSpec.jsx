@@ -88,7 +88,7 @@ describe("DisplayFilters", () => {
 
     it("should dispatch filterTabSwitch after clicking on cancel button", () => {
         let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
-        let cancelButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "cancel-btn secondary");
+        let cancelButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "cancel-btn primary");
         TestUtils.Simulate.click(cancelButton);
         filterTabSwitchMock.verify();
     });

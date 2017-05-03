@@ -152,7 +152,7 @@ export class DisplayFilters extends Component {
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
                 <div className="controls">
-                    <button id="cancelBtn" className="cancel-btn secondary" onClick={() => this.cancelFilter()}>{this.filterStrings.cancelButton}</button>
+                    <button id="cancelBtn" className="cancel-btn primary" onClick={() => this.cancelFilter()}>{this.filterStrings.cancelButton}</button>
                     <button id="applyBtn" className="apply-btn primary" onClick={() => this.applyFilter()}>{this.filterStrings.applyButton}</button>
                 </div>
             </aside>
