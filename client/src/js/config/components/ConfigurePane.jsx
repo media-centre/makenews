@@ -5,13 +5,13 @@ import SourcePane from "./SourcePane";
 import ConfigPaneNavigation from "./ConfigPaneNavigation";
 import { connect } from "react-redux";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
-import StringUtils from "../../../../../common/src/util/StringUtil";
 import SignInWarning from "./SignInWarning";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
 import { showAddUrl } from "./../actions/AddUrlActions";
 import AppSessionStorage from "../../utils/AppSessionStorage";
 import Locale from "./../../utils/Locale";
+import Input from "./../../utils/components/Input";
 
 export class ConfigurePane extends Component {
 
@@ -21,6 +21,7 @@ export class ConfigurePane extends Component {
         this.checkConfiguredSources = this.checkConfiguredSources.bind(this);
         this._closeConfigurationWarning = this._closeConfigurationWarning.bind(this);
         this.appSessionStorage = AppSessionStorage.instance();
+        this._searchInSources = this._searchInSources.bind(this);
     }
 
     componentWillMount() {
@@ -60,13 +61,9 @@ export class ConfigurePane extends Component {
 
     }
 
-    checkEnterKey(event) {
-        const value = (this.refs.searchSources.value).trim();
-        const ENTERKEY = 13;
-
-        if (StringUtils.isEmptyString(value) || event.keyCode === ENTERKEY) {
-            this.fetchSources(this.props.currentTab, value);
-        }
+    _searchInSources() {
+        const value = (this.refs.searchSources.refs.input.value).trim();
+        this.fetchSources(this.props.currentTab, value);
     }
 
     fetchSources(currentTab, value = "") {
@@ -94,15 +91,12 @@ export class ConfigurePane extends Component {
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
                   ? <div>
-                      <div className="input-box configure-source">
-                          <div className="input-container">
-                              <input type="text" ref="searchSources" onKeyUp={(event) => { this.checkEnterKey(event); }} className="search-sources" placeholder={`Search ${this.props.currentTab}....`} />
-                              <span className="input-addon">
-                                <img className="image" src="./images/search-icon.png" alt="search" onClick={() => { this.fetchSources(); }}/>
-                              </span>
-                          </div>
-                      </div>
-                      <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
+                  <Input ref="searchSources" className={"input-box configure-source"}
+                      callback={this._searchInSources}
+                      placeholder={`Search ${this.props.currentTab}....`}
+                      addonSrc="search" callbackOnEnter
+                  />
+                  <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
                   </div>
                   : <SignInWarning currentSourceType = {this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
               }

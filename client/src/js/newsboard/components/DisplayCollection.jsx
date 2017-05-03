@@ -17,6 +17,7 @@ export class DisplayCollection extends Component {
         this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false, "showConfirmationPopup": false };
         this.buttonEvent = {};
         this.deleteCollection = {};
+        this._searchCollections = this._searchCollections.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -103,8 +104,8 @@ export class DisplayCollection extends Component {
         return collectionItems;
     }
 
-    _searchCollections(event) {
-        this.setState({ "searchKey": event.target.value });
+    _searchCollections() {
+        this.setState({ "searchKey": this.refs.collectionSearch.refs.input.value });
     }
 
     createCollection(event) {
@@ -180,9 +181,8 @@ export class DisplayCollection extends Component {
     displayCollections() {
         return (<div className="collection-list-container" >
             <div className="search-bar">
-                <Input className={"input-box"} placeholder="Search collections" eventHandlers={{ "onKeyUp": (event) => {
-                    this._searchCollections(event);
-                } }} addonSrc="./images/search-icon.png"
+                <Input className={"input-box"} ref="collectionSearch" placeholder="Search collections"
+                    callback={this._searchCollections} addonSrc="search"
                 />
             </div>
             {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">{this.collectionMessages.selectCollection}</div> : this.createNewCollection()}

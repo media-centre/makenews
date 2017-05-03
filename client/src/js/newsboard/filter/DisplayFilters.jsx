@@ -18,6 +18,8 @@ export class DisplayFilters extends Component {
         this.state = { "hashtagInputBox": false };
         this._renderSources = this._renderSources.bind(this);
         this.hashtags = [];
+        this.searchInSources = this.searchInSources.bind(this);
+        this._onAddHashTag = this._onAddHashTag.bind(this);
     }
 
     componentDidMount() {
@@ -68,8 +70,8 @@ export class DisplayFilters extends Component {
         }
     }
 
-    searchInSources(event) {
-        let value = event.target.value;
+    searchInSources() {
+        let value = this.refs.filterSearch.refs.input.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
@@ -93,12 +95,9 @@ export class DisplayFilters extends Component {
         this.props.dispatch(filterTabSwitch(""));
     }
 
-    onEnterKeyPressed(event) {
-        const ENTERKEY = 13;
-        if(event.keyCode === ENTERKEY) {
-            let hashtag = event.target.value;
-            this.addHashtag(hashtag);
-        }
+    _onAddHashTag() {
+        let hashtag = this.refs.hashtagInput.refs.input.value;
+        this.addHashtag(hashtag);
     }
 
     addHashtag(hashtag) {
@@ -125,15 +124,12 @@ export class DisplayFilters extends Component {
     }
 
     render() {
-        let hashtagValue = "";
         this.filterStrings = Locale.applicationStrings().messages.newsBoard.filters;
         return (
             <aside ref="sources" className="filters-container">
-                <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => { //eslint-disable-line react/jsx-boolean-value
-                    this.searchInSources(event);
-                } }} placeholder="search" addonSrc="./images/search-icon.png"
+                <Input className={"input-box"} ref="filterSearch" callback={this.searchInSources}
+                    placeholder="search" addonSrc="search"
                 />
-
                 { this.props.currentTab === "twitter" &&
                     <div className="hashtag-container">
                        <div className="add-hashtag" onClick={() => this.setState({ "hashtagInputBox": !this.state.hashtagInputBox })}>
@@ -143,12 +139,12 @@ export class DisplayFilters extends Component {
                         { this.state.hashtagInputBox &&
                         <div className="hashtag-box">
                             <span className="hash">#</span>
-                            <Input placeholder="Add Hashtag" className={"input-hashtag-box show"} eventHandlers={{ "onKeyUp": (event) => {
-                                hashtagValue = event.target.value;
-                                this.onEnterKeyPressed(event);
-                            } }}
+                            <Input ref="hashtagInput" placeholder="Add Hashtag"
+                                className={"input-hashtag-box show"}
+                                callback={this._onAddHashTag}
+                                callbackOnEnter
                             />
-                            <div className="add-tag" onClick={() => this.addHashtag(hashtagValue)} >{this.filterStrings.addTag}</div>
+                            <div className="add-tag" onClick={this._onAddHashTag} >{this.filterStrings.addTag}</div>
                         </div> }
                     </div>
                 }

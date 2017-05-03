@@ -12,6 +12,7 @@ class ConfiguredSources extends Component {
     constructor() {
         super();
         this._renderSources = this._renderSources.bind(this);
+        this._searchInSources = this._searchInSources.bind(this);
     }
 
     componentDidMount() {
@@ -40,8 +41,8 @@ class ConfiguredSources extends Component {
         return R.map(configuredSourceDOM, R.filter(filterHashtags, this.props.sources[sourceType]));
     }
 
-    _searchInSources(event) {
-        let value = event.target.value;
+    _searchInSources() {
+        let value = this.refs.configSourcesSearch.ref.input.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
@@ -51,9 +52,8 @@ class ConfiguredSources extends Component {
             <aside className="configured-sources-container">
                 <h3 className="heading">{configureHeader.mySources}</h3>
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
-                <Input className={"input-box"} eventHandlers={{ "onKeyUp": (event) => {
-                    this._searchInSources(event);
-                } }} placeholder="search" addonSrc="./images/search-icon.png"
+                <Input ref="configSourcesSearch" className={"input-box"} callback={this._searchInSources}
+                    placeholder="search" addonSrc="search"
                 />
             </aside>
         );

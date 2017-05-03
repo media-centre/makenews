@@ -1,16 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import ConfigurePaneConnected, { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
+import { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
 import ConfigPaneNavigation from "./../../../src/js/config/components/ConfigPaneNavigation";
+import Input from "./../../../src/js/utils/components/Input";
 import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 import SourcePane from "../../../src/js/config/components/SourcePane";
-import { findAllWithType, findWithClass } from "react-shallow-testutils";
+import { findWithType } from "react-shallow-testutils";
 import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import sinon from "sinon";
-import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
-import thunkMiddleware from "redux-thunk";
 import { shallow } from "enzyme";
 import History from "./../../../src/js/History";
 import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
@@ -79,27 +76,18 @@ describe("Configure Pane", () => {
 
         it("should have ConfigPaneNavigationComponent", () => {
             let result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, ConfigPaneNavigation);
-            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+            let navigationPane = findWithType(result, ConfigPaneNavigation);
+            expect(navigationPane.props.currentSourceType).to.equal("web");
         });
 
-        it("should have an input box for searching sources", () => {
+        it("should have an Input component for searching sources", () => {
             let result = renderer.getRenderOutput();
-            let inputBox = findWithClass(result, "search-sources");
-
-            expect(inputBox.type).to.equal("input");
-            expect(inputBox.ref).to.equal("searchSources");
-            expect(inputBox.props.type).to.equal("text");
-            expect(inputBox.props.placeholder).to.equal(`Search ${currentTab}....`);
-        });
-
-        it("should have an addon search icon", () => {
-            const result = renderer.getRenderOutput();
-            const addon = findWithClass(result, "input-addon");
-            expect(addon.type).to.equal("span");
-
-            let img = addon.props.children;
-            expect(img.props.src).to.equal("./images/search-icon.png");
+            let input = findWithType(result, Input);
+            expect(input.ref).to.equal("searchSources");
+            expect(input.props.className).to.equal("input-box configure-source");
+            expect(input.props.placeholder).to.equal("Search web....");
+            expect(input.props.addonSrc).to.equal("search");
+            expect(input.props.callbackOnEnter).to.equal(true);
         });
 
         it("should have SourcePane if there are sources", () => {
@@ -109,84 +97,8 @@ describe("Configure Pane", () => {
                     sources = {{ "data": ["Hindu"] }} currentSourceType="web"
                 />);
             let result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, SourcePane);
-            expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
-            expect(renderedSources[0].props.dispatch).to.deep.equal(dispatch); //eslint-disable-line no-magic-numbers
-        });
-    });
-
-    describe("search input box", () => {
-        let store = null, configurePane = null;
-        let currentTab = null, getSourceMock = null;
-
-        beforeEach("search input box", () => {
-            currentTab = "web";
-            store = createStore(() => ({
-                "currentSourceTab": currentTab,
-                "sourceResults": { "data": [] },
-                "sourceSearchKeyword": "something",
-                "addUrlMessage": {}
-            }), applyMiddleware(thunkMiddleware));
-        });
-
-        afterEach("search input box", () => {
-            sandbox.restore();
-        });
-
-        it("should dispatch getSources when keyword is empty", () => {
-            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources").twice()
-                .returns({ "type": "" });
-
-            configurePane = TestUtils.renderIntoDocument(
-                <Provider store={store}>
-                <ConfigurePaneConnected currentSourceType="web"/>
-                </Provider>
-            );
-
-            let configurePaneDOM = ReactDOM.findDOMNode(configurePane);
-            let inputBox = configurePaneDOM.querySelectorAll(".search-sources")[0]; //eslint-disable-line no-magic-numbers
-            TestUtils.Simulate.keyUp(inputBox, { "key": "" });
-
-            getSourceMock.verify();
-        });
-
-        it("should not dispatch if there is value in input box and not entered", () => {
-            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
-                .once().returns({ "type": "" });
-
-            configurePane = TestUtils.renderIntoDocument(
-                <Provider store={store}>
-                <ConfigurePaneConnected currentSourceType="web" />
-                </Provider>
-            );
-
-            let configurePaneDOM = ReactDOM.findDOMNode(configurePane);
-            let inputBox = configurePaneDOM.querySelectorAll(".search-sources")[0]; //eslint-disable-line no-magic-numbers
-            inputBox.value = "some";
-            TestUtils.Simulate.keyUp(inputBox, { "value": "some" });
-
-            getSourceMock.verify();
-        });
-
-        it("should dispatch the getSources with the search value on enter", () => {
-            getSourceMock = sandbox.mock(SourceConfigActions).expects("getSources")
-                .twice().withArgs(currentTab).returns({
-                    "type": ""
-                });
-
-            configurePane = TestUtils.renderIntoDocument(
-                <Provider store={store}>
-                    <ConfigurePaneConnected currentSourceType="web" />
-                </Provider>
-            );
-
-            let configurePaneDOM = ReactDOM.findDOMNode(configurePane);
-            let inputBox = configurePaneDOM.querySelectorAll(".search-sources")[0]; //eslint-disable-line no-magic-numbers
-
-            inputBox.value = "something";
-            TestUtils.Simulate.keyUp(inputBox, { "keyCode": 13 });
-
-            getSourceMock.verify();
+            let renderedSource = findWithType(result, SourcePane);
+            expect(renderedSource.props.dispatch).to.deep.equal(dispatch);
         });
     });
 

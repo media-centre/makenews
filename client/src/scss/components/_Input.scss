@@ -33,8 +33,9 @@
 
   .input-addon {
     cursor: pointer;
-    img {
+    i {
       width: 20px;
+      color: $primary-color-light;
     }
   }
 }
