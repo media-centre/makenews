@@ -71,6 +71,38 @@ describe("CouchClient", () => {
                 done();
             });
         });
+
+        it("should throw an error if there is no matching index for the selector field", async () => {
+            const query = {
+                "selector": {
+                    "sourceId": {
+                        "$gt": null
+                    }
+                }
+            };
+
+            const warnResponse = {
+                "warning": "no matching index found, create an index to optimize query time",
+                "docs": []
+            };
+            nock("http://localhost:5984", {
+                "reqheaders": {
+                    "Cookie": "AuthSession=" + accessToken,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+                .post("/" + dbName + "/_find")
+                .reply(HttpResponseHandler.codes.OK, warnResponse);
+
+            let couchClientInstance = new CouchClient(accessToken, dbName);
+            try {
+                await couchClientInstance.findDocuments(query);
+            } catch (err) {
+                assert.deepEqual("No matching index found", err.message);
+            }
+
+        });
     });
 
     describe("createIndex", () => {

@@ -82,9 +82,13 @@ export default class CouchClient {
         });
     }
 
-    findDocuments(query, customHeaders = {}) {
+    async findDocuments(query, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
-        return this.post(path, query, customHeaders);
+        const response = await this.post(path, query, customHeaders);
+        if(response.warning) {
+            throw { "message": "No matching index found" }; //eslint-disable-line no-throw-literal
+        }
+        return response;
     }
 
     createIndex(indexDoc, customHeaders = {}) {
