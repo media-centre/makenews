@@ -1,11 +1,9 @@
 /*eslint no-unused-vars:0*/
 import RssURLDocuments from "./admin/20161114174315_RssURLDocuments";
 import RssURLSearchIndex from "./admin/20170103161414_RssURLSearchIndex";
+import RssURLIndex from "./admin/20170503141134_RssURLIndex";
 import FeedsSearchIndex from "./db/20170225114814_FeedsSearchIndex";
-import FetchFeedsIndex from "./db/20170419143359_FetchFeedsIndex";
-import BookmarkIndex from "./db/20170403025654_BookmarkIndex";
-import TitleIndex from "./db/20170202122859_TitleIndex";
-import CollectionIndex from "./db/20170201122859_CollectionIndex";
+import AppIndex from "./db/20170502164510_AppIndex";
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
 import CouchSession from "../CouchSession";
@@ -91,10 +89,10 @@ export default class Migration {
                 let migratableFileDetails = MigrationFile.instance(this.isAdmin).getMigratableFileClassNames(schemaVersion);
                 Migration.logger(this.dbName).info("migratable file names = %j", migratableFileDetails);
                 this._migrateFileSynchronously(migratableFileDetails).then(success => {
-                    Migration.logger(this.dbName).info("migration successful.");
+                    Migration.logger(this.dbName).info("migration successful.", success);
                     resolve(true);
                 }).catch(failure => {
-                    Migration.logger(this.dbName).error("migration failed");
+                    Migration.logger(this.dbName).error("migration failed", failure);
                     reject(false);
                 });
             }).catch(error => {
@@ -109,14 +107,10 @@ export default class Migration {
             return new RssURLDocuments(this.dbName, this.accessToken);
         case "RssURLSearchIndex" :
             return new RssURLSearchIndex(this.dbName, this.accessToken);
-        case "FetchFeedsIndex" :
-            return new FetchFeedsIndex(this.dbName, this.accessToken);
-        case "BookmarkIndex" :
-            return new BookmarkIndex(this.dbName, this.accessToken);
-        case "TitleIndex" :
-            return new TitleIndex(this.dbName, this.accessToken);
-        case "CollectionIndex" :
-            return new CollectionIndex(this.dbName, this.accessToken);
+        case "RssURLIndex" :
+            return new RssURLIndex(this.dbName, this.accessToken);
+        case "AppIndex" :
+            return new AppIndex(this.dbName, this.accessToken);
         case "FeedsSearchIndex" :
             return new FeedsSearchIndex(this.dbName, this.accessToken);
         default :

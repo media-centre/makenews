@@ -104,9 +104,14 @@ describe("CollectionFeedsRequestHandler", () => {
             const feedsQuery = {
                 "selector": {
                     "_id": {
-                        "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
-                            "ff49851eb7078d30c9019d0dce002687"]
-                    }
+                        "$gt": null
+                    },
+                    "$or": [{
+                        "_id": {
+                            "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                                "ff49851eb7078d30c9019d0dce002687"]
+                        }
+                    }]
                 }
             };
             const getDocsMock = sandbox.mock(couchClient);
@@ -124,9 +129,14 @@ describe("CollectionFeedsRequestHandler", () => {
             const feedsQuery = {
                 "selector": {
                     "_id": {
-                        "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
-                            "ff49851eb7078d30c9019d0dce002687"]
-                    }
+                        "$gt": null
+                    },
+                    "$or": [{
+                        "_id": {
+                            "$in": ["0237b027db53b23cbc010baa30f103c47e1cf41d3dd253d2f5e70280e68ad5da",
+                                "ff49851eb7078d30c9019d0dce002687"]
+                        }
+                    }]
                 }
             };
             const getDocsMock = sandbox.mock(couchClient);

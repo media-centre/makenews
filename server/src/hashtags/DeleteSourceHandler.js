@@ -77,6 +77,9 @@ export default class DeleteSourceHandler {
     async _getFeedsFromSources(sources) {
         const selector = {
             "selector": {
+                "_id": {
+                    "$gt": null
+                },
                 "docType": {
                     "$in": ["feed", "collectionFeed"]
                 },

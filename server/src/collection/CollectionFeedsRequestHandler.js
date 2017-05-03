@@ -19,10 +19,16 @@ async function getFeeds(couchClient, feedIds) {
     const query = {
         "selector": {
             "_id": {
-                "$in": feedIds
-            }
+                "$gt": null
+            },
+            "$or": [{
+                "_id": {
+                    "$in": feedIds
+                }
+            }]
         }
     };
+
 
     const response = await couchClient.findDocuments(query);
     return response.docs;
