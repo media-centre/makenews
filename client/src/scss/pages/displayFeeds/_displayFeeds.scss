@@ -77,6 +77,11 @@
     border-right: 1px solid lighten($primary-color, 35%);
     border-left: 1px solid lighten($primary-color, 35%);
 
+
+    @media (max-width: $tablet-max-width) {
+      flex-basis: 340px;
+    }
+
     .search-bar {
       height: $secondary-header-nav-height;
       background-color: $dark-background-color;
