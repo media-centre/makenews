@@ -1,5 +1,6 @@
 .configure-container {
   $configured-source-panel-width: 360px;
+  $configured-source-panel-width-tab: 330px;
 
   .configured-sources {
     &-container {
@@ -12,6 +13,10 @@
       position: fixed;
       display: flex;
       flex-direction: column;
+
+      @media (max-width: $tablet-max-width) {
+        width: $configured-source-panel-width-tab;
+      }
 
       .heading {
         background: $dark-background-color;
@@ -67,6 +72,10 @@
   .configure-sources {
     margin-left: $configured-source-panel-width;
 
+    @media (max-width: $tablet-max-width) {
+      margin-left: $configured-source-panel-width-tab;
+    }
+
     .configuration-warning {
       background: $primary-color-dark;
       color: white;
@@ -115,6 +124,11 @@
         opacity: .5;
         cursor: pointer;
 
+
+        @media (max-width: $tablet-max-width) {
+          padding: 10px 5px;
+        }
+
         &.active,
         &:hover {
           opacity: 1;
@@ -136,6 +150,10 @@
         align-items: center;
         margin-right: 1rem;
         margin-bottom: 1rem;
+
+        @media (max-width: $tablet-max-width) {
+          margin-right: .5rem;
+        }
       }
 
       .icon {

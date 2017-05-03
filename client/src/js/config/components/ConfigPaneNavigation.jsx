@@ -77,13 +77,15 @@ export class ConfigPaneNavigation extends Component {
             <nav className="sources-nav">
                 <Link to="/configure/web" className={this.props.currentSourceType === "web" ? "sources-nav__item active" : "sources-nav__item"}>
                     <i className="fa fa-globe"/>
-                    {this.configureHeaderStrings.web}
+                    <span>{this.configureHeaderStrings.web}</span>
                 </Link>
                 <Link to="/configure/facebook/pages" className={this.props.currentSourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>
-                    <i className="fa fa-facebook-square"/>{this.configureHeaderStrings.facebook.name}
+                    <i className="fa fa-facebook-square"/>
+                    <span>{this.configureHeaderStrings.facebook.name}</span>
                 </Link>
                 <Link to="/configure/twitter" className={this.props.currentSourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>
-                    <i className="fa fa-twitter"/>{this.configureHeaderStrings.twitter}
+                    <i className="fa fa-twitter"/>
+                    <span>{this.configureHeaderStrings.twitter}</span>
                 </Link>
                 <nav className="secondary-nav">
                     {this.navButtons()}

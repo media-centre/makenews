@@ -13,6 +13,12 @@
     font-weight: 400;
     font-size: 15px;
 
+    @media (max-width: $tablet-max-width) {
+      span {
+        display: none;
+      }
+    }
+
     i {
       font-size: 22px;
       margin-right: 7px;
@@ -34,7 +40,7 @@
 
   a.btn {
     display: inline-flex;
-    padding: 1rem 20px;
+    padding: 1rem 10px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -45,6 +51,7 @@
     text-transform: uppercase;
     height: 100%;
     display: inline-block;
+    align-items: center;
   }
 
   .btn-primary {

@@ -55,7 +55,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(webLink.props.to, "/configure/web");
         assert.strictEqual(webLink.props.className, "sources-nav__item active");
         const [, text] = webLink.props.children;
-        assert.strictEqual(text, "Web URLs");
+        assert.strictEqual(text.type, "span");
+        assert.strictEqual(text.props.children, "Web URLs");
     });
 
     it("should have /configure/facebook/pages link for facebook", () => {
@@ -65,7 +66,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(facebookLink.props.to, "/configure/facebook/pages");
         assert.strictEqual(facebookLink.props.className, "sources-nav__item active");
         const [, text] = facebookLink.props.children;
-        assert.strictEqual(text, "Facebook");
+        assert.strictEqual(text.type, "span");
+        assert.strictEqual(text.props.children, "Facebook");
     });
 
     it("should have /configure/twitter link for twitter", () => {
@@ -75,7 +77,8 @@ describe("ConfigPaneNavigation", () => {
         assert.strictEqual(twitterLink.props.to, "/configure/twitter");
         assert.strictEqual(twitterLink.props.className, "sources-nav__item active");
         const [, text] = twitterLink.props.children;
-        assert.strictEqual(text, "Twitter");
+        assert.strictEqual(text.type, "span");
+        assert.strictEqual(text.props.children, "Twitter");
     });
 
     it("should have a next button with facebook link if current source is web", () => {
