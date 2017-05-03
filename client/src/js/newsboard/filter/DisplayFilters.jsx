@@ -20,6 +20,9 @@ export class DisplayFilters extends Component {
         this.hashtags = [];
         this.searchInSources = this.searchInSources.bind(this);
         this._onAddHashTag = this._onAddHashTag.bind(this);
+        this.showInputBox = this.showInputBox.bind(this);
+        this.cancelFilter = this.cancelFilter.bind(this);
+        this.applyFilter = this.applyFilter.bind(this);
     }
 
     componentDidMount() {
@@ -122,6 +125,9 @@ export class DisplayFilters extends Component {
             Toast.show(this.filterStrings.hashTag.emptyHashTag);
         }
     }
+    showInputBox() {
+        this.setState({ "hashtagInputBox": !this.state.hashtagInputBox });
+    }
 
     render() {
         this.filterStrings = Locale.applicationStrings().messages.newsBoard.filters;
@@ -132,7 +138,7 @@ export class DisplayFilters extends Component {
                 />
                 { this.props.currentTab === "twitter" &&
                     <div className="hashtag-container">
-                       <div className="add-hashtag" onClick={() => this.setState({ "hashtagInputBox": !this.state.hashtagInputBox })}>
+                       <div className="add-hashtag" onClick={this.showInputBox}>
                            <i className="fa fa-plus-circle" />
                            <span>{this.filterStrings.addHashTags}</span>
                        </div>
@@ -152,8 +158,8 @@ export class DisplayFilters extends Component {
                 <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
                 <div className="controls">
-                    <button id="cancelBtn" className="cancel-btn primary" onClick={() => this.cancelFilter()}>{this.filterStrings.cancelButton}</button>
-                    <button id="applyBtn" className="apply-btn primary" onClick={() => this.applyFilter()}>{this.filterStrings.applyButton}</button>
+                    <button id="cancelBtn" className="cancel-btn primary" onClick={this.cancelFilter}>{this.filterStrings.cancelButton}</button>
+                    <button id="applyBtn" className="apply-btn primary" onClick={this.applyFilter}>{this.filterStrings.applyButton}</button>
                 </div>
             </aside>
         );

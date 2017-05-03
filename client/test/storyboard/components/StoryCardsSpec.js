@@ -49,7 +49,7 @@ describe("StoryCards", () => {
 
         let storiesList = ReactDOM.findDOMNode(storyBoardCards1).querySelectorAll("ul li.added-card i.delete-icon");
         let [story1] = storiesList;
-        let deleteMock = sinon.mock(storyBoardCards1).expects("deleteStory");
+        let deleteMock = sinon.mock(storyBoardCards1).expects("_showDeleteConfirmPopup");
         TestUtils.Simulate.click(story1);
         assert.isDefined(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
         assert.strictEqual(story1.className, "fa fa-remove icon delete-icon");

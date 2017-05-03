@@ -11,6 +11,8 @@ export class StoryCards extends Component {
     constructor() {
         super();
         this.state = { "showDeleteConfirm": false, "currentId": 0 };
+        this.deleteStory = (isConfirm) => this._deleteStory(isConfirm);
+        // this.showDeleteConfirmPopup = (event, id) => this._showDeleteConfirmPopup(event, id);
     }
     componentDidMount() {
         this.props.dispatch(StoryBoardActions.getStories());
@@ -20,7 +22,7 @@ export class StoryCards extends Component {
         this.props.dispatch(StoryBoardActions.clearStories);
     }
 
-    deleteStory(id, event) {
+    _showDeleteConfirmPopup(event, id) {
         event.stopPropagation();
         event.preventDefault();
         this.setState({ "showDeleteConfirm": true, "currentId": id });
@@ -30,7 +32,7 @@ export class StoryCards extends Component {
         const storiesArray = this.props.stories.map((story, index) => {
             const inc = 1;
             return (<li key={index + inc} className="added-card">
-                <i className="fa fa-remove icon delete-icon" onClick={(event) => this.deleteStory(story._id, event)}/>
+                <i className="fa fa-remove icon delete-icon" onClick={(event) => this._showDeleteConfirmPopup(event, story._id)}/>
                 <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
                     <div className="card">
                         <i ref={`title${story.title}`}>{story.title}</i>
@@ -49,6 +51,13 @@ export class StoryCards extends Component {
         return storiesArray;
     }
 
+    _deleteStory(isConfirmed) {
+        if(isConfirmed) {
+            this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));
+        }
+        this.setState({ "showDeleteConfirm": false });
+    }
+
     render() {
         this.storyBoardStrings = Locale.applicationStrings().messages.storyBoard;
         return (
@@ -60,13 +69,7 @@ export class StoryCards extends Component {
                     {this.state.showDeleteConfirm
                         ? <ConfirmPopup
                             description={this.storyBoardStrings.confirmDelete}
-                            callback={(isConfirmed) => {
-                                if(isConfirmed) {
-                                    this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));
-                                }
-                                this.setState({ "showDeleteConfirm": false });
-                            }
-                            }
+                            callback={this.deleteStory}
                           /> : null
                     }
 

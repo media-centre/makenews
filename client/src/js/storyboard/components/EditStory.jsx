@@ -24,6 +24,10 @@ export default class EditStory extends Component {
         this.state = { "title": "", "body": "", "showPopup": false };
         this._onChange = this._onChange.bind(this);
         this._onTitleChange = this._onTitleChange.bind(this);
+        this._exportHtml = this._exportHtml.bind(this);
+        this._saveStory = this._saveStory.bind(this);
+        this._showConfirmPopup = this._showConfirmPopup.bind(this);
+        this._goBack = (isConfirm) => this._back(isConfirm);
         this.storyId = "";
         this.story = {};
     }
@@ -114,9 +118,11 @@ export default class EditStory extends Component {
         let history = History.getHistory();
         if(goBack) {
             history.push("/story-board/stories");
-        } else {
-            this.setState({ "showPopup": false });
         }
+        this.setState({ "showPopup": false });
+    }
+    _showConfirmPopup() {
+        this.setState({ "showPopup": true });
     }
 
     render() {
@@ -125,31 +131,22 @@ export default class EditStory extends Component {
             ? (<ConfirmPopup
                 ref = "confirmPopup"
                 description = {this.storyboardStrings.confirmStoryBack}
-                callback = {(goBack) => {
-                    this._back(goBack);
-                }}
+                callback = {this._goBack}
                />) : null;
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
                     <div className="editor-toolbar">
-                        <button className="back" onClick={() =>
-                        this.setState({ "showPopup": true })}
-                        >{this.storyboardStrings.backButton}
-                        </button>
+                        <button className="back" onClick={this._showConfirmPopup}>{this.storyboardStrings.backButton}</button>
                         <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
-                        <button ref="saveButton" type="submit" className="save" value="save" onClick={() => {
-                            this._saveStory();
-                        }}
-                        >
-                        {this.storyboardStrings.saveButton}</button>
+                        <button ref="saveButton" type="submit" className="save" value="save" onClick={this._saveStory}>{this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
                     </div>
                     <ReactQuill className="story-editor" theme="snow" onChange={this._onChange} modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">
-                        <i className="fa fa-share export-icon" onClick={() => this._exportHtml()} />
+                        <i className="fa fa-share export-icon" onClick={this._exportHtml} />
                     </div>
                     {popup}
                 </div>

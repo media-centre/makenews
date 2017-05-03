@@ -5,6 +5,12 @@ import Locale from "../../Locale";
 
 export default class ConfirmPopup extends Component {
 
+    constructor() {
+        super();
+        this.handleClick = this.handleClick.bind(this);
+        this.handleOk = (event) => this.handleClick(event, true);
+    }
+
     handleClick(event, isConfirm) {
         this.refs.confirmButton.disabled = true;
         this.refs.cancelButton.disabled = true;
@@ -19,8 +25,8 @@ export default class ConfirmPopup extends Component {
                     <div className="container">
                         <p className="description" ref="description">{this.props.description}</p>
                         <div className="button-container t-right">
-                            <button className={this.props.hide ? "confirmButton hide" : "confirmButton"} ref="confirmButton" onClick={(event)=> this.handleClick(event, true)} >{confirmMessages.confirm}</button>
-                            <button className="cancelButton" ref="cancelButton" onClick={(event)=> this.handleClick(event)}>{this.props.hide ? confirmMessages.ok : confirmMessages.cancel}</button>
+                            <button className={this.props.hide ? "confirmButton hide" : "confirmButton"} ref="confirmButton" onClick={this.handleOk} >{confirmMessages.confirm}</button>
+                            <button className="cancelButton" ref="cancelButton" onClick={this.handleClick}>{this.props.hide ? confirmMessages.ok : confirmMessages.cancel}</button>
                         </div>
                     </div>
                 </div>

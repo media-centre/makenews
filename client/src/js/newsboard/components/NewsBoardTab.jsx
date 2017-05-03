@@ -5,10 +5,14 @@ import { newsBoardTabSwitch } from "./../actions/DisplayFeedActions";
 import { connect } from "react-redux";
 
 export class NewsBoardTab extends Component {
+    constructor() {
+        super();
+        this.displayFeeds = this.displayFeeds.bind(this);
+    }
 
-    displayFeeds(sourceType) {
+    displayFeeds() {
         if(!this.props.isFetchingFeeds) {
-            this.props.dispatch(newsBoardTabSwitch(sourceType));
+            this.props.dispatch(newsBoardTabSwitch(this.props.sourceType));
         }
     }
 
@@ -17,7 +21,7 @@ export class NewsBoardTab extends Component {
             <a className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
                 title={this.props.title}
                 id={this.props.id}
-                onClick={() => { this.displayFeeds(this.props.sourceType); }}
+                onClick={this.displayFeeds}
             >
                 <i className={`icon fa fa-${this.props.sourceIcon}`} />
                 {this.props.children}

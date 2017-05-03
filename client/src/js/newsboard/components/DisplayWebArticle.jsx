@@ -19,8 +19,8 @@ export class DisplayWebArticle extends Component {
 
     _renderDescription() {
         return this.props.article.isHTML
-            ? <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article.markup }} onMouseUp={() => this.props.toolTip()}/>
-            : <div className="article__desc" onMouseUp={() => this.props.toolTip()}>{getHtmlContent(this.props.selectedArticle.description)}</div>;
+            ? <div className="article__desc" dangerouslySetInnerHTML={{ "__html": this.props.article.markup }} onMouseUp={this.props.toolTip}/>
+            : <div className="article__desc" onMouseUp={this.props.toolTip}>{getHtmlContent(this.props.selectedArticle.description)}</div>;
     }
 
     render() {

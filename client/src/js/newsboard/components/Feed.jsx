@@ -5,6 +5,11 @@ import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 
 export default class Feed extends Component {
+    constructor() {
+        super();
+        this._onClick = this._onClick.bind(this);
+    }
+
     getMedia() {
         if(this.props.feed.videos && this.props.feed.videos.length) {
             return <img src={this.props.feed.videos[0].thumbnail}/>; //eslint-disable-line no-magic-numbers
@@ -22,7 +27,7 @@ export default class Feed extends Component {
     render() {
         const feed = this.props.feed;
         const tags = feed.tags || [];
-        return (<div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={() => this._onClick()}>
+        return (<div className={this.props.active ? "feed feed--highlight" : "feed"} onClick={this._onClick}>
                 <div className="feed__media">{this.getMedia()}</div>
 
                 <div className="feed__content">

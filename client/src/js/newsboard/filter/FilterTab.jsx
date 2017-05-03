@@ -4,17 +4,19 @@ import { connect } from "react-redux";
 import { filterTabSwitch } from "./FilterActions";
 
 export class FilterTab extends Component {
+    constructor() {
+        super();
+        this.displayConfiguredSources = this.displayConfiguredSources.bind(this);
+    }
 
-    displayConfiguredSources(sourceType) {
-        this.props.dispatch(filterTabSwitch(sourceType));
+    displayConfiguredSources() {
+        this.props.dispatch(filterTabSwitch(this.props.sourceType));
     }
 
     render() {
         return (
             <div className={this.props.currentFilter === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
-                onClick={() => {
-                    this.displayConfiguredSources(this.props.sourceType);
-                }}
+                onClick={this.displayConfiguredSources}
             >
                 <i className={`icon fa fa-${this.props.sourceIcon}`} />
             </div>
