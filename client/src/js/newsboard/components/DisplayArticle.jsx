@@ -15,6 +15,13 @@ export class DisplayArticle extends Component {
     constructor() {
         super();
         this._getSelectedTextDoc = this._getSelectedTextDoc.bind(this);
+        this._showToolTip = this._showToolTip.bind(this);
+        this._hideToolTip = this._hideToolTip.bind(this);
+        this.bookmarkArticle = this.bookmarkArticle.bind(this);
+        this.hideArticle = this.hideArticle.bind(this);
+        this._addToCollection = this._addToCollection.bind(this);
+        this.addTextToCollection = (event) => this._addTextToCollection(event);
+        this.copyTextToClipboard = (event) => this._copyTextToClipboard(event);
     }
 
     _showToolTip() {
@@ -38,11 +45,22 @@ export class DisplayArticle extends Component {
         }
     }
 
+    _addTextToCollection(event) {
+        this._toolTipStyle(event);
+        this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
+        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc()));
+    }
+
+    _copyTextToClipboard(event) {
+        this._toolTipStyle(event);
+        document.execCommand("Copy");
+    }
+
     renderBody() {
         const toolTip = (
             <div className="toolTip" id="toolTip">
-                <button id="add" className="icon fa fa-folder-o" onClick={(event) => { this._toolTipStyle(event); this._addToCollection(); }}>{this.articleMessages.addToCollection}</button>
-                <button id="copy" className="icon fa fa-copy" onClick={(event) => { this._toolTipStyle(event); this._copyToClipboard(); }}>{this.articleMessages.copy}</button>
+                <button id="add" className="icon fa fa-folder-o" onClick={this.addTextToCollection}>{this.articleMessages.addToCollection}</button>
+                <button id="copy" className="icon fa fa-copy" onClick={this.copyTextToClipboard}>{this.articleMessages.copy}</button>
             </div>);
 
         return (
@@ -64,8 +82,8 @@ export class DisplayArticle extends Component {
                 </div>
 
                 {this.props.article.sourceType === "web" && (!this.props.article.selectText || this.props.article.sourceDeleted)
-                    ? <DisplayWebArticle toolTip={this._showToolTip.bind(this)}/>
-                    : <div className="article__desc" onMouseUp={() => { this._showToolTip(); }}>
+                    ? <DisplayWebArticle toolTip={this._showToolTip}/>
+                    : <div className="article__desc" onMouseUp={this._showToolTip}>
                     { this.props.article.description }
                 </div>
                 }
@@ -96,48 +114,49 @@ export class DisplayArticle extends Component {
         parentDiv.style.display = "none";
     }
 
-    _copyToClipboard() {
-        document.execCommand("Copy");
-    }
-
     _addToCollection() {
         this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId, this._getSelectedTextDoc()));
+        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
+    }
+
+    hideArticle() {
+        this.props.collectionDOM.style.display = "block";
+        this.props.dispatch(displayArticle());
     }
 
     renderHeader() {
         return(this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
                 ? <header className="display-article__header back">
-                    <button className="back__button" onClick={() => { this.props.collectionDOM.style.display = "block"; this.props.dispatch(displayArticle()); }}>
+                    <button className="back__button" onClick={this.hideArticle}>
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
                   </header>
                 : this.renderArticleHeader()
         );
+    }
 
+    bookmarkArticle() {
+        this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab));
     }
 
     renderArticleHeader() {
         return(
             this.props.isStoryBoard
                 ? <header className={`${this.articleClass}__header back`}>
-                    <button className="back__button" onClick={() => { this.props.articleOpen(); }}>
+                    <button className="back__button" onClick={this.props.articleOpen}>
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
                     </button>
                   </header>
 
                 : <header className={`${this.articleClass}__header`}>
-                    <div className="collection" onClick={() => { this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
-                        this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
-                    }}
-                    >
+                    <div className="collection" onClick={this._addToCollection}>
                         <i className="icon fa fa-folder"/> {this.articleMessages.addToCollection}
                     </div>
 
                     {this.props.article.bookmark
-                        ? <div className="bookmark active" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
+                        ? <div className="bookmark active" onClick={this.bookmarkArticle}>
                             <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmarked}
                           </div>
-                        : <div className="bookmark" onClick={() => { this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab)); }}>
+                        : <div className="bookmark" onClick={this.bookmarkArticle}>
                             <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmark}
                           </div>
                     }
@@ -152,7 +171,7 @@ export class DisplayArticle extends Component {
                 this.props.collectionDOM.style.display = "none";
             }
             return (
-                <article className={this.articleClass} onClick={() => { this._hideToolTip(); }}>
+                <article className={this.articleClass} onClick={this._hideToolTip}>
                     { this.renderHeader() }
                     { this.renderBody() }
                 </article>

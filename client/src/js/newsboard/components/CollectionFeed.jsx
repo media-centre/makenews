@@ -11,6 +11,11 @@ const MAX_DESCRIPTION_LENGTH = 300;
 
 export default class CollectionFeed extends Component {
 
+    constructor() {
+        super();
+        this._displayArticle = this._displayArticle.bind(this);
+    }
+
     getMedia() {
         if(this.props.feed.videos && this.props.feed.videos.length) {
             return <img src={this.props.feed.videos[0].thumbnail}/>; //eslint-disable-line no-magic-numbers
@@ -57,7 +62,7 @@ export default class CollectionFeed extends Component {
                     </div>
                     <div className={`${feedClass}__readmore`}>
                         {feed.sourceType === "web" || video || image || description.length > MAX_DESCRIPTION_LENGTH
-                        ? <button className={`${feedClass}__readmore-button`} onClick={() => { this._displayArticle(); }}>{collectionMessages.readMoreButton}></button> : ""}
+                        ? <button className={`${feedClass}__readmore-button`} onClick={this._displayArticle}>{collectionMessages.readMoreButton}></button> : ""}
                     </div>
               </div>);
     }

@@ -18,6 +18,13 @@ export class DisplayCollection extends Component {
         this.buttonEvent = {};
         this.deleteCollection = {};
         this._searchCollections = this._searchCollections.bind(this);
+        this._isClicked = this._isClicked.bind(this);
+        this._showCreateCollectionPopup = this._showCreateCollectionPopup.bind(this);
+        this._closeCreateCollectionPopup = this._closeCreateCollectionPopup.bind(this);
+        this._closeConfirmationPopup = this._closeConfirmationPopup.bind(this);
+        this._deleteCollection = this._deleteCollection.bind(this);
+        this._createCollection = (event) => this.createCollection(event);
+        this.saveCollection = this.saveCollection.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,7 +57,7 @@ export class DisplayCollection extends Component {
         }
     }
 
-    _deleteCollectionEvent() {
+    _deleteCollection() {
         this.setState({ "showConfirmationPopup": false });
         this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
     }
@@ -117,35 +124,33 @@ export class DisplayCollection extends Component {
         }
     }
 
+    saveCollection() {
+        if (!StringUtil.isEmptyString(this.refs.collectionName.value)) {
+            this.props.dispatch(addToCollection(this.refs.collectionName.value.trim(), this.props.addArticleToCollection, true));
+        }
+        this.setState({ "showCollectionPopup": false });
+    }
+
     showPopup() {
         return (
             <div className="collection-popup-overlay">
                 {this.state.showCollectionPopup &&
                 <div className="new-collection">
                     <input type="text" className="new-collection-input-box" ref="collectionName"
-                        placeholder="create new collection" onKeyUp={(event) => {
-                            this.createCollection(event);
-                        }}
+                        placeholder="create new collection" onKeyUp={this._createCollection}
                     />
 
-                    <button className="cancel-collection" onClick={() => {
-                        this.setState({ "showCollectionPopup": false });
-                    }}
-                    >{this.collectionMessages.cancelButton}
-                    </button>
+                    <button className="cancel-collection" onClick={this._closeCreateCollectionPopup}>{this.collectionMessages.cancelButton}</button>
 
-                    <button className="save-collection" onClick={() => {
-                        if (!StringUtil.isEmptyString(this.refs.collectionName.value)) {
-                            this.props.dispatch(addToCollection(this.refs.collectionName.value.trim(), this.props.addArticleToCollection, true));
-                        }
-                        this.setState({ "showCollectionPopup": false });
-                    }}
-                    >{this.collectionMessages.saveButton}
-                    </button>
+                    <button className="save-collection" onClick={this.saveCollection}>{this.collectionMessages.saveButton}</button>
                 </div>
                 }
             </div>
         );
+    }
+
+    _closeConfirmationPopup() {
+        this.setState({ "showConfirmationPopup": false });
     }
 
     showConfirmationPopup() {
@@ -153,25 +158,24 @@ export class DisplayCollection extends Component {
             <div className="confirmation-popup-overlay">
                 <div className="delete-confirmation-popup">
                     <div className="confirmation-text">{this.collectionMessages.confirmDelete}<b>{this.deleteCollection.collection}</b>?</div>
-                    <button className="cancel-collection" onClick={() =>
-                        this.setState({ "showConfirmationPopup": false })
-                    }
-                    >NO</button>
-                    <button className="delete-confirmed" onClick={() =>
-                        this._deleteCollectionEvent()
-                    }
-                    >YES</button>
+                    <button className="cancel-collection" onClick={this._closeConfirmationPopup}>NO</button>
+                    <button className="delete-confirmed" onClick={this._deleteCollection}>YES</button>
                 </div>
             </div>
         );
     }
 
+    _closeCreateCollectionPopup() {
+        this.setState({ "showCollectionPopup": false });
+    }
+
+    _showCreateCollectionPopup() {
+        this.setState({ "showCollectionPopup": true });
+    }
+
     createNewCollection() {
         return (
-            <div className="create_collection" onClick={() => {
-                this.setState({ "showCollectionPopup": true });
-            }}
-            >
+            <div className="create_collection" onClick={this._showCreateCollectionPopup}>
                 <i className="fa fa-plus-circle icon"/> {this.collectionMessages.createCollection}
             </div>
         );
@@ -204,7 +208,7 @@ export class DisplayCollection extends Component {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
-                ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked.bind(this)}/>
+                ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked}/>
                 : this.displayCollections()
         );
     }

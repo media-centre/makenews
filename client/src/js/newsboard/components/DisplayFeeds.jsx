@@ -29,6 +29,13 @@ export class DisplayFeeds extends Component {
         this.getMoreFeeds = this.getMoreFeeds.bind(this);
         this.getFeedsCallBack = this.getFeedsCallBack.bind(this);
         this.fetchFeedsFromSources = this.fetchFeedsFromSources.bind(this);
+        this._showNewFeeds = this._showNewFeeds.bind(this);
+        this._isClicked = this._isClicked.bind(this);
+        this._hideExpandView = this._hideExpandView.bind(this);
+        this._search = this._search.bind(this);
+        this._cancel = this._cancel.bind(this);
+        this.toggleFeedsView = (event) => this._toggleFeedsView(event);
+        this.checkEnterKey = (event) => this._checkEnterKey(event);
     }
 
     componentWillMount() {
@@ -159,24 +166,24 @@ export class DisplayFeeds extends Component {
         this.setState({ "isFeedSelected": !this.state.isFeedSelected });
     }
 
+    _showNewFeeds() {
+        this.setState({ "gotNewFeeds": false });
+        this.offset = 0;
+        this.hasMoreFeeds = true;
+        this.props.dispatch(DisplayFeedActions.clearFeeds());
+        this.setState({ "searchToggle": false });
+        this.getMoreFeeds(this.props.sourceType);
+    }
+
     _showMoreFeedsButton() {
         if(!["collections", "bookmark"].includes(this.props.sourceType)) {
             return (
-                <button className="newsfeeds-notify" onClick={() => {
-                    this.setState({ "gotNewFeeds": false });
-                    this.offset = 0;
-                    this.hasMoreFeeds = true;
-                    this.props.dispatch(DisplayFeedActions.clearFeeds());
-                    this.setState({ "searchToggle": false });
-                    this.getMoreFeeds(this.props.sourceType);
-                }
-            }
-                >{this.newsboardStrings.showMoreFeedsButton}</button>);
+                <button className="newsfeeds-notify" onClick={this._showNewFeeds}>{this.newsboardStrings.showMoreFeedsButton}</button>);
         }
         return null;
     }
 
-    checkEnterKey(event) {
+    _checkEnterKey(event) {
         const ENTERKEY = 13;
         if(this.refs.searchFeeds.value === "") {
             this.setState({ "searchToggle": false });
@@ -232,7 +239,7 @@ export class DisplayFeeds extends Component {
         this.getMoreFeeds(this.props.sourceType);
     }
 
-    _hide() {
+    _hideExpandView() {
         const toolTip = document.getElementById("toolTip");
         if (toolTip) {
             toolTip.style.display = "none";
@@ -263,29 +270,29 @@ export class DisplayFeeds extends Component {
     displayFeeds() {
         this.newsboardStrings = Locale.applicationStrings().messages.newsBoard;
         return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
-            ? <DisplayArticle articleOpen={this._isClicked.bind(this)} isStoryBoard={this.state.isFeedSelected} />
-            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={() => { this._hide(); }}>
+            ? <DisplayArticle articleOpen={this._isClicked} isStoryBoard={this.state.isFeedSelected} />
+            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={this._hideExpandView}>
                 <div className="search-bar">
                     <div className="input-box">
                         <input type="text" ref="searchFeeds"
-                            onKeyUp={(event) => { this.checkEnterKey(event); }}
+                            onKeyUp={this.checkEnterKey}
                             className="search-sources"
                             placeholder="Search Keywords, Articles etc."
                             title="Search Keywords, Articles etc."
                         />
                         {this.state.searchToggle
-                            ? <span className="input-addon" onClick={() => { this._cancel(); }}>&times;</span>
-                            : <span className="input-addon" onClick={() => { this._search(); }}><i className="fa fa-search" aria-hidden="true"/></span>
+                            ? <span className="input-addon" onClick={this._cancel}>&times;</span>
+                            : <span className="input-addon" onClick={this._search}><i className="fa fa-search" aria-hidden="true"/></span>
                         }
                     </div>
                 </div>
                 { this.state.gotNewFeeds && this._showMoreFeedsButton() }
-                <i onClick={(event) => { this._toggleFeedsView(event); }} className="expand-icon" />
+                <i onClick={this.toggleFeedsView} className="expand-icon" />
                 <div className="feeds-container" ref="feeds">
                     <div className="feeds">
                         { this.props.feeds.map((feed, index) =>
                             <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                                isClicked={this._isClicked.bind(this)} dispatch={this.props.dispatch}
+                                isClicked={this._isClicked} dispatch={this.props.dispatch}
                             />)
                         }
                         { this.props.isFetchingFeeds
