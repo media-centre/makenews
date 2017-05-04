@@ -86,7 +86,6 @@ gulp.task("client:build", function(callback) {
     runSequence("client:copy-resources", "client:build-sources", "client:scss", callback);
 });
 
-// gulp.task("client:build", ["client:scss", "client:javascript", "client:riot-tags", "client:copy-index-html"]);
 
 gulp.task("client:watch", function() {
     this.cssFilesPath = parameters.client.scssSrcPath + "/**/*.scss";
