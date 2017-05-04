@@ -16,6 +16,7 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("DisplayFilters", () => {
     let displayFilters = null, displayFiltersDOM = null;
     const sandbox = sinon.sandbox.create();
+    const anonymousFun = () => {};
 
     beforeEach("DisplayFilters", () => {
         let store = createStore(() => ({
@@ -47,7 +48,7 @@ describe("DisplayFilters", () => {
         });
         displayFilters = TestUtils.renderIntoDocument(
             <Provider store= {store}>
-                <DisplayFilters dispatch={() => {}} callback={() => {}} />
+                <DisplayFilters dispatch={anonymousFun} callback={anonymousFun} />
             </Provider>);
         displayFiltersDOM = ReactDOM.findDOMNode(displayFilters);
 

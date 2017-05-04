@@ -14,6 +14,7 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("Display Collections", () => {
     let feeds = null, store = null, result = null;
     const sandbox = sinon.sandbox.create();
+    const anonymousFun = () => {};
 
     beforeEach("Display Collection", () => {
         feeds = [
@@ -47,7 +48,7 @@ describe("Display Collections", () => {
 
         result = TestUtils.renderIntoDocument(
             <Provider store={store}>
-                <DisplayCollection dispatch={()=> {}}/>
+                <DisplayCollection dispatch={anonymousFun}/>
             </Provider>);
     });
 
@@ -159,7 +160,7 @@ describe("Display Collections", () => {
 
             result = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <DisplayCollection dispatch={()=> {}}/>
+                    <DisplayCollection dispatch={anonymousFun}/>
                 </Provider>);
         });
 

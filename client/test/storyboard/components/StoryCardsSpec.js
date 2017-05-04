@@ -9,6 +9,7 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("StoryCards", () => {
     let storyBoardCards = null, stories = null;
     const sandbox = sinon.sandbox.create();
+    const anonymousFun = () => {};
 
     beforeEach("StoryCards", () => {
         const storyBoardMessages = {
@@ -23,7 +24,7 @@ describe("StoryCards", () => {
             }
         });
         storyBoardCards = TestUtils.renderIntoDocument(
-          <StoryCards stories = {stories} dispatch={()=>{}}/>
+          <StoryCards stories = {stories} dispatch={anonymousFun}/>
         );
     });
 
@@ -44,7 +45,7 @@ describe("StoryCards", () => {
 
     it("onclick of remove icon should dispatch event", () => {
         const storyBoardCards1 = TestUtils.renderIntoDocument(
-            <StoryCards stories = {stories} dispatch={()=>{}}/>
+            <StoryCards stories = {stories} dispatch={anonymousFun}/>
         );
 
         let storiesList = ReactDOM.findDOMNode(storyBoardCards1).querySelectorAll("ul li.added-card i.delete-icon");

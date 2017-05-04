@@ -6,6 +6,7 @@ import { expect } from "chai";
 
 describe("Source URL component", () => {
     let source = null, sourceRendered = null, sourceDOM = null;
+    const dispatchFun = () => {};
 
     before("Source URL component", () => {
         source = {
@@ -18,7 +19,7 @@ describe("Source URL component", () => {
             "url": "http://some.url"
         };
         sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
+            <Source source={source} dispatch={dispatchFun} currentSourceType="Profiles" />
         );
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
     });
@@ -34,7 +35,7 @@ describe("Source URL component", () => {
 
     it("should have source url if currentSourceType is WEB", () => {
         sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="web" />
+            <Source source={source} dispatch={dispatchFun} currentSourceType="web" />
         );
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
 
@@ -55,7 +56,7 @@ describe("Source URL component", () => {
     it("should have success arrow icon in the source when it's added to configured list", () =>{
         source.added = true;
         sourceRendered = TestUtils.renderIntoDocument(
-            <Source source={source} dispatch={()=>{}} currentSourceType="Profiles" />
+            <Source source={source} dispatch={dispatchFun} currentSourceType="Profiles" />
         );
         sourceDOM = ReactDOM.findDOMNode(sourceRendered);
         let imageSrc = sourceDOM.querySelectorAll(".source__action-icon img")[0].src; //eslint-disable-line no-magic-numbers

@@ -18,6 +18,8 @@ describe("ConfigureSourcesPage", () => {
         "storyBoard": "Write a Story",
         "configure": "Configure"
     };
+    const dispatchFun = () => {};
+
     describe("switchSourceTab", () => {
         let sandbox = null, renderer = null;
         beforeEach("switchSourceTab", () => {
@@ -31,7 +33,7 @@ describe("ConfigureSourcesPage", () => {
             renderer = TestUtils.createRenderer();
             /* we have to render it twice inorder to trigger componentwillreviceprops because of shallow rendering*/ // eslint-disable-line
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} sourcesAuthenticationInfo = {{ "facebook": true }} dispatch={()=>{}} />
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "bla" }} sourcesAuthenticationInfo = {{ "facebook": true }} dispatch={dispatchFun} />
             );
         });
 
@@ -44,7 +46,7 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("web");
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "web" }} dispatch={()=>{}}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "web" }} dispatch={dispatchFun}/>
             );
 
             switchTabsMock.verify();
@@ -55,7 +57,7 @@ describe("ConfigureSourcesPage", () => {
                 .expects("switchSourceTab").withArgs("groups");
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={()=>{}}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook", "sourceSubType": "groups" }} dispatch={dispatchFun}/>
             );
 
             switchTabsMock.verify();
@@ -66,7 +68,7 @@ describe("ConfigureSourcesPage", () => {
             sandbox.stub(History, "getHistory").returns({ "push": historyPushSpy });
 
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "random" }} dispatch={()=>{}}/>
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "random" }} dispatch={dispatchFun}/>
             );
 
             expect(historyPushSpy.calledWith("/configure/web")).to.be.true; //eslint-disable-line no-unused-expressions
@@ -94,7 +96,7 @@ describe("ConfigureSourcesPage", () => {
         it("should have ConfiguredSources component", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun}/>);
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfiguredSources);
             expect(configuredSources).to.have.lengthOf(ONE);
@@ -103,7 +105,7 @@ describe("ConfigureSourcesPage", () => {
         it("should have ConfigurePage component", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun}/>);
             result = renderer.getRenderOutput();
             let configurePane = findAllWithType(result, ConfigurePane);
             expect(configurePane).to.have.lengthOf(ONE);
@@ -112,7 +114,7 @@ describe("ConfigureSourcesPage", () => {
         xit("should not have ConfiguredSources component if sourceType is facebook and expireTime is ZERO", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={()=>{}} expireTime={ZERO}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun} expireTime={ZERO}/>);
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfiguredSources);
             expect(configuredSources).to.have.lengthOf(ZERO);
@@ -122,7 +124,7 @@ describe("ConfigureSourcesPage", () => {
         xit("should not have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is False", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}} twitterAuthenticated={false}/>);
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={dispatchFun} twitterAuthenticated={false}/>);
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfiguredSources);
             expect(configuredSources).to.have.lengthOf(ZERO);
@@ -131,7 +133,7 @@ describe("ConfigureSourcesPage", () => {
         it("should have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is true", () => {
             renderer = TestUtils.createRenderer();
             renderer.render(
-                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={()=>{}} twitterAuthenticated={true}/>); //eslint-disable-line
+                <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={dispatchFun} twitterAuthenticated={true}/>); //eslint-disable-line react/jsx-boolean-value
             result = renderer.getRenderOutput();
             let configuredSources = findAllWithType(result, ConfigurePane);
             expect(configuredSources).to.have.lengthOf(ONE);

@@ -10,6 +10,7 @@ import { assert } from "chai";
 
 describe("FilterTab", () => {
     let filterTab = null;
+    const anonymousFun = () => {};
 
     it("should have news-board-tab active class", () => {
         let store = createStore(() => ({
@@ -18,7 +19,7 @@ describe("FilterTab", () => {
 
         filterTab = TestUtils.renderIntoDocument(
             <Provider store= {store}>
-                <FilterTab dispatch={() => {}} sourceIcon={"twitter"} sourceType={"twitter"}/>
+                <FilterTab dispatch={anonymousFun} sourceIcon={"twitter"} sourceType={"twitter"}/>
             </Provider>);
 
         assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(filterTab, "news-board-tab active"));
@@ -33,7 +34,7 @@ describe("FilterTab", () => {
 
         filterTab = TestUtils.renderIntoDocument(
             <Provider store= {store}>
-                <FilterTab dispatch={() => {}} sourceIcon={"twitter"} sourceType={"twitter"}/>
+                <FilterTab dispatch={anonymousFun} sourceIcon={"twitter"} sourceType={"twitter"}/>
             </Provider>);
 
         let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });

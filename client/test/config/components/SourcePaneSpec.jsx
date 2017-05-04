@@ -15,6 +15,7 @@ import Locale from "./../../../src/js/utils/Locale";
 
 describe("SourcePane", () => {
     const sandbox = sinon.sandbox.create();
+    const dispatchFun = () => {};
 
     beforeEach("SourcePane", () => {
         const configurePage = {
@@ -41,7 +42,7 @@ describe("SourcePane", () => {
 
         beforeEach("Sources", () => {
             let renderer = TestUtils.createRenderer();
-            renderer.render(<SourcePane dispatch={()=>{}} currentTab={PROFILES}/>);
+            renderer.render(<SourcePane dispatch={dispatchFun} currentTab={PROFILES}/>);
             result = renderer.getRenderOutput();
         });
 
@@ -69,7 +70,7 @@ describe("SourcePane", () => {
         });
 
         it("should have a button add-custom-url", () => {
-            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB}/>);
+            const wrapper = shallow(<SourcePane dispatch={dispatchFun} currentTab={SourceConfigActions.WEB}/>);
             const customUrl = wrapper.find(".add-custom-url");
 
             const [icon, text] = customUrl.node.props.children;
@@ -79,21 +80,21 @@ describe("SourcePane", () => {
         });
 
         it("should not have a button add-custom-url if current-source type is GROUPS", () => {
-            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={GROUPS}/>);
+            const wrapper = shallow(<SourcePane dispatch={dispatchFun} currentTab={GROUPS}/>);
             const customUrl = wrapper.find(".add-custom-url");
 
             expect(customUrl.get(0)).to.be.undefined; //eslint-disable-line
         });
 
         it("should render Add url component if showAddUrl is true", () => {
-            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB} showAddUrl/>);
+            const wrapper = shallow(<SourcePane dispatch={dispatchFun} currentTab={SourceConfigActions.WEB} showAddUrl/>);
 
             const addUrl = wrapper.find(AddUrl);
             expect(addUrl).not.to.be.undefined; //eslint-disable-line no-unused-expressions
         });
 
         it("should not render Sources if showAddUrl is true", () => {
-            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB} showAddUrl/>);
+            const wrapper = shallow(<SourcePane dispatch={dispatchFun} currentTab={SourceConfigActions.WEB} showAddUrl/>);
 
             expect(wrapper.find(Sources).get(0)).to.be.undefined; //eslint-disable-line
         });
@@ -112,7 +113,7 @@ describe("SourcePane", () => {
         });
 
         it("should have a button add-all", () => {
-            const wrapper = shallow(<SourcePane dispatch={() => {}} currentTab={SourceConfigActions.WEB}/>);
+            const wrapper = shallow(<SourcePane dispatch={dispatchFun} currentTab={SourceConfigActions.WEB}/>);
             const addAllBtn = wrapper.find(".add-all");
 
             const [icon, text] = addAllBtn.node.props.children;
@@ -145,21 +146,21 @@ describe("SourcePane", () => {
         });
 
         it(`should not have facebook tabs component if current tab is ${SourceConfigActions.WEB}`, () => {
-            renderer.render(<SourcePane sources={sources} dispatch={()=>{}} currentTab={SourceConfigActions.WEB}/>);
+            renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={SourceConfigActions.WEB}/>);
             result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
         });
 
         it(`should not have facebook tabs component if current tab is ${SourceConfigActions.TWITTER}`, () => {
-            renderer.render(<SourcePane sources={sources} dispatch={()=>{}} currentTab={SourceConfigActions.TWITTER}/>);
+            renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={SourceConfigActions.TWITTER}/>);
             result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
         });
 
         it("should have facebook tabs component", () => {
-            renderer.render(<SourcePane sources={sources} dispatch={()=>{}} currentTab={PROFILES}/>);
+            renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={PROFILES}/>);
             result = renderer.getRenderOutput();
             let renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers

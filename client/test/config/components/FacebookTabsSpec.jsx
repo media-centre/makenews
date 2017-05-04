@@ -10,6 +10,8 @@ import * as sourceConfigActions from "./../../../src/js/sourceConfig/actions/Sou
 
 describe("Facebook Tabs", () => {
     let nav = null, store = null;
+    const dispatchFun = () => {};
+    const facebookComponent = () => <FacebookTabs dispatch={dispatchFun} store={store} currentTab={PROFILES}/>;
 
     beforeEach("Facebook Tabs", () => {
         store = { "getState": () => {
@@ -19,7 +21,7 @@ describe("Facebook Tabs", () => {
         } };
 
         let renderer = TestUtils.createRenderer();
-        nav = renderer.render(<FacebookTabs dispatch={() => {}} store={store} currentTab="pages"/>);
+        nav = renderer.render(<FacebookTabs dispatch={dispatchFun} store={store} currentTab="pages"/>);
     });
 
     it("should have nav tabs to switch between facebook sources", () => {
@@ -40,7 +42,7 @@ describe("Facebook Tabs", () => {
     it("should have proper links to profiles, pages, groups", () => {
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
-                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab={PROFILES}/>)} />
+                <Route path="/" component = {facebookComponent} />
             </Router>
         );
         let [pages, groups] = TestUtils.scryRenderedComponentsWithType(nav, Link);
@@ -53,7 +55,7 @@ describe("Facebook Tabs", () => {
         let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("pages");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
-                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Groups"/>)} />
+                <Route path="/" component = {facebookComponent} />
             </Router>
         );
         let [pagesLink] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
@@ -67,7 +69,7 @@ describe("Facebook Tabs", () => {
         let fbSourceTabSwitch = sandbox.mock(sourceConfigActions).expects("switchSourceTab").withArgs("groups");
         nav = TestUtils.renderIntoDocument(
             <Router history={History.getHistory()}>
-                <Route path="/" component = {() => (<FacebookTabs dispatch={() => {}} store={store} currentTab="Pages"/>)} />
+                <Route path="/" component = {facebookComponent} />
             </Router>
         );
         let [, groupsTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");

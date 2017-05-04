@@ -14,6 +14,7 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("EditStory", () => {
     let renderer = null, sandbox = null, renderedOutput = null,
         story = { "_id": "id", "_rev": "rev", "title": "title", "body": "body" };
+    const anonymousFun = () => {};
 
     beforeEach("EditStory", () => {
         sandbox = sinon.sandbox.create();
@@ -117,7 +118,7 @@ describe("EditStory", () => {
             }
         };
         const wrapper = shallow(
-            <EditStory story={story} dispatch={() => {}} store={store}/>
+            <EditStory story={story} dispatch={anonymousFun} store={store}/>
         );
         wrapper.setState({ "title": "new title", "body": "body of the article" });
         const options = wrapper.find(".export-icon");

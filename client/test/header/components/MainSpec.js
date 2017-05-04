@@ -8,6 +8,7 @@ import { findAllWithType } from "react-shallow-testutils";
 
 describe("MainHeader", () => {
     let result = null, currentHeaderTab = null, mainHeaderStrings = null, store = null, childElement = null;
+    const anonymousFun = () => {};
 
     beforeEach("MainHeader", () => {
         store = {
@@ -33,7 +34,7 @@ describe("MainHeader", () => {
         };
         childElement = <div>{"main-page children"}</div>;
         let renderer = TestUtils.createRenderer();
-        result = renderer.render(<Main store= {store} children={childElement} mainHeaderStrings={mainHeaderStrings} currentHeaderTab={"Scan News"} dispatch={() => {}}/>);
+        result = renderer.render(<Main store= {store} children={childElement} mainHeaderStrings={mainHeaderStrings} currentHeaderTab={"Scan News"} dispatch={anonymousFun}/>);
     });
 
     it("should have Header element", () => {

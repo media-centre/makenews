@@ -40,8 +40,9 @@ describe("login page component", () => {
             }
         };
 
+        const dispatchFun = () => {};
         loginPage = TestUtils.renderIntoDocument(
-            <LoginPage dispatch={()=>{}} login={props.login} loginPageStrings={props.loginPageStrings}/>
+            <LoginPage dispatch={dispatchFun} login={props.login} loginPageStrings={props.loginPageStrings}/>
         );
 
         loginPageDOM = ReactDOM.findDOMNode(loginPage);
