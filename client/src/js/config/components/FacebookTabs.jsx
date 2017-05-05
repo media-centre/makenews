@@ -1,12 +1,12 @@
 /* eslint react/jsx-no-literals:0, brace-style:0 react/jsx-closing-bracket-location:0*/
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { PAGES, GROUPS } from "../actions/FacebookConfigureActions";
 import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import { Link } from "react-router";
 
-export class FacebookTabs extends Component {
+export class FacebookTabs extends PureComponent {
     constructor() {
         super();
         this._tabHandler = this._tabHandler.bind(this);

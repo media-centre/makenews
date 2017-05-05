@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
 
-export default class ConfigureTab extends Component {
+export default class ConfigureTab extends PureComponent {
     render() {
         return (
             <Link to={this.props.url} >

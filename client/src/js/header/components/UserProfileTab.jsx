@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import UserProfile from "./../../user/UserProfile";
 import AppSessionStorage from "./../../utils/AppSessionStorage";
 
-export default class UserProfileTab extends Component {
+export default class UserProfileTab extends PureComponent {
 
     render() {
         const appSessionStorage = AppSessionStorage.instance();

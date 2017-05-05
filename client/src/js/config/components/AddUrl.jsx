@@ -1,5 +1,5 @@
 /* eslint brace-style:0 */
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import * as AddUrlActions from "../actions/AddUrlActions";
 import { connect } from "react-redux";
@@ -8,7 +8,7 @@ import { PAGES } from "./../../config/actions/FacebookConfigureActions";
 import { WEB, TWITTER } from "./../../sourceConfig/actions/SourceConfigurationActions";
 import Locale from "./../../utils/Locale";
 
-export class AddUrl extends Component {
+export class AddUrl extends PureComponent {
 
     constructor() {
         super();

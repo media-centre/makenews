@@ -31,7 +31,7 @@ export class ConfigurePane extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.currentSourceType === SourceConfigActions.WEB || nextProps.sourcesAuthenticationInfo[nextProps.currentSourceType]) {
-            const value = this.refs.searchSources.refs.input ? this.refs.searchSources.refs.input.value : "";
+            const value = this.refs.searchSources ? this.refs.searchSources.refs.input.value : "";
             if(nextProps.currentTab !== this.props.currentTab) {
                 this.fetchSources(nextProps.currentTab, value);
                 this.props.dispatch(showAddUrl(false));

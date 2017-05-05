@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import HeaderTab from "./HeaderTab";
 import ConfigureTab from "./ConfigureTab";
 import UserProfileTab from "./UserProfileTab";
 
-export default class Header extends Component {
+export default class Header extends PureComponent {
     render() {
         const renderedDOM = this.props.currentHeaderTab === "Configure"
             ? null

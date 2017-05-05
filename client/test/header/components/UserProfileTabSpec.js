@@ -50,12 +50,12 @@ describe("UserProfileTab", () => {
     it("should have name", ()=> {
         const appSessionStorage = AppSessionStorage.instance();
         sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-        sandbox.stub(appSessionStorage, "getValue").withArgs("UserName").returns("someName");
+        sandbox.stub(appSessionStorage, "getValue").withArgs("UserName").returns("user");
         renderer.render(<UserProfileTab />);
         result = renderer.getRenderOutput();
         const [, name] = result.props.children;
 
-        expect(name.props.children).to.be.equals("someName");
+        expect(name.props.children).to.be.equals("user");
     });
 
     it("should have down arrow", ()=> {

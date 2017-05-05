@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import Locale from "./../../utils/Locale";
 
-export default class SignInWarning extends Component {
+export default class SignInWarning extends PureComponent {
     _warningMessage(message, fun, signIn) {
         return (
             <div><div>{message}</div>
