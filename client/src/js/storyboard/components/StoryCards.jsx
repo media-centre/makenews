@@ -12,7 +12,7 @@ export class StoryCards extends Component {
         super();
         this.state = { "showDeleteConfirm": false, "currentId": 0 };
         this.deleteStory = (isConfirm) => this._deleteStory(isConfirm);
-        // this.showDeleteConfirmPopup = (event, id) => this._showDeleteConfirmPopup(event, id);
+        this.showDeleteConfirmPopup = (event) => this._showDeleteConfirmPopup(event);
     }
     componentDidMount() {
         this.props.dispatch(StoryBoardActions.getStories());
@@ -22,7 +22,8 @@ export class StoryCards extends Component {
         this.props.dispatch(StoryBoardActions.clearStories);
     }
 
-    _showDeleteConfirmPopup(event, id) {
+    _showDeleteConfirmPopup(event) {
+        const id = event.target.dataset.id;
         event.stopPropagation();
         event.preventDefault();
         this.setState({ "showDeleteConfirm": true, "currentId": id });
@@ -32,7 +33,7 @@ export class StoryCards extends Component {
         const storiesArray = this.props.stories.map((story, index) => {
             const inc = 1;
             return (<li key={index + inc} className="added-card">
-                <i className="fa fa-remove icon delete-icon" onClick={(event) => this._showDeleteConfirmPopup(event, story._id)}/>
+                <i className="fa fa-remove icon delete-icon" onClick={this.showDeleteConfirmPopup} data-id={story._id}/>
                 <Link ref={`story${story._id}`} to={`/story-board/story/edit/${story._id}`} className="navigation-link">
                     <div className="card">
                         <i ref={`title${story.title}`}>{story.title}</i>

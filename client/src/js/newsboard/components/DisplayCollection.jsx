@@ -76,7 +76,7 @@ export class DisplayCollection extends Component {
 
         let [first, ...rest] = filteredCollections;
         let collectionItems = [];
-        const getCollectionItem = (collection, className) =>
+        const getCollectionItem = (collection, className) => /*eslint-disable react/jsx-no-bind*/
             (<li tabIndex="0" className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>
                     {this.props.mainHeaderTab === "Write a Story" && collection.collection}
                     {this.props.mainHeaderTab !== "Write a Story" &&
@@ -98,8 +98,7 @@ export class DisplayCollection extends Component {
                     }}
                     > &times; </button>}
                 </li>
-            );
-
+            );/*eslint-enable react/jsx-no-bind*/
         if(!first) {
             return collectionItems;
         }

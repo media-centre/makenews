@@ -16,7 +16,7 @@ import WelcomePage from "./welcome/WelcomePage";
 import ConfigurationIntro from "./welcome/ConfigurationIntro";
 import Help from "./user/Help";
 
-export function renderRoutes(store) {
+export function renderRoutes(store) { /*eslint-disable react/jsx-no-bind*/
     return (
         <Route component={App}>
             <Route path="/" component={LoginPage} onEnter={(nextState, replaceState) => showLoginPage(store, replaceState)}/>
@@ -40,6 +40,7 @@ export function renderRoutes(store) {
             </Route>
         </Route>
     );
+    /*eslint-enable react/jsx-no-bind*/
 }
 
 function isLoggedIn(store, replaceState) {

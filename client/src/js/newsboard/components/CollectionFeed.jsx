@@ -14,6 +14,7 @@ export default class CollectionFeed extends Component {
     constructor() {
         super();
         this._displayArticle = this._displayArticle.bind(this);
+        this.deleteFeed = (event) => this._deleteFeed(event);
     }
 
     getMedia() {
@@ -29,6 +30,15 @@ export default class CollectionFeed extends Component {
         this.props.dispatch(displayArticle(this.props.feed));
     }
 
+    _deleteFeed(event) {
+        const feed = event.target.dataset.feed;
+        let docId = feed._id;
+        if(!feed.selectText) {
+            docId += this.props.collectionId;
+        }
+        this.props.dispatch(deleteCollectionFeed(event, docId, feed._id));
+    }
+
     render() {
         const feed = this.props.feed;
         const [video] = feed.videos || [];
@@ -38,15 +48,7 @@ export default class CollectionFeed extends Component {
         const collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (<div className={feedClass}>
                     { this.props.tab !== WRITE_A_STORY &&
-                        <button className="delete-feed" onClick={(event) => {
-                            let docId = feed._id;
-                            if(!feed.selectText) {
-                                docId += this.props.collectionId;
-                            }
-                            this.props.dispatch(deleteCollectionFeed(event, docId, feed._id));
-                        }}
-                        >&times;
-                        </button>
+                        <button className="delete-feed" onClick={this.deleteFeed} data-feed={feed}>&times;</button>
                     }
                     <div className={`${feedClass}__body`}>
                         <div className={`${feedClass}__title`}>{feed.title}</div>
