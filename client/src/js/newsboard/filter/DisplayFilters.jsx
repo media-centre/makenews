@@ -4,7 +4,7 @@ import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { filteredSources, filterTabSwitch } from "./FilterActions";
 import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
-import SourceFilters from "./SourceFilters";
+import ConfiguredSources from "./ConfiguredSources";
 import Input from "./../../utils/components/Input";
 import Toast from "../../utils/custom_templates/Toast";
 import Locale from "./../../utils/Locale";
@@ -155,7 +155,7 @@ export class DisplayFilters extends Component {
                     </div>
                 }
 
-                <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
+                <ConfiguredSources searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
 
                 <div className="controls">
                     <button id="cancelBtn" className="cancel-btn primary" onClick={this.cancelFilter}>{this.filterStrings.cancelButton}</button>

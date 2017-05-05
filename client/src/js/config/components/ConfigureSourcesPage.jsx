@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import ConfiguredSources from "./ConfiguredSources";
+import ConfiguredPane from "./ConfiguredPane";
 import ConfigurePane from "./ConfigurePane";
 import * as SourceConfigActions from "./../../sourceConfig/actions/SourceConfigurationActions";
 import FacebookLogin from "../../facebook/FacebookLogin";
@@ -80,7 +80,7 @@ export class ConfigureSourcesPage extends Component {
     render() {
         return (
             <div className="configure-container">
-                <ConfiguredSources />
+                <ConfiguredPane />
                 <ConfigurePane currentSourceType={this.props.params.sourceType}
                     fbLogin={this._showFBLogin}
                     twitterLogin = {this._showTwitterLogin}

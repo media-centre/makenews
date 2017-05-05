@@ -5,7 +5,7 @@ import TestUtils from "react-addons-test-utils";
 import sinon from "sinon";
 import { findAllWithType } from "react-shallow-testutils";
 import * as SourceConfigActions from "./../../../src/js/sourceConfig/actions/SourceConfigurationActions";
-import ConfiguredSources from "./../../../src/js/config/components/ConfiguredSources";
+import ConfiguredPane from "../../../src/js/config/components/ConfiguredPane";
 import ConfigurePane from "./../../../src/js/config/components/ConfigurePane";
 import { expect } from "chai";
 import History from "./../../../src/js/History";
@@ -98,8 +98,8 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun}/>);
             result = renderer.getRenderOutput();
-            let configuredSources = findAllWithType(result, ConfiguredSources);
-            expect(configuredSources).to.have.lengthOf(ONE);
+            let configuredPane = findAllWithType(result, ConfiguredPane);
+            expect(configuredPane).to.have.lengthOf(ONE);
         });
 
         it("should have ConfigurePage component", () => {
@@ -116,8 +116,8 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun} expireTime={ZERO}/>);
             result = renderer.getRenderOutput();
-            let configuredSources = findAllWithType(result, ConfiguredSources);
-            expect(configuredSources).to.have.lengthOf(ZERO);
+            let configuredPane = findAllWithType(result, ConfiguredPane);
+            expect(configuredPane).to.have.lengthOf(ZERO);
         });
 
 
@@ -126,8 +126,8 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={dispatchFun} twitterAuthenticated={false}/>);
             result = renderer.getRenderOutput();
-            let configuredSources = findAllWithType(result, ConfiguredSources);
-            expect(configuredSources).to.have.lengthOf(ZERO);
+            let configuredPane = findAllWithType(result, ConfiguredPane);
+            expect(configuredPane).to.have.lengthOf(ZERO);
         });
 
         it("should have ConfiguredSources component if sourceType is twitter and twitterAuthenticated is true", () => {

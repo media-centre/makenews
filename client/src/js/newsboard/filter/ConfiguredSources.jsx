@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TWITTER, WEB } from "../../sourceConfig/actions/SourceConfigurationActions";
 
-export default class SourceFilters extends Component {
+export default class ConfiguredSources extends Component {
 
     _listSourcesGroup(heading, sourceType, searchKey) {
         return (
@@ -41,7 +41,7 @@ export default class SourceFilters extends Component {
     }
 }
 
-SourceFilters.propTypes = {
+ConfiguredSources.propTypes = {
     "currentTab": PropTypes.string.isRequired,
     "searchKeyword": PropTypes.string.isRequired,
     "renderSources": PropTypes.func

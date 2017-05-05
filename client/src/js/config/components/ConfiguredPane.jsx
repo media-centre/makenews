@@ -4,10 +4,10 @@ import R from "ramda"; //eslint-disable-line id-length
 import { searchInConfiguredSources, deleteSource } from "../../sourceConfig/actions/SourceConfigurationActions";
 import { connect } from "react-redux";
 import Input from "./../../utils/components/Input";
-import SourceFilters from "./../../newsboard/filter/SourceFilters";
+import ConfiguredSources from "../../newsboard/filter/ConfiguredSources";
 import Locale from "./../../utils/Locale";
 
-class ConfiguredSources extends Component {
+class ConfiguredPane extends Component {
 
     constructor() {
         super();
@@ -55,7 +55,7 @@ class ConfiguredSources extends Component {
         return (
             <aside className="configured-sources-container">
                 <h3 className="heading">{configureHeader.mySources}</h3>
-                <SourceFilters searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
+                <ConfiguredSources searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
                 <Input ref="configSourcesSearch" className={"input-box"} callback={this._searchInSources}
                     placeholder="search" addonSrc="search"
                 />
@@ -72,11 +72,11 @@ function mapToStore(state) {
     };
 }
 
-ConfiguredSources.propTypes = {
+ConfiguredPane.propTypes = {
     "sources": PropTypes.object.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "searchKeyword": PropTypes.string,
     "currentTab": PropTypes.string.isRequired
 };
 
-export default connect(mapToStore)(ConfiguredSources);
+export default connect(mapToStore)(ConfiguredPane);

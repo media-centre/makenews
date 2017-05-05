@@ -1,7 +1,7 @@
 import DisplayFilters from "../../../src/js/newsboard/filter/DisplayFilters";
 import * as SourceConfigurationActions from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import * as FilterActions from "../../../src/js/newsboard/filter/FilterActions";
-import SourceFilters from "../../../src/js/newsboard/filter/SourceFilters";
+import ConfiguredSources from "../../../src/js/newsboard/filter/ConfiguredSources";
 import Input from "../../../src/js/utils/components/Input";
 import TestUtils from "react-addons-test-utils";
 import React from "react";
@@ -67,8 +67,8 @@ describe("DisplayFilters", () => {
         assert.isNotNull(TestUtils.findRenderedComponentWithType(displayFilters, Input));
     });
 
-    it("should have SourceFilters", () => {
-        assert.isNotNull(TestUtils.findRenderedComponentWithType(displayFilters, SourceFilters));
+    it("should have ConfiguredSources", () => {
+        assert.isNotNull(TestUtils.findRenderedComponentWithType(displayFilters, ConfiguredSources));
     });
 
     it("input box should visible after clicking on add-hashtag", () => {

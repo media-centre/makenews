@@ -1,7 +1,7 @@
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";
-import ConfiguredSources from "./../../../src/js/config/components/ConfiguredSources";
+import ConfiguredPane from "../../../src/js/config/components/ConfiguredPane";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
@@ -9,10 +9,10 @@ import { expect } from "chai";
 import sinon from "sinon";
 import Locale from "./../../../src/js/utils/Locale";
 
-describe("Configured Sources", () => {
+describe("ConfiguredPane", () => {
     const sandbox = sinon.sandbox.create();
 
-    beforeEach("Configured Sources", () => {
+    beforeEach("ConfiguredPane", () => {
         const configurePage = {
             "header": {
                 "mySources": "My Sources"
@@ -25,7 +25,7 @@ describe("Configured Sources", () => {
         });
     });
 
-    afterEach("Configured Sources", () => {
+    afterEach("ConfiguredPane", () => {
         sandbox.restore();
     });
 
@@ -37,12 +37,12 @@ describe("Configured Sources", () => {
                 "searchInConfiguredSources": ""
             }), applyMiddleware(thunkMiddleware));
 
-            let configuredSources = TestUtils.renderIntoDocument(
+            let configuredPane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfiguredSources />
+                    <ConfiguredPane/>
                 </Provider>
             );
-            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredPane);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
             let sourcesHeading = configuredSourcesDOM.querySelector(".list-sources__group__heading");
             expect(sourcesHeading.textContent).to.equal("Twitter");
@@ -57,12 +57,12 @@ describe("Configured Sources", () => {
                 "configuredSources": { "twitter": [{ "_id": "123", "name": "hello" }, { "_id": "1234", "name": "test" }] },
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
-            let configuredSources = TestUtils.renderIntoDocument(
+            let configuredPane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfiguredSources />
+                    <ConfiguredPane />
                 </Provider>
             );
-            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredPane);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
             expect(source.length).to.equal(1); //eslint-disable-line no-magic-numbers
         });
@@ -74,12 +74,12 @@ describe("Configured Sources", () => {
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
 
-            let configuredSources = TestUtils.renderIntoDocument(
+            let configuredPane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfiguredSources />
+                    <ConfiguredPane />
                 </Provider>
             );
-            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredPane);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
             expect(source.length).to.equal(1); //eslint-disable-line no-magic-numbers
 
@@ -93,15 +93,14 @@ describe("Configured Sources", () => {
                 "searchInConfiguredSources": "hello"
             }), applyMiddleware(thunkMiddleware));
 
-            let configuredSources = TestUtils.renderIntoDocument(
+            let configuredPane = TestUtils.renderIntoDocument(
                 <Provider store={store}>
-                    <ConfiguredSources />
+                    <ConfiguredPane />
                 </Provider>
             );
-            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredSources);
+            let configuredSourcesDOM = ReactDOM.findDOMNode(configuredPane);
             let source = configuredSourcesDOM.querySelectorAll(".source-name");
             expect(source.length).to.equal(2); //eslint-disable-line no-magic-numbers
-
         });
     });
 });
