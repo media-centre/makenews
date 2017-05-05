@@ -22,6 +22,7 @@ export class ConfigurePane extends Component {
         this._closeConfigurationWarning = this._closeConfigurationWarning.bind(this);
         this.appSessionStorage = AppSessionStorage.instance();
         this._searchInSources = this._searchInSources.bind(this);
+        this.fetchSources = this.fetchSources.bind(this);
     }
 
     componentWillMount() {
@@ -91,12 +92,12 @@ export class ConfigurePane extends Component {
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
                   ? <div>
-                  <Input ref="searchSources" className={"input-box configure-source"}
-                      callback={this._searchInSources}
-                      placeholder={`Search ${this.props.currentTab}....`}
-                      addonSrc="search" callbackOnEnter
-                  />
-                  <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
+                      <Input ref="searchSources" className={"input-box configure-source"}
+                          callback={this._searchInSources}
+                          placeholder={`Search ${this.props.currentTab}....`}
+                          addonSrc="search" callbackOnEnter
+                      />
+                      <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
                   </div>
                   : <SignInWarning currentSourceType = {this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
               }

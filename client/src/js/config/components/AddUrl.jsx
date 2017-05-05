@@ -13,6 +13,9 @@ export class AddUrl extends Component {
     constructor() {
         super();
         this.urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i; //eslint-disable-line max-len
+        this._closeAddCustomUrlPopup = this._closeAddCustomUrlPopup.bind(this);
+        this._addUrl = this._addUrl.bind(this);
+        this._onKeyDownInputBox = this._onKeyDownInputBox.bind(this);
     }
 
     _addUrl() {
@@ -40,6 +43,10 @@ export class AddUrl extends Component {
         }
     }
 
+    _closeAddCustomUrlPopup() {
+        this.props.dispatch(AddUrlActions.showAddUrl(false));
+    }
+
     render() {
         this.addCustomUrl = Locale.applicationStrings().messages.configurePage.addCustomUrl;
         return (
@@ -49,10 +56,7 @@ export class AddUrl extends Component {
                     <span className="text">
                         {this.addCustomUrl.description[this.props.currentTab]}
                     </span>
-                    <button className="close" onClick={() => {
-                        this.props.dispatch(AddUrlActions.showAddUrl(false));
-                    }}
-                    >
+                    <button className="close" onClick={this._closeAddCustomUrlPopup}>
                         &times;
                     </button>
                 </div>
@@ -61,12 +65,12 @@ export class AddUrl extends Component {
                         <input
                             type="text"
                             ref="url"
-                            onKeyDown={(event) => this._onKeyDownInputBox(event)}
+                            onKeyDown={this._onKeyDownInputBox}
                             className="add-url__input"
                             placeholder={`Ex: ${this.addCustomUrl.exampleUrls[this.props.currentTab]}`}
                         />
                         <span className="input-addon">
-                            <img src="./../../../images/arrow-icon.png" onClick={() => { this._addUrl(); }}/>
+                            <img src="./../../../images/arrow-icon.png" onClick={this._addUrl}/>
                         </span>
                     </div>
                 </div>

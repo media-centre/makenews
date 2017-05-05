@@ -12,6 +12,20 @@ import Locale from "./../../utils/Locale";
 
 export class SourcePane extends Component {
 
+    constructor() {
+        super();
+        this._showAddUrl = this._showAddUrl.bind(this);
+        this._addAllSources = this._addAllSources.bind(this);
+    }
+
+    _showAddUrl() {
+        this.props.dispatch(showAddUrl(true));
+    }
+
+    _addAllSources() {
+        this.props.dispatch(addAllSources());
+    }
+
     render() {
         const configurePageStrings = Locale.applicationStrings().messages.configurePage;
         return (
@@ -20,18 +34,12 @@ export class SourcePane extends Component {
                 <div className="configure-actions">
                     {
                         (this.props.currentTab !== GROUPS) &&
-                        <button className="add-custom-url" onClick={() => {
-                            this.props.dispatch(showAddUrl(true));
-                        }}
-                        >
+                        <button className="add-custom-url" onClick={this._showAddUrl}>
                             <i className="icon fa fa-plus" aria-hidden="true"/>
                             {configurePageStrings.addCustomUrl.name}
                         </button>
                     }
-                    <button className="add-all" onClick= {() => {
-                        this.props.dispatch(addAllSources());
-                    }}
-                    >
+                    <button className="add-all" onClick= {this._addAllSources}>
                         <i className="icon fa fa-plus-circle"/>
                         {configurePageStrings.addAll}
                     </button>

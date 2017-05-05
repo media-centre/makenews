@@ -13,19 +13,23 @@ class ConfiguredSources extends Component {
         super();
         this._renderSources = this._renderSources.bind(this);
         this._searchInSources = this._searchInSources.bind(this);
+        this._deleteSource = this._deleteSource.bind(this);
     }
 
     componentDidMount() {
         this.props.dispatch(searchInConfiguredSources(""));
     }
 
+    _deleteSource(event) {
+        this.props.dispatch(deleteSource(event.target));
+    }
+
     _renderSources(sourceType, searchKey) {
         const configuredSourceDOM = source =>
             <li className="source-name" key={source._id}>{source.name}
-                <button className="delete-source" title={`Delete ${source.name}`} onClick={(event) => {
-                    this.props.dispatch(deleteSource(source._id, sourceType, event));
-                }}
-                >&times;</button>
+                <button className="delete-source" data-source-id={source._id} data-source-type={sourceType} title={`Delete ${source.name}`} onClick={this._deleteSource}>
+                    &times;
+                </button>
             </li>;
 
         if(searchKey) {

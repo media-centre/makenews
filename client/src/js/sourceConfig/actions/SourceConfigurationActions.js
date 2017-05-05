@@ -146,12 +146,13 @@ export function getSources(sourceType, keyword, params, twitterPreFirstId = 0) {
     }
 }
 
-export function deleteSource(sourceId, sourceType, event) {
+export function deleteSource(button) {
+    const sourceId = button.dataset.sourceId;
+    const sourceType = button.dataset.sourceType;
     const headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    const button = event.target;
     button.className = "spinner";
     button.textContent = "";
     return async dispatch => {

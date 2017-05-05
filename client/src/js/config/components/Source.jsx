@@ -4,6 +4,15 @@ import PropTypes from "prop-types";
 import { addSourceToConfigureList, WEB } from "./../../sourceConfig/actions/SourceConfigurationActions";
 
 export default class Source extends Component {
+    constructor() {
+        super();
+        this._addToConfigure = this._addToConfigure.bind(this);
+    }
+
+    _addToConfigure() {
+        this.props.dispatch(addSourceToConfigureList(this.props.currentSourceType, this.props.source));
+    }
+
     render() {
         return (
             <div className={this.props.source.added ? "source added" : "source"}>
@@ -30,7 +39,7 @@ export default class Source extends Component {
                     </div>)
                     :
                     (<div className="source__add-icon source__action-icon"
-                        onClick={() => this.props.dispatch(addSourceToConfigureList(this.props.currentSourceType, this.props.source))}
+                        onClick={this._addToConfigure}
                      >
                         <img src="./images/add-btn.png"/>
                     </div>)

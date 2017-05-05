@@ -283,17 +283,19 @@ describe("SourceConfigurationActions", () => {
         
         it("should dispatch unmarkSources, deletedSource for the success response", (done) => {
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve({ "ok": true }));
+            const event = { "target": { "dataset": { "sourceId": sourceToDelete._id, "sourceType": sourceToDelete.sourceType } } };
 
-            let event = { "target": {} };
             const actions = [{ "type": sourceConfigActions.UNMARK_DELETED_SOURCE, "source": sourceToDelete._id },
                 { "type": sourceConfigActions.SOURCE_DELETED, "source": "tid2", "sourceType": "twitter" },
                 { "type": REMOVE_SOURCE, "sourceId": "tid2", "sourceType": "twitter" }];
 
             const store = mockStore(getStore, actions, done);
-            store.dispatch(sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType, event));
+            store.dispatch(sourceConfigActions.deleteSource(event.target));
         });
 
         it("should show a Toast message when the source could not be deleted", async () => {
+            const event = { "target": { "dataset": { "sourceId": sourceToDelete._id, "sourceType": sourceToDelete.sourceType } } };
+
             const configurePage = {
                 "errorMessages": {
                     "sourceDeletedFailed": "Could not delete source"
@@ -308,8 +310,7 @@ describe("SourceConfigurationActions", () => {
 
             const toastMock = sandbox.mock(Toast).expects("show")
                 .withExactArgs("Could not delete source");
-            let event = { "target": {} };
-            const fn = sourceConfigActions.deleteSource(sourceToDelete._id, sourceToDelete.sourceType, event);
+            const fn = sourceConfigActions.deleteSource(event.target);
             await fn();
             expect(event.target.className).to.equal("delete-source");
             expect(event.target.innerHTML).to.equal("&times");

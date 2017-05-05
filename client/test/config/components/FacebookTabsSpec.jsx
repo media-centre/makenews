@@ -59,7 +59,7 @@ describe("Facebook Tabs", () => {
             </Router>
         );
         let [pagesLink] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
-        TestUtils.Simulate.click(pagesLink);
+        TestUtils.Simulate.click(pagesLink, { "target": { "dataset": { "tab": "pages" } } });
         fbSourceTabSwitch.verify();
         sandbox.restore();
     });
@@ -73,7 +73,7 @@ describe("Facebook Tabs", () => {
             </Router>
         );
         let [, groupsTab] = TestUtils.scryRenderedDOMComponentsWithClass(nav, "fb-sources-tab__item");
-        TestUtils.Simulate.click(groupsTab);
+        TestUtils.Simulate.click(groupsTab, { "target": { "dataset": { "tab": "groups" } } });
         fbSourceTabSwitch.verify();
         sandbox.restore();
     });

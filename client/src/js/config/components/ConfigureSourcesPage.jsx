@@ -20,6 +20,8 @@ export class ConfigureSourcesPage extends Component {
         super();
         this.facebookLogin = FacebookLogin.instance();
         this.login = false;
+        this._showFBLogin = this._showFBLogin.bind(this);
+        this._showTwitterLogin = this._showTwitterLogin.bind(this);
     }
 
     componentWillMount() {
@@ -45,11 +47,11 @@ export class ConfigureSourcesPage extends Component {
             nextProps.sourcesAuthenticationInfo.twitter !== this.props.sourcesAuthenticationInfo.twitter;
     }
 
-    _showFBLogin(dispatch) {
+    _showFBLogin() {
         if(!this.login) {
             this.facebookLogin.login().then(expiresAfter => {
-                dispatch(updateTokenExpiredInfo(expiresAfter));
-                dispatch(SourceConfigActions.clearSources);
+                this.props.dispatch(updateTokenExpiredInfo(expiresAfter));
+                this.props.dispatch(SourceConfigActions.clearSources);
             }).catch(() => {
                 this.login = false;
             });
@@ -57,11 +59,11 @@ export class ConfigureSourcesPage extends Component {
         }
     }
 
-    _showTwitterLogin(dispatch) {
+    _showTwitterLogin() {
         if(!this.props.sourcesAuthenticationInfo.twitter) {
             TwitterLogin.instance().login().then((authenticated) => {
-                dispatch(twitterTokenInformation(authenticated));
-                dispatch(SourceConfigActions.clearSources);
+                this.props.dispatch(twitterTokenInformation(authenticated));
+                this.props.dispatch(SourceConfigActions.clearSources);
             });
         }
     }
@@ -80,12 +82,8 @@ export class ConfigureSourcesPage extends Component {
             <div className="configure-container">
                 <ConfiguredSources />
                 <ConfigurePane currentSourceType={this.props.params.sourceType}
-                    fbLogin={() => {
-                        this._showFBLogin(this.props.dispatch);
-                    }}
-                    twitterLogin = {()=> {
-                        this._showTwitterLogin(this.props.dispatch);
-                    }}
+                    fbLogin={this._showFBLogin}
+                    twitterLogin = {this._showTwitterLogin}
                 />
             </div>);
     }

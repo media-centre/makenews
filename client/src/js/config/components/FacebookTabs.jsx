@@ -7,15 +7,22 @@ import * as sourceConfigActions from "./../../sourceConfig/actions/SourceConfigu
 import { Link } from "react-router";
 
 export class FacebookTabs extends Component {
-    _tabHandler(tab) {
-        this.props.dispatch(sourceConfigActions.switchSourceTab(tab));
+    constructor() {
+        super();
+        this._tabHandler = this._tabHandler.bind(this);
+    }
+
+    _tabHandler(event) {
+        this.props.dispatch(sourceConfigActions.switchSourceTab(event.target.dataset.tab));
     }
 
     _renderTab(tab, tabName) {
-        return (<Link to={`/configure/facebook/${tabName.toLowerCase()}`} onClick={() => { this._tabHandler(tab); }}
-            className={this.props.currentTab === tab ? "fb-sources-tab__item active" : "fb-sources-tab__item"} >
-            { tabName }
-        </Link>);
+        return (
+            <Link to={`/configure/facebook/${tabName.toLowerCase()}`} data-tab={tab} onClick={this._tabHandler}
+                className={this.props.currentTab === tab ? "fb-sources-tab__item active" : "fb-sources-tab__item"} >
+                { tabName }
+            </Link>
+        );
     }
 
     render() {
