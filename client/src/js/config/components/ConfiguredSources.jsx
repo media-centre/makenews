@@ -46,7 +46,7 @@ class ConfiguredSources extends Component {
     }
 
     _searchInSources() {
-        let value = this.refs.configSourcesSearch.ref.input.value;
+        let value = this.refs.configSourcesSearch.refs.input.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
