@@ -8,7 +8,7 @@
 
 ### Create an admin user and common dabatase
 1.  in `couchdb_tasks.sh` change the admin and common db details
-    ```
+    ```shell
     adminUserName="adminuser"
     adminPassword="adminpassword"
     commonDbName="commondb"
@@ -31,7 +31,7 @@ your server will be running on `http://localhost:5000`
 ## Configuration
 ### Client configuration
 path `./client/config/config.js`
-```
+```javascript
 {
     window.mediaCenter.serverUrl = "http://localhost:5000";
     window.mediaCenter.facebookAppId = "148292852294882"; //replace with your facebook appId
@@ -43,7 +43,7 @@ path `./client/config/config.js`
 
 ### Server configuration
 path `./server/config/application.json`
-```
+```javascript
 {
   "default": {
     "serverIpAddress": "localhost",
