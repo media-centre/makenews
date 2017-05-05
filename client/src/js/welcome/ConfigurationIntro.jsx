@@ -3,6 +3,10 @@ import History from "../History";
 import Locale from "./../utils/Locale";
 
 export default class ConfigurationIntro extends Component {
+
+    redirectToWeb() {
+        History.getHistory().push("/configure/web");
+    }
     render() {
         const configurationIntroStrings = Locale.applicationStrings().messages.configurationIntro;
         return (
@@ -29,7 +33,7 @@ export default class ConfigurationIntro extends Component {
                     </div>
                 </main>
                 <footer>
-                    <button className="makenews-desc-link" onClick={() => History.getHistory().push("/configure/web")}>
+                    <button className="makenews-desc-link" onClick={this.redirectToWeb}>
                         <span> <i className="fa fa-arrow-right" /> {configurationIntroStrings.getStarted} </span>
                     </button>
                 </footer>

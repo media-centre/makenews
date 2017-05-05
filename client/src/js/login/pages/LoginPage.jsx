@@ -6,8 +6,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 export class LoginPage extends Component {
+
+    constructor() {
+        super();
+        this._userLogin = this._userLogin.bind(this);
+    }
+
+    _userLogin(history, userName, password) {
+        this.props.dispatch(userLogin(history, userName, password));
+    }
+
     render() {
-        const { dispatch } = this.props;
         const { featuresHelp } = this.props.loginPageStrings;
         return (
             <div className="login-page">
@@ -25,7 +34,7 @@ export class LoginPage extends Component {
                         </a>
                     </div>
                     <div className="login-box">
-                        <Login ref="login" onLoginClick={(history, userName, password) => dispatch(userLogin(history, userName, password))} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
+                        <Login ref="login" onLoginClick={this._userLogin} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
                     </div>
                 </div>
                 <div className="screenshots container">

@@ -14,6 +14,7 @@ export class ChangePassword extends Component {
 
     constructor(props) {
         super(props);
+        this.submitProfile = this.submitProfile.bind(this);
     }
 
     submitProfile(event) {  //eslint-disable-line consistent-return
@@ -44,11 +45,9 @@ export class ChangePassword extends Component {
         const popUp = this.props.changePasswordMessages.isSuccess
             ? (<ConfirmPopup
                 ref="confirmPopup"
-                description= {changePasswordStrings.logoutConfirmMessage}
-                hide = {this.props.changePasswordMessages.isSuccess}
-                callback={() => {
-                    this._logout();
-                }}
+                description={changePasswordStrings.logoutConfirmMessage}
+                hide={this.props.changePasswordMessages.isSuccess}
+                callback={this._logout}
                />)
             : null;
 
@@ -58,7 +57,7 @@ export class ChangePassword extends Component {
 
         return (
             <div className="change-password">
-                <form id="changePassword" onSubmit={(event) => this.submitProfile(event)}>
+                <form id="changePassword" onSubmit={this.submitProfile}>
                     <h3>{"Change Password"}</h3>
                     <p className="error-msg small-text">{this.props.changePasswordMessages.errorMessage}</p>
                     <input type="password" name="current password" placeholder={changePasswordStrings.currentPassword} className={currentPasswordError} required ref="currentPassword"/>

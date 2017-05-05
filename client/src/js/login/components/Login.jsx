@@ -4,6 +4,11 @@ import History from "../../History";
 
 export default class Login extends React.Component {
 
+    constructor() {
+        super();
+        this.handleClick = this.handleClick.bind(this);
+    }
+
     handleClick(event) {
         event.preventDefault();
         let userName = this.refs.userName.value.trim();
@@ -13,7 +18,7 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <form className="login" onSubmit={(event) => this.handleClick(event)}>
+            <form className="login" onSubmit={this.handleClick}>
                 <p id="errorMessage" ref="errorMessage" className="error extra-small-text">
                     {this.props.errorMessage}
                 </p>
