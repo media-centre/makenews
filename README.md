@@ -1,12 +1,12 @@
-#Makenews
+# Makenews
 
-##How to build
+## How to build
 
-###Prerequisites
+### Prerequisites
 1.  `node` and `npm`
 2.  [couchdb 2.0.0](http://docs.couchdb.org/en/2.0.0/install/index.html)
 
-###Create an admin user and common dabatase
+### Create an admin user and common dabatase
 1.  in `couchdb_tasks.sh` change the admin and common db details
     ```
     adminUserName="adminuser"
@@ -19,7 +19,7 @@
     this will creates and admin user, common db, role access to common db,
     `_users` db, `_replicator` db and `_global_changes` db
 
-###Build and Run
+### Build and Run
 1.  make sure couchdb is running
 2.  `npm install`
 3.  `gulp build`
@@ -28,8 +28,8 @@
 your server will be running on `http://localhost:5000`
 
 
-##Configuration
-###Client configuration
+## Configuration
+### Client configuration
 path `./client/config/config.js`
 ```
 {
@@ -41,7 +41,7 @@ path `./client/config/config.js`
 }
 ```
 
-###Server configuration
+### Server configuration
 path `./server/config/application.json`
 ```
 {
@@ -76,9 +76,9 @@ path `./server/config/application.json`
 ```
 
 
-##Development
+## Development
 
-###Watch and run tests
+### Watch and run tests
 1.  `gulp build`
 2.  `gulp watch`
 3.  `gulp test`
