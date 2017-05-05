@@ -49,16 +49,15 @@ export default class DeleteSourceHandler {
                     toBeDeleted.push(feedDoc);
                 }
             } else {
-                const { _id, collectionId } = feedDoc;
+                const { _id, collectionId, docType, _rev } = feedDoc;
                 const { title, description, link,
                 tags, sourceType, pubDate } = currentFeedDoc;
                 const sourceDeleted = true;
                 const selectText = true;
 
-                const updatedCollectionFeedDoc = { _id, collectionId, title,
+                const updatedCollectionFeedDoc = { _id, _rev, collectionId, title,
                     description, link, tags, sourceType,
-                    pubDate, selectText, sourceDeleted };
-
+                    pubDate, selectText, sourceDeleted, docType };
                 updatedCollectionFeedDocs.push(updatedCollectionFeedDoc);
             }
         });
