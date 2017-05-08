@@ -7,7 +7,7 @@ export default class ConfirmPopup extends Component {
 
     constructor() {
         super();
-        this.handleClick = this.handleClick.bind(this);
+        this.handleCancel = (event) => this.handleClick(event, false);
         this.handleOk = (event) => this.handleClick(event, true);
     }
 
@@ -26,7 +26,7 @@ export default class ConfirmPopup extends Component {
                         <p className="description" ref="description">{this.props.description}</p>
                         <div className="button-container t-right">
                             <button className={this.props.hide ? "confirmButton hide" : "confirmButton"} ref="confirmButton" onClick={this.handleOk} >{confirmMessages.confirm}</button>
-                            <button className="cancelButton" ref="cancelButton" onClick={this.handleClick}>{this.props.hide ? confirmMessages.ok : confirmMessages.cancel}</button>
+                            <button className="cancelButton" ref="cancelButton" onClick={this.handleCancel}>{this.props.hide ? confirmMessages.ok : confirmMessages.cancel}</button>
                         </div>
                     </div>
                 </div>
