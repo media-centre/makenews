@@ -78,6 +78,31 @@ describe("DeleteSourceHandler", () => {
             saveDocs.verify();
             assert.deepEqual(response, { "ok": true });
         });
+
+        it("should update the collection feed docs of the given sources to delete", async () => {
+            const sources = ["NewsClick"];
+            const sourcesDoc = { "docs": [{ "_id": "newsclick" }] };
+            const collectionFeedDoc = { "_id": "collectionFeedId1", "docType": "collectionFeed", "_rev": "rev1", "collectionId": "collectionId1" };
+            const feedDoc = { "_id": "feedId1", "docType": "feed", "sourceId": "newsClick", "title": "title",
+                "description": "description", "link": "link", "tags": [], "sourceType": "web", "pubDate": "20170520" };
+            const feedsDoc = { "docs": [feedDoc, collectionFeedDoc] };
+            const updatedDoc = { "_id": "collectionFeedId1", "docType": "collectionFeed", "_rev": "rev1", "collectionId": "collectionId1",
+                "title": "title", "description": "description", "link": "link",
+                "tags": [], "sourceType": "web", "pubDate": "20170520", "sourceDeleted": true, "selectText": true };
+
+            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
+            findMock.onSecondCall().returns(Promise.resolve(feedsDoc));
+
+            let deleteBulkMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withArgs([feedDoc, { "_id": "newsclick" }]);
+            let saveBulkMock = sandbox.mock(couchClient).expects("saveBulkDocuments").withArgs({ "docs": [updatedDoc] });
+
+            await deleteSourceHandler.deleteSources(sources);
+
+            findMock.verify();
+            deleteBulkMock.verify();
+            saveBulkMock.verify();
+        });
     });
 
     describe("deleteHashtags", () => {

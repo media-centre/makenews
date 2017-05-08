@@ -119,7 +119,7 @@ export default class EditStory extends Component {
     }
     _showConfirmPopup() {
         const body = this.refs.body.getEditorContents();
-        this.setState({body});
+        this.setState({ body });
         this.setState({ "showPopup": true });
     }
 

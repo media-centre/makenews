@@ -67,7 +67,10 @@ export default class DeleteSourceHandler {
         try {
             const markedFeeds = await this.markAsSourceDeleted(toBeMarked);
             updatedCollectionFeedDocs.push(...markedFeeds);
-            await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
+            let response = await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
+            if(response.length && response.filter((status) => status.error === "conflict").length) {
+                DeleteSourceHandler.logger().warn("Error updating the collection feed document, Error:: Document update conflict");
+            }
         } catch(err) {
             DeleteSourceHandler.logger().error(`Error making feeds as source deleted, Error:: ${JSON.stringify(err)}`);
         }
