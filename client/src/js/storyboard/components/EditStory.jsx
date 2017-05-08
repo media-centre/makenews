@@ -22,7 +22,6 @@ export default class EditStory extends Component {
     constructor() {
         super();
         this.state = { "title": "", "body": "", "showPopup": false };
-        this._onChange = this._onChange.bind(this);
         this._onTitleChange = this._onTitleChange.bind(this);
         this._exportHtml = this._exportHtml.bind(this);
         this._saveStory = this._saveStory.bind(this);
@@ -52,21 +51,22 @@ export default class EditStory extends Component {
         const ajax = AjaxClient.instance("/story");
         await ajax.get({ "id": storyId }).then((response) => {
             this.story = response;
-            this._onChange(this.story.body);
             this.setState({ "title": this.story.title });
+            this.setState({ "body": this.story.body });
         });
         this.autoSave();
     }
 
     async _saveStory() {
+        const body = this.refs.body.getEditorContents();
         let title = this.state.title;
-        if (this.state.body && !title && !this.storyId) {
+        if (body && !title && !this.storyId) {
             title = `Untitled_${new Date().getTime()}`;
         }
         this.story.title = title;
-        this.story.body = this.state.body;
+        this.story.body = body;
 
-        if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(this.story.body)) {
+        if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(body)) {
             Toast.show(this.storyboardStrings.warningMessages.emptyStory);
         } else {
             let ajax = AjaxClient.instance("/save-story");
@@ -106,10 +106,6 @@ export default class EditStory extends Component {
         FileSaver.saveAs(blob, `${this.state.title}.html`);
     }
 
-    _onChange(body) {
-        this.setState({ body });
-    }
-
     _onTitleChange() {
         this.setState({ "title": this.refs.title.value });
     }
@@ -122,6 +118,8 @@ export default class EditStory extends Component {
         this.setState({ "showPopup": false });
     }
     _showConfirmPopup() {
+        const body = this.refs.body.getEditorContents();
+        this.setState({body});
         this.setState({ "showPopup": true });
     }
 
@@ -144,7 +142,7 @@ export default class EditStory extends Component {
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
                     </div>
-                    <ReactQuill className="story-editor" theme="snow" onChange={this._onChange} modules={EditStory.modules} toolbar={false} value={this.state.body}/>
+                    <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={this._exportHtml} />
                     </div>
