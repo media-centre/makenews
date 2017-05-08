@@ -295,7 +295,7 @@ describe("DisplayArticle", () => {
             let [arrowIcon,, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
-            expect(mainDOM.props.className).to.be.equal("story-display-article display-article__header back");
+            expect(mainDOM.props.className).to.be.equal("display-article__header back");
 
             expect(backButton.type).to.be.equal("button");
             expect(backButton.props.className).to.be.equal("back__button");

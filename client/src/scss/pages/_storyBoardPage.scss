@@ -105,6 +105,22 @@
       width: 100%;
       justify-content: center;
 
+      @media (max-width: $tablet-max-width) {
+        position: relative;
+        display: block;
+
+        .back {
+          margin: 0;
+        }
+
+        .save {
+          margin: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+      }
+
       .save, .back {
         margin: 10px 15px 10px 0;
         color: $secondary-color;
@@ -132,7 +148,11 @@
   .ql-snow.ql-toolbar {
     background-color: $dark-background-color;
     text-align: center;
-    padding: 15px;
+    padding: .94rem;
+
+    @media (max-width: $tablet-max-width) {
+      padding: 0;
+    }
   }
 
   .story-editor {

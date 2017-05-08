@@ -5,6 +5,10 @@
   flex-basis: $side-panel-width;
   border-right: 1px solid lighten($primary-color, 35%);
 
+  @media (max-width: $tablet-max-width) {
+    flex-basis: $side-panel-width-tab;
+  }
+
   .search-bar {
     height: $secondary-header-nav-height;
     background-color: $dark-background-color;
@@ -161,15 +165,9 @@
     flex-wrap: wrap;
 
     .collection-feed {
-      @media (min-width: 1400px) {
-        width: 50%;
-      }
+      width: 50%;
 
       @media (max-width: 1024px) {
-        width: 50%;
-      }
-
-      @media (max-width: 768px) {
         width: 100%;
       }
 
@@ -317,4 +315,5 @@
 .story-board-collections {
   flex: 0;
   flex-basis: 420px;
+  border-right: 1px solid lighten($primary-color, 35%);
 }

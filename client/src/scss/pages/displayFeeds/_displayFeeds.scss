@@ -79,7 +79,7 @@
 
 
     @media (max-width: $tablet-max-width) {
-      flex-basis: 340px;
+      flex-basis: $side-panel-width-tab;
     }
 
     .search-bar {
@@ -309,6 +309,10 @@
 
 .story-collections .source-type-bar .news-board-tab .toast {
   display: none;
+}
+
+.story-collections .configured-feeds-container {
+  border-left: 0;
 }
 
 .default-message {

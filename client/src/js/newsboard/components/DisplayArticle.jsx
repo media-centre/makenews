@@ -141,13 +141,13 @@ export class DisplayArticle extends Component {
     renderArticleHeader() {
         return(
             this.props.isStoryBoard
-                ? <header className={`${this.articleClass}__header back`}>
+                ? <header className="display-article__header back">
                     <button className="back__button" onClick={this.props.articleOpen}>
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
                     </button>
                   </header>
 
-                : <header className={`${this.articleClass}__header`}>
+                : <header className="display-article__header">
                     <div className="collection" onClick={this._addToCollection}>
                         <i className="icon fa fa-folder"/> {this.articleMessages.addToCollection}
                     </div>
@@ -165,13 +165,12 @@ export class DisplayArticle extends Component {
 
     render() {
         this.articleMessages = Locale.applicationStrings().messages.newsBoard.article;
-        this.articleClass = this.props.isStoryBoard ? "story-display-article display-article" : "display-article";
         if(this.props.article && this.props.article._id) {
             if(this.props.collectionDOM) {
                 this.props.collectionDOM.style.display = "none";
             }
             return (
-                <article className={this.articleClass} onClick={this._hideToolTip}>
+                <article className={this.props.isStoryBoard ? "story-display-article display-article" : "display-article"} onClick={this._hideToolTip}>
                     { this.renderHeader() }
                     { this.renderBody() }
                 </article>

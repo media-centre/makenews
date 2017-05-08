@@ -7,6 +7,7 @@ import { createStore, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { Router } from "react-router";
 import History from "./History";
+import "babel-polyfill";
 
 const store = createStore(contentDiscoveryApp, applyMiddleware(thunkMiddleware));
 

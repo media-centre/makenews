@@ -26,6 +26,7 @@
     right: initial;
     background: $primary-color;
     transform: translateX(-100%);
+    -webkit-animation: rollInLeft .5s forwards;
     animation: rollInLeft .5s forwards;
 
     i {
@@ -83,6 +84,15 @@
     &:hover {
       color: $secondary-font-color;
     }
+  }
+}
+
+@-webkit-keyframes rollInLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 

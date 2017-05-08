@@ -103,7 +103,12 @@
 
 .story-display-article {
   flex: 0;
-  flex-basis: 420px;
+  flex-basis: $side-panel-width;
+  border-right: 1px solid lighten($primary-color, 35%);
+
+  @media (max-width: $tablet-max-width) {
+    flex-basis: $side-panel-width-tab;
+  }
 }
 
 .toolTip {
