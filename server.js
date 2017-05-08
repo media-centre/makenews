@@ -11,25 +11,17 @@ import csp from "helmet-csp";
 let app = express();
 app.use(helmet.hidePoweredBy());
 app.use(csp({ "directives": {
-    "scriptSrc": ["'self'", "'unsafe-eval'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
+    "scriptSrc": ["'self'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
     "styleSrc": ["'self'", "'unsafe-inline'"]
 } }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ "extended": true }));
 app.use(cookieParser());
-app.use(helmet.noSniff());
 app.use(helmet.xssFilter());
-app.use(helmet.frameguard({
-    "action": "deny"
-}));
+
 const ninetyDaysInMilliseconds = 7776000000;
-const ninetyDaysInSeconds = 7776000;
 app.use(helmet.hsts({ "maxAge": ninetyDaysInMilliseconds, "force": true }));
 app.use(helmet.referrerPolicy({ "policy": "same-origin" }));
-app.use(helmet.hpkp({
-    "maxAge": ninetyDaysInSeconds,
-    "sha256s": ["AbCdEf123=", "ZyXwVu456="]
-}));
 
 app.disable("x-powered-by");
 routers(app);
