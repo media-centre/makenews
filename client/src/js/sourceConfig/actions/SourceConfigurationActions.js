@@ -56,7 +56,7 @@ export function addSourceToConfigureList(sourceType, ...sources) {
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "fb_group", FbActions.FACEBOOK_ADD_GROUP);
     }
     case WEB: {
-        let configuredSources = Object.assign([], sources);
+        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "web", WebConfigActions.WEB_ADD_SOURCE);
     }
     case TWITTER: {

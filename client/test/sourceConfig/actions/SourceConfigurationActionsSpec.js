@@ -109,8 +109,8 @@ describe("SourceConfigurationActions", () => {
             "Content-Type": "application/json"
         };
 
-        beforeEach("add source to configred list", () => {
-            sources = [{ "name": "something", "id": "432455" }];
+        beforeEach("add source to configured list", () => {
+            sources = [{ "name": "something", "id": "432455", "url": "432455" }];
             configuredSources = [{ "name": "something", "id": "432455", "url": "432455" }];
             sandbox = sinon.sandbox.create();
             ajaxClient = AjaxClient.instance("/configure-sources");
@@ -191,7 +191,7 @@ describe("SourceConfigurationActions", () => {
                 .put("/configure-sources")
                 .reply(HttpResponseHandler.codes.OK, { "ok": true });
             configuredSources = [{ "name": "something", "url": "432455", "id": "432455" }];
-            sources = [{ "name": "something", "id": "432455" }];
+            sources = [{ "name": "something", "id": "432455", "url": "432455" }];
         });
 
         afterEach("add all sources", () => {

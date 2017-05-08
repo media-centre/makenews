@@ -1,4 +1,4 @@
-import RssURLSearchIndex from "../../../src/migration/admin/20170103161414_RssURLSearchIndex";
+import RssURLSearchIndex from "../../../src/migration/admin/20170805181027_RssURLSearchIndex";
 import CouchClient from "../../../src/CouchClient";
 import chai, { assert } from "chai";
 import chaiAsPromised from "chai-as-promised";
@@ -13,7 +13,7 @@ describe("RssURLSearchIndex", () => {
         "fulltext": {
             "by_name": {
                 "index":
-                    "function(doc) { if(doc.sourceType === 'web') { var ret=new Document(); ret.add(doc.name, {'field':'name', 'store': 'yes'}); ret.add(doc._id, {'field':'url', 'store': 'yes'}); return ret; } }"
+                    "function(doc) { if(doc.sourceType === 'web') { var ret=new Document(); ret.add(doc.name, {'field':'name', 'store': 'yes'}); ret.add(doc._id, {'field':'id', 'store': 'yes'}); return ret; } }"
             }
         }
     };

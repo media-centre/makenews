@@ -25,7 +25,7 @@ export function fetchWebSources(keyword = "", params = {}) {
             const data = await ajaxClient.get({ keyword, ...params });
             if(data.docs.length) {
                 const configuredSources = getState().configuredSources.web;
-                const cmp = (first, second) => first.url === second._id;
+                const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotWebSourceResults(data, keyword, "web"));
             } else {

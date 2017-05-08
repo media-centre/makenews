@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks: [2, 7], no-unused-vars:0*/
 
 import RssURLDocuments from "../../src/migration/admin/20161114174315_RssURLDocuments";
-import RssURLSearchIndex from "../../src/migration/admin/20170103161414_RssURLSearchIndex";
+import RssURLSearchIndex from "../../src/migration/admin/20170805181027_RssURLSearchIndex";
 import RssURLIndex from "../../src/migration/admin/20170503141134_RssURLIndex";
 import Migration from "../../src/migration/Migration";
 import MigrationFile from "../../src/migration/MigrationFile";

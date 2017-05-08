@@ -59,8 +59,8 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should add a web url to the state when asked for adding a web source", () => {
-            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "url": "http://website.url" }] };
-            expect(configuredSources(state, action).web).to.deep.equal([{ "name": "website", "url": "http://website.url", "_id": "http://website.url" }]);
+            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "id": "http://website.url" }] };
+            expect(configuredSources(state, action).web).to.deep.equal([{ "name": "website", "id": "http://website.url", "_id": "http://website.url" }]);
         });
 
         it("should add a twitter handle to the state when asked for adding a twitter source", () => {

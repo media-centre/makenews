@@ -28,7 +28,7 @@ export default class Source extends Component {
 
                     { this.props.currentSourceType === WEB &&
                     <div className="source__url">
-                        { this.props.source.url }
+                        { this.props.source.id }
                     </div>
                     }
                 </div>

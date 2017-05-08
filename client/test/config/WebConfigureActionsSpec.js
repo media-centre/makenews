@@ -86,10 +86,10 @@ describe("WebConfigureActions", () => {
             const result = {
                 "docs": [{
                     "name": "The Hindu - International",
-                    "url": "http://www.thehindu.com/news/international/?service=rss"
+                    "id": "http://www.thehindu.com/news/international/?service=rss"
                 }, {
                     "name": "The Hindu - Sport",
-                    "url": "http://www.thehindu.com/sport/?service=rss"
+                    "id": "http://www.thehindu.com/sport/?service=rss"
                 }],
                 "paging": {
                     "offset": "25"
@@ -103,10 +103,10 @@ describe("WebConfigureActions", () => {
                 "sources": {
                     "data": [{
                         "name": "The Hindu - International",
-                        "url": "http://www.thehindu.com/news/international/?service=rss"
+                        "id": "http://www.thehindu.com/news/international/?service=rss"
                     }, {
                         "name": "The Hindu - Sport",
-                        "url": "http://www.thehindu.com/sport/?service=rss",
+                        "id": "http://www.thehindu.com/sport/?service=rss",
                         "added": true
                     }],
                     "paging": result.paging,
@@ -118,7 +118,7 @@ describe("WebConfigureActions", () => {
             const getStore = { "configuredSources": {
                 "web": [{
                     "name": "The Hindu - Sport",
-                    "url": "http://www.thehindu.com/sport/?service=rss",
+                    "id": "http://www.thehindu.com/sport/?service=rss",
                     "_id": "http://www.thehindu.com/sport/?service=rss"
                 }]
             } };

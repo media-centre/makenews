@@ -127,7 +127,7 @@ export const configuredSources = (state = { "profiles": [], "pages": [], "groups
         return Object.assign({}, state, { "groups": state.groups.concat(sources) });
     }
     case WEB_ADD_SOURCE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.url }), action.sources);
+        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "web": state.web.concat(sources) });
     }
     case TWITTER_ADD_SOURCE: {

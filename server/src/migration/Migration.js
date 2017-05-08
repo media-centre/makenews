@@ -1,6 +1,6 @@
 /*eslint no-unused-vars:0*/
 import RssURLDocuments from "./admin/20161114174315_RssURLDocuments";
-import RssURLSearchIndex from "./admin/20170103161414_RssURLSearchIndex";
+import RssURLSearchIndex from "./admin/20170805181027_RssURLSearchIndex";
 import RssURLIndex from "./admin/20170503141134_RssURLIndex";
 import FeedsSearchIndex from "./db/20170225114814_FeedsSearchIndex";
 import AppIndex from "./db/20170502164510_AppIndex";
