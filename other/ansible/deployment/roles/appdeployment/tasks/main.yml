@@ -11,7 +11,7 @@
   shell: rm -rf {{project_directory}}
 
 - name: create the project directory if it's not available
-  file: path={{project_directory}} state=directory mode=0744 recurse=yes
+  file: path={{project_directory}} state=directory mode=0754 recurse=yes
 
 - name: copy the dist.tar.gz to the project directory
   shell: cp "/var/lib/go-agent/pipelines/{{pipeline_deployment_folder_name}}/trunk/{{artifact}}" {{project_directory}}

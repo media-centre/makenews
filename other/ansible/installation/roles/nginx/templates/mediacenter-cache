@@ -1,0 +1,26 @@
+root {{project_directory}}/dist/client;
+
+location ~* \.(?:manifest|appcache|html?|xml|json)$ {
+  expires -1;
+}
+
+location ~* config\/\w*.js$ {
+  expires 3h;
+  add_header Cache-Control "public";
+}
+
+# Fonts
+
+# Media: images, icons, video, audio, HTC
+location ~* \.(?:jpg|jpeg|gif|png|ico|svg|svgz|mp4|webm|woff|ttf|otf|woff2|eot)$ {
+  expires 1M;
+  access_log on;
+  add_header Cache-Control "public";
+}
+
+# CSS and Javascript
+location ~* (?:app\.css|app-min\.js)$ {
+  expires 1d;
+  access_log on;
+  add_header Cache-Control "public";
+}

@@ -23,7 +23,6 @@ const ninetyDaysInMilliseconds = 7776000000;
 app.use(helmet.hsts({ "maxAge": ninetyDaysInMilliseconds, "force": true }));
 app.use(helmet.referrerPolicy({ "policy": "same-origin" }));
 
-app.disable("x-powered-by");
 routers(app);
 
 const DEFAULT_PORT = 5000;

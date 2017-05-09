@@ -10,6 +10,7 @@
     - go_server_ip: 46.101.245.151
     - go_server: https:\/\/46.101.245.151:8154\/go
     - letsEncrypt: True
+    - project_directory: /home/go/ContentDiscovery
   roles:
     - PreInstallationTasks
     - couchdb-dump

@@ -12,6 +12,9 @@
 - name: copy mediacenter to sites-available
   template: src=mediacenter dest=/etc/nginx/sites-available/mediacenter mode=0644
 
+- name: copy mediacenter-cache to conf.d
+  template: src=mediacenter-cache dest=/etc/nginx/conf.d/mediacenter-cache mode=0644
+
 - name: link mediacenter in sites-enabled
   file: src=/etc/nginx/sites-available/mediacenter dest=/etc/nginx/sites-enabled/mediacenter state=link
   notify:
