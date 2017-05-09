@@ -9,6 +9,11 @@
 - name: delete default in sites-available
   action: file path=/etc/nginx/sites-enabled/default state=absent
 
+- name: adding www-data user to the users group so we can access the static content from www-data see the mediacenter-cache for root path
+  user: name='www-data'
+        groups=users
+        append=yes
+
 - name: copy mediacenter to sites-available
   template: src=mediacenter dest=/etc/nginx/sites-available/mediacenter mode=0644
 
