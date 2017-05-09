@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import R from "ramda"; //eslint-disable-line id-length
 import { searchInConfiguredSources, deleteSource } from "../../sourceConfig/actions/SourceConfigurationActions";
@@ -7,7 +7,7 @@ import Input from "./../../utils/components/Input";
 import ConfiguredSources from "../../newsboard/filter/ConfiguredSources";
 import Locale from "./../../utils/Locale";
 
-class ConfiguredPane extends PureComponent {
+class ConfiguredPane extends Component {
 
     constructor() {
         super();

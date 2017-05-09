@@ -89,7 +89,7 @@ export const sourceResults = (state = sourceResultsInitialState, action = {}) =>
     }
 
     case WEB_ADD_SOURCE: {
-        return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "url") });
+        return Object.assign({}, state, { "data": markSourcesAsAdded(state.data, action.sources, "id") });
     }
 
     case TWITTER_ADD_SOURCE: {

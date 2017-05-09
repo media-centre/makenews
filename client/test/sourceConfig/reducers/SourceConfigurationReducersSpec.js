@@ -213,11 +213,11 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should add the added=true property to the configured web url", () => {
-            let state = { "data": [{ "url": "http://web.url", "name": "Group" }, { "url": "http://web2.url", "name": "Group2" }], "paging": {} };
-            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "url": "http://web.url", "name": "Group" }] };
+            let state = { "data": [{ "id": "http://web.url", "name": "Group" }, { "id": "http://web2.url", "name": "Group2" }], "paging": {} };
+            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "id": "http://web.url", "name": "Group" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
-                [{ "_id": "http://web.url", "added": true, "url": "http://web.url", "name": "Group" },
-                    { "url": "http://web2.url", "name": "Group2" }]);
+                [{ "_id": "http://web.url", "added": true, "id": "http://web.url", "name": "Group" },
+                    { "id": "http://web2.url", "name": "Group2" }]);
         });
 
         it("should add the added=true property to the configured twitter handle", () => {

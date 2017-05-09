@@ -35,6 +35,7 @@ export class Sources extends Component {
     
     componentWillUnmount() {
         document.removeEventListener("scroll", this.getMoreFeeds);
+        clearInterval(this.timer);
     }
 
     _getMoreFeeds() {
