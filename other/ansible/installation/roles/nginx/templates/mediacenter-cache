@@ -5,13 +5,11 @@ location ~* \.(?:manifest|appcache|html?|xml|json)$ {
 }
 
 location ~* config\/\w*.js$ {
-  expires 3h;
+  expires 1h;
   add_header Cache-Control "public";
 }
 
-# Fonts
-
-# Media: images, icons, video, audio, HTC
+# Media: images, icons, fonts, video, audio, HTC
 location ~* \.(?:jpg|jpeg|gif|png|ico|svg|svgz|mp4|webm|woff|ttf|otf|woff2|eot)$ {
   expires 1M;
   access_log on;
@@ -22,5 +20,17 @@ location ~* \.(?:jpg|jpeg|gif|png|ico|svg|svgz|mp4|webm|woff|ttf|otf|woff2|eot)$
 location ~* (?:app\.css|app-min\.js)$ {
   expires 1d;
   access_log on;
+  add_header Cache-Control "public";
+}
+
+location ^~ /article { #for fetching webArticle api
+  proxy_pass http://makenews;
+  proxy_cache web_article;
+
+  proxy_cache_bypass  $http_cache_control;
+  proxy_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+  proxy_cache_valid 200 302 24h;
+  proxy_cache_valid any 5m;
+  expires 1d;
   add_header Cache-Control "public";
 }
