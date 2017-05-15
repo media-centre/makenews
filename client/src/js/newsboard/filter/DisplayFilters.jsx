@@ -19,20 +19,16 @@ export class DisplayFilters extends Component {
         this._renderSources = this._renderSources.bind(this);
         this.hashtags = [];
         this.searchInSources = this.searchInSources.bind(this);
-        this._onAddHashTag = this._onAddHashTag.bind(this);
         this.showInputBox = this.showInputBox.bind(this);
         this.cancelFilter = this.cancelFilter.bind(this);
         this.applyFilter = this.applyFilter.bind(this);
+        this.addHashTag = this.addHashTag.bind(this);
     }
 
     componentDidMount() {
         this.props.dispatch(getConfiguredSources());
         this.props.dispatch(searchInConfiguredSources(""));
         this.hashtags = this.props.sources.twitter.map((source) => source.name);
-        this.initSelectedSources();
-    }
-
-    componentWillUnmount() {
         this.initSelectedSources();
     }
 
@@ -98,12 +94,8 @@ export class DisplayFilters extends Component {
         this.props.dispatch(filterTabSwitch(""));
     }
 
-    _onAddHashTag() {
+    addHashTag() {
         let hashtag = this.refs.hashtagInput.refs.input.value;
-        this.addHashtag(hashtag);
-    }
-
-    addHashtag(hashtag) {
         if(hashtag && hashtag !== "#") {
             if (!hashtag.startsWith("#")) {
                 hashtag = "#" + hashtag; //eslint-disable-line no-param-reassign
@@ -125,6 +117,7 @@ export class DisplayFilters extends Component {
             Toast.show(this.filterStrings.hashTag.emptyHashTag);
         }
     }
+
     showInputBox() {
         this.setState({ "hashtagInputBox": !this.state.hashtagInputBox });
     }
@@ -147,10 +140,10 @@ export class DisplayFilters extends Component {
                             <span className="hash">#</span>
                             <Input ref="hashtagInput" placeholder="Add Hashtag"
                                 className={"input-hashtag-box show"}
-                                callback={this._onAddHashTag}
+                                callback={this.addHashTag}
                                 callbackOnEnter
                             />
-                            <div className="add-tag" onClick={this._onAddHashTag} >{this.filterStrings.addTag}</div>
+                            <div className="add-tag" onClick={this.addHashTag} >{this.filterStrings.addTag}</div>
                         </div> }
                     </div>
                 }
@@ -180,6 +173,7 @@ DisplayFilters.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "searchKeyword": PropTypes.string,
     "currentTab": PropTypes.string.isRequired,
+    "callback": PropTypes.func,
     "currentFilterSource": PropTypes.object
 };
 
