@@ -22,6 +22,7 @@ export class DisplayArticle extends Component {
         this._addToCollection = this._addToCollection.bind(this);
         this.addTextToCollection = (event) => this._addTextToCollection(event);
         this.copyTextToClipboard = (event) => this._copyTextToClipboard(event);
+        this.closeArticle = this.closeArticle.bind(this);
     }
 
     _showToolTip() {
@@ -138,11 +139,16 @@ export class DisplayArticle extends Component {
         this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab));
     }
 
+    closeArticle() {
+        this.props.articleOpen();
+        this.props.feedsDOM.style.display = "block";
+    }
+
     renderArticleHeader() {
         return(
-            this.props.isStoryBoard
+            this.props.feedsDOM
                 ? <header className="display-article__header back">
-                    <button className="back__button" onClick={this.props.articleOpen}>
+                    <button className="back__button" onClick={this.closeArticle}>
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
                     </button>
                   </header>
@@ -169,8 +175,11 @@ export class DisplayArticle extends Component {
             if(this.props.collectionDOM) {
                 this.props.collectionDOM.style.display = "none";
             }
+            if(this.props.feedsDOM) {
+                this.props.feedsDOM.style.display = "none";
+            }
             return (
-                <article className={this.props.isStoryBoard ? "story-display-article display-article" : "display-article"} onClick={this._hideToolTip}>
+                <article className={this.props.feedsDOM ? "story-display-article display-article" : "display-article"} onClick={this._hideToolTip}>
                     { this.renderHeader() }
                     { this.renderBody() }
                 </article>
@@ -191,9 +200,9 @@ DisplayArticle.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "collectionDOM": PropTypes.object,
+    "feedsDOM": PropTypes.object,
     "collectionName": PropTypes.string,
     "articleOpen": PropTypes.func,
-    "isStoryBoard": PropTypes.bool,
     "currentHeaderTab": PropTypes.string
 };
 

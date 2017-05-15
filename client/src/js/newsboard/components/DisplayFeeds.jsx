@@ -269,36 +269,37 @@ export class DisplayFeeds extends Component {
 
     displayFeeds() {
         this.newsboardStrings = Locale.applicationStrings().messages.newsBoard;
-        return (this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected
-            ? <DisplayArticle articleOpen={this._isClicked} isStoryBoard={this.state.isFeedSelected} />
-            : <div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"} onClick={this._hideExpandView}>
-                <div className="search-bar">
-                    <div className="input-box">
-                        <input type="text" ref="searchFeeds"
-                            onKeyUp={this.checkEnterKey}
-                            className="search-sources"
-                            placeholder="Search Keywords, Articles etc."
-                            title="Search Keywords, Articles etc."
-                        />
-                        {this.state.searchToggle
-                            ? <span className="input-addon" onClick={this._cancel}>&times;</span>
-                            : <span className="input-addon" onClick={this._search}><i className="fa fa-search" aria-hidden="true"/></span>
-                        }
+        return (<div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
+                {this.props.currentHeaderTab === WRITE_A_STORY && this.state.isFeedSelected && <DisplayArticle articleOpen={this._isClicked} feedsDOM={this.refs.feedsDOM}/>}
+                <div ref="feedsDOM" onClick={this._hideExpandView}>
+                    <div className="search-bar">
+                        <div className="input-box">
+                            <input type="text" ref="searchFeeds"
+                                onKeyUp={this.checkEnterKey}
+                                className="search-sources"
+                                placeholder="Search Keywords, Articles etc."
+                                title="Search Keywords, Articles etc."
+                            />
+                            {this.state.searchToggle
+                                ? <span className="input-addon" onClick={this._cancel}>&times;</span>
+                                : <span className="input-addon" onClick={this._search}><i className="fa fa-search" aria-hidden="true"/></span>
+                            }
+                        </div>
                     </div>
-                </div>
-                { this.state.gotNewFeeds && this._showMoreFeedsButton() }
-                <i onClick={this.toggleFeedsView} className="expand-icon" />
-                <div className="feeds-container" ref="feeds">
-                    <div className="feeds">
-                        { this.props.feeds.map((feed, index) =>
-                            <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                                isClicked={this._isClicked} dispatch={this.props.dispatch}
-                            />)
-                        }
-                        { this.props.isFetchingFeeds
-                            ? <Spinner />
-                            : this._defaultMessage()
-                        }
+                    { this.state.gotNewFeeds && this._showMoreFeedsButton() }
+                    <i onClick={this.toggleFeedsView} className="expand-icon" />
+                    <div className="feeds-container" ref="feeds">
+                        <div className="feeds">
+                            { this.props.feeds.map((feed, index) =>
+                                <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
+                                    isClicked={this._isClicked} dispatch={this.props.dispatch}
+                                />)
+                            }
+                            { this.props.isFetchingFeeds
+                                ? <Spinner />
+                                : this._defaultMessage()
+                            }
+                        </div>
                     </div>
                 </div>
             </div>);

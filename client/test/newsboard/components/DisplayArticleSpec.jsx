@@ -288,8 +288,14 @@ describe("DisplayArticle", () => {
                 "pubDate": "2017-01-31T06:58:27.000Z",
                 "_id": 123
             };
-            let isSelected = true;
-            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab={"web"} articleOpen={anonymousFun} isStoryBoard={isSelected}/>);
+            let feedsDOM = { "style": { "display": "none" } };
+            displayArticleDom = renderer.render(
+                <DisplayArticle
+                    article={feed} dispatch={anonymousFun}
+                    newsBoardCurrentSourceTab={"web"} articleOpen={anonymousFun}
+                    feedsDOM={feedsDOM}
+                />
+            );
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
             let [arrowIcon,, name] = backButton.props.children;
