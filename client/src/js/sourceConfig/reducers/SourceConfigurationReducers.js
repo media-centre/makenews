@@ -32,35 +32,9 @@ const sourceResultsInitialState = {
 let tab = WEB;
 export const sourceResults = (state = sourceResultsInitialState, action = {}) => {
     switch(action.type) {
-    case FACEBOOK_GOT_SOURCES: {
-        if(action.currentTab === tab) {
-            return Object.assign({}, state,
-                {
-                    "data": state.data.concat(action.sources.data),
-                    "nextPage": action.sources.paging,
-                    "twitterPreFirstId": action.sources.twitterPreFirstId,
-                    "isFetchingSources": false,
-                    "keyword": action.sources.keyword,
-                    "hasMoreSourceResults": true
-                });
-        }
-        return state;
-    }
+    case WEB_GOT_SOURCE_RESULTS:
+    case FACEBOOK_GOT_SOURCES:
     case TWITTER_GOT_SOURCE_RESULTS: {
-        if(action.currentTab === tab) {
-            return Object.assign({}, state,
-                {
-                    "data": state.data.concat(action.sources.data),
-                    "nextPage": action.sources.paging,
-                    "twitterPreFirstId": action.sources.twitterPreFirstId,
-                    "isFetchingSources": false,
-                    "keyword": action.sources.keyword,
-                    "hasMoreSourceResults": true
-                });
-        }
-        return state;
-    }
-    case WEB_GOT_SOURCE_RESULTS: {
         if(action.currentTab === tab) {
             return Object.assign({}, state,
                 {
