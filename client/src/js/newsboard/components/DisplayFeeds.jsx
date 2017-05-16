@@ -97,6 +97,7 @@ export class DisplayFeeds extends Component {
         if(this.feedsDOM) {
             this.feedsDOM.removeEventListener("scroll", this.getFeedsCallBack);
         }
+        clearInterval(AppWindow.instance().get("autoRefreshTimer"));
     }
 
     getFeedsCallBack() {

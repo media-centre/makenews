@@ -25,6 +25,12 @@ export class DisplayArticle extends Component {
         this.closeArticle = this.closeArticle.bind(this);
     }
 
+    componentWillUnmount() {
+        if(this.props.feedsDOM) {
+            this.props.feedsDOM.style.display = "block";
+        }
+    }
+
     _showToolTip() {
         let div = document.getElementById("toolTip");
         if(this.props.currentHeaderTab === SCAN_NEWS && this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection && window.getSelection().toString()) {

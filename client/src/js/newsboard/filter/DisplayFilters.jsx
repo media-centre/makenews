@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import R from "ramda"; //eslint-disable-line id-length
 import { connect } from "react-redux";
 import { filteredSources, filterTabSwitch } from "./FilterActions";
-import { getConfiguredSources, searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
+import { searchInConfiguredSources, addSourceToConfigureList } from "../../sourceConfig/actions/SourceConfigurationActions";
 import ConfiguredSources from "./ConfiguredSources";
 import Input from "./../../utils/components/Input";
 import Toast from "../../utils/custom_templates/Toast";
@@ -25,10 +25,16 @@ export class DisplayFilters extends Component {
         this.addHashTag = this.addHashTag.bind(this);
     }
 
+    componentWillMount() {
+        this.initSelectedSources();
+    }
+
     componentDidMount() {
-        this.props.dispatch(getConfiguredSources());
         this.props.dispatch(searchInConfiguredSources(""));
         this.hashtags = this.props.sources.twitter.map((source) => source.name);
+    }
+
+    componentWillUnmount() {
         this.initSelectedSources();
     }
 
