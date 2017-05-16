@@ -182,7 +182,7 @@ export class DisplayCollection extends Component {
     }
 
     displayCollections() {
-        return (<div className="collection-list-container" >
+        return (<div ref="collections">
             <div className="search-bar">
                 <Input className={"input-box"} ref="collectionSearch" placeholder="Search collections"
                     callback={this._searchCollections} addonSrc="search"
@@ -206,9 +206,10 @@ export class DisplayCollection extends Component {
     render() {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
-            this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked
-                ? <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked}/>
-                : this.displayCollections()
+            <div className="collection-list-container">
+            { this.props.mainHeaderTab === WRITE_A_STORY && this.state.isClicked && <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked} collectionsDOM={this.refs.collections}/> }
+            { this.displayCollections() }
+            </div>
         );
     }
 }

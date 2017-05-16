@@ -44,6 +44,9 @@ export class DisplayCollectionFeeds extends Component {
     componentWillUnmount() {
         this.dom.removeEventListener("scroll", this.getMoreFeeds);
         this.props.dispatch(clearFeeds());
+        if(this.props.collectionsDOM) {
+            this.props.collectionsDOM.style.display = "block";
+        }
     }
 
     getMoreFeeds() {
@@ -83,6 +86,9 @@ export class DisplayCollectionFeeds extends Component {
 
     render() {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
+        if(this.props.tab === WRITE_A_STORY && this.props.collectionsDOM) {
+            this.props.collectionsDOM.style.display = "none";
+        }
         return (
             <div className={this.props.tab === WRITE_A_STORY ? "collections story-board-collections" : "collections"}>
                 <DisplayArticle collectionDOM={this.refs.collection} collectionName={this.props.collection.name} />
@@ -105,7 +111,8 @@ DisplayCollectionFeeds.propTypes = {
     "feeds": PropTypes.array.isRequired,
     "dispatch": PropTypes.func.isRequired,
     "tab": PropTypes.string,
-    "isClicked": PropTypes.func
+    "isClicked": PropTypes.func,
+    "collectionsDOM": PropTypes.object
 };
 
 function mapToStore(store) {
