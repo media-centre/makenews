@@ -10,7 +10,7 @@ import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 import InlineEdit from "./../../utils/components/InlineEdit";
 import R from "ramda"; //eslint-disable-line id-length
 import Locale from "./../../utils/Locale";
-import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
+import { popUp } from "./../../header/HeaderActions";
 
 export class DisplayCollection extends Component {
     constructor() {
@@ -22,7 +22,7 @@ export class DisplayCollection extends Component {
         this._isClicked = this._isClicked.bind(this);
         this._showCreateCollectionPopup = this._showCreateCollectionPopup.bind(this);
         this._closeCreateCollectionPopup = this._closeCreateCollectionPopup.bind(this);
-        this._showDeleteConfirmPopup = (isConfirm) => this.showDeleteConfirmPopup(isConfirm);
+        this._deleteCollection = this._deleteCollection.bind(this);
         this._createCollection = (event) => this.createCollection(event);
         this.saveCollection = this.saveCollection.bind(this);
     }
@@ -55,6 +55,13 @@ export class DisplayCollection extends Component {
         if(this.props.addArticleToCollection.id) {
             this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
         }
+    }
+
+    _deleteCollection(isConfirmed) {
+        if(isConfirmed) {
+            this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
+        }
+        this.setState({ "showDeleteConfirmationPopup": false });
     }
 
     _renderCollections() {
@@ -143,21 +150,6 @@ export class DisplayCollection extends Component {
         );
     }
 
-    showDeleteConfirmPopup(isConfirmed) {
-        if(isConfirmed) {
-            this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
-        }
-        this.setState({ "showDeleteConfirmationPopup": false });
-    }
-
-    showConfirmationPopup() {
-        return (
-            <ConfirmPopup
-                description = {`${this.collectionMessages.confirmDelete} ${this.deleteCollection.collection}`}
-                callback = {this._showDeleteConfirmPopup}
-            />);
-    }
-
     _closeCreateCollectionPopup() {
         this.setState({ "showCollectionPopup": false });
     }
@@ -184,11 +176,6 @@ export class DisplayCollection extends Component {
             </div>
             {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">{this.collectionMessages.selectCollection}</div> : this.createNewCollection()}
             {this.state.showCollectionPopup ? this.showPopup() : null}
-            {this.state.showDeleteConfirmationPopup
-                ? <ConfirmPopup
-                    description = {`${this.collectionMessages.confirmDelete} ${this.deleteCollection.collection}`}
-                    callback = {this._showDeleteConfirmPopup}
-                  /> : null}
             <div className="feeds">
                 <ul className="configured-sources" ref="collectionList">
                     { this._renderCollections() }
@@ -202,6 +189,9 @@ export class DisplayCollection extends Component {
     }
 
     render() {
+        if(this.state.showDeleteConfirmationPopup) {
+            this.props.dispatch(popUp(this.collectionMessages.confirmDelete, this._deleteCollection));
+        }
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             <div className="collection-list-container">

@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import { assert } from "chai";
 import sinon from "sinon";
 import * as DisplayArticleActions from "../../../src/js/newsboard/actions/DisplayArticleActions";
-import * as DisplayCollectionActions from "../../../src/js/newsboard/actions/DisplayCollectionActions";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("Display Collections", () => {
@@ -114,38 +113,6 @@ describe("Display Collections", () => {
 
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
         assert.equal(collections[0].textContent, "politics × "); //eslint-disable-line no-magic-numbers
-    });
-
-    it("should dispatch deleteCollection after confirmation", () => {
-        const collectionsDOM = ReactDOM.findDOMNode(result);
-        const deleteCollectionMock = sandbox.mock(DisplayCollectionActions).expects("deleteCollection")
-            .returns({ "type": "" });
-
-        const deleteIcon = collectionsDOM.querySelector(".delete-collection");
-        TestUtils.Simulate.click(deleteIcon);
-
-        const confirmationPopup = collectionsDOM.querySelector(".confirmButton");
-        TestUtils.Simulate.click(confirmationPopup);
-
-        const closePopup = collectionsDOM.querySelector(".confirm-popup");
-
-        deleteCollectionMock.verify();
-
-        assert.isNull(closePopup);
-    });
-
-    it("should close popup when cancel is clicked", () => {
-        const collectionsDOM = ReactDOM.findDOMNode(result);
-
-        const deleteIcon = collectionsDOM.querySelector(".delete-collection");
-        TestUtils.Simulate.click(deleteIcon);
-
-        const confirmationPopup = collectionsDOM.querySelector(".cancelButton");
-        TestUtils.Simulate.click(confirmationPopup);
-
-        const closePopup = collectionsDOM.querySelector(".confirm-popup");
-
-        assert.isNull(closePopup);
     });
 
     describe("Display StoryBoard Collection", () => {
