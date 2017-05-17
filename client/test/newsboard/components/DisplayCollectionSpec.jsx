@@ -42,7 +42,12 @@ describe("Display Collections", () => {
         };
         sandbox.stub(Locale, "applicationStrings").returns({
             "messages": {
-                "newsBoard": newsBoardStrings
+                "newsBoard": newsBoardStrings,
+                "confirmPopup": {
+                    "ok": "OK",
+                    "confirm": "CONFIRM",
+                    "cancel": "CANCEL"
+                }
             }
         });
 
@@ -119,33 +124,27 @@ describe("Display Collections", () => {
         const deleteIcon = collectionsDOM.querySelector(".delete-collection");
         TestUtils.Simulate.click(deleteIcon);
 
-        const showPopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
-
-        const confirmationPopup = collectionsDOM.querySelector(".delete-confirmed");
+        const confirmationPopup = collectionsDOM.querySelector(".confirmButton");
         TestUtils.Simulate.click(confirmationPopup);
 
-        const closePopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+        const closePopup = collectionsDOM.querySelector(".confirm-popup");
 
         deleteCollectionMock.verify();
 
-        assert.isNotNull(showPopup);
         assert.isNull(closePopup);
     });
 
-    it("should close popup when 'No' is clicked", () => {
+    it("should close popup when cancel is clicked", () => {
         const collectionsDOM = ReactDOM.findDOMNode(result);
 
         const deleteIcon = collectionsDOM.querySelector(".delete-collection");
         TestUtils.Simulate.click(deleteIcon);
 
-        const showPopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
-
-        const confirmationPopup = collectionsDOM.querySelector(".cancel-collection");
+        const confirmationPopup = collectionsDOM.querySelector(".cancelButton");
         TestUtils.Simulate.click(confirmationPopup);
 
-        const closePopup = collectionsDOM.querySelector(".confirmation-popup-overlay");
+        const closePopup = collectionsDOM.querySelector(".confirm-popup");
 
-        assert.isNotNull(showPopup);
         assert.isNull(closePopup);
     });
 

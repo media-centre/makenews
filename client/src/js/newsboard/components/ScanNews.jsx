@@ -17,7 +17,7 @@ export class ScanNews extends Component {
     constructor() {
         super();
         this.filterCallBack = this.filterCallBack.bind(this);
-        this.renderFilter = this.renderFilter.bind(this);
+        this.displayFilters = this.displayFilters.bind(this);
     }
 
     componentWillMount() {
@@ -25,7 +25,7 @@ export class ScanNews extends Component {
         this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.newsBoard));
     }
 
-    renderFilter() {
+    displayFilters() {
         this.props.dispatch(filterTabSwitch(this.props.currentTab));
     }
 
@@ -46,7 +46,7 @@ export class ScanNews extends Component {
         return(
             <div className="news-board-container">
                 <div className="source-type-bar">
-                    <div onClick={this.renderFilter} className="source-filter news-board-tab">
+                    <div onClick={this.displayFilters} className="source-filter news-board-tab">
                         <i className="icon fa fa-filter"/>
                     </div>
                     <NewsBoardTabs />

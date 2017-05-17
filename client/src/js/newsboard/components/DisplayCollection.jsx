@@ -10,19 +10,19 @@ import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 import InlineEdit from "./../../utils/components/InlineEdit";
 import R from "ramda"; //eslint-disable-line id-length
 import Locale from "./../../utils/Locale";
+import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
 
 export class DisplayCollection extends Component {
     constructor() {
         super();
-        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false, "showConfirmationPopup": false };
+        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false, "showDeleteConfirmationPopup": false };
         this.buttonEvent = {};
         this.deleteCollection = {};
         this._searchCollections = this._searchCollections.bind(this);
         this._isClicked = this._isClicked.bind(this);
         this._showCreateCollectionPopup = this._showCreateCollectionPopup.bind(this);
         this._closeCreateCollectionPopup = this._closeCreateCollectionPopup.bind(this);
-        this._closeConfirmationPopup = this._closeConfirmationPopup.bind(this);
-        this._deleteCollection = this._deleteCollection.bind(this);
+        this._showDeleteConfirmPopup = (isConfirm) => this.showDeleteConfirmPopup(isConfirm);
         this._createCollection = (event) => this.createCollection(event);
         this.saveCollection = this.saveCollection.bind(this);
     }
@@ -57,11 +57,6 @@ export class DisplayCollection extends Component {
         }
     }
 
-    _deleteCollection() {
-        this.setState({ "showConfirmationPopup": false });
-        this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
-    }
-
     _renderCollections() {
         const searchKey = this.state.searchKey;
         let filteredCollections = [];
@@ -94,7 +89,7 @@ export class DisplayCollection extends Component {
                         event.stopPropagation();
                         this.buttonEvent = Object.assign({}, event);
                         this.deleteCollection = collection;
-                        this.setState({ "showConfirmationPopup": true });
+                        this.setState({ "showDeleteConfirmationPopup": true });
                     }}
                     > &times; </button>}
                 </li>
@@ -148,20 +143,19 @@ export class DisplayCollection extends Component {
         );
     }
 
-    _closeConfirmationPopup() {
-        this.setState({ "showConfirmationPopup": false });
+    showDeleteConfirmPopup(isConfirmed) {
+        if(isConfirmed) {
+            this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
+        }
+        this.setState({ "showDeleteConfirmationPopup": false });
     }
 
     showConfirmationPopup() {
         return (
-            <div className="confirmation-popup-overlay">
-                <div className="delete-confirmation-popup">
-                    <div className="confirmation-text">{this.collectionMessages.confirmDelete}<b>{this.deleteCollection.collection}</b>?</div>
-                    <button className="cancel-collection" onClick={this._closeConfirmationPopup}>NO</button>
-                    <button className="delete-confirmed" onClick={this._deleteCollection}>YES</button>
-                </div>
-            </div>
-        );
+            <ConfirmPopup
+                description = {`${this.collectionMessages.confirmDelete} ${this.deleteCollection.collection}`}
+                callback = {this._showDeleteConfirmPopup}
+            />);
     }
 
     _closeCreateCollectionPopup() {
@@ -190,7 +184,11 @@ export class DisplayCollection extends Component {
             </div>
             {this.props.mainHeaderTab === WRITE_A_STORY ? <div className="select_collection">{this.collectionMessages.selectCollection}</div> : this.createNewCollection()}
             {this.state.showCollectionPopup ? this.showPopup() : null}
-            {this.state.showConfirmationPopup ? this.showConfirmationPopup() : null}
+            {this.state.showDeleteConfirmationPopup
+                ? <ConfirmPopup
+                    description = {`${this.collectionMessages.confirmDelete} ${this.deleteCollection.collection}`}
+                    callback = {this._showDeleteConfirmPopup}
+                  /> : null}
             <div className="feeds">
                 <ul className="configured-sources" ref="collectionList">
                     { this._renderCollections() }
