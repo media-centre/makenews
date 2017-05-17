@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Locale from "../../Locale";
+import { popUp } from "./../../../header/HeaderActions";
 
 export default class ConfirmPopup extends Component {
 
@@ -15,6 +16,7 @@ export default class ConfirmPopup extends Component {
         this.refs.confirmButton.disabled = true;
         this.refs.cancelButton.disabled = true;
         this.props.callback(isConfirm || false);
+        this.props.dispatch(popUp());
     }
 
     render() {
@@ -37,6 +39,7 @@ export default class ConfirmPopup extends Component {
 
 ConfirmPopup.displayName = "ConfirmPopup";
 ConfirmPopup.propTypes = {
+    "dispatch": PropTypes.func,
     "description": PropTypes.string,
     "callback": PropTypes.func.isRequired,
     "hide": PropTypes.bool

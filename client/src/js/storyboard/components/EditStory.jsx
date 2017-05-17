@@ -10,8 +10,8 @@ import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import FileSaver from "file-saver";
 import AppWindow from "./../../utils/AppWindow";
-import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
 import Locale from "./.././../utils/Locale";
+import { popUp } from "./../../header/HeaderActions";
 
 export default class EditStory extends Component {
 
@@ -125,12 +125,10 @@ export default class EditStory extends Component {
 
     render() {
         this.storyboardStrings = Locale.applicationStrings().messages.storyBoard;
-        let popup = this.state.showPopup
-            ? (<ConfirmPopup
-                ref = "confirmPopup"
-                description = {this.storyboardStrings.confirmStoryBack}
-                callback = {this._goBack}
-               />) : null;
+        if(this.state.showPopup) {
+            this.props.route.dispatch(popUp(this.storyboardStrings.confirmStoryBack, this._goBack)); //eslint-disable-line react/prop-types
+        }
+
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
@@ -146,7 +144,6 @@ export default class EditStory extends Component {
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={this._exportHtml} />
                     </div>
-                    {popup}
                 </div>
 
                 <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>

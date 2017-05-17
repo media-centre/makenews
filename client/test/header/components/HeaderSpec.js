@@ -1,5 +1,5 @@
 /* eslint no-magic-numbers:0 */
-import Header from "./../../../src/js/header/components/Header";
+import { Header } from "./../../../src/js/header/components/Header";
 import HeaderTab from "./../../../src/js/header/components/HeaderTab";
 import ConfigureTab from "./../../../src/js/header/components/ConfigureTab";
 import UserProfileTab from "./../../../src/js/header/components/UserProfileTab";
@@ -8,24 +8,34 @@ import TestUtils from "react-addons-test-utils";
 import React from "react";
 import { findAllWithType } from "react-shallow-testutils";
 import { shallow } from "enzyme";
+import ConfirmPopup from "../../../src/js/utils/components/ConfirmPopup/ConfirmPopup";
 
 describe("Header component", () => {
     let result = null, currentHeaderTab = null, mainHeaderStrings = null, header = null; //eslint-disable-line no-unused-vars
+    const dispatchFun = () => {};
+
+    const store = {
+        "getState": () => {
+            return {
+                "popUp": {
+                    "message": "something",
+                    "callback": () => {}
+                }
+            };
+        }
+    };
+
     beforeEach("Header component", () => {
         currentHeaderTab = "Scan News";
         mainHeaderStrings = {
-            "newsBoard": {
-                "Name": "Scan News"
-            },
-            "storyBoard": {
-                "Name": "Write a Story"
-            },
-            "configure": {
-                "Name": "Configure"
-            }
+            "newsBoard": "Scan News",
+            "storyBoard": "Write a Story",
+            "configure": "Configure"
         };
         let renderer = TestUtils.createRenderer();
-        header = renderer.render(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab={currentHeaderTab}/>);
+        header = renderer.render(<Header store={store} dispatch={dispatchFun} mainHeaderStrings={mainHeaderStrings}
+            currentHeaderTab={currentHeaderTab} confirmPopup={{ "message": "some message" }}
+                                 />);
         result = renderer.getRenderOutput();
     });
 
@@ -45,8 +55,15 @@ describe("Header component", () => {
     });
 
     it("should not render anything if currentHeaderTab is Configure", () => {
-        const headerDOM = shallow(<Header mainHeaderStrings ={mainHeaderStrings} currentHeaderTab="Configure"/>);
+        const headerDOM = shallow(<Header store={store} dispatch={dispatchFun} mainHeaderStrings ={mainHeaderStrings} currentHeaderTab="Configure" confirmPopup={{ "message": "" }}/>);
 
         expect(headerDOM.get(0)).to.be.null; //eslint-disable-line no-unused-expressions
+    });
+
+    describe("ConfirmPopup", () => {
+        it("should have ConfirmPopup element", () => {
+            let renderedSources = findAllWithType(result, ConfirmPopup);
+            expect(renderedSources).to.have.lengthOf(1);
+        });
     });
 });

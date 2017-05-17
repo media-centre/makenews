@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import * as StoryBoardActions from "../actions/StoryBoardActions";
-import ConfirmPopup from "../../utils/components/ConfirmPopup/ConfirmPopup";
 import { Link } from "react-router";
 import Locale from "../../utils/Locale";
+import { popUp } from "./../../header/HeaderActions";
 
 export class StoryCards extends Component {
 
@@ -60,6 +60,10 @@ export class StoryCards extends Component {
     }
 
     render() {
+        if(this.state.showDeleteConfirm) {
+            this.props.dispatch(popUp(this.storyBoardStrings.confirmDelete, this.deleteStory));
+        }
+
         this.storyBoardStrings = Locale.applicationStrings().messages.storyBoard;
         return (
             <div>
@@ -67,13 +71,6 @@ export class StoryCards extends Component {
                     <ul className="story-cards">
                         {this._renderStoriesList()}
                     </ul>
-                    {this.state.showDeleteConfirm
-                        ? <ConfirmPopup
-                            description={this.storyBoardStrings.confirmDelete}
-                            callback={this.deleteStory}
-                          /> : null
-                    }
-
                 </div>
             </div>
         );

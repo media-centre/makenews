@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks: [2, 5] */
 import ConfirmPopup from "../../../../src/js/utils/components/ConfirmPopup/ConfirmPopup";
 import Locale from "../../../../src/js/utils/Locale";
+import * as HeaderActions from "./../../../../src/js/header/HeaderActions";
 
 import { assert } from "chai";
 import TestUtils from "react-addons-test-utils";
@@ -30,7 +31,7 @@ describe("ConfirmPopup", ()=> {
         cancelCalled = null;
     });
 
-    it("should have descripion and callback as properties", ()=> {
+    it("should have description and callback as properties", ()=> {
         assert.strictEqual(confirmPop.props.description, "Test description");
         assert.strictEqual(confirmPop.props.callback(), "Test Result");
     });
@@ -46,23 +47,37 @@ describe("ConfirmPopup", ()=> {
     });
 
     it("should trigger the callback on clicking cancel button", ()=> {
+        const anonymousFun = () => {};
+        const sandbox = sinon.sandbox.create();
+        const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
+
         let confirmPopTest = TestUtils.renderIntoDocument(
-            <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
+            <ConfirmPopup description={"Test description"} callback={confirmCallback} dispatch={anonymousFun}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.cancelButton);
         assert.isTrue(confirmPopTest.refs.cancelButton.disabled);
         assert.isTrue(confirmPopTest.refs.confirmButton.disabled);
         assert.isFalse(cancelCalled);
+
+        popUpMock.verify();
+        sandbox.restore();
     });
 
     it("should trigger the callback on clicking confirm button", ()=> {
+        const anonymousFun = () => {};
+        const sandbox = sinon.sandbox.create();
+        const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
+
         let confirmPopTest = TestUtils.renderIntoDocument(
-            <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
+            <ConfirmPopup description={"Test description"} callback={confirmCallback} dispatch={anonymousFun}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.confirmButton);
         assert.isTrue(confirmPopTest.refs.cancelButton.disabled);
         assert.isTrue(confirmPopTest.refs.confirmButton.disabled);
         assert.isTrue(cancelCalled);
+
+        popUpMock.verify();
+        sandbox.restore();
     });
 
 });

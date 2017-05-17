@@ -29,8 +29,8 @@ export function renderRoutes(store) { /*eslint-disable react/jsx-no-bind*/
                     <Route path="/newsBoard" component={ScanNews} />
                     <Route path="/story-board" component={StoryBoard}>
                         <Route path="/story-board/stories" component={StoryCards} />
-                        <Route path="/story-board/story" component={EditStory} />
-                        <Route path="/story-board/story/edit/:storyId" component={EditStory}/>
+                        <Route path="/story-board/story" dispatch={store.dispatch} component={EditStory} />
+                        <Route path="/story-board/story/edit/:storyId" dispatch={store.dispatch} component={EditStory}/>
                     </Route>
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
                     <Route path="/twitterFailed" component={TwitterFailed} />

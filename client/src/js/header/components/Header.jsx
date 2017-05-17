@@ -1,10 +1,12 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import HeaderTab from "./HeaderTab";
 import ConfigureTab from "./ConfigureTab";
 import UserProfileTab from "./UserProfileTab";
+import ConfirmPopup from "./../../utils/components/ConfirmPopup/ConfirmPopup";
 
-export default class Header extends PureComponent {
+export class Header extends Component {
     render() {
         const renderedDOM = this.props.currentHeaderTab === "Configure"
             ? null
@@ -21,12 +23,30 @@ export default class Header extends PureComponent {
                     />
                     <UserProfileTab/>
                 </div>
-            </div>);
+
+                { this.props.confirmPopup.message &&
+                <ConfirmPopup
+                    description={this.props.confirmPopup.message}
+                    callback={this.props.confirmPopup.callback}
+                    dispatch={this.props.dispatch}
+                /> }
+            </div>
+        );
         return renderedDOM;
     }
 }
 
 Header.propTypes = {
     "mainHeaderStrings": PropTypes.object.isRequired,
-    "currentHeaderTab": PropTypes.string.isRequired
+    "currentHeaderTab": PropTypes.string.isRequired,
+    "confirmPopup": PropTypes.object.isRequired,
+    "dispatch": PropTypes.func
 };
+
+function mapToStore(store) {
+    return {
+        "confirmPopup": store.popUp
+    };
+}
+
+export default connect(mapToStore)(Header);

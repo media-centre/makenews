@@ -1,4 +1,4 @@
-import { WRITE_A_STORY, SCAN_NEWS, CONFIGURE } from "./HeaderActions";
+import { WRITE_A_STORY, SCAN_NEWS, CONFIGURE, POP_UP } from "./HeaderActions";
 
 export const currentHeaderTab = (state = SCAN_NEWS, action = {}) => {
     switch(action.type) {
@@ -10,6 +10,15 @@ export const currentHeaderTab = (state = SCAN_NEWS, action = {}) => {
     }
     case CONFIGURE: {
         return action.currentHeaderTab;
+    }
+    default: return state;
+    }
+};
+
+export const popUp = (state = {}, action = {}) => {
+    switch(action.type) {
+    case POP_UP: {
+        return Object.assign({}, state, { "message": action.message, "callback": action.callback });
     }
     default: return state;
     }

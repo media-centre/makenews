@@ -2,7 +2,7 @@ import { login, loginPageLocale } from "./login/LoginReducers";
 import { combineReducers } from "redux";
 import { mainHeaderStrings } from "./main/reducers/MainReducer";
 import { changePassword } from "./user/UserProfileReducer";
-import { currentHeaderTab } from "./header/HeaderReducer";
+import { currentHeaderTab, popUp } from "./header/HeaderReducer";
 import { showAddUrl } from "./config/reducers/AddUrlReducer";
 import { fetchedFeeds,
     newsBoardCurrentSourceTab,
@@ -47,7 +47,8 @@ const contentDiscoveryApp = combineReducers({
     currentFilter,
     currentFilterSource,
     fetchingFeeds,
-    deleteSourceStatus
+    deleteSourceStatus,
+    popUp
 });
 
 export default contentDiscoveryApp;

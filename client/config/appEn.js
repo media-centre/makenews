@@ -82,6 +82,7 @@ window.mediaCenter.appEn = {
                 "readMoreButton": "Read More",
                 "backButton": "BACK",
                 "saveButton": "SAVE",
+                "cancelButton": "CANCEL",
                 "confirmDelete": "Do you really want to delete collection",
                 "deleteFailure": "Could not able to delete collection",
                 "addToCollectionMessages": {
