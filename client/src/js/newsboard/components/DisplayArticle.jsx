@@ -32,11 +32,13 @@ export class DisplayArticle extends Component {
     }
 
     _showToolTip() {
+        const marginTop = 50;
+        const firstIndex = 0;
         let div = document.getElementById("toolTip");
         if(this.props.currentHeaderTab === SCAN_NEWS && this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection && window.getSelection().toString()) {
-            let selection = window.getSelection(), range = selection.getRangeAt(0), rect = range.getBoundingClientRect();  //eslint-disable-line no-magic-numbers
+            let selection = window.getSelection(), range = selection.getRangeAt(firstIndex), rect = range.getBoundingClientRect();
 
-            div.style.top = rect.top - 50 + "px"; //eslint-disable-line no-magic-numbers
+            div.style.top = `${rect.top - marginTop}px`;
             div.style.display = "block";
             div.style.left = rect.left + "px";
         }

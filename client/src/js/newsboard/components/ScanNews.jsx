@@ -1,7 +1,7 @@
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import DisplayFeeds from "./DisplayFeeds";
 import DisplayArticle from "./DisplayArticle";
-import DisplayCollection from "./DisplayCollectionFeeds";
+import DisplayCollectionFeeds from "./DisplayCollectionFeeds";
 import NewsBoardTabs from "./NewsBoardTabs";
 import { newsBoardSourceTypes } from "./../../utils/Constants";
 import FilterTabs from "../filter/FilterTabs";
@@ -47,12 +47,12 @@ export class ScanNews extends Component {
             <div className="news-board-container">
                 <div className="source-type-bar">
                     <div onClick={this.displayFilters} className="source-filter news-board-tab">
-                        <i className="icon fa fa-filter"/>
+                        {this.props.currentTab !== newsBoardSourceTypes.collection && <i className="icon fa fa-filter"/>}
                     </div>
                     <NewsBoardTabs />
                 </div>
                 <DisplayFeeds />
-                {this.props.currentTab === newsBoardSourceTypes.collection ? <DisplayCollection /> : <DisplayArticle />}
+                {this.props.currentTab === newsBoardSourceTypes.collection ? <DisplayCollectionFeeds /> : <DisplayArticle />}
             </div>
         );
     }
