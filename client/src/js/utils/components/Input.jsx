@@ -20,7 +20,7 @@ export default class Input extends Component {
         return (
             <div className={this.props.className}>
                 <div className="input-container">
-                    <input ref="input" className="input-tag" type="text" placeholder={this.props.placeholder} onKeyUp={this.props.callbackOnEnter ? this.inputHandler : this.props.callback} autoFocus/>
+                    <input ref="input" className="input-tag" type="text" placeholder={this.props.placeholder} onKeyUp={this.props.callbackOnEnter ? this.inputHandler : this.props.callback} autoFocus={this.props.autoFocus}/>
                     {this.props.addonSrc &&
                         <span className="input-addon">
                             <i className={`icon fa fa-${this.props.addonSrc}`} onClick={this.props.callback}/>
@@ -37,5 +37,6 @@ Input.propTypes = {
     "placeholder": PropTypes.string.isRequired,
     "callback": PropTypes.func,
     "callbackOnEnter": PropTypes.bool,
-    "className": PropTypes.string.isRequired
+    "className": PropTypes.string.isRequired,
+    "autoFocus": PropTypes.bool
 };

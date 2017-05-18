@@ -148,6 +148,7 @@ export class DisplayFilters extends Component {
                                 className={"input-hashtag-box show"}
                                 callback={this.addHashTag}
                                 callbackOnEnter
+                                autoFocus
                             />
                             <div className="add-tag" onClick={this.addHashTag} >{this.filterStrings.addTag}</div>
                         </div> }

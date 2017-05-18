@@ -47,7 +47,7 @@ export class ScanNews extends Component {
             <div className="news-board-container">
                 <div className="source-type-bar">
                     <div onClick={this.displayFilters} className="source-filter news-board-tab">
-                        {this.props.currentTab !== newsBoardSourceTypes.collection && <i className="icon fa fa-filter"/>}
+                        <i className="icon fa fa-filter"/>
                     </div>
                     <NewsBoardTabs />
                 </div>
