@@ -24,7 +24,7 @@ export default class Login extends React.Component {
                 </p>
 
                 <div className="input-container">
-                    <input tabIndex="1" type="text" id="userName" placeholder={this.props.loginStrings.userNamePlaceHolder} ref="userName" name="userName" className="username" required/>
+                    <input tabIndex="1" type="text" id="userName" placeholder={this.props.loginStrings.userNamePlaceHolder} ref="userName" name="userName" className="username" required autoFocus/>
                     <input tabIndex="1" type="password" id="password" placeholder={this.props.loginStrings.passwordPlaceHolder} ref="password" name="password" className="password" required/>
                     <button tabIndex="1" id="submit" type="submit" className="btn primary lg" ref="submit">
                         {this.props.loginStrings.loginButton}

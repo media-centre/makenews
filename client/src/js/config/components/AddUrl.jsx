@@ -68,6 +68,7 @@ export class AddUrl extends PureComponent {
                             onKeyDown={this._onKeyDownInputBox}
                             className="add-url__input"
                             placeholder={`Ex: ${this.addCustomUrl.exampleUrls[this.props.currentTab]}`}
+                            autoFocus
                         />
                         <span className="input-addon">
                             <img src="./../../../images/arrow-icon.png" onClick={this._addUrl}/>

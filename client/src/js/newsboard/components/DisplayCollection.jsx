@@ -137,7 +137,7 @@ export class DisplayCollection extends Component {
                 {this.state.showCollectionPopup &&
                 <div className="new-collection">
                     <input type="text" className="new-collection-input-box" ref="collectionName"
-                        placeholder="create new collection" onKeyUp={this._createCollection}
+                        placeholder="create new collection" onKeyUp={this._createCollection} autoFocus
                     />
 
                     <button className="cancel-collection" onClick={this._closeCreateCollectionPopup}>{this.collectionMessages.cancelButton}</button>

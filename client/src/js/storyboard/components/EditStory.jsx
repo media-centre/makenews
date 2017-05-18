@@ -134,7 +134,7 @@ export default class EditStory extends Component {
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={this._saveStory}>{this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
-                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange}/>
+                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange} autoFocus/>
                     </div>
                     <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">

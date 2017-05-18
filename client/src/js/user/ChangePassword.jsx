@@ -56,7 +56,7 @@ export class ChangePassword extends Component {
                 <form id="changePassword" onSubmit={this.submitProfile}>
                     <h3>{"Change Password"}</h3>
                     <p className="error-msg small-text">{this.props.changePasswordMessages.errorMessage}</p>
-                    <input type="password" name="current password" placeholder={changePasswordStrings.currentPassword} className={currentPasswordError} required ref="currentPassword"/>
+                    <input type="password" name="current password" placeholder={changePasswordStrings.currentPassword} className={currentPasswordError} required ref="currentPassword" autoFocus/>
                     <input type="password" name="new password" placeholder={changePasswordStrings.newPassword} className={newPasswordError} required ref="newPassword"/>
                     <input type="password" name="confirm password" placeholder={changePasswordStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
                     <button type="submit" className="primary">{"Submit"}</button>
