@@ -6,9 +6,9 @@ import {
     newPwdConfirmPwdMismatchAction
 } from "./UserProfileActions";
 import { connect } from "react-redux";
-import ConfirmPopup from "../utils/components/ConfirmPopup/ConfirmPopup";
 import Logout from "../login/LogoutActions";
 import Locale from "./../utils/Locale";
+import { popUp } from "./../header/HeaderActions";
 
 export class ChangePassword extends Component {
 
@@ -42,14 +42,10 @@ export class ChangePassword extends Component {
     render() {
         const changePasswordStrings = Locale.applicationStrings().messages.changePassword;
         const errorMessage = this.props.changePasswordMessages.errorMessage;
-        const popUp = this.props.changePasswordMessages.isSuccess
-            ? (<ConfirmPopup
-                ref="confirmPopup"
-                description={changePasswordStrings.logoutConfirmMessage}
-                hide={this.props.changePasswordMessages.isSuccess}
-                callback={this._logout}
-               />)
-            : null;
+
+        if(this.props.changePasswordMessages.isSuccess) {
+            this.props.dispatch(popUp(changePasswordStrings.logoutConfirmMessage, this._logout, this.props.changePasswordMessages.isSuccess));
+        }
 
         const currentPasswordError = (errorMessage === changePasswordStrings.invalidCredentials) ? "error-border " : "";
         const newPasswordError = (errorMessage === changePasswordStrings.newPwdShouldNotMatchCurrentPwd) ? "error-border " : "";
@@ -65,7 +61,6 @@ export class ChangePassword extends Component {
                     <input type="password" name="confirm password" placeholder={changePasswordStrings.confirmPassword} className={confirmPasswordError} required ref="confirmPassword"/>
                     <button type="submit" className="primary">{"Submit"}</button>
                 </form>
-                {popUp}
             </div>
         );
     }

@@ -21,7 +21,7 @@ export default class EditStory extends Component {
 
     constructor() {
         super();
-        this.state = { "title": "", "body": "", "showPopup": false };
+        this.state = { "title": "", "body": "" };
         this._onTitleChange = this._onTitleChange.bind(this);
         this._exportHtml = this._exportHtml.bind(this);
         this._saveStory = this._saveStory.bind(this);
@@ -115,19 +115,15 @@ export default class EditStory extends Component {
         if(goBack) {
             history.push("/story-board/stories");
         }
-        this.setState({ "showPopup": false });
     }
     _showConfirmPopup() {
         const body = this.refs.body.getEditorContents();
         this.setState({ body });
-        this.setState({ "showPopup": true });
+        this.props.route.dispatch(popUp(this.storyboardStrings.confirmStoryBack, this._goBack)); //eslint-disable-line react/prop-types
     }
 
     render() {
         this.storyboardStrings = Locale.applicationStrings().messages.storyBoard;
-        if(this.state.showPopup) {
-            this.props.route.dispatch(popUp(this.storyboardStrings.confirmStoryBack, this._goBack)); //eslint-disable-line react/prop-types
-        }
 
         return (
             <div className="story-board story-collections">

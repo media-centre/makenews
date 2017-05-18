@@ -18,7 +18,7 @@ export const currentHeaderTab = (state = SCAN_NEWS, action = {}) => {
 export const popUp = (state = {}, action = {}) => {
     switch(action.type) {
     case POP_UP: {
-        return Object.assign({}, state, { "message": action.message, "callback": action.callback });
+        return Object.assign({}, state, { "message": action.message, "callback": action.callback, "hide": action.hide });
     }
     default: return state;
     }

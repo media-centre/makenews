@@ -29,6 +29,7 @@ export class Header extends Component {
                     description={this.props.confirmPopup.message}
                     callback={this.props.confirmPopup.callback}
                     dispatch={this.props.dispatch}
+                    hide={this.props.confirmPopup.hide}
                 /> }
             </div>
         );

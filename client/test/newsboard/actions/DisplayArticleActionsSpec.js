@@ -32,7 +32,7 @@ describe("DisplayArticleActions", () => {
                 "readMoreButton": "Read More",
                 "backButton": "BACK",
                 "saveButton": "SAVE",
-                "confirmDelete": "Do you really want to delete collection",
+                "confirmDelete": "Do you really want to delete collection?",
                 "deleteFaliure": "Could not able to delete collection",
                 "addToCollectionMessages": {
                     "createCollectionSuccess": "Successfully created collection",

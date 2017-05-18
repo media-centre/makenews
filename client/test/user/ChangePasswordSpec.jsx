@@ -4,13 +4,15 @@ import { expect } from "chai";
 import { shallow } from "enzyme";
 import Locale from "./../../src/js/utils/Locale";
 import sinon from "sinon";
+import * as HeaderActions from "./../../src/js/header/HeaderActions";
 
 describe("Change Password", () => {
     let changePasswordDom = null;
     const sandbox = sinon.sandbox.create();
+    let popup = null;
 
     beforeEach("Change Password", () => {
-        const changePasswordMessages = {};
+        const changePasswordMessages = { "isSuccess": true };
         const dispatch = ()=>{};
         sandbox.stub(Locale, "applicationStrings").returns({
             "messages": {
@@ -28,6 +30,7 @@ describe("Change Password", () => {
                 }
             }
         });
+        popup = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "" });
         changePasswordDom = shallow(<ChangePassword changePasswordMessages={changePasswordMessages} dispatch={dispatch}/>);
     });
 
@@ -40,28 +43,28 @@ describe("Change Password", () => {
         expect(changePasswordDom.node.props.className).to.equals("change-password");
     });
 
-    it("should have a change-password div", () => {
-        const [form] = changePasswordDom.node.props.children;
+    it("should have a form with changePassword id", () => {
+        const form = changePasswordDom.node.props.children;
         expect(form.type).to.equals("form");
         expect(form.props.id).to.equals("changePassword");
     });
 
     it("should have change password heading", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [heading] = form.props.children;
         expect(heading.type).to.equals("h3");
         expect(heading.props.children).to.equals("Change Password");
     });
 
     it("should have a error message element", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [, errorMsg] = form.props.children;
         expect(errorMsg.type).to.equals("p");
         expect(errorMsg.props.className).to.equals("error-msg small-text");
     });
 
     it("should have input box for current password", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [,, input] = form.props.children;
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("current password");
@@ -70,7 +73,7 @@ describe("Change Password", () => {
     });
 
     it("should have input box for new password", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [,,, input] = form.props.children;
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("new password");
@@ -79,7 +82,7 @@ describe("Change Password", () => {
     });
 
     it("should have input box for confirm new password", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [,,,, input] = form.props.children;
         expect(input.type).to.equals("input");
         expect(input.props.name).to.equals("confirm password");
@@ -88,10 +91,14 @@ describe("Change Password", () => {
     });
 
     it("should have a submit button", () => {
-        const [form] = changePasswordDom.node.props.children;
+        const form = changePasswordDom.node.props.children;
         const [,,,,, button] = form.props.children;
         expect(button.type).to.equals("button");
         expect(button.props.type).to.equals("submit");
         expect(button.props.className).to.equals("primary");
+    });
+
+    it("should dispatch popUp when changePassword confirmed", () => {
+        popup.verify();
     });
 });

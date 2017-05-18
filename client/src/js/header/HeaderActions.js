@@ -10,10 +10,11 @@ export function setCurrentHeaderTab(currentHeaderTab) {
     };
 }
 
-export function popUp(message = "", callback = () => {}) {
+export function popUp(message = "", callback = () => {}, hide = false) {
     return {
         "type": POP_UP,
         message,
-        callback
+        callback,
+        hide
     };
 }

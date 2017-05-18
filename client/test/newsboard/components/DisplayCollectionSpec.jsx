@@ -36,7 +36,7 @@ describe("Display Collections", () => {
                 "readMoreButton": "Read More",
                 "backButton": "BACK",
                 "saveButton": "SAVE",
-                "confirmDelete": "Do you really want to delete collection"
+                "confirmDelete": "Do you really want to delete collection?"
             }
         };
         sandbox.stub(Locale, "applicationStrings").returns({

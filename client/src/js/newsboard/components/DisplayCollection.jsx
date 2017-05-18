@@ -15,7 +15,7 @@ import { popUp } from "./../../header/HeaderActions";
 export class DisplayCollection extends Component {
     constructor() {
         super();
-        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false, "showDeleteConfirmationPopup": false };
+        this.state = { "showCollectionPopup": false, "searchKey": "", "isClicked": false };
         this.buttonEvent = {};
         this.deleteCollection = {};
         this._searchCollections = this._searchCollections.bind(this);
@@ -61,7 +61,6 @@ export class DisplayCollection extends Component {
         if(isConfirmed) {
             this.props.dispatch(deleteCollection(this.buttonEvent, this.deleteCollection._id));
         }
-        this.setState({ "showDeleteConfirmationPopup": false });
     }
 
     _renderCollections() {
@@ -96,7 +95,7 @@ export class DisplayCollection extends Component {
                         event.stopPropagation();
                         this.buttonEvent = Object.assign({}, event);
                         this.deleteCollection = collection;
-                        this.setState({ "showDeleteConfirmationPopup": true });
+                        this.props.dispatch(popUp(this.collectionMessages.confirmDelete, this._deleteCollection));
                     }}
                     > &times; </button>}
                 </li>
@@ -189,9 +188,6 @@ export class DisplayCollection extends Component {
     }
 
     render() {
-        if(this.state.showDeleteConfirmationPopup) {
-            this.props.dispatch(popUp(this.collectionMessages.confirmDelete, this._deleteCollection));
-        }
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             <div className="collection-list-container">

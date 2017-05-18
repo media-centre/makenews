@@ -14,8 +14,9 @@ describe("Header Reducer", () => {
     describe("popup", () => {
         const message = "message";
         const callback = () => {};
-        const action = { "type": "POP_UP", message, callback };
+        const hide = false;
+        const action = { "type": "POP_UP", message, callback, hide };
 
-        expect(popUp({}, action)).to.deep.equals({ message, callback });
+        expect(popUp({}, action)).to.deep.equals({ message, callback, hide });
     });
 });

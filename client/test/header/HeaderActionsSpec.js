@@ -15,15 +15,18 @@ describe("HeaderActions", () => {
 
         expect(result.type).to.equal("POP_UP");
         expect(result.message).to.equal("");
+        expect(result.hide).to.equal(false);
     });
 
     it("should return message and type for popUp", () => {
         const message = "message";
         const callback = () => {};
-        const result = HeaderActions.popUp(message, callback);
+        const hide = true;
+        const result = HeaderActions.popUp(message, callback, hide);
 
         expect(result.type).to.equal("POP_UP");
         expect(result.message).to.equal(message);
         expect(result.callback).to.equal(callback);
+        expect(result.hide).to.equal(hide);
     });
 });

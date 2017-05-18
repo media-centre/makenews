@@ -10,7 +10,7 @@ export class StoryCards extends Component {
 
     constructor() {
         super();
-        this.state = { "showDeleteConfirm": false, "currentId": 0 };
+        this.state = { "currentId": 0 };
         this.deleteStory = (isConfirm) => this._deleteStory(isConfirm);
         this.showDeleteConfirmPopup = (event) => this._showDeleteConfirmPopup(event);
     }
@@ -26,7 +26,8 @@ export class StoryCards extends Component {
         const id = event.target.dataset.id;
         event.stopPropagation();
         event.preventDefault();
-        this.setState({ "showDeleteConfirm": true, "currentId": id });
+        this.props.dispatch(popUp(this.storyBoardStrings.confirmDelete, this.deleteStory));
+        this.setState({ "currentId": id });
     }
 
     _renderStoriesList() {
@@ -56,15 +57,11 @@ export class StoryCards extends Component {
         if(isConfirmed) {
             this.props.dispatch(StoryBoardActions.deleteStory(this.state.currentId));
         }
-        this.setState({ "showDeleteConfirm": false });
     }
 
     render() {
-        if(this.state.showDeleteConfirm) {
-            this.props.dispatch(popUp(this.storyBoardStrings.confirmDelete, this.deleteStory));
-        }
-
         this.storyBoardStrings = Locale.applicationStrings().messages.storyBoard;
+
         return (
             <div>
                 <div className="story-board-container">
