@@ -4,6 +4,7 @@ import AjaxClient from "../../../src/js/utils/AjaxClient";
 import sinon from "sinon";
 import { assert } from "chai";
 import Locale from "./../../../src/js/utils/Locale";
+import Toast from "./../../../src/js/utils/custom_templates/Toast";
 
 describe("StoryBoardActions", () => {
     const sandbox = sinon.sandbox.create();
@@ -72,4 +73,113 @@ describe("StoryBoardActions", () => {
             postMock.verify();
         });
     });
+
+    describe("getStory", () => {
+        it("should get the story details", async() => {
+            const id = "41bbf2025f28f2666adb613252002849";
+            const response = {
+                "_id": "41bbf2025f28f2666adb613252002849",
+                "_rev": "183-43b954b356e1d2113d786f90d648cac7",
+                "title": "durga",
+                "body": "<div><b>dlfsnsvkjdghbnksfjgnbkfg <span style=\"font-size: 18px;\"></div>",
+                "docType": "story"
+            };
+            const ajaxClientInstance = AjaxClient.instance("/story");
+            sandbox.stub(AjaxClient, "instance")
+               .returns(ajaxClientInstance);
+            const getMock = sandbox.mock(ajaxClientInstance).expects("get").withArgs({ id })
+               .returns(Promise.resolve(response));
+
+            const result = await StoryBoardActions.getStory(id);
+            assert.equal(result, response);
+            getMock.verify();
+        });
+    });
+
+    describe("saveStory", () => {
+        let ajaxClientInstance = null;
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        story = {
+            "_id": "41bbf2025f28f2666adb613252002849",
+            "_rev": "183-43b954b356e1d2113d786f90d648cac7",
+            "title": "durga",
+            "body": "<div><b>dlfsnsvkjdghbnksfjgnbkfg <span style=\"font-size: 18px;\"></div>",
+            "docType": "story"
+        };
+
+        beforeEach("saveStory", () => {
+            const storyBoardMessages = {
+                "successMessages": {
+                    "saveStory": "Story saved successfully",
+                    "deleteStory": "Story deleted successfully"
+                },
+                "warningMessages": {
+                    "emptyStory": "Cannot save empty story"
+                },
+                "errorMessages": {
+                    "saveStoryFailure": "Not able to save"
+                }
+            };
+            sandbox.stub(Locale, "applicationStrings").returns({
+                "messages": {
+                    "storyBoard": storyBoardMessages
+                }
+            });
+            ajaxClientInstance = AjaxClient.instance("/save-story");
+            sandbox.stub(AjaxClient, "instance").returns(ajaxClientInstance);
+        });
+
+        afterEach("saveStory", () => {
+            sandbox.restore();
+        });
+
+        it("should save the story", async() => {
+            const response = {
+                "ok": true,
+                "id": "41bbf2025f28f2666adb613252002849",
+                "rev": "186-989f7a25c7eb85dceed679d3deaba60d"
+            };
+
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put").withArgs(headers, { story })
+                .returns(Promise.resolve(response));
+
+            const result = await StoryBoardActions.saveStory(story);
+            assert.equal(result, response);
+            putMock.verify();
+        });
+
+        it("should should show toast message if unable to save story", async() => {
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Not able to save");
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put").withArgs(headers, { story })
+                .returns(Promise.reject({ "message": "Not able to save" }));
+
+            await StoryBoardActions.saveStory(story);
+            putMock.verify();
+            toastMock.verify();
+        });
+
+        it("should should show toast message if title already exists", async() => {
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Title Already exists");
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put").withArgs(headers, { story })
+                .returns(Promise.reject({ "message": "Title Already exists" }));
+
+            await StoryBoardActions.saveStory(story);
+            putMock.verify();
+            toastMock.verify();
+        });
+
+        it("should should show toast message if title is empty", async() => {
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Please add title");
+            const putMock = sandbox.mock(ajaxClientInstance).expects("put").withArgs(headers, { story })
+                .returns(Promise.reject({ "message": "Please add title" }));
+
+            await StoryBoardActions.saveStory(story);
+            putMock.verify();
+            toastMock.verify();
+        });
+    });
+
 });

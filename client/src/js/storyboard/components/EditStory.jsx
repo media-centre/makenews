@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
-import AjaxClient from "../../utils/AjaxClient";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
 import StringUtil from "../../../../../common/src/util/StringUtil";
@@ -12,6 +11,7 @@ import FileSaver from "file-saver";
 import AppWindow from "./../../utils/AppWindow";
 import Locale from "./.././../utils/Locale";
 import { popUp } from "./../../header/HeaderActions";
+import { getStory, saveStory } from "./../actions/StoryBoardActions";
 
 export default class EditStory extends Component {
 
@@ -48,12 +48,12 @@ export default class EditStory extends Component {
     }
 
     async _getStory(storyId) {
-        const ajax = AjaxClient.instance("/story");
-        await ajax.get({ "id": storyId }).then((response) => {
+        const response = await getStory(storyId);
+        if(response) {
             this.story = response;
             this.setState({ "title": this.story.title });
             this.setState({ "body": this.story.body });
-        });
+        }
         this.autoSave();
     }
 
@@ -69,28 +69,15 @@ export default class EditStory extends Component {
         if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(body)) {
             Toast.show(this.storyboardStrings.warningMessages.emptyStory);
         } else {
-            let ajax = AjaxClient.instance("/save-story");
-            const headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            };
-            try{
-                let response = await ajax.put(headers, { "story": this.story });
+            const response = await saveStory(this.story);
+            if(response) {
                 this.story._rev = response.rev;
                 this.story._id = response.id;
+                Toast.show(this.storyboardStrings.successMessages.saveStory, "success");
                 if(!this.storyId) {
                     this.storyId = response.id;
                     this.setState({ "title": this.story.title,
                         "body": this.story.body });
-                }
-                Toast.show(this.storyboardStrings.successMessages.saveStory, "success");
-            } catch(error) {
-                if(error.message === "Please add title") {
-                    Toast.show(error.message);
-                } else if(error.message === "Title Already exists") {
-                    Toast.show(error.message);
-                } else {
-                    Toast.show(this.storyboardStrings.errorMessages.saveStoryFailure);
                 }
             }
         }

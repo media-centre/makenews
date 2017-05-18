@@ -10,8 +10,7 @@ export default class SaveStoryRoute extends Route {
 
     validate() {
         if(super.validate(this.story.title)) {
-            let message = "Please add title";
-            return message;
+            return "Please add title";
         }
         return null;
     }

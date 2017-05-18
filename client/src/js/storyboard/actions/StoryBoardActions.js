@@ -49,3 +49,28 @@ export function getStories() {
         });
     };
 }
+
+export async function getStory(id) {
+    const ajax = AjaxClient.instance("/story");
+    return await ajax.get({ id });
+}
+
+export async function saveStory(story) { //eslint-disable-line consistent-return
+    const storyboardStrings = Locale.applicationStrings().messages.storyBoard;
+    try {
+        let ajax = AjaxClient.instance("/save-story");
+        const headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        return await ajax.put(headers, { story });
+    } catch(error) {
+        if(error.message === "Please add title") {
+            Toast.show(error.message);
+        } else if(error.message === "Title Already exists") {
+            Toast.show(error.message);
+        } else {
+            Toast.show(storyboardStrings.errorMessages.saveStoryFailure);
+        }
+    }
+}
