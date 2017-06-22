@@ -1056,6 +1056,475 @@
       "name": "Sabrang",
       "url": "https://sabrangindia.in/rssfeeds",
       "_id": "https://sabrangindia.in/rssfeeds"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Headlines",
+      "url": "http://rssfeeds.usatoday.com/usatoday-NewsTopStories",
+      "_id": "http://rssfeeds.usatoday.com/usatoday-NewsTopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - World",
+      "url": "http://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories",
+      "_id": "http://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Opinion",
+      "url": "http://rssfeeds.usatoday.com/News-Opinion",
+      "_id": "http://rssfeeds.usatoday.com/News-Opinion"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Sports",
+      "url": "http://rssfeeds.usatoday.com/UsatodaycomSports-TopStories",
+      "_id": "http://rssfeeds.usatoday.com/UsatodaycomSports-TopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Technology",
+      "url": "http://rssfeeds.usatoday.com/usatoday-TechTopStories",
+      "_id": "http://rssfeeds.usatoday.com/usatoday-TechTopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Money",
+      "url": "http://rssfeeds.usatoday.com/UsatodaycomMoney-TopStories",
+      "_id": "http://rssfeeds.usatoday.com/UsatodaycomMoney-TopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New York Times - Home Page",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "_id": "http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New York Times - Technology",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+      "_id": "http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New York Times - Science",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/Science.xml",
+      "_id": "http://rss.nytimes.com/services/xml/rss/nyt/Science.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New York Times - World",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+      "_id": "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "New York Times - Business",
+      "url": "http://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+      "_id": "http://rss.nytimes.com/services/xml/rss/nyt/Business.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Los Angles Times",
+      "url": "http://www.latimes.com/rss2.0.xml",
+      "_id": "http://www.latimes.com/rss2.0.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Chicago Tribune",
+      "url": "http://www.chicagotribune.com/rss2.0.xml",
+      "_id": "http://www.chicagotribune.com/rss2.0.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Washington Post",
+      "url": "http://feeds.washingtonpost.com/rss/world",
+      "_id": "http://feeds.washingtonpost.com/rss/world"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Vox",
+      "url": "https://www.vox.com/rss/index.xml",
+      "_id": "https://www.vox.com/rss/index.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Guardian",
+      "url": "https://www.theguardian.com/international/rss",
+      "_id": "https://www.theguardian.com/international/rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Politico",
+      "url": "http://www.politico.com/rss/politicopicks.xml",
+      "_id": "http://www.politico.com/rss/politicopicks.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Denver Post",
+      "url": "http://www.denverpost.com/feed/",
+      "_id": "http://www.denverpost.com/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Top Stories",
+      "url": "http://rssfeeds.usatoday.com/usatoday-NewsTopStories",
+      "_id": "http://rssfeeds.usatoday.com/usatoday-NewsTopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - World",
+      "url": "http://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories",
+      "_id": "http://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - National",
+      "url": "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories",
+      "_id": "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "USA Today - Opinion",
+      "url": "http://rssfeeds.usatoday.com/News-Opinion",
+      "_id": "http://rssfeeds.usatoday.com/News-Opinion"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Boston Globe",
+      "url": "https://www.boston.com/feed",
+      "_id": "https://www.boston.com/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Boston Globe - World News",
+      "url": "https://www.boston.com/tag/world-news/feed",
+      "_id": "https://www.boston.com/tag/world-news/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Boston Globe - National News",
+      "url": "https://www.boston.com/tag/national-news/feed",
+      "_id": "https://www.boston.com/tag/national-news/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Boston Globe - National News",
+      "url": "https://www.boston.com/tag/national-news/feed",
+      "_id": "https://www.boston.com/tag/national-news/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Wall Street Journal - World News",
+      "url": "http://www.wsj.com/xml/rss/3_7085.xml",
+      "_id": "http://www.wsj.com/xml/rss/3_7085.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Wall Street Journal - Opinion",
+      "url": "http://www.wsj.com/xml/rss/3_7041.xml",
+      "_id": "http://www.wsj.com/xml/rss/3_7041.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Wall Street Journal - Technology",
+      "url": "http://www.wsj.com/xml/rss/3_7455.xml",
+      "_id": "http://www.wsj.com/xml/rss/3_7455.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Wall Street Journal - Market News",
+      "url": "http://www.wsj.com/xml/rss/3_7031.xml",
+      "_id": "http://www.wsj.com/xml/rss/3_7031.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Daily Sabah",
+      "url": "https://www.dailysabah.com/rss/homepage",
+      "_id": "https://www.dailysabah.com/rss/homepage"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Express Tribune",
+      "url": "https://tribune.com.pk/feed/",
+      "_id": "https://tribune.com.pk/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "China Daily - China News",
+      "url": "http://www.chinadaily.com.cn/rss/china_rss.xml",
+      "_id": "http://www.chinadaily.com.cn/rss/china_rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "China Daily - World News",
+      "url": "http://www.chinadaily.com.cn/rss/world_rss.xml",
+      "_id": "http://www.chinadaily.com.cn/rss/world_rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "China Daily - Opinion",
+      "url": "http://www.chinadaily.com.cn/rss/opinion_rss.xml",
+      "_id": "http://www.chinadaily.com.cn/rss/opinion_rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Counter Punch",
+      "url": "http://www.counterpunch.org/feed/",
+      "_id": "http://www.counterpunch.org/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Counter Punch",
+      "url": "http://www.counterpunch.org/feed/",
+      "_id": "http://www.counterpunch.org/feed/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Democracy Now",
+      "url": "https://www.democracynow.org/democracynow.rss",
+      "_id": "https://www.democracynow.org/democracynow.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Democracy Now - Audio",
+      "url": "https://www.democracynow.org/podcast.xml",
+      "_id": "https://www.democracynow.org/podcast.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Democracy Now - Video",
+      "url": "https://www.democracynow.org/podcast-video.xml",
+      "_id": "https://www.democracynow.org/podcast-video.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Real News",
+      "url": "http://therealnews.com/rss/therealnews.rss",
+      "_id": "http://therealnews.com/rss/therealnews.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Real News - Video",
+      "url": "http://therealnews.com/rss/therealnewsvideo.rss",
+      "_id": "http://therealnews.com/rss/therealnewsvideo.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Real News - Audio",
+      "url": "http://therealnews.com/rss/therealnewsitunesaudio.rss",
+      "_id": "http://therealnews.com/rss/therealnewsitunesaudio.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Onion",
+      "url": "http://www.theonion.com/feeds/rss",
+      "_id": "http://www.theonion.com/feeds/rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Sydney Morning Herald - Top Stories",
+      "url": "http://www.smh.com.au/rssheadlines/top.xml",
+      "_id": "http://www.smh.com.au/rssheadlines/top.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Sydney Morning Herald - World",
+      "url": "http://www.smh.com.au/rssheadlines/world/article/rss.xml",
+      "_id": "http://www.smh.com.au/rssheadlines/world/article/rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Russia Today",
+      "url": "https://www.rt.com/rss/",
+      "_id": "https://www.rt.com/rss/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Al Jazeera",
+      "url": "http://www.aljazeera.com/xml/rss/all.xml",
+      "_id": "http://www.aljazeera.com/xml/rss/all.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "The Intercept",
+      "url": "https://theintercept.com/feed/?rss",
+      "_id": "https://theintercept.com/feed/?rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Reuters - Top Stories",
+      "url": "http://feeds.reuters.com/reuters/INtopNews",
+      "_id": "http://feeds.reuters.com/reuters/INtopNews"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Reuters - World News",
+      "url": "http://feeds.reuters.com/reuters/INworldNews",
+      "_id": "http://feeds.reuters.com/reuters/INworldNews"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Reuters - South Asia",
+      "url": "http://feeds.reuters.com/reuters/INsouthAsiaNews",
+      "_id": "http://feeds.reuters.com/reuters/INsouthAsiaNews"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "CNN - Top Stories",
+      "url": "http://rss.cnn.com/rss/edition.rss",
+      "_id": "http://rss.cnn.com/rss/edition.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "CNN - World",
+      "url": "http://rss.cnn.com/rss/edition_world.rss",
+      "_id": "http://rss.cnn.com/rss/edition_world.rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "BBC",
+      "url": "http://feeds.bbci.co.uk/news/rss.xml",
+      "_id": "http://feeds.bbci.co.uk/news/rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "BBC - World",
+      "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+      "_id": "http://feeds.bbci.co.uk/news/world/rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "BBC - Technology",
+      "url": "http://feeds.bbci.co.uk/news/technology/rss.xml",
+      "_id": "http://feeds.bbci.co.uk/news/technology/rss.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Sky News",
+      "url": "http://feeds.skynews.com/feeds/rss/home.xml",
+      "_id": "http://feeds.skynews.com/feeds/rss/home.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Sky News - World",
+      "url": "http://feeds.skynews.com/feeds/rss/world.xml",
+      "_id": "http://feeds.skynews.com/feeds/rss/world.xml"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "CBS News",
+      "url": "http://www.cbsnews.com/latest/rss/main",
+      "_id": "http://www.cbsnews.com/latest/rss/main"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "CBS News - World",
+      "url": "http://www.cbsnews.com/latest/rss/world",
+      "_id": "http://www.cbsnews.com/latest/rss/world"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "ABC News",
+      "url": "http://feeds.abcnews.com/abcnews/topstories",
+      "_id": "http://feeds.abcnews.com/abcnews/topstories"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "ABC News - World",
+      "url": "http://feeds.abcnews.com/abcnews/internationalheadlines",
+      "_id": "http://feeds.abcnews.com/abcnews/internationalheadlines"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "CNET News",
+      "url": "https://www.cnet.com/rss/news/",
+      "_id": "https://www.cnet.com/rss/news/"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Financial Times",
+      "url": "https://www.ft.com/?format=rss",
+      "_id": "https://www.ft.com/?format=rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Hacker News",
+      "url": "https://news.ycombinator.com/rss",
+      "_id": "https://news.ycombinator.com/rss"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Truth Out",
+      "url": "http://www.truth-out.org/feed?format=feed",
+      "_id": "http://www.truth-out.org/feed?format=feed"
     }
   ]
 }
