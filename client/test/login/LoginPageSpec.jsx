@@ -18,7 +18,6 @@ describe("login page component", () => {
                 "login": {
                     "loginButton": "Login"
                 },
-                "getStarted": "get started for free",
                 "watchDemo": "Watch Makenews Demo",
                 "branding": {
                     "text": "sample branding"
@@ -57,11 +56,6 @@ describe("login page component", () => {
     it("should have the makenews description", () => {
         const [desc] = loginPageDOM.querySelectorAll(".makenews-desc");
         assert.strictEqual(desc.textContent, "sample branding");
-    });
-
-    it("should have the getStarted button", () => {
-        const [button] = loginPageDOM.querySelectorAll(".get-started.btn");
-        assert.strictEqual(button.textContent, "get started for free");
     });
 
     it("should have a watch makenews demo link", () => {

@@ -26,9 +26,6 @@ export class LoginPage extends Component {
                         <p className="makenews-desc">
                             {this.props.loginPageStrings.branding.text}
                         </p>
-                        <button className="get-started btn primary lg">
-                            {this.props.loginPageStrings.getStarted}
-                        </button>
                         <a href="#" className="watch-demo">
                             <i className="arrow fa fa-caret-right" aria-hidden="true"/> {this.props.loginPageStrings.watchDemo}
                         </a>
