@@ -65,9 +65,7 @@ export async function saveStory(story) { //eslint-disable-line consistent-return
         };
         return await ajax.put(headers, { story });
     } catch(error) {
-        if(error.message === "Please add title") {
-            Toast.show(error.message);
-        } else if(error.message === "Title Already exists") {
+        if(error.message === "Please add title" || error.message === "Title Already exists") {
             Toast.show(error.message);
         } else {
             Toast.show(storyboardStrings.errorMessages.saveStoryFailure);

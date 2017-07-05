@@ -104,6 +104,7 @@
 .story-display-article {
   flex: 0;
   flex-basis: $side-panel-width;
+  background-color: #ffffff;
   border-right: 1px solid lighten($primary-color, 35%);
 
   @media (max-width: $tablet-max-width) {

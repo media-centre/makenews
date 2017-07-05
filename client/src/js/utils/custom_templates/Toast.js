@@ -1,5 +1,5 @@
 export default class Toast {
-    static show(toastMessage, type) {
+    static show(toastMessage, type, element) {
         if(Toast.timer !== null) {
             clearTimeout(Toast.timer);
         }
@@ -20,6 +20,7 @@ export default class Toast {
             toastDOM.className = "custom-toast bottom-box-shadow clear-fix";
         }
         let icon = "fa fa-exclamation";
+        toastDOM.style = "";
         if(type === "success") {
             icon = "fa fa-check";
         } else if (type === "collection") {
@@ -30,6 +31,12 @@ export default class Toast {
             toastDOM.classList.add("bookmark");
         } else if (type === "search-warning") {
             toastDOM.classList.add("search-warning");
+        } else if(type === "save-story") {
+            icon = "fa fa-check";
+            toastDOM.style.top = element.offsetTop + element.offsetHeight + "px";
+            toastDOM.style.left = element.offsetLeft + element.offsetWidth + "px";
+            toastDOM.classList.add("save-story");
+
         } else {
             toastDOM.className = "custom-toast bottom-box-shadow clear-fix";
         }

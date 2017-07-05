@@ -22,19 +22,16 @@ export default class EditStory extends Component {
     constructor() {
         super();
         this.state = { "title": "", "body": "" };
-        this._onTitleChange = this._onTitleChange.bind(this);
         this._exportHtml = this._exportHtml.bind(this);
         this._saveStory = this._saveStory.bind(this);
         this._showConfirmPopup = this._showConfirmPopup.bind(this);
         this._goBack = (isConfirm) => this._back(isConfirm);
-        this.storyId = "";
-        this.story = {};
     }
 
     componentDidMount() {
-        this.storyId = this.props.params.storyId;
-        if(this.storyId) {
-            this._getStory(this.storyId);
+        const storyId = this.props.params.storyId;
+        if(storyId) {
+            this._getStory(storyId);
         }
     }
 
@@ -50,35 +47,37 @@ export default class EditStory extends Component {
     async _getStory(storyId) {
         const response = await getStory(storyId);
         if(response) {
-            this.story = response;
-            this.setState({ "title": this.story.title });
-            this.setState({ "body": this.story.body });
+            let { _id, _rev, title, body } = response;
+            this.setState({ _id, _rev, title, body });
+            this.refs.title.value = title;
         }
         this.autoSave();
     }
 
     async _saveStory() {
         const body = this.refs.body.getEditorContents();
-        let title = this.state.title;
-        if (body && !title && !this.storyId) {
-            title = `Untitled_${new Date().getTime()}`;
-        }
-        this.story.title = title;
-        this.story.body = body;
+        let title = this.refs.title.value;
 
-        if(StringUtil.isEmptyString(this.story.title) && StringUtil.isEmptyString(body)) {
+        if(!this.isStoryUpdated()) {
+            return;
+        }
+        if (body && !title && !this.state._id) {
+            title = `Untitled_${new Date().getTime()}`;
+            this.refs.title.value = title;
+        }
+
+        if(StringUtil.isEmptyString(title) && StringUtil.isEmptyString(body)) {
             Toast.show(this.storyboardStrings.warningMessages.emptyStory);
         } else {
-            const response = await saveStory(this.story);
-            if(response) {
-                this.story._rev = response.rev;
-                this.story._id = response.id;
-                Toast.show(this.storyboardStrings.successMessages.saveStory, "success");
-                if(!this.storyId) {
-                    this.storyId = response.id;
-                    this.setState({ "title": this.story.title,
-                        "body": this.story.body });
+            let { _id, _rev } = this.state;
+            const saveStoryResponse = await saveStory({ _id, _rev, title, body });
+            if(saveStoryResponse) {
+                if(!this.state._id) {
+                    this.autoSave();
                 }
+                let response = { "_id": saveStoryResponse.id, "_rev": saveStoryResponse.rev, title, body };
+                this.setState(response);
+                Toast.show(this.storyboardStrings.successMessages.saveStory, "save-story", this.refs.saveButton);
             }
         }
     }
@@ -93,20 +92,24 @@ export default class EditStory extends Component {
         FileSaver.saveAs(blob, `${this.state.title}.html`);
     }
 
-    _onTitleChange() {
-        this.setState({ "title": this.refs.title.value });
-    }
-
     _back(goBack) {
         let history = History.getHistory();
         if(goBack) {
             history.push("/story-board/stories");
         }
     }
-    _showConfirmPopup() {
+
+    isStoryUpdated() {
         const body = this.refs.body.getEditorContents();
-        this.setState({ body });
-        this.props.route.dispatch(popUp(this.storyboardStrings.confirmStoryBack, this._goBack)); //eslint-disable-line react/prop-types
+        return this.state.body !== body || this.state.title !== this.refs.title.value;
+    }
+
+    _showConfirmPopup() {
+        if(this.isStoryUpdated()) {
+            this.props.route.dispatch(popUp(this.storyboardStrings.confirmStoryBack, this._goBack));
+        } else {
+            this._goBack(true);
+        }
     }
 
     render() {
@@ -121,7 +124,7 @@ export default class EditStory extends Component {
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={this._saveStory}>{this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
-                        <input className="story-title" ref="title" placeholder="please enter title" value={this.state.title} onChange={this._onTitleChange} autoFocus/>
+                        <input className="story-title" ref="title" placeholder="please enter title" autoFocus />
                     </div>
                     <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} toolbar={false} value={this.state.body}/>
                     <div className="export-container">
@@ -140,7 +143,8 @@ export default class EditStory extends Component {
 }
 
 EditStory.propTypes = {
-    "params": PropTypes.object
+    "params": PropTypes.object,
+    "route": PropTypes.object
 };
 
 EditStory.modules = {

@@ -42,7 +42,7 @@ describe("EditStory", () => {
             }
         });
         renderer = TestUtils.createRenderer();
-        renderer.render(<EditStory story={story} />);
+        renderer.render(<EditStory story={story} params={{ "storyId": "id" }}/>);
         renderedOutput = renderer.getRenderOutput();
     });
 
@@ -88,12 +88,10 @@ describe("EditStory", () => {
         let [, inputContainer] = editor.props.children;
         const inputElement = inputContainer.props.children;
 
-
         assert.equal(inputContainer.props.className, "title-bar");
         assert.equal(inputElement.ref, "title");
         assert.equal(inputElement.props.className, "story-title");
         assert.equal(inputElement.props.placeholder, "please enter title");
-        assert.equal(inputElement.props.value, "");
     });
 
     it("should have React quill element", () => {
@@ -118,7 +116,7 @@ describe("EditStory", () => {
             }
         };
         const wrapper = shallow(
-            <EditStory story={story} dispatch={anonymousFun} store={store}/>
+            <EditStory story={story} dispatch={anonymousFun} store={store} params={{ "storyId": "id" }}/>
         );
         wrapper.setState({ "title": "new title", "body": "body of the article" });
         const options = wrapper.find(".export-icon");
