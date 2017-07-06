@@ -120,13 +120,27 @@ export default class EditStory extends Component {
                 <div className="editor-container">
                     <div className="editor-toolbar">
                         <button className="back" onClick={this._showConfirmPopup}>{this.storyboardStrings.backButton}</button>
-                        <ReactQuill.Toolbar key="toolbar" theme="snow" id="toolbar" ref="toolbar" className="ql-toolbar ql-snow"/>
+                        <div id="toolbar" className="ql-toolbar">
+                            <select className="ql-font" />
+                            <select className="ql-size" />
+                            <select className="ql-align" />
+                            <button className="ql-bold" />
+                            <button className="ql-italic" />
+                            <button className="ql-strike" />
+                            <button className="ql-underline" />
+                            <select className="ql-color" />
+                            <select className="ql-background" />
+                            <button className="ql-link" />
+                            <button className="ql-list" value="bullet" />
+                            <button className="ql-list" value="ordered" />
+                            <button className="ql-image" />
+                        </div>
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={this._saveStory}>{this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" autoFocus />
                     </div>
-                    <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} toolbar={false} value={this.state.body}/>
+                    <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} value={this.state.body}/>
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={this._exportHtml} />
                     </div>
@@ -148,8 +162,6 @@ EditStory.propTypes = {
 };
 
 EditStory.modules = {
-    "link-tooltip": true,
-    "image-tooltip": true,
     "toolbar": {
         "container": ".ql-toolbar"
     }

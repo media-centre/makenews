@@ -77,7 +77,7 @@
     "react": "^15.3.2",
     "react-addons-test-utils": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-quill": "^0.4.1",
+    "react-quill": "^1.0.0",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
     "react-shallow-testutils": "^2.0.0",
