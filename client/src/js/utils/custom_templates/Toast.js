@@ -33,7 +33,7 @@ export default class Toast {
             toastDOM.classList.add("search-warning");
         } else if(type === "save-story") {
             icon = "fa fa-check";
-            toastDOM.style.top = element.offsetTop + element.offsetHeight + "px";
+            toastDOM.style.top = element.offsetTop + element.offsetHeight + element.offsetParent.offsetTop + "px";
             toastDOM.style.left = element.offsetLeft + element.offsetWidth + "px";
             toastDOM.classList.add("save-story");
 
