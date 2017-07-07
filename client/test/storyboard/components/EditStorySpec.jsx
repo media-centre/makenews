@@ -2,7 +2,6 @@ import EditStory from "../../../src/js/storyboard/components/EditStory";
 import TestUtils from "react-addons-test-utils";
 import { shallow } from "enzyme";
 import React from "react";
-import ReactQuill from "react-quill";
 import DisplayFeeds from "./../../../src/js/newsboard/components/DisplayFeeds";
 import NewsBoardTabs from "./../../../src/js/newsboard/components/NewsBoardTabs";
 import { assert } from "chai";
@@ -12,6 +11,7 @@ import FileSaver from "file-saver";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("EditStory", () => {
+
     let renderer = null, sandbox = null, renderedOutput = null,
         story = { "_id": "id", "_rev": "rev", "title": "title", "body": "body" };
     const anonymousFun = () => {};
@@ -41,6 +41,8 @@ describe("EditStory", () => {
                 "storyBoard": storyBoardMessages
             }
         });
+
+        sandbox.stub(EditStory, "quillEditor");
         renderer = TestUtils.createRenderer();
         renderer.render(<EditStory story={story} params={{ "storyId": "id" }}/>);
         renderedOutput = renderer.getRenderOutput();
@@ -92,13 +94,6 @@ describe("EditStory", () => {
         assert.equal(inputElement.ref, "title");
         assert.equal(inputElement.props.className, "story-title");
         assert.equal(inputElement.props.placeholder, "please enter title");
-    });
-
-    it("should have React quill element", () => {
-        let source = findAllWithType(renderedOutput, ReactQuill);
-        let [storyEditor] = source;
-
-        assert.isDefined(storyEditor);
     });
 
     it("should have export icon", () => {

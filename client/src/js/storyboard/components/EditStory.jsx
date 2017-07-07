@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
 import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
 import StringUtil from "../../../../../common/src/util/StringUtil";
@@ -17,6 +16,13 @@ export default class EditStory extends Component {
 
     static blobInstance(byteNumbers) {
         return new Blob([byteNumbers], { "type": "text/html" });
+    }
+
+    static quillEditor(text) {
+        if(!EditStory.editor) {
+            EditStory.editor = require("react-quill"); //eslint-disable-line global-require
+        }
+        return <EditStory.editor className="story-editor" theme="snow" ref="body" modules={EditStory.modules} value={text}/>;
     }
 
     constructor() {
@@ -114,7 +120,6 @@ export default class EditStory extends Component {
 
     render() {
         this.storyboardStrings = Locale.applicationStrings().messages.storyBoard;
-
         return (
             <div className="story-board story-collections">
                 <div className="editor-container">
@@ -140,7 +145,7 @@ export default class EditStory extends Component {
                     <div className="title-bar">
                         <input className="story-title" ref="title" placeholder="please enter title" autoFocus />
                     </div>
-                    <ReactQuill className="story-editor" theme="snow" ref="body" modules={EditStory.modules} value={this.state.body}/>
+                    {EditStory.quillEditor(this.state.body)}
                     <div className="export-container">
                         <i className="fa fa-share export-icon" onClick={this._exportHtml} />
                     </div>
