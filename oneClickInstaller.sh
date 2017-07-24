@@ -11,8 +11,8 @@ cat <<EOF > ./server/config/application.json
   "default": {
     "serverIpAddress": "localhost",
     "serverPort": 5000,
-    "couchDbUrl": "http://localhost:5984",
-    "searchEngineUrl": "http://localhost:5986/_fti/local",
+    "couchDbUrl": "$couchDbUrl",
+    "searchEngineUrl": "$searchEngineUrl",
     "userDbPrefix": "db_",
     "adminDetails": {
       "username": "$userName",
@@ -45,11 +45,14 @@ cat <<EOF > ./client/config/config.js
     window.mediaCenter.autoRefreshSurfFeedsInterval = 300000;
     window.mediaCenter.dbSessionInterval = 600000;
     window.mediaCenter.storyAutoSaveTimeInterval = 300000;
-}
 EOF
 
 gulp build
 
 node ./dist/server/src/migration.js
+
+cd dist
+
+./create_user.sh
 
 

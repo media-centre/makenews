@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "--- creating couchdb admin username and password"
-curl -g -X PUT http://localhost:5984/_config/admins/$1 -d '"'$2'"' 2>/dev/null
+curl -g -X PUT http://localhost:5986/_config/admins/$1 -d '"'$2'"' 2>/dev/null
 if [ "$?" -ne 0 ]
 then
   echo "*** creation of admin account failed."
