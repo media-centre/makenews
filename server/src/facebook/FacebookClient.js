@@ -64,7 +64,7 @@ export default class FacebookClient {
             if (response.status === HttpResponseHandler.codes.OK) {
                 const feedResponse = await response.json();
                 const feedsAccumulator = feeds.concat(feedResponse.data);
-                if(!since && feedResponse.paging) { //eslint-disable-next-line no-param-reassign
+                if(!since && feedResponse.paging && feedResponse.paging.previous) { //eslint-disable-next-line no-param-reassign
                     since = this._getLatestFeedTimeStamp(feedResponse.paging.previous);
                 }
                 if(feedResponse.data.length === maxFeedsPerRequest.facebook && feedsAccumulator.length < this.facebookParameters.maxFeeds) {

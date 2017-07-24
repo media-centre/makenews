@@ -22,8 +22,8 @@ cat <<EOF > ./server/config/application.json
     "facebook": {
       "url": "https://graph.facebook.com/v2.8",
       "appSecretKey": "$fb_appSecretKey",
-      "appId": "fb_appId",
-      "timeOut": 2000,
+      "appId": "$fb_appId",
+      "timeOut": 4000,
       "limit": 500
     },
     "twitter": {
