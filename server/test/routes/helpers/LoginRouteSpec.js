@@ -1,7 +1,6 @@
 import LoginRoute from "../../../src/routes/helpers/LoginRoute";
 import * as UserRequest from "../../../src/login/UserRequest";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import EnvironmentConfig from "../../../src/config/EnvironmentConfig";
 import { userDetails } from "../../../src/Factory";
 import { assert } from "chai";
 import sinon from "sinon";
@@ -62,11 +61,7 @@ describe("LoginRoute", () => {
                     try {
                         assert.deepEqual(
                             {
-                                "userName": userName,
-                                "dbParameters": {
-                                    "serverUrl": "http://localhost:5000",
-                                    "remoteDbUrl": "http://localhost:5984"
-                                }
+                                "userName": userName
                             }, data);
                         userReqGetAuthSessionCookieMock.verify();
                         updateUserMock.verify();
@@ -78,17 +73,6 @@ describe("LoginRoute", () => {
                     }
                 }
             };
-
-            const clientConfig = {
-                "get": (param) => {
-                    assert.strictEqual("db", param);
-                    return {
-                        "serverUrl": "http://localhost:5000",
-                        "remoteDbUrl": "http://localhost:5984"
-                    };
-                }
-            };
-            sandbox.stub(EnvironmentConfig, "instance").withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
             updateUserMock.withArgs(token, userName).returns("db_test");
@@ -133,10 +117,6 @@ describe("LoginRoute", () => {
                         assert.deepEqual(
                             {
                                 userName,
-                                "dbParameters": {
-                                    "serverUrl": "http://localhost:5000",
-                                    "remoteDbUrl": "http://localhost:5984"
-                                },
                                 "firstTimeUser": true
                             }, data);
                         done();
@@ -145,18 +125,6 @@ describe("LoginRoute", () => {
                     }
                 }
             };
-
-            const clientConfig = {
-                "get": (param) => {
-                    assert.strictEqual("db", param);
-                    return {
-                        "serverUrl": "http://localhost:5000",
-                        "remoteDbUrl": "http://localhost:5984"
-                    };
-                }
-            };
-            sandbox.stub(EnvironmentConfig, "instance")
-                .withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
 
@@ -182,11 +150,7 @@ describe("LoginRoute", () => {
                     try {
                         assert.deepEqual(
                             {
-                                userName,
-                                "dbParameters": {
-                                    "serverUrl": "http://localhost:5000",
-                                    "remoteDbUrl": "http://localhost:5984"
-                                }
+                                userName
                             }, data);
                         done();
                     } catch(err) {
@@ -194,18 +158,6 @@ describe("LoginRoute", () => {
                     }
                 }
             };
-
-            const clientConfig = {
-                "get": (param) => {
-                    assert.strictEqual("db", param);
-                    return {
-                        "serverUrl": "http://localhost:5000",
-                        "remoteDbUrl": "http://localhost:5984"
-                    };
-                }
-            };
-            sandbox.stub(EnvironmentConfig, "instance")
-                .withArgs(EnvironmentConfig.files.CLIENT_PARAMETERS).returns(clientConfig);
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
 

@@ -1525,6 +1525,48 @@
       "name": "Truth Out",
       "url": "http://www.truth-out.org/feed?format=feed",
       "_id": "http://www.truth-out.org/feed?format=feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - India",
+      "url": "http://newsclick.in/taxonomy/term/india/feed",
+      "_id": "http://newsclick.in/taxonomy/term/india/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - International",
+      "url": "http://newsclick.in/taxonomy/term/international/feed",
+      "_id": "http://newsclick.in/taxonomy/term/international/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - Culture",
+      "url": "http://newsclick.in/taxonomy/term/culture/feed",
+      "_id": "http://newsclick.in/taxonomy/term/culture/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - Science",
+      "url": "http://newsclick.in/taxonomy/term/science/feed",
+      "_id": "http://newsclick.in/taxonomy/term/science/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - Economy",
+      "url": "http://newsclick.in/taxonomy/term/economy/feed",
+      "_id": "http://newsclick.in/taxonomy/term/economy/feed"
+    },
+    {
+      "docType": "source",
+      "sourceType": "web",
+      "name": "Newsclick - Politics",
+      "url": "http://newsclick.in/taxonomy/term/politics/feed",
+      "_id": "http://newsclick.in/taxonomy/term/politics/feed"
     }
   ]
 }

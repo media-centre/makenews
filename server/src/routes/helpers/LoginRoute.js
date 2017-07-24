@@ -1,6 +1,5 @@
 import { getAuthSessionCookie, getUserDetails } from "../../../src/login/UserRequest";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
-import ClientConfig from "../../../src/config/ClientConfig";
 import RouteLogger from "../RouteLogger";
 import Route from "./Route";
 import StringUtil from "../../../../common/src/util/StringUtil";
@@ -45,12 +44,11 @@ export default class LoginRoute extends Route {
     }
 
     async _handleLoginSuccess(authSessionCookie, token, userData) {
-        const dbJson = ClientConfig.instance().db();
         userDetails.updateUser(token, this.userName);
         let deleteSourceHandler = DeleteSourceHandler.instance(token);
         deleteSourceHandler.deleteHashTags();
         deleteSourceHandler.deleteOldFeeds();
-        let responseData = { "userName": this.userName, "dbParameters": dbJson };
+        let responseData = { "userName": this.userName };
         if(!userData.visitedUser) {
             let visited = await markAsVisitedUser(token, this.userName);
             responseData.firstTimeUser = !visited;
@@ -60,7 +58,7 @@ export default class LoginRoute extends Route {
             .json(responseData);
 
         RouteLogger.instance().info("LoginRoute::_handleLoginSuccess: Login request successful");
-        RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": this.userName, "dbParameters": dbJson }));
+        RouteLogger.instance().debug("LoginRoute::_handleLoginSuccess: response = " + JSON.stringify({ "userName": this.userName }));
     }
 
     _handleFailure(error) {
