@@ -3,11 +3,12 @@ import Locale from "../utils/Locale";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class Help extends Component {
+    //s
     displayFAQs() {
         const faqDom = (faq, index) =>
             (<div className="FAQ" key={index}>
                 <h4 className="question">{faq.question}</h4>
-                <p className="answer">{faq.answer}</p>
+                <p className="answer" dangerouslySetInnerHTML={{ "__html": faq.answer }} />
             </div>);
         const mapIndex = R.addIndex(R.map);
 

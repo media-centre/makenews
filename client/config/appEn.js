@@ -137,8 +137,87 @@ window.mediaCenter.appEn = {
             "FAQsHeading": "FAQs",
             "FAQs": [
                 {
-                    "question": "What is the purpose of the application?",
-                    "answer": "To act as an aggregator for news items from different sources like RSS feeds, Facebook Page and Twitter Handles or Hashtags"
+                    "question": "1. What are the use cases of the application?",
+                    "answer": `Makenews can be used for the following purposes especially for Journalists
+                    <ul style='margin-left:20px;'>
+                        <li>News aggregator from websites and social networks (Facebook and Twitter)</li>
+                        <li>Organising the news collection</li>
+                        <li>Writing the stories</li>
+                    </ul>`
+                },
+                {
+                    "question": "2. Is there any link to see the demo of the application?",
+                    "answer": `Please visit <a href='https://makenews.in'>makenews.in</a> and please use for the following credentials.
+                    Username: demo
+                    Password: demo`
+                },
+                {
+                    "question": "3. Can I install the application in my own server or system?",
+                    "answer": "Yes. Please follow the git instructions at URL"
+                },
+                {
+                    "question": "4. Can I modify the code to suit the custom needs?",
+                    "answer": "Yes. The application is licensed under AGPL V3."
+                },
+                {
+                    "question": "5. Who can use this application?",
+                    "answer": "This application is designed with a special emphasis for Journalists. However, it can be used by anyone who wish to update themselves with the latest news."
+                },
+                {
+                    "question": "6. Do I need to give the credentials for Facebook and Twitter for using the application?",
+                    "answer": "If the user needs information from the social networks, the user will need to give the permission to the app using the respective facebook and twitter accounts."
+                },
+                {
+                    "question": "7. Can I follow my friends on Facebook using this application?",
+                    "answer": "No. The application is meant to follow pages and groups which are public."
+                },
+                {
+                    "question": "8. Can I get information related to hashtags?",
+                    "answer": `Users can follow hashtags. The option lies under Scan news -> Twitter -> Filters.
+                    However, the life of hashtags is limited to that particular session of login.`
+                },
+                {
+                    "question": "9. To use makenews, is it mandatory to login using Facebook and Twitter?",
+                    "answer": "If, you wish to scan news only from websites, in that case it is not needed to provided to provide the credentials for Facebook and Twitter."
+                },
+                {
+                    "question": "10. Are the list of websites in the configuration page exhaustive or can I add my own url?",
+                    "answer": `Yes. You can. Please click “Add URL”.
+                    Please note that we need add only RSS Feed Link at the moment.
+                    Want to know more about RSS. Please click <a href="https://en.wikipedia.org/wiki/RSS">here</a>`
+                },
+                {
+                    "question": "11. How can I save my stories created in the application?",
+                    "answer": "Currently the application allows the user to export the article in html format. This can be copy pasted in any editor of a CMS System or in word document without losing the style changes."
+                },
+                {
+                    "question": "12. What are the options available to read the articles later?",
+                    "answer": "Any article can be added to collections, can be bookmarked and there is also an option to add few selected lines in the article to your collections."
+                },
+                {
+                    "question": "13. Can I able to create an account for using makenews?",
+                    "answer": "This is not a SaaS implementation. There is a demo url for trying out this application. However, one can install makenews on their own computers or servers and run it."
+                },
+                {
+                    "question": "14. How do we create users in the newly installed makenews application?",
+                    "answer": "Please run the script as mentioned in the READ ME file."
+                },
+                {
+                    "question": "15. What is the life of the data that is collected from various sources?",
+                    "answer": "Currently it is set to 30 days, which means the data of past 30 days from various sources will be visible to the users."
+                },
+                {
+                    "question": "16. Do it need to visit the webpage from the makenews to read the articles?",
+                    "answer": "Not needed in most of the cases. The article can be viewed from the application."
+                },
+                {
+                    "question": "17. Are videos played inside the application?",
+                    "answer": "No. However, the external links to the video are accessible."
+                },
+                {
+                    "question": "18. What is the expiration period for Twitter and Facebook?",
+                    "answer": `<p>For Twitter, there is no expiry period.</p>
+                    <p>For Facebook, the token expiration period is 60 days. So after 60 days user needs to provide the credentials of Facebook.</p>`
                 }
             ]
         },
