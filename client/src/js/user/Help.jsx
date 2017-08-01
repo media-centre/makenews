@@ -3,7 +3,6 @@ import Locale from "../utils/Locale";
 import R from "ramda"; //eslint-disable-line id-length
 
 export default class Help extends Component {
-    //s
     displayFAQs() {
         const faqDom = (faq, index) =>
             (<div className="FAQ" key={index}>
