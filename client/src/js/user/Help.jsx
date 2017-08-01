@@ -1,3 +1,4 @@
+/* eslint react/no-danger:0 */
 import React, { Component } from "react";
 import Locale from "../utils/Locale";
 import R from "ramda"; //eslint-disable-line id-length
