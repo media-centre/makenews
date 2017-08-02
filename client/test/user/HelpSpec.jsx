@@ -50,8 +50,6 @@ describe("Help", () => {
         const [, video] = help.props.children;
         expect(video.type).to.equals("div");
         expect(video.props.className).to.equals("video");
-        expect(video.props.children.type).to.equals("i");
-        expect(video.props.children.props.className).to.equals("icon fa fa-play");
     });
 
     it("should have heading help", () => {
