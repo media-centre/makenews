@@ -63,7 +63,8 @@ export class DisplayFilters extends Component {
     }
 
     hasChecked(id, sourceType) {
-        return selectedSources[sourceTypes[sourceType]].has(id);
+        const tempId = (sourceType === sourceTypes.twitter && id.startsWith("#")) ? encodeURIComponent(id) : id;
+        return selectedSources[sourceTypes[sourceType]].has(tempId);
     }
 
     sourceClick(eventObj) {
@@ -114,7 +115,7 @@ export class DisplayFilters extends Component {
                     "name": hashtag,
                     "hashtag": true
                 };
-                selectedSources.twitter.add(hashtag);
+                selectedSources.twitter.add(encodeURIComponent(hashtag));
                 this.props.dispatch(addSourceToConfigureList(this.props.currentTab, sourceDoc));
             } else {
                 Toast.show(this.filterStrings.hashTag.alreadyExist);
