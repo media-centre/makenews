@@ -26,7 +26,7 @@ export class LoginPage extends Component {
                         <p className="makenews-desc">
                             {this.props.loginPageStrings.branding.text}
                         </p>
-                        <a href="#" className="watch-demo">
+                        <a href="https://www.youtube.com/watch?v=KrDjm5Mwv8Y" target="_blank" className="watch-demo">
                             <i className="arrow fa fa-caret-right" aria-hidden="true"/> {this.props.loginPageStrings.watchDemo}
                         </a>
                     </div>
