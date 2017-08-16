@@ -47,7 +47,7 @@ describe("DisplayArticle", () => {
         });
 
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" collectionName="test" />);
+        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" collectionName="test" currentHeaderTab="Scan News"/>);
     });
 
     afterEach("DisplayArticle", () => {
@@ -166,7 +166,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web"/>
+                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
                 </Provider>
             );
             let collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
@@ -177,7 +177,9 @@ describe("DisplayArticle", () => {
 
         it("should have add to collection button", () => {
             const [headerDOM] = displayArticleDom.props.children;
-            const [collectionDOM] = headerDOM.props.children;
+            const [, articleHeaderDOM] = headerDOM.props.children;
+            const [collectionDOM] = articleHeaderDOM.props.children;
+
             expect(collectionDOM.props.className).to.equal("collection");
             expect(collectionDOM.type).to.equal("div");
 
@@ -187,7 +189,8 @@ describe("DisplayArticle", () => {
 
         it("should have bookmark class when article is not bookmarked", () => {
             let [headerDOM] = displayArticleDom.props.children;
-            let [, bookmarkDOM] = headerDOM.props.children;
+            const [, articleHeaderDOM] = headerDOM.props.children;
+            let [, bookmarkDOM] = articleHeaderDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark");
             expect(bookmarkDOM.type).to.equal("div");
 
@@ -197,9 +200,10 @@ describe("DisplayArticle", () => {
 
         it("should have bookmark & active classes when article is boomarked", () => {
             feed.bookmark = true;
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab={"collection"} />);
+            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab={"collection"} currentHeaderTab= "Scan News" />);
             let [headerDOM] = displayArticleDom.props.children;
-            let [, bookmarkDOM] = headerDOM.props.children;
+            const [, articleHeaderDOM] = headerDOM.props.children;
+            let [, bookmarkDOM] = articleHeaderDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark active");
             expect(bookmarkDOM.type).to.equal("div");
         });
@@ -218,7 +222,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web"/>
+                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
@@ -241,7 +245,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web"/>
+                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
@@ -297,11 +301,11 @@ describe("DisplayArticle", () => {
                 />
             );
             let [mainDOM] = displayArticleDom.props.children;
-            let backButton = mainDOM.props.children;
+            let [backButton] = mainDOM.props.children;
             let [arrowIcon,, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
-            expect(mainDOM.props.className).to.be.equal("display-article__header back");
+            expect(mainDOM.props.className).to.be.equal("display-article__header");
 
             expect(backButton.type).to.be.equal("button");
             expect(backButton.props.className).to.be.equal("back__button");
