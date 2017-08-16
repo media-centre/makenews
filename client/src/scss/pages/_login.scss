@@ -94,3 +94,18 @@
     }
   }
 }
+
+@media (max-width: $mobile-max-width) {
+  .screenshots, .details, .page, .empty-box {
+    display: none;
+  }
+
+  .login-page {
+    .container {
+      padding: 1rem 4rem;
+    }
+    .row {
+      display: block;
+    }
+  }
+}
