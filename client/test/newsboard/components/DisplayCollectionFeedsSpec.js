@@ -45,8 +45,9 @@ describe("DisplayCollectionFeeds", () => {
         let renderer = null;
         beforeEach("Feeds", () => {
             renderer = TestUtils.createRenderer();
+            let collectionDOM = { "style": { "display": "none" } };
             renderer.render(
-                <DisplayCollectionFeeds collection = {{ "name": collectionName, "id": "collectionId" }} dispatch = {anonymousFun} feeds = {feeds} tab="Scan News" />);
+                <DisplayCollectionFeeds collection = {{ "name": collectionName, "id": "collectionId" }} dispatch = {anonymousFun} feeds = {feeds} tab="Scan News" collectionsDOM={collectionDOM}/>);
             result = renderer.getRenderOutput();
         });
 

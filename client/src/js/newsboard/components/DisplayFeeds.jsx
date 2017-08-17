@@ -14,9 +14,9 @@ import StringUtils from "./../../../../../common/src/util/StringUtil";
 import Toast from "./../../utils/custom_templates/Toast";
 import Locale from "./../../utils/Locale";
 import { Link } from "react-router";
+import { MOBLE_MAX_WIDTH } from "./../../utils/Constants";
 
 const MIN_SEARCH_KEY_LENGTH = 3;
-const mobileMaxWidth = 425;
 
 export class DisplayFeeds extends Component {
 
@@ -272,7 +272,7 @@ export class DisplayFeeds extends Component {
     displayFeeds() {
         this.newsboardStrings = Locale.applicationStrings().messages.newsBoard;
         return (<div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
-                {(this.props.currentHeaderTab === WRITE_A_STORY || window.screen.width <= mobileMaxWidth) && this.state.isFeedSelected && <DisplayArticle articleOpen={this._isClicked} feedsDOM={this.refs.feedsDOM}/>}
+                {(this.props.currentHeaderTab === WRITE_A_STORY || window.screen.width <= MOBLE_MAX_WIDTH) && this.state.isFeedSelected && <DisplayArticle articleOpen={this._isClicked} feedsDOM={this.refs.feedsDOM}/>}
                 <div ref="feedsDOM" onClick={this._hideExpandView}>
                     <div className="search-bar">
                         <div className="input-box">

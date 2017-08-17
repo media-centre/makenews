@@ -361,4 +361,4 @@ export const FB_DEFAULT_SOURCES = {
         "data": []
     }
 };
-
+export const MOBLE_MAX_WIDTH = 425;
