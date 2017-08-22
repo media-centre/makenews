@@ -1,10 +1,15 @@
+stty echo
 echo "Enter user name to be created"
 read user_name
 echo "Enter password for the user $user_name"
+stty -echo
 read password
 
 echo "Re-enter password for the user $user_name"
-read -s confirm_password
+stty -echo
+read confirm_password
+
+stty echo
 
 if [ "$password" != "$confirm_password" ]
 then
