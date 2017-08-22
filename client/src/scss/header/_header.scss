@@ -61,6 +61,7 @@
   float: left;
   height: 64px;
   width: 100px;
+
   &__image {
     float: left;
     margin-top: 20px;
@@ -144,5 +145,47 @@
     &:hover {
       background-color: $secondary-color;
     }
+  }
+}
+
+@media (max-width: $tablet-max-width) {
+  .header__logo {
+    width: 130px;
+
+    img {
+      width: 120px;
+      margin-left: 15px;
+    }
+  }
+
+  .header-tabs--left__item {
+    width : 110px;
+    margin: 0 -0.5rem 0 0.5rem;
+
+    &__name {
+      margin-left: 10px;
+    }
+  }
+
+  .header-tabs--configure {
+    width: 50px;
+      &__image {
+        margin-left: 10px;
+      }
+  }
+
+  .user-profile {
+    min-width: 140px;
+
+    &__name{
+      margin-left: 5px;
+      font-size: medium;
+    }
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .header-tabs--configure, .header-tabs--left__item {
+    display: none;
   }
 }

@@ -1,18 +1,3 @@
-@media (max-width: $mobile-max-width) {
-  #main {
-    display: none;
-  }
-  body {
-    text-align: center;
-    margin-top: 50%;
-  }
-  body::after {
-    content: "Not yet supported at this resolution";
-    color: $secondary-color;
-    font-weight: bold;
-    font-size: 1.5rem;
-  }
-}
 .login-page {
   .container {
     padding: 1rem 6rem;
@@ -106,6 +91,27 @@
       margin: 0 0 1rem;
       background: $dark-background-color;
       color: $primary-color-light;
+    }
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .screenshots, .details, .page, .empty-box {
+    display: none;
+  }
+
+  .login-page {
+    .container {
+      padding: 1rem 3rem;
+    }
+    .row {
+      display: block;
+    }
+  }
+
+  .login {
+    .input-container {
+      width: 15rem;
     }
   }
 }

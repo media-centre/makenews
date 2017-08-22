@@ -3,14 +3,13 @@
   height: calc(100vh - #{$main-header-height});
   overflow: auto;
 
-  .back {
-    text-align: left;
-    &__button {
-      color: $primary-color-light;
-      font-size: $mid-font-size;
-      border: 0;
-      padding-top: 4px;
-    }
+  .back__button {
+    color: $primary-color-light;
+    font-size: $mid-font-size;
+    border: 0;
+    padding-top: 4px;
+    float: left;
+
     .icon{
       vertical-align: baseline;
       font-size: 1.3rem;
@@ -35,6 +34,12 @@
       &.active {
         color: $primary-color;
       }
+
+      @media (max-width: $mobile-max-width) {
+        span {
+          display: none;
+        }
+      }
     }
 
     .collection {
@@ -47,6 +52,12 @@
     .icon {
       font-size: 1.5rem;
       vertical-align: sub;
+    }
+
+    @media (max-width: $mobile-max-width) {
+      span {
+        display: none;
+      }
     }
   }
 

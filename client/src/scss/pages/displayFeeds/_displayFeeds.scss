@@ -77,9 +77,11 @@
     border-right: 1px solid lighten($primary-color, 35%);
     border-left: 1px solid lighten($primary-color, 35%);
 
-
-    @media (max-width: $tablet-max-width) {
+    @media (min-width:$mobile-max-width) and (max-width:$tablet-max-width) {
       flex-basis: $side-panel-width-tab;
+    }
+    @media (max-width: $mobile-max-width) {
+      flex-basis: 370px;
     }
 
     .search-bar {

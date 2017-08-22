@@ -139,7 +139,10 @@ export class DisplayArticle extends Component {
                     <button className="back__button" onClick={this.hideArticle}>
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
                   </header>
-                : this.renderArticleHeader()
+                : <header className="display-article__header">
+                    {this.props.feedsDOM && this.renderBackbutton() }
+                    {this.props.currentHeaderTab === SCAN_NEWS && this.renderArticleHeader()}
+                </header>
         );
     }
 
@@ -152,29 +155,34 @@ export class DisplayArticle extends Component {
         this.props.feedsDOM.style.display = "block";
     }
 
+    renderBackbutton() {
+        return (
+            <button className="back__button" onClick={this.closeArticle}>
+                <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
+            </button>
+        );
+    }
+
     renderArticleHeader() {
         return(
-            this.props.feedsDOM
-                ? <header className="display-article__header back">
-                    <button className="back__button" onClick={this.closeArticle}>
-                        <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
-                    </button>
-                  </header>
+            <div>
+                <div className="collection" onClick={this._addToCollection}>
+                    <i className="icon fa fa-folder"/>
+                    <span> {this.articleMessages.addToCollection}</span>
+                </div>
 
-                : <header className="display-article__header">
-                    <div className="collection" onClick={this._addToCollection}>
-                        <i className="icon fa fa-folder"/> {this.articleMessages.addToCollection}
-                    </div>
-
-                    {this.props.article.bookmark
-                        ? <div className="bookmark active" onClick={this.bookmarkArticle}>
-                            <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmarked}
-                          </div>
-                        : <div className="bookmark" onClick={this.bookmarkArticle}>
-                            <i className="icon fa fa-bookmark"/> {this.articleMessages.bookmark}
-                          </div>
-                    }
-                  </header>);
+                {this.props.article.bookmark
+                 ? <div className="bookmark active" onClick={this.bookmarkArticle}>
+                     <i className="icon fa fa-bookmark"/>
+                     <span> {this.articleMessages.bookmarked}</span>
+                   </div>
+                : <div className="bookmark" onClick={this.bookmarkArticle}>
+                     <i className="icon fa fa-bookmark"/>
+                     <span> {this.articleMessages.bookmark}</span>
+                   </div>
+                }
+            </div>
+        );
     }
 
     render() {
