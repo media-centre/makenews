@@ -361,4 +361,5 @@ export const FB_DEFAULT_SOURCES = {
         "data": []
     }
 };
-export const MOBLE_MAX_WIDTH = 425;
+
+export const IS_MOBILE = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);

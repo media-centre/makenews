@@ -11,7 +11,7 @@ import InlineEdit from "./../../utils/components/InlineEdit";
 import R from "ramda"; //eslint-disable-line id-length
 import Locale from "./../../utils/Locale";
 import { popUp } from "./../../header/HeaderActions";
-import { MOBLE_MAX_WIDTH } from "./../../utils/Constants";
+import { IS_MOBILE } from "./../../utils/Constants";
 
 export class DisplayCollection extends Component {
     constructor() {
@@ -192,7 +192,7 @@ export class DisplayCollection extends Component {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             <div className="collection-list-container">
-            { (this.props.mainHeaderTab === WRITE_A_STORY || window.screen.width <= MOBLE_MAX_WIDTH) && this.state.isClicked &&
+            { (this.props.mainHeaderTab === WRITE_A_STORY || IS_MOBILE) && this.state.isClicked &&
             <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked} collectionsDOM={this.refs.collections}/> }
             { this.displayCollections() }
             </div>

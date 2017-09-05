@@ -8,7 +8,7 @@ import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY, SCAN_NEWS } from "./../../header/HeaderActions";
 import R from "ramda"; //eslint-disable-line id-length
 import Locale from "./../../utils/Locale";
-import { MOBLE_MAX_WIDTH } from "./../../utils/Constants";
+import { IS_MOBILE } from "./../../utils/Constants";
 
 export class DisplayCollectionFeeds extends Component {
     constructor() {
@@ -75,7 +75,7 @@ export class DisplayCollectionFeeds extends Component {
     }
 
     displayHeader() {
-        return(this.props.tab === WRITE_A_STORY || window.screen.width <= MOBLE_MAX_WIDTH
+        return(this.props.tab === WRITE_A_STORY || IS_MOBILE
             ? <header className="collection-header">
                 <button className="all-collections" onClick={this.props.isClicked}>
                     <i className="fa fa-arrow-left" aria-hidden="true"/>{this.collectionMessages.allCollections}
@@ -87,7 +87,7 @@ export class DisplayCollectionFeeds extends Component {
 
     render() {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
-        if((this.props.tab === SCAN_NEWS && window.screen.width <= MOBLE_MAX_WIDTH) || (this.props.tab === WRITE_A_STORY && this.props.collectionsDOM)) {
+        if((this.props.tab === SCAN_NEWS && IS_MOBILE) || (this.props.tab === WRITE_A_STORY && this.props.collectionsDOM)) {
             this.props.collectionsDOM.style.display = "none";
         }
 
