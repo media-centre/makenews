@@ -117,7 +117,7 @@ DisplayCollectionFeeds.propTypes = {
 
 function mapToStore(store) {
     return {
-        "feeds": store.displayCollection,
+        "feeds": store.displayCollection.feeds,
         "collection": store.currentCollection
     };
 }

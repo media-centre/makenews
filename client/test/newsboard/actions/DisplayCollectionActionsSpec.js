@@ -25,12 +25,11 @@ describe("DisplayCollectionAction", () => {
     let ajaxClientInstance = null;
 
     describe("displayCollectionFeed", () => {
-
         beforeEach("DisplayCollectionAction", () => {
             collection = "test";
             sandbox = sinon.sandbox.create();
 
-            ajaxClientInstance = AjaxClient.instance("/collectionFeeds");
+            ajaxClientInstance = AjaxClient.instance("/collection-feeds");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
         });
 
@@ -45,7 +44,7 @@ describe("DisplayCollectionAction", () => {
             let getMock = sandbox.mock(ajaxClientInstance).expects("get")
                 .withArgs({ collection, offset }).returns(Promise.resolve(feeds));
 
-            let store = mockStore([], [{ "type": COLLECTION_FEEDS, feeds }], done);
+            let store = mockStore([], [{ "type": COLLECTION_FEEDS, feeds, "collectionId": collection }], done);
             store.dispatch(displayCollectionFeeds(offset, collection, (result) => {
                 try {
                     assert.strictEqual(result.docsLength, 1); //eslint-disable-line no-magic-numbers

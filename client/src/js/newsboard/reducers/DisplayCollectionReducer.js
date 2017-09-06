@@ -5,17 +5,20 @@ import {
     DELETE_COLLECTION_FEED
 } from "./../actions/DisplayCollectionActions";
 
-export function displayCollection(state = [], action = {}) {
+export function displayCollection(state = { "feeds": [], "collectionId": "" }, action = {}) {
     switch(action.type) {
     case COLLECTION_FEEDS: {
-        return Object.assign([], state.concat(action.feeds));
+        if(state.collectionId === action.collectionId) {
+            return { ...state, "feeds": state.feeds.concat(...action.feeds) };
+        }
+        return { "feeds": action.feeds, "collectionId": action.collectionId };
     }
     case CLEAR_COLLECTION_FEEDS: {
-        return [];
+        return { ...state, "feeds": [] };
     }
     case DELETE_COLLECTION_FEED: {
-        const filteredCollection = state.filter(feed => feed._id !== action.deleteFeed);
-        return [].concat(filteredCollection);
+        const filteredCollection = state.feeds.filter(feed => feed._id !== action.deleteFeed);
+        return { ...state, "feeds": [...filteredCollection] };
     }
     default: return state;
     }

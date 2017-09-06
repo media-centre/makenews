@@ -22,7 +22,7 @@ export function displayCollectionFeeds(offset, collection, callback) {
                 "docsLength": 0
             };
             if (feeds.length) {
-                dispatch(collectionFeeds(feeds));
+                dispatch(collectionFeeds(feeds, collection));
                 result.docsLength = feeds.length;
             }
             let defaultPageSize = 25;
@@ -34,10 +34,11 @@ export function displayCollectionFeeds(offset, collection, callback) {
     };
 }
 
-function collectionFeeds(feeds) {
+function collectionFeeds(feeds, collectionId) {
     return {
         "type": COLLECTION_FEEDS,
-        feeds
+        feeds,
+        collectionId
     };
 }
 
