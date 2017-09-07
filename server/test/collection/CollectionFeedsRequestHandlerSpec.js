@@ -6,6 +6,7 @@ import {
 import CouchClient from "../../src/CouchClient";
 import sinon from "sinon";
 import { assert } from "chai";
+import { COLLECTION_FEEDS_PER_REQUEST } from "../../src/util/Constants";
 
 describe("CollectionFeedsRequestHandler", () => {
 
@@ -112,7 +113,8 @@ describe("CollectionFeedsRequestHandler", () => {
                                 "ff49851eb7078d30c9019d0dce002687"]
                         }
                     }]
-                }
+                },
+                "limit": COLLECTION_FEEDS_PER_REQUEST
             };
             const getDocsMock = sandbox.mock(couchClient);
             const getFirstFeedMock = getDocsMock.expects("findDocuments").withArgs(intermediateDocsQuery).returns(Promise.resolve(intermediateDocs));
@@ -137,8 +139,10 @@ describe("CollectionFeedsRequestHandler", () => {
                                 "ff49851eb7078d30c9019d0dce002687"]
                         }
                     }]
-                }
+                },
+                "limit": COLLECTION_FEEDS_PER_REQUEST
             };
+
             const getDocsMock = sandbox.mock(couchClient);
             const getFirstFeedMock = getDocsMock.expects("findDocuments").withArgs(intermediateDocsQuery).returns(Promise.resolve(intermediateDocs));
             const getSecondFeedMock = getDocsMock.expects("findDocuments").withArgs(feedsQuery).returns(Promise.reject("unexpected response from the db"));

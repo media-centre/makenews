@@ -10,32 +10,30 @@ import { assert } from "chai";
 describe("DisplayCollectionReducer", () => {
 
     describe("displayCollection", () => {
-        const collectionId = "1234";
 
         it("should return feeds with type collection feeds", () => {
             let feeds = [{ "_id": "id", "title": "someTitle" }];
-            let action = { "type": COLLECTION_FEEDS, feeds, collectionId };
+            let action = { "type": COLLECTION_FEEDS, feeds };
 
-            assert.deepEqual(displayCollection({ "feeds": [], collectionId }, action), { feeds, collectionId });
+            assert.deepEqual(displayCollection([], action), feeds);
         });
 
         it("should return empty feeds on clear", () => {
             let action = { "type": CLEAR_COLLECTION_FEEDS };
-            const currentState = { "feeds": [{ "_id": "id", "title": "someTitle" }], collectionId };
-            assert.deepEqual(displayCollection(currentState, action), { "feeds": [], collectionId });
+            assert.deepEqual(displayCollection([], action), []);
         });
 
         it("should return empty feeds and collectionId by default", () => {
-            assert.deepEqual(displayCollection(), { "feeds": [], "collectionId": "" });
+            assert.deepEqual(displayCollection(), []);
         });
 
         it("should return all the feeds except deleted feed", () => {
-            const state = { "feeds": [{ "_id": 1 }, { "_id": 2 }, { "_id": 3 }], collectionId };
+            const state = [{ "_id": 1 }, { "_id": 2 }, { "_id": 3 }];
             const expectedState = [{ "_id": 1 }, { "_id": 3 }];
             const feedId = 2;
             const action = { "type": DELETE_COLLECTION_FEED, "deleteFeed": feedId };
 
-            assert.deepEqual(displayCollection(state, action), { "feeds": expectedState, collectionId });
+            assert.deepEqual(displayCollection(state, action), expectedState);
         });
     });
 

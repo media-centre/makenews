@@ -1,5 +1,5 @@
 import CouchClient from "../CouchClient";
-import { FEED_LIMIT_TO_DELETE_IN_QUERY } from "../util/Constants";
+import { FEED_LIMIT_TO_DELETE_IN_QUERY, COLLECTION_FEEDS_PER_REQUEST } from "../util/Constants";
 import RouteLogger from "../routes/RouteLogger";
 
 export async function getCollectedFeeds(authSession, collection, offset) {
@@ -26,7 +26,8 @@ async function getFeeds(couchClient, feedIds) {
                     "$in": feedIds
                 }
             }]
-        }
+        },
+        "limit": COLLECTION_FEEDS_PER_REQUEST
     };
 
 

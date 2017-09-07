@@ -39,31 +39,21 @@ describe("DisplayCollectionAction", () => {
 
         it("should dispatch collection feeds when successful fetch of feeds", (done) => {
             let feeds = [{ "_id": "id", "title": "someTitle" }];
-            let offset = 0;
 
             let getMock = sandbox.mock(ajaxClientInstance).expects("get")
-                .withArgs({ collection, offset }).returns(Promise.resolve(feeds));
+                .withArgs({ collection }).returns(Promise.resolve(feeds));
 
-            let store = mockStore([], [{ "type": COLLECTION_FEEDS, feeds, "collectionId": collection }], done);
-            store.dispatch(displayCollectionFeeds(offset, collection, (result) => {
-                try {
-                    assert.strictEqual(result.docsLength, 1); //eslint-disable-line no-magic-numbers
-                    assert.isFalse(result.hasMoreFeeds);
-                    getMock.verify();
-                } catch(err) {
-                    done(err);
-                }
-            }));
+            let store = mockStore([], [{ "type": COLLECTION_FEEDS, feeds }], done);
+            store.dispatch(displayCollectionFeeds(collection));
+            getMock.verify();
         });
 
         it("should dispatch no collection feeds when failed to fetch the feeds", (done) => {
-            let offset = 0;
             let getMock = sandbox.mock(ajaxClientInstance).expects("get")
-                .withArgs({ collection, offset }).returns(Promise.reject("error"));
+                .withArgs({ collection }).returns(Promise.reject("error"));
 
             let store = mockStore([], [{ "type": NO_COLLECTION_FEEDS }], done);
-            store.dispatch(displayCollectionFeeds(offset, collection, () => {
-            }));
+            store.dispatch(displayCollectionFeeds(collection));
 
             getMock.verify();
         });
