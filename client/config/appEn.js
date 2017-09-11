@@ -246,7 +246,7 @@ window.mediaCenter.appEn = {
                     "twitter": "Please enter the link below to add a new twitter source."
                 },
                 "exampleUrls": {
-                    "web": "http://economictimes.indiatimes.com/rssfeedsdefault.cms",
+                    "web": "http://www.thehindu.com/?service=rss",
                     "pages": "https://www.facebook.com/TimesofIndia",
                     "twitter": "@timesofindia"
                 },

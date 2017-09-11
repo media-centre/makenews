@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { updateTokenExpiredInfo, isFBTokenExpired } from "./../../facebook/FacebookAction";
 import { twitterAuthentication, twitterTokenInformation } from "./../../twitter/TwitterTokenActions";
 import TwitterLogin from "./../../twitter/TwitterLogin";
-import { sourceTypes } from "./../../utils/Constants";
+import { sourceTypes, IS_MOBILE } from "./../../utils/Constants";
 import History from "./../../History";
 import R from "ramda"; //eslint-disable-line id-length
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
@@ -80,7 +80,7 @@ export class ConfigureSourcesPage extends Component {
     render() {
         return (
             <div className="configure-container">
-                <ConfiguredPane />
+                { !IS_MOBILE && <ConfiguredPane /> }
                 <ConfigurePane currentSourceType={this.props.params.sourceType}
                     fbLogin={this._showFBLogin}
                     twitterLogin = {this._showTwitterLogin}

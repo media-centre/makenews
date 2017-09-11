@@ -29,6 +29,16 @@
       margin-right: 20px;
       margin-top: 1rem;
       padding: 0;
+
+      @media(max-width: $mobile-max-width) {
+        margin-top: 0.3rem;
+        margin-right: 5px;
+        width: 22px;
+        height: 23px;
+        font-size: 1rem;
+        background-color: #FF6945;
+        border-radius: 100%;
+      }
     }
   }
 
@@ -52,6 +62,34 @@
         &::-moz-placeholder {
           color: #bbb;
         }
+      }
+    }
+
+    @media (max-width: $mobile-max-width) {
+      display: block;
+      height: 50px;
+
+      .input-container {
+        padding-left: 0;
+        padding-top: 20px;
+      }
+
+      input {
+        font-size: 10px;
+      }
+
+      span {
+        width: 0;
+      }
+
+      img {
+        width: 20px;
+      }
+
+      &:before,
+      &:after {
+        display: block;
+        content: none;
       }
     }
   }

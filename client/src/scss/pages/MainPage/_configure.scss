@@ -76,6 +76,10 @@
       margin-left: $configured-source-panel-width-tab;
     }
 
+    @media (max-width: $mobile-max-width) {
+      margin-left: 0;
+    }
+
     .configuration-warning {
       background: $primary-color-dark;
       color: white;

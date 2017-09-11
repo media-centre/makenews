@@ -3,6 +3,10 @@
   display: flex;
   height: $secondary-header-nav-height;
 
+  @media (max-width: $mobile-max-width) {
+    display: block;
+  }
+
 
   &__item {
     padding: 16px 20px;
@@ -16,6 +20,11 @@
       span {
         display: none;
       }
+    }
+
+    @media (max-width: $mobile-max-width) {
+       padding: 16px 15px;
+      font-size: 30px;
     }
 
     i {
@@ -35,6 +44,10 @@
     flex-grow: 1;
     display: flex;
     justify-content: flex-end;
+
+    @media (max-width: $mobile-max-width) {
+      float: right;
+    }
   }
 
   a.btn {
@@ -50,17 +63,22 @@
     display: inline-block;
     align-items: center;
     height: 100%;
+
+    @media (max-width: $mobile-max-width) {
+      font-size: 1rem;
+    }
   }
 
   .btn-primary {
     background: $secondary-color;
     color: white;
+    height: $secondary-header-nav-height;
   }
 
   .btn-secondary {
     color: $primary-color;
     opacity: .5;
-    font-size: 1.3rem;
+    height: $secondary-header-nav-height;
   }
 
   .right-arrow, .check-icon {
