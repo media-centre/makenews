@@ -31,7 +31,7 @@ gulp.task("mobile:remove-directory", function () {
 });
 gulp.task("mobile:init", ["mobile:remove-directory"], function (cb) {
     process.chdir(__dirname + "/dist/");
-    exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
+    exec("cordova create mobile com.makenews.android MakeNews", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         process.chdir("../");
