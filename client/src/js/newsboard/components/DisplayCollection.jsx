@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { setCurrentCollection, deleteCollection, renameCollection } from "./../actions/DisplayCollectionActions";
+import { setCurrentCollection, deleteCollection, renameCollection, displayCollectionFeeds } from "./../actions/DisplayCollectionActions";
 import { addToCollection } from "../actions/DisplayArticleActions";
 import StringUtil from "./../../../../../common/src/util/StringUtil";
 import { connect } from "react-redux";
@@ -38,6 +38,7 @@ export class DisplayCollection extends Component {
                 setCollection.className = "collection-name active";
             }
             this.props.dispatch(setCurrentCollection(firstCollection));
+            this.props.dispatch(displayCollectionFeeds(firstCollection._id));
         }
     }
 
@@ -53,6 +54,7 @@ export class DisplayCollection extends Component {
             event.target.parentNode.className = "collection-name active";
         }
         this.props.dispatch(setCurrentCollection(collection));
+        this.props.dispatch(displayCollectionFeeds(collection._id));
         if(this.props.addArticleToCollection.id) {
             this.props.dispatch(addToCollection(collection.collection, this.props.addArticleToCollection));
         }

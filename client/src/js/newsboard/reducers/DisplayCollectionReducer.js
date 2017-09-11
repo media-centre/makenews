@@ -8,14 +8,13 @@ import {
 export function displayCollection(state = [], action = {}) {
     switch(action.type) {
     case COLLECTION_FEEDS: {
-        return Object.assign([], state.concat(action.feeds));
+        return [...action.feeds];
     }
     case CLEAR_COLLECTION_FEEDS: {
         return [];
     }
     case DELETE_COLLECTION_FEED: {
-        const filteredCollection = state.filter(feed => feed._id !== action.deleteFeed);
-        return [].concat(filteredCollection);
+        return [...state.filter(feed => feed._id !== action.deleteFeed)];
     }
     default: return state;
     }
