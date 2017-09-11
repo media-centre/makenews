@@ -36,7 +36,7 @@ describe("UserProfileTab", () => {
         expect(img.type).to.be.equals("span");
         expect(img.props.className).to.be.equals("user-profile__image");
         expect(img.props.children.type).to.be.equals("img");
-        expect(img.props.children.props.src).to.be.equals("../../../images/userprofile-icon.png");
+        expect(img.props.children.props.src).to.be.equals("./images/userprofile-icon.png");
     });
 
     it("should have default name as user", ()=> {

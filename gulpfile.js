@@ -17,10 +17,52 @@ var babelRegister = null;
 var uglify = require("gulp-uglify");
 var buffer = require("vinyl-buffer");
 var envify = require("gulp-envify");
-
+var cordova = require("cordova-lib").cordova.raw;
 
 var development = environments.development; //eslint-disable-line no-unused-vars
 var production = environments.production;
+
+function clean(path) {
+    return del(path);
+}
+gulp.task("mobile:remove-directory", function () {
+    var files = "." + parameters.mobile.mobilePath;
+    return clean(files);
+});
+gulp.task("mobile:init", ["mobile:remove-directory"], function (cb) {
+    process.chdir(__dirname + "/dist/");
+    exec("cordova create mobile com.mediaCenter.android MediaCenter", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        process.chdir("../");
+        cb(err);
+    });
+});
+gulp.task("mobile:create", function (cb) {
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+    exec("cordova platform add android ", (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task("mobile:clean-files", function () {
+    var files = parameters.mobile.cordovaPath + "/*";
+    return clean(files);
+});
+gulp.task("mobile:copy-files", ["mobile:clean-files"], function () {
+    return gulp.src([parameters.mobile.appPath + "/**/*"]).pipe(gulp.dest(parameters.mobile.cordovaPath));
+});
+gulp.task("mobile:build", ["mobile:copy-files"], function (cb) {
+    process.chdir(__dirname + parameters.mobile.mobilePath);
+    cordova.build().then(function () {
+        process.chdir("../");
+        cb();
+    }).catch(function (err) {
+        console.log(err);
+    });
+});
 
 function loadBabelForTests() {
     if(!babelRegister) {

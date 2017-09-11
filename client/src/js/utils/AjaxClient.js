@@ -2,6 +2,7 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import UserSession from "../user/UserSession";
 import AppWindow from "../utils/AppWindow";
 import fetch from "isomorphic-fetch";
+import { isCordova } from "./Constants";
 
 export default class AjaxClient {
     static instance(url, skipTimer) {
@@ -18,7 +19,6 @@ export default class AjaxClient {
     async post(headers, data) {
         return await this.request({
             "method": "POST",
-            "credentials": "same-origin",
             "headers": headers,
             "body": JSON.stringify(data)
         });
@@ -27,7 +27,6 @@ export default class AjaxClient {
     async put(headers, data) {
         return await this.request({
             "method": "PUT",
-            "credentials": "same-origin",
             "headers": headers,
             "body": JSON.stringify(data)
         });
@@ -41,8 +40,7 @@ export default class AjaxClient {
             this.url = this.url + keyValues.join("&");
         }
         return await this.request({
-            "method": requestType,
-            "credentials": "same-origin"
+            "method": requestType
         });
     }
 
@@ -55,6 +53,7 @@ export default class AjaxClient {
     }
 
     async request(params) {
+        params.credentials = isCordova ? "include" : "same-origin";
         let response = await fetch(this.url, params);
 
         let responseJson = await response.json();

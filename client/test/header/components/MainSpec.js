@@ -49,6 +49,6 @@ describe("MainHeader", () => {
         expect(div.props.className).to.equals("header");
         expect(image.className).to.equals("header__logo");
         expect(image.children.type).to.equals("img");
-        expect(image.children.props.src).to.equals(".../../../images/makenews-logo.png");
+        expect(image.children.props.src).to.equals("./images/makenews-logo.png");
     });
 });

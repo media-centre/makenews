@@ -52,7 +52,7 @@ export class AddUrl extends PureComponent {
         return (
             <div className="add-url">
                 <div className="add-url__message">
-                    <span className="image"><img src="./../../../images/warning-icon.png"/></span>
+                    <span className="image"><img src="./images/warning-icon.png"/></span>
                     <span className="text">
                         {this.addCustomUrl.description[this.props.currentTab]}
                     </span>
@@ -71,7 +71,7 @@ export class AddUrl extends PureComponent {
                             autoFocus
                         />
                         <span className="input-addon">
-                            <img src="./../../../images/arrow-icon.png" onClick={this._addUrl}/>
+                            <img src="./images/arrow-icon.png" onClick={this._addUrl}/>
                         </span>
                     </div>
                 </div>

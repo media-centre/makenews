@@ -4,6 +4,7 @@ import AppSessionStorage from "../utils/AppSessionStorage";
 import AjaxClient from "../utils/AjaxClient";
 import AppWindow from "../utils/AppWindow";
 import { getConfiguredSources } from "../sourceConfig/actions/SourceConfigurationActions";
+import { isCordova } from "../utils/Constants";
 
 const leadTime = 120000;
 
@@ -39,7 +40,7 @@ export default class UserSession {
 
     renewSession() {
         let currentTime = moment().valueOf();
-        if(!this.isActiveContinuously(currentTime)) {
+        if(!isCordova && !this.isActiveContinuously(currentTime)) {
             clearInterval(this.sessionTimer);
             this.autoLogout();
             return;

@@ -18,6 +18,6 @@ describe("ConfigureTab", () => {
         assert.strictEqual(linkProps.to, "/test");
         assert.strictEqual(linkProps.children.props.className, "header-tabs--configure active");
         assert.strictEqual(link.children.props.className, "header-tabs--configure__image");
-        assert.strictEqual(image.children.props.src, "./../../../images/configure-icon.png");
+        assert.strictEqual(image.children.props.src, "./images/configure-icon.png");
     });
 });

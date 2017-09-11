@@ -10,7 +10,7 @@ export default class UserProfileTab extends PureComponent {
         return (
             <div className="user-profile">
                 <span className="user-profile__image">
-                    <img src="../../../images/userprofile-icon.png"/>
+                    <img src="./images/userprofile-icon.png"/>
                 </span>
                 <span className="user-profile__name">{userName}</span>
                 <span className="user-profile__downarrow">
