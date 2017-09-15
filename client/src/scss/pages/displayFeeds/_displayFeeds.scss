@@ -80,9 +80,6 @@
     @media (min-width:$mobile-max-width) and (max-width:$tablet-max-width) {
       flex-basis: $side-panel-width-tab;
     }
-    @media (max-width: $mobile-max-width) {
-      flex-basis: 370px;
-    }
 
     .search-bar {
       height: $secondary-header-nav-height;
@@ -323,4 +320,8 @@
   font-size: 1.2rem;
   color: #a7a6a6;
   padding-top: 16rem;
+}
+
+.feed-article-container {
+  display: inline-flex;
 }

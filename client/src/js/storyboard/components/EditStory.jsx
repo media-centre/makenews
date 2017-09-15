@@ -4,8 +4,7 @@ import Toast from "../../utils/custom_templates/Toast";
 import History from "../../History";
 import StringUtil from "../../../../../common/src/util/StringUtil";
 import NewsBoardTabs from "./../../newsboard/components/NewsBoardTabs";
-import DisplayFeeds from "./../../newsboard/components/DisplayFeeds";
-import { WRITE_A_STORY } from "./../../header/HeaderActions";
+import FeedContainer from "./../../newsboard/components/FeedContainer";
 import FileSaver from "file-saver";
 import AppWindow from "./../../utils/AppWindow";
 import Locale from "./.././../utils/Locale";
@@ -13,7 +12,6 @@ import { popUp } from "./../../header/HeaderActions";
 import { getStory, saveStory } from "./../actions/StoryBoardActions";
 
 export default class EditStory extends Component {
-
     static blobInstance(byteNumbers) {
         return new Blob([byteNumbers], { "type": "text/html" });
     }
@@ -32,6 +30,7 @@ export default class EditStory extends Component {
         this._saveStory = this._saveStory.bind(this);
         this._showConfirmPopup = this._showConfirmPopup.bind(this);
         this._goBack = (isConfirm) => this._back(isConfirm);
+        this._navBarRef = this._navBarRef.bind(this);
     }
 
     componentDidMount() {
@@ -118,6 +117,10 @@ export default class EditStory extends Component {
         }
     }
 
+    _navBarRef() {
+        return this.refs.storyBoardNavBar;
+    }
+
     render() {
         this.storyboardStrings = Locale.applicationStrings().messages.storyBoard;
         return (
@@ -151,9 +154,9 @@ export default class EditStory extends Component {
                     </div>
                 </div>
 
-                <DisplayFeeds currentHeaderTab={WRITE_A_STORY}/>
+                <FeedContainer navBar={this._navBarRef}/>
 
-                <div className="source-type-bar">
+                <div className="source-type-bar" ref="storyBoardNavBar">
                     <NewsBoardTabs />
                 </div>
             </div>

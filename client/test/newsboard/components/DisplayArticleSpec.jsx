@@ -47,7 +47,7 @@ describe("DisplayArticle", () => {
         });
 
         renderer = TestUtils.createRenderer();
-        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" collectionName="test" currentHeaderTab="Scan News"/>);
+        displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" collectionName="test" currentHeaderTab="Scan News" toolBar/>);
     });
 
     afterEach("DisplayArticle", () => {
@@ -149,7 +149,7 @@ describe("DisplayArticle", () => {
             expect(headerDOM.type).to.equal("header");
         });
 
-        it("should dispatch newsBoardTabSwitch, addArticleToCollection when add to collection clicked", () => {
+        it("should dispatch newsBoardTabSwitch, addArticleToCollection when add to collection is clicked", () => {
             let article = { "_id": "article id", "description": "article description" };
             let currentTab = "facebook";
             let store = createStore(() => ({
@@ -166,7 +166,7 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
+                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News" toolBar/>
                 </Provider>
             );
             let collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
@@ -200,7 +200,15 @@ describe("DisplayArticle", () => {
 
         it("should have bookmark & active classes when article is boomarked", () => {
             feed.bookmark = true;
-            displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab={"collection"} currentHeaderTab= "Scan News" />);
+            displayArticleDom = renderer.render(
+                <DisplayArticle active={active}
+                                article={feed}
+                                dispatch={anonymousFun}
+                                newsBoardCurrentSourceTab={"collection"}
+                                currentHeaderTab= "Scan News"
+                                toolBar
+                />
+            );
             let [headerDOM] = displayArticleDom.props.children;
             const [, articleHeaderDOM] = headerDOM.props.children;
             let [, bookmarkDOM] = articleHeaderDOM.props.children;
@@ -222,7 +230,12 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
+                    <DisplayArticle article={article}
+                                    dispatch={anonymousFun}
+                                    newsBoardCurrentSourceTab="web"
+                                    currentHeaderTab="Scan News"
+                                    toolBar
+                    />
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
@@ -245,7 +258,12 @@ describe("DisplayArticle", () => {
 
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
-                    <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News"/>
+                    <DisplayArticle article={article}
+                                    dispatch={anonymousFun}
+                                    newsBoardCurrentSourceTab="web"
+                                    currentHeaderTab="Scan News"
+                                    toolBar
+                    />
                 </Provider>
             );
             let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
@@ -266,7 +284,14 @@ describe("DisplayArticle", () => {
                 "_id": 123
             };
 
-            displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab={"collections"} collectionName="test"/>);
+            displayArticleDom = renderer.render(
+                <DisplayArticle article={feed}
+                                dispatch={anonymousFun}
+                                newsBoardCurrentSourceTab={"collections"}
+                                collectionName="test"
+                                feedCallback={anonymousFun}
+                />
+            );
             let [mainDOM] = displayArticleDom.props.children;
             let backButton = mainDOM.props.children;
             let [arrowIcon, name] = backButton.props.children;
@@ -296,7 +321,8 @@ describe("DisplayArticle", () => {
             displayArticleDom = renderer.render(
                 <DisplayArticle
                     article={feed} dispatch={anonymousFun}
-                    newsBoardCurrentSourceTab={"web"} articleOpen={anonymousFun}
+                    newsBoardCurrentSourceTab={"web"}
+                    feedCallback={anonymousFun}
                     feedsDOM={feedsDOM}
                 />
             );

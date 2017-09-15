@@ -10,7 +10,7 @@
   }
 
   @media (max-width: $mobile-max-width) {
-    flex-basis: 370px;
+    flex-basis: auto;
   }
 
   .search-bar {
@@ -145,6 +145,10 @@
       left: 65px;
       width: 395px;
       top: 5%;
+
+      @media (max-width: $mobile-max-width) {
+        width: 300px;
+      }
     }
 
     .confirmation-text {

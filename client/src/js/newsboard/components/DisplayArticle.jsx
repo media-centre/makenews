@@ -22,13 +22,6 @@ export class DisplayArticle extends Component {
         this._addToCollection = this._addToCollection.bind(this);
         this.addTextToCollection = (event) => this._addTextToCollection(event);
         this.copyTextToClipboard = (event) => this._copyTextToClipboard(event);
-        this.closeArticle = this.closeArticle.bind(this);
-    }
-
-    componentWillUnmount() {
-        if(this.props.feedsDOM) {
-            this.props.feedsDOM.style.display = "block";
-        }
     }
 
     _showToolTip() {
@@ -140,8 +133,8 @@ export class DisplayArticle extends Component {
                         <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
                   </header>
                 : <header className="display-article__header">
-                    {this.props.feedsDOM && this.renderBackbutton() }
-                    {this.props.currentHeaderTab === SCAN_NEWS && this.renderArticleHeader()}
+                    {this.props.feedCallback && this.renderBackbutton()}
+                    {this.props.toolBar && this.renderArticleHeader()}
                 </header>
         );
     }
@@ -150,14 +143,9 @@ export class DisplayArticle extends Component {
         this.props.dispatch(bookmarkArticle(this.props.article, this.props.newsBoardCurrentSourceTab));
     }
 
-    closeArticle() {
-        this.props.articleOpen();
-        this.props.feedsDOM.style.display = "block";
-    }
-
     renderBackbutton() {
         return (
-            <button className="back__button" onClick={this.closeArticle}>
+            <button className="back__button" onClick={this.props.feedCallback}>
                 <i className="icon fa fa-arrow-left" aria-hidden="true"/> {this.articleMessages.backButton}
             </button>
         );
@@ -191,11 +179,9 @@ export class DisplayArticle extends Component {
             if(this.props.collectionDOM) {
                 this.props.collectionDOM.style.display = "none";
             }
-            if(this.props.feedsDOM) {
-                this.props.feedsDOM.style.display = "none";
-            }
+
             return (
-                <article className={this.props.feedsDOM ? "story-display-article display-article" : "display-article"} onClick={this._hideToolTip}>
+                <article className={this.props.feedCallback ? "story-display-article display-article" : "display-article"} onClick={this._hideToolTip}>
                     { this.renderHeader() }
                     { this.renderBody() }
                 </article>
@@ -216,10 +202,10 @@ DisplayArticle.propTypes = {
     "dispatch": PropTypes.func.isRequired,
     "newsBoardCurrentSourceTab": PropTypes.string.isRequired,
     "collectionDOM": PropTypes.object,
-    "feedsDOM": PropTypes.object,
     "collectionName": PropTypes.string,
-    "articleOpen": PropTypes.func,
-    "currentHeaderTab": PropTypes.string
+    "feedCallback": PropTypes.func,
+    "currentHeaderTab": PropTypes.string,
+    "toolBar": PropTypes.bool
 };
 
 function mapToStore(store) {

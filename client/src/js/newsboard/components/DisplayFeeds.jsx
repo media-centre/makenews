@@ -8,13 +8,10 @@ import * as DisplayFeedActions from "../actions/DisplayFeedActions";
 import R from "ramda"; //eslint-disable-line id-length
 import DisplayCollection from "./DisplayCollection";
 import Spinner from "../../utils/components/Spinner";
-import { WRITE_A_STORY } from "./../../header/HeaderActions";
-import DisplayArticle from "./DisplayArticle";
 import StringUtils from "./../../../../../common/src/util/StringUtil";
 import Toast from "./../../utils/custom_templates/Toast";
 import Locale from "./../../utils/Locale";
 import { Link } from "react-router";
-import { IS_MOBILE } from "./../../utils/Constants";
 
 const MIN_SEARCH_KEY_LENGTH = 3;
 
@@ -164,8 +161,11 @@ export class DisplayFeeds extends Component {
             AppWindow.instance().set("autoRefreshTimer", setInterval(this.fetchFeedsFromSources, AUTO_REFRESH_INTERVAL));
         }
     }
+
     _isClicked() {
-        this.setState({ "isFeedSelected": !this.state.isFeedSelected });
+        if(this.props.feedCallback) {
+            this.props.feedCallback();
+        }
     }
 
     _showNewFeeds() {
@@ -269,42 +269,46 @@ export class DisplayFeeds extends Component {
         return null;
     }
 
+
+    getFeedsDOM() {
+        return (<div ref="feedsDOM" onClick={this._hideExpandView}>
+            <div className="search-bar">
+                <div className="input-box">
+                    <input type="text" ref="searchFeeds"
+                        onKeyUp={this.checkEnterKey}
+                        className="search-sources"
+                        placeholder="Search Keywords, Articles etc."
+                        title="Search Keywords, Articles etc."
+                    />
+                    {this.state.searchToggle
+                        ? <span className="input-addon" onClick={this._cancel}>&times;</span>
+                        : <span className="input-addon" onClick={this._search}><i className="fa fa-search" aria-hidden="true"/></span>
+                    }
+                </div>
+            </div>
+            { this.state.gotNewFeeds && this._showMoreFeedsButton() }
+            <i onClick={this.toggleFeedsView} className="expand-icon" />
+            <div className="feeds-container" ref="feeds">
+                <div className="feeds">
+                    {this.props.feeds.map((feed, index) =>
+                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
+                            isClicked={this._isClicked} dispatch={this.props.dispatch}
+                        />)
+                    }
+                    {this.props.isFetchingFeeds
+                        ? <Spinner />
+                        : this._defaultMessage()
+                    }
+                </div>
+            </div>
+        </div>);
+    }
+
     displayFeeds() {
         this.newsboardStrings = Locale.applicationStrings().messages.newsBoard;
         return (<div className={this.state.expandFeedsView ? "configured-feeds-container expand" : "configured-feeds-container"}>
-                {(this.props.currentHeaderTab === WRITE_A_STORY || IS_MOBILE) && this.state.isFeedSelected && <DisplayArticle articleOpen={this._isClicked} feedsDOM={this.refs.feedsDOM}/>}
-                <div ref="feedsDOM" onClick={this._hideExpandView}>
-                    <div className="search-bar">
-                        <div className="input-box">
-                            <input type="text" ref="searchFeeds"
-                                onKeyUp={this.checkEnterKey}
-                                className="search-sources"
-                                placeholder="Search Keywords, Articles etc."
-                                title="Search Keywords, Articles etc."
-                            />
-                            {this.state.searchToggle
-                                ? <span className="input-addon" onClick={this._cancel}>&times;</span>
-                                : <span className="input-addon" onClick={this._search}><i className="fa fa-search" aria-hidden="true"/></span>
-                            }
-                        </div>
-                    </div>
-                    { this.state.gotNewFeeds && this._showMoreFeedsButton() }
-                    <i onClick={this.toggleFeedsView} className="expand-icon" />
-                    <div className="feeds-container" ref="feeds">
-                        <div className="feeds">
-                            { this.props.feeds.map((feed, index) =>
-                                <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                                    isClicked={this._isClicked} dispatch={this.props.dispatch}
-                                />)
-                            }
-                            { this.props.isFetchingFeeds
-                                ? <Spinner />
-                                : this._defaultMessage()
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>);
+            {this.getFeedsDOM()}
+        </div>);
     }
 
     render() {
@@ -333,7 +337,8 @@ DisplayFeeds.propTypes = {
     "currentFilterSource": PropTypes.object,
     "configuredSources": PropTypes.object,
     "isFetchingFeeds": PropTypes.bool,
-    "currentHeaderTab": PropTypes.string
+    "currentHeaderTab": PropTypes.string,
+    "feedCallback": PropTypes.func
 };
 
 export default connect(mapToStore)(DisplayFeeds);

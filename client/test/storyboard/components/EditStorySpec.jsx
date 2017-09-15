@@ -2,7 +2,7 @@ import EditStory from "../../../src/js/storyboard/components/EditStory";
 import TestUtils from "react-addons-test-utils";
 import { shallow } from "enzyme";
 import React from "react";
-import DisplayFeeds from "./../../../src/js/newsboard/components/DisplayFeeds";
+import FeedContainer from "./../../../src/js/newsboard/components/FeedContainer";
 import NewsBoardTabs from "./../../../src/js/newsboard/components/NewsBoardTabs";
 import { assert } from "chai";
 import { findAllWithType, findWithClass } from "react-shallow-testutils";
@@ -126,10 +126,10 @@ describe("EditStory", () => {
         saveMock.verify();
     });
 
-    it("should have Display feeds component", () => {
-        let source = findAllWithType(renderedOutput, DisplayFeeds);
-        let [displayFeeds] = source;
-        assert.isDefined(displayFeeds);
+    it("should have FeedContainer component", () => {
+        let source = findAllWithType(renderedOutput, FeedContainer);
+        let [feedContainer] = source;
+        assert.isDefined(feedContainer);
     });
 
     it("should have tabs component", () => {
