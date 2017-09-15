@@ -18,6 +18,10 @@
         width: $configured-source-panel-width-tab;
       }
 
+      @media (max-width: $mobile-max-width) {
+        display: none;
+      }
+
       .heading {
         background: $dark-background-color;
         padding: 15px;
