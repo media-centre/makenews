@@ -1,7 +1,7 @@
     if(!window.mediaCenter) {
         window.mediaCenter = {};
     }
-    window.mediaCenter.serverUrl = "http://localhost:5000";
+    window.mediaCenter.serverUrl = "";
     window.mediaCenter.facebookAppId = "";
     window.mediaCenter.autoRefreshSurfFeedsInterval = 300000;
     window.mediaCenter.dbSessionInterval = 600000;

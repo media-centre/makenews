@@ -361,7 +361,7 @@ export const FB_DEFAULT_SOURCES = {
         "data": []
     }
 };
-export const IS_MOBILE = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
+export const IS_MOBILE = window.innerWidth <=600;
 const NOT_FOUND_INDEX = -1;
 export const isCordova = document.URL.indexOf("http://") === NOT_FOUND_INDEX && document.URL.indexOf("https://") === NOT_FOUND_INDEX;
 

@@ -119,6 +119,9 @@ export class DisplayArticle extends Component {
     _addToCollection() {
         this.props.dispatch(newsBoardTabSwitch(newsBoardSourceTypes.collection));
         this.props.dispatch(addArticleToCollection(this.props.article._id, this.props.newsBoardCurrentSourceTab, this.props.article.sourceId));
+        if(this.props.feedCallback) {
+            this.props.feedCallback();
+        }
     }
 
     hideArticle() {

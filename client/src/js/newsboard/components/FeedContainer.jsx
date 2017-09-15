@@ -46,5 +46,5 @@ export default class FeedContainer extends Component {
 FeedContainer.propTypes = {
     "currentTab": PropTypes.string,
     "toolBar": PropTypes.bool,
-    "navBar": PropTypes.string
+    "navBar": PropTypes.func
 };
