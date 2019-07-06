@@ -21,8 +21,6 @@ export default class FilterTabs extends Component {
             <div className="source-type-bar">
                 {filterIcon}
                 <FilterTab sourceIcon={icons[newsBoardSourceTypes.web]} sourceType={newsBoardSourceTypes.web}/>
-                <FilterTab sourceIcon={icons[newsBoardSourceTypes.facebook]} sourceType={newsBoardSourceTypes.facebook}/>
-                <FilterTab sourceIcon={icons[newsBoardSourceTypes.twitter]} sourceType={newsBoardSourceTypes.twitter}/>
             </div>
         );
     }

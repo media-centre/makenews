@@ -39,10 +39,6 @@ export class SourcePane extends Component {
                             {configurePageStrings.addCustomUrl.name}
                         </button>
                     }
-                    <button className="add-all" onClick= {this._addAllSources}>
-                        <i className="icon fa fa-plus-circle"/>
-                        {configurePageStrings.addAll}
-                    </button>
                 </div>
                 { this.props.showAddUrl ? <AddUrl currentTab={this.props.currentTab}/> : <Sources /> }
             </div>

@@ -146,7 +146,7 @@ export default class EditStory extends Component {
                         <button ref="saveButton" type="submit" className="save" value="save" onClick={this._saveStory}>{this.storyboardStrings.saveButton}</button>
                     </div>
                     <div className="title-bar">
-                        <input className="story-title" ref="title" placeholder="please enter title" autoFocus />
+                        <input className="story-title" ref="title" placeholder="Titel eingeben" autoFocus />
                     </div>
                     {EditStory.quillEditor(this.state.body)}
                     <div className="export-container">

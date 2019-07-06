@@ -8,6 +8,13 @@ import AppSessionStorage from "../../utils/AppSessionStorage";
 
 export class ConfigPaneNavigation extends Component {
     navButtons() {
+        if(this.props.currentSourceType === "facebook") {
+            return null;
+        }
+        if(this.props.currentSourceType === "twitter") {
+            return null;
+        }
+
         const firstTimeUser = AppSessionStorage.instance().getValue(AppSessionStorage.KEYS.FIRST_TIME_USER);
         const hasConfiguredSources = R.pipe(
             R.values,
@@ -18,9 +25,6 @@ export class ConfigPaneNavigation extends Component {
             if (this.props.sourcesAuthenticationInfo.facebook) {
                 return (
                     <div>
-                        <Link to="/configure/twitter" className="sources-nav__next btn btn-secondary">
-                            <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.next}
-                        </Link>
                         {
                             hasConfiguredSources && !firstTimeUser &&
                             <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
@@ -58,9 +62,6 @@ export class ConfigPaneNavigation extends Component {
         }
         return (
             <div>
-                <Link to="/configure/facebook/pages" className="sources-nav__next btn btn-secondary">
-                    <i className="fa fa-arrow-right right-arrow"/> {this.configureHeaderStrings.next}
-                </Link>
                 {
                     hasConfiguredSources && !firstTimeUser &&
                     <Link to="/newsBoard" className="sources-nav__next btn btn-primary">
@@ -78,14 +79,6 @@ export class ConfigPaneNavigation extends Component {
                 <Link to="/configure/web" className={this.props.currentSourceType === "web" ? "sources-nav__item active" : "sources-nav__item"}>
                     <i className="fa fa-globe"/>
                     <span>{this.configureHeaderStrings.web}</span>
-                </Link>
-                <Link to="/configure/facebook/pages" className={this.props.currentSourceType === "facebook" ? "sources-nav__item active" : "sources-nav__item"}>
-                    <i className="fa fa-facebook-square"/>
-                    <span>{this.configureHeaderStrings.facebook.name}</span>
-                </Link>
-                <Link to="/configure/twitter" className={this.props.currentSourceType === "twitter" ? "sources-nav__item active" : "sources-nav__item"}>
-                    <i className="fa fa-twitter"/>
-                    <span>{this.configureHeaderStrings.twitter}</span>
                 </Link>
                 <nav className="secondary-nav">
                     {this.navButtons()}

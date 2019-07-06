@@ -277,8 +277,8 @@ export class DisplayFeeds extends Component {
                     <input type="text" ref="searchFeeds"
                         onKeyUp={this.checkEnterKey}
                         className="search-sources"
-                        placeholder="Search Keywords, Articles etc."
-                        title="Search Keywords, Articles etc."
+                        placeholder="Suche nach Keywords, Artikeln, etc."
+                        title="Suche nach Keywords, Artikeln, etc."
                     />
                     {this.state.searchToggle
                         ? <span className="input-addon" onClick={this._cancel}>&times;</span>

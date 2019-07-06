@@ -10,6 +10,7 @@ import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
 import Main from "./header/components/Main";
 import ScanNews from "./newsboard/components/ScanNews";
 import StoryBoard from "./storyboard/components/StoryBoard";
+import Portfolio from "./storyboard/components/Portfolio";
 import StoryCards from "./storyboard/components/StoryCards";
 import EditStory from "./storyboard/components/EditStory";
 import WelcomePage from "./welcome/WelcomePage";
@@ -32,6 +33,8 @@ export function renderRoutes(store) { /*eslint-disable react/jsx-no-bind*/
                         <Route path="/story-board/story" dispatch={store.dispatch} component={EditStory} />
                         <Route path="/story-board/story/edit/:storyId" dispatch={store.dispatch} component={EditStory}/>
                     </Route>
+                    <Route path="/portfolio" component={Portfolio} />
+
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
                     <Route path="/twitterFailed" component={TwitterFailed} />
                     <Route path="/change-password" component={ChangePassword} />

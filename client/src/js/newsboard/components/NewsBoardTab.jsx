@@ -17,9 +17,15 @@ export class NewsBoardTab extends Component {
     }
 
     render() {
+
+        if ((this.props.title === "facebook feeds") || (this.props.title === "twitter feeds") || (this.props.title === "bookmarked items")) {
+            return null;
+        }
+
         return (
             <a className={this.props.currentNewsBoard === this.props.sourceType ? "news-board-tab active" : "news-board-tab"}
                 title={this.props.title}
+                name={this.props.title}
                 id={this.props.id}
                 onClick={this.displayFeeds}
             >

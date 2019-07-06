@@ -1,6 +1,6 @@
-export const SCAN_NEWS = "Scan News";
-export const WRITE_A_STORY = "Write a Story";
-export const CONFIGURE = "Configure";
+export const SCAN_NEWS = "Scanne deine News";
+export const WRITE_A_STORY = "Schreibe eine Story";
+export const CONFIGURE = "Einstellungen";
 export const POP_UP = "POP_UP";
 
 export function setCurrentHeaderTab(currentHeaderTab) {

@@ -134,7 +134,7 @@ export class DisplayFilters extends Component {
         return (
             <aside ref="sources" className="filters-container">
                 <Input className={"input-box"} ref="filterSearch" callback={this.searchInSources}
-                    placeholder="search" addonSrc="search"
+                    placeholder="suchen..." addonSrc="search"
                 />
                 { this.props.currentTab === "twitter" &&
                     <div className="hashtag-container">

@@ -162,16 +162,6 @@ export class DisplayArticle extends Component {
                     <span> {this.articleMessages.addToCollection}</span>
                 </div>
 
-                {this.props.article.bookmark
-                 ? <div className="bookmark active" onClick={this.bookmarkArticle}>
-                     <i className="icon fa fa-bookmark"/>
-                     <span> {this.articleMessages.bookmarked}</span>
-                   </div>
-                : <div className="bookmark" onClick={this.bookmarkArticle}>
-                     <i className="icon fa fa-bookmark"/>
-                     <span> {this.articleMessages.bookmark}</span>
-                   </div>
-                }
             </div>
         );
     }

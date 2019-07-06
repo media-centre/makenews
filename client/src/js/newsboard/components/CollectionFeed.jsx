@@ -6,6 +6,7 @@ import getHtmlContent from "../../utils/HtmContent";
 import { displayArticle } from "./../actions/DisplayFeedActions";
 import { WRITE_A_STORY } from "./../../header/HeaderActions";
 import { deleteCollectionFeed } from "../actions/DisplayCollectionActions";
+import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import Locale from "./../../utils/Locale";
 const MAX_DESCRIPTION_LENGTH = 300;
 
@@ -14,6 +15,11 @@ export default class CollectionFeed extends Component {
     constructor() {
         super();
         this._displayArticle = this._displayArticle.bind(this);
+    }
+
+    componentWillMount() {
+        const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
+        this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.collections));
     }
 
     getMedia() {

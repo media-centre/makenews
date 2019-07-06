@@ -8,14 +8,14 @@ window.mediaCenter.appEn = {
     "messages": {
         "loginPage": {
             "login": {
-                "loginButton": "Sign in",
-                "userNamePlaceHolder": "Username",
-                "passwordPlaceHolder": "Password",
-                "loginHelpLabel": "Need help to login"
+                "loginButton": "Anmelden",
+                "userNamePlaceHolder": "Benutzername",
+                "passwordPlaceHolder": "Passwort",
+                "loginHelpLabel": "Hilfe?"
             },
-            "watchDemo": "Watch Makenews Demo",
+            "watchDemo": "",
             "branding": {
-                "text": "MakeNews is for journalists and newsrooms. It helps you track news from web and social media in real-time."
+                "text": "Loca hilft Journalisten und lokalen Geschäften."
             },
             "featuresHelp": {
                 "configureHelp": {
@@ -45,42 +45,42 @@ window.mediaCenter.appEn = {
             "logoutConfirmMessage": "Your password has been successfully changed. The application will now logout. Please re-login with your new password"
         },
         "userProfileStrings": {
-            "changePassword": "Change Password",
-            "logout": "Logout",
+            "changePassword": "Passwort ändern",
+            "logout": "Abmelden",
             "help": "Help & FAQs"
         },
         "newsBoard": {
             "filters": {
                 "addHashTags": "ADD HASHTAG",
                 "addTag": "ADD TAG",
-                "cancelButton": "Cancel",
-                "applyButton": "Apply",
+                "cancelButton": "Abbrechen",
+                "applyButton": "Anwenden",
                 "hashTag": {
                     "alreadyExist": "Hashtag already exists",
                     "emptyHashTag": "Hashtag cannot be Empty"
                 }
             },
             "defaultMessages": {
-                "trending": "Please configure sources on configure page ",
-                "web": "Please configure web sources on configure page ",
+                "trending": "Bitte Quellen auf der Konfigurieren-Seite pflegen ",
+                "web": "Bitte Quellen auf der Konfigurieren-Seite pflegen ",
                 "facebook": "Please configure facebook sources on configure page ",
                 "twitter": "Please configure twitter sources on configure page ",
                 "bookmark": "Please bookmark the feeds",
-                "noFeeds": "No feeds to display"
+                "noFeeds": "Keine Feeds zum Anzeigen"
             },
             "search": {
                 "validateKey": "Please enter a keyword minimum of 3 characters",
                 "errorMessage": "No Search results found for this keyword"
             },
-            "showMoreFeedsButton": "Show new feeds",
+            "showMoreFeedsButton": "Zeige neue Feeds",
             "collection": {
-                "defaultMessage": "No feeds added to collection",
+                "defaultMessage": "Keine Feeds in der Sammlung",
                 "allCollections": "All Collections",
                 "selectCollection": "SELECT A COLLECTION",
-                "createCollection": "Create new collection",
+                "createCollection": "Neue Sammlung erstellen",
                 "readMoreButton": "Read More",
-                "backButton": "BACK",
-                "saveButton": "SAVE",
+                "backButton": "ZURÜCK",
+                "saveButton": "SPEICHERN",
                 "cancelButton": "CANCEL",
                 "confirmDelete": "Do you really want to delete collection?",
                 "deleteFailure": "Could not able to delete collection",
@@ -93,22 +93,40 @@ window.mediaCenter.appEn = {
             },
             "article": {
                 "defaultMessage": "",
-                "backButton": "back",
-                "addToCollection": "Add to Collection",
+                "backButton": "zurück",
+                "addToCollection": "zur Sammlung hinzufügen",
                 "bookmark": "Bookmark",
                 "bookmarked": "Bookmarked",
                 "readOriginalArticle": "Read the Original Article",
                 "deleteFailure": "Could not able to delete article",
                 "fetchingArticleFailure": "Unable to get the article contents",
-                "copy": "Copy"
+                "copy": "kopieren"
             },
             "bookmarkSuccess": "Successfully bookmarked"
         },
         "storyBoard": {
-            "createStory": "Create New Story",
+            "createStory": "Neuen Beitrag schreiben",
             "untitledStory": "Untitled",
-            "backButton": "Back",
-            "saveButton": "SAVE",
+            "backButton": "ZURÜCK",
+            "saveButton": "SPEICHERN",
+            "confirmDelete": "Are you sure you want to delete the story?",
+            "confirmStoryBack": "All the unsaved changes will be removed. Are you sure you want to go back?",
+            "successMessages": {
+                "saveStory": "Story saved successfully",
+                "deleteStory": "Story deleted successfully"
+            },
+            "warningMessages": {
+                "emptyStory": "Cannot save empty story"
+            },
+            "errorMessages": {
+                "saveStoryFailure": "Not able to save"
+            }
+        },
+        "portfolio": {
+            "createStory": "Portfolio",
+            "untitledStory": "Untitled",
+            "backButton": "ZURÜCK",
+            "saveButton": "SPEICHERN",
             "confirmDelete": "Are you sure you want to delete the story?",
             "confirmStoryBack": "All the unsaved changes will be removed. Are you sure you want to go back?",
             "successMessages": {
@@ -123,9 +141,10 @@ window.mediaCenter.appEn = {
             }
         },
         "mainHeaderStrings": {
-            "newsBoard": "Scan News",
-            "storyBoard": "Write a Story",
-            "configure": "Configure"
+            "newsBoard": "Nach Feeds scannen",
+            "storyBoard": "Beitrag schreiben",
+            "configure": "Konfigurieren",
+            "portfolio": "Portfolio"
         },
         "confirmPopup": {
             "ok": "OK",
@@ -223,7 +242,7 @@ window.mediaCenter.appEn = {
         },
         "configurePage": {
             "header": {
-                "mySources": "My Sources",
+                "mySources": "Meine Quellen",
                 "web": "Web URLs",
                 "facebook": {
                     "name": "Facebook",
@@ -234,19 +253,19 @@ window.mediaCenter.appEn = {
                 },
                 "twitter": "Twitter",
                 "next": "Next",
-                "done": "Done",
+                "done": "Fertig",
                 "signIn": "Sign in"
             },
-            "addAll": "Add All",
+            "addAll": "Alle hinzufügen",
             "addCustomUrl": {
-                "name": "Add custom url",
+                "name": "Url angeben",
                 "description": {
-                    "web": "Please enter the link below to add a new web source.",
+                    "web": "Hier den neuen Link hinzufügen:",
                     "pages": "Please enter the link below to add a new page source.",
                     "twitter": "Please enter the link below to add a new twitter source."
                 },
                 "exampleUrls": {
-                    "web": "http://www.thehindu.com/?service=rss",
+                    "web": "https://www.spiegel.de/schlagzeilen/tops/index.rss",
                     "pages": "https://www.facebook.com/TimesofIndia",
                     "twitter": "@timesofindia"
                 },

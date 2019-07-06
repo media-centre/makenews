@@ -18,16 +18,7 @@ export default class Input extends Component {
 
     render() {
         return (
-            <div className={this.props.className}>
-                <div className="input-container">
-                    <input ref="input" className="input-tag" type="text" placeholder={this.props.placeholder} onKeyUp={this.props.callbackOnEnter ? this.inputHandler : this.props.callback} autoFocus={this.props.autoFocus}/>
-                    {this.props.addonSrc &&
-                        <span className="input-addon">
-                            <i className={`icon fa fa-${this.props.addonSrc}`} onClick={this.props.callback}/>
-                        </span>
-                    }
-                </div>
-            </div>
+            <div className={this.props.className} />
         );
     }
 }

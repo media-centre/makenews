@@ -17,6 +17,10 @@ export class Header extends Component {
                 <HeaderTab url="/story-board/stories" name={this.props.mainHeaderStrings.storyBoard}
                     currentHeaderTab={this.props.currentHeaderTab}
                 />
+                <HeaderTab url="/portfolio" name={this.props.mainHeaderStrings.portfolio}
+                    currentHeaderTab={this.props.currentHeaderTab}
+                />
+
                 <div className="header-tabs-right">
                     <ConfigureTab url="/configure/web" name={this.props.mainHeaderStrings.configure}
                         currentHeaderTab={this.props.currentHeaderTab}
