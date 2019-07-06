@@ -10,7 +10,7 @@ export default class FacebookLogin {
     }
 
     constructor() {
-        this.initialize();
+        //this.initialize(); // todo it was activated and blocked the stream, so now we get the feed
     }
 
     initialize() {

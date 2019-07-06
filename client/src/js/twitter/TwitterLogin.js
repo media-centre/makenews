@@ -3,7 +3,7 @@ import AjaxClient from "../utils/AjaxClient";
 
 export default class TwitterLogin {
     static instance() {
-        return new TwitterLogin();
+        //    return new TwitterLogin(); // todo it was activated and blocked the stream, so now we get the feed
     }
 
     login() {
