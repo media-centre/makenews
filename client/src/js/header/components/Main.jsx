@@ -8,10 +8,7 @@ export class Main extends Component {
         return (
             <div>
                 <div className = "header">
-                    <div className = "header__logo">
-                        <img src="./images/makenews-logo.png"/>
-                    </div>
-                        <Header mainHeaderStrings={this.props.mainHeaderStrings} currentHeaderTab={this.props.currentHeaderTab}/>
+                    <Header mainHeaderStrings={this.props.mainHeaderStrings} currentHeaderTab={this.props.currentHeaderTab}/>
                 </div>
                 <section className="main">{this.props.children}</section>
             </div>

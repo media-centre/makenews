@@ -22,36 +22,16 @@ export class LoginPage extends Component {
             <div className="login-page">
                 <div className="row container">
                     <div className="branding">
-                        <img className="logo" alt="makenews" src="./images/makenews-logo.png"/>
-                        <p className="makenews-desc">
-                            {this.props.loginPageStrings.branding.text}
-                        </p>
-                        <a href="https://www.youtube.com/watch?v=KrDjm5Mwv8Y" target="_blank" className="watch-demo">
-                            <i className="arrow fa fa-caret-right" aria-hidden="true"/> {this.props.loginPageStrings.watchDemo}
-                        </a>
+                        <p>LOCA</p>
                     </div>
                     <div className="login-box">
                         <Login ref="login" onLoginClick={this._userLogin} loginStrings={this.props.loginPageStrings.login} errorMessage={this.props.login.errorMessage} />
                     </div>
                 </div>
                 <div className="screenshots container">
-                    <img src="./images/banner.png" alt="configuration, scan news and write a story thumbnails"/>
                 </div>
                 <div className="details container">
-                    <div className="page">
-                        <h2>{featuresHelp.configureHelp.name}</h2>
-                        <p className="description">{featuresHelp.configureHelp.text}</p>
-                    </div>
-                    <div className="page">
-                        <h2>{featuresHelp.scanNewsHelp.name}</h2>
-                        <p className="description">{featuresHelp.scanNewsHelp.text}</p>
-                    </div>
-                    <div className="page">
-                        <h2>{featuresHelp.writeStoryHelp.name}</h2>
-                        <p className="description">{featuresHelp.writeStoryHelp.text}</p>
-                    </div>
                 </div>
-                <div className="empty-box"></div>
             </div>
         );
     }

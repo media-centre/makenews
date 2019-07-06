@@ -33,16 +33,16 @@ window.mediaCenter.appEn = {
             }
         },
         "changePassword": {
-            "passwordUpdateFailure": "Password update failed",
-            "invalidCredentials": "Incorrect Current Password",
-            "newPwdConfirmPwdMismatch": "New Password and Confirm Password do not match",
-            "currentPassword": "current password",
-            "newPassword": "new password",
-            "confirmPassword": "confirm password",
-            "newPwdShouldNotMatchCurrentPwd": "New Password should not be same as the Current Password",
-            "pwdChangeSuccessful": "Password successfully changed",
-            "pwdShouldNotBeEmpty": "Passwords cannot be left blank",
-            "logoutConfirmMessage": "Your password has been successfully changed. The application will now logout. Please re-login with your new password"
+            "passwordUpdateFailure": "Fehler",
+            "invalidCredentials": "aktuelles Passwort nicht korrekt",
+            "newPwdConfirmPwdMismatch": "passt nicht zusammen",
+            "currentPassword": "aktuelles Passwort",
+            "newPassword": "neues Passwort",
+            "confirmPassword": "Passwort bestätigen",
+            "newPwdShouldNotMatchCurrentPwd": "Das Passwort sollte ein neues sein",
+            "pwdChangeSuccessful": "Erfolgreich",
+            "pwdShouldNotBeEmpty": "Darf nicht leer sein",
+            "logoutConfirmMessage": "System wird abgemeldet. Bitte neu anmelden. :)"
         },
         "userProfileStrings": {
             "changePassword": "Passwort ändern",
@@ -141,10 +141,10 @@ window.mediaCenter.appEn = {
             }
         },
         "mainHeaderStrings": {
-            "newsBoard": "Nach Feeds scannen",
-            "storyBoard": "Beitrag schreiben",
+            "newsBoard": "Lesen",
+            "storyBoard": "Schreiben",
             "configure": "Konfigurieren",
-            "portfolio": "Portfolio"
+            "portfolio": "Veröffentlichen"
         },
         "confirmPopup": {
             "ok": "OK",

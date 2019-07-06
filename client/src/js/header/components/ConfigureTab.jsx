@@ -8,7 +8,7 @@ export default class ConfigureTab extends PureComponent {
             <Link to={this.props.url} >
                 <div className={"header-tabs--configure " + ((this.props.currentHeaderTab === this.props.name) ? "active" : "")}>
                     <span className="header-tabs--configure__image">
-                        <img src="./images/configure-icon.png"/>
+                        Feeds
                     </span>
                 </div>
             </Link>

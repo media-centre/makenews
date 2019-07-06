@@ -1,17 +1,20 @@
 .header {
   height: $main-header-height;
+  padding-left: 1rem;
   position: fixed;
   z-index: 1;
   width: 100%;
-  background-color: $primary-color-dark;
-  border-bottom: 4px solid $secondary-color;
+  background-color: #ffffff;
+  border-color: #9ecaed;
+  box-shadow: 0 0 10px #9ecaed;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 
   &__logo {
     width: 177px;
-    float: left;
+    position: absolute;
+    left: 49.5%;
 
     img {
       width: 145px;
@@ -28,23 +31,22 @@
 }
 
 .header-tabs--left {
+  background: #2a1f3f;
   float: left;
   height: 64px;
 
   &__item {
     float: left;
-    width: 144px;
     height: 64px;
-    color: #fff;
-    margin: 0 -1rem 0 1.5rem;
+    color: #2A1F3F;
+    margin: 0 1rem 0 0;
 
     &__name {
       float: left;
       margin-top: 20px;
-      margin-left: 30px;
-      width: 110px;
       height: 24px;
       cursor: pointer;
+      color: #2A1F3F;
     }
 
     &.active {
@@ -150,12 +152,8 @@
 
 @media (max-width: $tablet-max-width) {
   .header__logo {
-    width: 130px;
-
-    img {
-      width: 120px;
-      margin-left: 15px;
-    }
+    position: absolute;
+    left: 49.5%;
   }
 
   .header-tabs--left__item {
