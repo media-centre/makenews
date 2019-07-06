@@ -18,7 +18,7 @@ export class NewsBoardTab extends Component {
 
     render() {
 
-        if ((this.props.title === "facebook feeds") || (this.props.title === "twitter feeds") || (this.props.title === "bookmarked items")) {
+        if ((this.props.title === "facebook feeds") || (this.props.title === "twitter feeds") || (this.props.title === "bookmarked items") || (this.props.title === "trending feeds")) {
             return null;
         }
 

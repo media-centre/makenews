@@ -109,11 +109,11 @@ window.mediaCenter.appEn = {
             "untitledStory": "Untitled",
             "backButton": "ZURÜCK",
             "saveButton": "SPEICHERN",
-            "confirmDelete": "Are you sure you want to delete the story?",
-            "confirmStoryBack": "All the unsaved changes will be removed. Are you sure you want to go back?",
+            "confirmDelete": "Wirklich löschen?",
+            "confirmStoryBack": "Wirklich gehen ohne zu speichern?",
             "successMessages": {
-                "saveStory": "Story saved successfully",
-                "deleteStory": "Story deleted successfully"
+                "saveStory": "Beitrag gespeichert",
+                "deleteStory": "gelöscht"
             },
             "warningMessages": {
                 "emptyStory": "Cannot save empty story"
@@ -144,7 +144,7 @@ window.mediaCenter.appEn = {
             "newsBoard": "Lesen",
             "storyBoard": "Schreiben",
             "configure": "Konfigurieren",
-            "portfolio": "Veröffentlichen"
+            "portfolio": "Portfolio"
         },
         "confirmPopup": {
             "ok": "OK",

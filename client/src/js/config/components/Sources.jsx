@@ -55,7 +55,7 @@ export class Sources extends Component {
         const _renderSources = (source, index) => <Source key={index} source={source} dispatch={this.props.dispatch} currentSourceType={this.props.currentTab}/>;
 
         let message = this.props.sources.keyword ? <p>{"No results found. Please enter another keyword"}</p>
-            : <p>{"Hier erscheinen die Feeds"}</p>;
+            : <p>{""}</p>;
 
         return (
             <div className="source-results">
