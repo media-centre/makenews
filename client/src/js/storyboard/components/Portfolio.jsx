@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { setCurrentHeaderTab } from "./../../header/HeaderActions";
 import { connect } from "react-redux";
@@ -12,7 +12,10 @@ export class Portfolio extends Component {
     }
 
     render() {
-        return this.props.children;
+        return (<div className="portfolio">
+                <img className="portfolioImage" src="./images/portfolioImage.png" />
+            </div>
+        );
     }
 }
 

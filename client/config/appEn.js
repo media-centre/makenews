@@ -85,10 +85,10 @@ window.mediaCenter.appEn = {
                 "confirmDelete": "Do you really want to delete collection?",
                 "deleteFailure": "Could not able to delete collection",
                 "addToCollectionMessages": {
-                    "createCollectionSuccess": "Successfully created collection",
-                    "createCollectionFailure": "Failed to create collection",
-                    "addFeedToCollectionFailure": "Failed to add feed to collection",
-                    "addFeedToCollectionSuccess": "Added to"
+                    "createCollectionSuccess": "Fehler",
+                    "createCollectionFailure": "Fehler",
+                    "addFeedToCollectionFailure": "Fehler",
+                    "addFeedToCollectionSuccess": "Hinzugefügt zu"
                 }
             },
             "article": {
