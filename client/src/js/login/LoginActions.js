@@ -30,7 +30,7 @@ export function userLogin(history, userName, password) {
                 history.push("/newsBoard");
             }
         } catch(errorData) {
-            dispatch(loginFailed("Invalid user name or password"));
+            dispatch(loginFailed("Ungültiger Nutzername oder Passwort"));
         }
     };
 }
