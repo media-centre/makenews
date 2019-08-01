@@ -202,11 +202,11 @@ describe("DisplayArticle", () => {
             feed.bookmark = true;
             displayArticleDom = renderer.render(
                 <DisplayArticle active={active}
-                                article={feed}
-                                dispatch={anonymousFun}
-                                newsBoardCurrentSourceTab={"collection"}
-                                currentHeaderTab= "Scan News"
-                                toolBar
+                    article={feed}
+                    dispatch={anonymousFun}
+                    newsBoardCurrentSourceTab={"collection"}
+                    currentHeaderTab= "Scan News"
+                    toolBar
                 />
             );
             let [headerDOM] = displayArticleDom.props.children;
@@ -231,10 +231,10 @@ describe("DisplayArticle", () => {
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article}
-                                    dispatch={anonymousFun}
-                                    newsBoardCurrentSourceTab="web"
-                                    currentHeaderTab="Scan News"
-                                    toolBar
+                        dispatch={anonymousFun}
+                        newsBoardCurrentSourceTab="web"
+                        currentHeaderTab="Scan News"
+                        toolBar
                     />
                 </Provider>
             );
@@ -259,10 +259,10 @@ describe("DisplayArticle", () => {
             let displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article}
-                                    dispatch={anonymousFun}
-                                    newsBoardCurrentSourceTab="web"
-                                    currentHeaderTab="Scan News"
-                                    toolBar
+                        dispatch={anonymousFun}
+                        newsBoardCurrentSourceTab="web"
+                        currentHeaderTab="Scan News"
+                        toolBar
                     />
                 </Provider>
             );
@@ -286,10 +286,10 @@ describe("DisplayArticle", () => {
 
             displayArticleDom = renderer.render(
                 <DisplayArticle article={feed}
-                                dispatch={anonymousFun}
-                                newsBoardCurrentSourceTab={"collections"}
-                                collectionName="test"
-                                feedCallback={anonymousFun}
+                    dispatch={anonymousFun}
+                    newsBoardCurrentSourceTab={"collections"}
+                    collectionName="test"
+                    feedCallback={anonymousFun}
                 />
             );
             let [mainDOM] = displayArticleDom.props.children;

@@ -361,7 +361,7 @@ export const FB_DEFAULT_SOURCES = {
         "data": []
     }
 };
-export const IS_MOBILE = window.innerWidth <=600;
+export const IS_MOBILE = window.innerWidth <= 600; //eslint-disable-line no-magic-numbers
 const NOT_FOUND_INDEX = -1;
 export const isCordova = document.URL.indexOf("http://") === NOT_FOUND_INDEX && document.URL.indexOf("https://") === NOT_FOUND_INDEX;
 
