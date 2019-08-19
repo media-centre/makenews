@@ -1,5 +1,7 @@
+import sinon from "sinon";
 import TwitterParser from "../../src/twitter/TwitterParser";
 import { assert, expect } from "chai";
+import DateUtil from "../../src/util/DateUtil";
 
 describe("TwitterParser", () => {
 
@@ -27,8 +29,8 @@ describe("TwitterParser", () => {
 
         it("should return handle with specific fields", () => {
             let twitterParser = TwitterParser.instance();
-            let expectedHandle = twitterParser.parseHandle(handleFromTwitter);
-            let parsedHandle = [{
+            let actualHandle = twitterParser.parseHandle(handleFromTwitter);
+            let expectedHandle = [{
                 "id": "123",
                 "picture": {
                     "data": {
@@ -45,15 +47,22 @@ describe("TwitterParser", () => {
                 },
                 "name": "india2"
             }];
-            assert.deepEqual(parsedHandle, expectedHandle);
+            assert.deepEqual(actualHandle, expectedHandle);
         });
     });
 
     describe("parseTweets", () => {
 
         let twitterParser = null;
+        let sandbox = null;
         beforeEach("parseTweets", () => {
             twitterParser = TwitterParser.instance();
+            sandbox = sinon.sandbox.create();
+            sandbox.stub(DateUtil, "getUTCDateAndTime").returns("2001-12-11T06:11:56.000Z");
+        });
+
+        afterEach(() => {
+            sandbox.restore();
         });
 
         it("should return tweets with the desired format of description type", ()=> {

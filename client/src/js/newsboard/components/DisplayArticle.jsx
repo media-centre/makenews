@@ -73,7 +73,7 @@ export class DisplayArticle extends Component {
 
                 <div className="article__details">
                     <i className={`fa fa-${this.props.article.sourceType}`} />
-                    <span>{` | ${DateTimeUtil.getLocalTime(this.props.article.pubDate)}`}</span>
+                    <span>{` | ${DateTimeUtil.getLocalTimeFromUTC(this.props.article.pubDate)}`}</span>
                     {
                         this.props.article.tags &&
                         this.props.article.tags.map((tag, index) => <span key={index}>{` | ${tag}`}</span>)

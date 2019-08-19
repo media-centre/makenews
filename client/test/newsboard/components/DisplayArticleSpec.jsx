@@ -11,6 +11,7 @@ import { expect } from "chai";
 import { findAllWithType } from "react-shallow-testutils";
 import sinon from "sinon";
 import Locale from "./../../../src/js/utils/Locale";
+import DateTimeUtil from "../../../src/js/utils/DateTimeUtil";
 
 describe("DisplayArticle", () => {
     let feed = null, renderer = null, displayArticleDom = null, active = null;
@@ -45,6 +46,7 @@ describe("DisplayArticle", () => {
                 "newsBoard": newsBoardStrings
             }
         });
+        sandbox.stub(DateTimeUtil, "getLocalTimeFromUTC").returns("Tue, Jan 31, 2017 6:58 AM");
 
         renderer = TestUtils.createRenderer();
         displayArticleDom = renderer.render(<DisplayArticle article={feed} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" collectionName="test" currentHeaderTab="Scan News" toolBar/>);
@@ -92,7 +94,7 @@ describe("DisplayArticle", () => {
             expect(sourceTypeIcon.props.className).to.equals(`fa fa-${feed.sourceType}`);
 
             expect(pubDate.type).to.equals("span");
-            expect(pubDate.props.children).to.equals(" | Jan 31 2017, 12:28:27 PM IST");
+            expect(pubDate.props.children).to.equals(" | Tue, Jan 31, 2017 6:58 AM");
 
             expect(tags[0].type).to.equals("span"); //eslint-disable-line no-magic-numbers
             expect(tags[0].props.children).to.equals(` | ${feed.tags[0]}`); //eslint-disable-line no-magic-numbers

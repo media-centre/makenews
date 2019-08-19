@@ -18,10 +18,18 @@ describe("FacebookRequestHandler", () => {
         appSecretProof = "test_secret_proof", appId = "test_app_id";
     before("FacebookRequestHandler", () => {
         sinon.stub(FacebookRequestHandler, "logger").returns(LogTestHelper.instance());
+
+        const applicationConfig = new ApplicationConfig();
+        sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
+        sinon.stub(applicationConfig, "facebook").returns({
+            "appSecretKey": "test_secret_key",
+            "appId": "test_app_id"
+        });
     });
 
     after("FacebookRequestHandler", () => {
         FacebookRequestHandler.logger.restore();
+        ApplicationConfig.instance.restore();
     });
 
     describe("CouchClient", () => {
@@ -47,31 +55,19 @@ describe("FacebookRequestHandler", () => {
 
     describe("appSecretKey", () => {
         it("should get the app secret key from the configuration file", () => {
-            let applicationConfig = new ApplicationConfig();
-            sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
-            sinon.stub(applicationConfig, "facebook").returns({
-                "appSecretKey": "test_secret_key"
-            });
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let secretKey = facebookRequestHandler.appSecretKey();
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const secretKey = facebookRequestHandler.appSecretKey();
+
             assert.strictEqual("test_secret_key", secretKey);
-            ApplicationConfig.instance.restore();
-            applicationConfig.facebook.restore();
         });
 
     });
 
     describe("appId", () => {
         it("should get the app Id from the configuration file", () => {
-            let applicationConfig = new ApplicationConfig();
-            sinon.stub(ApplicationConfig, "instance").returns(applicationConfig);
-            sinon.stub(applicationConfig, "facebook").returns({
-                "appId": "test_app_id"
-            });
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+
             assert.strictEqual("test_app_id", facebookRequestHandler.appId());
-            ApplicationConfig.instance.restore();
-            applicationConfig.facebook.restore();
         });
 
     });
@@ -227,6 +223,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
             facebookClient = new FacebookClient(accessToken, appSecretProof);
             sandbox.mock(FacebookClient).expects("instance").returns(facebookClient);
+
         });
 
         afterEach("", () => {
