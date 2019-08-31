@@ -13,7 +13,6 @@ var cssnano = require("gulp-cssnano");
 var environments = require("gulp-environments");
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
-var babelRegister = null;
 var uglify = require("gulp-uglify");
 var buffer = require("vinyl-buffer");
 var envify = require("gulp-envify");
@@ -25,11 +24,11 @@ var production = environments.production;
 function clean(path) {
     return del(path);
 }
-gulp.task("mobile:remove-directory", function () {
+gulp.task("mobile:remove-directory", function() {
     var files = "." + parameters.mobile.mobilePath;
     return clean(files);
 });
-gulp.task("mobile:init", ["mobile:remove-directory"], function (cb) {
+gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
     process.chdir(__dirname + "/dist/");
     exec("cordova create mobile com.makenews.android MakeNews", (err, stdout, stderr) => {
         console.log(stdout);
@@ -38,7 +37,7 @@ gulp.task("mobile:init", ["mobile:remove-directory"], function (cb) {
         cb(err);
     });
 });
-gulp.task("mobile:create", function (cb) {
+gulp.task("mobile:create", function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
     exec("cordova platform add android ", (err, stdout, stderr) => {
         console.log(stdout);
@@ -47,28 +46,22 @@ gulp.task("mobile:create", function (cb) {
     });
 });
 
-gulp.task("mobile:clean-files", function () {
+gulp.task("mobile:clean-files", function() {
     var files = parameters.mobile.cordovaPath + "/*";
     return clean(files);
 });
-gulp.task("mobile:copy-files", ["mobile:clean-files"], function () {
+gulp.task("mobile:copy-files", ["mobile:clean-files"], function() {
     return gulp.src([parameters.mobile.appPath + "/**/*"]).pipe(gulp.dest(parameters.mobile.cordovaPath));
 });
-gulp.task("mobile:build", ["mobile:copy-files"], function (cb) {
+gulp.task("mobile:build", ["mobile:copy-files"], function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
-    cordova.build().then(function () {
+    cordova.build().then(function() {
         process.chdir("../");
         cb();
-    }).catch(function (err) {
+    }).catch(function(err) {
         console.log(err);
     });
 });
-
-function loadBabelForTests() {
-    if(!babelRegister) {
-        require("babel-register"); //eslint-disable-line global-require
-    }
-}
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
@@ -119,9 +112,8 @@ gulp.task("client:clean", function() {
 });
 
 gulp.task("client:test", function() {
-    loadBabelForTests();
     return gulp.src([parameters.client.testPath + "**/**/*.jsx", parameters.client.testPath + "**/**/*.js"], { "read": false })
-      .pipe(mocha());
+        .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
 gulp.task("client:build", function(callback) {
@@ -177,9 +169,8 @@ gulp.task("functional:eslint", function() {
 });
 
 gulp.task("functional:test", function() {
-    loadBabelForTests();
     return gulp.src(parameters.functional.serverSpecPath + "**/**/*.js", { "read": false })
-        .pipe(mocha({ "timeout": 3000 }));
+        .pipe(mocha({ "require": ["babel-core/register"], "timeout": 3000 }));
 });
 
 gulp.task("functional:test:watch", () => {
@@ -194,9 +185,8 @@ gulp.task("common:copy-js", function() {
 });
 
 gulp.task("common:test", function() {
-    loadBabelForTests();
     return gulp.src(parameters.common.testPath + "/**/**/*.js", { "read": false })
-        .pipe(mocha());
+        .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
 gulp.task("common:watch", () => {
@@ -264,9 +254,8 @@ gulp.task("server:clean", function() {
 });
 
 gulp.task("server:test", function() {
-    loadBabelForTests();
     return gulp.src(parameters.server.testPath + "**/**/*.js", { "read": false })
-    .pipe(mocha({ "timeout": 3000 }));
+        .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
 gulp.task("server:build", ["server:copy-js"]);
