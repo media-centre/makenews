@@ -211,7 +211,7 @@ describe("FacebookRequestHandler", () => {
                 await facebookRequestHandler.setToken("test");
                 assert.fail();
             } catch(error) {
-                assert.deepEqual(error, new Error("error getting long lived token with token " + accessToken));
+                assert.deepEqual(error.message, "error getting long lived token with token " + accessToken);
             }
         });
     });
@@ -404,12 +404,13 @@ describe("FacebookRequestHandler", () => {
         afterEach("saveToken", () => {
             sandbox.restore();
         });
+
         it("should throw an error if saveDocument is not successful", async () => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.reject("Unexpected Response from db"));
             try {
                 await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             } catch(error) {
-                assert.deepEqual(new Error("error while saving facebook long lived token."), error);
+                assert.deepEqual(error.message, "error while saving facebook long lived token.");
             }
         });
 

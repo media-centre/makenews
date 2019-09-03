@@ -12,7 +12,7 @@ import nock from "nock";
 describe("CouchClient", () => {
     let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
     let sandbox = null;
-    before("CouchClient", () => {
+    beforeEach("CouchClient", () => {
         sandbox = sinon.sandbox.create();
         applicationConfig = new ApplicationConfig();
         sandbox.stub(ApplicationConfig, "instance").returns(applicationConfig);
@@ -20,7 +20,7 @@ describe("CouchClient", () => {
         sandbox.stub(CouchClient, "logger").returns(LogTestHelper.instance());
     });
 
-    after("CouchClient", () => {
+    afterEach("CouchClient", () => {
         sandbox.restore();
     });
 
@@ -61,13 +61,12 @@ describe("CouchClient", () => {
                 .post("/" + dbName + "/_find")
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.findDocuments(body).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -124,13 +123,12 @@ describe("CouchClient", () => {
                 .post("/" + dbName + "/_index")
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.createIndex(indexDoc).then((actualResponse) => {
                 assert.deepEqual(actualResponse, response);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -155,13 +153,12 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -181,13 +178,12 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj, headers).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -211,13 +207,12 @@ describe("CouchClient", () => {
                     "port": 5984
                 });
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -234,13 +229,12 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "message": "not found" });
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.deepEqual({ "status": HttpResponseHandler.codes.NOT_FOUND, "message": { "message": "not found" } }, error);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -280,13 +274,12 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -307,13 +300,12 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId, headers).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -331,18 +323,17 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "error": "not found" });
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).catch((error) => {
                 assert.deepEqual(error, { "status": HttpResponseHandler.codes.NOT_FOUND, "message": { "error": "not found" } });
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
 
-        it("should reject with error if couchdb returns error", (done) => {
+        it("should reject with error if couchdb returns error", () => {
             let docId = "123456";
 
             nock("http://localhost:5984", {
@@ -355,14 +346,12 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .replyWithError("error message");
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
             let couchClientInstance = new CouchClient(accessToken, dbName);
-            couchClientInstance.getDocument(docId).catch((error) => {
-                assert.deepEqual(error, new Error("error message"));
+            return couchClientInstance.getDocument(docId).catch((error) => {
+                assert.equal(error.message, "error message");
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
-                done();
             });
         });
 
@@ -398,13 +387,12 @@ describe("CouchClient", () => {
                 .post("/" + dbName, documentObject)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.updateDocument(documentObject).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
@@ -432,13 +420,12 @@ describe("CouchClient", () => {
                     "port": 5984
                 });
 
-            let nodeErrorHandlerMock = sinon.mock(NodeErrorHandler).expects("noError");
+            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
             let couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.updateDocument(documentObject).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
-                NodeErrorHandler.noError.restore();
                 done();
             });
         });
