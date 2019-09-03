@@ -3,7 +3,6 @@ var parameters = require("./config/parameters");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var babelify = require("babelify");
-var runSequence = require("run-sequence");
 var babel = require("gulp-babel");
 var mocha = require("gulp-mocha");
 var eslint = require("gulp-eslint");
@@ -28,7 +27,8 @@ gulp.task("mobile:remove-directory", function() {
     var files = "." + parameters.mobile.mobilePath;
     return clean(files);
 });
-gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
+
+gulp.task("mobile:init", gulp.series("mobile:remove-directory", function(cb) {
     process.chdir(__dirname + "/dist/");
     exec("cordova create mobile com.makenews.android MakeNews", (err, stdout, stderr) => {
         console.log(stdout);
@@ -36,7 +36,8 @@ gulp.task("mobile:init", ["mobile:remove-directory"], function(cb) {
         process.chdir("../");
         cb(err);
     });
-});
+}));
+
 gulp.task("mobile:create", function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
     exec("cordova platform add android ", (err, stdout, stderr) => {
@@ -50,10 +51,12 @@ gulp.task("mobile:clean-files", function() {
     var files = parameters.mobile.cordovaPath + "/*";
     return clean(files);
 });
-gulp.task("mobile:copy-files", ["mobile:clean-files"], function() {
+
+gulp.task("mobile:copy-files", gulp.series("mobile:clean-files", function() {
     return gulp.src([parameters.mobile.appPath + "/**/*"]).pipe(gulp.dest(parameters.mobile.cordovaPath));
-});
-gulp.task("mobile:build", ["mobile:copy-files"], function(cb) {
+}));
+
+gulp.task("mobile:build", gulp.series("mobile:copy-files", function(cb) {
     process.chdir(__dirname + parameters.mobile.mobilePath);
     cordova.build().then(function() {
         process.chdir("../");
@@ -61,7 +64,7 @@ gulp.task("mobile:build", ["mobile:copy-files"], function(cb) {
     }).catch(function(err) {
         console.log(err);
     });
-});
+}));
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
@@ -116,10 +119,7 @@ gulp.task("client:test", function() {
         .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
-gulp.task("client:build", function(callback) {
-    runSequence("client:copy-resources", "client:build-sources", "client:scss", callback);
-});
-
+gulp.task("client:build", gulp.series("client:copy-resources", "client:build-sources", "client:scss"));
 
 gulp.task("client:watch", function() {
     this.cssFilesPath = parameters.client.scssSrcPath + "/**/*.scss";
@@ -148,8 +148,8 @@ gulp.task("client:test-eslint", function() {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task("client:eslint", ["client:src-eslint", "client:test-eslint"]);
-gulp.task("client:checkin-ready", ["client:eslint", "client:test"]);
+gulp.task("client:eslint", gulp.series("client:src-eslint", "client:test-eslint"));
+gulp.task("client:checkin-ready", gulp.series("client:eslint", "client:test"));
 
 gulp.task("client:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.client.testPath + "/**/**/**/*.jsx  " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
@@ -179,7 +179,7 @@ gulp.task("functional:test:watch", () => {
 
 // -------------------------------common tasks -------------------------------------------
 gulp.task("common:copy-js", function() {
-    gulp.src(parameters.common.srcPath + "/**/*.js")
+    return gulp.src(parameters.common.srcPath + "/**/*.js")
         .pipe(babel())
         .pipe(gulp.dest(parameters.common.distFolder + "/src"));
 });
@@ -208,13 +208,13 @@ gulp.task("common:test-eslint", function() {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task("common:build", ["common:copy-js"]);
+gulp.task("common:build", gulp.series("common:copy-js"));
 gulp.task("common:clean", function() {
     del(parameters.common.distFolder);
 });
 
-gulp.task("common:eslint", ["common:src-eslint", "common:test-eslint"]);
-gulp.task("common:checkin-ready", ["common:eslint", "common:test"]);
+gulp.task("common:eslint", gulp.series("common:src-eslint", "common:test-eslint"));
+gulp.task("common:checkin-ready", gulp.series("common:eslint", "common:test"));
 
 gulp.task("common:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.common.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
@@ -243,14 +243,14 @@ gulp.task("server:copy-js", function() {
     gulp.src("./create_user.sh")
         .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
-    gulp.src("./" + parameters.server.packageJsonFile)
+    return gulp.src("./" + parameters.server.packageJsonFile)
     .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
 });
 
 gulp.task("server:clean", function() {
     del(parameters.server.distFolder);
-    del(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile);
+    return del(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile);
 });
 
 gulp.task("server:test", function() {
@@ -258,7 +258,7 @@ gulp.task("server:test", function() {
         .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
-gulp.task("server:build", ["server:copy-js"]);
+gulp.task("server:build", gulp.series("server:copy-js"));
 
 gulp.task("server:watch", function() {
     this.srcPath = parameters.server.srcPath + "/**/*.js";
@@ -283,10 +283,10 @@ gulp.task("server:test-eslint", function() {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task("server:eslint", ["server:src-eslint", "server:test-eslint"]);
-gulp.task("server:checkin-ready", ["server:eslint", "server:test"]);
+gulp.task("server:eslint", gulp.series("server:src-eslint", "server:test-eslint"));
+gulp.task("server:checkin-ready", gulp.series("server:eslint", "server:test"));
 gulp.task("server:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
+    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -296,12 +296,12 @@ gulp.task("server:test-coverage", (cb) => {
 // ------------------------------- any other tasks ---------------------------------------
 
 gulp.task("other:copy-ansible-scripts", function() {
-    gulp.src(parameters.other.ansibleScrptsPath + "/**/*", { "base": "./other/ansible" })
+    return gulp.src(parameters.other.ansibleScrptsPath + "/**/*", { "base": "./other/ansible" })
         .pipe(gulp.dest(parameters.other.ansibleDistFolder));
 });
 
 gulp.task("other:dist-clean", function() {
-    del([parameters.other.distFolder]);
+    return del([parameters.other.distFolder]);
 });
 
 
@@ -339,15 +339,13 @@ gulp.task("list", (cb) => {
     });
 });
 
-gulp.task("build", ["common:build", "client:build", "server:build", "other:copy-ansible-scripts"]);
-gulp.task("clean", ["other:dist-clean"]);
-gulp.task("test", function(callback) {
-    runSequence("common:test", "client:test", "server:test", callback);
-});
+gulp.task("build", gulp.series("common:build", "client:build", "server:build", "other:copy-ansible-scripts"));
+gulp.task("clean", gulp.series("other:dist-clean"));
+gulp.task("test", gulp.series("common:test", "client:test", "server:test"));
 
-gulp.task("watch", ["client:watch", "server:watch"]);
-gulp.task("eslint", ["common:eslint", "client:eslint", "server:eslint", "functional:eslint"]);
-gulp.task("checkin-ready", ["common:checkin-ready", "client:checkin-ready", "server:checkin-ready"]);
+gulp.task("watch", gulp.series("client:watch", "server:watch"));
+gulp.task("eslint", gulp.series("common:eslint", "client:eslint", "server:eslint", "functional:eslint"));
+gulp.task("checkin-ready", gulp.series("common:checkin-ready", "client:checkin-ready", "server:checkin-ready"));
 
 gulp.task("test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " +
@@ -360,6 +358,4 @@ gulp.task("test-coverage", (cb) => {
     });
 });
 
-gulp.task("clean-start", function(callback) {
-    runSequence("clean", "stop", "build", "start", callback);
-});
+gulp.task("clean-start", gulp.series("clean", "stop", "build", "start"));
