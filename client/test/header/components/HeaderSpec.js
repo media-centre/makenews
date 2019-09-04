@@ -1,4 +1,4 @@
-/* eslint no-magic-numbers:0 */
+/* eslint no-magic-numbers:0, react/jsx-no-bind:0 */
 import { Header } from "./../../../src/js/header/components/Header";
 import HeaderTab from "./../../../src/js/header/components/HeaderTab";
 import ConfigureTab from "./../../../src/js/header/components/ConfigureTab";
@@ -33,9 +33,10 @@ describe("Header component", () => {
             "configure": "Configure"
         };
         let renderer = TestUtils.createRenderer();
-        header = renderer.render(<Header store={store} dispatch={dispatchFun} mainHeaderStrings={mainHeaderStrings}
-            currentHeaderTab={currentHeaderTab} confirmPopup={{ "message": "some message" }}
-                                 />);
+        header = renderer.render(
+            <Header store={store} dispatch={dispatchFun} mainHeaderStrings={mainHeaderStrings}
+                currentHeaderTab={currentHeaderTab} confirmPopup={{ "message": "some message" }}
+            />);
         result = renderer.getRenderOutput();
     });
 

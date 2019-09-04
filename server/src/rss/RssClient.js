@@ -27,9 +27,9 @@ export default class RssClient {
     async getFeedsFromRssUrl(rssUrl, url) {
 
         if (rssUrl.startsWith("//")) {
-            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl;  //eslint-disable-line no-param-reassign, no-magic-numbers
+            rssUrl = url.substring(0, url.indexOf("//")) + rssUrl; //eslint-disable-line no-param-reassign, no-magic-numbers
         } else if (rssUrl.startsWith("/")) {
-            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl;  //eslint-disable-line no-param-reassign, no-magic-numbers
+            rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl; //eslint-disable-line no-param-reassign, no-magic-numbers
         }
         try {
             let feeds = await this.getRssData(rssUrl);
@@ -40,7 +40,7 @@ export default class RssClient {
         }
     }
 
-    async crawlForRssUrl(root, url) {  //eslint-disable-line consistent-return
+    async crawlForRssUrl(root, url) { //eslint-disable-line consistent-return
         let links = new Set();
         let rssUrl = url.substring(0, url.indexOf("/", httpIndex)); //eslint-disable-line no-magic-numbers
         let relativeLinks = root("a[href^='/']");
@@ -54,7 +54,7 @@ export default class RssClient {
             links.add(root(this).attr("href"));
         });
 
-        if (links.size === 0) {   //eslint-disable-line no-magic-numbers
+        if (links.size === 0) { //eslint-disable-line no-magic-numbers
             this.handleUrlError(url, "no rss links found");
         } else {
             return await this.getCrawledRssData(links, url);
@@ -62,7 +62,7 @@ export default class RssClient {
         }
     }
 
-    async getCrawledRssData(links, url) {  //eslint-disable-line consistent-return
+    async getCrawledRssData(links, url) { //eslint-disable-line consistent-return
         let linksIterator = links.values();
         let link = linksIterator.next().value;
         /* TODO: remove the loop statement*/ //eslint-disable-line
@@ -133,7 +133,7 @@ export default class RssClient {
         });
     }
 
-    async fetchRssFeeds(url) {  //eslint-disable-line consistent-return
+    async fetchRssFeeds(url) { //eslint-disable-line consistent-return
         try {
             return await this.getRssData(url);
         } catch (error) {
@@ -145,7 +145,7 @@ export default class RssClient {
                     return await this.getFeedsFromRssUrl(rssUrl, url);
                 }
                 return await this.crawlForRssUrl(root, url.replace(/\/+$/g, ""));
-            } else {  //eslint-disable-line no-else-return
+            } else { //eslint-disable-line no-else-return
                 this.handleUrlError(url, error);
             }
         }
@@ -239,14 +239,14 @@ export default class RssClient {
 
             result.docs = R.map(row => row.fields)(response.rows);
             result.paging = { "offset": (skip + SOURCES_PER_REQUEST) };
-        
+
             RssClient.logger().debug("RssClient:: successfully searched the urls for key.");
         } catch (error) {
             this.handleRequestError(keyword, error);
         }
         return result;
     }
-    
+
     handleUrlError(url, error) {
         let errorMessage = { "message": `${url} is not a proper feed` };
         RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}`);

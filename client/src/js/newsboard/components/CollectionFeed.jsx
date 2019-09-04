@@ -37,7 +37,7 @@ export default class CollectionFeed extends Component {
         let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         const collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (<div className={feedClass}>
-                    { this.props.tab !== WRITE_A_STORY &&
+            { this.props.tab !== WRITE_A_STORY &&
                         <button className="delete-feed" onClick={(event) => { //eslint-disable-line react/jsx-no-bind
                             let docId = feed._id;
                             if(!feed.selectText) {
@@ -47,24 +47,24 @@ export default class CollectionFeed extends Component {
                         }}
                         >&times;
                         </button>
-                    }
-                    <div className={`${feedClass}__body`}>
-                        <div className={`${feedClass}__title`}>{feed.title}</div>
-                        <div className={`${feedClass}__media`}>{this.getMedia()}</div>
-                        <div className={`${feedClass}__description`}>{getHtmlContent(feed.description)}</div>
-                        <div className={`${feedClass}__source`}>
-                            <div className="source-type">
-                                <i className={`fa fa-${feed.sourceType}`}/>
-                            </div>
-                            <div className="source">{`${[feed.tags]} |`}</div>
-                            <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
-                        </div>
+            }
+            <div className={`${feedClass}__body`}>
+                <div className={`${feedClass}__title`}>{feed.title}</div>
+                <div className={`${feedClass}__media`}>{this.getMedia()}</div>
+                <div className={`${feedClass}__description`}>{getHtmlContent(feed.description)}</div>
+                <div className={`${feedClass}__source`}>
+                    <div className="source-type">
+                        <i className={`fa fa-${feed.sourceType}`}/>
                     </div>
-                    <div className={`${feedClass}__readmore`}>
-                        {feed.sourceType === "web" || video || image || description.length > MAX_DESCRIPTION_LENGTH
-                        ? <button className={`${feedClass}__readmore-button`} onClick={this._displayArticle}>{collectionMessages.readMoreButton}></button> : ""}
-                    </div>
-              </div>);
+                    <div className="source">{`${[feed.tags]} |`}</div>
+                    <div className="date">{DateTimeUtil.getLocalTime(feed.pubDate)}</div>
+                </div>
+            </div>
+            <div className={`${feedClass}__readmore`}>
+                {feed.sourceType === "web" || video || image || description.length > MAX_DESCRIPTION_LENGTH
+                    ? <button className={`${feedClass}__readmore-button`} onClick={this._displayArticle}>{collectionMessages.readMoreButton}></button> : ""}
+            </div>
+        </div>);
     }
 }
 

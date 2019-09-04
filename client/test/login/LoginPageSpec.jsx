@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import "../helper/TestHelper";
 import { LoginPage } from "../../src/js/login/pages/LoginPage";
 

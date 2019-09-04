@@ -51,7 +51,7 @@ export default class DeleteSourceHandler {
             } else {
                 const { _id, collectionId, docType, _rev } = feedDoc;
                 const { title, description, link,
-                tags, sourceType, pubDate } = currentFeedDoc;
+                    tags, sourceType, pubDate } = currentFeedDoc;
                 const sourceDeleted = true;
                 const selectText = true;
 

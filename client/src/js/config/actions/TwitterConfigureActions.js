@@ -22,7 +22,7 @@ export function gotTwitterSourceResults(sources, keyword, currentTab) {
 
 export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
     let ajaxClient = keyword ? AjaxClient.instance("/twitter-handles") : AjaxClient.instance("/twitter-followings");
-    return async (dispatch, getState) => {
+    return async(dispatch, getState) => {
         dispatch(fetchingSources);
         try {
             let data = await ajaxClient.get({ keyword, ...paging, twitterPreFirstId });

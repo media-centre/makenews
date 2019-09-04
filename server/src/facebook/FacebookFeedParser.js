@@ -13,7 +13,7 @@ function _parsePost(sourceId, post) {
         "type": "description",
         "title": post.name || "",
         "sourceType": "facebook",
-        "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]),          //eslint-disable-line no-magic-numbers
+        "link": facebookRegex.test(post.link) ? post.link : ("https://www.facebook.com/" + postId[0] + "/posts/" + postId[1]), //eslint-disable-line no-magic-numbers
         "description": post.message || "",
         "pubDate": post.created_time ? DateUtil.getUTCDateAndTime(post.created_time) : null,
         "tags": [post.from.name],

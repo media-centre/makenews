@@ -26,11 +26,11 @@ class ConfiguredPane extends Component {
 
     _renderSources(sourceType, searchKey) {
         const configuredSourceDOM = source =>
-            <li className="source-name" key={source._id}>{source.name}
+            (<li className="source-name" key={source._id}>{source.name}
                 <button className="delete-source" data-source-id={source._id} data-source-type={sourceType} title={`Delete ${source.name}`} onClick={this._deleteSource}>
                     &times;
                 </button>
-            </li>;
+            </li>);
 
         if(searchKey) {
             const key = searchKey.toUpperCase();

@@ -44,7 +44,7 @@ export default class RssParser {
                         "images": []
                     };
                     if (feed.enclosures && feed.enclosures.length) {
-                        feed.enclosures.forEach((item, index) => {  //eslint-disable-line no-loop-func
+                        feed.enclosures.forEach((item, index) => { //eslint-disable-line no-loop-func
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
                                 let image = feed.enclosures[index];
                                 image.thumbnail = image.url;

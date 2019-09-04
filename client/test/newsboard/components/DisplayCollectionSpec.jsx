@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import DisplayCollection from "./../../../src/js/newsboard/components/DisplayCollection";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -61,8 +62,8 @@ describe("Display Collections", () => {
     });
 
     it("should render collections when the sourcetype is collection", () => {
-        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2);  //eslint-disable-line no-magic-numbers
-        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "delete-collection").length, 2);  //eslint-disable-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2); //eslint-disable-line no-magic-numbers
+        assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "delete-collection").length, 2); //eslint-disable-line no-magic-numbers
     });
 
     it("should show popup when create new collection is clicked", () => {

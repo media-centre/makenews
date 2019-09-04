@@ -65,7 +65,7 @@ describe("FacebookSourceRoutes", () => {
             isRejected(facebookRouteHelper.handle(), "access token not there");
         });
 
-        it("should throw error if any problem from getting pages from facebook", async () => {
+        it("should throw error if any problem from getting pages from facebook", async() => {
 
             let facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
@@ -94,7 +94,7 @@ describe("FacebookSourceRoutes", () => {
             isRejected(facebookRouteHelper.handle(), "response");
         });
 
-        it("should get the facebook profiles", async () => {
+        it("should get the facebook profiles", async() => {
             let profiles = [{
                 "id": "7dsEdsA8",
                 "name": "Maha Arjun",
@@ -133,7 +133,7 @@ describe("FacebookSourceRoutes", () => {
             assert.deepEqual(await facebookRouteHelper.handle(), profiles);
         });
 
-        it("should get the facebook pages", async () => {
+        it("should get the facebook pages", async() => {
             let pages = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },
                 { "name": "The Hindu Business Line", "id": "60573550946" },
@@ -166,7 +166,7 @@ describe("FacebookSourceRoutes", () => {
             assert.deepEqual(await facebookRouteHelper.handle(), pages);
         });
 
-        it("should get the facebook groups", async () => {
+        it("should get the facebook groups", async() => {
             type = "group";
             let groups = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },

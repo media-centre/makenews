@@ -38,9 +38,7 @@ export default class Source extends Component {
                         <img src="./images/success-arrow.png"/>
                     </div>)
                     :
-                    (<div className="source__add-icon source__action-icon"
-                        onClick={this._addToConfigure}
-                     >
+                    (<div className="source__add-icon source__action-icon" onClick={this._addToConfigure} >
                         <img src="./images/add-btn.png"/>
                     </div>)
                 }

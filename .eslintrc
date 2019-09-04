@@ -238,28 +238,10 @@
   },
   "extends": "eslint:recommended",
 
-  //ECMAScript 6
-  //These rules are only relevant to ES6 environments.
-  "ecmaFeatures": {
-    "arrow-body-style": true,                // require braces in arrow function body
-    "arrow-parens": true,                // require parens in arrow function arguments
-    "arrow-spacing": true,                // require space before/after arrow function's arrow (fixable)
-    "constructor-super": true,                // verify calls of super() in constructors
-    "generator-star-spacing": true,                // enforce spacing around the * in generator functions (fixable)
-    "no-arrow-condition": true,                // disallow arrow functions where a condition is expected
-    "no-class-assign": true,                // disallow modifying variables of class declarations
-    "no-const-assign": true,                // disallow modifying variables that are declared using const
-    "no-dupe-class-members": true,                // disallow duplicate name in class members
-    "no-this-before-super": true,                // disallow use of this/super before calling super() in constructors.
-    "no-var": true,                // require let or const instead of var
-    "object-shorthand": true,                // require method and property shorthand syntax for object literals
-    "prefer-arrow-callback": true,                // suggest using arrow functions as callbacks
-    "prefer-const": true,                // suggest using const declaration for variables that are never modified after declared
-    "prefer-reflect": true,                // suggest using Reflect methods where applicable
-    "prefer-spread": true,                // suggest using the spread operator instead of .apply().
-    "prefer-template": true,                // suggest using template literals instead of strings concatenation
-    "require-yield": true,                // disallow generator functions that do not have yield
-    "jsx": true
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "plugins": [
     "react",

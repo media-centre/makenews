@@ -176,7 +176,7 @@ describe("DisplayFeedActions", () => {
             sandbox.restore();
         });
 
-        it("should call /fetch-feeds", async () => {
+        it("should call /fetch-feeds", async() => {
             const ajaxClient = new AjaxClient("/fetch-feeds", true);
             const ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .withExactArgs("/fetch-feeds", true).returns(ajaxClient);
@@ -188,7 +188,7 @@ describe("DisplayFeedActions", () => {
             postMock.verify();
         });
 
-        it("should return status true after fetching the sources", async () => {
+        it("should return status true after fetching the sources", async() => {
             const ajaxClient = new AjaxClient("/fetch-feeds", false);
             sandbox.stub(AjaxClient, "instance")
                 .withArgs("/fetch-feeds", true).returns(ajaxClient);
@@ -199,7 +199,7 @@ describe("DisplayFeedActions", () => {
             assert.isTrue(response);
         });
 
-        it("should return status false after fetching the sources", async () => {
+        it("should return status false after fetching the sources", async() => {
             const ajaxClient = new AjaxClient("/fetch-feeds", true);
             sandbox.stub(AjaxClient, "instance")
                 .withArgs("/fetch-feeds", true).returns(ajaxClient);

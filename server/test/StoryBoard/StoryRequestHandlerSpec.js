@@ -17,7 +17,7 @@ describe("StoryRequestHandler", () => {
             dbName = "dbName",
             couchClientInstanceMock = new CouchClient(authSession, dbName);
 
-        it("should find the document of docType story and id", async () => {
+        it("should find the document of docType story and id", async() => {
             let resultDoc = {
                 "_id": "id",
                 "title": "title",
@@ -31,7 +31,7 @@ describe("StoryRequestHandler", () => {
             assert.deepEqual(resultDoc, expectedDocs);
         });
 
-        it("should throw an error if document id does not exist", async () => {
+        it("should throw an error if document id does not exist", async() => {
             sandbox.mock(CouchClient).expects("instance")
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("getDocument")
@@ -50,7 +50,7 @@ describe("StoryRequestHandler", () => {
             couchClientInstanceMock = new CouchClient(authSession, dbName);
         let result = null, query = null;
 
-        it("should find the documents of docType story", async () => {
+        it("should find the documents of docType story", async() => {
             result = {
                 "docs": [
                     {
@@ -94,7 +94,7 @@ describe("StoryRequestHandler", () => {
             couchClientInstanceMock = new CouchClient(authSession, dbName);
         let result = null;
 
-        it("should return documents which have same title and doctype is story", async () => {
+        it("should return documents which have same title and doctype is story", async() => {
             let title = "title";
             result = { "docs": [{ "_id": "id", "title": title }] };
             sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock);
@@ -103,7 +103,7 @@ describe("StoryRequestHandler", () => {
             assert.strictEqual(result, expectedResult);
         });
 
-        it("should reject with error if find documents reject with an error", async () => {
+        it("should reject with error if find documents reject with an error", async() => {
             let title = "title";
             result = { "docs": [{ "_id": "id", "title": title }] };
             sandbox.mock(CouchClient).expects("instance")
@@ -132,7 +132,7 @@ describe("StoryRequestHandler", () => {
             };
         });
 
-        it("should return ok on success response from db", async () => {
+        it("should return ok on success response from db", async() => {
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance).twice();
             let updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
@@ -149,7 +149,7 @@ describe("StoryRequestHandler", () => {
             }
         });
 
-        it("should throw if title is already exists", async () => {
+        it("should throw if title is already exists", async() => {
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
             let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
@@ -157,12 +157,12 @@ describe("StoryRequestHandler", () => {
             try {
                 await StoryRequestHandler.saveStory(story, authSession);
             } catch(error) {
-                assert.strictEqual(error, "Title Already exists");
+                assert.strictEqual(error.message, "Title Already exists");
                 findDocMock.verify();
             }
         });
 
-        it("should update the document", async () => {
+        it("should update the document", async() => {
             story._id = "id";
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance).twice();
@@ -180,7 +180,7 @@ describe("StoryRequestHandler", () => {
             }
         });
     });
-    
+
     describe("deleteStory", () => {
         const id = "test_1", authSession = "auth session",
             couchClientInstance = new CouchClient(authSession, "db name");
@@ -188,19 +188,19 @@ describe("StoryRequestHandler", () => {
 
         beforeEach("deleteStory", () => {
             deleteDocumentMock = sandbox.mock(couchClientInstance)
-                 .expects("deleteDocument")
-                 .withExactArgs(id);
+                .expects("deleteDocument")
+                .withExactArgs(id);
             sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClientInstance);
         });
 
-        it("should delete document", async () => {
+        it("should delete document", async() => {
             deleteDocumentMock.returns(Promise.resolve({ "ok": true }));
             const message = await StoryRequestHandler.deleteStory(id, authSession);
             deleteDocumentMock.verify();
             assert.deepEqual(message, { "message": "deleted" });
         });
 
-        it("should throw error if deletion fails", async () => {
+        it("should throw error if deletion fails", async() => {
             const erroMessage = { "message": "error" };
             deleteDocumentMock.returns(Promise.reject(erroMessage));
             await isRejected(StoryRequestHandler.deleteStory(id, authSession),

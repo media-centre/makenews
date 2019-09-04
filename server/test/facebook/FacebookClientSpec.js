@@ -52,7 +52,7 @@ describe("FacebookClient", () => {
             sandbox.restore();
         });
 
-        it("should return feeds for a public page", async () => {
+        it("should return feeds for a public page", async() => {
             const fbResponse = {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
@@ -104,7 +104,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return feeds for a public page and paging with current time if paging not there", async () => {
+        it("should return feeds for a public page and paging with current time if paging not there", async() => {
             const fbResponse = {
                 "data": []
             };
@@ -127,7 +127,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return the feeds recursively", async () => {
+        it("should return the feeds recursively", async() => {
             const fbResponseFirst = {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
@@ -201,7 +201,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return the feeds recursively till the maxlimit of iterations", async () => {
+        it("should return the feeds recursively till the maxlimit of iterations", async() => {
             const fbResponseFirst = {
                 "data": [{ "message": "test news 1", "id": "163974433696568_957858557641481", "from": { "name": "some" } },
                     { "message": "test news 2", "id": "163974433696568_957850670975603", "from": { "name": "some" } }],
@@ -213,7 +213,7 @@ describe("FacebookClient", () => {
 
             const fbResponseSecond = {
                 "data": [{ "message": "test news 3", "id": "163974433696568_956585496352123", "from": { "name": "some" } },
-                { "message": "test news 4", "id": "163974433696568_956578545587459", "from": { "name": "some" } }],
+                    { "message": "test news 4", "id": "163974433696568_956578545587459", "from": { "name": "some" } }],
                 "paging": {
                     "previous": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&since=1485425132&format=json",
                     "next": "https://graph.facebook.com/v2.8/1608617579371619/posts?limit=25&until=1485362142&format=json"
@@ -287,7 +287,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should return empty data if there are any errors from facebook like authentication", async () => {
+        it("should return empty data if there are any errors from facebook like authentication", async() => {
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
@@ -308,7 +308,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(data, { "docs": [], "paging": { "since": 1487927102 } });
         });
 
-        it("should log error if there are any errors from facebook like authentication", async () => {
+        it("should log error if there are any errors from facebook like authentication", async() => {
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
@@ -330,8 +330,8 @@ describe("FacebookClient", () => {
 
             loggerMock.verify();
         });
-        
-        it("should reject if the facebook takes too long to return the data", async () => {
+
+        it("should reject if the facebook takes too long to return the data", async() => {
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
@@ -352,7 +352,7 @@ describe("FacebookClient", () => {
             loggerMock.verify();
         });
 
-        it("should reject if it is not able to fetch the data", async () => {
+        it("should reject if it is not able to fetch the data", async() => {
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
@@ -404,7 +404,7 @@ describe("FacebookClient", () => {
             remainingUrl = "/v2.8/" + facebookUrl1 + "/?access_token=" + accessToken1 + "&appsecret_proof=" + appSecretProof1;
         });
 
-        it("should return id for a public page", async () => {
+        it("should return id for a public page", async() => {
             const response = {
                 "name": "test_id",
                 "id": "12345678"
@@ -419,7 +419,7 @@ describe("FacebookClient", () => {
             assert.deepEqual(pageInfo, response);
         });
 
-        it("should reject with can't get the pageId if invalid page url is given", async () => {
+        it("should reject with can't get the pageId if invalid page url is given", async() => {
             const response = {
                 "og_object": {
                     "id": "12345678",
@@ -496,7 +496,7 @@ describe("FacebookClient", () => {
             });
         });
     });
-    
+
     describe("getProfiles", () => {
         let nodeErrorHandlerMock = null, sandbox = null;
 
@@ -585,7 +585,7 @@ describe("FacebookClient", () => {
             facebookClient = FacebookClient.instance(accessToken, appSecretProof);
         });
 
-        it("should give an error when facebook is rejected with some error", async () => {
+        it("should give an error when facebook is rejected with some error", async() => {
             let params = {
                 "q": "keyword",
                 "type": "user"
@@ -615,9 +615,9 @@ describe("FacebookClient", () => {
 
         it("should fetch the facebook pages", (done) => {
             let pages = { "data": [
-                    { "name": "The Hindu", "id": "163974433696568" },
-                    { "name": "The Hindu Business Line", "id": "60573550946" },
-                    { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
+                { "name": "The Hindu", "id": "163974433696568" },
+                { "name": "The Hindu Business Line", "id": "60573550946" },
+                { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
             let params = {
                 "q": "keyword",

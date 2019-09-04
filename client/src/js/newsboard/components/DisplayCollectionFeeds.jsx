@@ -33,7 +33,7 @@ export class DisplayCollectionFeeds extends Component {
                 <button className="all-collections" onClick={this.props.isClicked}>
                     <i className="fa fa-arrow-left" aria-hidden="true"/>{this.collectionMessages.allCollections}
                 </button>
-              </header>
+            </header>
             : <header className="collection-header" />);
 
     }
@@ -51,7 +51,7 @@ export class DisplayCollectionFeeds extends Component {
                     { this.displayHeader() }
                     <div className="collection-feeds">
                         {this.props.feeds.map((feed, index) =>
-                                <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)}
+                            <CollectionFeed collectionId = {this.props.collection.id} feed={feed} key={index} dispatch={this.props.dispatch} tab={this.props.tab}/>)}
                         {!this.props.feeds.length && <div className="default-message">{this.collectionMessages.defaultMessage}</div>}
 
                     </div>

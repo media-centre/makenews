@@ -71,7 +71,7 @@ describe("CouchClient", () => {
             });
         });
 
-        it("should throw an error if there is no matching index for the selector field", async () => {
+        it("should throw an error if there is no matching index for the selector field", async() => {
             const query = {
                 "selector": {
                     "sourceId": {
@@ -433,7 +433,7 @@ describe("CouchClient", () => {
 
     describe("deleteDocument", () => {
         const docId = "123", revision = "1";
-        it("should delete document", async () => {
+        it("should delete document", async() => {
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -448,7 +448,7 @@ describe("CouchClient", () => {
             await couchClientInstance.deleteDocument(docId, revision);
         });
 
-        it("should get revision and then delete document if revision not passed", async () => {
+        it("should get revision and then delete document if revision not passed", async() => {
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -473,7 +473,7 @@ describe("CouchClient", () => {
             await couchClientInstance.deleteDocument(docId);
         });
 
-        it("should reject if deletion failed", async () => {
+        it("should reject if deletion failed", async() => {
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,

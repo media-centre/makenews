@@ -6,7 +6,7 @@ export const NEW_PWD_CONFIRM_PWD_MISMATCH = "NEW_PWD_CONFIRM_PWD_MISMATCH";
 export const NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD = "NEW_PWD_SHOULD_NOT_MATCH_CURRENT_PWD";
 
 export function changePassword(currentPassword, newPassword) {
-    return async (dispatch) => {
+    return async(dispatch) => {
         try {
             const ajax = AjaxClient.instance("/change-password");
             const headers = {

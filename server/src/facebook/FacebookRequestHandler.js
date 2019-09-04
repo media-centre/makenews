@@ -13,7 +13,7 @@ export default class FacebookRequestHandler {
     static instance(accessToken) {
         return new FacebookRequestHandler(accessToken);
     }
-    
+
     static logger() {
         return Logger.instance("Facebook");
     }
@@ -92,7 +92,7 @@ export default class FacebookRequestHandler {
             throw new Error(`error getting long lived token with token ${this.accessToken}`);
         }
     }
-    
+
     fetchProfiles() {
         return new Promise((resolve, reject) => {
             let facebookClientInstance = this.facebookClient();
@@ -136,7 +136,7 @@ export default class FacebookRequestHandler {
             return R.assoc("data", sources.data, pagingResponse);
         } catch(error) {
             FacebookRequestHandler.logger().error(`FacebookRequestHandler:: error fetching facebook ${params.type}s. Error: ${JSON.stringify(error)}`);
-            throw `error fetching facebook ${params.type}s`;  // eslint-disable-line no-throw-literal
+            throw `error fetching facebook ${params.type}s`; // eslint-disable-line no-throw-literal
         }
     }
 

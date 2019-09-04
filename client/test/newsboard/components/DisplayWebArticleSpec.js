@@ -66,7 +66,7 @@ describe("DisplayWebArticle", () => {
             <Provider store={store}>
                 <DisplayWebArticle />
             </Provider>
-        , node);
+            , node);
 
         result.setState({
             "selectedArticle": {

@@ -65,7 +65,7 @@ describe("DisplayFeeds", () => {
 
     it("should render the feeds", () => {
         const renderedSources = TestUtils.scryRenderedComponentsWithType(result, Feed);
-        expect(renderedSources).to.have.lengthOf(2);  //eslint-disable-line no-magic-numbers
+        expect(renderedSources).to.have.lengthOf(2); //eslint-disable-line no-magic-numbers
     });
 
     it("should not have expand class by default", () => {
@@ -106,7 +106,7 @@ describe("DisplayFeeds", () => {
                 </Provider>);
 
             let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
-            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+            expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });
 
@@ -127,11 +127,11 @@ describe("DisplayFeeds", () => {
             }), applyMiddleware(thunkMiddleware));
 
             result = TestUtils.renderIntoDocument(
-                    <DisplayFeeds store={store} currentHeaderTab={WRITE_A_STORY}/>);
+                <DisplayFeeds store={store} currentHeaderTab={WRITE_A_STORY}/>);
             result.setState({ "isClicked": true });
 
             let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayArticle);
-            expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+            expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });
 

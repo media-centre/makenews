@@ -72,7 +72,7 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
 
-        it("should fetch rss feed for given url", async () => {
+        it("should fetch rss feed for given url", async() => {
             let url = "www.example.com";
             let response = {
                 "docs":

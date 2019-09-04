@@ -12,7 +12,7 @@ describe("Get Story Route", () => {
         sandbox.restore();
     });
 
-    it("should validate id", async () => {
+    it("should validate id", async() => {
         let result = await new GetStoryRoute({
             "query": {
                 "id": "id_1"
@@ -25,7 +25,7 @@ describe("Get Story Route", () => {
         assert.equal(result, "");
     });
 
-    it("should validate id and give a message if id is not there", async () => {
+    it("should validate id and give a message if id is not there", async() => {
         let result = await new GetStoryRoute({
             "query": { },
             "cookies": {
@@ -36,7 +36,7 @@ describe("Get Story Route", () => {
         assert.equal(result, "missing parameters");
     });
 
-    it("should return single document", async () => {
+    it("should return single document", async() => {
         let document = {
             "title": "title2",
             "_id": "1234",
@@ -54,7 +54,7 @@ describe("Get Story Route", () => {
         assert.deepEqual(result, document);
     });
 
-    it("should throw an error if document does not exist", async () => {
+    it("should throw an error if document does not exist", async() => {
         sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.reject("No document found"));
         let addStory = new GetStoryRoute({
             "query": {

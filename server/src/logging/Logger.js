@@ -95,7 +95,7 @@ export default class Logger {
                         Logger._getDefaultLogger().error("Creating logger for %s failed with error %s", loggerName, error);
                     }
                 });
-                
+
                 categoriesInitialized = true;
             }
         }
@@ -174,7 +174,7 @@ export default class Logger {
     getFormattedDate() {
         let currentDate = new Date();
         return Logger.appendZero(currentDate.getFullYear()) +
-            Logger.appendZero(1 + currentDate.getMonth()) +       // eslint-disable-line no-magic-numbers
+            Logger.appendZero(1 + currentDate.getMonth()) + // eslint-disable-line no-magic-numbers
             Logger.appendZero(currentDate.getDate());
     }
 
@@ -201,7 +201,7 @@ export default class Logger {
     }
 
     getArguments(message) {
-        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message));      // eslint-disable-line no-magic-numbers
+        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message)); // eslint-disable-line no-magic-numbers
         args.push({});
         return args;
     }

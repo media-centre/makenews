@@ -45,7 +45,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
             };
         });
 
-        it("should return feeds for correct response", async () => {
+        it("should return feeds for correct response", async() => {
 
             sinon.mock(FetchRequestHandler).expects("instance").returns(fetchRequestHandlerInstance);
             sinon.mock(fetchRequestHandlerInstance).expects("fetchFeeds").returns(Promise.resolve(feeds));
@@ -61,7 +61,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
             FetchRequestHandler.instance.restore();
         });
 
-        it("should retrun bad request if fetch feeds reject with an error", async () => {
+        it("should retrun bad request if fetch feeds reject with an error", async() => {
             response = mockResponse();
             request = {
                 "cookies": {

@@ -142,7 +142,7 @@ describe("Route", () => {
             assert.deepEqual(response.json(), { "message": "processing failed" });
         });
 
-        it("update response if handle success", async () => {
+        it("update response if handle success", async() => {
 
             let MyRoute = class MyRoute extends Route {
                 constructor(request, response, next) {

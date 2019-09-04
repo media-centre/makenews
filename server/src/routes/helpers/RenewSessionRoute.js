@@ -19,7 +19,7 @@ export default class RenewSessionRoute extends Route {
         return true;
     }
 
-    handle() {     //eslint-disable-line consistent-return
+    handle() { //eslint-disable-line consistent-return
         if(!this.valid()) {
             RouteLogger.instance().warn("RenewSessionRoute:: invalid authSession %s.", this.authSession);
             return this._handleInvalidRoute();

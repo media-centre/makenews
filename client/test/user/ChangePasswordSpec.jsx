@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { ChangePassword } from "./../../src/js/user/ChangePassword";
 import React from "react";
 import { expect } from "chai";

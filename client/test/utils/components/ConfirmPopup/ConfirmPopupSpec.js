@@ -1,4 +1,4 @@
-/* eslint max-nested-callbacks: [2, 5] */
+/* eslint max-nested-callbacks: [2, 5], react/jsx-no-bind:0 */
 import ConfirmPopup from "../../../../src/js/utils/components/ConfirmPopup/ConfirmPopup";
 import Locale from "../../../../src/js/utils/Locale";
 import * as HeaderActions from "./../../../../src/js/header/HeaderActions";
@@ -24,7 +24,7 @@ describe("ConfirmPopup", ()=> {
             "cancel": "CANCEL"
         } } });
         confirmPop = TestUtils.renderIntoDocument(
-        <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
+            <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
         );
     });
     afterEach(() => {

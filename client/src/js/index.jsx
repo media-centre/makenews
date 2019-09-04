@@ -12,8 +12,8 @@ import "babel-polyfill";
 const store = createStore(contentDiscoveryApp, applyMiddleware(thunkMiddleware));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={History.getHistory()}>{renderRoutes(store)}</Router>
-  </Provider>,
-  document.getElementById("main")
+    <Provider store={store}>
+        <Router history={History.getHistory()}>{renderRoutes(store)}</Router>
+    </Provider>,
+    document.getElementById("main")
 );

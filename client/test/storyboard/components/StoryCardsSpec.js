@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { StoryCards } from "../../../src/js/storyboard/components/StoryCards";
 import TestUtils from "react-addons-test-utils";
 import { assert } from "chai";
@@ -24,7 +25,7 @@ describe("StoryCards", () => {
             }
         });
         storyBoardCards = TestUtils.renderIntoDocument(
-          <StoryCards stories = {stories} dispatch={anonymousFun}/>
+            <StoryCards stories = {stories} dispatch={anonymousFun}/>
         );
     });
 
@@ -34,12 +35,12 @@ describe("StoryCards", () => {
 
     it("should have the stories based on props input", () => {
         let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card");
-        assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
+        assert.strictEqual(2, storiesList.length); //eslint-disable-line no-magic-numbers
     });
 
     it("should have the remove icon", () => {
         let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i.delete-icon");
-        assert.strictEqual(2, storiesList.length);    //eslint-disable-line no-magic-numbers
+        assert.strictEqual(2, storiesList.length); //eslint-disable-line no-magic-numbers
         assert.isNull(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
     });
 

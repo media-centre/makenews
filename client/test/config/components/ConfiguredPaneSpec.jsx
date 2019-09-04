@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import TestUtils from "react-addons-test-utils";
 import React from "react";
 import ReactDOM from "react-dom";

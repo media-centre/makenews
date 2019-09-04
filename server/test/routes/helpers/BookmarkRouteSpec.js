@@ -40,7 +40,7 @@ describe("BookmarkRoute", () => {
         assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
     });
 
-    it("should throw error if update is not successful", async () => {
+    it("should throw error if update is not successful", async() => {
         let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("bookmarkTheDocument")
             .withExactArgs(authSession, docId, status)
             .returns(Promise.reject({ "error": "conflict" }));

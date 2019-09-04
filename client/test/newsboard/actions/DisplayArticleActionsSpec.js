@@ -209,7 +209,7 @@ describe("DisplayArticleActions", () => {
             ajaxPutMock.verify();
         });
 
-        it("should show toast message of unable to create collection if failed message on bad request", async () => {
+        it("should show toast message of unable to create collection if failed message on bad request", async() => {
             response = { "error": "unexpected response" };
             sandbox.mock(ajaxClientInstance).expects("put")
                 .withExactArgs(headers, body)
@@ -223,7 +223,7 @@ describe("DisplayArticleActions", () => {
             toastMock.verify();
         });
 
-        it("should show toast message of unable to add article if failed message on bad request", async () => {
+        it("should show toast message of unable to add article if failed message on bad request", async() => {
             response = { "error": "unexpected response" };
 
             sandbox.mock(ajaxClientInstance).expects("put")

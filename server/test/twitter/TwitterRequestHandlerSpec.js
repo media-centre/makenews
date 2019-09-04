@@ -16,7 +16,7 @@ describe("TwitterRequestHandler", () => {
             userName = "testUser";
             userObj = { "userName": userName };
             keyword = "keyword";
-            page = 1;  //eslint-disable-line no-magic-numbers
+            page = 1; //eslint-disable-line no-magic-numbers
             preFirstId = 123; //eslint-disable-line no-magic-numbers
             sandbox.mock(userDetails).expects("getUser").returns(userObj);
         });
@@ -52,7 +52,7 @@ describe("TwitterRequestHandler", () => {
             userName = "testUser";
             userObj = { "userName": userName };
             keyword = "keyword";
-            page = 1;  //eslint-disable-line no-magic-numbers
+            page = 1; //eslint-disable-line no-magic-numbers
             preFirstId = 123; //eslint-disable-line no-magic-numbers
             sandbox.mock(userDetails).expects("getUser").returns(userObj);
             twitterRequestHandler = new TwitterRequestHandler();
@@ -121,7 +121,7 @@ describe("TwitterRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should fetch tweets from the twitter", async () => {
+        it("should fetch tweets from the twitter", async() => {
             let url = "123344";
             let timeStamp = 12345678;
             const sinceId = "8123472382371882392";
@@ -195,7 +195,7 @@ describe("TwitterRequestHandler", () => {
             assert.deepEqual(response, expectedData);
         });
 
-        it("should throw could not get more when the requests are exceed", async () => {
+        it("should throw could not get more when the requests are exceed", async() => {
             fetchFollowingMock.returns(Promise.reject({ "statusCode": HttpResponseHandler.codes.TOO_MANY_REQUESTS, "message": "too many requests" }));
             await isRejected(twitterHandler.fetchFollowings(authSession, nextCursor), { "message": "Could not get more handles" });
         });

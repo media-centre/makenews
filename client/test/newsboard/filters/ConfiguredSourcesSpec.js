@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import ConfiguredSources from "../../../src/js/newsboard/filter/ConfiguredSources";
 import React from "react";
 import TestUtils from "react-addons-test-utils";

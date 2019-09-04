@@ -43,7 +43,7 @@ describe("FacebookTokenDocument", () => {
             sandbox.stub(FacebookTokenDocument, "logger").returns(LogTestHelper.instance());
         });
 
-        it("should return false when the current time is less than the expires time", async () => {
+        it("should return false when the current time is less than the expires time", async() => {
             const document = {
                 "access_token": "test_token",
                 "token_type": "test_type",
@@ -64,7 +64,7 @@ describe("FacebookTokenDocument", () => {
             assert.isFalse(isExpired);
         });
 
-        it("should return true when the current time is greater then the expires time", async () => {
+        it("should return true when the current time is greater then the expires time", async() => {
             const document = {
                 "access_token": "test_token",
                 "token_type": "test_type",
@@ -112,7 +112,7 @@ describe("FacebookTokenDocument", () => {
             };
         });
 
-        it("should get admin db instance", async () => {
+        it("should get admin db instance", async() => {
             let appConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(appConfig);
             appConfigMock = sandbox.mock(appConfig).expects("adminDetails");
@@ -127,7 +127,7 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("GetUserDocument", () => {
-        it("should get the user document for given user authSession", async () => {
+        it("should get the user document for given user authSession", async() => {
 
             let facebookId = "_facebookToken";
             let documentId = await getUserDocumentId(authSession, facebookId);

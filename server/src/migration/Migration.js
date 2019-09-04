@@ -118,11 +118,11 @@ export default class Migration {
         }
     }
 
-    _migrateFileSynchronously(migratableFileDetails, index = 0) {  // eslint-disable-line no-magic-numbers
+    _migrateFileSynchronously(migratableFileDetails, index = 0) { // eslint-disable-line no-magic-numbers
         return new Promise((resolve, reject) => {
             if (migratableFileDetails && migratableFileDetails.length > index) {
                 this._migrateFile(migratableFileDetails[index]).then(response => {
-                    this._migrateFileSynchronously(migratableFileDetails, index + 1).then(status => {  // eslint-disable-line no-magic-numbers
+                    this._migrateFileSynchronously(migratableFileDetails, index + 1).then(status => { // eslint-disable-line no-magic-numbers
                         resolve(true);
                     }).catch(error => {
                         reject(false);
@@ -139,21 +139,21 @@ export default class Migration {
     _migrateFile(fileDetails) {
         return new Promise((resolve, reject) => {
             try {
-                this.getObject(fileDetails[1]).up().then(response => {   // eslint-disable-line no-magic-numbers
-                    Migration.logger(this.dbName).info("%s::up is successful", fileDetails[1]);    // eslint-disable-line no-magic-numbers
-                    SchemaInfo.instance(this.dbName, this.accessToken).save(fileDetails[0]).then(success => {   // eslint-disable-line no-magic-numbers
-                        Migration.logger(this.dbName).info("saving schema info token %s is successful.", fileDetails[0]);   // eslint-disable-line no-magic-numbers
+                this.getObject(fileDetails[1]).up().then(response => { // eslint-disable-line no-magic-numbers
+                    Migration.logger(this.dbName).info("%s::up is successful", fileDetails[1]); // eslint-disable-line no-magic-numbers
+                    SchemaInfo.instance(this.dbName, this.accessToken).save(fileDetails[0]).then(success => { // eslint-disable-line no-magic-numbers
+                        Migration.logger(this.dbName).info("saving schema info token %s is successful.", fileDetails[0]); // eslint-disable-line no-magic-numbers
                         resolve(success);
                     }).catch(error => {
-                        Migration.logger(this.dbName).error("saving schema info token %s is failed.", fileDetails[0]);   // eslint-disable-line no-magic-numbers
+                        Migration.logger(this.dbName).error("saving schema info token %s is failed.", fileDetails[0]); // eslint-disable-line no-magic-numbers
                         reject(error);
                     });
                 }).catch(error => {
-                    Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]);  // eslint-disable-line no-magic-numbers
+                    Migration.logger(this.dbName).error("%s migration failed.", fileDetails[1]); // eslint-disable-line no-magic-numbers
                     reject(error);
                 });
             } catch (error) {
-                Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]);   // eslint-disable-line no-magic-numbers
+                Migration.logger(this.dbName).error("getObject for %s failed.", fileDetails[1]); // eslint-disable-line no-magic-numbers
                 reject(error);
             }
         });

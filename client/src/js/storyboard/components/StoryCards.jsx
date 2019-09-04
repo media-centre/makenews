@@ -45,8 +45,8 @@ export class StoryCards extends Component {
         storiesArray.unshift(<li className="add-card" key="0">
             <Link ref="newStoryCard" className="navigation-link" to="/story-board/story">
                 <div className="card">
-                <i className="fa fa-plus-circle icon" aria-hidden="true"/>
-                {this.storyBoardStrings.createStory}
+                    <i className="fa fa-plus-circle icon" aria-hidden="true"/>
+                    {this.storyBoardStrings.createStory}
                 </div>
             </Link>
         </li>);

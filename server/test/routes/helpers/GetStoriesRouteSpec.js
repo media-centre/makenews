@@ -14,7 +14,7 @@ describe("GetStoriesRoute", () => {
             sandbox.restore();
         });
 
-        it("should return array of documents", async () => {
+        it("should return array of documents", async() => {
             let documents = { "docs": {
                 "title": "title2",
                 "_id": "1234",

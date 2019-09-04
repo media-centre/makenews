@@ -65,7 +65,7 @@ describe("BookmarkedFeedsRoute", () => {
         assert.deepEqual(response.json(), feeds);
     });
 
-    it("should throw error if fetching bookmarked feeds is failed", async () => {
+    it("should throw error if fetching bookmarked feeds is failed", async() => {
         let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("getBookmarkedFeeds")
             .withExactArgs(authSession, offset)
             .returns(Promise.reject("error"));

@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { ConfigureSourcesPage } from "./../../../src/js/config/components/ConfigureSourcesPage";
 import FacebookLogin from "./../../../src/js/facebook/FacebookLogin";
 import React from "react";

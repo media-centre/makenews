@@ -280,7 +280,7 @@ describe("SourceConfigurationActions", () => {
         afterEach("deleteSource", () => {
             sandbox.restore();
         });
-        
+
         it("should dispatch unmarkSources, deletedSource for the success response", (done) => {
             sandbox.mock(ajaxInstance).expects("post").returns(Promise.resolve({ "ok": true }));
             const event = { "target": { "dataset": { "sourceId": sourceToDelete._id, "sourceType": sourceToDelete.sourceType } } };
@@ -293,7 +293,7 @@ describe("SourceConfigurationActions", () => {
             store.dispatch(sourceConfigActions.deleteSource(event.target));
         });
 
-        it("should show a Toast message when the source could not be deleted", async () => {
+        it("should show a Toast message when the source could not be deleted", async() => {
             const event = { "target": { "dataset": { "sourceId": sourceToDelete._id, "sourceType": sourceToDelete.sourceType } } };
 
             const configurePage = {

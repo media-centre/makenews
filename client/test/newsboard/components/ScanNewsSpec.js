@@ -20,6 +20,6 @@ xdescribe("Scan News", () => {
 
     it("should have DisplayFeeds Component", () => {
         let renderedSources = findAllWithType(result, DisplayFeeds);
-        expect(renderedSources).to.have.lengthOf(1);  //eslint-disable-line no-magic-numbers
+        expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
     });
 });

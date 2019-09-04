@@ -79,30 +79,30 @@ export class ConfigurePane extends Component {
     render() {
         const configurePage = Locale.applicationStrings().messages.configurePage;
         return (
-          <div className="configure-sources">
-              <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin} checkConfiguredSources={this.checkConfiguredSources}/>
-              { this.state.showConfigurationWarning &&
+            <div className="configure-sources">
+                <ConfigPaneNavigation currentSourceType={this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin} checkConfiguredSources={this.checkConfiguredSources}/>
+                { this.state.showConfigurationWarning &&
                   <div className="configuration-warning">
                       <i className="warning-icon" />
                       <span className="warning-message">{configurePage.warningMessages.configureAtLeastOneSource}</span>
                       <span className="close" onClick={this._closeConfigurationWarning}>&times;</span>
                   </div>
-              }
-              { (this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
+                }
+                { (this.props.currentSourceType === "facebook" && this.props.sourcesAuthenticationInfo.facebook) ||
                 (this.props.currentSourceType === "twitter" && this.props.sourcesAuthenticationInfo.twitter) ||
                 (this.props.currentSourceType === "web")
-                  ? <div>
-                      <Input ref="searchSources" className={"input-box configure-source"}
-                          callback={this._searchInSources}
-                          placeholder={`Search ${this.props.currentTab}....`}
-                          addonSrc="search" callbackOnEnter
-                      />
-                      <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
-                  </div>
-                  : <SignInWarning currentSourceType = {this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
-              }
+                    ? <div>
+                        <Input ref="searchSources" className={"input-box configure-source"}
+                            callback={this._searchInSources}
+                            placeholder={`Search ${this.props.currentTab}....`}
+                            addonSrc="search" callbackOnEnter
+                        />
+                        <SourcePane dispatch={this.props.dispatch} currentTab={this.props.currentTab}/>
+                    </div>
+                    : <SignInWarning currentSourceType = {this.props.currentSourceType} fbLogin={this.props.fbLogin} twitterLogin={this.props.twitterLogin}/>
+                }
 
-          </div>
+            </div>
         );
     }
 }

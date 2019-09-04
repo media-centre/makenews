@@ -37,7 +37,7 @@ describe("FetchFeedsFromAllSources", () => {
             sandbox.restore();
         });
 
-        it("should send error response if there is an invalid data in the request body", async () => {
+        it("should send error response if there is an invalid data in the request body", async() => {
             requestBody = {
                 "cookies": { "AuthSession": null }
             };
@@ -52,7 +52,7 @@ describe("FetchFeedsFromAllSources", () => {
             assert.deepEqual(response.json(), { "message": "bad request" });
         });
 
-        it("should return success response after getting the feeds", async () => {
+        it("should return success response after getting the feeds", async() => {
             let fetchFeedsFromAllSourcesMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromAllSources");
             fetchFeedsFromAllSourcesMock.returns(Promise.resolve([{ "_id": "1", "title": "title" }]));
             const saveDocMock = sandbox.mock(fetchFeedsRequest).expects("saveFeedDocumentsToDb").returns(Promise.resolve("success"));
@@ -64,7 +64,7 @@ describe("FetchFeedsFromAllSources", () => {
             assert.deepEqual(response.json(), { "status": true });
         });
 
-        it("should return false status if there are no new feeds", async () => {
+        it("should return false status if there are no new feeds", async() => {
             let fetchFeedsFromAllSourcesMock = sandbox.mock(fetchFeedsRequest).expects("fetchFeedsFromAllSources");
             fetchFeedsFromAllSourcesMock.returns(Promise.resolve([]));
 
@@ -169,7 +169,7 @@ describe("FetchFeedsFromAllSources", () => {
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
         });
 
-        it("should call the saveDoc with the updated source", async () => {
+        it("should call the saveDoc with the updated source", async() => {
             sandbox.stub(DateUtil, "getCurrentTime").returns("12955678");
             const urlDoc = { "_id": 1, "sourceType": "twitter", "title": "heading", "since": "12345678" };
             const paging = { "since": "13012345" };
@@ -289,10 +289,10 @@ describe("FetchFeedsFromAllSources", () => {
                 feeds = { "docs": [
                     { "sourceType": "twitter", "_id": "@TheHindu", "since": "12344568", "docType": "feed" }
                 ],
-                    "paging": {
-                        "sinceId": "123124123131",
-                        "since": 124123432
-                    }
+                "paging": {
+                    "sinceId": "123124123131",
+                    "since": 124123432
+                }
                 };
                 let twitterRequestHandler = new TwitterRequestHandler();
                 let twitterRequestHandlerMock = sandbox.mock(TwitterRequestHandler).expects("instance");
@@ -411,7 +411,7 @@ describe("FetchFeedsFromAllSources", () => {
     });
 
     describe("GetUrlDocs", () => {
-        it("should get all url docs", async () => {
+        it("should get all url docs", async() => {
             let rss = { "sourceType": "rss",
                 "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" };
             let facebook = { "sourceType": "twitter", "_id": "@TheHindu" };
@@ -434,11 +434,11 @@ describe("FetchFeedsFromAllSources", () => {
             assert.deepEqual(resp, expectedFeeds);
         });
 
-        it("should get the url docs recursively, if there are more than 25 url docs", async () => {
+        it("should get the url docs recursively, if there are more than 25 url docs", async() => {
             const feedResults1 = [{ "sourceType": "rss",
                 "_id": "http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms" },
-                { "sourceType": "twitter", "_id": "@TheHindu" },
-                { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }];
+            { "sourceType": "twitter", "_id": "@TheHindu" },
+            { "sourceType": "facebook", "_id": "http://www.facebook.com/thehindu" }];
             const feedResults2 = [{ "sourceType": "twitter", "_id": "@TheEconomicsTimes" },
                 { "sourceType": "facebook", "_id": "http://www.facebook.com/minion" }];
             const offset = 3;

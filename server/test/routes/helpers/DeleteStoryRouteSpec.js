@@ -16,7 +16,7 @@ describe("DeleteStoryRoute", () => {
         sandbox.restore();
     });
 
-    it("should validate id", async () => {
+    it("should validate id", async() => {
         let result = await new DeleteStoryRoute({
             "body": {
                 "id": "id_1"
@@ -29,7 +29,7 @@ describe("DeleteStoryRoute", () => {
         assert.equal(result, "");
     });
 
-    it("should validate id and give a message if id is not there", async () => {
+    it("should validate id and give a message if id is not there", async() => {
         let result = await new DeleteStoryRoute({
             "body": { },
             "cookies": {
@@ -40,7 +40,7 @@ describe("DeleteStoryRoute", () => {
         assert.equal(result, "missing parameters");
     });
 
-    it("should call deleteStory", async () => {
+    it("should call deleteStory", async() => {
         const id = "id_1", authSession = "test_session";
         const couchClientInstance = new CouchClient(authSession, "db name");
         const saveDocumentMock = sandbox.mock(couchClientInstance)

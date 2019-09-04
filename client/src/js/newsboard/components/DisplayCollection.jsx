@@ -82,8 +82,8 @@ export class DisplayCollection extends Component {
         let collectionItems = [];
         const getCollectionItem = (collection, className) => /*eslint-disable react/jsx-no-bind*/
             (<li tabIndex="0" className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>
-                    {this.props.mainHeaderTab === "Write a Story" && collection.collection}
-                    {this.props.mainHeaderTab !== "Write a Story" &&
+                {this.props.mainHeaderTab === "Write a Story" && collection.collection}
+                {this.props.mainHeaderTab !== "Write a Story" &&
                     <InlineEdit
                         text={collection.collection}
                         paramName="newCollectionName"
@@ -93,7 +93,7 @@ export class DisplayCollection extends Component {
                             this.props.dispatch(renameCollection(collection._id, value.newCollectionName));
                         }}
                     />}
-                    {this.props.mainHeaderTab !== "Write a Story" &&
+                {this.props.mainHeaderTab !== "Write a Story" &&
                     <button className="delete-collection" title={`Delete ${collection.collection}`} onClick={(event) => {
                         event.stopPropagation();
                         this.buttonEvent = Object.assign({}, event);
@@ -101,7 +101,7 @@ export class DisplayCollection extends Component {
                         this.props.dispatch(popUp(this.collectionMessages.confirmDelete, this._deleteCollection));
                     }}
                     > &times; </button>}
-                </li>
+            </li>
             );/*eslint-enable react/jsx-no-bind*/
         if(!first) {
             return collectionItems;
@@ -194,9 +194,9 @@ export class DisplayCollection extends Component {
         this.collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (
             <div className="collection-list-container">
-            { (this.props.mainHeaderTab === WRITE_A_STORY || IS_MOBILE) && this.state.isClicked &&
+                { (this.props.mainHeaderTab === WRITE_A_STORY || IS_MOBILE) && this.state.isClicked &&
             <DisplayCollectionFeeds tab={this.props.mainHeaderTab} isClicked={this._isClicked} collectionsDOM={this.refs.collections}/> }
-            { this.displayCollections() }
+                { this.displayCollections() }
             </div>
         );
     }

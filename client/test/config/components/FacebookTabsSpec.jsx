@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { FacebookTabs } from "../../../src/js/config/components/FacebookTabs";
 import React from "react";
 import { Router, Route, Link } from "react-router";

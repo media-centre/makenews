@@ -17,7 +17,7 @@ export class ChangePassword extends Component {
         this.submitProfile = this.submitProfile.bind(this);
     }
 
-    submitProfile(event) {  //eslint-disable-line consistent-return
+    submitProfile(event) { //eslint-disable-line consistent-return
         event.preventDefault();
         const currentPassword = this.refs.currentPassword.value.trim();
         const newPassword = this.refs.newPassword.value.trim();

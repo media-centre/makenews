@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { DisplayCollectionFeeds } from "./../../../src/js/newsboard/components/DisplayCollectionFeeds";
 import CollectionFeed from "../../../src/js/newsboard/components/CollectionFeed";
 import DisplayArticle from "../../../src/js/newsboard/components/DisplayArticle";
@@ -11,8 +12,8 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("DisplayCollectionFeeds", () => {
     let result = null;
     const feeds = [
-                { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
-                { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }];
+        { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
+        { "_id": "12345", "sourceUrl": "http://www.test2.com", "docType": "feed", "tags": [], "videos": [], "images": [] }];
     const collectionName = "test";
     const sandbox = sinon.sandbox.create();
     const anonymousFun = () => {};

@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("DeleteSourceRoute", () => {
-    it("should give success response", async () => {
+    it("should give success response", async() => {
         let sources = ["source1"];
         let request = {
             "cookies": {

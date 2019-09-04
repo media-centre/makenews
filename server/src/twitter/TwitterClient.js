@@ -18,7 +18,7 @@ export default class TwitterClient {
     static instance() {
         return new TwitterClient();
     }
-    
+
     async fetchTweets(url, userName, since, sinceId = "1") {
         const type = url.startsWith("#") || url.startsWith("%23") ? twitterTypes.TAG : twitterTypes.USER;
         const timestampQuery = since ? `&since=${this._getTwitterTimestampFormat(since)}` : "";
@@ -28,7 +28,7 @@ export default class TwitterClient {
             : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&since_id=${sinceId}&user_id=${url}`;
         const oauth = TwitterLogin.createOAuthInstance();
         const twitterMaxFeedsLimit = ApplicationConfig.instance().twitter().maxFeeds;
-        
+
         const tweets = await this.recursivelyFetchTweets(searchUrl, oauth, tokenInfo, twitterMaxFeedsLimit);
         if(tweets.error) {
             TwitterClient.logger().error("TwitterClient:: error fetching feeds for %s", url);
@@ -60,7 +60,7 @@ export default class TwitterClient {
         }
         return feedsData;
     }
-    
+
     requestTweets(url, oauth, tokenInfo) {
         return new Promise((resolve, reject) => {
             oauth.get(url, ...tokenInfo, (error, data) => {
@@ -96,7 +96,7 @@ export default class TwitterClient {
 
     _getTwitterTimestampFormat(timestamp) {
         let dateObj = new Date(timestamp);
-        return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();  //eslint-disable-line no-magic-numbers
+        return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate(); //eslint-disable-line no-magic-numbers
     }
 
     async fetchUserInfoFromHandle(username, handle) {
@@ -113,7 +113,7 @@ export default class TwitterClient {
             throw `Requested user ${handle} not found`; //eslint-disable-line no-throw-literal
         }
     }
-    
+
     async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
         let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}&count=12`;
         const parsedData = await this._getTwitterData(handlesWithKeyApi, userName);

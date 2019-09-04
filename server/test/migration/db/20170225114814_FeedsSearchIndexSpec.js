@@ -25,7 +25,7 @@ describe("FeedsSearchIndex", () => {
         sandbox.restore();
     });
 
-    it("should return success response from the db", async () => {
+    it("should return success response from the db", async() => {
 
         let successResponse = {
             "ok": true,

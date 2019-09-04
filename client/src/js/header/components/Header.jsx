@@ -32,7 +32,7 @@ export class Header extends Component {
                     hide={this.props.confirmPopup.hide}
                 /> }
             </div>
-        );
+            );
         return renderedDOM;
     }
 }

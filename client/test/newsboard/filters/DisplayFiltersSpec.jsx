@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import DisplayFilters from "../../../src/js/newsboard/filter/DisplayFilters";
 import * as SourceConfigurationActions from "../../../src/js/sourceConfig/actions/SourceConfigurationActions";
 import * as FilterActions from "../../../src/js/newsboard/filter/FilterActions";
@@ -22,8 +23,8 @@ describe("DisplayFilters", () => {
         let store = createStore(() => ({
             "configuredSources": { "web": [{ "_id": "id1", "name": "name1" },
                 { "_id": "id2", "name": "name2" }],
-                "pages": [], "profiles": [], "groups": [],
-                "twitter": [] },
+            "pages": [], "profiles": [], "groups": [],
+            "twitter": [] },
             "searchInConfiguredSources": "the",
             "currentFilter": "twitter",
             "currentFilterSource": { "web": [{ "_id": "id1", "name": "name1" }], "facebook": [], "twitter": [] }

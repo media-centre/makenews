@@ -45,12 +45,12 @@ export class DisplayFilters extends Component {
 
     _renderSources(sourceType, searchKey) {
         let configuredSourceDOM = (source) =>
-            <li className="filter-source" key={source._id}>
+            (<li className="filter-source" key={source._id}>
                 <input type="checkbox" role="checkbox" name={sourceType} title={source.name} value={source._id}
                     onClick={this.sourceClick} defaultChecked={this.hasChecked(source._id, sourceType)}
                 />
                 <span className="source__title">{source.name}</span>
-            </li>;
+            </li>);
         if(searchKey) {
             let key = searchKey.toUpperCase();
             let configuredSources = source => source && source.name && source.name.toUpperCase().match(key);
@@ -138,10 +138,10 @@ export class DisplayFilters extends Component {
                 />
                 { this.props.currentTab === "twitter" &&
                     <div className="hashtag-container">
-                       <div className="add-hashtag" onClick={this.showInputBox}>
-                           <i className="fa fa-plus-circle" />
-                           <span>{this.filterStrings.addHashTags}</span>
-                       </div>
+                        <div className="add-hashtag" onClick={this.showInputBox}>
+                            <i className="fa fa-plus-circle" />
+                            <span>{this.filterStrings.addHashTags}</span>
+                        </div>
                         { this.state.hashtagInputBox &&
                         <div className="hashtag-box">
                             <span className="hash">#</span>

@@ -1,3 +1,5 @@
+/*eslint react/jsx-no-bind:0*/
+
 import Source from "../../../src/js/config/components/Source";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -42,7 +44,7 @@ describe("Source URL component", () => {
         let sourceUrl = sourceDOM.querySelectorAll(".source__url");
         expect(sourceUrl).to.have.lengthOf(1); // eslint-disable-line no-magic-numbers
     });
-    
+
     it("should have user icon with the give source", () => {
         let [image] = sourceDOM.querySelectorAll("img");
         expect(image.src).to.equal(source.picture.data.url);

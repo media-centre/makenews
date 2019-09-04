@@ -26,7 +26,7 @@ describe("FetchArticleFromUrl", () => {
             sandbox.restore();
         });
 
-        it("should get the HTML for a valid url", async () => {
+        it("should get the HTML for a valid url", async() => {
             let fetchArticle = new FetchArticleFromUrl({
                 "query": { "url": "http://some.url" }
             }, {});

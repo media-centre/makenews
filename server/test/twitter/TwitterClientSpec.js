@@ -36,7 +36,7 @@ describe("TwitterClient", () => {
             sandbox.restore();
         });
 
-        it("should fetch handles from the twitter user", async () => {
+        it("should fetch handles from the twitter user", async() => {
             let parsedData = [{
                 "id": 1277389,
                 "id_str": 1277389,
@@ -77,7 +77,7 @@ describe("TwitterClient", () => {
             }
         });
 
-        it("should return empty object if results are matching with previous result", async () => {
+        it("should return empty object if results are matching with previous result", async() => {
             let resultData = { "docs": [] };
 
             getAccessMock = sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -92,7 +92,7 @@ describe("TwitterClient", () => {
                     "location": "india"
                 }]);
             try {
-                let result = await twitterClient.fetchHandles("userName", "india", 1, 1277389);  //eslint-disable-line no-magic-numbers
+                let result = await twitterClient.fetchHandles("userName", "india", 1, 1277389); //eslint-disable-line no-magic-numbers
                 assert.deepEqual(resultData, result);
                 getAccessMock.verify();
                 createOAuthMock.verify();
@@ -101,7 +101,7 @@ describe("TwitterClient", () => {
             }
         });
 
-        it("should reject with an error if oauth get returns error", async () => {
+        it("should reject with an error if oauth get returns error", async() => {
             getAccessMock = sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
@@ -110,17 +110,17 @@ describe("TwitterClient", () => {
                 .reply(HttpResponseHanlder.codes.BAD_REQUEST, "no result");
 
             try {
-                await twitterClient.fetchHandles("userName", "india", 1, 0);  //eslint-disable-line no-magic-numbers
+                await twitterClient.fetchHandles("userName", "india", 1, 0); //eslint-disable-line no-magic-numbers
             } catch(error) {
                 assert.deepEqual("no result", error.data);
             }
         });
 
-        it("should reject with an error if getAccessToken rejects with an error", async () => {
+        it("should reject with an error if getAccessToken rejects with an error", async() => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.reject("Error"));
 
             try {
-                await twitterClient.fetchHandles("userName", "keyword", 1, 123);  //eslint-disable-line no-magic-numbers
+                await twitterClient.fetchHandles("userName", "keyword", 1, 123); //eslint-disable-line no-magic-numbers
                 assert.fail();
             } catch(error) {
                 assert.deepEqual(error, "Error");
@@ -164,7 +164,7 @@ describe("TwitterClient", () => {
             sandbox.restore();
         });
 
-        it("should fetch tweets for the given url", async () => {
+        it("should fetch tweets for the given url", async() => {
             let parsedTweets = [{
                 "_id": 1277389,
                 "docType": "feed",
@@ -202,7 +202,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expctedData);
         });
 
-        it("should fetch tweets for the given url with the since id", async () => {
+        it("should fetch tweets for the given url with the since id", async() => {
             const expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
@@ -249,7 +249,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should return empty docs and same sinceId if twitter gives empty feeds", async () => {
+        it("should return empty docs and same sinceId if twitter gives empty feeds", async() => {
             const twitterResponse = {
                 "statuses": [],
                 "search_metadata": {
@@ -278,7 +278,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should fetch tweets for the given url recursively", async () => {
+        it("should fetch tweets for the given url recursively", async() => {
             let expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
@@ -377,7 +377,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should fetch tweets for the given hashtag recursively", async () => {
+        it("should fetch tweets for the given hashtag recursively", async() => {
             let expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
@@ -501,7 +501,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should fetch tweets for the given hashtag recursively till the recursion limit", async () => {
+        it("should fetch tweets for the given hashtag recursively till the recursion limit", async() => {
             let expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
@@ -648,7 +648,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should fetch log the error message if fetching tweets fails", async () => {
+        it("should fetch log the error message if fetching tweets fails", async() => {
             const expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
@@ -736,7 +736,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(tweetData, expectedData);
         });
 
-        it("should reject with an error if getAccessToken rejects with an error", async () => {
+        it("should reject with an error if getAccessToken rejects with an error", async() => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.reject("Error"));
 
             try {
@@ -771,7 +771,7 @@ describe("TwitterClient", () => {
             sandbox.restore();
         });
 
-        it("should fetch user Info from handle", async () => {
+        it("should fetch user Info from handle", async() => {
             const twitterResponseData = {
                 "id": 1277389,
                 "id_str": 1277389,
@@ -802,7 +802,7 @@ describe("TwitterClient", () => {
             assert.deepEqual(handleData, expectedData);
         });
 
-        it("should reject with an error if oauth get returns error", async () => {
+        it("should reject with an error if oauth get returns error", async() => {
             getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
@@ -838,7 +838,7 @@ describe("TwitterClient", () => {
             sandbox.restore();
         });
 
-        it("should fetch followings", async () => {
+        it("should fetch followings", async() => {
             let parsedData = [{
                 "id": 1277389,
                 "id_str": 1277389,
@@ -882,7 +882,7 @@ describe("TwitterClient", () => {
             createOAuthMock.verify();
         });
 
-        it("should reject with an error if oauth get returns error", async () => {
+        it("should reject with an error if oauth get returns error", async() => {
             getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
@@ -897,7 +897,7 @@ describe("TwitterClient", () => {
             }
         });
 
-        it("should reject with an error if getAccessToken rejects with an error", async () => {
+        it("should reject with an error if getAccessToken rejects with an error", async() => {
             sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.reject("Error"));
             await isRejected(twitterClientInstance.fetchFollowings("username"), "Error");
         });

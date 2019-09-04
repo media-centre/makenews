@@ -11,7 +11,7 @@ export default class FacebookSetAccessTokenRoute extends Route {
         this.authSession = this.request.cookies.AuthSession;
     }
     
-    async handle() {   //eslint-disable-line consistent-return
+    async handle() { //eslint-disable-line consistent-return
         if (StringUtil.isEmptyString(this.accessToken)) {
             return this._handleInvalidRequest();
         }

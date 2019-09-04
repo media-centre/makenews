@@ -58,10 +58,10 @@ export class ScanNews extends Component {
                     <NewsBoardTabs />
                 </div>
                 { IS_MOBILE ? <FeedContainer navBar={this._navBarRef} tab={this.props.currentTab} toolBar/>
-                : <div className="feed-article-container">
-                    <DisplayFeeds />
-                    {this.props.currentTab === newsBoardSourceTypes.collection ? <DisplayCollectionFeeds /> : <DisplayArticle toolBar />}
-                </div>}
+                    : <div className="feed-article-container">
+                        <DisplayFeeds />
+                        {this.props.currentTab === newsBoardSourceTypes.collection ? <DisplayCollectionFeeds /> : <DisplayArticle toolBar />}
+                    </div>}
             </div>
         );
     }

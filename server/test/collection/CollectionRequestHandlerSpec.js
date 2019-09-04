@@ -32,7 +32,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should throw error if isNewCollection is true and collection id Exist", async () => {
+        it("should throw error if isNewCollection is true and collection id Exist", async() => {
             const collectionDoc = [{ "_id": "collection id", "collection": "first collection" }];
             const findDocMock = sandbox.mock(couchClient).expects("findDocuments")
                 .returns(Promise.resolve({ "docs": collectionDoc }));
@@ -43,7 +43,7 @@ describe("CollectionRequestHandler", () => {
             findDocMock.verify();
         });
 
-        it("should create collectionDoc", async () => {
+        it("should create collectionDoc", async() => {
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
                 .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [] }));
             const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
@@ -56,7 +56,7 @@ describe("CollectionRequestHandler", () => {
             assert.deepEqual(response, { "ok": true, "_id": "1234" });
         });
 
-        it("should create collectionFeedDoc when the collection already exists", async () => {
+        it("should create collectionFeedDoc when the collection already exists", async() => {
 
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
                 .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [{ "_id": "123455" }] }));
@@ -70,7 +70,7 @@ describe("CollectionRequestHandler", () => {
             assert.deepEqual(response, { "ok": true, "_id": "123455" });
         });
 
-        it("should create collectionDoc and collectionFeedDoc", async () => {
+        it("should create collectionDoc and collectionFeedDoc", async() => {
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
                 .withExactArgs(collectionName).returns(Promise.resolve({ "docs": [] }));
             const createCollectionMock = sandbox.mock(collectionRequestHandler).expects("createCollection")
@@ -86,7 +86,7 @@ describe("CollectionRequestHandler", () => {
             assert.deepEqual(response, { "ok": true, "_id": "1234" });
         });
 
-        it("should create collection feed doc with the selected Text if it exists", async () => {
+        it("should create collection feed doc with the selected Text if it exists", async() => {
             const collectionId = "123455";
             const selectedText = "adding something";
             const getCollectionMock = sandbox.mock(collectionRequestHandler).expects("getCollectionDoc")
@@ -107,7 +107,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return collection id after creating collection", async () => {
+        it("should return collection id after creating collection", async() => {
             const collectionName = "collection name";
             const collectionDoc = {
                 "docType": "collection",
@@ -129,7 +129,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should create collectionFeed doc when there is docId and collectionId", async () => {
+        it("should create collectionFeed doc when there is docId and collectionId", async() => {
             const feedId = "doc id";
             const sourceId = "http://www.thehindu.com/?service=rss";
             const collectionId = 123;
@@ -151,7 +151,7 @@ describe("CollectionRequestHandler", () => {
             assert.deepEqual(response, { "ok": true });
         });
 
-        it("should return article already added if the article already added to same collection", async () => {
+        it("should return article already added if the article already added to same collection", async() => {
             const docId = "doc id";
             const sourceId = "1123455";
             const collectionId = "collection id";
@@ -163,7 +163,7 @@ describe("CollectionRequestHandler", () => {
             saveDocumentMock.verify();
         });
 
-        it("should throw error when there is error from db other than conflict", async () => {
+        it("should throw error when there is error from db other than conflict", async() => {
             const docId = "doc id";
             const sourceId = "1233455";
             const collectionId = "collection id";
@@ -191,7 +191,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should get all collections", async () => {
+        it("should get all collections", async() => {
             const allCollections = { "docs": ["id1", "id2", "id3", "id4", "id5", "id6"] };
             const firstResponse = { "docs": ["id1", "id2", "id3", "id4"] };
             const secondResponse = { "docs": ["id5", "id6"] };
@@ -211,7 +211,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should throw an error if the collection is already exits with the same name", async () => {
+        it("should throw an error if the collection is already exits with the same name", async() => {
             const collectionId = 123456;
             const collectionName = "new collection name";
             const selector = {
@@ -231,7 +231,7 @@ describe("CollectionRequestHandler", () => {
                 `There is already a collection with the name ${collectionName}`);
         });
         
-        it("should rename the collection", async () => {
+        it("should rename the collection", async() => {
             const collectionId = 123456;
             const collectionName = "new collection name";
             sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
@@ -257,7 +257,7 @@ describe("CollectionRequestHandler", () => {
             assert.deepEqual(response, { "ok": true });
         });
 
-        it("should throw error if couchdb throws any error", async () => {
+        it("should throw error if couchdb throws any error", async() => {
             const collectionId = 123456;
             const collectionName = "new collection name";
             sandbox.stub(couchClient, "findDocuments").returns(Promise.resolve({ "docs": [] }));
@@ -292,7 +292,7 @@ describe("CollectionRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should create collectionFeed doc with selectedText", async () => {
+        it("should create collectionFeed doc with selectedText", async() => {
             const collectionFeedDoc = {
                 "docType": "collectionFeed",
                 "description": selectedText.description,

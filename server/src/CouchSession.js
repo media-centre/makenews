@@ -24,7 +24,7 @@ export default class CouchSession {
                 if(NodeErrorHandler.noError(error)) {
                     if(response.statusCode === HttpResponseHandler.codes.OK) {
                         CouchSession.logger().debug("CouchSession:: login successful for user '%s'.", username);
-                        resolve(response.headers["set-cookie"][0]);  //eslint-disable-line no-magic-numbers
+                        resolve(response.headers["set-cookie"][0]); //eslint-disable-line no-magic-numbers
                     } else {
                         reject(response.body);
                     }

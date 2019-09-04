@@ -116,7 +116,7 @@ describe("CollectionRoute", () => {
             sandbox.restore();
         });
 
-        it("should return all collections", async () => {
+        it("should return all collections", async() => {
             let collection = { "docs": ["first", "second"] };
             let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.resolve(collection));
@@ -130,7 +130,7 @@ describe("CollectionRoute", () => {
             }
         });
 
-        it("should throw error when fetching collection failed", async () => {
+        it("should throw error when fetching collection failed", async() => {
             let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.reject({ "error": "unexpected response from db" }));
             try {

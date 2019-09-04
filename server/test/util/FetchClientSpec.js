@@ -6,7 +6,7 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("FetchClient", () => {
     describe("getRequest", () => {
-        it("should call get and get the response if status 200", async () => {
+        it("should call get and get the response if status 200", async() => {
             let url = "http://mytest.com";
             let params = { "q": "key" };
             let expectedResponse = {
@@ -19,7 +19,7 @@ describe("FetchClient", () => {
             assert.deepEqual(response, expectedResponse);
         });
 
-        it("should throw error if status is not 200", async () => {
+        it("should throw error if status is not 200", async() => {
             let url = "http://mytest.com", params = { "q": "key" };
             let error = {
                 "message": "missing"

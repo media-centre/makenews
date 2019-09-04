@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { SourcePane } from "../../../src/js/config/components/SourcePane";
 import React from "react";
 import TestUtils from "react-addons-test-utils";

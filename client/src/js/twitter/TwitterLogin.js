@@ -28,7 +28,7 @@ export default class TwitterLogin {
                             reject(false);
                         }
                     }
-                    iteration += 1;  // eslint-disable-line no-magic-numbers
+                    iteration += 1; // eslint-disable-line no-magic-numbers
                 }, TwitterLogin.getWaitTime());
             });
         });

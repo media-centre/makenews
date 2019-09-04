@@ -21,7 +21,7 @@ export default class LoginRoute extends Route {
         return true;
     }
 
-    handle() {  //eslint-disable-line consistent-return
+    handle() { //eslint-disable-line consistent-return
         try {
             if(!this.valid()) {
                 return this._handleFailure({ "message": "unauthorized" });

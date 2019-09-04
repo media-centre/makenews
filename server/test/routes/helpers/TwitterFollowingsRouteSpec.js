@@ -5,7 +5,7 @@ import sinon from "sinon";
 
 describe("TwitterFollowingsRoute", () => {
 
-    it("should get followings", async () => {
+    it("should get followings", async() => {
         let sandbox = sinon.sandbox.create();
         const authSession = "authSession";
         const nextCursor = -1;

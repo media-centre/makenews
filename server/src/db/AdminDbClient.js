@@ -33,8 +33,8 @@ export default class AdminDbClient extends CouchClient {
 
     static createInstance(token, db, userName) {
         let accessToken = "";
-        if (token && token.split(";")[0]) {                  // eslint-disable-line no-magic-numbers
-            accessToken = token.split(";")[0].split("=")[1];  // eslint-disable-line no-magic-numbers
+        if (token && token.split(";")[0]) { // eslint-disable-line no-magic-numbers
+            accessToken = token.split(";")[0].split("=")[1]; // eslint-disable-line no-magic-numbers
         }
         const adminDbClient = new AdminDbClient(db, accessToken);
         dbInstanceMap.set(userName, { "instance": adminDbClient, "expiration": AdminDbClient.getExpirationTime() });

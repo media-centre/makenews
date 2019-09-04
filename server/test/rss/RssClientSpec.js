@@ -317,7 +317,7 @@ describe("RssClient", () => {
             assert.deepEqual(res, expectedFeeds);
         });
 
-        it("it should return bad_status_code when status code is not 200 ok", async () => {
+        it("it should return bad_status_code when status code is not 200 ok", async() => {
             nock(url)
                 .get("/rss")
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "data": "error" });
@@ -378,7 +378,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should fetch data and update common and user db", async () => {
+        it("should fetch data and update common and user db", async() => {
 
             const fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(sourceUrl).returns(Promise.resolve({ "title": name }));
@@ -398,7 +398,7 @@ describe("RssClient", () => {
             assert.deepEqual(response, { name, "url": sourceUrl });
         });
 
-        it("should return error when fetchRss throws error", async () => {
+        it("should return error when fetchRss throws error", async() => {
 
             const fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(sourceUrl).returns(Promise.reject({ "message": sourceUrl + " is not a proper feed" }));
@@ -411,7 +411,7 @@ describe("RssClient", () => {
             }
         });
 
-        it("should return error when addURLtoCommon throws error", async () => {
+        it("should return error when addURLtoCommon throws error", async() => {
 
             const fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(sourceUrl).returns(Promise.resolve({ "title": name }));
@@ -430,7 +430,7 @@ describe("RssClient", () => {
             }
         });
 
-        it("should return error when addURLtoUser throws error", async () => {
+        it("should return error when addURLtoUser throws error", async() => {
 
             const fetchRssFeedsMock = sandbox.mock(rssClient).expects("fetchRssFeeds");
             fetchRssFeedsMock.withArgs(sourceUrl).returns(Promise.resolve({ "title": name }));
@@ -549,7 +549,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should save the document if it is not exists", async () => {
+        it("should save the document if it is not exists", async() => {
             const document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
 
             const findMock = sandbox.mock(couchClient).expects("findDocuments")
@@ -570,7 +570,7 @@ describe("RssClient", () => {
             findMock.verify();
         });
 
-        it("should not save the document if it exists", async () => {
+        it("should not save the document if it exists", async() => {
             const document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
             const existedDoc = { "name": urlName, "url": sourceUrl + "/", "docType": "source", "sourceType": "web" };
 
@@ -586,7 +586,7 @@ describe("RssClient", () => {
             assert.deepEqual(response, existedDoc.url);
         });
 
-        it("should return the error response when server throws error while saving the document", async () => {
+        it("should return the error response when server throws error while saving the document", async() => {
             const document = { "name": urlName, "url": sourceUrl, "docType": "source", "sourceType": "web" };
 
 
@@ -631,7 +631,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should save the document if it is not exists", async () => {
+        it("should save the document if it is not exists", async() => {
             url = "http://www.test.com/rss";
             const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
@@ -648,7 +648,7 @@ describe("RssClient", () => {
             saveDocMock.verify();
         });
 
-        it("should return the error response when server throws error while saving the document", async () => {
+        it("should return the error response when server throws error while saving the document", async() => {
             url = "http://www.test.com/rss";
             const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
@@ -664,7 +664,7 @@ describe("RssClient", () => {
             }
         });
 
-        it("should throw error if url already exists in the user db", async () => {
+        it("should throw error if url already exists in the user db", async() => {
             url = "http://www.test.com/rss";
             const document = { "name": urlName, "url": url, "docType": "source", "sourceType": "web" };
 
@@ -699,7 +699,7 @@ describe("RssClient", () => {
             sandbox.restore();
         });
 
-        it("should return the searched URL Documents if the keyword is in name", async () => {
+        it("should return the searched URL Documents if the keyword is in name", async() => {
             const key = "Hindu";
             const skip = 100;
 
@@ -744,7 +744,7 @@ describe("RssClient", () => {
             assert.deepEqual(document, expectedOutput);
         });
 
-        it("should return the searched URL Documents if the keyword is in url", async () => {
+        it("should return the searched URL Documents if the keyword is in url", async() => {
             const key = "thehindu";
             const skip = 100;
 

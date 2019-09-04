@@ -27,7 +27,7 @@ describe("AjaxClient", function() {
     });
 
     describe("post", () => {
-        it("should post and return success promise on success", async () => {
+        it("should post and return success promise on success", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "username", "password": "pwd" };
@@ -44,7 +44,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should post and return error promise on failure", async () => {
+        it("should post and return error promise on failure", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "ssds", "password": "sds" };
@@ -60,7 +60,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should logout if session expired", async () => {
+        it("should logout if session expired", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "ssds", "password": "sds" };
@@ -80,7 +80,7 @@ describe("AjaxClient", function() {
     });
 
     describe("get", () => {
-        it("should do a get request to the url", async () => {
+        it("should do a get request to the url", async() => {
             var url = "/home";
             let ajax = new AjaxClient(url);
             nock("http://localhost:5000")
@@ -97,7 +97,7 @@ describe("AjaxClient", function() {
 
         });
 
-        it("should do a get request with query parameter to the url", async () => {
+        it("should do a get request with query parameter to the url", async() => {
             var url = "/rss-feeds";
             let ajax = new AjaxClient(url);
             nock("http://localhost:5000")
@@ -110,7 +110,7 @@ describe("AjaxClient", function() {
             expect(succesData.data).to.eq("success");
         });
 
-        it("should do a get request with multiple query parameters to the url", async () => {
+        it("should do a get request with multiple query parameters to the url", async() => {
             var url = "/rss-feeds";
             nock("http://localhost:5000")
                 .get(`${url}?url=http%3A%2F%2Frssfedd.com&page=1`)
@@ -126,7 +126,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should handle for empty objects", async () => {
+        it("should handle for empty objects", async() => {
             var url = "/rss-feeds";
             nock("http://localhost:5000")
                 .get(url)
@@ -142,7 +142,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should handle for 404", async () => {
+        it("should handle for 404", async() => {
 
             var url = "/rss-feeds";
             nock("http://localhost:5000")
@@ -157,7 +157,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should reject on connection refused", async () => {
+        it("should reject on connection refused", async() => {
             let url = "/home";
             nock("http://localhost:5000")
                 .get(url)
@@ -174,7 +174,7 @@ describe("AjaxClient", function() {
     });
 
     describe("put", () => {
-        it("should put and return success promise on success", async () => {
+        it("should put and return success promise on success", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "username", "password": "pwd" };
@@ -191,7 +191,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should put and return error promise on failure", async () => {
+        it("should put and return error promise on failure", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "ssds", "password": "sds" };
@@ -207,7 +207,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should logout if session expired", async () => {
+        it("should logout if session expired", async() => {
             let url = "/login";
             let headers = {};
             let data = { "username": "ssds", "password": "sds" };
@@ -227,7 +227,7 @@ describe("AjaxClient", function() {
     });
 
     describe("deleteRequest", () => {
-        it("should do a delete request to the url", async () => {
+        it("should do a delete request to the url", async() => {
             const url = "/collection";
             const ajax = new AjaxClient(url);
             nock("http://localhost:5000")
@@ -241,7 +241,7 @@ describe("AjaxClient", function() {
             expect(successData.data).to.eq("success");
         });
 
-        it("should do a delete request with query parameter to the url", async () => {
+        it("should do a delete request with query parameter to the url", async() => {
             const url = "/collection";
             const ajax = new AjaxClient(url);
             nock("http://localhost:5000")
@@ -255,7 +255,7 @@ describe("AjaxClient", function() {
         });
 
 
-        it("should handle for 404", async () => {
+        it("should handle for 404", async() => {
 
             const url = "/collection";
             nock("http://localhost:5000")
@@ -270,7 +270,7 @@ describe("AjaxClient", function() {
             }
         });
 
-        it("should reject on connection refused", async () => {
+        it("should reject on connection refused", async() => {
             const url = "/collection";
             nock("http://localhost:5000")
                 .delete(url)

@@ -43,9 +43,9 @@ describe("DeleteCollectionFeedRoute", () => {
 
     describe("handle", () => {
 
-        it("should delete feed from collection", async () => {
+        it("should delete feed from collection", async() => {
             let deleteArticleMock = sandbox.mock(CollectionFeedsRequestHandler).expects("deleteFeedFromCollection")
-               .withExactArgs(accessToken, intermediateDocId).returns(Promise.resolve({ "ok": true }));
+                .withExactArgs(accessToken, intermediateDocId).returns(Promise.resolve({ "ok": true }));
 
             deleteFeed = new DeleteCollectionFeedRoute(request, {});
 

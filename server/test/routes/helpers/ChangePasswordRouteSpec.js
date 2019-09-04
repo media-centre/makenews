@@ -54,7 +54,7 @@ describe("ChangePasswordRoute", () => {
     });
 
     describe("handle", () => {
-        it("should update with new password", async () => {
+        it("should update with new password", async() => {
             const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
             const response = mockResponse();
             request = {
@@ -77,7 +77,7 @@ describe("ChangePasswordRoute", () => {
             assert.deepEqual(response.json(), { "message": "Password updation successful" });
         });
 
-        it("should respond with error when password updation failed", async () => {
+        it("should respond with error when password updation failed", async() => {
             const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
             const response = mockResponse();
             request = {
@@ -100,7 +100,7 @@ describe("ChangePasswordRoute", () => {
             assert.deepEqual(response.json(), { "message": "Password updation failed" });
         });
 
-        it("should respond with authorization error when user current credentials are incorrect", async () => {
+        it("should respond with authorization error when user current credentials are incorrect", async() => {
             const updatePasswordMock = sandbox.mock(UserRequest).expects("updatePassword");
             const response = mockResponse();
             request = {

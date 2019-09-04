@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import EditStory from "../../../src/js/storyboard/components/EditStory";
 import TestUtils from "react-addons-test-utils";
 import { shallow } from "enzyme";

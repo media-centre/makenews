@@ -191,7 +191,7 @@ describe("SourceConfigureRoute", () => {
             configRoute.addConfiguredSource(sourceType);
         });
 
-        it("should add the source to configured list", async () => {
+        it("should add the source to configured list", async() => {
             let data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
             let source = [{ "name": "SourceName", "url": "http://source.url/" }];
             let response = mockResponse();

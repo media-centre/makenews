@@ -74,12 +74,12 @@ describe("CouchSessionSpec", () => {
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }
             })
-            .get("/_session")
-            .reply(HttpResponseHandler.codes.OK, {
-                "userCtx": { "name": "test_user", "roles": [] }
-            }, {
-                "set-cookie": ["AuthSession=test_token;"]
-            });
+                .get("/_session")
+                .reply(HttpResponseHandler.codes.OK, {
+                    "userCtx": { "name": "test_user", "roles": [] }
+                }, {
+                    "set-cookie": ["AuthSession=test_token;"]
+                });
 
             CouchSession.authenticate(token).then((newToken) => {
                 expect(newToken).to.have.string("test_token");
@@ -92,10 +92,10 @@ describe("CouchSessionSpec", () => {
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }
             })
-            .get("/_session")
-            .reply(HttpResponseHandler.codes.OK, {
-                "userCtx": { "name": "test_user", "roles": [] }
-            });
+                .get("/_session")
+                .reply(HttpResponseHandler.codes.OK, {
+                    "userCtx": { "name": "test_user", "roles": [] }
+                });
 
             CouchSession.authenticate(token).then((newToken) => {
                 expect(newToken).to.have.string(token);
@@ -110,10 +110,10 @@ describe("CouchSessionSpec", () => {
                     "Cookie": "AuthSession=" + token
                 }
             })
-            .get("/_session")
-            .reply(HttpResponseHandler.codes.OK, {
-                "userCtx": { "name": "", "roles": [] }
-            });
+                .get("/_session")
+                .reply(HttpResponseHandler.codes.OK, {
+                    "userCtx": { "name": "", "roles": [] }
+                });
 
             CouchSession.authenticate(token).catch((userName) => {
                 expect("unauthenticated user").to.equal(userName);
@@ -128,14 +128,14 @@ describe("CouchSessionSpec", () => {
                     "Cookie": "AuthSession=" + token
                 }
             })
-            .get("/_session")
-            .replyWithError({
-                "code": "ECONNREFUSED",
-                "errno": "ECONNREFUSED",
-                "syscall": "connect",
-                "address": "127.0.0.1",
-                "port": 5984
-            });
+                .get("/_session")
+                .replyWithError({
+                    "code": "ECONNREFUSED",
+                    "errno": "ECONNREFUSED",
+                    "syscall": "connect",
+                    "address": "127.0.0.1",
+                    "port": 5984
+                });
 
             CouchSession.authenticate(token).catch((error) => {
                 expect(error.code).to.have.string("ECONNREFUSED");
@@ -160,7 +160,7 @@ describe("CouchSessionSpec", () => {
             sandbox.restore();
         });
 
-        it("should update the password for the given user", async () => {
+        it("should update the password for the given user", async() => {
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + username,
@@ -185,7 +185,7 @@ describe("CouchSessionSpec", () => {
             saveDocumentMock.verify();
         });
 
-        it("should update the password for the given user and preserve the visitedUser info", async () => {
+        it("should update the password for the given user and preserve the visitedUser info", async() => {
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + username,
@@ -226,12 +226,12 @@ describe("CouchSessionSpec", () => {
             assert.equal(response.ok, true);
         });
 
-        it("should reject with error if there is an issue while getting the user document", async () => {
+        it("should reject with error if there is an issue while getting the user document", async() => {
             sandbox.stub(couchClient, "getDocument").returns(Promise.reject("error"));
             await isRejected(CouchSession.updatePassword(username, newPassword, token), "error");
         });
 
-        it("should reject with error if there is an issue while updating the user document", async () => {
+        it("should reject with error if there is an issue while updating the user document", async() => {
             sandbox.stub(couchClient, "getDocument").returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + username,
                 "_rev": "12345",

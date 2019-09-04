@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import FilterTab from "../../../src/js/newsboard/filter/FilterTab";
 import * as FilterActions from "../../../src/js/newsboard/filter/FilterActions";
 import TestUtils from "react-addons-test-utils";

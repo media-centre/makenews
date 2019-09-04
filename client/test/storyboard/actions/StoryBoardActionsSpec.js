@@ -86,9 +86,9 @@ describe("StoryBoardActions", () => {
             };
             const ajaxClientInstance = AjaxClient.instance("/story");
             sandbox.stub(AjaxClient, "instance")
-               .returns(ajaxClientInstance);
+                .returns(ajaxClientInstance);
             const getMock = sandbox.mock(ajaxClientInstance).expects("get").withArgs({ id })
-               .returns(Promise.resolve(response));
+                .returns(Promise.resolve(response));
 
             const result = await StoryBoardActions.getStory(id);
             assert.equal(result, response);

@@ -86,8 +86,8 @@ export class DisplayArticle extends Component {
                 {this.props.article.sourceType === "web" && (!this.props.article.selectText || this.props.article.sourceDeleted)
                     ? <DisplayWebArticle toolTip={this._showToolTip}/>
                     : <div className="article__desc" onMouseUp={this._showToolTip}>
-                    { this.props.article.description }
-                </div>
+                        { this.props.article.description }
+                    </div>
                 }
 
                 <div className="article__original-source">
@@ -131,14 +131,14 @@ export class DisplayArticle extends Component {
 
     renderHeader() {
         return(this.props.newsBoardCurrentSourceTab === newsBoardSourceTypes.collection
-                ? <header className="display-article__header back">
-                    <button className="back__button" onClick={this.hideArticle}>
-                        <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
-                  </header>
-                : <header className="display-article__header">
-                    {this.props.feedCallback && this.renderBackbutton()}
-                    {this.props.toolBar && this.renderArticleHeader()}
-                </header>
+            ? <header className="display-article__header back">
+                <button className="back__button" onClick={this.hideArticle}>
+                    <i className="icon fa fa-arrow-left" aria-hidden="true"/>{this.props.collectionName}</button>
+            </header>
+            : <header className="display-article__header">
+                {this.props.feedCallback && this.renderBackbutton()}
+                {this.props.toolBar && this.renderArticleHeader()}
+            </header>
         );
     }
 
@@ -163,14 +163,14 @@ export class DisplayArticle extends Component {
                 </div>
 
                 {this.props.article.bookmark
-                 ? <div className="bookmark active" onClick={this.bookmarkArticle}>
-                     <i className="icon fa fa-bookmark"/>
-                     <span> {this.articleMessages.bookmarked}</span>
-                   </div>
-                : <div className="bookmark" onClick={this.bookmarkArticle}>
-                     <i className="icon fa fa-bookmark"/>
-                     <span> {this.articleMessages.bookmark}</span>
-                   </div>
+                    ? <div className="bookmark active" onClick={this.bookmarkArticle}>
+                        <i className="icon fa fa-bookmark"/>
+                        <span> {this.articleMessages.bookmarked}</span>
+                    </div>
+                    : <div className="bookmark" onClick={this.bookmarkArticle}>
+                        <i className="icon fa fa-bookmark"/>
+                        <span> {this.articleMessages.bookmark}</span>
+                    </div>
                 }
             </div>
         );

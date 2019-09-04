@@ -38,7 +38,7 @@ export function showAddUrl(added) {
 }
 
 export function addFacebookPage(pageUrl) {
-    return async (dispatch) => {
+    return async(dispatch) => {
         try {
             const ajax = AjaxClient.instance("/configure-facebook-page");
             const headers = {
@@ -59,7 +59,7 @@ export function addFacebookPage(pageUrl) {
 }
 
 export function addTwitterHandle(twitterHandle) {
-    return async (dispatch) => {
+    return async(dispatch) => {
         try {
             const ajax = AjaxClient.instance("/configure-twitter-handle");
             const headers = {

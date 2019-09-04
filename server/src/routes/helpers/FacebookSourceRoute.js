@@ -3,7 +3,7 @@ import FacebookAccessToken from "../../facebook/FacebookAccessToken";
 import Route from "./Route";
 import { fbSourceTypesToFetch } from "../../util/Constants";
 import { userDetails } from "../../Factory";
-import R from "ramda";  //eslint-disable-line id-length
+import R from "ramda"; //eslint-disable-line id-length
 
 export default class FacebookSourceRoute extends Route {
     constructor(request, response, next) {

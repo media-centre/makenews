@@ -29,7 +29,7 @@ describe("UserRequest", () => {
             sandbox.restore();
         });
 
-        it("should give the valid token if valid credentials are given", async () => {
+        it("should give the valid token if valid credentials are given", async() => {
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.resolve(sessionCooke));
 
             const actualToken = await UserRequest.getToken(userName, password);
@@ -38,7 +38,7 @@ describe("UserRequest", () => {
             couchSessionLoginMock.verify();
         });
 
-        it("should reject with error if canse of invalid credentials", async () => {
+        it("should reject with error if canse of invalid credentials", async() => {
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.reject("error"));
 
             await isRejected(UserRequest.getToken(userName, password), "login failed");
@@ -56,13 +56,13 @@ describe("UserRequest", () => {
             sandbox.restore();
         });
 
-        it("should give the auth session cookie if valid credentials are given", async () => {
+        it("should give the auth session cookie if valid credentials are given", async() => {
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.resolve(sessionCooke));
             const actualSessionCookie = await UserRequest.getAuthSessionCookie(userName, password);
             assert.strictEqual(sessionCooke, actualSessionCookie);
         });
 
-        it("should reject with error if case of invalid credentials", async () => {
+        it("should reject with error if case of invalid credentials", async() => {
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.reject("error"));
             await isRejected(UserRequest.getAuthSessionCookie(userName, password), "login failed");
         });
@@ -80,7 +80,7 @@ describe("UserRequest", () => {
         afterEach("updatePassword", () => {
             sandbox.restore();
         });
-        it("should update the password if old passwords is correct", async () => {
+        it("should update the password if old passwords is correct", async() => {
             const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
             sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.resolve("dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA"));
             sandbox.mock(CouchSession).expects("updatePassword").returns(Promise.resolve({ "body": { "ok": true, "id": "org.couchdb.user:test", "rev": "new revision" } }));
@@ -89,14 +89,14 @@ describe("UserRequest", () => {
             couchSessionLogin.verify();
         });
 
-        it("should not update the password if old password is incorrect", async () => {
+        it("should not update the password if old password is incorrect", async() => {
             sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.reject("error"));
             sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.reject("error"));
 
             await isRejected(UserRequest.updatePassword(username, newPassword, currentPassword), "login failed");
         });
 
-        it("should not update the password when couchdb password updation fails", async () => {
+        it("should not update the password when couchdb password updation fails", async() => {
             const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
             sandbox.mock(UserRequest).expects("getToken").returns(Promise.resolve(token));
             sandbox.mock(CouchSession).expects("updatePassword").withArgs(username, newPassword, "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA").returns(Promise.reject("Updation failed"));
@@ -111,7 +111,7 @@ describe("UserRequest", () => {
             sandbox.restore();
         });
 
-        it("should get the user details", async () => {
+        it("should get the user details", async() => {
             const name = "test", token = "token";
             const expectedUserDetails = { "takenTour": false };
             const couchClient = new CouchClient(token, "_users");
@@ -125,7 +125,7 @@ describe("UserRequest", () => {
             getMock.verify();
         });
 
-        it("should reject with error if fetch fails", async () => {
+        it("should reject with error if fetch fails", async() => {
             const name = "test", token = "token";
             const couchClient = new CouchClient(token, "_users");
             sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
@@ -164,7 +164,7 @@ describe("UserRequest", () => {
             sandbox.restore();
         });
 
-        it("should update the userDetails document with visitedUser as true and return success response", async () => {
+        it("should update the userDetails document with visitedUser as true and return success response", async() => {
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
             const findDocumentMock = sandbox.mock(couchClientUser).expects("findDocuments");
             getDocumentMock.returns(Promise.resolve({
@@ -192,13 +192,13 @@ describe("UserRequest", () => {
             assert.deepEqual(response, true);
         });
 
-        it("should reject with error if getDocument returns an error", async () => {
+        it("should reject with error if getDocument returns an error", async() => {
             sandbox.mock(couchClient).expects("getDocument").returns(Promise.reject("Error"));
 
             await isRejected(UserRequest.markAsVisitedUser(token, userName), { "message": "not able to update" });
         });
 
-        it("should reject with an error if update document returns with an error", async () => {
+        it("should reject with an error if update document returns with an error", async() => {
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + userName,

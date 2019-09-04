@@ -31,10 +31,10 @@ describe("RssURLSearchIndex", () => {
 
         let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
-          .withArgs(accessToken, dbName).returns(couchInstance);
+            .withArgs(accessToken, dbName).returns(couchInstance);
         let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
-          .withArgs("_design/webUrlSearch", indexDoc)
-          .returns(response);
+            .withArgs("_design/webUrlSearch", indexDoc)
+            .returns(response);
 
 
         let indexDocument = new RssURLSearchIndex(dbName, accessToken);
@@ -45,10 +45,10 @@ describe("RssURLSearchIndex", () => {
     it("should throw error if index creation failed", async() => {
         let couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
-          .withArgs(accessToken, dbName).returns(couchInstance);
+            .withArgs(accessToken, dbName).returns(couchInstance);
         let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
-          .withArgs("_design/webUrlSearch", indexDoc)
-          .throws(new Error("failed"));
+            .withArgs("_design/webUrlSearch", indexDoc)
+            .throws(new Error("failed"));
 
         let indexDocument = new RssURLSearchIndex(dbName, accessToken);
         await assert.isRejected(indexDocument.up(), "failed");

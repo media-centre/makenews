@@ -12,7 +12,7 @@ describe("TwitterHandlesRoute", () => {
     let sandbox = null, pageNumber = null, twitterPreFirstId = null;
     beforeEach("TwitterHandlesRoute", () => {
         sandbox = sinon.sandbox.create();
-        pageNumber = 1;  //eslint-disable-line no-magic-numbers
+        pageNumber = 1; //eslint-disable-line no-magic-numbers
         twitterPreFirstId = 123; //eslint-disable-line no-magic-numbers
         sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
     });

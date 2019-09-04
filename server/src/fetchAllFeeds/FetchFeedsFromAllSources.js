@@ -46,7 +46,7 @@ export default class FetchFeedsFromAllSources extends Route {
     async fetchFeedsFromAllSources() {
         const couchClient = CouchClient.instance(this.accesstoken);
         let urlDocuments = await this._getUrlDocuments(couchClient);
-        let mapUrlDocs = urlDocuments.map(async (url) => {
+        let mapUrlDocs = urlDocuments.map(async(url) => {
             const currentTime = DateUtil.getCurrentTimeInSeconds();
             if(!url.since ||
                 currentTime - url.since > fetchFeedsTimeInterval[url.sourceType]) {
@@ -60,7 +60,7 @@ export default class FetchFeedsFromAllSources extends Route {
         let feedArrays = await Promise.all(mapUrlDocs);
         return feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
     }
-    /* TODO: change DOCSLIMIT to 100 and add limit to selector*/ //eslint-disable-line 
+    /* TODO: change DOCSLIMIT to 100 and add limit to selector*/ //eslint-disable-line
     async _getUrlDocuments(couchClient, offset = 0, results = []) { // eslint-disable-line no-magic-numbers
         const selector = {
             "selector": {

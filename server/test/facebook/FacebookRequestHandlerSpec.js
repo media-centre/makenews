@@ -123,7 +123,7 @@ describe("FacebookRequestHandler", () => {
             facebookRequestHandler.appSecretProof.restore();
         });
 
-        it("should return the page posts for a given facebook web url", async () => {
+        it("should return the page posts for a given facebook web url", async() => {
             facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.resolve(response));
             const actualFeeds = await facebookRequestHandler.fetchFeeds(sourceId, "posts", { "since": "12943678" });
 
@@ -131,7 +131,7 @@ describe("FacebookRequestHandler", () => {
             assert.strictEqual(actualFeeds, response);
         });
 
-        it("should reject with error if there is error while fetching facebook id", async () => {
+        it("should reject with error if there is error while fetching facebook id", async() => {
             facebookClientPagePostsMock.withArgs(sourceId, "posts", optionsJson).returns(Promise.reject("test"));
 
             await isRejected(facebookRequestHandler.fetchFeeds(sourceId, "posts", { "since": "12943678" }), `error fetching facebook feeds of web url = ${sourceId}`);
@@ -205,7 +205,7 @@ describe("FacebookRequestHandler", () => {
             }
         });
 
-        it("should throw error if long lived token not fetched", async () => {
+        it("should throw error if long lived token not fetched", async() => {
             facebookClientPagePostsMock.returns(Promise.reject("error"));
             try {
                 await facebookRequestHandler.setToken("test");
@@ -299,7 +299,7 @@ describe("FacebookRequestHandler", () => {
             });
         });
 
-        it("should get facebook pages", async () => {
+        it("should get facebook pages", async() => {
             const pages = {
                 "data": [
                     { "name": "The Hindu", "id": "163974433696568" },
@@ -333,7 +333,7 @@ describe("FacebookRequestHandler", () => {
             expect(pagesData).to.deep.equal(result);
         });
 
-        it("should get facebook users", async () => {
+        it("should get facebook users", async() => {
             const users = {
                 "data": [
                     { "name": "The Hindu", "id": "163974433696568" },
@@ -405,7 +405,7 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should throw an error if saveDocument is not successful", async () => {
+        it("should throw an error if saveDocument is not successful", async() => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.reject("Unexpected Response from db"));
             try {
                 await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
@@ -414,7 +414,7 @@ describe("FacebookRequestHandler", () => {
             }
         });
 
-        it("should return expired_after when saveDocument is successful", async () => {
+        it("should return expired_after when saveDocument is successful", async() => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.resolve("successfully saved"));
             let response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             assert.equal(tokenDocument.expired_after, response);
@@ -435,7 +435,7 @@ describe("FacebookRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return page info after saving the page", async () => {
+        it("should return page info after saving the page", async() => {
             sandbox.stub(facebookClient, "getFacebookPageInfo")
                 .returns(Promise.resolve({ "name": "test_id", "id": "12345678" }));
 
@@ -451,7 +451,7 @@ describe("FacebookRequestHandler", () => {
             expect(response).to.deep.equals({ "name": "test_id", "id": "12345678" });
         });
 
-        it("should throw an error if it is unable to add the page to configured list", async () => {
+        it("should throw an error if it is unable to add the page to configured list", async() => {
             sandbox.stub(facebookClient, "getFacebookPageInfo")
                 .returns(Promise.reject());
 

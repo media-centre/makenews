@@ -31,7 +31,7 @@ try {
     Migration.allDbs(adminUserName, adminPassword).then(status => {
         console.log("[Success dbs, failed dbs] = ", status);
         console.log("Migration completed.");
-        if(status[1] > 0) {  //eslint-disable-line no-magic-numbers
+        if(status[1] > 0) { //eslint-disable-line no-magic-numbers
             console.log("migration failed. [Success dbs, failed dbs] = " + status);
             process.exit(1); //eslint-disable-line no-magic-numbers
         }

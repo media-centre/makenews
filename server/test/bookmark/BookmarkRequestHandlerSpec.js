@@ -19,7 +19,7 @@ describe("BookmarkRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should return success response by successfully updating the doc with given bookmark status", async () => {
+        it("should return success response by successfully updating the doc with given bookmark status", async() => {
             let docId = "123", status = false;
             let documentObj = {
                 "_id": "123",
@@ -49,7 +49,7 @@ describe("BookmarkRequestHandler", () => {
             assert.deepEqual(response, dbResponse);
         });
 
-        it("should toggle the status if no status is provided and return the success response", async () => {
+        it("should toggle the status if no status is provided and return the success response", async() => {
             let docId = "123";
             let documentObj = {
                 "_id": "123",
@@ -80,7 +80,7 @@ describe("BookmarkRequestHandler", () => {
             assert.deepEqual(response, dbResponse);
         });
 
-        it("should throw error if updating is failed", async () => {
+        it("should throw error if updating is failed", async() => {
             let docId = "123";
             let documentObj = {
                 "_id": "123",
@@ -101,7 +101,7 @@ describe("BookmarkRequestHandler", () => {
             }
         });
 
-        it("should delete the feed when the feed is unbookmarked and source is deleted", async () => {
+        it("should delete the feed when the feed is unbookmarked and source is deleted", async() => {
             const feedId = "feedId";
             const feedDoc = {
                 "_id": feedId,
@@ -129,7 +129,7 @@ describe("BookmarkRequestHandler", () => {
             assert.deepEqual(respone, { "ok": true });
         });
 
-        it("should add the new field with current time when the bookmark status true", async () => {
+        it("should add the new field with current time when the bookmark status true", async() => {
             const feedId = "feedId";
             const currentTime = 12345;
             const feedDoc = {
@@ -189,7 +189,7 @@ describe("BookmarkRequestHandler", () => {
             sandbox.restore();
         });
 
-        it("should get bookmarkedFeeds from the database", async () => {
+        it("should get bookmarkedFeeds from the database", async() => {
             let feeds = {
                 "docs": [
                     {
@@ -226,7 +226,7 @@ describe("BookmarkRequestHandler", () => {
             findDocumentsMock.verify();
         });
 
-        it("should reject with error when database throws unexpected response", async () => {
+        it("should reject with error when database throws unexpected response", async() => {
             let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(selector).returns(Promise.reject("unexpected response from the db"));
             try{

@@ -13,7 +13,7 @@ export default class URLDocument {
     }
 
     getDocument() {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, "../documents/WebURLDocuments.json"), "utf-8"));  //eslint-disable-line no-sync
+        return JSON.parse(fs.readFileSync(path.join(__dirname, "../documents/WebURLDocuments.json"), "utf-8")); //eslint-disable-line no-sync
     }
 
     up() {
@@ -30,20 +30,20 @@ export default class URLDocument {
                 "body": categoryDocument,
                 "json": true
             },
-                (error, response) => {
-                    if (NodeErrorHandler.noError(error)) {
-                        if (new HttpResponseHandler(response.statusCode).success()) {
-                            Migration.logger(this.dbName).debug("RssURLDocuments::up - response %j", response.body);
-                            resolve(response.body);
-                        } else {
-                            Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", response.body);
-                            reject("unexpected response from the db");
-                        }
+            (error, response) => {
+                if (NodeErrorHandler.noError(error)) {
+                    if (new HttpResponseHandler(response.statusCode).success()) {
+                        Migration.logger(this.dbName).debug("RssURLDocuments::up - response %j", response.body);
+                        resolve(response.body);
                     } else {
-                        Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", error);
-                        reject(error);
+                        Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", response.body);
+                        reject("unexpected response from the db");
                     }
-                });
+                } else {
+                    Migration.logger(this.dbName).error("RssURLDocuments::up - error %j", error);
+                    reject(error);
+                }
+            });
         });
     }
 }

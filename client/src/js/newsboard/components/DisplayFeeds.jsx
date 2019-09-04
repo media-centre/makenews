@@ -290,10 +290,7 @@ export class DisplayFeeds extends Component {
             <i onClick={this.toggleFeedsView} className="expand-icon" />
             <div className="feeds-container" ref="feeds">
                 <div className="feeds">
-                    {this.props.feeds.map((feed, index) =>
-                        <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id}
-                            isClicked={this._isClicked} dispatch={this.props.dispatch}
-                        />)
+                    {this.props.feeds.map((feed, index) => <Feed feed={feed} key={index} active={feed._id === this.props.articleToDisplay._id} isClicked={this._isClicked} dispatch={this.props.dispatch} />)
                     }
                     {this.props.isFetchingFeeds
                         ? <Spinner />

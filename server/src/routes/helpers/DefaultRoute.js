@@ -14,7 +14,7 @@ export default class DefaultRoute extends Route {
         return !StringUtil.isEmptyString(this.url);
     }
 
-    handle() {  //eslint-disable-line consistent-return
+    handle() { //eslint-disable-line consistent-return
         if(!this.valid()) {
             return this._handleInvalidRoute();
         }
@@ -49,7 +49,7 @@ export default class DefaultRoute extends Route {
         let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/user_db/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
         return whitelistUrls.filter((item) => {
             return this.url.match(item);
-        }).length > 0;  //eslint-disable-line no-magic-numbers
+        }).length > 0; //eslint-disable-line no-magic-numbers
     }
 }
 

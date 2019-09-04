@@ -15,7 +15,7 @@ describe("fetchArticleData", () => {
         sinon.restore(articleConfig);
     });
 
-    it("should fetch the article data when given a url", async () => {
+    it("should fetch the article data when given a url", async() => {
         let url = "http://www.thehindu.com/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true";
         let successCode = 200;
 
@@ -39,7 +39,7 @@ describe("fetchArticleData", () => {
         expect(content).to.deep.equal(expectedData);
     });
 
-    it("should reject with error if we give invalid url", async () => {
+    it("should reject with error if we give invalid url", async() => {
         let url = "http://www.thehindu.com/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true";
         nock("http://www.thehindu.com")
             .get("/sport/cricket/Playing-in-India-is-tough-a-rest-before-tour-is-welcome-David-Warner/article17086264.ece?homepage=true")

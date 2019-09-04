@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import React from "react";
 import { ConfigurePane } from "../../../src/js/config/components/ConfigurePane";
 import ConfigPaneNavigation from "./../../../src/js/config/components/ConfigPaneNavigation";

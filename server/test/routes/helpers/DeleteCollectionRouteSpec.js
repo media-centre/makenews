@@ -43,7 +43,7 @@ describe("DeleteCollectionRoute", () => {
             sandbox.restore();
         });
 
-        it("should delete the collection", async () => {
+        it("should delete the collection", async() => {
             const collection = "bsjzueer1_1jshguejsnmgjeu";
             const request = {
                 "cookies": { "AuthSession": authSession },

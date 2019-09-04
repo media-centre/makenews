@@ -52,9 +52,9 @@ export async function getStories(authSession) {
 export async function saveStory(story, authSession) {
     let sameTitledStory = await getStoryWithTitle(story.title, authSession);
     if(sameTitledStory.docs.length && story._id !== sameTitledStory.docs[0]._id) { //eslint-disable-line no-magic-numbers
-        let message = "Title Already exists";
-        throw message;
+        throw new Error("Title Already exists");
     }
+    // eslint-disable-next-line require-atomic-updates
     story.docType = "story";
     let couchInstance = CouchClient.instance(authSession);
     return await couchInstance.updateDocument(story);

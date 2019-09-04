@@ -1,3 +1,4 @@
+/*eslint react/jsx-no-bind:0*/
 import { DisplayArticle } from "./../../../src/js/newsboard/components/DisplayArticle";
 import DisplayWebArticle from "./../../../src/js/newsboard/components/DisplayWebArticle";
 import * as DisplayFeedActions from "./../../../src/js/newsboard/actions/DisplayFeedActions";

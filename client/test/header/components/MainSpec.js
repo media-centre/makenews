@@ -1,4 +1,4 @@
-/*eslint no-magic-numbers:0*/
+/*eslint no-magic-numbers:0, react/jsx-no-bind:0*/
 import { Main } from "./../../../src/js/header/components/Main";
 import Header from "./../../../src/js/header/components/Header";
 import React from "react";

@@ -31,7 +31,7 @@ describe("DeleteSourceHandler", () => {
             Constants.FEED_LIMIT_TO_DELETE_IN_QUERY = feedsLimitOriginal;
         });
 
-        it("should delete feeds of the given sources", async () => {
+        it("should delete feeds of the given sources", async() => {
             let sources = ["newsClick"];
             let sourcesDoc = { "docs": [{ "_id": "source1" }] };
             let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" },
@@ -56,7 +56,7 @@ describe("DeleteSourceHandler", () => {
         });
 
 
-        it("should iterate the findDocuments if the current result is 25 ", async () => {
+        it("should iterate the findDocuments if the current result is 25 ", async() => {
             let sources = ["newsClick"];
             let sourcesDoc = { "docs": [{ "_id": "source1" }] };
             let firstResponse = { "docs": [{ "_id": "id1" }, { "_id": "id4" },
@@ -79,7 +79,7 @@ describe("DeleteSourceHandler", () => {
             assert.deepEqual(response, { "ok": true });
         });
 
-        it("should update the collection feed docs of the given sources to delete", async () => {
+        it("should update the collection feed docs of the given sources to delete", async() => {
             const sources = ["NewsClick"];
             const sourcesDoc = { "docs": [{ "_id": "newsclick" }] };
             const collectionFeedDoc = { "_id": "collectionFeedId1", "docType": "collectionFeed", "_rev": "rev1", "collectionId": "collectionId1" };
@@ -106,7 +106,7 @@ describe("DeleteSourceHandler", () => {
     });
 
     describe("deleteHashtags", () => {
-        it("should delete feeds of the hashtags sources", async () => {
+        it("should delete feeds of the hashtags sources", async() => {
             let sourcesDoc = { "docs": [{ "_id": "#abc" }] };
             let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
                 { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" }, { "_id": "id30", "docType": "feed" }] };
@@ -124,7 +124,7 @@ describe("DeleteSourceHandler", () => {
     });
 
     describe("deleteOldFeeds", () => {
-        it("should delete all feeds whose published date is older than 30 days from the present day", async () => {
+        it("should delete all feeds whose published date is older than 30 days from the present day", async() => {
             let docs = [
                 {
                     "images": [{ "url": "image url" }],

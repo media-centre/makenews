@@ -4,7 +4,7 @@ import { assert } from "chai";
 import sinon from "sinon";
 
 describe("Search Urls Route", () => {
-    it("should fetch search results", async () => {
+    it("should fetch search results", async() => {
         const request = {
             "query": {
                 "keyword": "Test",

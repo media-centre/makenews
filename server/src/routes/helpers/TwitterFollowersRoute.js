@@ -18,7 +18,7 @@ export default class TwitterFollowersRoute extends Route {
         return (Number.isInteger(page) && page >= ONE) ? page : ONE;
     }
 
-    async handle() {    //eslint-disable-line consistent-return
+    async handle() { //eslint-disable-line consistent-return
         let twitterRequestHandler = TwitterRequestHandler.instance();
         try {
             let data = await twitterRequestHandler.fetchFollowersRequest(this.authSession, this.keyword, this.pageValue());

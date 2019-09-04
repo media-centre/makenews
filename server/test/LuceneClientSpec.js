@@ -12,7 +12,7 @@ describe("LuceneClient", () => {
     });
 
     describe("searchDocuments", () => {
-        it("should fetch the documents", async () => {
+        it("should fetch the documents", async() => {
             let query = {
                 "q": "name:my"
             };

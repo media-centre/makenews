@@ -18,7 +18,7 @@ describe("TwitterOauthCallbackRoute", () => {
             sandbox.restore();
         });
 
-        it("should return the clientCallbackUrl on success", async () => {
+        it("should return the clientCallbackUrl on success", async() => {
             const twitterLogin = new TwitterLogin();
             const oauthToken = "oauth_token", oauthVerifier = "oauth_verifier", clientRedirectUrl = "clientRedirectUrl";
             const twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "previouslyFetchedOauthToken": oauthToken, "accessToken": "test_token" }).returns(Promise.resolve(twitterLogin));

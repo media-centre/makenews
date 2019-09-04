@@ -54,7 +54,7 @@ describe("RenameCollectionRoute", () => {
     });
 
     describe("handle", () => {
-        it("should rename the collection", async () => {
+        it("should rename the collection", async() => {
 
             request = {
                 "cookies": {

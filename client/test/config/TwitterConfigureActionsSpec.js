@@ -135,7 +135,7 @@ describe("TwitterConfigureActions", () => {
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
-                done);
+            done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
         });
 
@@ -145,7 +145,7 @@ describe("TwitterConfigureActions", () => {
 
             let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
-                done);
+            done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
         });
 

@@ -27,7 +27,7 @@ export function facebookSourcesReceived(response, keyword, currentTab) {
 
 export function fetchFacebookSources(keyword, type, sourceType, props = {}) {
 
-    return async (dispatch, getState) => {
+    return async(dispatch, getState) => {
         dispatch(fetchingSources);
         try {
             const sources = getState().sourceResults.data;
@@ -55,11 +55,11 @@ async function _getFbSources(keyword, type, sources, props) {
             "Content-Type": "application/json"
         };
         response = await
-            ajaxClient.post(headers, {
-                keyword,
-                type,
-                "paging": props
-            });
+        ajaxClient.post(headers, {
+            keyword,
+            type,
+            "paging": props
+        });
     } else {
         const updateSources = FB_DEFAULT_SOURCES[type];
         if(!sources.length || (updateSources.data)[0].id !== sources[0].id) { //eslint-disable-line no-magic-numbers

@@ -45,7 +45,7 @@ describe("CollectionFeedsRoute", () => {
             sandbox.restore();
         });
 
-        it("should get collected feeds", async () => {
+        it("should get collected feeds", async() => {
             const collection = "bsjzueer1_1jshguejsnmgjeu";
             const request = {
                 "cookies": { "AuthSession": authSession },

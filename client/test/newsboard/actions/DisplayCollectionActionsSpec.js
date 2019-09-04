@@ -135,7 +135,7 @@ describe("DisplayCollectionAction", () => {
             deleteMock.verify();
         });
 
-        it("should display toast message on failure", async () => {
+        it("should display toast message on failure", async() => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ collection }).returns(Promise.reject());
 
@@ -152,7 +152,7 @@ describe("DisplayCollectionAction", () => {
         });
 
 
-        it("should display toast when there is no response", async () => {
+        it("should display toast when there is no response", async() => {
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ collection }).returns(Promise.resolve({}));
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete collection");
@@ -205,7 +205,7 @@ describe("DisplayCollectionAction", () => {
             deleteMock.verify();
         });
 
-        it("should show toast message on failure", async () => {
+        it("should show toast message on failure", async() => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ intermediateDocId }).returns(Promise.reject());
@@ -219,7 +219,7 @@ describe("DisplayCollectionAction", () => {
             }
         });
 
-        it("should show toast message when there is no response from db", async () => {
+        it("should show toast message when there is no response from db", async() => {
             const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("Could not able to delete article");
             const deleteMock = sandbox.mock(ajaxClientInstance).expects("deleteRequest")
                 .withExactArgs({ intermediateDocId }).returns(Promise.resolve({}));
@@ -256,7 +256,7 @@ describe("DisplayCollectionAction", () => {
             };
 
             const putMock = sandbox.mock(ajaxClientInstance).expects("put")
-               .withExactArgs(headers, { collectionId, newCollectionName }).returns(Promise.resolve(response));
+                .withExactArgs(headers, { collectionId, newCollectionName }).returns(Promise.resolve(response));
             const actions = [{ "type": RENAMED_COLLECTION, collectionId, newCollectionName }];
             const store = mockStore([], actions, done);
 
