@@ -1,7 +1,8 @@
-import jsdom from "jsdom";
+import { JSDOM } from "jsdom";
 
-global.document = jsdom.jsdom("<!doctype html><html><body></body></html>");
-global.window = global.document.defaultView;
+const { window } = new JSDOM("<!doctype html><html><body></body></html>");
+global.window = window;
+global.document = global.window.document;
 global.navigator = global.window.navigator;
 
 global.sessionStorage = {
