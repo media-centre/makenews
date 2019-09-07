@@ -1,7 +1,7 @@
 import RssClient from "../../src/rss/RssClient";
 import { assert } from "chai";
 import sinon from "sinon";
-import * as cheerio from "cheerio/lib/static";
+import * as cheerio from "cheerio";
 import RssParser from "../../../server/src/rss/RssParser";
 import nock from "nock";
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
@@ -608,7 +608,7 @@ describe("RssClient", () => {
             }
         });
     });
-    
+
     describe("addURLToUser", () => {
         let couchClient = null, accessToken = "access token";
         let userDetailsMock = null;
