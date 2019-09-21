@@ -49,7 +49,7 @@
     "browserify": "^16.5.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "cordova-lib": "^7.0.1",
+    "cordova-lib": "^9.0.1",
     "del": "^5.1.0",
     "enzyme": "^2.7.1",
     "eslint": "^6.3.0",
