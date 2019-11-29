@@ -21,5 +21,3 @@ jobs:
       run: |
         npm ci
         npx gulp test
-      env:
-        CI: true
