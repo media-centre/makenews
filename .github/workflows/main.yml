@@ -20,4 +20,4 @@ jobs:
     - name: npm install, and test
       run: |
         npm ci
-        npx gulp test
+        npm test
