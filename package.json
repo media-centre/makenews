@@ -80,6 +80,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "test": "TZ=UTC gulp test"
   }
 }
