@@ -254,7 +254,7 @@ gulp.task("server:clean", function() {
 });
 
 gulp.task("server:test", function() {
-    return gulp.src(parameters.server.testPath + "**/**/*.js", { "read": false })
+    return gulp.src([parameters.client.testPath + "/helper/TestHelper.js", parameters.server.testPath + "**/**/*.js"], { "read": false })
         .pipe(mocha({ "require": ["babel-core/register"] }));
 });
 
