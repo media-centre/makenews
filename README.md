@@ -3,10 +3,11 @@
 ## Pre Requisites:
 1. Install node(version >= 4.0)   npm
 2. Install couchdb 2.0
-3. Create an admin user in couchdb with whom you can create, delete and change databases manually on the localhost:5984/_utils/# \\
+3. Create an admin user in couchdb with whom you can create, delete and change databases manually on the localhost:5984/_utils/# <br />
 If your admin user in couchdb is not with the name 'admin' and password 'admin', change this data in the file \" instal.config \" from this very project.
 4. Install couchdb lucene 2.0
 5. Install gulp
+6. Install git
 
 
 ## Test Requisites:
@@ -17,21 +18,22 @@ you can try querying a database(if you created database in couchdb and you have 
 ```
 	curl http://"your_database_ip":5984/database_name/_fti/design_doc/view_name?q=Query
 ```
-4.write 'gulp --version' in the console and it shall return the number of the certain installed gulp version(local and cli)
+4. write 'gulp --version' in the console and it shall return the number of the certain installed gulp version(local and cli)
+5. write 'git --version' in the console and it shall return the number of the certain installed git version
 
 ## 1. Installation:
 
-1.Clone the makenews application repository from git
-2. All the configuration related data must be mentioned in the install.config file
-* Facebook appId and app secret key must be given in the file for being able to configure data from FB sources
-* Twitter consumer key and consumer secret must be mentioned under twitter configuration for being able to access twitter data from makenews
-* Refer install.config file for instructions
+1.Clone the makenews application repository from git <br />
+2. All the configuration related data must be mentioned in the install.config file <br />
+* Facebook appId and app secret key must be given in the file for being able to configure data from FB sources <br />
+* Twitter consumer key and consumer secret must be mentioned under twitter configuration for being able to access twitter data from makenews <br />
+* Refer install.config file for instructions <br />
 
-Comments: Facebook and Twitter appIds are not necessary to start the application, they are necessary for the actual connection between the app and facebook or twitter.
-3. Start couchdb
-4. Once the configurations are set in the install.config file, run the oneClickInstaller.sh file
-5. Running this file installs the makenews application with the configurations set in the install.config 
-6. Towards the end of the execution, application user creation dialogue would be prompted on the console, enter the username and password for the intended user 
+Comments: Facebook and Twitter appIds are not necessary to start the application, they are necessary for the actual connection between the app and facebook or twitter.<br />
+3. Start couchdb <br />
+4. Once the configurations are set in the install.config file, run the oneClickInstaller.sh file <br />
+5. Running this file installs the makenews application with the configurations set in the install.config <br />
+6. Towards the end of the execution, application user creation dialogue would be prompted on the console, enter the username and password for the intended user <br />
 
 ## 2. Start the server:
 
@@ -140,3 +142,5 @@ If your change need data migration follow below steps:
     ```
     node dist/server/src/migration.js [--admin_user_name='username' --admin_password='password']
     ```
+ ## 6. Tips:   
+* If you have some problems to install couchdb or to connect it to couchdb-lucene, just to know that if you have or use mac os - the installation is very faster and easier. The mac users install only the application couchdb and there is almost no manual configurations between couchdb and couchdb-lucene(just 2-3 line in the console) 
