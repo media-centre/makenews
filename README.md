@@ -3,14 +3,20 @@
 ## Pre Requisites:
 1. Install node(version >= 4.0)   npm
 2. Install couchdb 2.0
-3. Install couchdb lucene 2.0
+3. Create an admin user in couchdb with whom you can create, delete and change databases manually on the localhost:5984/_utils/# \\
+If your admin user in couchdb is not with the name 'admin' and password 'admin', change this data in the file \" instal.config \" from this very project.
+4. Install couchdb lucene 2.0
+
+
 
 ## Test Requisites:
 1. write 'npm --version' in the console and it shall return the number of the certain installed npm version.
 2. write 'localhost:5984' on your browser and there you should see the couchdb version and some additional information about couchdb.
 3. check whether you have configurate correctly the couchdb-lucene. For instance,
 you can try querying a database(if you created in couchdb) like this:
+```
 	curl http://"your_database_ip":5984/database_name/_fti/design_doc/view_name?q=Query
+```
 
 ## 1. Installation:
 
