@@ -46,6 +46,7 @@ window.mediaCenter.appEn = {
         },
         "userProfileStrings": {
             "changePassword": "Change Password",
+            "adminPanel": "Admin Panel",
             "logout": "Logout",
             "help": "Help & FAQs"
         },

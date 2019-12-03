@@ -4,6 +4,7 @@ import TwitterSuccess from "./main/pages/TwitterSuccess";
 import TwitterFailed from "./main/pages/TwitterFailed";
 import UserSession from "./user/UserSession";
 import ChangePassword from "./user/ChangePassword";
+import AdminPanel from "./user/AdminPanel";
 import React from "react";
 import { Route } from "react-router";
 import ConfigureSourcesPage from "./config/components/ConfigureSourcesPage";
@@ -35,6 +36,7 @@ export function renderRoutes(store) { /*eslint-disable react/jsx-no-bind*/
                     <Route path="/twitterSuccess" component={TwitterSuccess} />
                     <Route path="/twitterFailed" component={TwitterFailed} />
                     <Route path="/change-password" component={ChangePassword} />
+                    <Route path="/admin-panel" component={AdminPanel} />
                     <Route path="/help" component={Help} />
                 </Route>
             </Route>

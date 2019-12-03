@@ -28,6 +28,7 @@ describe("UserProfileTab", () => {
     it("should have user profile div", ()=> {
         expect(result.type).to.be.equals("div");
         expect(result.props.className).to.be.equals("user-profile");
+        expect(result.props.className).to.be.equals("admin-profile");
     });
 
     it("should have image", ()=> {

@@ -16,6 +16,9 @@ export default class UserProfile extends Component {
                 <li className="user-profile--change-password">
                     <Link to="/change-password">{userProfileStrings.changePassword}</Link>
                 </li>
+                <li className="user-profile--admin">
+                    <Link to="/admin-panel">{userProfileStrings.adminPanel}</Link>
+                </li>
                 <li className="user-profile--help">
                     <Link to="/help">{userProfileStrings.help}</Link>
                 </li>
