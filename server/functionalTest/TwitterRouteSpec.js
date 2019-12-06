@@ -21,7 +21,7 @@ describe("TwitterRoutesSpec", () => {
             request(serverIp)
                 .get("/twitter-request-token?serverCallbackUrl=https://localhost:5000")
                 .set("Cookie", accessToken)
-                .end((err, res) => {  //eslint-disable-line handle-callback-err
+                .end((err, res) => { //eslint-disable-line handle-callback-err
                     let response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
                     assert.deepEqual(res.body, response);
                     if(err) {
@@ -37,7 +37,7 @@ describe("TwitterRoutesSpec", () => {
             request(serverIp)
                 .get("/twitter-oauth-callback?oauth_token=token")
                 .set("Cookie", accessToken)
-                .end((err, res) => {  //eslint-disable-line handle-callback-err
+                .end((err, res) => { //eslint-disable-line handle-callback-err
                     let response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
                     assert.deepEqual(res.body, response);
                     done();
@@ -50,7 +50,7 @@ describe("TwitterRoutesSpec", () => {
             request(serverIp)
                 .get("/twitter-handles?keyword=key&page=3")
                 .set("Cookie", accessToken)
-                .end((err, res) => {  //eslint-disable-line handle-callback-err
+                .end((err, res) => { //eslint-disable-line handle-callback-err
                     const response = {
                         "docs": [{ "id": 1277389, "picture": { "data": {} }, "name": "testUser" }],
                         "paging": { "page": 4 },
@@ -67,7 +67,7 @@ describe("TwitterRoutesSpec", () => {
             request(serverIp)
                 .get("/twitter-followings?page=3")
                 .set("Cookie", accessToken)
-                .end((err, res) => {  //eslint-disable-line handle-callback-err
+                .end((err, res) => { //eslint-disable-line handle-callback-err
                     const response = {
                         "docs": [{ "id": 1277389, "picture": { "data": {} }, "name": "testUser" }],
                         "paging": { "page": 3 }
