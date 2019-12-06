@@ -32,7 +32,7 @@ describe("FetchFeedsRoute", () => {
             .post("/login")
             .send(user)
             .then((resp) => {
-                accessToken = resp.headers["set-cookie"].pop().split(";")[0].split("=")[1];  //eslint-disable-line no-magic-numbers
+                accessToken = resp.headers["set-cookie"].pop().split(";")[0].split("=")[1]; //eslint-disable-line no-magic-numbers
                 couchClient = new CouchClient(accessToken, CryptUtil.dbNameHash("test"));
                 couchClient.saveBulkDocuments(sourceDocument).then(()=> {
                     done();
