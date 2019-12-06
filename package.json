@@ -70,6 +70,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
     "history": "^3.0.0",
+    "husky": "^3.1.0",
     "istanbul": "^0.4.5",
     "jsdom": "^15.1.1",
     "mocha": "^6.2.0",
@@ -83,5 +84,10 @@
     "gulp": "gulp",
     "test": "TZ=UTC gulp test",
     "lint": "gulp eslint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm test"
+    }
   }
 }
