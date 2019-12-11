@@ -3,7 +3,7 @@
 ## Pre Requisites:
 1. Install node(version >= 8.0) npm
 2. Install couchdb 2.0
-3. Create an admin user in couchdb with whom you can create, delete and change databases manually on the localhost:5984/_utils/# <br />
+3. Create an admin user in couchdb with whom you can create, delete and change databases manually on the [localhost:5984/_utils/#](http://localhost:5984/_utils/#) <br />
 If your admin user in couchdb is not with the name 'admin' and password 'admin', change this data in the file \" instal.config \" from this very project.
 4. Install couchdb lucene 2.0
 5. Install gulp `npm install gulp -g`
