@@ -54,9 +54,3 @@ else
 fi
 echo '-------------------------------------------'
 echo '\n'
-
-echo '-------------------------------------------'
-echo 'Git is not necessary but strongly recommended for cloning of the git repository!\n'
-echo 'Current couchdb-lucene version: '
-git --version
-echo '-------------------------------------------'
