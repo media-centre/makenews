@@ -2,7 +2,7 @@
 echo '-------------------------------------------'
 nodeVersion=$(node --version)
 
-if [[ nodeVersion > 4.0 ]] || [[ nodeVersion == 4.0 ]]; then
+if [[ nodeVersion > 8.0 ]] || [[ nodeVersion == 8.0 ]]; then
   echo 'Current node version: '
   echo $nodeVersion
   echo 'node: passed'
