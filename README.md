@@ -20,9 +20,6 @@ you can try querying a database(if you created database in couchdb and you have 
 4. write 'gulp --version' in the console and it shall return the number of the certain installed gulp version(local and cli)
 5. write 'git --version' in the console and it shall return the number of the certain installed git version
 
-## Recommended software:
-1. Install git- for cloning the git repository
-
 ## 1. Installation:
 
 1.Clone the makenews application repository from git <br />
