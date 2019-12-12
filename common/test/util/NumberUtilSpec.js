@@ -1,5 +1,5 @@
 import NumberUtil from "../../src/util/NumberUtil";
-import { assert, expect } from "chai";
+import { expect } from "chai";
 
 describe("NumberUtil", () => {
     it("should return number 5", () => {

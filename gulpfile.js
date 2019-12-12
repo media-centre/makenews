@@ -5,7 +5,6 @@ const sass = require("gulp-sass");
 const babelify = require("babelify");
 const babel = require("gulp-babel");
 const mocha = require("gulp-mocha");
-const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const del = require("del");
 const cssnano = require("gulp-cssnano");
@@ -129,27 +128,12 @@ gulp.task("client:watch", function() {
     this.appPath = parameters.client.clientAppPath + "/index.html";
     gulp.watch(this.cssFilesPath, ["client:scss"]);
     gulp.watch(this.copyFilesPath, ["client:copy-resources"]);
-    gulp.watch(this.jsFilesPath, ["client:build-sources", "client:src-eslint"]);
-    gulp.watch(this.testJsFilesPath, ["client:test", "client:test-eslint"]);
+    gulp.watch(this.jsFilesPath, ["client:build-sources"]);
+    gulp.watch(this.testJsFilesPath, ["client:test"]);
     gulp.watch(this.appPath, ["client:copy-resources"]);
 });
 
-gulp.task("client:src-eslint", function() {
-    return gulp.src([parameters.client.srcPath + "/**/*.jsx", parameters.client.srcPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task("client:test-eslint", function() {
-    return gulp.src([parameters.client.testPath + "/**/*.jsx", parameters.client.testPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task("client:eslint", gulp.series("client:src-eslint", "client:test-eslint"));
-gulp.task("client:checkin-ready", gulp.series("client:eslint", "client:test"));
+gulp.task("client:checkin-ready", gulp.series("client:test"));
 
 gulp.task("client:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.client.testPath + "/**/**/**/*.jsx  " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
@@ -161,20 +145,13 @@ gulp.task("client:test-coverage", (cb) => {
 
 //-------------------------------- functional tests --------------------------------------
 
-gulp.task("functional:eslint", function() {
-    return gulp.src([parameters.functional.serverSpecPath + "/**/*.js", parameters.functional.testServerPath + "/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
 gulp.task("functional:test", function() {
     return gulp.src(parameters.functional.serverSpecPath + "**/**/*.js", { "read": false })
         .pipe(mocha({ "require": ["babel-core/register"], "timeout": 3000 }));
 });
 
 gulp.task("functional:test:watch", () => {
-    gulp.watch(parameters.functional.serverSpecPath + "**/**/*.js", ["functional:test", "functional:eslint"]);
+    gulp.watch(parameters.functional.serverSpecPath + "**/**/*.js", ["functional:test"]);
 });
 
 // -------------------------------common tasks -------------------------------------------
@@ -194,27 +171,12 @@ gulp.task("common:watch", () => {
     gulp.watch(`${parameters.common.testPath}/**/**/*.js`, ["common:test"]);
 });
 
-gulp.task("common:src-eslint", function() {
-    return gulp.src([parameters.common.srcPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task("common:test-eslint", function() {
-    return gulp.src([parameters.common.testPath + "**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
 gulp.task("common:build", gulp.series("common:copy-js"));
 gulp.task("common:clean", function() {
     del(parameters.common.distFolder);
 });
 
-gulp.task("common:eslint", gulp.series("common:src-eslint", "common:test-eslint"));
-gulp.task("common:checkin-ready", gulp.series("common:eslint", "common:test"));
+gulp.task("common:checkin-ready", gulp.series("common:test"));
 
 gulp.task("common:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.common.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
@@ -264,27 +226,12 @@ gulp.task("server:watch", function() {
     this.srcPath = parameters.server.srcPath + "/**/*.js";
     this.serverJSFilePath = parameters.server.serverJsFile;
     this.testPath = parameters.server.testPath + "/**/*.js";
-    gulp.watch(this.srcPath, ["server:src-eslint", "server:copy-js", "server:test-eslint", "server:test"]);
-    gulp.watch(this.serverJSFilePath, ["server:src-eslint", "server:test-eslint", "server:copy-js"]);
-    gulp.watch(this.testPath, ["server:test", "server:src-eslint", "server:test-eslint"]);
+    gulp.watch(this.srcPath, ["server:copy-js", "server:test"]);
+    gulp.watch(this.serverJSFilePath, ["server:copy-js"]);
+    gulp.watch(this.testPath, ["server:test"]);
 });
 
-gulp.task("server:src-eslint", function() {
-    return gulp.src([parameters.server.srcPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task("server:test-eslint", function() {
-    return gulp.src([parameters.server.testPath + "/**/*.js"])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task("server:eslint", gulp.series("server:src-eslint", "server:test-eslint"));
-gulp.task("server:checkin-ready", gulp.series("server:eslint", "server:test"));
+gulp.task("server:checkin-ready", gulp.series("server:test"));
 gulp.task("server:test-coverage", (cb) => {
     exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
         console.log(stdout);
@@ -344,7 +291,6 @@ gulp.task("clean", gulp.series("other:dist-clean"));
 gulp.task("test", gulp.parallel("common:test", "client:test", "server:test"));
 
 gulp.task("watch", gulp.series("client:watch", "server:watch"));
-gulp.task("eslint", gulp.parallel("common:eslint", "client:eslint", "server:eslint", "functional:eslint"));
 gulp.task("checkin-ready", gulp.series("common:checkin-ready", "client:checkin-ready", "server:checkin-ready"));
 
 gulp.task("test-coverage", (cb) => {
