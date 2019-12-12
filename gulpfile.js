@@ -341,10 +341,10 @@ gulp.task("list", (cb) => {
 
 gulp.task("build", gulp.series("common:build", "client:build", "server:build", "other:copy-ansible-scripts"));
 gulp.task("clean", gulp.series("other:dist-clean"));
-gulp.task("test", gulp.series("common:test", "client:test", "server:test"));
+gulp.task("test", gulp.parallel("common:test", "client:test", "server:test"));
 
 gulp.task("watch", gulp.series("client:watch", "server:watch"));
-gulp.task("eslint", gulp.series("common:eslint", "client:eslint", "server:eslint", "functional:eslint"));
+gulp.task("eslint", gulp.parallel("common:eslint", "client:eslint", "server:eslint", "functional:eslint"));
 gulp.task("checkin-ready", gulp.series("common:checkin-ready", "client:checkin-ready", "server:checkin-ready"));
 
 gulp.task("test-coverage", (cb) => {
