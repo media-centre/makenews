@@ -1,30 +1,30 @@
 /*eslint no-console:0, no-path-concat:0 */
-var parameters = require("./config/parameters");
-var gulp = require("gulp");
-var sass = require("gulp-sass");
-var babelify = require("babelify");
-var babel = require("gulp-babel");
-var mocha = require("gulp-mocha");
-var eslint = require("gulp-eslint");
-var exec = require("child_process").exec;
-var del = require("del");
-var cssnano = require("gulp-cssnano");
-var environments = require("gulp-environments");
-var browserify = require("browserify");
-var source = require("vinyl-source-stream");
-var uglify = require("gulp-uglify");
-var buffer = require("vinyl-buffer");
-var envify = require("gulp-envify");
-var cordova = require("cordova-lib").cordova.raw;
+const parameters = require("./config/parameters");
+const gulp = require("gulp");
+const sass = require("gulp-sass");
+const babelify = require("babelify");
+const babel = require("gulp-babel");
+const mocha = require("gulp-mocha");
+const eslint = require("gulp-eslint");
+const exec = require("child_process").exec;
+const del = require("del");
+const cssnano = require("gulp-cssnano");
+const environments = require("gulp-environments");
+const browserify = require("browserify");
+const source = require("vinyl-source-stream");
+const uglify = require("gulp-uglify");
+const buffer = require("vinyl-buffer");
+const envify = require("gulp-envify");
+const cordova = require("cordova-lib").cordova.raw;
 
-var development = environments.development; //eslint-disable-line no-unused-vars
-var production = environments.production;
+const development = environments.development; //eslint-disable-line no-unused-vars
+const production = environments.production;
 
 function clean(path) {
     return del(path);
 }
 gulp.task("mobile:remove-directory", function() {
-    var files = "." + parameters.mobile.mobilePath;
+    const files = "." + parameters.mobile.mobilePath;
     return clean(files);
 });
 
@@ -48,7 +48,7 @@ gulp.task("mobile:create", function(cb) {
 });
 
 gulp.task("mobile:clean-files", function() {
-    var files = parameters.mobile.cordovaPath + "/*";
+    const files = parameters.mobile.cordovaPath + "/*";
     return clean(files);
 });
 
@@ -68,17 +68,17 @@ gulp.task("mobile:build", gulp.series("mobile:copy-files", function(cb) {
 
 gulp.task("client:scss", function() {
     return gulp.src([parameters.client.scssSrcPath + "/app.scss"])
-          .pipe(sass({
-              "sourceComments": true
-          }))
-          .pipe(production(cssnano()))
-          .pipe(gulp.dest(parameters.client.distFolder));
+        .pipe(sass({
+            "sourceComments": true
+        }))
+        .pipe(production(cssnano()))
+        .pipe(gulp.dest(parameters.client.distFolder));
 });
 
 
 gulp.task("client:images", function() {
     return gulp.src(parameters.client.imgSrcPath + "/**/*.*")
-          .pipe(gulp.dest(parameters.client.distFolder + "/images"));
+        .pipe(gulp.dest(parameters.client.distFolder + "/images"));
 });
 
 gulp.task("client:build-sources", function() {
@@ -101,7 +101,7 @@ gulp.task("client:build-sources", function() {
 
 gulp.task("client:copy-resources", function() {
     gulp.src(parameters.client.clientAppPath + "/index.html")
-    .pipe(gulp.dest(parameters.client.distFolder));
+        .pipe(gulp.dest(parameters.client.distFolder));
 
     gulp.src(parameters.client.imgSrcPath + "/**/*.*")
         .pipe(gulp.dest(parameters.client.distFolder + "/images"));
@@ -227,8 +227,8 @@ gulp.task("common:test-coverage", (cb) => {
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
     gulp.src([parameters.server.serverAppPath + "/src/**/*.js"])
-    .pipe(babel())
-    .pipe(gulp.dest(parameters.server.distFolder + "/src"));
+        .pipe(babel())
+        .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
     gulp.src(parameters.server.serverAppPath + "/config/**/*.json")
         .pipe(gulp.dest(parameters.server.distFolder + "/config"));
@@ -237,14 +237,14 @@ gulp.task("server:copy-js", function() {
         .pipe(gulp.dest(parameters.server.distFolder + "/src"));
 
     gulp.src("./" + parameters.server.serverJsFile)
-    .pipe(babel())
-    .pipe(gulp.dest(parameters.server.distServerJsFolder));
+        .pipe(babel())
+        .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
     gulp.src("./create_user.sh")
         .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
     return gulp.src("./" + parameters.server.packageJsonFile)
-    .pipe(gulp.dest(parameters.server.distServerJsFolder));
+        .pipe(gulp.dest(parameters.server.distServerJsFolder));
 
 });
 
