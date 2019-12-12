@@ -32,6 +32,21 @@ window.mediaCenter.appEn = {
                 }
             }
         },
+        "adminPanel": {
+            "header": "Admin Panel",
+            "delete": "Delete Users:",
+            "additionalHTML": [
+                {
+                    "question": "1. What are the use cases of the application?",
+                    "answer": `Makenews can be used for the following purposes especially for Journalists
+                    <ul style='margin-left:20px;'>
+                        <li>News aggregator from websites and social networks (Facebook and Twitter)</li>
+                        <li>Organising the news collection</li>
+                        <li>Writing the stories</li>
+                    </ul>`
+                }
+            ]
+        },
         "changePassword": {
             "passwordUpdateFailure": "Password update failed",
             "invalidCredentials": "Incorrect Current Password",

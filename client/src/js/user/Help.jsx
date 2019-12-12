@@ -20,7 +20,7 @@ export default class Help extends Component {
         return(
             <div className="help-FAQs">
                 <div className="help">
-                    <h3>{this.messages.help}</h3>
+                   <h3>{this.messages.help}</h3>
                     <div className="video" dangerouslySetInnerHTML={{ "__html": "<iframe class='video-play' src='https://www.youtube.com/embed/KrDjm5Mwv8Y?ecver=2'></iframe>" }} />
                 </div>
                 <div className="FAQs">
