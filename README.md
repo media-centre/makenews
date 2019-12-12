@@ -1,5 +1,7 @@
 # Makenews
 
+![Makenews](/client/src/images/banner.png?raw=true)
+
 ## Pre Requisites:
 1. Install node(version >= 8.0) npm
 2. Install couchdb 2.0
@@ -10,15 +12,14 @@ If your admin user in couchdb is not with the name 'admin' and password 'admin',
 
 
 ## Test Requisites:
-1. write 'npm --version' in the console and it shall return the number of the certain installed npm version
+1. write `npm --version` in the console and it shall return the number of the certain installed npm version
 2. write 'localhost:5984' on your browser and there you should see the couchdb version and some additional information about couchdb.
-3. check whether you have configurate correctly the couchdb-lucene. For instance,
+3. check whether you have configured correctly the couchdb-lucene. For instance,
 you can try querying a database(if you created database in couchdb and you have installed curl) like this:
 ```
 	curl http://"your_database_ip":5984/database_name/_fti/design_doc/view_name?q=Query
 ```
-4. write 'gulp --version' in the console and it shall return the number of the certain installed gulp version(local and cli)
-5. write 'git --version' in the console and it shall return the number of the certain installed git version
+4. write `gulp --version` in the console and it shall return the number of the certain installed gulp version(local and cli)
 
 ## 1. Installation:
 
@@ -111,21 +112,21 @@ window.mediaCenter.storyAutoSaveTimeInterval = 300000; // time after which a sto
 ## 5. Troubleshoot:
 
 * If twitter authentication page shows empty - While creating the twitter app, mention the makenews app url under the callback url, to redirect to the app after authentication
-* If login failes and console shows CORS error - Ensure that the couchdb CORS is enabled
-* If login failes - Make sure Couchdb is running before trying to log into the application 
+* If login fails and console shows CORS error - Ensure that the couchdb CORS is enabled
+* If login fails - Make sure Couchdb is running before trying to log into the application 
 * In case of error with facebook authentication - Facebook app( whose id is mentioned in the configuration file)  must be in active state, for the makenews app to be able to fetch data from Facebook
 * If the default Web URL suggestion are not seen - check lucene if setup is properly done
-* For Windows users, changing the server url to ‘localhost’ will not work, hence keep the server url to the default ‘127.0.0.1’
+* For Windows users, changing the server url to ‘localhost’ will not work, hence keep the server url to the default `127.0.0.1`
 * Makenews is configured to work with facebook version of v2.10. There could be issues cropping up if a new version is released from Facebook, which might need fixes in the code
 
 ## 6. Developer options:
 
 ### 6.a Build and Tests:
 The procedure to build the application, and get your changes working, are 
-- gulp build          //build the application
-- gulp test			//run unit test cases
-- gulp eslint			//run static analyser
-- gulp clean			//cleaning dist folder
+- `gulp build`
+- `gulp test`	
+- `gulp eslint`			//run static analyser
+- `gulp clean`			//cleaning dist folder
 
 *check the `gulpfile.js` for more gulp tasks*
 
@@ -141,5 +142,5 @@ If your change need data migration follow below steps:
     ```
     node dist/server/src/migration.js [--admin_user_name='username' --admin_password='password']
     ```
- ## 6. Tips:   
+ ## 7. Tips:   
 * If you have some problems to install couchdb or to connect it to couchdb-lucene, just to know that if you have or use mac os - the installation is very faster and easier. The mac users install only the application couchdb and there is almost no manual configurations between couchdb and couchdb-lucene(just 2-3 line in the console) 
