@@ -1,5 +1,3 @@
-"use strict";
-
 const clientConfig = {
     "clientAppPath": "./client",
     "appMainFile": "app.js",
