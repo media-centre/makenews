@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#check requisites
+sh ./checkPreRequisites.sh
 
 source ./install.config
 
@@ -63,5 +65,3 @@ node ./dist/server/src/migration.js
 cd dist
 
 ./create_user.sh
-
-
