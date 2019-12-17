@@ -8,8 +8,13 @@ import sinon from "sinon";
 import nock from "nock";
 
 describe("RssURLDocuments", ()=> {
-    let defaultDocument = null, response = null, accessToken = "testToken", dbName = "testDb";
-    let sandbox = null, migrationLoggerStub = null, applicationConfig = null;
+    let defaultDocument = null;
+    let response = null;
+    const accessToken = "testToken";
+    const dbName = "testDb";
+    let sandbox = null;
+    let migrationLoggerStub = null;
+    let applicationConfig = null;
 
     before("RssURLDocuments", () => {
         sandbox = sinon.sandbox.create();
@@ -77,8 +82,8 @@ describe("RssURLDocuments", ()=> {
                 .post("/" + dbName + "/_bulk_docs", defaultDocument)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
-            let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
+            const defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
+            const getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
             defaultDocumentInstance.up().then((actualResponse)=> {
@@ -89,7 +94,7 @@ describe("RssURLDocuments", ()=> {
         });
 
         it("should reject creating default URL document if there is an error", (done) => {
-            let errorObj = {
+            const errorObj = {
                 "code": "ECONNREFUSED",
                 "errno": "ECONNREFUSED",
                 "syscall": "connect",
@@ -106,8 +111,8 @@ describe("RssURLDocuments", ()=> {
                 .post("/" + dbName + "/_bulk_docs", defaultDocument)
                 .replyWithError(errorObj);
 
-            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
-            let getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
+            const defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
+            const getDocumentStub = sinon.stub(defaultDocumentInstance, "getDocument");
             getDocumentStub.returns(defaultDocument);
 
             defaultDocumentInstance.up().catch((error)=> {
@@ -121,8 +126,8 @@ describe("RssURLDocuments", ()=> {
     });
     describe("getDocument", () => {
         it("should fetch default URL document json and return", () => {
-            let defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
-            let defaultURLJson = defaultDocumentInstance.getDocument();
+            const defaultDocumentInstance = new RssURLDocuments(dbName, accessToken);
+            const defaultURLJson = defaultDocumentInstance.getDocument();
             const zeroIndex = 0;
             assert.deepEqual("web", defaultURLJson.docs[zeroIndex].sourceType);
             assert.deepEqual("source", defaultURLJson.docs[zeroIndex].docType);

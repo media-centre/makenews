@@ -8,18 +8,19 @@ export default class TwitterLogin {
 
     login() {
         return new Promise((resolve, reject) => {
-            let twitterWindow = window.open("", "twitterWindow", "location=0,status=0,width=800,height=600");
+            const twitterWindow = window.open("", "twitterWindow", "location=0,status=0,width=800,height=600");
             this.requestToken().then((response) => {
                 twitterWindow.location = response.authenticateUrl;
-                let maxIterations = 150, iteration = 0;
-                let timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
+                const maxIterations = 150;
+                let iteration = 0;
+                const timer = setInterval(() => { //eslint-disable-line max-nested-callbacks
                     if(iteration > maxIterations) {
                         clearInterval(timer);
                         reject(false);
                     }
                     if(twitterWindow.closed) {
                         clearInterval(timer);
-                        let appWindow = AppWindow.instance();
+                        const appWindow = AppWindow.instance();
                         if(appWindow.get("twitterLoginSucess")) {
                             appWindow.set("twitterLoginSucess", false);
                             this.authenticated = true;
@@ -34,15 +35,15 @@ export default class TwitterLogin {
         });
     }
     static getWaitTime() {
-        let twoSeconds = 2000;
+        const twoSeconds = 2000;
         return twoSeconds;
     }
 
     requestToken() {
-        let appServerUrl = AppWindow.instance().get("serverUrl");
-        let serverCallbackUrl = appServerUrl + "/twitter-oauth-callback";
-        let clientCallbackUrl = appServerUrl + "/#/twitterSuccess";
-        let ajaxClient = AjaxClient.instance("/twitter-request-token");
+        const appServerUrl = AppWindow.instance().get("serverUrl");
+        const serverCallbackUrl = appServerUrl + "/twitter-oauth-callback";
+        const clientCallbackUrl = appServerUrl + "/#/twitterSuccess";
+        const ajaxClient = AjaxClient.instance("/twitter-request-token");
         return ajaxClient.get({ "clientCallbackUrl": clientCallbackUrl,
             "serverCallbackUrl": serverCallbackUrl });
     }

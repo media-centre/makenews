@@ -11,8 +11,8 @@ export default class Login extends React.Component {
 
     handleClick(event) {
         event.preventDefault();
-        let userName = this.refs.userName.value.trim();
-        let password = this.refs.password.value.trim();
+        const userName = this.refs.userName.value.trim();
+        const password = this.refs.password.value.trim();
         this.props.onLoginClick(History.getHistory(), userName, password);
     }
 

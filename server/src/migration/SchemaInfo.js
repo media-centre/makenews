@@ -18,7 +18,7 @@ export default class SchemaInfo {
 
     save(schemaVersion) {
         return new Promise((resolve, reject) => {
-            let couchClient = CouchClient.instance(this.accessToken, this.dbName);
+            const couchClient = CouchClient.instance(this.accessToken, this.dbName);
             this.getSchemaInfoDocument().then(schemaInfoDocument => {
                 couchClient.saveDocument("schema_info", this._getDocument(schemaVersion, schemaInfoDocument)).then(response => { //eslint-disable-line no-unused-vars
                     Migration.logger(this.dbName).info("SchemaInfo::save - success. %j", this.dbName, response);

@@ -15,12 +15,13 @@ import { assert } from "chai";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayFilters", () => {
-    let displayFilters = null, displayFiltersDOM = null;
+    let displayFilters = null;
+    let displayFiltersDOM = null;
     const sandbox = sinon.sandbox.create();
     const anonymousFun = () => {};
 
     beforeEach("DisplayFilters", () => {
-        let store = createStore(() => ({
+        const store = createStore(() => ({
             "configuredSources": { "web": [{ "_id": "id1", "name": "name1" },
                 { "_id": "id2", "name": "name2" }],
             "pages": [], "profiles": [], "groups": [],
@@ -73,40 +74,40 @@ describe("DisplayFilters", () => {
     });
 
     it("input box should visible after clicking on add-hashtag", () => {
-        let hashtag = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "add-hashtag");
+        const hashtag = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "add-hashtag");
         TestUtils.Simulate.click(hashtag);
         assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(displayFilters, "hashtag-box"));
     });
 
     it("should dispatch addSourceToConfigureList after clicking on input-tag", () => {
-        let hashtag = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "add-hashtag");
+        const hashtag = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "add-hashtag");
         TestUtils.Simulate.click(hashtag);
-        let addToConfigureList = sandbox.mock(SourceConfigurationActions).expects("addSourceToConfigureList").returns({ "type": "" });
-        let input = displayFiltersDOM.querySelectorAll(".input-tag")[1]; //eslint-disable-line no-magic-numbers
+        const addToConfigureList = sandbox.mock(SourceConfigurationActions).expects("addSourceToConfigureList").returns({ "type": "" });
+        const input = displayFiltersDOM.querySelectorAll(".input-tag")[1]; //eslint-disable-line no-magic-numbers
         input.value = "#hashtag";
         TestUtils.Simulate.keyUp(input, { "keyCode": 13 });
         addToConfigureList.verify();
     });
 
     it("should dispatch filterTabSwitch after clicking on cancel button", () => {
-        let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
-        let cancelButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "cancel-btn primary");
+        const filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
+        const cancelButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "cancel-btn primary");
         TestUtils.Simulate.click(cancelButton);
         filterTabSwitchMock.verify();
     });
 
     it("should dispatch filterTabSwitch after clicking on apply button", () => {
-        let filteredSources = sandbox.mock(FilterActions).expects("filteredSources").returns({ "type": "" });
-        let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
-        let applyButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "apply-btn primary");
+        const filteredSources = sandbox.mock(FilterActions).expects("filteredSources").returns({ "type": "" });
+        const filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
+        const applyButton = TestUtils.findRenderedDOMComponentWithClass(displayFilters, "apply-btn primary");
         TestUtils.Simulate.click(applyButton);
         filteredSources.verify();
         filterTabSwitchMock.verify();
     });
 
     it("should dispatch searchInSources after clicking on first child input tag", () => {
-        let searchInSources = sandbox.mock(SourceConfigurationActions).expects("searchInConfiguredSources").returns({ "type": "" });
-        let input = displayFiltersDOM.querySelectorAll(".input-tag")[0]; //eslint-disable-line no-magic-numbers
+        const searchInSources = sandbox.mock(SourceConfigurationActions).expects("searchInConfiguredSources").returns({ "type": "" });
+        const input = displayFiltersDOM.querySelectorAll(".input-tag")[0]; //eslint-disable-line no-magic-numbers
         input.value = "#hashtag";
         TestUtils.Simulate.keyUp(input, { "keyCode": 13 });
         searchInSources.verify();

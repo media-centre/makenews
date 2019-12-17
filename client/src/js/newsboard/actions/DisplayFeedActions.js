@@ -47,13 +47,13 @@ export function displayFeedsByPage(pageIndex, filter = {}, callback = () => {}) 
 }
 
 export function getBookmarkedFeeds(pageIndex, callback = () => {}) {
-    let ajaxClient = AjaxClient.instance("/bookmarks", true);
+    const ajaxClient = AjaxClient.instance("/bookmarks", true);
 
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
 export function getAllCollections(pageIndex, callback = () => {}) {
-    let ajaxClient = AjaxClient.instance("/collections");
+    const ajaxClient = AjaxClient.instance("/collections");
     return _getFeeds(ajaxClient, { "offset": pageIndex }, callback);
 }
 
@@ -73,11 +73,11 @@ export async function fetchFeedsFromSources() {
 
 function _getFeeds(ajaxClient, params, callback) {
     return async dispatch => {
-        let result = {
+        const result = {
             "docsLength": 0
         };
         try {
-            let feeds = await ajaxClient.get(params);
+            const feeds = await ajaxClient.get(params);
             if (feeds.docs.length) {
                 dispatch(paginatedFeeds(feeds.docs));
                 result.docsLength = feeds.docs.length;
@@ -95,7 +95,7 @@ function _getFeeds(ajaxClient, params, callback) {
 
 export function searchFeeds(sourceType, searchKey, offset, callback) {
     return async dispatch => {
-        let result = {
+        const result = {
             "docsLength": 0
         };
         const ajax = AjaxClient.instance("/search-feeds");

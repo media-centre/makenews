@@ -17,11 +17,11 @@ export const clearFeeds = () => ({
 });
 
 export function displayCollectionFeeds(collection) {
-    let ajaxClient = AjaxClient.instance("/collection-feeds");
+    const ajaxClient = AjaxClient.instance("/collection-feeds");
 
     return async dispatch => {
         try {
-            let feeds = await ajaxClient.get({ collection });
+            const feeds = await ajaxClient.get({ collection });
             dispatch(collectionFeeds(feeds));
         } catch (err) {
             dispatch(noCollectionFeeds);
@@ -54,7 +54,7 @@ export function deleteCollection(event, collection) {
         button.className = "spinner";
         button.textContent = "";
         try {
-            let response = await ajax.deleteRequest({ collection });
+            const response = await ajax.deleteRequest({ collection });
             if(response.ok) {
                 if((currentCollection.className).endsWith("active")) {
                     dispatch(clearFeeds());

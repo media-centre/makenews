@@ -1,5 +1,6 @@
 export function mockResponse() {
-    let responseStatus = null, responseJson = null;
+    let responseStatus = null;
+    let responseJson = null;
     return {
         "status": (status) => {
             if(status) {

@@ -34,7 +34,7 @@ export default class CollectionFeed extends Component {
         const [video] = feed.videos || [];
         const [image] = feed.images || [];
         const description = feed.description || "";
-        let feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
+        const feedClass = this.props.tab === WRITE_A_STORY ? "story-collection-feed collection-feed" : "collection-feed";
         const collectionMessages = Locale.applicationStrings().messages.newsBoard.collection;
         return (<div className={feedClass}>
             { this.props.tab !== WRITE_A_STORY &&

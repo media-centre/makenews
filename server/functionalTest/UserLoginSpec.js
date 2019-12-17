@@ -6,11 +6,11 @@ import argv from "yargs";
 import config from "../config/application";
 
 let cookies = "";
-let env = argv.client_environment || "default";
+const env = argv.client_environment || "default";
 describe("UserLoginTests", () => {
     describe("UserLoginPage", () => {
         it("response to /login with correct username and correct password ", () => {
-            let user = { "username": "test", "password": "test" };
+            const user = { "username": "test", "password": "test" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
@@ -23,7 +23,7 @@ describe("UserLoginTests", () => {
 
         });
         it("response to /login correct  username and wrong password ", (done) => {
-            let user = { "username": "test", "password": "asdfasdf" };
+            const user = { "username": "test", "password": "asdfasdf" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
@@ -31,7 +31,7 @@ describe("UserLoginTests", () => {
 
         });
         it("response to /login empty  username and password ", (done) => {
-            let user = { "username": "", "password": "" };
+            const user = { "username": "", "password": "" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
@@ -39,7 +39,7 @@ describe("UserLoginTests", () => {
 
         });
         it("response to /login long  username and password ", (done) => {
-            let user = {
+            const user = {
                 "username": "kfghjfkjykjhhgvghdkjthgkuyhtrsysrchtrajtystffrrtuytsrfs",
                 "password": "ytrgftjkkjhtvrtsouyfduteyiufrtfiuyeiugftfuyiydtryfutyigfryedghsiustcrt"
             };
@@ -51,7 +51,7 @@ describe("UserLoginTests", () => {
         });
 
         it(" verifying cookie against couchdb  on correct username and correct password at /login ", (done) => {
-            let user = { "username": "test", "password": "test" };
+            const user = { "username": "test", "password": "test" };
             let userName = "";
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
@@ -71,12 +71,12 @@ describe("UserLoginTests", () => {
         });
 
         it("check set cookie on correct username and password ", (done) => {
-            let user = { "username": "test", "password": "test" };
+            const user = { "username": "test", "password": "test" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
                 .end((err, res) => {
-                    let thirdCookiePart = 3;
+                    const thirdCookiePart = 3;
                     cookies = res.headers["set-cookie"].pop().split(";");
                     expect(cookies[0]).to.contain("AuthSession=");
                     assert.equal(" Version=1", cookies[1]);
@@ -88,7 +88,7 @@ describe("UserLoginTests", () => {
 
 
         it("cookie not set  on correct username and wrong password ", (done) => {
-            let user = { "username": "test", "password": "jkhkh" };
+            const user = { "username": "test", "password": "jkhkh" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
@@ -99,7 +99,7 @@ describe("UserLoginTests", () => {
         });
 
         it("cookie not set  on empty username and  password ", (done) => {
-            let user = { "username": "", "password": "" };
+            const user = { "username": "", "password": "" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)

@@ -40,7 +40,7 @@ export function deleteStory(id) {
 
 export function getStories() {
     return (dispatch) => {
-        let ajax = AjaxClient.instance("/stories");
+        const ajax = AjaxClient.instance("/stories");
 
         ajax.get().then((response) => {
             response.docs.map((doc) => {
@@ -58,7 +58,7 @@ export async function getStory(id) {
 export async function saveStory(story) { //eslint-disable-line consistent-return
     const storyboardStrings = Locale.applicationStrings().messages.storyBoard;
     try {
-        let ajax = AjaxClient.instance("/save-story");
+        const ajax = AjaxClient.instance("/save-story");
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"

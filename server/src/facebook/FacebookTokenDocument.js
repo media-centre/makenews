@@ -35,6 +35,6 @@ export async function getAdminDBInstance() {
 }
 
 export async function getUserDocumentId(authSession, id) {
-    let { userName } = userDetails.getUser(authSession);
+    const { userName } = userDetails.getUser(authSession);
     return `${userName}${id}`;
 }

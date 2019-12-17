@@ -18,8 +18,10 @@ describe("TwitterConfigureActions", () => {
     const currentTab = TWITTER;
     describe("gotTwitterSourceResults", () => {
         it("should return source and type object", () => {
-            let pageNumber = 1, twitterPreFirstId = 123, keyword = "india";
-            let data = [{
+            const pageNumber = 1;
+            const twitterPreFirstId = 123;
+            const keyword = "india";
+            const data = [{
                 "id": 8640348,
                 "name": "testUser",
                 "location": "andhra"
@@ -28,7 +30,7 @@ describe("TwitterConfigureActions", () => {
                 "name": "testUser3",
                 "location": "andhrapradesh"
             }];
-            let sources = {
+            const sources = {
                 "docs": data,
                 "paging": pageNumber,
                 "twitterPreFirstId": twitterPreFirstId
@@ -43,8 +45,13 @@ describe("TwitterConfigureActions", () => {
     });
 
     describe("fetchTwitterSources", () => {
-        let sandbox = null, keyword = "the";
-        let ajaxClient = null, ajaxGetMock = null, twitterPreFirstId = null, paging = null, sourceDocs = null;
+        let sandbox = null;
+        let keyword = "the";
+        let ajaxClient = null;
+        let ajaxGetMock = null;
+        let twitterPreFirstId = null;
+        let paging = null;
+        let sourceDocs = null;
 
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();
@@ -69,14 +76,14 @@ describe("TwitterConfigureActions", () => {
         });
 
         it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS} after getting sources`, (done) => {
-            let result = {
+            const result = {
                 "docs": sourceDocs,
                 "paging": paging,
                 "twitterPreFirstId": twitterPreFirstId
             };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let gotTwitterSourcesActionObj = {
+            const gotTwitterSourcesActionObj = {
                 "type": TWITTER_GOT_SOURCE_RESULTS,
                 "sources": {
                     "data": sourceDocs,
@@ -95,14 +102,14 @@ describe("TwitterConfigureActions", () => {
         });
 
         it(`should dispatch ${TWITTER_GOT_SOURCE_RESULTS} after getting sources with added=true property`, (done) => {
-            let result = {
+            const result = {
                 "docs": sourceDocs,
                 "paging": paging,
                 "twitterPreFirstId": twitterPreFirstId
             };
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let gotWebSourcesActionObj = {
+            const gotWebSourcesActionObj = {
                 "type": TWITTER_GOT_SOURCE_RESULTS,
                 "sources": {
                     "data": sourceDocs,
@@ -128,12 +135,12 @@ describe("TwitterConfigureActions", () => {
         });
 
         it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} if sources are empty`, (done) => {
-            let result = { "docs": [], "paging": {}, "twitterPreFirstId": 0 };
+            const result = { "docs": [], "paging": {}, "twitterPreFirstId": 0 };
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             sandbox.mock(SearchResultsSetOperations).expects("intersectionWith");
             ajaxGetMock.returns(Promise.resolve(result));
 
-            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
+            const store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
             done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));
@@ -143,7 +150,7 @@ describe("TwitterConfigureActions", () => {
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClient);
             ajaxGetMock.returns(Promise.reject("error"));
 
-            let store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
+            const store = mockStore({}, [{ "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, keyword }],
             done);
             store.dispatch(fetchTwitterSources(keyword, paging, twitterPreFirstId));

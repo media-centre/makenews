@@ -44,34 +44,34 @@ describe("SourceConfigurationReducers", () => {
             state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] };
         });
         it("should add a profile to the state when asked for adding a profile", () => {
-            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "name": "Profile1", "id": "12345" }] };
+            const action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "name": "Profile1", "id": "12345" }] };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a page to the state when asked for adding a page", () => {
-            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "name": "Page1", "id": "12345" }] };
+            const action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "name": "Page1", "id": "12345" }] };
             expect(configuredSources(state, action).pages).to.deep.equal([{ "name": "Page1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a group to the state when asked for adding a group", () => {
-            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1", "id": "12345" }] };
+            const action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "name": "Group1", "id": "12345" }] };
             expect(configuredSources(state, action).groups).to.deep.equal([{ "name": "Group1", "id": "12345", "_id": "12345" }]);
         });
 
         it("should add a web url to the state when asked for adding a web source", () => {
-            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "id": "http://website.url" }] };
+            const action = { "type": WEB_ADD_SOURCE, "sources": [{ "name": "website", "id": "http://website.url" }] };
             expect(configuredSources(state, action).web).to.deep.equal([{ "name": "website", "id": "http://website.url", "_id": "http://website.url" }]);
         });
 
         it("should add a twitter handle to the state when asked for adding a twitter source", () => {
-            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "name": "twitter handle", "id": "123" }] };
+            const action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "name": "twitter handle", "id": "123" }] };
             expect(configuredSources(state, action).twitter).to.deep.equal([{ "name": "twitter handle", "_id": "123", "id": "123" }]);
         });
 
         it("should return updated state with configured profiles", () => {
-            let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
+            const sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
-            let action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
+            const action = { "type": GOT_CONFIGURED_SOURCES, "sources": sources };
             expect(configuredSources(state, action).profiles).to.deep.equal([{ "name": "Profile1" }, { "name": "Profile2" }]);
         });
 
@@ -92,7 +92,7 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it(`should return given currentTab when ${CHANGE_CURRENT_SOURCE_TAB} is dispatched`, () => {
-            let action = { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": PAGES };
+            const action = { "type": CHANGE_CURRENT_SOURCE_TAB, "currentTab": PAGES };
             expect(currentSourceTab("", action)).to.equal(PAGES);
         });
     });
@@ -180,29 +180,29 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should add the added=true property to the configured facebook profile", () => {
-            let state = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
-            let action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
+            const state = { "data": [{ "id": 1, "name": "Profile" }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            const action = { "type": FACEBOOK_ADD_PROFILE, "sources": [{ "id": 1, "name": "Profile" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": 1, "id": 1, "added": true, "name": "Profile" }, { "id": 2, "name": "Profile2" }]);
         });
 
         it("should add the added=true property to the configured facebook page", () => {
-            let state = { "data": [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }], "paging": {} };
-            let action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "id": 1, "name": "Page" }] };
+            const state = { "data": [{ "id": 1, "name": "Page" }, { "id": 2, "name": "Page2" }], "paging": {} };
+            const action = { "type": FACEBOOK_ADD_PAGE, "sources": [{ "id": 1, "name": "Page" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": 1, "id": 1, "added": true, "name": "Page" }, { "id": 2, "name": "Page2" }]);
         });
 
         it("should add the added=true property to the configured facebook group", () => {
-            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
-            let action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "id": 1, "name": "Group" }] };
+            const state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
+            const action = { "type": FACEBOOK_ADD_GROUP, "sources": [{ "id": 1, "name": "Group" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": 1, "id": 1, "added": true, "name": "Group" }, { "id": 2, "name": "Group2" }]);
         });
 
         it("should add the added=true property to multiple FACEBOOK_GROUPS when requested with multiple sources", () => {
-            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
-            let action = {
+            const state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": {} };
+            const action = {
                 "type": FACEBOOK_ADD_GROUP,
                 "sources": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }]
             };
@@ -213,30 +213,30 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should add the added=true property to the configured web url", () => {
-            let state = { "data": [{ "id": "http://web.url", "name": "Group" }, { "id": "http://web2.url", "name": "Group2" }], "paging": {} };
-            let action = { "type": WEB_ADD_SOURCE, "sources": [{ "id": "http://web.url", "name": "Group" }] };
+            const state = { "data": [{ "id": "http://web.url", "name": "Group" }, { "id": "http://web2.url", "name": "Group2" }], "paging": {} };
+            const action = { "type": WEB_ADD_SOURCE, "sources": [{ "id": "http://web.url", "name": "Group" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": "http://web.url", "added": true, "id": "http://web.url", "name": "Group" },
                     { "id": "http://web2.url", "name": "Group2" }]);
         });
 
         it("should add the added=true property to the configured twitter handle", () => {
-            let state = { "data": [{ "id": 123, "name": "india" }, { "id": 456, "name": "mera bharath" }],
+            const state = { "data": [{ "id": 123, "name": "india" }, { "id": 456, "name": "mera bharath" }],
                 "paging": {},
                 "twitterPreFirstId": 123
             };
-            let action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "id": 123, "name": "india" }] };
+            const action = { "type": TWITTER_ADD_SOURCE, "sources": [{ "id": 123, "name": "india" }] };
             expect(sourceResults(state, action).data).to.deep.equal(
                 [{ "_id": 123, "added": true, "id": 123, "name": "india" },
                     { "id": 456, "name": "mera bharath" }]);
         });
 
         it(`should clear the sources, next page and hasMoreSourceResults should be true when ${CLEAR_SOURCES} is action is performed`, () => {
-            let state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": { "offset": 50 } };
-            let action = {
+            const state = { "data": [{ "id": 1, "name": "Group" }, { "id": 2, "name": "Group2" }], "paging": { "offset": 50 } };
+            const action = {
                 "type": CLEAR_SOURCES
             };
-            let sources = sourceResults(state, action);
+            const sources = sourceResults(state, action);
             expect(sources.data).to.deep.equal([]);
             expect(sources.nextPage).to.deep.equal({});
             expect(sources.hasMoreSourceResults).to.be.true; //eslint-disable-line no-unused-expressions
@@ -253,9 +253,9 @@ describe("SourceConfigurationReducers", () => {
         });
 
         it("should change added to false for the source to be delete", () => {
-            let state = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": true }, { "id": 2, "name": "Profile2" }], "paging": {} };
-            let action = { "type": UNMARK_DELETED_SOURCE, "source": 1 };
-            let result = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": false }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            const state = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": true }, { "id": 2, "name": "Profile2" }], "paging": {} };
+            const action = { "type": UNMARK_DELETED_SOURCE, "source": 1 };
+            const result = { "data": [{ "id": 1, "_id": 1, "name": "Profile", "added": false }, { "id": 2, "name": "Profile2" }], "paging": {} };
             expect(sourceResults(state, action)).to.deep.equal(result);
 
         });

@@ -19,7 +19,7 @@ export default class URLDocument {
     up() {
         return new Promise((resolve, reject) => {
             Migration.logger(this.dbName).info("RssURLDocuments::up - started");
-            let categoryDocument = this.getDocument();
+            const categoryDocument = this.getDocument();
             request.post({
                 "uri": ApplicationConfig.instance().dbUrl() + "/" + this.dbName + "/_bulk_docs",
                 "headers": {

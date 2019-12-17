@@ -23,31 +23,32 @@ import Locale from "./../../../src/js/utils/Locale";
 describe("DisplayFeedActions", () => {
     describe("paginatedFeeds", () => {
         it("should return type DISPLAY_FETCHED_FEEDS action ", () => {
-            let feeds = [
+            const feeds = [
                 { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed" },
                 { "_id": 12345, "sourceUrl": "http://www.test2.com", "docType": "feed" }
             ];
-            let paginatedFeedsAction = { "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds };
+            const paginatedFeedsAction = { "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds };
             assert.deepEqual(paginatedFeeds(feeds), paginatedFeedsAction);
         });
     });
 
     describe("newsBoardTabSwitch", () => {
         it("should return type NEWSBOARD_CURRENT_TAB action ", () => {
-            let newsBoardTabSwitchAction = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "web" };
+            const newsBoardTabSwitchAction = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "web" };
             assert.deepEqual(newsBoardTabSwitch("web"), newsBoardTabSwitchAction);
         });
     });
 
     describe("clearFeeds", () => {
         it("should return type CLEAR_NEWS_BOARD_FEEDS action ", () => {
-            let clearFeedsAction = { "type": CLEAR_NEWS_BOARD_FEEDS };
+            const clearFeedsAction = { "type": CLEAR_NEWS_BOARD_FEEDS };
             assert.deepEqual(clearFeeds(), clearFeedsAction);
         });
     });
 
     describe("displayFeedsByPage", () => {
-        let sandbox = null, offset = 0;
+        let sandbox = null;
+        const offset = 0;
         beforeEach("displayFeedsByPage", () => {
             sandbox = sinon.sandbox.create();
         });
@@ -64,9 +65,9 @@ describe("DisplayFeedActions", () => {
                 ]
             };
             const ajaxClientInstance = AjaxClient.instance("/feeds", true);
-            let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
+            const ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .withArgs("/feeds").returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance).expects("get")
+            const postMock = sandbox.mock(ajaxClientInstance).expects("get")
                 .withArgs({ offset, "filter": "{}" }).returns(Promise.resolve(feeds));
             const store = mockStore({}, [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": feeds.docs }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
             store.dispatch(displayFeedsByPage(offset, {}, (result) => {
@@ -82,13 +83,13 @@ describe("DisplayFeedActions", () => {
         });
 
         it("dispatch displayFetchedFeedAction action with no feeds on successful fetch", (done) => {
-            let ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
-            let ajaxClientMock = sinon.mock(AjaxClient);
+            const ajaxClientInstance = AjaxClient.instance("/get-feeds", true);
+            const ajaxClientMock = sinon.mock(AjaxClient);
             ajaxClientMock.expects("instance").returns(ajaxClientInstance);
-            let postMock = sandbox.mock(ajaxClientInstance);
+            const postMock = sandbox.mock(ajaxClientInstance);
             postMock.expects("get").returns(Promise.reject("error"));
 
-            let store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
+            const store = mockStore([], [{ "type": PAGINATED_FETCHED_FEEDS, "feeds": [] }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
             store.dispatch(displayFeedsByPage(offset, "twitter"));
 
             ajaxClientMock.verify();
@@ -117,8 +118,8 @@ describe("DisplayFeedActions", () => {
             });
 
             it("should return feeds for searched keyword", (done) => {
-                let sourceType = "web";
-                let keyword = "test key";
+                const sourceType = "web";
+                const keyword = "test key";
                 const feeds = {
                     "docs": [
                         { "_id": 1234, "sourceUrl": "http://www.test.com", "docType": "feed", "sourceType": "twitter" },
@@ -126,9 +127,9 @@ describe("DisplayFeedActions", () => {
                     ]
                 };
 
-                let ajaxClientInstance = AjaxClient.instance("/search-feeds");
+                const ajaxClientInstance = AjaxClient.instance("/search-feeds");
                 sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-                let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(feeds));
+                const getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(feeds));
 
                 const store = mockStore([], [{ "type": SEARCHED_FEEDS, "feeds": feeds.docs }, { "type": FETCHING_FEEDS, "isFetching": false }], done);
                 store.dispatch(searchFeeds(sourceType, keyword, offset, (result) => {
@@ -164,7 +165,7 @@ describe("DisplayFeedActions", () => {
 
     describe("displayArticle", () => {
         it("should dispatch the current selected article", () => {
-            let displayArticleAction = { "type": DISPLAY_ARTICLE, "article": { "_id": "id", "title": "title" } };
+            const displayArticleAction = { "type": DISPLAY_ARTICLE, "article": { "_id": "id", "title": "title" } };
             assert.deepEqual(displayArticle({ "_id": "id", "title": "title" }), displayArticleAction);
         });
     });

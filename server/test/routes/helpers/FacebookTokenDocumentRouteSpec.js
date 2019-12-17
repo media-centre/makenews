@@ -6,8 +6,12 @@ import { assert } from "chai";
 
 describe("FacebookTokenDocumentRoute", () => {
     describe("getExpiredTime", () => {
-        let facebookTokenDocument = null, facebookTokenDocumentInstanceMock = null, sandbox = null, request1 = null, next = null;
-        let authSession = "authSession";
+        let facebookTokenDocument = null;
+        let facebookTokenDocumentInstanceMock = null;
+        let sandbox = null;
+        let request1 = null;
+        let next = null;
+        const authSession = "authSession";
         beforeEach("getTokenExpireTime", () => {
             sandbox = sinon.sandbox.create();
             facebookTokenDocument = new FacebookTokenDocument();

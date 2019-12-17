@@ -33,7 +33,7 @@ export class DisplayCollection extends Component {
         const [firstCollection] = nextProps.feeds;
 
         if((!currentCollection && firstCollection)) {
-            let setCollection = this.refs.collectionList.querySelector(".collection-name");
+            const setCollection = this.refs.collectionList.querySelector(".collection-name");
             if(setCollection) {
                 setCollection.className = "collection-name active";
             }
@@ -78,8 +78,8 @@ export class DisplayCollection extends Component {
             filteredCollections = this.props.feeds;
         }
 
-        let [first, ...rest] = filteredCollections;
-        let collectionItems = [];
+        const [first, ...rest] = filteredCollections;
+        const collectionItems = [];
         const getCollectionItem = (collection, className) => /*eslint-disable react/jsx-no-bind*/
             (<li tabIndex="0" className={className} onClick={(event) => this.collectionClick(event, collection)} key={collection._id}>
                 {this.props.mainHeaderTab === "Write a Story" && collection.collection}

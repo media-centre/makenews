@@ -27,9 +27,11 @@ export class DisplayArticle extends Component {
     _showToolTip() {
         const marginTop = 50;
         const firstIndex = 0;
-        let div = document.getElementById("toolTip");
+        const div = document.getElementById("toolTip");
         if(this.props.currentHeaderTab === SCAN_NEWS && this.props.newsBoardCurrentSourceTab !== newsBoardSourceTypes.collection && window.getSelection().toString()) {
-            let selection = window.getSelection(), range = selection.getRangeAt(firstIndex), rect = range.getBoundingClientRect();
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(firstIndex);
+            const rect = range.getBoundingClientRect();
 
             div.style.top = `${rect.top - marginTop}px`;
             div.style.display = "block";
@@ -112,7 +114,7 @@ export class DisplayArticle extends Component {
 
     _toolTipStyle(event) {
         event.stopPropagation();
-        let parentDiv = document.getElementById("toolTip");
+        const parentDiv = document.getElementById("toolTip");
         parentDiv.style.display = "none";
     }
 

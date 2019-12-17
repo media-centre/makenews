@@ -7,7 +7,10 @@ import * as Constants from "./../../src/util/Constants";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("CollectionRequestHandler", () => {
-    let authSession = null, couchClient = null, collectionRequestHandler = null, sandbox = null;
+    let authSession = null;
+    let couchClient = null;
+    let collectionRequestHandler = null;
+    let sandbox = null;
 
     beforeEach("CollectionRequestHandler", () => {
         authSession = "auth session";
@@ -21,7 +24,9 @@ describe("CollectionRequestHandler", () => {
     });
 
     describe("updateCollection", () => {
-        let docId = null, collectionName = null, sourceId = "http://www.thehindu.com/?service=rss";
+        let docId = null;
+        let collectionName = null;
+        const sourceId = "http://www.thehindu.com/?service=rss";
 
         beforeEach("updateCollection", () => {
             docId = "doc id";
@@ -286,7 +291,7 @@ describe("CollectionRequestHandler", () => {
     describe("createCollectionFeedWithSelectedText", () => {
         const feedId = "feedId";
         const collectionId = "collectionId";
-        let selectedText = { "title": "title", "description": "description", "sourceType": "web" };
+        const selectedText = { "title": "title", "description": "description", "sourceType": "web" };
 
         afterEach("createCollectionFeedWithSelectedText", () => {
             sandbox.restore();

@@ -10,7 +10,7 @@ export default class FeedsSearchIndexDocument {
     async up() {
         try {
             Migration.logger(this.dbName).info("FeedsSearchIndexDocument::up - started");
-            let indexDoc = {
+            const indexDoc = {
                 "_id": "_design/feedSearch",
                 "fulltext": {
                     "by_document": {

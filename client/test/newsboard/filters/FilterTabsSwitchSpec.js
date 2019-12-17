@@ -8,24 +8,24 @@ import { assert } from "chai";
 describe("FilterTabsSwitch", () => {
 
     it("should have source-type-bar class", () => {
-        let renderer = TestUtils.createRenderer();
+        const renderer = TestUtils.createRenderer();
         renderer.render(<FilterTabs currentTab={"twitter"} />);
-        let filterTabDOM = renderer.getRenderOutput();
+        const filterTabDOM = renderer.getRenderOutput();
 
         assert.strictEqual(findAllWithClass(filterTabDOM, "source-type-bar").length, 1); //eslint-disable-line no-magic-numbers
     });
 
     it("should have only one FilterTab element except for trending", () => {
-        let renderer = TestUtils.createRenderer();
+        const renderer = TestUtils.createRenderer();
         renderer.render(<FilterTabs currentTab={"twitter"} />);
-        let filterTabDOM = renderer.getRenderOutput();
+        const filterTabDOM = renderer.getRenderOutput();
         assert.strictEqual(findAllWithType(filterTabDOM, FilterTab).length, 1); //eslint-disable-line no-magic-numbers
     });
 
     it("should have three FilterTab elements for trending", () => {
-        let renderer = TestUtils.createRenderer();
+        const renderer = TestUtils.createRenderer();
         renderer.render(<FilterTabs currentTab={"trending"} />);
-        let filterTabDOM = renderer.getRenderOutput();
+        const filterTabDOM = renderer.getRenderOutput();
         assert.strictEqual(findAllWithType(filterTabDOM, FilterTab).length, 3); //eslint-disable-line no-magic-numbers
     });
 });

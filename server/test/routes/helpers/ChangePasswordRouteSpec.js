@@ -8,7 +8,11 @@ import { userDetails } from "./../../../src/Factory";
 import { mockResponse } from "./../../helpers/MockResponse";
 
 describe("ChangePasswordRoute", () => {
-    let request = null, userName = "test1", sandbox = null, currentPassword = null, newPassword = null;
+    let request = null;
+    const userName = "test1";
+    let sandbox = null;
+    let currentPassword = null;
+    let newPassword = null;
     beforeEach("ChangePasswordRoute", () => {
         currentPassword = "current_password";
         newPassword = "new_password";

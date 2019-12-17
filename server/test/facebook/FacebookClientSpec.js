@@ -13,8 +13,11 @@ import sinon from "sinon";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("FacebookClient", () => {
-    let accessToken = null, appSecretProof = null, applicationConfigFacebookStub = null, applicationConfig = null;
-    let logger = LogTestHelper.instance();
+    let accessToken = null;
+    let appSecretProof = null;
+    let applicationConfigFacebookStub = null;
+    let applicationConfig = null;
+    const logger = LogTestHelper.instance();
     before("FacebookClient", () => {
         accessToken = "test_token";
         appSecretProof = "test_secret_proof";
@@ -37,9 +40,11 @@ describe("FacebookClient", () => {
     });
 
     describe("fetchFeeds", () => {
-        let remainingUrl = null, userParameters = null, pageId = null;
-        let sandbox = sinon.sandbox.create();
-        let fbReadLimit = Constants.maxFeedsPerRequest.facebook;
+        let remainingUrl = null;
+        let userParameters = null;
+        let pageId = null;
+        const sandbox = sinon.sandbox.create();
+        const fbReadLimit = Constants.maxFeedsPerRequest.facebook;
         beforeEach("fetchFeeds", () => {
             userParameters = { "fields": "link,message,picture,name,caption,place,tags,privacy,created_time,from", "limit": 2, "since": "12943678" };
             remainingUrl = `/v2.8/12345678/posts?fields=link,message,picture,name,caption,place,tags,privacy,created_time,from&limit=${userParameters.limit}&since=12943678&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
@@ -98,8 +103,8 @@ describe("FacebookClient", () => {
                 .get(`/v2.8/1608617579371619/posts?limit=${userParameters.limit}&until=1485955212&format=json`)
                 .reply(HttpResponseHandler.codes.OK, { "data": [] });
 
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
             const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
             assert.deepEqual(response, expectedResponse);
         });
@@ -120,8 +125,8 @@ describe("FacebookClient", () => {
             nock("https://graph.facebook.com")
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.OK, fbResponse);
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
 
             const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
             assert.deepEqual(response, expectedResponse);
@@ -194,9 +199,9 @@ describe("FacebookClient", () => {
                 .get(secondUrl)
                 .reply(HttpResponseHandler.codes.OK, fbResponseSecond);
 
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
 
             assert.deepEqual(response, expectedResponse);
         });
@@ -280,9 +285,9 @@ describe("FacebookClient", () => {
                 .reply(HttpResponseHandler.codes.OK, fbResponseFirst)
                 .get(secondUrl)
                 .reply(HttpResponseHandler.codes.OK, fbResponseSecond);
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
-            let response = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const response = await facebookClient.fetchFeeds(pageId, type, userParameters);
 
             assert.deepEqual(response, expectedResponse);
         });
@@ -300,10 +305,10 @@ describe("FacebookClient", () => {
                         "fbtrace_id": "AWpk5h2ceG6"
                     }
                 });
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
 
-            let data = await facebookClient.fetchFeeds(pageId, type, userParameters);
+            const data = await facebookClient.fetchFeeds(pageId, type, userParameters);
 
             assert.deepEqual(data, { "docs": [], "paging": { "since": 1487927102 } });
         });
@@ -321,8 +326,8 @@ describe("FacebookClient", () => {
                         "fbtrace_id": "AWpk5h2ceG6"
                     }
                 });
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
 
             const loggerMock = sandbox.mock(logger).expects("error")
                 .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error validating access token: Session has expired on Thursday, 10-Dec-15 04:00:00 PST. The current time is Thursday, 10-Dec-15 20:23:54 PST.`);
@@ -342,8 +347,8 @@ describe("FacebookClient", () => {
                         { "message": "test news 2", "id": "163974433696568_957850670975603" }]
                 });
 
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
 
             const loggerMock = sandbox.mock(logger).expects("error")
                 .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error occurred while fetching feeds`);
@@ -360,8 +365,8 @@ describe("FacebookClient", () => {
                     "code": "ENOENT"
                 });
 
-            let type = "posts";
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const type = "posts";
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
 
             const loggerMock = sandbox.mock(logger).expects("error")
                 .withExactArgs(`FacebookClient:: error fetch feeds for url ${pageId}. Details:: Error occurred while fetching feeds`);
@@ -370,7 +375,7 @@ describe("FacebookClient", () => {
             loggerMock.verify();
         });
         it("should throw an error when access token is null", () => {
-            let createFacebookClient = () => {
+            const createFacebookClient = () => {
                 return new FacebookClient(null, appSecretProof);
             };
 
@@ -378,7 +383,7 @@ describe("FacebookClient", () => {
         });
 
         it("should throw an error when application secret proof is null", () => {
-            let createFacebookClient = () => {
+            const createFacebookClient = () => {
                 return new FacebookClient(accessToken, null);
             };
 
@@ -387,7 +392,7 @@ describe("FacebookClient", () => {
 
         it("should reject with error when page name is null", (done) => {
 
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.fetchFeeds(null).catch((error) => {
                 assert.strictEqual("page id cannot be empty", error.message);
                 done();
@@ -396,7 +401,10 @@ describe("FacebookClient", () => {
     });
 
     describe("getFacebookPageInfo", () => {
-        let accessToken1 = null, appSecretProof1 = null, facebookUrl1 = null, remainingUrl = null;
+        let accessToken1 = null;
+        let appSecretProof1 = null;
+        let facebookUrl1 = null;
+        let remainingUrl = null;
         before("getFacebookPageInfo", () => {
             accessToken1 = "test_token";
             appSecretProof1 = "test_secret_proof";
@@ -414,7 +422,7 @@ describe("FacebookClient", () => {
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
+            const facebookClient = new FacebookClient(accessToken1, appSecretProof1);
             const pageInfo = await facebookClient.getFacebookPageInfo(facebookUrl1);
             assert.deepEqual(pageInfo, response);
         });
@@ -449,7 +457,7 @@ describe("FacebookClient", () => {
                 .delayConnection(200)
                 .reply(HttpResponseHandler.codes.OK, {});
 
-            let facebookClient = new FacebookClient(accessToken1, appSecretProof1);
+            const facebookClient = new FacebookClient(accessToken1, appSecretProof1);
             facebookClient.getFacebookPageInfo(facebookUrl1).catch((error) => { //eslint-disable-line
                 done();
             });
@@ -457,7 +465,10 @@ describe("FacebookClient", () => {
     });
 
     describe("getLongLivedToken", () => {
-        let accessToken1 = null, appSecretProof1 = null, remainingUrl = null, appId = null;
+        let accessToken1 = null;
+        let appSecretProof1 = null;
+        let remainingUrl = null;
+        let appId = null;
         before("getLongLivedToken", () => {
             accessToken1 = "test_token";
             appSecretProof1 = "test_secret_proof";
@@ -467,7 +478,7 @@ describe("FacebookClient", () => {
 
         it("should return long-lived token for a valid short-lived token", (done) => {
 
-            let response = {
+            const response = {
                 "access_token": "test token",
                 "token_type": "bearer",
                 "expires_in": 123456
@@ -477,7 +488,7 @@ describe("FacebookClient", () => {
                 .get(remainingUrl)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
+            const facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
             facebookClient.getLongLivedToken().then((result) => {
                 assert.deepEqual(response.id, result.id);
                 done();
@@ -489,7 +500,7 @@ describe("FacebookClient", () => {
                 .get(remainingUrl)
                 .replyWithError("error");
 
-            let facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
+            const facebookClient = new FacebookClient(accessToken1, appSecretProof1, appId);
             facebookClient.getLongLivedToken().catch((error) => {
                 assert.strictEqual(error.message, "error");
                 done();
@@ -498,7 +509,8 @@ describe("FacebookClient", () => {
     });
 
     describe("getProfiles", () => {
-        let nodeErrorHandlerMock = null, sandbox = null;
+        let nodeErrorHandlerMock = null;
+        let sandbox = null;
 
         beforeEach("getProfiles", () => {
             sandbox = sinon.sandbox.create();
@@ -511,7 +523,7 @@ describe("FacebookClient", () => {
 
         it("should fetch the friends list", (done) => {
             nodeErrorHandlerMock.returns(true);
-            let url = `/v2.8/me/taggable_friends?fields=id,name,picture&limit=100&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
+            const url = `/v2.8/me/taggable_friends?fields=id,name,picture&limit=100&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
             nock("https://graph.facebook.com")
                 .get(url)
                 .reply(HttpResponseHandler.codes.OK, {
@@ -536,7 +548,7 @@ describe("FacebookClient", () => {
                     }]
                 });
 
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.fetchProfiles().then((profiles) => {
                 try {
                     expect(profiles.data).to.have.lengthOf(2);
@@ -551,7 +563,7 @@ describe("FacebookClient", () => {
 
         it("should reject the promise if there are any errors from facebook like authentication", (done) => {
             nodeErrorHandlerMock.returns(true);
-            let url = `/v2.8/me/taggable_friends?fields=id,name,picture&limit=100&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
+            const url = `/v2.8/me/taggable_friends?fields=id,name,picture&limit=100&access_token=${accessToken}&appsecret_proof=${appSecretProof}`;
 
             nock("https://graph.facebook.com")
                 .get(url)
@@ -565,7 +577,7 @@ describe("FacebookClient", () => {
                     }
                 });
 
-            let facebookClient = new FacebookClient(accessToken, appSecretProof);
+            const facebookClient = new FacebookClient(accessToken, appSecretProof);
             facebookClient.fetchProfiles().catch((error) => {
                 try {
                     assert.strictEqual("OAuthException", error.type);
@@ -586,12 +598,12 @@ describe("FacebookClient", () => {
         });
 
         it("should give an error when facebook is rejected with some error", async() => {
-            let params = {
+            const params = {
                 "q": "keyword",
                 "type": "user"
             };
 
-            let paging = {
+            const paging = {
                 "__after_id": "enc_AdClDCor0",
                 "limit": "24",
                 "offset": "25"
@@ -614,17 +626,17 @@ describe("FacebookClient", () => {
         });
 
         it("should fetch the facebook pages", (done) => {
-            let pages = { "data": [
+            const pages = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
-            let params = {
+            const params = {
                 "q": "keyword",
                 "type": "user"
             };
 
-            let paging = {
+            const paging = {
                 "__after_id": "enc_AdClDCor0",
                 "limit": "24",
                 "offset": "25"

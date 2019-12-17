@@ -15,7 +15,7 @@ function facebookRoutes(app) {
     app.get("/https://www.facebook.com/search", (request, response, next) => {
         console.log("/https://www.facebook.com/search request received");
 
-        let responseData = {
+        const responseData = {
             "paging": {
                 "cursors": {
                     "after": "enc_AdClDCor0"

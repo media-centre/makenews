@@ -45,19 +45,19 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async fetchFeedsFromAllSources() {
         const couchClient = CouchClient.instance(this.accesstoken);
-        let urlDocuments = await this._getUrlDocuments(couchClient);
-        let mapUrlDocs = urlDocuments.map(async(url) => {
+        const urlDocuments = await this._getUrlDocuments(couchClient);
+        const mapUrlDocs = urlDocuments.map(async(url) => {
             const currentTime = DateUtil.getCurrentTimeInSeconds();
             if(!url.since ||
                 currentTime - url.since > fetchFeedsTimeInterval[url.sourceType]) {
-                let feeds = await this.fetchFeedsFromSource(url);
+                const feeds = await this.fetchFeedsFromSource(url);
                 /* TODO: URLTimeStamp should be updated, only after we save the feeds in DB*/ //eslint-disable-line
                 await this.updateUrlTimeStamp(url, feeds.paging);
                 return feeds.docs;
             }
             return [];
         });
-        let feedArrays = await Promise.all(mapUrlDocs);
+        const feedArrays = await Promise.all(mapUrlDocs);
         return feedArrays.reduce((acc, feedsObjArray) => acc.concat(feedsObjArray));
     }
     /* TODO: change DOCSLIMIT to 100 and add limit to selector*/ //eslint-disable-line
@@ -80,7 +80,7 @@ export default class FetchFeedsFromAllSources extends Route {
 
     async updateUrlTimeStamp(sourceUrlDoc, paging) {
         try {
-            let couchClient = CouchClient.instance(this.accesstoken);
+            const couchClient = CouchClient.instance(this.accesstoken);
             const updatedSource = Object.assign({}, sourceUrlDoc, paging);
             await couchClient.saveDocument(encodeURIComponent(sourceUrlDoc._id), updatedSource);
         } catch (err) {
@@ -89,8 +89,9 @@ export default class FetchFeedsFromAllSources extends Route {
     }
 
     async fetchFeedsFromSource(item) {
-        let feeds = null, type = "posts";
-        let defaultResponse = { "docs": [] };
+        let feeds = null;
+        let type = "posts";
+        const defaultResponse = { "docs": [] };
         switch (item.sourceType) {
         case WEB:
             try {
@@ -131,24 +132,24 @@ export default class FetchFeedsFromAllSources extends Route {
     }
 
     async _getFacebookAccessToken() {
-        let { userName } = userDetails.getUser(this.accesstoken);
+        const { userName } = userDetails.getUser(this.accesstoken);
         const adminDetails = ApplicationConfig.instance().adminDetails();
-        let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-        let selector = {
+        const dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+        const selector = {
             "selector": {
                 "_id": {
                     "$eq": userName + "_facebookToken"
                 }
             }
         };
-        let response = await dbInstance.findDocuments(selector);
+        const response = await dbInstance.findDocuments(selector);
         const [tokenDoc] = response.docs;
         return tokenDoc.access_token;
     }
 
     async saveFeedDocumentsToDb(feeds) {
-        let couchClient = CouchClient.instance(this.accesstoken);
-        let feedObject = { "docs": feeds };
+        const couchClient = CouchClient.instance(this.accesstoken);
+        const feedObject = { "docs": feeds };
         return await couchClient.saveBulkDocuments(feedObject);
     }
 }

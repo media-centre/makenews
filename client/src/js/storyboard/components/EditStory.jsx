@@ -52,7 +52,7 @@ export default class EditStory extends Component {
     async _getStory(storyId) {
         const response = await getStory(storyId);
         if(response) {
-            let { _id, _rev, title, body } = response;
+            const { _id, _rev, title, body } = response;
             this.setState({ _id, _rev, title, body });
             this.refs.title.value = title;
         }
@@ -74,13 +74,13 @@ export default class EditStory extends Component {
         if(StringUtil.isEmptyString(title) && StringUtil.isEmptyString(body)) {
             Toast.show(this.storyboardStrings.warningMessages.emptyStory);
         } else {
-            let { _id, _rev } = this.state;
+            const { _id, _rev } = this.state;
             const saveStoryResponse = await saveStory({ _id, _rev, title, body });
             if(saveStoryResponse) {
                 if(!this.state._id) {
                     this.autoSave();
                 }
-                let response = { "_id": saveStoryResponse.id, "_rev": saveStoryResponse.rev, title, body };
+                const response = { "_id": saveStoryResponse.id, "_rev": saveStoryResponse.rev, title, body };
                 this.setState(response);
                 Toast.show(this.storyboardStrings.successMessages.saveStory, "save-story", this.refs.saveButton);
             }
@@ -88,17 +88,17 @@ export default class EditStory extends Component {
     }
 
     _exportHtml() {
-        let htmlString = `<html style="line-height: 1.5rem;"><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`;
-        let byteNumbers = new Uint8Array(htmlString.length);
+        const htmlString = `<html style="line-height: 1.5rem;"><body><h1>${this.state.title}</h1>${this.state.body}</body></html>`;
+        const byteNumbers = new Uint8Array(htmlString.length);
         [...htmlString].map((htmlChar, index) => {
             byteNumbers[index] = htmlChar.charCodeAt();
         });
-        let blob = EditStory.blobInstance(byteNumbers);
+        const blob = EditStory.blobInstance(byteNumbers);
         FileSaver.saveAs(blob, `${this.state.title}.html`);
     }
 
     _back(goBack) {
-        let history = History.getHistory();
+        const history = History.getHistory();
         if(goBack) {
             history.push("/story-board/stories");
         }

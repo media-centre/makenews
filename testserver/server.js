@@ -1,13 +1,13 @@
 /*eslint no-magic-numbers:0, no-console:0, max-len:0 */
 /*eslint consistent-return:0 */
-var express = require("express");
-var facebookRoutes = require("./Facebook/FacebookRoutes");
-var twitterRoutes = require("./Twitter/TwitterRoutes");
-var fetchFeedsRoutes = require("./FetchFeedsRoutes");
+const express = require("express");
+const facebookRoutes = require("./Facebook/FacebookRoutes");
+const twitterRoutes = require("./Twitter/TwitterRoutes");
+const fetchFeedsRoutes = require("./FetchFeedsRoutes");
 
 const PORT = 3000;
 
-var app = express();
+const app = express();
 //routes(app)
 
 console.log("listening on port " + PORT); //eslint-disable-line no-console
@@ -69,7 +69,7 @@ app.get("/gardian/timeout-feeds", (request, response, next) => {
 });
 
 app.get("/statuses/user_timeline.json", (request, response, next) => {
-    var urlString = "" + request.url;//eslint-disable-line no-implicit-coercion
+    const urlString = "" + request.url;//eslint-disable-line no-implicit-coercion
     console.log("/search/tweets.json request received for handler " + urlString);
 
     console.log("urlString = ", urlString);

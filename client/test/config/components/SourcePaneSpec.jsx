@@ -42,7 +42,7 @@ describe("SourcePane", () => {
         let result = null;
 
         beforeEach("Sources", () => {
-            let renderer = TestUtils.createRenderer();
+            const renderer = TestUtils.createRenderer();
             renderer.render(<SourcePane dispatch={dispatchFun} currentTab={PROFILES}/>);
             result = renderer.getRenderOutput();
         });
@@ -138,7 +138,8 @@ describe("SourcePane", () => {
 
     describe("FacebookTabs", () => {
         let sources = null;
-        let result = null, renderer = null;
+        let result = null;
+        let renderer = null;
         beforeEach("FacebookTabs", () => {
             sources = [
                 { "name": "Profile 1" }
@@ -149,21 +150,21 @@ describe("SourcePane", () => {
         it(`should not have facebook tabs component if current tab is ${SourceConfigActions.WEB}`, () => {
             renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={SourceConfigActions.WEB}/>);
             result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, FacebookTabs);
+            const renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
         });
 
         it(`should not have facebook tabs component if current tab is ${SourceConfigActions.TWITTER}`, () => {
             renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={SourceConfigActions.TWITTER}/>);
             result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, FacebookTabs);
+            const renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(0); //eslint-disable-line no-magic-numbers
         });
 
         it("should have facebook tabs component", () => {
             renderer.render(<SourcePane sources={sources} dispatch={dispatchFun} currentTab={PROFILES}/>);
             result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, FacebookTabs);
+            const renderedSources = findAllWithType(result, FacebookTabs);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });

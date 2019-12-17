@@ -10,7 +10,11 @@ import { assert } from "chai";
 import nock from "nock";
 
 describe("CouchClient", () => {
-    let applicationConfig = null, dbName = "test", accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt", documentId = "schema_info", response = null;
+    let applicationConfig = null;
+    const dbName = "test";
+    const accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt";
+    const documentId = "schema_info";
+    let response = null;
     let sandbox = null;
     beforeEach("CouchClient", () => {
         sandbox = sinon.sandbox.create();
@@ -49,8 +53,8 @@ describe("CouchClient", () => {
         });
 
         it("should return all documents with name matching the search key", (done) => {
-            let searchKey = "Hindu";
-            let body = { "selector": { "_id": { "$gt": null }, "name": { "$regex": searchKey }, "url": { "$gt": null } } };
+            const searchKey = "Hindu";
+            const body = { "selector": { "_id": { "$gt": null }, "name": { "$regex": searchKey }, "url": { "$gt": null } } };
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -61,9 +65,9 @@ describe("CouchClient", () => {
                 .post("/" + dbName + "/_find")
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.findDocuments(body).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -94,7 +98,7 @@ describe("CouchClient", () => {
                 .post("/" + dbName + "/_find")
                 .reply(HttpResponseHandler.codes.OK, warnResponse);
 
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             try {
                 await couchClientInstance.findDocuments(query);
             } catch (err) {
@@ -106,7 +110,7 @@ describe("CouchClient", () => {
 
     describe("createIndex", () => {
         it("should return response for createIndex", (done) => {
-            let indexDoc = {
+            const indexDoc = {
                 "index": {
                     "fields": ["name", "id"]
                 },
@@ -123,9 +127,9 @@ describe("CouchClient", () => {
                 .post("/" + dbName + "/_index")
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.createIndex(indexDoc).then((actualResponse) => {
                 assert.deepEqual(actualResponse, response);
                 nodeErrorHandlerMock.verify();
@@ -141,7 +145,7 @@ describe("CouchClient", () => {
         });
 
         it("should save the document with the given id", (done) => {
-            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            const documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -153,9 +157,9 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -164,8 +168,8 @@ describe("CouchClient", () => {
         });
 
         it("should save the document with the given id and extra headers", (done) => {
-            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
-            let headers = { "If-Match": "12345" };
+            const documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            const headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -178,9 +182,9 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj, headers).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -189,7 +193,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if there is any error", (done) => {
-            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            const documentObj = { "lastMigratedTimeStamp": "20151217145510" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -207,9 +211,9 @@ describe("CouchClient", () => {
                     "port": 5984
                 });
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
@@ -218,7 +222,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if the response code is not 200", (done) => {
-            let documentObj = { "lastMigratedTimeStamp": "20151217145510" };
+            const documentObj = { "lastMigratedTimeStamp": "20151217145510" };
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + accessToken,
@@ -229,9 +233,9 @@ describe("CouchClient", () => {
                 .put("/" + dbName + "/schema_info", documentObj)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "message": "not found" });
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.saveDocument(documentId, documentObj).catch((error) => {
                 assert.deepEqual({ "status": HttpResponseHandler.codes.NOT_FOUND, "message": { "message": "not found" } }, error);
                 nodeErrorHandlerMock.verify();
@@ -261,8 +265,8 @@ describe("CouchClient", () => {
     describe("getDocument", () => {
 
         it("should get the document with the success status code", (done) => {
-            let docId = "123456";
-            let documentObj = { "_id": docId, "test": "abcd" };
+            const docId = "123456";
+            const documentObj = { "_id": docId, "test": "abcd" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -274,9 +278,9 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
@@ -285,9 +289,9 @@ describe("CouchClient", () => {
         });
 
         it("should get the document with custom headers", (done) => {
-            let docId = "123456";
-            let documentObj = { "_id": docId, "test": "abcd" };
-            let headers = { "If-Match": "12345" };
+            const docId = "123456";
+            const documentObj = { "_id": docId, "test": "abcd" };
+            const headers = { "If-Match": "12345" };
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -300,9 +304,9 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.OK, documentObj);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId, headers).then((actualResponse) => {
                 assert.deepEqual(actualResponse, documentObj);
                 nodeErrorHandlerMock.verify();
@@ -311,7 +315,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if couchdb returns status not success", (done) => {
-            let docId = "123456";
+            const docId = "123456";
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -323,9 +327,9 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .reply(HttpResponseHandler.codes.NOT_FOUND, { "error": "not found" });
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.getDocument(docId).catch((error) => {
                 assert.deepEqual(error, { "status": HttpResponseHandler.codes.NOT_FOUND, "message": { "error": "not found" } });
                 nodeErrorHandlerMock.verify();
@@ -334,7 +338,7 @@ describe("CouchClient", () => {
         });
 
         it("should reject with error if couchdb returns error", () => {
-            let docId = "123456";
+            const docId = "123456";
 
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -346,9 +350,9 @@ describe("CouchClient", () => {
                 .get("/" + dbName + "/" + docId)
                 .replyWithError("error message");
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             return couchClientInstance.getDocument(docId).catch((error) => {
                 assert.equal(error.message, "error message");
                 nodeErrorHandlerMock.verify();
@@ -372,7 +376,7 @@ describe("CouchClient", () => {
 
     describe("updateDocument", () => {
         it("should create the document with the given document", (done) => {
-            let documentObject = {
+            const documentObject = {
                 "title": "title",
                 "description": "description"
             };
@@ -387,9 +391,9 @@ describe("CouchClient", () => {
                 .post("/" + dbName, documentObject)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(true);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.updateDocument(documentObject).then((actualResponse) => {
                 assert.deepEqual(response, actualResponse);
                 nodeErrorHandlerMock.verify();
@@ -399,7 +403,7 @@ describe("CouchClient", () => {
 
 
         it("should reject with error if there is any error", (done) => {
-            let documentObject = {
+            const documentObject = {
                 "title": "title",
                 "description": "description"
             };
@@ -420,9 +424,9 @@ describe("CouchClient", () => {
                     "port": 5984
                 });
 
-            let nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
+            const nodeErrorHandlerMock = sandbox.mock(NodeErrorHandler).expects("noError");
             nodeErrorHandlerMock.returns(false);
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             couchClientInstance.updateDocument(documentObject).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
                 nodeErrorHandlerMock.verify();
@@ -432,7 +436,8 @@ describe("CouchClient", () => {
     });
 
     describe("deleteDocument", () => {
-        const docId = "123", revision = "1";
+        const docId = "123";
+        const revision = "1";
         it("should delete document", async() => {
             nock("http://localhost:5984", {
                 "reqheaders": {
@@ -444,7 +449,7 @@ describe("CouchClient", () => {
                 .delete(`/${dbName}/${docId}?rev=${revision}`)
                 .reply(HttpResponseHandler.codes.OK, response);
 
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             await couchClientInstance.deleteDocument(docId, revision);
         });
 
@@ -469,7 +474,7 @@ describe("CouchClient", () => {
                 .get(`/${dbName}/${docId}`)
                 .reply(HttpResponseHandler.codes.OK, { "_rev": revision });
 
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             await couchClientInstance.deleteDocument(docId);
         });
 
@@ -490,7 +495,7 @@ describe("CouchClient", () => {
                     "port": 5984
                 });
 
-            let couchClientInstance = new CouchClient(accessToken, dbName);
+            const couchClientInstance = new CouchClient(accessToken, dbName);
             await couchClientInstance.deleteDocument(docId, revision).catch((error) => {
                 assert.strictEqual("ECONNREFUSED", error.code);
             });

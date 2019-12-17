@@ -14,7 +14,11 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 import DateUtil from "../../src/util/DateUtil";
 
 describe("RssClient", () => {
-    let sandbox = null, rssClientMock = null, feed = null, error = null, url = null;
+    let sandbox = null;
+    let rssClientMock = null;
+    let feed = null;
+    let error = null;
+    let url = null;
 
     beforeEach("RssClient", () => {
         sandbox = sinon.sandbox.create();
@@ -510,7 +514,9 @@ describe("RssClient", () => {
     });
 
     describe("addUrlToCommon", () => {
-        let couchClient = null, adminDetailsMock = null, adminDbInstance = null;
+        let couchClient = null;
+        let adminDetailsMock = null;
+        let adminDbInstance = null;
         const sourceUrl = "http://www.test.com/rss";
         const extractedUrl = "test.com/rss";
         const urlName = "test name";
@@ -610,7 +616,8 @@ describe("RssClient", () => {
     });
 
     describe("addURLToUser", () => {
-        let couchClient = null, accessToken = "access token";
+        let couchClient = null;
+        let accessToken = "access token";
         let userDetailsMock = null;
 
         const urlName = "test name";
@@ -736,8 +743,9 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
+            const dbName = "adminDb";
+            const indexPath = "_design/webUrlSearch/by_name";
+            const query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
@@ -781,8 +789,9 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
+            const dbName = "adminDb";
+            const indexPath = "_design/webUrlSearch/by_name";
+            const query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
@@ -808,8 +817,9 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
+            const dbName = "adminDb";
+            const indexPath = "_design/webUrlSearch/by_name";
+            const query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
@@ -853,8 +863,9 @@ describe("RssClient", () => {
                 "paging": { "offset": (skip + limit) }
             };
 
-            let dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": "*:*", limit, skip };
+            const dbName = "adminDb";
+            const indexPath = "_design/webUrlSearch/by_name";
+            const query = { "q": "*:*", limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.resolve(response));
             const document = await rssClient.searchURL(key, skip);
             searchDocumentsMock.verify();
@@ -868,8 +879,9 @@ describe("RssClient", () => {
             const searchDocumentsMock = sandbox.mock(LuceneClient).expects("searchDocuments");
             const rssClient = RssClient.instance();
 
-            const dbName = "adminDb", indexPath = "_design/webUrlSearch/by_name",
-                query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
+            const dbName = "adminDb";
+            const indexPath = "_design/webUrlSearch/by_name";
+            const query = { "q": `name:${key}* OR url:${key}*`, limit, skip };
             searchDocumentsMock.withArgs(dbName, indexPath, query).returns(Promise.reject("Unexpected Repsonse from DB"));
 
             await isRejected(rssClient.searchURL(key, skip), { "message": `Request failed for url: ${key}, error: "Unexpected Repsonse from DB"` });

@@ -29,7 +29,7 @@ export default class TwitterParser {
     }
 
     parseTweet(sourceId, tweet) {
-        let feedObj = {
+        const feedObj = {
             "_id": tweet.id_str,
             "docType": "feed",
             "sourceType": "twitter",
@@ -42,14 +42,14 @@ export default class TwitterParser {
             "videos": [],
             "sourceId": sourceId
         };
-        let images = tweet.entities.media;
+        const images = tweet.entities.media;
         if(images) {
             images.forEach(item => {
                 feedObj.images.push({ "url": item.media_url_https, "thumbnail": `${item.media_url_https}:thumb` });
             });
         }
 
-        let videos = tweet.extended_entities ? tweet.extended_entities.media : [];
+        const videos = tweet.extended_entities ? tweet.extended_entities.media : [];
         videos.forEach(item => {
             feedObj.videos.push({ "thumbnail": `${item.media_url_https}:thumb` });
         });

@@ -2,7 +2,7 @@ import { INCORRECT_USER_CREDENTIALS, PASSWORD_UPDATION_FAILED, NEW_PWD_CONFIRM_P
 import Locale from "../utils/Locale";
 
 export function changePassword(state = { "errorMessage": "", "isSuccess": false }, action = {}) {
-    let appEn = Locale.applicationStrings();
+    const appEn = Locale.applicationStrings();
     switch(action.type) {
     case INCORRECT_USER_CREDENTIALS:
         return {

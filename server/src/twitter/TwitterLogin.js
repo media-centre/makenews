@@ -4,7 +4,7 @@ import { TWITTER_DOCUMENT_ID } from "./TwitterToken";
 import Logger from "../logging/Logger";
 import OAuth from "oauth";
 
-let oauthTokenMap = {};
+const oauthTokenMap = {};
 export default class TwitterLogin {
     constructor(oauthToken, oauthTokenSecret, clientCallbackUrl, accessToken) {
         this.oauthToken = oauthToken;
@@ -22,8 +22,8 @@ export default class TwitterLogin {
         return new Promise((resolve, reject) => { //eslint-disable-line no-unused-vars
             if(options.previouslyFetchedOauthToken) {
                 TwitterLogin.logger().debug("TwitterLogin:: returning existing twitter login instance with auth token");
-                let tokenInfo = oauthTokenMap[options.previouslyFetchedOauthToken];
-                let twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, options.accessToken);
+                const tokenInfo = oauthTokenMap[options.previouslyFetchedOauthToken];
+                const twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, options.accessToken);
                 resolve(twitterInstance);
             } else {
                 new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl).then(instance => {
@@ -74,14 +74,14 @@ export default class TwitterLogin {
     }
     
     async saveToken(oauthAccessToken, oauthAccessTokenSecret) {
-        let tokenDocumentId = await getUserDocumentId(this.accessToken, TWITTER_DOCUMENT_ID);
-        let document = {
+        const tokenDocumentId = await getUserDocumentId(this.accessToken, TWITTER_DOCUMENT_ID);
+        const document = {
             "oauthAccessToken": oauthAccessToken,
             "oauthAccessTokenSecret": oauthAccessTokenSecret
         };
-        let adminDbInstance = await getAdminDBInstance();
+        const adminDbInstance = await getAdminDBInstance();
         try {
-            let tokenDocument = await adminDbInstance.getDocument(tokenDocumentId);
+            const tokenDocument = await adminDbInstance.getDocument(tokenDocumentId);
             TwitterLogin.logger().debug("TwitterLogin:: successfully fetched existing twitter token from db.");
             await adminDbInstance.saveDocument(tokenDocumentId, Object.assign({}, tokenDocument, document));
         } catch (error) {

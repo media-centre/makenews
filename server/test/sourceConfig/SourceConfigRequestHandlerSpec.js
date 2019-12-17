@@ -7,7 +7,11 @@ import sinon from "sinon";
 
 describe("SourceConfigRequestHandler", () => {
     describe("fetchConfiguredSources", () => {
-        let sandbox = null, dbName = null, body = null, sourceRequestHandler = null, couchClient = null;
+        let sandbox = null;
+        let dbName = null;
+        let body = null;
+        let sourceRequestHandler = null;
+        let couchClient = null;
         beforeEach("SourceConfigRequestHandler", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";
@@ -29,7 +33,7 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should get the configured Sources", (done) => {
-            let result = {
+            const result = {
                 "docs": [{
                     "_id": "7535677770c76f0bf6045a0e1401ccf4",
                     "_rev": "1-23d11b676e21bca63e16d032a03b0826",
@@ -86,7 +90,7 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should reject with error when database gives an error", (done) => {
-            let errorMessage = "unexpected response from the db";
+            const errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "post").returns(Promise.reject(errorMessage));
             sourceRequestHandler.fetchConfiguredSources().catch(error => {
                 try {
@@ -100,9 +104,15 @@ describe("SourceConfigRequestHandler", () => {
     });
 
     describe("Add Configured Sources", () => {
-        let sandbox = null, dbName = null, sourceRequestHandler = null, couchClient = null;
-        let documents = null, sources = null, currentTime = 123456, sourceType = sourceTypes.fb_page;
-        let authSession = "authSession";
+        let sandbox = null;
+        let dbName = null;
+        let sourceRequestHandler = null;
+        let couchClient = null;
+        let documents = null;
+        let sources = null;
+        const currentTime = 123456;
+        const sourceType = sourceTypes.fb_page;
+        const authSession = "authSession";
         beforeEach("Add Configured Sources", () => {
             sandbox = sinon.sandbox.create();
             dbName = "db_name";
@@ -129,7 +139,7 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should format the sources to put them in database", () => {
-            let [first, second] = sources;
+            const [first, second] = sources;
             documents = [{
                 "_id": "http://source.url",
                 "name": first.name,
@@ -163,7 +173,7 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should add the source to configured list", (done) => {
-            let bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
+            const bulkDocksMock = sandbox.mock(couchClient).expects("saveBulkDocuments");
             bulkDocksMock.returns({ "ok": true });
 
             sourceRequestHandler.addConfiguredSource(sourceType, sources, authSession).then(data => {
@@ -178,7 +188,7 @@ describe("SourceConfigRequestHandler", () => {
         });
 
         it("should reject with error when database gives an error", (done) => {
-            let errorMessage = "unexpected response from the db";
+            const errorMessage = "unexpected response from the db";
             sandbox.stub(couchClient, "saveBulkDocuments").returns(Promise.reject(errorMessage));
             sourceRequestHandler.addConfiguredSource(sourceType, sources, authSession).catch(error => {
                 try {

@@ -7,7 +7,8 @@ describe("DeleteCollectionFeedRoute", () => {
     const sandbox = sinon.sandbox.create();
     const accessToken = "accessToken";
     const intermediateDocId = "intermediateDocId";
-    let deleteFeed = null, request = null;
+    let deleteFeed = null;
+    let request = null;
     beforeEach("DeleteCollectionFeedRoute", () => {
         request = {
             "cookies": {
@@ -44,12 +45,12 @@ describe("DeleteCollectionFeedRoute", () => {
     describe("handle", () => {
 
         it("should delete feed from collection", async() => {
-            let deleteArticleMock = sandbox.mock(CollectionFeedsRequestHandler).expects("deleteFeedFromCollection")
+            const deleteArticleMock = sandbox.mock(CollectionFeedsRequestHandler).expects("deleteFeedFromCollection")
                 .withExactArgs(accessToken, intermediateDocId).returns(Promise.resolve({ "ok": true }));
 
             deleteFeed = new DeleteCollectionFeedRoute(request, {});
 
-            let response = await deleteFeed.handle();
+            const response = await deleteFeed.handle();
 
             deleteArticleMock.verify();
             assert.deepEqual(response, { "ok": true });

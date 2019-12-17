@@ -37,7 +37,7 @@ describe("Search Urls Route", () => {
 
         requestHandlerMock.withExactArgs(request.query.keyword, ZERO).returns(Promise.resolve(feeds));
 
-        let searchURLsRoute = new SearchURLsRoute(request, {}, {});
+        const searchURLsRoute = new SearchURLsRoute(request, {}, {});
         const result = await searchURLsRoute.handle();
 
         requestHandlerMock.verify();

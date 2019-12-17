@@ -4,7 +4,7 @@ import { expect } from "chai";
 describe("FacebookFeedParser", () => {
 
     it("should parse the facebook feeds", () => {
-        let data = [
+        const data = [
             {
                 "message": "Latest Feed 1.0",
                 "privacy": {
@@ -33,7 +33,7 @@ describe("FacebookFeedParser", () => {
             }
         ];
         
-        let parsedData = [{
+        const parsedData = [{
             "_id": "952680454818870_1019161978170717",
             "docType": "feed",
             "type": "description",
@@ -64,7 +64,7 @@ describe("FacebookFeedParser", () => {
     });
 
     it("should add the image link to image url property", () => {
-        let data = [
+        const data = [
             {
                 "link": "https://www.facebook.com/DisneyPixar/photos/a.127437064077.102676.35245929077/10154988680249078/?type=3",
                 "message": "Destination: everywhere.",
@@ -84,7 +84,7 @@ describe("FacebookFeedParser", () => {
             }
         ];
 
-        let parsedFeeds = [{
+        const parsedFeeds = [{
             "_id": "35245929077_10154988680249078",
             "docType": "feed",
             "type": "image",
@@ -106,7 +106,7 @@ describe("FacebookFeedParser", () => {
     });
 
     it("should add the thumbnail link to video url property", () => {
-        let data = [{
+        const data = [{
             "link": "https://www.facebook.com/DisneyPixar/videos/10154988196624078/",
             "message": "Dive into a sea of Easter eggs. It's National Trivia Day!",
             "picture": "https://scontent.xx.fbcdn.net/v/t15.0-10/s130x130/15816214_10154988202144078_6654347227177156608_n.jpg?oh=282550634a2909f97bfab6d498bf6bdd&oe=58E29742",
@@ -124,7 +124,7 @@ describe("FacebookFeedParser", () => {
             "id": "35245929077_10154988196624078"
         }];
 
-        let parsedFeeds = [{
+        const parsedFeeds = [{
             "_id": "35245929077_10154988196624078",
             "docType": "feed",
             "type": "video",

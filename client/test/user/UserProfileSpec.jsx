@@ -7,7 +7,8 @@ import LogoutActions from "./../../src/js/login/LogoutActions";
 import Locale from "./../../src/js/utils/Locale";
 
 describe("UserProfile", () => {
-    let userProfileDom = null, userProfileStrings = null;
+    let userProfileDom = null;
+    let userProfileStrings = null;
     const sandbox = sinon.sandbox.create();
     beforeEach("UserProfile", () => {
         userProfileStrings = {

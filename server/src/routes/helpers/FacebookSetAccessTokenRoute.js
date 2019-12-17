@@ -16,8 +16,8 @@ export default class FacebookSetAccessTokenRoute extends Route {
             return this._handleInvalidRequest();
         }
         try {
-            let facebookReqHandler = FacebookRequestHandler.instance(this.accessToken);
-            let expiresAfter = await facebookReqHandler.setToken(this.authSession);
+            const facebookReqHandler = FacebookRequestHandler.instance(this.accessToken);
+            const expiresAfter = await facebookReqHandler.setToken(this.authSession);
             RouteLogger.instance().debug("FacebookSetAccessTokenRoute:: successfully fetched facebook long lived token.");
             this._handleSuccess({ "expires_after": expiresAfter });
         } catch(error) {

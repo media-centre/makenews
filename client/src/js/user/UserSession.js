@@ -39,7 +39,7 @@ export default class UserSession {
     }
 
     renewSession() {
-        let currentTime = moment().valueOf();
+        const currentTime = moment().valueOf();
         if(!isCordova && !this.isActiveContinuously(currentTime)) {
             clearInterval(this.sessionTimer);
             this.autoLogout();

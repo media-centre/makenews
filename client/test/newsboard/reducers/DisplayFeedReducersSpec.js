@@ -44,15 +44,15 @@ describe("DisplayFeedReducer", () => {
         });
 
         it("should return feeds when action type is paginated fetched feeds", () => {
-            let action = { "type": "PAGINATED_FETCHED_FEEDS", feeds };
+            const action = { "type": "PAGINATED_FETCHED_FEEDS", feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
 
         it("should return feeds when action type is bookmarked_article feeds", () => {
-            let state = feeds;
-            let modifiedState = feeds;
+            const state = feeds;
+            const modifiedState = feeds;
 
-            let action = { "type": UPDATE_BOOKMARK_STATUS, "articleId": "123", "bookmarkStatus": true };
+            const action = { "type": UPDATE_BOOKMARK_STATUS, "articleId": "123", "bookmarkStatus": true };
             expect(fetchedFeeds(state, action)).to.deep.equal(modifiedState);
         });
 
@@ -69,7 +69,7 @@ describe("DisplayFeedReducer", () => {
         });
 
         it("should return feeds when type searched feeds", () => {
-            let action = { "type": SEARCHED_FEEDS, feeds };
+            const action = { "type": SEARCHED_FEEDS, feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
 
@@ -93,7 +93,7 @@ describe("DisplayFeedReducer", () => {
         });
 
         it("should return feeds when type searched feeds", () => {
-            let action = { "type": SEARCHED_FEEDS, feeds };
+            const action = { "type": SEARCHED_FEEDS, feeds };
             expect(fetchedFeeds([], action)).to.deep.equal(feeds);
         });
 
@@ -129,7 +129,7 @@ describe("DisplayFeedReducer", () => {
     describe("NewsBoard Current Source Tab", () => {
 
         it("should return twitter as current tab when action type is newsboard current tab with tab as twitter", () => {
-            let action = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "twitter" };
+            const action = { "type": NEWS_BOARD_CURRENT_TAB, "currentTab": "twitter" };
             expect(newsBoardCurrentSourceTab([], action)).to.deep.equal("twitter");
         });
 

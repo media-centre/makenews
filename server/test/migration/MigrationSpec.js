@@ -14,14 +14,18 @@ import { assert } from "chai";
 import sinon from "sinon";
 
 describe("Migration", () => {
-    let dbName = null, accessToken = null, accessCookieHeader = null, migrationLoggerStub = null;
-    const zeroIndex = 0, oneIndex = 1;
+    let dbName = null;
+    let accessToken = null;
+    let accessCookieHeader = null;
+    let migrationLoggerStub = null;
+    const zeroIndex = 0;
+    const oneIndex = 1;
     before("Migration", () => {
         dbName = "test";
         accessToken = "dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt";
         accessCookieHeader = "AuthSession=dmlrcmFtOjU2NzdCREJBOhK9v521YI6LBX32KPdmgNMX9mGt; Version=1; Path=/; HttpOnly";
         migrationLoggerStub = sinon.stub(Migration, "logger").returns(LogTestHelper.instance());
-        let loggerInstanceStub = sinon.stub(Logger, "fileInstance").returns(LogTestHelper.instance());
+        const loggerInstanceStub = sinon.stub(Logger, "fileInstance").returns(LogTestHelper.instance());
     });
 
     after("Migration", () => {
@@ -33,22 +37,22 @@ describe("Migration", () => {
     describe("getObject", () => {
 
         it("should give the function object to create the instance of url document", () => {
-            let migrationInstance = new Migration(dbName, accessToken);
-            let className = "RssURLDocuments";
-            let object = migrationInstance.getObject(className);
+            const migrationInstance = new Migration(dbName, accessToken);
+            const className = "RssURLDocuments";
+            const object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof RssURLDocuments);
         });
 
         it("should give the function object to create the instance of Index document", () => {
-            let migrationInstance = new Migration(dbName, accessToken);
-            let className = "RssURLSearchIndex";
-            let object = migrationInstance.getObject(className);
+            const migrationInstance = new Migration(dbName, accessToken);
+            const className = "RssURLSearchIndex";
+            const object = migrationInstance.getObject(className);
             assert.isTrue(object instanceof RssURLSearchIndex);
         });
 
         it("should throw an error if the class name does not found in case", ()=> {
-            let getObjectFn = () => {
-                let migrationInstance = new Migration(dbName, accessToken);
+            const getObjectFn = () => {
+                const migrationInstance = new Migration(dbName, accessToken);
                 migrationInstance.getObject("DummyCategoryDocument");
             };
             assert.throw(getObjectFn, Error, "class name : DummyCategoryDocument not found");
@@ -89,15 +93,15 @@ describe("Migration", () => {
         });
 
         it("should migrate db and save version", (done) => {
-            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
+            const migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
 
-            let indexDocument = new RssURLSearchIndex(dbName, accessToken);
+            const indexDocument = new RssURLSearchIndex(dbName, accessToken);
             getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
-            let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
+            const createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
             saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
@@ -115,15 +119,15 @@ describe("Migration", () => {
         });
 
         it("should migrate db and save version incase there is no schema version in db yet", (done) => {
-            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
+            const migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(null));
             getMigratableFileClassNamesMock.withArgs("19700101000000").returns(migratableFileDetails);
 
-            let indexDocument = new RssURLSearchIndex(dbName, accessToken);
+            const indexDocument = new RssURLSearchIndex(dbName, accessToken);
             getObjectMock.withArgs(migratableFileDetails[zeroIndex][oneIndex]).returns(indexDocument);
 
-            let createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
+            const createCategoryDesignDocumentUpMock = sinon.mock(indexDocument).expects("up");
             createCategoryDesignDocumentUpMock.returns(Promise.resolve("upResponse"));
 
             saveMock.withArgs(migratableFileDetails[zeroIndex][zeroIndex]).returns(Promise.resolve("saveResponse"));
@@ -160,7 +164,7 @@ describe("Migration", () => {
 
         it("should stop the migration after the failure", (done) => {
 
-            let migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
+            const migratableFileDetails = [["20161130171021", "RssURLSearchIndex"]];
 
             getSchemaInfoMock.returns(Promise.resolve(actualDocument));
             getMigratableFileClassNamesMock.withArgs(schemaVersion).returns(migratableFileDetails);
@@ -179,23 +183,24 @@ describe("Migration", () => {
     });
 
     describe("allDbs", () => {
-        let userName = null, password = null;
+        let userName = null;
+        let password = null;
         before("allDbs", () => {
             userName = "testUserName";
             password = "testPassword";
         });
 
         it("should migrate all dbs", (done) => {
-            let couchSessionLoginMock = sinon.mock(CouchSession).expects("login");
+            const couchSessionLoginMock = sinon.mock(CouchSession).expects("login");
             couchSessionLoginMock.withArgs(userName, password).returns(Promise.resolve(accessCookieHeader));
-            let couchClient = new CouchClient(accessToken, dbName);
+            const couchClient = new CouchClient(accessToken, dbName);
             sinon.stub(CouchClient, "instance").returns(couchClient);
-            let couchClientGetAllDbs = sinon.mock(CouchClient).expects("getAllDbs");
+            const couchClientGetAllDbs = sinon.mock(CouchClient).expects("getAllDbs");
             couchClientGetAllDbs.returns(Promise.resolve(["test1"]));
-            let migrationInstanceMock = sinon.mock(Migration).expects("instance");
-            let test1Migration = new Migration("test1", accessToken);
+            const migrationInstanceMock = sinon.mock(Migration).expects("instance");
+            const test1Migration = new Migration("test1", accessToken);
             migrationInstanceMock.withArgs("test1", accessToken).returns(test1Migration);
-            let test1StartMock = sinon.mock(test1Migration).expects("start");
+            const test1StartMock = sinon.mock(test1Migration).expects("start");
             test1StartMock.returns(Promise.resolve(true));
 
             Migration.allDbs(userName, password).then(migrateCount => {

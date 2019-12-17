@@ -33,10 +33,10 @@ export default class AjaxClient {
     }
 
     async sendRequest(requestType, queryParams = {}) {
-        let keys = Object.keys(queryParams);
+        const keys = Object.keys(queryParams);
         if (keys.length) {
             this.url = this.url + "?";
-            let keyValues = keys.map(queryKey => `${queryKey}=${encodeURIComponent(queryParams[queryKey])}`);
+            const keyValues = keys.map(queryKey => `${queryKey}=${encodeURIComponent(queryParams[queryKey])}`);
             this.url = this.url + keyValues.join("&");
         }
         return await this.request({
@@ -54,9 +54,9 @@ export default class AjaxClient {
 
     async request(params) {
         params.credentials = isCordova ? "include" : "same-origin";
-        let response = await fetch(this.url, params);
+        const response = await fetch(this.url, params);
 
-        let responseJson = await response.json();
+        const responseJson = await response.json();
 
         if (response.status === this.responseCodes().OK) {
             return responseJson;

@@ -45,12 +45,12 @@ export default class LoginRoute extends Route {
 
     async _handleLoginSuccess(authSessionCookie, token, userData) {
         userDetails.updateUser(token, this.userName);
-        let deleteSourceHandler = DeleteSourceHandler.instance(token);
+        const deleteSourceHandler = DeleteSourceHandler.instance(token);
         deleteSourceHandler.deleteHashTags();
         deleteSourceHandler.deleteOldFeeds();
-        let responseData = { "userName": this.userName };
+        const responseData = { "userName": this.userName };
         if(!userData.visitedUser) {
-            let visited = await markAsVisitedUser(token, this.userName);
+            const visited = await markAsVisitedUser(token, this.userName);
             responseData.firstTimeUser = !visited;
         }
         this.response.status(HttpResponseHandler.codes.OK)

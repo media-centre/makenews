@@ -42,7 +42,7 @@ export default class FacebookClient {
         } else {
             this._addDefaultParameters(parameters);
             const url = `${this.facebookParameters.url}/${sourceId}/${type}?${constructQueryString(parameters, false)}`;
-            let feedResponse = await this.requestForFeeds(url);
+            const feedResponse = await this.requestForFeeds(url);
             if(feedResponse.error) {
                 FacebookClient.logger().error(`FacebookClient:: error fetch feeds for url ${sourceId}. Details:: ${feedResponse.error}`);
                 delete feedResponse.error;
@@ -58,7 +58,7 @@ export default class FacebookClient {
     }
 
     async requestForFeeds(url, since, feeds = []) {
-        let feedsData = { "docs": feeds, "paging": {} };
+        const feedsData = { "docs": feeds, "paging": {} };
         try {
             const response = await fetch(url, { "timeout": this.facebookParameters.timeOut });
             if (response.status === HttpResponseHandler.codes.OK) {
@@ -88,14 +88,14 @@ export default class FacebookClient {
             request.get({
                 "url": `${this.facebookParameters.url}/me/taggable_friends?${constructQueryString(parameters, false)}`
             }, (error, response, body) => {
-                let err = NodeErrorHandler.noError(error);
+                const err = NodeErrorHandler.noError(error);
                 if (err) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        let profiles = JSON.parse(body);
+                        const profiles = JSON.parse(body);
                         FacebookClient.logger().debug("FacebookClient:: successfully fetched the profiles");
                         resolve(profiles);
                     } else {
-                        let errorInfo = JSON.parse(body);
+                        const errorInfo = JSON.parse(body);
                         FacebookClient.logger().error(`FacebookClient:: Error fetching profiles. Error: ${JSON.stringify(errorInfo)}`);
                         reject(errorInfo.error);
                     }
@@ -110,7 +110,7 @@ export default class FacebookClient {
     async fetchSourceUrls(parameters, paging = {}) {
         parameters.fields = "id,name,picture";
         parameters.limit = SOURCES_PER_REQUEST;
-        let params = R.merge(parameters, paging);
+        const params = R.merge(parameters, paging);
         this._addDefaultParameters(params);
         let response = null;
         try {
@@ -120,7 +120,7 @@ export default class FacebookClient {
             throw err;
         }
 
-        let responseJson = await response.json();
+        const responseJson = await response.json();
         if(response.status === HttpResponseHandler.codes.OK) {
             return responseJson;
         }
@@ -159,11 +159,11 @@ export default class FacebookClient {
             }, (error, response, body) => { //eslint-disable-line no-unused-vars
                 if (NodeErrorHandler.noError(error)) {
                     if (new HttpResponseHandler(response.statusCode).is(HttpResponseHandler.codes.OK)) {
-                        let feedResponse = JSON.parse(body);
+                        const feedResponse = JSON.parse(body);
                         FacebookClient.logger().debug("FacebookClient:: getting long lived token successful.");
                         resolve(feedResponse);
                     } else {
-                        let errorInfo = JSON.parse(body);
+                        const errorInfo = JSON.parse(body);
                         FacebookClient.logger().debug("FacebookClient:: error getting long lived token failed. Error: %j", errorInfo.error);
                         reject(errorInfo.error);
                     }

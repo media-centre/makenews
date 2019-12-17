@@ -9,7 +9,7 @@ export const ADD_URL_STATUS = "ADD_URL_STATUS";
 
 export function addRssUrl(url) {
     return (dispatch) => {
-        let ajax = AjaxClient.instance("/add-url", true);
+        const ajax = AjaxClient.instance("/add-url", true);
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"

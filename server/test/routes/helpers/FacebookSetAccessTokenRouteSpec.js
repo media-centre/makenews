@@ -9,8 +9,13 @@ import { assert } from "chai";
 
 describe("FacebookSetAccessTokenRoute", () => {
     describe("handle", () => {
-        let accessToken = null, facebookRequestHandler = null, facebookRequestHandlerInstanceMock = null, sandbox = null, request1 = null, next = null;
-        let authSession = "authSession";
+        let accessToken = null;
+        let facebookRequestHandler = null;
+        let facebookRequestHandlerInstanceMock = null;
+        let sandbox = null;
+        let request1 = null;
+        let next = null;
+        const authSession = "authSession";
         beforeEach("handle", () => {
             accessToken = "test_access_token";
             sandbox = sinon.sandbox.create();
@@ -32,10 +37,10 @@ describe("FacebookSetAccessTokenRoute", () => {
         });
 
         it("should response with long lived token expiration time", (done) => {
-            let expiresAfter = "12233";
+            const expiresAfter = "12233";
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
-            let response = {
+            const facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
+            const response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.OK, status);
                     return response;
@@ -55,10 +60,10 @@ describe("FacebookSetAccessTokenRoute", () => {
         it("should set the error on the response in case if token can not be fetched from facebook", (done) => {
 
             facebookRequestHandlerInstanceMock.withArgs(accessToken).returns(facebookRequestHandler);
-            let facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
+            const facebookRequestHandlerStub = sinon.stub(facebookRequestHandler, "setToken");
             facebookRequestHandlerStub.withArgs(authSession).returns(Promise.reject("error"));
 
-            let response = {
+            const response = {
                 "status": (status) => {
                     assert.strictEqual(status, HttpResponseHandler.codes.INTERNAL_SERVER_ERROR);
                     return response;
@@ -74,7 +79,7 @@ describe("FacebookSetAccessTokenRoute", () => {
         });
 
         it("should reject the request if access token is missing", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
                     done();

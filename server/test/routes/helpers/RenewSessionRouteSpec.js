@@ -5,7 +5,10 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("RenewSessionRoute", () => {
-    let token = null, couchSessionAuthenticateMock = null, request = null, next = null;
+    let token = null;
+    let couchSessionAuthenticateMock = null;
+    let request = null;
+    let next = null;
     beforeEach("getUserName", () => {
         token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
         request = {
@@ -21,7 +24,7 @@ describe("RenewSessionRoute", () => {
     });
 
     it("should return error incase of failure", (done) => {
-        let response = {
+        const response = {
             "status": function(status) {
                 expect(HttpResponseHandler.codes.INTERNAL_SERVER_ERROR).to.equal(status);
                 return response;
@@ -33,7 +36,7 @@ describe("RenewSessionRoute", () => {
         };
 
         couchSessionAuthenticateMock.withArgs(token).returns(Promise.reject("failed"));
-        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        const renewSessionHelper = new RenewSessionRoute(request, response, next);
         renewSessionHelper.handle();
         couchSessionAuthenticateMock.verify();
     });
@@ -44,7 +47,7 @@ describe("RenewSessionRoute", () => {
             }
         };
 
-        let response = {
+        const response = {
             "status": function(status) {
                 expect(HttpResponseHandler.codes.BAD_REQUEST).to.equal(status);
                 return response;
@@ -55,13 +58,13 @@ describe("RenewSessionRoute", () => {
             }
         };
 
-        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        const renewSessionHelper = new RenewSessionRoute(request, response, next);
         renewSessionHelper.handle();
     });
 
     it("should return unauthorised if cookie in header is empty", (done) => {
         request = {};
-        let response = {
+        const response = {
             "status": function(status) {
                 expect(HttpResponseHandler.codes.BAD_REQUEST).to.equal(status);
                 return response;
@@ -72,13 +75,13 @@ describe("RenewSessionRoute", () => {
             }
         };
 
-        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        const renewSessionHelper = new RenewSessionRoute(request, response, next);
         renewSessionHelper.handle();
     });
 
     it("should return auth session cookie for success", (done) => {
-        let renewedCookie = "AuthSession=new token";
-        let response = {
+        const renewedCookie = "AuthSession=new token";
+        const response = {
             "status": function(status) {
                 expect(HttpResponseHandler.codes.OK).to.equal(status);
                 return response;
@@ -94,7 +97,7 @@ describe("RenewSessionRoute", () => {
             }
         };
         couchSessionAuthenticateMock.withArgs(token).returns(Promise.resolve("new token"));
-        let renewSessionHelper = new RenewSessionRoute(request, response, next);
+        const renewSessionHelper = new RenewSessionRoute(request, response, next);
         renewSessionHelper.handle();
         couchSessionAuthenticateMock.verify();
     });

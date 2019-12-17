@@ -17,7 +17,7 @@ describe("WebConfigureActions", () => {
     const currentTab = WEB;
     describe("gotWebSourceResults", () => {
         it("should return source and type object", () => {
-            let sources = {
+            const sources = {
                 "docs": [{
                     "name": "The Hindu - International",
                     "url": "http://www.thehindu.com/news/international/?service=rss"
@@ -29,7 +29,7 @@ describe("WebConfigureActions", () => {
                     "offset": "25"
                 }
             };
-            let result = gotWebSourceResults(sources);
+            const result = gotWebSourceResults(sources);
             assert.strictEqual(result.sources.data, sources.docs);
             assert.strictEqual(result.sources.paging, sources.paging);
             assert.equal(result.type, WEB_GOT_SOURCE_RESULTS);
@@ -37,8 +37,10 @@ describe("WebConfigureActions", () => {
     });
 
     describe("fetchSources", () => {
-        let sandbox = null, keyword = "the";
-        let ajaxClient = null, ajaxGetMock = null;
+        let sandbox = null;
+        const keyword = "the";
+        let ajaxClient = null;
+        let ajaxGetMock = null;
 
         beforeEach("fetchSources", () => {
             sandbox = sinon.sandbox.create();

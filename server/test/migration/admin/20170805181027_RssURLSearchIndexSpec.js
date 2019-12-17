@@ -7,8 +7,10 @@ import sinon from "sinon";
 chai.use(chaiAsPromised);
 
 describe("RssURLSearchIndex", () => {
-    let accessToken = "testToken", dbName = "testDb", sandbox = sinon.sandbox.create();
-    let indexDoc = {
+    const accessToken = "testToken";
+    const dbName = "testDb";
+    const sandbox = sinon.sandbox.create();
+    const indexDoc = {
         "_id": "_design/webUrlSearch",
         "fulltext": {
             "by_name": {
@@ -23,34 +25,34 @@ describe("RssURLSearchIndex", () => {
     });
 
     it("should give successResponse for creating index", async() => {
-        let response = {
+        const response = {
             "ok": "true",
             "_id": "_design/webUrlSearch",
             "_rev": "test_revision"
         };
 
-        let couchInstance = new CouchClient(accessToken, dbName);
+        const couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
             .withArgs(accessToken, dbName).returns(couchInstance);
-        let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
+        const createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
             .withArgs("_design/webUrlSearch", indexDoc)
             .returns(response);
 
 
-        let indexDocument = new RssURLSearchIndex(dbName, accessToken);
+        const indexDocument = new RssURLSearchIndex(dbName, accessToken);
         await indexDocument.up();
         createIndexMock.verify();
     });
 
     it("should throw error if index creation failed", async() => {
-        let couchInstance = new CouchClient(accessToken, dbName);
+        const couchInstance = new CouchClient(accessToken, dbName);
         sandbox.stub(CouchClient, "instance")
             .withArgs(accessToken, dbName).returns(couchInstance);
-        let createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
+        const createIndexMock = sandbox.mock(couchInstance).expects("saveDocument")
             .withArgs("_design/webUrlSearch", indexDoc)
             .throws(new Error("failed"));
 
-        let indexDocument = new RssURLSearchIndex(dbName, accessToken);
+        const indexDocument = new RssURLSearchIndex(dbName, accessToken);
         await assert.isRejected(indexDocument.up(), "failed");
         createIndexMock.verify();
     });

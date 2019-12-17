@@ -14,8 +14,8 @@ export default class FetchAllConfiguredFeeds extends Route {
 
     async fetchFeeds() {
         try {
-            let feedsRequestHandler = FeedsRequestHandler.instance();
-            let feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, this.filter);
+            const feedsRequestHandler = FeedsRequestHandler.instance();
+            const feeds = await feedsRequestHandler.fetchFeeds(this.authSession, this.offset, this.filter);
             RouteLogger.instance().debug("FeedsRequestHandler:: successfully fetched the feeds");
             this._handleSuccess(feeds);
         } catch (error) {

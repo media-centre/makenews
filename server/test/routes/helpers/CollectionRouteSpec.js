@@ -7,7 +7,10 @@ import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 import CouchClient from "../../../src/CouchClient";
 
 describe("CollectionRoute", () => {
-    let couchClient = null, authSession = null, sandbox = null, collectionRequestHandler = null;
+    let couchClient = null;
+    let authSession = null;
+    let sandbox = null;
+    let collectionRequestHandler = null;
 
     beforeEach("CollectionRoute", () => {
         sandbox = sinon.sandbox.create();
@@ -23,8 +26,12 @@ describe("CollectionRoute", () => {
     });
 
     describe("addToCollection", () => {
-        let request = null, response = null, docId = null, collectionName = null;
-        let collectionRoute = null, selectedTextDoc = null;
+        let request = null;
+        let response = null;
+        let docId = null;
+        let collectionName = null;
+        let collectionRoute = null;
+        let selectedTextDoc = null;
         const sourceId = "http://www.thehindu.com/?service=rss";
 
 
@@ -83,7 +90,7 @@ describe("CollectionRoute", () => {
         });
 
         it("should throw bad request when collection is not updated", async() => {
-            let updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
+            const updateMock = sandbox.mock(collectionRequestHandler).expects("updateCollection")
                 .withExactArgs(collectionName, true, docId, sourceId, selectedTextDoc)
                 .returns(Promise.reject({ "error": "failed to update" }));
             try {
@@ -97,7 +104,10 @@ describe("CollectionRoute", () => {
     });
 
     describe("getAllCollections", () => {
-        let collectionRoute = null, response = null, request = null, collectionName = null;
+        let collectionRoute = null;
+        let response = null;
+        let request = null;
+        const collectionName = null;
 
         beforeEach("getAllCollections", () => {
             response = mockResponse();
@@ -117,8 +127,8 @@ describe("CollectionRoute", () => {
         });
 
         it("should return all collections", async() => {
-            let collection = { "docs": ["first", "second"] };
-            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
+            const collection = { "docs": ["first", "second"] };
+            const getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.resolve(collection));
 
             try {
@@ -131,7 +141,7 @@ describe("CollectionRoute", () => {
         });
 
         it("should throw error when fetching collection failed", async() => {
-            let getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
+            const getCollectionsMock = sandbox.mock(collectionRequestHandler).expects("getAllCollections");
             getCollectionsMock.returns(Promise.reject({ "error": "unexpected response from db" }));
             try {
                 await collectionRoute.getAllCollections();

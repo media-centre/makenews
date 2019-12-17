@@ -36,7 +36,7 @@ export default class InlineEdit extends React.Component {
     componentWillReceiveProps(nextProps) {
         const isTextChanged = (nextProps.text !== this.props.text);
         const isEditingChanged = (nextProps.editing !== this.props.editing);
-        let nextState = {};
+        const nextState = {};
         if (isTextChanged) {
             nextState.text = nextProps.text;
         }
@@ -49,7 +49,7 @@ export default class InlineEdit extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let inputElem = ReactDOM.findDOMNode(this.refs.input);
+        const inputElem = ReactDOM.findDOMNode(this.refs.input);
         if (this.state.editing && !prevState.editing) {
             inputElem.focus();
             selectInputText(inputElem);
@@ -79,7 +79,7 @@ export default class InlineEdit extends React.Component {
 
     commitEditing() {
         this.setState({ "editing": false, "text": this.state.text });
-        let newProp = {};
+        const newProp = {};
         newProp[this.props.paramName] = this.state.text.trim();
         this.props.change(newProp);
     }
@@ -95,7 +95,8 @@ export default class InlineEdit extends React.Component {
     }
 
     keyDown(event) {
-        const ENTER = 13, ESC = 27;
+        const ENTER = 13;
+        const ESC = 27;
         if (event.keyCode === ENTER) {
             this.finishEditing();
         } else if (event.keyCode === ESC) {

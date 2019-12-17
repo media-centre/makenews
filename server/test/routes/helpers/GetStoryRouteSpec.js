@@ -13,7 +13,7 @@ describe("Get Story Route", () => {
     });
 
     it("should validate id", async() => {
-        let result = await new GetStoryRoute({
+        const result = await new GetStoryRoute({
             "query": {
                 "id": "id_1"
             },
@@ -26,7 +26,7 @@ describe("Get Story Route", () => {
     });
 
     it("should validate id and give a message if id is not there", async() => {
-        let result = await new GetStoryRoute({
+        const result = await new GetStoryRoute({
             "query": { },
             "cookies": {
                 "AuthSession": "test_session"
@@ -37,13 +37,13 @@ describe("Get Story Route", () => {
     });
 
     it("should return single document", async() => {
-        let document = {
+        const document = {
             "title": "title2",
             "_id": "1234",
             "rev": "1234"
         };
         sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.resolve(document));
-        let result = await new GetStoryRoute({
+        const result = await new GetStoryRoute({
             "query": {
                 "id": "id_1"
             },
@@ -56,7 +56,7 @@ describe("Get Story Route", () => {
 
     it("should throw an error if document does not exist", async() => {
         sandbox.mock(storyRequestHandler).expects("getStory").returns(Promise.reject("No document found"));
-        let addStory = new GetStoryRoute({
+        const addStory = new GetStoryRoute({
             "query": {
                 "id": "id_1"
             },

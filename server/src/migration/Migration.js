@@ -35,7 +35,7 @@ export default class Migration {
     static allDbs(adminUserName, password) {
 
         return new Promise((resolve, reject) => {
-            let allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
+            const allDbMigrationLogger = Logger.fileInstance("migration-alldbs");
             CouchSession.login(adminUserName, password).then(cookieHeader => {
                 let accessToken = null;
                 if (cookieHeader && cookieHeader.split("=")[1].split(";")[0]) { // eslint-disable-line no-magic-numbers
@@ -44,14 +44,15 @@ export default class Migration {
 
                 CouchClient.getAllDbs().then(dbNames => {
                     allDbMigrationLogger.info("all dbs = %s", dbNames);
-                    let finishedCount = 0, failedCount = 0;
+                    let finishedCount = 0;
+                    let failedCount = 0;
                     dbNames.forEach(dbName => { //eslint-disable-line
                         if(dbName === ApplicationConfig.instance().adminDetails().db) {
                             finishedCount += 1; // eslint-disable-line no-magic-numbers
                             resolveStatus(finishedCount, failedCount, dbNames.length);
                         } else {
                             allDbMigrationLogger.info("%s migration started", dbName);
-                            let migrationInstance = Migration.instance(dbName, accessToken);
+                            const migrationInstance = Migration.instance(dbName, accessToken);
                             migrationInstance.start().then(status => { //eslint-disable-line
                                 allDbMigrationLogger.info("%s migration completed", dbName);
                                 finishedCount += 1; // eslint-disable-line no-magic-numbers
@@ -86,7 +87,7 @@ export default class Migration {
                     schemaVersion = schemaInfoDoc.lastMigratedDocumentTimeStamp;
                 }
                 Migration.logger(this.dbName).info("schema version in db is %s ", schemaVersion);
-                let migratableFileDetails = MigrationFile.instance(this.isAdmin).getMigratableFileClassNames(schemaVersion);
+                const migratableFileDetails = MigrationFile.instance(this.isAdmin).getMigratableFileClassNames(schemaVersion);
                 Migration.logger(this.dbName).info("migratable file names = %j", migratableFileDetails);
                 this._migrateFileSynchronously(migratableFileDetails).then(success => {
                     Migration.logger(this.dbName).info("migration successful.", success);

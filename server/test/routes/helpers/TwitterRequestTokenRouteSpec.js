@@ -17,23 +17,25 @@ describe("TwitterRequestTokenRouteSpec", () => {
         });
 
         it("should redirect to authenticate with requestToken", () => {
-            let twitterLogin = new TwitterLogin();
-            let token = "token", expectedUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + token;
-            let clientCallbackUrl = "clientUrl", serverCallbackUrl = "serverUrl";
+            const twitterLogin = new TwitterLogin();
+            const token = "token";
+            const expectedUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=" + token;
+            const clientCallbackUrl = "clientUrl";
+            const serverCallbackUrl = "serverUrl";
             twitterLogin.oauthToken = token;
-            let twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).returns(Promise.resolve(twitterLogin));
-            let response = { "status": () => {}, "json": () => {} };
-            let request = {
+            const twitterLoginMock = sandbox.mock(TwitterLogin).expects("instance").withArgs({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl }).returns(Promise.resolve(twitterLogin));
+            const response = { "status": () => {}, "json": () => {} };
+            const request = {
                 "query": {
                     "clientCallbackUrl": clientCallbackUrl,
                     "serverCallbackUrl": serverCallbackUrl,
                     "userName": "Maharjun"
                 }
             };
-            let responseMock = sandbox.mock(response);
+            const responseMock = sandbox.mock(response);
             responseMock.expects("status").withArgs(HttpResponseHandler.codes.OK);
             responseMock.expects("json").withArgs({ "authenticateUrl": expectedUrl });
-            let twitterReqTokenRoute = new TwitterRequestTokenRoute(request, response);
+            const twitterReqTokenRoute = new TwitterRequestTokenRoute(request, response);
             return Promise.resolve(twitterReqTokenRoute.handle()).then(() => {
                 twitterLoginMock.verify();
                 responseMock.verify();

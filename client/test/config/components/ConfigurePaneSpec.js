@@ -48,7 +48,10 @@ describe("Configure Pane", () => {
     });
 
     describe("config pane", () => {
-        let store = null, renderer = null, configurePaneDOM = null, dispatch = null;
+        let store = null;
+        let renderer = null;
+        let configurePaneDOM = null;
+        let dispatch = null;
         let currentTab = null;
 
         beforeEach("Configure Pane", () => {
@@ -76,14 +79,14 @@ describe("Configure Pane", () => {
         });
 
         it("should have ConfigPaneNavigationComponent", () => {
-            let result = renderer.getRenderOutput();
-            let navigationPane = findWithType(result, ConfigPaneNavigation);
+            const result = renderer.getRenderOutput();
+            const navigationPane = findWithType(result, ConfigPaneNavigation);
             expect(navigationPane.props.currentSourceType).to.equal("web");
         });
 
         it("should have an Input component for searching sources", () => {
-            let result = renderer.getRenderOutput();
-            let input = findWithType(result, Input);
+            const result = renderer.getRenderOutput();
+            const input = findWithType(result, Input);
             expect(input.ref).to.equal("searchSources");
             expect(input.props.className).to.equal("input-box configure-source");
             expect(input.props.placeholder).to.equal("Search web....");
@@ -97,8 +100,8 @@ describe("Configure Pane", () => {
                 <ConfigurePane dispatch={dispatch} store={store} currentTab={currentTab}
                     sources = {{ "data": ["Hindu"] }} currentSourceType="web"
                 />);
-            let result = renderer.getRenderOutput();
-            let renderedSource = findWithType(result, SourcePane);
+            const result = renderer.getRenderOutput();
+            const renderedSource = findWithType(result, SourcePane);
             expect(renderedSource.props.dispatch).to.deep.equal(dispatch);
         });
     });

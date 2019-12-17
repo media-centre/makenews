@@ -11,8 +11,11 @@ import { COLLECTION_FEEDS_PER_REQUEST } from "../../src/util/Constants";
 describe("CollectionFeedsRequestHandler", () => {
 
     describe("getCollectedFeeds", () => {
-        let sandbox = null, authSession = null, couchClient = null;
-        const offset = 0, collection = "ff49851eb7078d30c9019d0dce00099c";
+        let sandbox = null;
+        let authSession = null;
+        let couchClient = null;
+        const offset = 0;
+        const collection = "ff49851eb7078d30c9019d0dce00099c";
         const intermediateDocs = {
             "docs": [
                 {
@@ -119,7 +122,7 @@ describe("CollectionFeedsRequestHandler", () => {
             const getDocsMock = sandbox.mock(couchClient);
             const getFirstFeedMock = getDocsMock.expects("findDocuments").withArgs(intermediateDocsQuery).returns(Promise.resolve(intermediateDocs));
             const getSecondFeedMock = getDocsMock.expects("findDocuments").withArgs(feedsQuery).returns(Promise.resolve(feeds));
-            let docs = await getCollectedFeeds(authSession, collection, offset);
+            const docs = await getCollectedFeeds(authSession, collection, offset);
 
             assert.deepEqual(docs, feeds.docs);
             getFirstFeedMock.verify();
@@ -156,7 +159,7 @@ describe("CollectionFeedsRequestHandler", () => {
         });
 
         it("should reject with error when database throws unexpected response while getting intermediate docs", async() => {
-            let findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
+            const findDocumentsMock = sandbox.mock(couchClient).expects("findDocuments");
             findDocumentsMock.withArgs(intermediateDocsQuery).returns(Promise.reject("unexpected response from the db"));
             try {
                 await getCollectedFeeds(authSession, collection, offset);
@@ -196,7 +199,7 @@ describe("CollectionFeedsRequestHandler", () => {
             const saveMock = sandbox.mock(couchClient).expects("deleteBulkDocuments");
             saveMock.withExactArgs(deleteDocs).returns(Promise.resolve({ "ok": true }));
 
-            let response = await deleteCollection(authSession, collectionId);
+            const response = await deleteCollection(authSession, collectionId);
 
             findDocsMock.verify();
             saveMock.verify();
@@ -205,7 +208,10 @@ describe("CollectionFeedsRequestHandler", () => {
     });
 
     describe("deleteFeedFromCollection", () => {
-        let sandbox = null, couchClientInstance = null, instanceMock = null, getMock = null;
+        let sandbox = null;
+        let couchClientInstance = null;
+        let instanceMock = null;
+        let getMock = null;
         const authSession = "AuthSession";
         const intermediateDocId = "intermediateDocId";
         const feedId = "FeedId";

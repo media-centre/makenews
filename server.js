@@ -8,7 +8,7 @@ import EnvironmentConfig from "./server/src/config/EnvironmentConfig";
 import path from "path";
 import helmet from "helmet";
 import csp from "helmet-csp";
-let app = express();
+const app = express();
 app.use(helmet.hidePoweredBy());
 app.use(csp({ "directives": {
     "scriptSrc": ["'self'", "https://connect.facebook.net", "http://connect.facebook.net", "https://api.twitter.com"],
@@ -31,6 +31,6 @@ const port = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).get
 const clientPath = app.get("env") === "debug" ? "/dist/" : "/";
 app.use(express.static(path.join(__dirname, `${clientPath}client`)));
 routeErrorHandler(app);
-let server = app.listen(port);
+const server = app.listen(port);
 export default server;
 console.log("listening on port " + port);

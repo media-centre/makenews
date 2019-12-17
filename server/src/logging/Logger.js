@@ -6,12 +6,14 @@ import path from "path";
 import moment from "moment";
 import mkdirp from "mkdirp";
 
-export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR": "error", "LOG_WARN": "warn" },
-    logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 },
-    logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
-let defaultCategoryLogger = null, defaultLogger = null, categoriesInitialized = false;
-export let LOG_DIR = path.join(__dirname, "../../../../../logs");
-let LOG_FILE = "defaultLog.log";
+export const logLevel = { "LOG_INFO": "info", "LOG_DEBUG": "debug", "LOG_ERROR": "error", "LOG_WARN": "warn" };
+export const logType = { "CONSOLE": 0, "FILE": 1, "CONSOLE_FILE": 2 };
+export const logCategories = { "DEFAULT": "default", "HTTP": "http", "DATABASE": "database", "AUTHORIZATION": "authorization" };
+let defaultCategoryLogger = null;
+let defaultLogger = null;
+let categoriesInitialized = false;
+export const LOG_DIR = path.join(__dirname, "../../../../../logs");
+const LOG_FILE = "defaultLog.log";
 
 export default class Logger {
 
@@ -71,8 +73,8 @@ export default class Logger {
 
     static _createCategoryLoggers(logConfigJson = {}) {
         if(logConfigJson !== {}) {
-            let environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION);
-            let loggingConfig = logConfigJson[environment.environment];
+            const environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION);
+            const loggingConfig = logConfigJson[environment.environment];
             if(loggingConfig) {
                 let logDir = LOG_DIR;
                 if(loggingConfig.dir || loggingConfig.dir !== "") {
@@ -80,13 +82,13 @@ export default class Logger {
                 }
                 Logger.createDir(logDir);
                 Object.keys(loggingConfig).forEach(loggerName => {
-                    let categoryConfig = loggingConfig[loggerName];
+                    const categoryConfig = loggingConfig[loggerName];
                     if (categoryConfig.file) {
                         categoryConfig.file.dirname = logDir;
                         categoryConfig.file.timestamp = Logger.timeStamp;
                     }
                     try {
-                        let categoryLogger = winston.loggers.add(loggerName, categoryConfig);
+                        const categoryLogger = winston.loggers.add(loggerName, categoryConfig);
                         categoryLogger.remove(winston.transports.Console);
                         if(loggerName === logCategories.DEFAULT) {
                             defaultCategoryLogger = categoryLogger;
@@ -111,7 +113,7 @@ export default class Logger {
 
     static fileInstance(fileName, level = logLevel.LOG_INFO) {
         Logger.createDir(LOG_DIR);
-        let fileOptions = { "filename": fileName, "level": level };
+        const fileOptions = { "filename": fileName, "level": level };
         return Logger.customInstance(fileOptions);
     }
 
@@ -120,19 +122,19 @@ export default class Logger {
     }
 
     static _readLogConfig(relativefilePath) {
-        let logConfigJSON = Logger._getJson(relativefilePath);
+        const logConfigJSON = Logger._getJson(relativefilePath);
         Logger._createCategoryLoggers(logConfigJSON);
     }
 
     static _createLogger(options) {
-        let transports = Logger._createTransports(options);
+        const transports = Logger._createTransports(options);
         return new winston.Logger({
             "transports": transports
         });
     }
 
     static _createTransports(options) {
-        let transports = [];
+        const transports = [];
         switch (options.logType) {
         case logType.CONSOLE:
             transports.push(Logger._createConsoleTransport(options));
@@ -172,14 +174,14 @@ export default class Logger {
     }
 
     getFormattedDate() {
-        let currentDate = new Date();
+        const currentDate = new Date();
         return Logger.appendZero(currentDate.getFullYear()) +
             Logger.appendZero(1 + currentDate.getMonth()) + // eslint-disable-line no-magic-numbers
             Logger.appendZero(currentDate.getDate());
     }
 
     appendZero(value) {
-        let maxValue = 10;
+        const maxValue = 10;
         return (value < maxValue) ? "0" + value : String(value);
     }
 
@@ -201,7 +203,7 @@ export default class Logger {
     }
 
     getArguments(message) {
-        let args = (message.length === 1 ? [message[0]] : Array.apply(null, message)); // eslint-disable-line no-magic-numbers
+        const args = (message.length === 1 ? [message[0]] : Array.apply(null, message)); // eslint-disable-line no-magic-numbers
         args.push({});
         return args;
     }

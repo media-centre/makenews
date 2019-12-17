@@ -19,7 +19,7 @@ describe("RssParser", () => {
     });
 
     it("should reject if the url is not a feed", (done) => {
-        let data = `
+        const data = `
         <HTML>
             <HEAD>
                 <meta http-equiv="content-type" content="text/html;charset=utf-8">
@@ -35,10 +35,10 @@ describe("RssParser", () => {
         nock("http://www.google.com")
             .get("/users")
             .reply(HttpResponseHandler.codes.OK, data);
-        let url = "http://www.google.com/users";
+        const url = "http://www.google.com/users";
 
         restRequest(url).on("response", function(res) {
-            let rssParser = new RssParser(res);
+            const rssParser = new RssParser(res);
             rssParser.parse().catch((error) => {
                 expect(error).to.eq("Not a feed");
                 done();
@@ -47,7 +47,7 @@ describe("RssParser", () => {
     });
 
     it("should resolve with parsed items for proper url", (done) => {
-        let data = `<?xml version="1.0" encoding="utf-8" ?>
+        const data = `<?xml version="1.0" encoding="utf-8" ?>
                      <rss version="2.0" xml:base="http://www.nasa.gov/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/"> <channel>
                     <item>
                      <title>NASA Administrator Remembers Apollo-Era Astronaut Edgar Mitchell</title>
@@ -63,17 +63,17 @@ describe("RssParser", () => {
                     </item>
                     </channel>
                     </rss>`;
-        let url = "http://www.nasa.com/images/?service=rss";
+        const url = "http://www.nasa.com/images/?service=rss";
 
         nock("http://www.nasa.com/images")
             .get("/?service=rss")
             .reply(HttpResponseHandler.codes.OK, data);
 
-        let hmacStub = sandbox.stub(CryptUtil, "hmac");
+        const hmacStub = sandbox.stub(CryptUtil, "hmac");
         hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-administrator-remembers-apollo-era-astronaut-edgar-mitchell").returns("test-guid-1");
         hmacStub.withArgs("sha256", "appSecretKey", "hex", "http://www.nasa.gov/press-release/nasa-television-to-air-russian-spacewalk").returns("test-guid-2");
 
-        let expectedFeeds = {
+        const expectedFeeds = {
             "items":
             [{
                 "_id": "test-guid-1",
@@ -115,7 +115,7 @@ describe("RssParser", () => {
         };
 
         restRequest(url).on("response", function(res) {
-            let rssParser = new RssParser(res);
+            const rssParser = new RssParser(res);
             rssParser.parse(url).then((feedJson) => {
                 expect(feedJson.items).deep.equal(expectedFeeds.items);
                 done();

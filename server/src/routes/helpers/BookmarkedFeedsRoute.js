@@ -11,7 +11,7 @@ export default class BookmarkedFeedsRoute extends Route {
 
     async getFeeds() {
         try {
-            let response = await getBookmarkedFeeds(this.authSession, this.offset);
+            const response = await getBookmarkedFeeds(this.authSession, this.offset);
             RouteLogger.instance().debug("BookmarkedFeedsRoute:: successfully fetched the feeds");
             this._handleSuccess(response);
         } catch(error) {

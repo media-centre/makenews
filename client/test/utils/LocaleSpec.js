@@ -7,7 +7,7 @@ import sinon from "sinon";
 describe("Locale", function() {
 
     before("Locale", () => {
-        let appWindow = new AppWindow();
+        const appWindow = new AppWindow();
         sinon.stub(appWindow, "get").withArgs("appEn").returns({ "locales": ["en"] });
         sinon.stub(AppWindow, "instance").returns(appWindow);
     });
@@ -18,23 +18,23 @@ describe("Locale", function() {
 
     describe("applicationStrings", () => {
         it("should return the english locale strings of the application", () => {
-            let englishStringsFile = Locale.applicationStrings("en");
+            const englishStringsFile = Locale.applicationStrings("en");
             assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
         it("should thow an error if the language is not passed", () => {
-            let applicationStringsFunc = () => {
+            const applicationStringsFunc = () => {
                 Locale.applicationStrings(null);
             };
             assert.throw(applicationStringsFunc, Error, "language can not be null");
         });
 
         it("should return the english locale strings as default", () => {
-            let englishStringsFile = Locale.applicationStrings();
+            const englishStringsFile = Locale.applicationStrings();
             assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
 
         it("should return the english locale strings for all the languages other than english", () => {
-            let englishStringsFile = Locale.applicationStrings("fr");
+            const englishStringsFile = Locale.applicationStrings("fr");
             assert.strictEqual("en", englishStringsFile.locales[0]); // eslint-disable-line no-magic-numbers
         });
 

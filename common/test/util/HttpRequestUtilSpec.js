@@ -15,14 +15,14 @@ describe("HttpRequestUtil", () => {
         });
 
         it("should convert the options to query parameters in encoded format", () => {
-            let expectedParameters = "parameter1=value1&parameter2=value2&parameter3=value3%2Cvalue4";
-            let parameters = constructQueryString(options);
+            const expectedParameters = "parameter1=value1&parameter2=value2&parameter3=value3%2Cvalue4";
+            const parameters = constructQueryString(options);
             assert.strictEqual(expectedParameters, parameters);
         });
 
         it("should convert the options to query parameters in non encoded format", () => {
-            let expectedParameters = "parameter1=value1&parameter2=value2&parameter3=value3,value4";
-            let parameters = constructQueryString(options, false);
+            const expectedParameters = "parameter1=value1&parameter2=value2&parameter3=value3,value4";
+            const parameters = constructQueryString(options, false);
             assert.strictEqual(expectedParameters, parameters);
         });
 

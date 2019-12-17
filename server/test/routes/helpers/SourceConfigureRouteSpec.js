@@ -9,14 +9,14 @@ import { mockResponse } from "../../helpers/MockResponse";
 describe("SourceConfigureRoute", () => {
 
     describe("fetch Configured Sources", () => {
-        let sandbox = sinon.sandbox.create();
+        const sandbox = sinon.sandbox.create();
 
         afterEach("SourceConfigureRoute", () => {
             sandbox.restore();
         });
 
         it("should reject the request if auth session is missing", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
@@ -27,14 +27,14 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let sourceRoute = new SourceConfigureRoute({
+            const sourceRoute = new SourceConfigureRoute({
                 "cookies": {}
             }, response);
             sourceRoute.fetchConfiguredSources();
         });
 
         it("should give 400 when there is a problem getting the sources", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
@@ -45,25 +45,25 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let sourceRoute = new SourceConfigureRoute({
+            const sourceRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" }
             }, response);
 
-            let sourceRequestHandler = new SourceConfigRequestHandler();
+            const sourceRequestHandler = new SourceConfigRequestHandler();
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(sourceRequestHandler);
 
-            let configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
+            const configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
             configStub.withArgs("session").returns(Promise.reject("error fetching data"));
 
             sourceRoute.fetchConfiguredSources();
         });
 
         it("should get the sources", (done) => {
-            let sources = {
+            const sources = {
                 "profiles": [{ "name": "Name", "id": "Id_" }],
                 "pages": [], "groups": [], "twitter": [], "web": []
             };
-            let response = {
+            const response = {
                 "status": (status) => {
                     assert.strictEqual(HttpResponseHandler.codes.OK, status);
                     return response;
@@ -78,14 +78,14 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let sourceRoute = new SourceConfigureRoute({
+            const sourceRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" }
             }, response);
 
-            let sourceRequestHandler = new SourceConfigRequestHandler();
+            const sourceRequestHandler = new SourceConfigRequestHandler();
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(sourceRequestHandler);
 
-            let configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
+            const configStub = sandbox.stub(sourceRequestHandler, "fetchConfiguredSources");
             configStub.withArgs("session").returns(Promise.resolve(sources));
 
             sourceRoute.fetchConfiguredSources();
@@ -93,15 +93,15 @@ describe("SourceConfigureRoute", () => {
     });
 
     describe("add configure source", () => {
-        let sandbox = sinon.sandbox.create();
-        let sourceType = "fb-profile";
+        const sandbox = sinon.sandbox.create();
+        const sourceType = "fb-profile";
 
         afterEach("add configure source", () => {
             sandbox.restore();
         });
 
         it("should reject the request if type is missing", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.BAD_REQUEST, status);
@@ -112,7 +112,7 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let configRoute = new SourceConfigureRoute({
+            const configRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" },
                 "body": {
                     "source": {},
@@ -124,7 +124,7 @@ describe("SourceConfigureRoute", () => {
         });
 
         it("should reject the request if auth session is missing", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
@@ -135,7 +135,7 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let configRoute = new SourceConfigureRoute({
+            const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
                 "body": { "source": {} },
                 "cookies": {}
@@ -144,7 +144,7 @@ describe("SourceConfigureRoute", () => {
         });
 
         it("should reject the request if source name or url is missing", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
@@ -155,7 +155,7 @@ describe("SourceConfigureRoute", () => {
                 }
             };
 
-            let configRoute = new SourceConfigureRoute({
+            const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
                 "body": { "source": {} },
                 "cookies": { "AuthSession": "session" }
@@ -164,7 +164,7 @@ describe("SourceConfigureRoute", () => {
         });
 
         it("should give 400 when there is a problem getting the sources", (done) => {
-            let response = {
+            const response = {
                 "status": (status) => {
                     try {
                         assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
@@ -174,37 +174,37 @@ describe("SourceConfigureRoute", () => {
                     }
                 }
             };
-            let source = { "name": "SourceName", "url": "http://source.url/" };
+            const source = { "name": "SourceName", "url": "http://source.url/" };
 
-            let configRoute = new SourceConfigureRoute({
+            const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
                 "cookies": { "AuthSession": "session" },
                 "body": { "source": source }
             }, response);
 
-            let configRequestHandler = new SourceConfigRequestHandler();
+            const configRequestHandler = new SourceConfigRequestHandler();
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(configRequestHandler);
 
-            let configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
+            const configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
             configStub.withArgs(source, "user", "session").returns(Promise.reject("error fetching data"));
 
             configRoute.addConfiguredSource(sourceType);
         });
 
         it("should add the source to configured list", async() => {
-            let data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
-            let source = [{ "name": "SourceName", "url": "http://source.url/" }];
-            let response = mockResponse();
+            const data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
+            const source = [{ "name": "SourceName", "url": "http://source.url/" }];
+            const response = mockResponse();
 
-            let facebookRoute = new SourceConfigureRoute({
+            const facebookRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" },
                 "body": { "sources": source, "type": sourceTypes.fb_group }
             }, response);
 
-            let configRequestHandler = new SourceConfigRequestHandler("token");
+            const configRequestHandler = new SourceConfigRequestHandler("token");
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(configRequestHandler);
 
-            let configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
+            const configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
             configStub.withArgs(sourceTypes[sourceTypes.fb_group], source, "session").returns(Promise.resolve(data));
 
             await facebookRoute.addConfiguredSource();

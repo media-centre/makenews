@@ -38,7 +38,7 @@ export function fetchedFeeds(state = [], action = {}) {
         return [].concat(updatedCollections);
     }
     case RENAMED_COLLECTION: {
-        let filteredCollection = state.find(feed => feed._id === action.collectionId);
+        const filteredCollection = state.find(feed => feed._id === action.collectionId);
         filteredCollection.collection = action.newCollectionName;
         return [].concat(state);
     }

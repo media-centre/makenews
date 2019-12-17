@@ -10,24 +10,24 @@ describe("login reducer", function() {
 
     describe("login", () => {
         it("default state if action type is not handled", function() {
-            let action = { "type": "undefined" };
-            let state = login(undefined, action);
+            const action = { "type": "undefined" };
+            const state = login(undefined, action);
             assert.deepEqual({ "errorMessage": "" }, state);
         });
 
         it("should return error message incase of login failure", function() {
-            let action = { "type": "LOGIN_FAILED", "responseMessage": "login failed" };
-            let state = login(undefined, action);
+            const action = { "type": "LOGIN_FAILED", "responseMessage": "login failed" };
+            const state = login(undefined, action);
             assert.strictEqual("login failed", state.errorMessage);
         });
 
         it("should set the user session details when the login is successful", function() {
-            let DocumentMock = sinon.mock(document);
+            const DocumentMock = sinon.mock(document);
 
-            let testUser = "test_user";
-            let action = { "type": "LOGIN_SUCCESS", "history": { }, "userName": testUser };
+            const testUser = "test_user";
+            const action = { "type": "LOGIN_SUCCESS", "history": { }, "userName": testUser };
 
-            let state = login(undefined, action);
+            const state = login(undefined, action);
             DocumentMock.verify();
             assert.strictEqual("", state.errorMessage);
             assert.strictEqual(testUser, state.userName);
@@ -36,7 +36,7 @@ describe("login reducer", function() {
     });
     describe("loginLocale", () => {
         it("should have login page strings in English by default", () => {
-            let applicationStrings = {
+            const applicationStrings = {
                 "locales": ["en"],
 
                 "messages": {
@@ -47,9 +47,9 @@ describe("login reducer", function() {
                     }
                 }
             };
-            let applicationStringsMock = sinon.mock(Locale).expects("applicationStrings");
+            const applicationStringsMock = sinon.mock(Locale).expects("applicationStrings");
             applicationStringsMock.returns(applicationStrings);
-            let loginPageLocales = loginPageLocale();
+            const loginPageLocales = loginPageLocale();
             assert.strictEqual("Login", loginPageLocales.login.loginButton);
             applicationStringsMock.verify();
             Locale.applicationStrings.restore();

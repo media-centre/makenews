@@ -12,14 +12,14 @@ describe("DisplayCollectionReducer", () => {
     describe("displayCollection", () => {
 
         it("should return feeds with type collection feeds", () => {
-            let feeds = [{ "_id": "id", "title": "someTitle" }];
-            let action = { "type": COLLECTION_FEEDS, feeds };
+            const feeds = [{ "_id": "id", "title": "someTitle" }];
+            const action = { "type": COLLECTION_FEEDS, feeds };
 
             assert.deepEqual(displayCollection([], action), feeds);
         });
 
         it("should return empty feeds on clear", () => {
-            let action = { "type": CLEAR_COLLECTION_FEEDS };
+            const action = { "type": CLEAR_COLLECTION_FEEDS };
             assert.deepEqual(displayCollection([], action), []);
         });
 

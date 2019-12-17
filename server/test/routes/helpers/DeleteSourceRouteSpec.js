@@ -5,8 +5,8 @@ import { assert } from "chai";
 
 describe("DeleteSourceRoute", () => {
     it("should give success response", async() => {
-        let sources = ["source1"];
-        let request = {
+        const sources = ["source1"];
+        const request = {
             "cookies": {
                 "AuthSession": "test_session"
             },
@@ -14,12 +14,12 @@ describe("DeleteSourceRoute", () => {
                 "sources": sources
             }
         };
-        let sandbox = sinon.sandbox.create();
-        let deleteHandler = DeleteHashtagHandler.instance("test_session");
+        const sandbox = sinon.sandbox.create();
+        const deleteHandler = DeleteHashtagHandler.instance("test_session");
         sandbox.mock(DeleteHashtagHandler).expects("instance").returns(deleteHandler);
-        let deleteHashtsgMock = sandbox.mock(deleteHandler).expects("deleteSources")
+        const deleteHashtsgMock = sandbox.mock(deleteHandler).expects("deleteSources")
             .withExactArgs(sources).returns(Promise.resolve({ "ok": true }));
-        let deleteHashtagRoute = new DelteHashtagRoute(request, {});
+        const deleteHashtagRoute = new DelteHashtagRoute(request, {});
         try {
             await deleteHashtagRoute.handle();
             deleteHashtsgMock.verify();

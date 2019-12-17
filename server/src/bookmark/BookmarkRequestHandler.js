@@ -2,8 +2,8 @@ import CouchClient from "../CouchClient";
 import DateUtil from "../util/DateUtil";
 
 export async function bookmarkTheDocument(authSession, docId, status) {
-    let couchClient = CouchClient.instance(authSession);
-    let documentObj = await couchClient.getDocument(docId);
+    const couchClient = CouchClient.instance(authSession);
+    const documentObj = await couchClient.getDocument(docId);
     documentObj.bookmark = typeof status === "boolean" ? status : !documentObj.bookmark;
 
     if(documentObj.bookmark) {
@@ -18,8 +18,8 @@ export async function bookmarkTheDocument(authSession, docId, status) {
 }
 
 export async function getBookmarkedFeeds(authSession, offset) {
-    let couchClient = CouchClient.instance(authSession);
-    let selector = {
+    const couchClient = CouchClient.instance(authSession);
+    const selector = {
         "selector": {
             "docType": {
                 "$eq": "feed"

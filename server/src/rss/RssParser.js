@@ -17,7 +17,7 @@ export default class RssParser {
 
     parse(url) {
         return new Promise((resolve, reject) => {
-            let items = [];
+            const items = [];
             this.response.pipe(this.feedParser);
             this.feedParser.on("error", (error) => {
                 RssParser.logger().error("RssParser:: Parsing error %s", error);
@@ -25,11 +25,12 @@ export default class RssParser {
             });
 
             this.feedParser.on("readable", function() {
-                let meta = this.meta, feed = this.read();
+                const meta = this.meta;
+                let feed = this.read();
                 /* TODO: remove the loop statement*/ //eslint-disable-line
                 while (feed) { //eslint-disable-line no-loops/no-loops
-                    let guid = CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid);
-                    let feedObject = {
+                    const guid = CryptUtil.hmac("sha256", "appSecretKey", "hex", feed.guid);
+                    const feedObject = {
                         "_id": guid,
                         "guid": guid,
                         "title": feed.title,
@@ -46,7 +47,7 @@ export default class RssParser {
                     if (feed.enclosures && feed.enclosures.length) {
                         feed.enclosures.forEach((item, index) => { //eslint-disable-line no-loop-func
                             if (!item.type || item.type.indexOf("image") !== NEGATIVE_INDEX) {
-                                let image = feed.enclosures[index];
+                                const image = feed.enclosures[index];
                                 image.thumbnail = image.url;
                                 feedObject.images.push(image);
                             } else if (item.type.indexOf("video") !== NEGATIVE_INDEX) {

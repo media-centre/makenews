@@ -13,10 +13,15 @@ import * as Constants from "./../../src/util/Constants";
 import { isRejected } from "./../helpers/AsyncTestHelper";
 
 describe("TwitterClient", () => {
-    let sandbox = null, twitterClient = null, tokenInfo = null, oauth = null, twitterParser = null;
+    let sandbox = null;
+    let twitterClient = null;
+    let tokenInfo = null;
+    let oauth = null;
+    let twitterParser = null;
     const logger = LogTestHelper.instance();
     describe("FetchHandles", () => {
-        let getAccessMock = null, createOAuthMock = null;
+        let getAccessMock = null;
+        let createOAuthMock = null;
         beforeEach(() => {
             sandbox = sinon.sandbox.create();
             twitterClient = new TwitterClient();
@@ -37,7 +42,7 @@ describe("TwitterClient", () => {
         });
 
         it("should fetch handles from the twitter user", async() => {
-            let parsedData = [{
+            const parsedData = [{
                 "id": 1277389,
                 "id_str": 1277389,
                 "name": "testUser",
@@ -47,7 +52,7 @@ describe("TwitterClient", () => {
                     }
                 }
             }];
-            let resultData = {
+            const resultData = {
                 "docs": parsedData,
                 "paging": { "page": 2 },
                 "twitterPreFirstId": 1277389
@@ -68,7 +73,7 @@ describe("TwitterClient", () => {
                 }]);
 
             try {
-                let handles = await twitterClient.fetchHandles("userName", "keyword", 1, 0); //eslint-disable-line no-magic-numbers
+                const handles = await twitterClient.fetchHandles("userName", "keyword", 1, 0); //eslint-disable-line no-magic-numbers
                 assert.deepEqual(resultData, handles);
                 getAccessMock.verify();
                 createOAuthMock.verify();
@@ -78,7 +83,7 @@ describe("TwitterClient", () => {
         });
 
         it("should return empty object if results are matching with previous result", async() => {
-            let resultData = { "docs": [] };
+            const resultData = { "docs": [] };
 
             getAccessMock = sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
@@ -92,7 +97,7 @@ describe("TwitterClient", () => {
                     "location": "india"
                 }]);
             try {
-                let result = await twitterClient.fetchHandles("userName", "india", 1, 1277389); //eslint-disable-line no-magic-numbers
+                const result = await twitterClient.fetchHandles("userName", "india", 1, 1277389); //eslint-disable-line no-magic-numbers
                 assert.deepEqual(resultData, result);
                 getAccessMock.verify();
                 createOAuthMock.verify();
@@ -165,7 +170,7 @@ describe("TwitterClient", () => {
         });
 
         it("should fetch tweets for the given url", async() => {
-            let parsedTweets = [{
+            const parsedTweets = [{
                 "_id": 1277389,
                 "docType": "feed",
                 "sourceType": "twitter",
@@ -179,8 +184,8 @@ describe("TwitterClient", () => {
                 "docs": parsedTweets,
                 "paging": { "sinceId": 1277389, "since": 1487927102 }
             };
-            let sourceId = "123";
-            let twitterRespone = [{
+            const sourceId = "123";
+            const twitterRespone = [{
                 "id": 1277389,
                 "id_str": 1277389,
                 "created_at": "Fri Dec 09 07:24:44 +0000 2016",
@@ -227,7 +232,7 @@ describe("TwitterClient", () => {
             const sinceid = "835103042471096320";
             const timestamp = 1483947627341;
 
-            let twitterResponse = [{
+            const twitterResponse = [{
                 "id": 835103042471096320,
                 "id_str": "835103042471096320",
                 "created_at": "fri dec 09 07:24:44 +0000 2016",
@@ -279,7 +284,7 @@ describe("TwitterClient", () => {
         });
 
         it("should fetch tweets for the given url recursively", async() => {
-            let expectedData = {
+            const expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
                     "docType": "feed",
@@ -373,12 +378,12 @@ describe("TwitterClient", () => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
-            let tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
+            const tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
             assert.deepEqual(tweetData, expectedData);
         });
 
         it("should fetch tweets for the given hashtag recursively", async() => {
-            let expectedData = {
+            const expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
                     "docType": "feed",
@@ -497,12 +502,12 @@ describe("TwitterClient", () => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
-            let tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
+            const tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
             assert.deepEqual(tweetData, expectedData);
         });
 
         it("should fetch tweets for the given hashtag recursively till the recursion limit", async() => {
-            let expectedData = {
+            const expectedData = {
                 "docs": [{
                     "_id": "835103042471096320",
                     "docType": "feed",
@@ -644,7 +649,7 @@ describe("TwitterClient", () => {
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
 
-            let tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
+            const tweetData = await twitterClient.fetchTweets("123", "userName", timestamp, sinceId);
             assert.deepEqual(tweetData, expectedData);
         });
 
@@ -748,7 +753,9 @@ describe("TwitterClient", () => {
     });
 
     describe("FetchUserInfoFromHandle", () => {
-        let twitterClientInstance = null, getAccessMock = null, createOAuthMock = null;
+        let twitterClientInstance = null;
+        let getAccessMock = null;
+        let createOAuthMock = null;
         const handle = "@testUser";
         beforeEach("FetchUserInfoFromHandle", () => {
             sandbox = sinon.sandbox.create();
@@ -816,7 +823,9 @@ describe("TwitterClient", () => {
     });
     
     describe("Fetch Followings", () => {
-        let twitterClientInstance = null, getAccessMock = null, createOAuthMock = null;
+        let twitterClientInstance = null;
+        let getAccessMock = null;
+        let createOAuthMock = null;
         beforeEach("Fetch Followings", () => {
             sandbox = sinon.sandbox.create();
             twitterClientInstance = TwitterClient.instance();
@@ -839,7 +848,7 @@ describe("TwitterClient", () => {
         });
 
         it("should fetch followings", async() => {
-            let parsedData = [{
+            const parsedData = [{
                 "id": 1277389,
                 "id_str": 1277389,
                 "name": "testUser",
@@ -850,7 +859,7 @@ describe("TwitterClient", () => {
                 }
             }];
 
-            let expectedData = {
+            const expectedData = {
                 "docs": parsedData,
                 "paging": { "page": 0 }
             };
@@ -876,7 +885,7 @@ describe("TwitterClient", () => {
                     "next_cursor": 0
                 });
 
-            let handles = await twitterClientInstance.fetchFollowings("userName"); //eslint-disable-line no-magic-numbers
+            const handles = await twitterClientInstance.fetchFollowings("userName"); //eslint-disable-line no-magic-numbers
             assert.deepEqual(handles, expectedData);
             getAccessMock.verify();
             createOAuthMock.verify();
@@ -908,7 +917,7 @@ describe("TwitterClient", () => {
                 "docs": [],
                 "paging": { "page": 0 }
             };
-            let result = await twitterClientInstance.fetchFollowings("username", nextCursor);
+            const result = await twitterClientInstance.fetchFollowings("username", nextCursor);
             assert.deepEqual(result, expectedData);
         });
 

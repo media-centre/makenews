@@ -4,7 +4,10 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("Search Feeds Route", () => {
-    let sourceType = null, searchkey = null, accessToken = null, feeds = null;
+    let sourceType = null;
+    let searchkey = null;
+    let accessToken = null;
+    let feeds = null;
     let sandbox = null;
 
     it("should return feeds", async() => {
@@ -14,17 +17,17 @@ describe("Search Feeds Route", () => {
         accessToken = "test_token";
         feeds = "feeds";
 
-        let request = {
+        const request = {
             "cookies": { "AuthSession": accessToken },
             "query": { sourceType, searchkey }
         };
-        let searchFeed = new SearchFeedsRoute(request, {});
+        const searchFeed = new SearchFeedsRoute(request, {});
 
-        let requestHandleInstance = new FeedsRequestHandler();
+        const requestHandleInstance = new FeedsRequestHandler();
         sandbox.mock(FeedsRequestHandler).expects("instance").returns(requestHandleInstance);
         sandbox.mock(requestHandleInstance).expects("searchFeeds").returns(feeds);
 
-        let result = await searchFeed.handle();
+        const result = await searchFeed.handle();
         assert.equal(result, feeds);
     });
 });

@@ -14,8 +14,10 @@ import * as DisplayFeedActions from "./../../../src/js/newsboard/actions/Display
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("DisplayFeeds", () => {
-    let result = null, feeds = null, store = null;
-    let sandbox = sinon.sandbox.create();
+    let result = null;
+    let feeds = null;
+    let store = null;
+    const sandbox = sinon.sandbox.create();
     beforeEach("DisplayFeeds", () => {
         feeds = [
             { "_id": "1234", "sourceUrl": "http://www.test.com", "docType": "feed", "tags": [], "videos": [], "images": [] },
@@ -105,7 +107,7 @@ describe("DisplayFeeds", () => {
                     <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
                 </Provider>);
 
-            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
+            const renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayCollection);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });
@@ -130,30 +132,31 @@ describe("DisplayFeeds", () => {
                 <DisplayFeeds store={store} currentHeaderTab={WRITE_A_STORY}/>);
             result.setState({ "isClicked": true });
 
-            let renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayArticle);
+            const renderedSources = TestUtils.scryRenderedComponentsWithType(result, DisplayArticle);
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
     });
 
     describe("search", () => {
         it("should have search bar", () => {
-            let searchBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-bar");
+            const searchBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-bar");
             expect(searchBox.className).to.equal("search-bar");
         });
 
         it("should have input Box", () => {
-            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "input-box");
+            const inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "input-box");
             expect(inputBox.className).to.equal("input-box");
         });
 
         it("should dispatch search feeds", () => {
-            let searchKey = "test";
-            let offset = 0, sourceType = "web";
-            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
+            const searchKey = "test";
+            const offset = 0;
+            const sourceType = "web";
+            const inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
             inputBox.value = "test";
-            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("searchFeeds")
+            const searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("searchFeeds")
                 .withArgs(sourceType, searchKey, offset).returns({ "type": "" });
-            let addOn = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            const addOn = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
             TestUtils.Simulate.click(addOn);
 
             searchFeedsMock.verify();
@@ -165,13 +168,13 @@ describe("DisplayFeeds", () => {
                     <DisplayFeeds currentHeaderTab={SCAN_NEWS}/>
                 </Provider>);
 
-            let inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
+            const inputBox = TestUtils.findRenderedDOMComponentWithClass(result, "search-sources");
             inputBox.value = "test";
-            let searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("displayFeedsByPage").returns({ "type": "" });
-            let search = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            const searchFeedsMock = sandbox.mock(DisplayFeedActions).expects("displayFeedsByPage").returns({ "type": "" });
+            const search = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
             TestUtils.Simulate.click(search);
 
-            let cross = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
+            const cross = TestUtils.findRenderedDOMComponentWithClass(result, "input-addon");
             TestUtils.Simulate.click(cross);
             searchFeedsMock.verify();
         });

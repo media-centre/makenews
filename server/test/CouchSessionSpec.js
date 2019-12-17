@@ -27,8 +27,8 @@ describe("CouchSessionSpec", () => {
 
     describe("login", () => {
         it("should login user with given username and password", (done) => {
-            let username = "test_user";
-            let password = "test_password";
+            const username = "test_user";
+            const password = "test_password";
             nock("http://localhost:5984")
                 .post("/_session", {
                     "name": username,
@@ -45,8 +45,8 @@ describe("CouchSessionSpec", () => {
         });
 
         it("should fail if username/password are invalid", (done) => {
-            let username = "test_user";
-            let password = "test_password";
+            const username = "test_user";
+            const password = "test_password";
             nock("http://localhost:5984")
                 .post("/_session", {
                     "name": username,
@@ -70,7 +70,7 @@ describe("CouchSessionSpec", () => {
 
     describe("authenticate", () => {
         it("should send the auth token if authCookie is present in couch response", (done) => {
-            let token = "12345678";
+            const token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }
             })
@@ -88,7 +88,7 @@ describe("CouchSessionSpec", () => {
         });
 
         it("should send the auth token if authCookie is present in couch response with existing token", (done) => {
-            let token = "12345678";
+            const token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": { "Cookie": "AuthSession=" + token }
             })
@@ -104,7 +104,7 @@ describe("CouchSessionSpec", () => {
         });
 
         it("should return the reject promise if the token is invalid", (done) => {
-            let token = "12345678";
+            const token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + token
@@ -122,7 +122,7 @@ describe("CouchSessionSpec", () => {
         });
 
         it("should return the reject promise with actual error if service is not available", (done) => {
-            let token = "12345678";
+            const token = "12345678";
             nock("http://localhost:5984", {
                 "reqheaders": {
                     "Cookie": "AuthSession=" + token
@@ -146,7 +146,11 @@ describe("CouchSessionSpec", () => {
     });
 
     describe("updatePassword", () => {
-        let sandbox = null, couchClient = null, username = null, newPassword = null, token = null;
+        let sandbox = null;
+        let couchClient = null;
+        let username = null;
+        let newPassword = null;
+        let token = null;
         beforeEach("updatePassword", () => {
             sandbox = sinon.sandbox.create();
             token = "12345678";

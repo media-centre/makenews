@@ -1,8 +1,8 @@
 import CouchClient from "../CouchClient";
 
 export async function getStoryWithTitle(title, authSession) {
-    let couchClient = CouchClient.instance(authSession);
-    let query = {
+    const couchClient = CouchClient.instance(authSession);
+    const query = {
         "selector": {
             "docType": {
                 "$eq": "story"
@@ -16,18 +16,18 @@ export async function getStoryWithTitle(title, authSession) {
 }
 
 export async function getStory(id, authSession) {
-    let couchClient = CouchClient.instance(authSession);
+    const couchClient = CouchClient.instance(authSession);
     try {
         return await couchClient.getDocument(id);
     } catch (error) {
-        let notFoundMsg = "No document found";
+        const notFoundMsg = "No document found";
         throw notFoundMsg;
     }
 }
 
 export async function deleteStory(id, authSession) {
     try {
-        let couchClient = CouchClient.instance(authSession);
+        const couchClient = CouchClient.instance(authSession);
         await couchClient.deleteDocument(id);
         return { "message": "deleted" };
     } catch (error) {
@@ -37,8 +37,8 @@ export async function deleteStory(id, authSession) {
 }
 
 export async function getStories(authSession) {
-    let couchClient = CouchClient.instance(authSession);
-    let query = {
+    const couchClient = CouchClient.instance(authSession);
+    const query = {
         "selector": {
             "docType": {
                 "$eq": "story"
@@ -50,12 +50,12 @@ export async function getStories(authSession) {
 }
 
 export async function saveStory(story, authSession) {
-    let sameTitledStory = await getStoryWithTitle(story.title, authSession);
+    const sameTitledStory = await getStoryWithTitle(story.title, authSession);
     if(sameTitledStory.docs.length && story._id !== sameTitledStory.docs[0]._id) { //eslint-disable-line no-magic-numbers
         throw new Error("Title Already exists");
     }
     // eslint-disable-next-line require-atomic-updates
     story.docType = "story";
-    let couchInstance = CouchClient.instance(authSession);
+    const couchInstance = CouchClient.instance(authSession);
     return await couchInstance.updateDocument(story);
 }

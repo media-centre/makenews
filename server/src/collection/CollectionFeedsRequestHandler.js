@@ -75,7 +75,7 @@ async function _getCollectionFeedDocs(couchClient, collectionId) {
 export async function deleteFeedFromCollection(authSession, intermediateDocId) {
     const couchClient = CouchClient.instance(authSession);
     try {
-        let response = { "ok": true, "deleteFeed": intermediateDocId };
+        const response = { "ok": true, "deleteFeed": intermediateDocId };
 
         const intermediateDoc = await couchClient.getDocument(intermediateDocId);
         await couchClient.deleteDocument(intermediateDocId, intermediateDoc._rev);

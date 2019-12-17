@@ -23,11 +23,11 @@ export default class FacebookSourceRoute extends Route {
     }
 
     async handle() {
-        let params = {
+        const params = {
             "q": this.keyword,
             "type": fbSourceTypesToFetch[this.type]
         };
-        let token = await FacebookAccessToken.instance().getAccessToken(userDetails.getUser(this.accessToken).userName);
+        const token = await FacebookAccessToken.instance().getAccessToken(userDetails.getUser(this.accessToken).userName);
         return await FacebookRequestHandler.instance(token).fetchSourceUrls(params, this.paging);
     }
 }

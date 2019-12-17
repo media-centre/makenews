@@ -9,26 +9,30 @@ import { assert } from "chai";
 
 describe("TwitterToken", () => {
     describe("isPresent", () => {
-        let authSession = "test_authSession", adminDbMock = null, adminDbInstance = null, sandbox = null, appConfigMock = null;
+        const authSession = "test_authSession";
+        let adminDbMock = null;
+        let adminDbInstance = null;
+        let sandbox = null;
+        let appConfigMock = null;
         beforeEach("isPresent", () => {
             sandbox = sinon.sandbox.create();
-            let adminDetails = {
+            const adminDetails = {
                 "adminDetails": {
                     "username": "test",
                     "password": "password",
                     "db": "test"
                 }
             };
-            let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+            const userDetailsMock = sandbox.mock(userDetails).expects("getUser");
             userDetailsMock.withArgs(authSession).returns({ "username": "test" });
-            let appConfig = new ApplicationConfig();
+            const appConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(appConfig);
             appConfigMock = sandbox.mock(appConfig).expects("adminDetails");
             appConfigMock.returns({ adminDetails });
             adminDbInstance = new AdminDbClient();
             adminDbMock = sandbox.mock(AdminDbClient).expects("instance").withExactArgs(adminDetails.username, adminDetails.password, adminDetails.db);
             adminDbMock.returns(Promise.resolve(adminDbInstance));
-            let couchClient = new CouchClient();
+            const couchClient = new CouchClient();
             sandbox.stub(CouchClient, "createInstance").withArgs(authSession).returns(Promise.resolve(couchClient));
             sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(adminDetails.username));
             sandbox.stub(TwitterToken, "logger").returns(LogTestHelper.instance());
@@ -38,17 +42,17 @@ describe("TwitterToken", () => {
         });
 
         it("should return authenticated as true when document is present in database", async() => {
-            let document = {
+            const document = {
                 "access_token": "test_token",
                 "token_type": "test_type",
                 "expires_in": 12345,
                 "expired_after": 123456
             };
-            let getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
+            const getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
             getDocumentMock.returns(Promise.resolve(document));
-            let twitterToken = new TwitterToken();
+            const twitterToken = new TwitterToken();
             try {
-                let authenticated = await twitterToken.isPresent(authSession);
+                const authenticated = await twitterToken.isPresent(authSession);
                 assert.strictEqual(authenticated, true);
                 getDocumentMock.verify();
                 appConfigMock.verify();
@@ -59,11 +63,11 @@ describe("TwitterToken", () => {
         });
 
         it("should return authenticated as false when document is not present in database", async() => {
-            let getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
+            const getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
             getDocumentMock.returns(Promise.reject("no document in db"));
-            let facebookTokenDocument = new TwitterToken();
+            const facebookTokenDocument = new TwitterToken();
             try {
-                let authenticated = await facebookTokenDocument.isPresent(authSession);
+                const authenticated = await facebookTokenDocument.isPresent(authSession);
                 assert.strictEqual(authenticated, false);
                 appConfigMock.verify();
                 adminDbMock.verify();

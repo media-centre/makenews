@@ -15,7 +15,10 @@ import Locale from "./../../../src/js/utils/Locale";
 import DateTimeUtil from "../../../src/js/utils/DateTimeUtil";
 
 describe("DisplayArticle", () => {
-    let feed = null, renderer = null, displayArticleDom = null, active = null;
+    let feed = null;
+    let renderer = null;
+    let displayArticleDom = null;
+    let active = null;
     const sandbox = sinon.sandbox.create();
     const anonymousFun = () => {};
 
@@ -62,7 +65,7 @@ describe("DisplayArticle", () => {
     });
 
     it("should have a div with default-message class if article is not passed", () => {
-        let noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={anonymousFun} newsBoardCurrentSourceTab="web"/>);
+        const noArticleDom = renderer.render(<DisplayArticle article={{}} dispatch={anonymousFun} newsBoardCurrentSourceTab="web"/>);
         expect(noArticleDom.props.children.props.className).to.equals("default-message");
     });
 
@@ -78,19 +81,19 @@ describe("DisplayArticle", () => {
         });
 
         it("should have article title", () => {
-            let [title] = mainDOM.props.children;
+            const [title] = mainDOM.props.children;
             expect(title.type).to.equals("h1");
             expect(title.props.children).to.equals(feed.title);
             expect(title.props.className).to.equals("article__title");
         });
 
         it("should have article details", () => {
-            let [, detailsDOM] = mainDOM.props.children;
+            const [, detailsDOM] = mainDOM.props.children;
 
             expect(detailsDOM.type).to.equals("div");
             expect(detailsDOM.props.className).to.equals("article__details");
 
-            let [sourceTypeIcon, pubDate, tags] = detailsDOM.props.children;
+            const [sourceTypeIcon, pubDate, tags] = detailsDOM.props.children;
             expect(sourceTypeIcon.type).to.equals("i");
             expect(sourceTypeIcon.props.className).to.equals(`fa fa-${feed.sourceType}`);
 
@@ -103,8 +106,8 @@ describe("DisplayArticle", () => {
         });
 
         it("should have article images", () => {
-            let [, , imagesDOM] = mainDOM.props.children;
-            let [img] = imagesDOM.props.children;
+            const [, , imagesDOM] = mainDOM.props.children;
+            const [img] = imagesDOM.props.children;
 
             expect(imagesDOM.type).to.equals("div");
             expect(imagesDOM.props.className).to.equals("article__images");
@@ -115,7 +118,7 @@ describe("DisplayArticle", () => {
         });
 
         it("should have article description", () => {
-            let [, , , description] = mainDOM.props.children;
+            const [, , , description] = mainDOM.props.children;
 
             expect(description.type).to.equals("div");
             expect(description.props.className).to.equals("article__desc");
@@ -136,8 +139,8 @@ describe("DisplayArticle", () => {
             };
 
             displayArticleDom = renderer.render(<DisplayArticle active={active} article={feed} newsBoardCurrentSourceTab="web" dispatch={anonymousFun}/>);
-            let result = renderer.getRenderOutput();
-            let renderedSources = findAllWithType(result, DisplayWebArticle);
+            const result = renderer.getRenderOutput();
+            const renderedSources = findAllWithType(result, DisplayWebArticle);
 
             expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
         });
@@ -147,32 +150,32 @@ describe("DisplayArticle", () => {
     describe("headerTag", () => {
 
         it("should have header tag with display-article__header class", () => {
-            let [headerDOM] = displayArticleDom.props.children;
+            const [headerDOM] = displayArticleDom.props.children;
             expect(headerDOM.props.className).to.equal("display-article__header");
             expect(headerDOM.type).to.equal("header");
         });
 
         it("should dispatch newsBoardTabSwitch, addArticleToCollection when add to collection is clicked", () => {
-            let article = { "_id": "article id", "description": "article description" };
-            let currentTab = "facebook";
-            let store = createStore(() => ({
+            const article = { "_id": "article id", "description": "article description" };
+            const currentTab = "facebook";
+            const store = createStore(() => ({
                 "selectedArticle": article,
                 "newsBoardCurrentSourceTab": currentTab
             }), applyMiddleware(thunkMiddleware));
 
-            let newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions)
+            const newsBoardTabSwitchMock = sandbox.mock(DisplayFeedActions)
                 .expects("newsBoardTabSwitch")
                 .returns({ "type": "" });
-            let addArticleToCollectionMock = sandbox.mock(DisplayArticleActions)
+            const addArticleToCollectionMock = sandbox.mock(DisplayArticleActions)
                 .expects("addArticleToCollection")
                 .returns({ "type": "" });
 
-            let displayArticle = TestUtils.renderIntoDocument(
+            const displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="web" currentHeaderTab="Scan News" toolBar/>
                 </Provider>
             );
-            let collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
+            const collectionClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "collection");
             TestUtils.Simulate.click(collectionClick);
             newsBoardTabSwitchMock.verify();
             addArticleToCollectionMock.verify();
@@ -191,9 +194,9 @@ describe("DisplayArticle", () => {
         });
 
         it("should have bookmark class when article is not bookmarked", () => {
-            let [headerDOM] = displayArticleDom.props.children;
+            const [headerDOM] = displayArticleDom.props.children;
             const [, articleHeaderDOM] = headerDOM.props.children;
-            let [, bookmarkDOM] = articleHeaderDOM.props.children;
+            const [, bookmarkDOM] = articleHeaderDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark");
             expect(bookmarkDOM.type).to.equal("div");
 
@@ -212,26 +215,26 @@ describe("DisplayArticle", () => {
                     toolBar
                 />
             );
-            let [headerDOM] = displayArticleDom.props.children;
+            const [headerDOM] = displayArticleDom.props.children;
             const [, articleHeaderDOM] = headerDOM.props.children;
-            let [, bookmarkDOM] = articleHeaderDOM.props.children;
+            const [, bookmarkDOM] = articleHeaderDOM.props.children;
             expect(bookmarkDOM.props.className).to.equal("bookmark active");
             expect(bookmarkDOM.type).to.equal("div");
         });
 
         it("should dispatch bookmarkArticle when bookmark is clicked", () => {
-            let article = { "_id": "article id", "description": "article description" };
-            let currentTab = "facebook";
-            let store = createStore(() => ({
+            const article = { "_id": "article id", "description": "article description" };
+            const currentTab = "facebook";
+            const store = createStore(() => ({
                 "selectedArticle": article,
                 "newsBoardCurrentSourceTab": currentTab
             }), applyMiddleware(thunkMiddleware));
 
-            let bookmarkMock = sandbox.mock(DisplayArticleActions)
+            const bookmarkMock = sandbox.mock(DisplayArticleActions)
                 .expects("bookmarkArticle")
                 .returns({ "type": "" });
 
-            let displayArticle = TestUtils.renderIntoDocument(
+            const displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article}
                         dispatch={anonymousFun}
@@ -241,25 +244,25 @@ describe("DisplayArticle", () => {
                     />
                 </Provider>
             );
-            let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
+            const bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark");
             TestUtils.Simulate.click(bookmarkClick);
 
             bookmarkMock.verify();
         });
 
         it("should dispatch bookmarkArticle when bookmarked is clicked", () => {
-            let article = { "_id": "article id", "description": "article description", "bookmark": true };
-            let currentTab = "facebook";
-            let store = createStore(() => ({
+            const article = { "_id": "article id", "description": "article description", "bookmark": true };
+            const currentTab = "facebook";
+            const store = createStore(() => ({
                 "selectedArticle": article,
                 "newsBoardCurrentSourceTab": currentTab
             }), applyMiddleware(thunkMiddleware));
 
-            let bookmarkMock = sandbox.mock(DisplayArticleActions)
+            const bookmarkMock = sandbox.mock(DisplayArticleActions)
                 .expects("bookmarkArticle")
                 .returns({ "type": "" });
 
-            let displayArticle = TestUtils.renderIntoDocument(
+            const displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article}
                         dispatch={anonymousFun}
@@ -269,7 +272,7 @@ describe("DisplayArticle", () => {
                     />
                 </Provider>
             );
-            let bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
+            const bookmarkClick = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "bookmark active");
             TestUtils.Simulate.click(bookmarkClick);
 
             bookmarkMock.verify();
@@ -295,9 +298,9 @@ describe("DisplayArticle", () => {
                     feedCallback={anonymousFun}
                 />
             );
-            let [mainDOM] = displayArticleDom.props.children;
-            let backButton = mainDOM.props.children;
-            let [arrowIcon, name] = backButton.props.children;
+            const [mainDOM] = displayArticleDom.props.children;
+            const backButton = mainDOM.props.children;
+            const [arrowIcon, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("display-article__header back");
@@ -320,7 +323,7 @@ describe("DisplayArticle", () => {
                 "pubDate": "2017-01-31T06:58:27.000Z",
                 "_id": 123
             };
-            let feedsDOM = { "style": { "display": "none" } };
+            const feedsDOM = { "style": { "display": "none" } };
             displayArticleDom = renderer.render(
                 <DisplayArticle
                     article={feed} dispatch={anonymousFun}
@@ -329,9 +332,9 @@ describe("DisplayArticle", () => {
                     feedsDOM={feedsDOM}
                 />
             );
-            let [mainDOM] = displayArticleDom.props.children;
-            let [backButton] = mainDOM.props.children;
-            let [arrowIcon,, name] = backButton.props.children;
+            const [mainDOM] = displayArticleDom.props.children;
+            const [backButton] = mainDOM.props.children;
+            const [arrowIcon,, name] = backButton.props.children;
 
             expect(mainDOM.type).to.be.equal("header");
             expect(mainDOM.props.className).to.be.equal("display-article__header");
@@ -347,23 +350,23 @@ describe("DisplayArticle", () => {
    /* TODO: unable to mock window getSelection, getRangeAt methods */ //eslint-disable-line
     xdescribe("ToolTip", () => {
         it("should dispatch addToCollection when there is selectedText and click on add To collection option", () => {
-            let article = { "_id": "article id", "description": "article description", "selectText": true };
-            let currentTab = "facebook";
-            let store = createStore(() => ({
+            const article = { "_id": "article id", "description": "article description", "selectText": true };
+            const currentTab = "facebook";
+            const store = createStore(() => ({
                 "selectedArticle": article,
                 "newsBoardCurrentSourceTab": currentTab
             }), applyMiddleware(thunkMiddleware));
-            let displayArticle = TestUtils.renderIntoDocument(
+            const displayArticle = TestUtils.renderIntoDocument(
                 <Provider store = {store}>
                     <DisplayArticle article={article} dispatch={anonymousFun} newsBoardCurrentSourceTab="facebook"/>
                 </Provider>
             );
-            let range = {
+            const range = {
                 "getBoundingClientRect": () => {
                     return { "left": 1, "right": 3, "top": 4 };
                 }
             };
-            let selection = {
+            const selection = {
                 "getRangeAt": () => {
                     return range;
                 }
@@ -375,11 +378,11 @@ describe("DisplayArticle", () => {
             };
             sinon.stub(window, "getSelection").returns("SelectedData");
 
-            let toolTip = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "article__desc");
+            const toolTip = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "article__desc");
 
             TestUtils.Simulate.mouseUp(toolTip);
 
-            let addToCollection = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "icon fa fa-folder-o");
+            const addToCollection = TestUtils.findRenderedDOMComponentWithClass(displayArticle, "icon fa fa-folder-o");
             TestUtils.Simulate.click(addToCollection);
 
         });

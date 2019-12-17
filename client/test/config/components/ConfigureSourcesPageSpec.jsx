@@ -13,7 +13,8 @@ import History from "./../../../src/js/History";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("ConfigureSourcesPage", () => {
-    let ZERO = 0, ONE = 1;
+    const ZERO = 0;
+    const ONE = 1;
     const mainHeaderStrings = {
         "newsBoard": "Scan News",
         "storyBoard": "Write a Story",
@@ -22,7 +23,8 @@ describe("ConfigureSourcesPage", () => {
     const dispatchFun = () => {};
 
     describe("switchSourceTab", () => {
-        let sandbox = null, renderer = null;
+        let sandbox = null;
+        let renderer = null;
         beforeEach("switchSourceTab", () => {
             sandbox = sinon.sandbox.create();
             sandbox.stub(FacebookLogin, "instance").returns({});
@@ -78,7 +80,8 @@ describe("ConfigureSourcesPage", () => {
 
     describe("children", () => {
         let renderer = null;
-        let result = null, sandbox = null;
+        let result = null;
+        let sandbox = null;
 
         beforeEach("children", () => {
             sandbox = sinon.sandbox.create();
@@ -99,7 +102,7 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun}/>);
             result = renderer.getRenderOutput();
-            let configuredPane = findAllWithType(result, ConfiguredPane);
+            const configuredPane = findAllWithType(result, ConfiguredPane);
             expect(configuredPane).to.have.lengthOf(ONE);
         });
 
@@ -108,7 +111,7 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun}/>);
             result = renderer.getRenderOutput();
-            let configurePane = findAllWithType(result, ConfigurePane);
+            const configurePane = findAllWithType(result, ConfigurePane);
             expect(configurePane).to.have.lengthOf(ONE);
         });
 
@@ -117,7 +120,7 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "facebook" }} dispatch={dispatchFun} expireTime={ZERO}/>);
             result = renderer.getRenderOutput();
-            let configuredPane = findAllWithType(result, ConfiguredPane);
+            const configuredPane = findAllWithType(result, ConfiguredPane);
             expect(configuredPane).to.have.lengthOf(ZERO);
         });
 
@@ -127,7 +130,7 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={dispatchFun} twitterAuthenticated={false}/>);
             result = renderer.getRenderOutput();
-            let configuredPane = findAllWithType(result, ConfiguredPane);
+            const configuredPane = findAllWithType(result, ConfiguredPane);
             expect(configuredPane).to.have.lengthOf(ZERO);
         });
 
@@ -136,7 +139,7 @@ describe("ConfigureSourcesPage", () => {
             renderer.render(
                 <ConfigureSourcesPage store={{}} params={{ "sourceType": "twitter" }} dispatch={dispatchFun} twitterAuthenticated={true}/>); //eslint-disable-line react/jsx-boolean-value
             result = renderer.getRenderOutput();
-            let configuredSources = findAllWithType(result, ConfigurePane);
+            const configuredSources = findAllWithType(result, ConfigurePane);
             expect(configuredSources).to.have.lengthOf(ONE);
         });
     });

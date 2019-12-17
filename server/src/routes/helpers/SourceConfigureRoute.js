@@ -37,13 +37,13 @@ export default class SourceConfigureRoute extends Route {
     }
 
     async addConfiguredSource() {
-        let sourceType = sourceTypes[this.type];
+        const sourceType = sourceTypes[this.type];
         if(R.any(StringUtil.isEmptyString)([sourceType, this.authSession])) {
             RouteLogger.instance().warn(`SourceConfigureRoute:: invalid sourceType ${this.type} or authentication failed`);
             this._handleInvalidRequest({ "message": "invalid Source Type" });
         } else {
             try {
-                let status = await SourceConfigRequestHandler.instance().addConfiguredSource(sourceType, this.sources, this.authSession);
+                const status = await SourceConfigRequestHandler.instance().addConfiguredSource(sourceType, this.sources, this.authSession);
                 RouteLogger.instance().debug("SourceConfigureRoute:: successfully added configured source to db");
                 this._handleSuccess(status);
             } catch (error) {

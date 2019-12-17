@@ -9,8 +9,8 @@ export default class DateUtil {
     }
 
     static getUTCDateAndTime(dateString) {
-        let date = new Date(dateString);
-        let dateToISO = isNaN(date.getTime()) ? dateString : date.toISOString();
+        const date = new Date(dateString);
+        const dateToISO = isNaN(date.getTime()) ? dateString : date.toISOString();
         return moment.utc(dateToISO).format("YYYY-MM-DDTHH:mm:ss.SSS") + "Z";
     }
 }

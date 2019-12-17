@@ -7,13 +7,13 @@ import sinon from "sinon";
 describe("UserSession", () => {
     describe("setLastAccessedTime", () => {
         it("should set lastAccessedTime", () => {
-            let sandbox = sinon.sandbox.create();
-            let appSessionStorage = new AppSessionStorage();
+            const sandbox = sinon.sandbox.create();
+            const appSessionStorage = new AppSessionStorage();
             sandbox.stub(AppSessionStorage, "instance").returns(appSessionStorage);
-            let lastAccessedTime = new Date().getTime();
-            let userSession = UserSession.instance();
-            let appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
-            let appSessionStorageGetMock = sandbox.mock(appSessionStorage).expects("getValue");
+            const lastAccessedTime = new Date().getTime();
+            const userSession = UserSession.instance();
+            const appSessionStorageSetMock = sandbox.mock(appSessionStorage).expects("setValue");
+            const appSessionStorageGetMock = sandbox.mock(appSessionStorage).expects("getValue");
             appSessionStorageSetMock.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME, lastAccessedTime);
             appSessionStorageGetMock.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
             userSession.setLastAccessedTime(lastAccessedTime);
@@ -24,15 +24,17 @@ describe("UserSession", () => {
         });
 
         it("should set lastAccessedTime to current time when no parameters passed", () => {
-            let lastAccessedTime = new Date().getTime();
-            let userSession = UserSession.instance();
+            const lastAccessedTime = new Date().getTime();
+            const userSession = UserSession.instance();
             userSession.setLastAccessedTime();
             assert.strictEqual(new Date(userSession.getLastAccessedTime()).getHours(), new Date(lastAccessedTime).getHours());
         });
     });
 
     describe("user activity", () => {
-        let appSessionStorage = null, sandbox = null, appSessionStorageGetStub = null;
+        let appSessionStorage = null;
+        let sandbox = null;
+        let appSessionStorageGetStub = null;
         beforeEach("beforeEach", () => {
             sandbox = sinon.sandbox.create();
             appSessionStorage = new AppSessionStorage();
@@ -46,27 +48,27 @@ describe("UserSession", () => {
 
         describe("isActiveContinuously", () => {
             it("should return the true if active within 9 minutes", () => {
-                let fiveMinute = 5;
-                let lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
-                let userSession = new UserSession();
+                const fiveMinute = 5;
+                const lastAccessedTime = moment().add(fiveMinute, "m").valueOf();
+                const userSession = new UserSession();
                 userSession.sessionTime = 600000;
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), true);
             });
 
             it("should return the false if not active for 8 minutes", () => {
-                let eightMinutes = 8;
-                let lastAccessedTime = moment().subtract(eightMinutes, "m").valueOf();
-                let userSession = new UserSession();
+                const eightMinutes = 8;
+                const lastAccessedTime = moment().subtract(eightMinutes, "m").valueOf();
+                const userSession = new UserSession();
                 userSession.sessionTime = 600000;
                 userSession.lastAccessedTime = lastAccessedTime;
                 assert.strictEqual(userSession.isActiveContinuously(), false);
             });
 
             it("should return the false if not active for more than 8 minutes", () => {
-                let tenMinute = 10;
-                let lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
-                let userSession = new UserSession();
+                const tenMinute = 10;
+                const lastAccessedTime = moment().subtract(tenMinute, "m").valueOf();
+                const userSession = new UserSession();
                 userSession.sessionTime = 600000;
                 appSessionStorageGetStub.withArgs(AppSessionStorage.KEYS.LAST_RENEWED_TIME).returns(lastAccessedTime);
                 assert.strictEqual(userSession.isActiveContinuously(), false);

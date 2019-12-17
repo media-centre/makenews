@@ -4,7 +4,9 @@ import CouchSession from "../src/CouchSession";
 import { assert } from "chai";
 
 describe("TwitterRoutesSpec", () => {
-    let accessToken = null, applicationConfig = null, serverIp = null;
+    let accessToken = null;
+    let applicationConfig = null;
+    let serverIp = null;
     before("TwitterRoutesSpec", (done)=> {
         applicationConfig = new ApplicationConfig();
         serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
@@ -22,7 +24,7 @@ describe("TwitterRoutesSpec", () => {
                 .get("/twitter-request-token?serverCallbackUrl=https://localhost:5000")
                 .set("Cookie", accessToken)
                 .end((err, res) => { //eslint-disable-line handle-callback-err
-                    let response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
+                    const response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
                     assert.deepEqual(res.body, response);
                     if(err) {
                         done();
@@ -38,7 +40,7 @@ describe("TwitterRoutesSpec", () => {
                 .get("/twitter-oauth-callback?oauth_token=token")
                 .set("Cookie", accessToken)
                 .end((err, res) => { //eslint-disable-line handle-callback-err
-                    let response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
+                    const response = { "authenticateUrl": "https://api.twitter.com/oauth/authenticate?oauth_token=" };
                     assert.deepEqual(res.body, response);
                     done();
                 });

@@ -3,6 +3,6 @@
 import Locale from "../../utils/Locale";
 
 export function mainHeaderStrings(state = {}, action = {}) {
-    let appLocaleEn = Locale.applicationStrings();
+    const appLocaleEn = Locale.applicationStrings();
     return appLocaleEn.messages.mainHeaderStrings;
 }

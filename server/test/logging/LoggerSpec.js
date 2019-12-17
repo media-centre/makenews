@@ -10,7 +10,10 @@ describe("Logger", () => {
     const environment = EnvironmentConfig.instance(EnvironmentConfig.files.APPLICATION).environment;
 
     describe("instance", () => {
-        let sandBox = null, JsonStub = null, loggerStub = null, defaultCategoryLogger = null;
+        let sandBox = null;
+        let JsonStub = null;
+        let loggerStub = null;
+        let defaultCategoryLogger = null;
 
         beforeEach("stub getJson", () => {
             sandBox = sinon.sandbox.create();
@@ -32,7 +35,7 @@ describe("Logger", () => {
         });
 
         it("default logger should be returned when instance is called without default logging config ", () => {
-            let myJson = {
+            const myJson = {
             };
             myJson[environment] = {
                 "dir": "../../../dist/logs",
@@ -52,7 +55,7 @@ describe("Logger", () => {
         });
 
         it("category logger should be returned when instance is called with category name", () => {
-            let myJson = {
+            const myJson = {
             };
             myJson[environment] = {
                 "dir": "/var/logs",
@@ -76,7 +79,7 @@ describe("Logger", () => {
             defaultCategoryLogger = sandBox.stub(Logger, "_getDefaultCategoryLogger");
             defaultCategoryLogger.returns(null);
 
-            let logger = new Logger(null, "test3");
+            const logger = new Logger(null, "test3");
             assertFileLogger(logger, "test3.log", "/var/logs", logLevel.LOG_INFO);
         });
 
@@ -99,16 +102,16 @@ describe("Logger", () => {
             assertFileLogger(Logger.customInstance(), "defaultLog.log", defaultDirPath, logLevel.LOG_INFO);
         });
         it("file instance", () => {
-            let options = { "logType": logType.FILE, "filename": "customtest1.log", "level": logLevel.LOG_DEBUG };
+            const options = { "logType": logType.FILE, "filename": "customtest1.log", "level": logLevel.LOG_DEBUG };
             assertFileLogger(Logger.customInstance(options), "customtest1.log", defaultDirPath, logLevel.LOG_DEBUG);
         });
         it("console instance", () => {
-            let options = { "logType": logType.CONSOLE, "level": logLevel.LOG_DEBUG };
+            const options = { "logType": logType.CONSOLE, "level": logLevel.LOG_DEBUG };
             assertConsoleLogger(Logger.customInstance(options), logLevel.LOG_DEBUG);
         });
         it("file and console instance", () => {
-            let options = { "logType": logType.CONSOLE_FILE, "filename": "customtest3.log", "level": logLevel.LOG_ERROR };
-            let logger = Logger.customInstance(options);
+            const options = { "logType": logType.CONSOLE_FILE, "filename": "customtest3.log", "level": logLevel.LOG_ERROR };
+            const logger = Logger.customInstance(options);
             assertFileLogger(logger, "customtest3.log", defaultDirPath, "error");
             assertConsoleLogger(logger, "error");
         });

@@ -5,8 +5,11 @@ import CouchClient from "../src/CouchClient";
 import CryptUtil from "../src/util/CryptUtil";
 
 describe("FetchFeedsRoute", () => {
-    let accessToken = null, applicationConfig = null, serverIp = null;
-    let couchClient = null, sourceDocument = null;
+    let accessToken = null;
+    let applicationConfig = null;
+    let serverIp = null;
+    let couchClient = null;
+    let sourceDocument = null;
 
     before("FetchFeedsRoute", (done) => {
         applicationConfig = new ApplicationConfig();

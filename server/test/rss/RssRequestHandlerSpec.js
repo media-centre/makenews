@@ -15,12 +15,12 @@ describe("Rss Request Handler", () => {
             sandbox.restore();
         });
         it("should return the default URL Document", async() => {
-            let key = "the";
-            let offSet = 0;
-            let rssRequestHandler = RssRequestHandler.instance();
-            let rssMock = new RssClient();
+            const key = "the";
+            const offSet = 0;
+            const rssRequestHandler = RssRequestHandler.instance();
+            const rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            const rssClientMock = sandbox.mock(rssMock).expects("searchURL");
             rssClientMock.withExactArgs(key, offSet).returns(Promise.resolve({
                 "docs": [{
                     "name": "url1 test",
@@ -32,7 +32,7 @@ describe("Rss Request Handler", () => {
                 }]
             }));
             try {
-                let document = await rssRequestHandler.searchUrl(key, offSet);
+                const document = await rssRequestHandler.searchUrl(key, offSet);
                 const zero = 0;
                 assert.strictEqual("url1 test", document.docs[zero].name);
                 rssClientMock.verify();
@@ -42,13 +42,13 @@ describe("Rss Request Handler", () => {
         });
 
         it("should reject with an error if the URL document rejects with an error", async() => {
-            let key = "Error";
-            let offSet = 5;
-            let rssMock = new RssClient();
+            const key = "Error";
+            const offSet = 5;
+            const rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
-            let rssClientMock = sandbox.mock(rssMock).expects("searchURL");
+            const rssClientMock = sandbox.mock(rssMock).expects("searchURL");
             rssClientMock.withExactArgs(key, offSet).returns(Promise.reject("No selector found"));
-            let rssRequestHandler = RssRequestHandler.instance();
+            const rssRequestHandler = RssRequestHandler.instance();
             try {
                 await rssRequestHandler.searchUrl(key, offSet);
                 assert.fail();
@@ -60,7 +60,10 @@ describe("Rss Request Handler", () => {
     });
 
     describe("fetchBatchRssFeedsRequest", ()=> {
-        let rssRequestHandler = null, rssClient = null, rssClientMock = null, sandbox = null;
+        let rssRequestHandler = null;
+        let rssClient = null;
+        let rssClientMock = null;
+        let sandbox = null;
         beforeEach("fetchBatchRssFeedsRequest", () => {
             sandbox = sinon.sandbox.create();
             rssRequestHandler = new RssRequestHandler();
@@ -73,8 +76,8 @@ describe("Rss Request Handler", () => {
         });
 
         it("should fetch rss feed for given url", async() => {
-            let url = "www.example.com";
-            let response = {
+            const url = "www.example.com";
+            const response = {
                 "docs":
                 [{
                     "_id": "test-guid-1",
@@ -94,10 +97,10 @@ describe("Rss Request Handler", () => {
                     "since": 123412312
                 }
             };
-            let rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
+            const rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
             rssClientPostMock.withArgs(url).returns(response);
 
-            let feeds = await rssRequestHandler.fetchBatchRssFeedsRequest(url);
+            const feeds = await rssRequestHandler.fetchBatchRssFeedsRequest(url);
 
             rssClientMock.verify();
             rssClientPostMock.verify();
@@ -106,8 +109,8 @@ describe("Rss Request Handler", () => {
         });
 
         it("should return error rss feed for given url", () => {
-            let url = "www.error.com";
-            let rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
+            const url = "www.error.com";
+            const rssClientPostMock = sandbox.mock(rssClient).expects("getRssData");
             rssClientPostMock.withArgs(url).returns(Promise.reject("error"));
             return rssRequestHandler.fetchBatchRssFeedsRequest(url, "auth_token").catch((error) => {
                 assert.strictEqual("error", error);
@@ -128,15 +131,15 @@ describe("Rss Request Handler", () => {
         });
 
         it("should return name and url for correct URL Document", async() => {
-            let url = "http://www.newsclick.in";
-            let name = "NewsClick";
-            let accessToken = "tes_token";
-            let rssMock = new RssClient();
+            const url = "http://www.newsclick.in";
+            const name = "NewsClick";
+            const accessToken = "tes_token";
+            const rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.resolve({ name, url }));
-            let rssRequestHandler = new RssRequestHandler();
+            const rssRequestHandler = new RssRequestHandler();
             try {
-                let response = await rssRequestHandler.addURL(url, accessToken);
+                const response = await rssRequestHandler.addURL(url, accessToken);
                 assert.deepEqual({ name, url }, response);
             }catch (error) {
                 assert.fail(error);
@@ -144,12 +147,12 @@ describe("Rss Request Handler", () => {
         });
 
         it("should return Error If url is invalid", async() => {
-            let accessToken = "test_token";
-            let url = "http://www.newsclick.in";
-            let rssMock = new RssClient();
+            const accessToken = "test_token";
+            const url = "http://www.newsclick.in";
+            const rssMock = new RssClient();
             sandbox.mock(RssClient).expects("instance").returns(rssMock);
             sandbox.mock(rssMock).expects("addURL").withArgs(url, accessToken).returns(Promise.reject("unexpected response from the db"));
-            let rssRequestHandler = new RssRequestHandler();
+            const rssRequestHandler = new RssRequestHandler();
             try {
                 await rssRequestHandler.addURL(url, accessToken);
                 assert.fail();

@@ -12,7 +12,7 @@ export default class BookmarkRoute extends Route {
 
     async bookmarkFeed() {
         try {
-            let response = await bookmarkTheDocument(this.authSession, this.docId, this.status);
+            const response = await bookmarkTheDocument(this.authSession, this.docId, this.status);
             RouteLogger.instance().debug(`BookmarkRoute:: successfully added bookmark field for the document ${this.docId}`);
             this._handleSuccess(response);
         } catch(error) {

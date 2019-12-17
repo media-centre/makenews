@@ -12,10 +12,14 @@ describe("FeedsRequestHandler", () => {
     const LIMIT_VALUE = 24;
 
     describe("fetch feeds", () => {
-        let feed = null, authSession = null, feedsRequestHandler = null;
+        let feed = null;
+        let authSession = null;
+        let feedsRequestHandler = null;
         let couchClientInstanceMock = null;
-        let dbName = "dbName", body = null;
-        let offset = null, sourceType = "web";
+        const dbName = "dbName";
+        let body = null;
+        let offset = null;
+        const sourceType = "web";
         let sandbox = null;
 
         beforeEach("fetch feeds", () => {
@@ -75,15 +79,15 @@ describe("FeedsRequestHandler", () => {
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(body).returns(Promise.resolve(feed));
-            let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset);
+            const expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset);
 
             assert.deepEqual(expectedFeeds, feed);
         });
 
 
         it("should fetch feeds from the db for an array of filtered sources", async() => {
-            var sourceIds = ["A7AE6BD7-0B65-01EF-AE07-DAE4727754E3"];
-            let query = {
+            const sourceIds = ["A7AE6BD7-0B65-01EF-AE07-DAE4727754E3"];
+            const query = {
                 "selector": {
                     "docType": {
                         "$eq": "feed"
@@ -119,13 +123,13 @@ describe("FeedsRequestHandler", () => {
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(query).returns(Promise.resolve(feed));
-            let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, { "sources": { "web": sourceIds } });
+            const expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, { "sources": { "web": sourceIds } });
 
             assert.deepEqual(expectedFeeds, feed);
         });
 
         it("should fetch feeds from the db for source type", async() => {
-            let query = {
+            const query = {
                 "selector": {
                     "docType": {
                         "$eq": "feed"
@@ -159,7 +163,7 @@ describe("FeedsRequestHandler", () => {
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments")
                 .withArgs(query).returns(Promise.resolve(feed));
-            let expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, { "sources": { "web": [] } });
+            const expectedFeeds = await feedsRequestHandler.fetchFeeds(authSession, offset, { "sources": { "web": [] } });
 
             assert.deepEqual(expectedFeeds, feed);
         });
@@ -168,8 +172,11 @@ describe("FeedsRequestHandler", () => {
     describe("searchFeeds", () => {
         let sandbox = null;
         let feedRequestHandler = null;
-        const authSession = "AuthSession", dbName = "dbName";
-        let sourceType = "web", searchKey = "test", skip = 5;
+        const authSession = "AuthSession";
+        const dbName = "dbName";
+        let sourceType = "web";
+        const searchKey = "test";
+        const skip = 5;
         let response = {
             "q": "+sourceType:web +(title:test* description:test*)",
             "fetch_duration": 0,

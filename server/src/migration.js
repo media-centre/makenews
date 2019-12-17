@@ -2,23 +2,23 @@
 import Migration from "./migration/Migration";
 import ApplicationConfig from "./config/ApplicationConfig";
 import AdminDbClient from "../src/db/AdminDbClient";
-var argv = require("yargs").argv;
+const argv = require("yargs").argv;
 
 try {
 
     console.log("usage:: node dist/server/src/migration.js [--admin_user_name='username' --admin_password='password']");
 
-    let appConfig = new ApplicationConfig();
+    const appConfig = new ApplicationConfig();
 
-    let adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().username;
-    let adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().password;
-    let adminDb = appConfig.adminDetails().db;
+    const adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().username;
+    const adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().password;
+    const adminDb = appConfig.adminDetails().db;
 
     console.log("Migration Started. Check the logs for the progress..");
 
     console.log("started admin migration");
     AdminDbClient.instance(adminUserName, adminPassword, adminDb).then(adminDbClient => {
-        let migrationInstance = Migration.instance(adminDb, adminDbClient.accessToken, true);
+        const migrationInstance = Migration.instance(adminDb, adminDbClient.accessToken, true);
         migrationInstance.start().then(() => {
             console.log("completed admin migration");
         }).catch(error => {

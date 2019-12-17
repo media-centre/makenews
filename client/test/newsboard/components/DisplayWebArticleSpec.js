@@ -10,8 +10,11 @@ import sinon from "sinon";
 import * as DisplayArticleActions from "./../../../src/js/newsboard/actions/DisplayArticleActions";
 
 describe("DisplayWebArticle", () => {
-    let displayWebMock = null, result = null;
-    let sandbox = null, store = null, currentArticle = null;
+    let displayWebMock = null;
+    let result = null;
+    let sandbox = null;
+    let store = null;
+    let currentArticle = null;
     beforeEach("DisplayWebArticle", () => {
         sandbox = sinon.sandbox.create();
 
@@ -40,7 +43,7 @@ describe("DisplayWebArticle", () => {
             </Provider>
         );
 
-        let renderedDom = ReactDOM.findDOMNode(result);
+        const renderedDom = ReactDOM.findDOMNode(result);
         expect(renderedDom.className).to.equal("article__desc");
     });
 
@@ -58,7 +61,7 @@ describe("DisplayWebArticle", () => {
     });
 
     xit("should dispatch displayWebArticle after changing the selectedArticle", () => {
-        let node = document.createElement("div");
+        const node = document.createElement("div");
         displayWebMock = sandbox.mock(DisplayArticleActions).expects("displayWebArticle")
             .twice().returns({ "type": null });
 

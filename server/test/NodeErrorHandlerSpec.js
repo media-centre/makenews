@@ -26,7 +26,7 @@ describe("NodeErrorHandler", () => {
         });
 
         it("should return false if error object is empty", () => {
-            let error = null;
+            const error = null;
             expect(NodeErrorHandler.errored(error)).to.be.not.ok;
         });
 
@@ -38,7 +38,7 @@ describe("NodeErrorHandler", () => {
         });
 
         it("should return true if error object is empty", () => {
-            let error = null;
+            const error = null;
             expect(NodeErrorHandler.noError(error)).to.be.ok;
         });
     });

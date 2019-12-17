@@ -20,7 +20,7 @@ export default class ConfirmPopup extends Component {
     }
 
     render() {
-        let confirmMessages = Locale.applicationStrings().messages.confirmPopup;
+        const confirmMessages = Locale.applicationStrings().messages.confirmPopup;
         return (
             <div className="confirm-mask mask">
                 <div className="confirm-popup bottom-box-shadow">

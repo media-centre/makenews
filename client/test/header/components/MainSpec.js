@@ -7,7 +7,11 @@ import TestUtils from "react-addons-test-utils";
 import { findAllWithType } from "react-shallow-testutils";
 
 describe("MainHeader", () => {
-    let result = null, currentHeaderTab = null, mainHeaderStrings = null, store = null, childElement = null;
+    let result = null;
+    let currentHeaderTab = null;
+    let mainHeaderStrings = null;
+    let store = null;
+    let childElement = null;
     const anonymousFun = () => {};
 
     beforeEach("MainHeader", () => {
@@ -33,18 +37,18 @@ describe("MainHeader", () => {
             }
         };
         childElement = <div>{"main-page children"}</div>;
-        let renderer = TestUtils.createRenderer();
+        const renderer = TestUtils.createRenderer();
         result = renderer.render(<Main store= {store} children={childElement} mainHeaderStrings={mainHeaderStrings} currentHeaderTab={"Scan News"} dispatch={anonymousFun}/>);
     });
 
     it("should have Header element", () => {
-        let renderedSources = findAllWithType(result, Header);
-        let ONE = 1;
+        const renderedSources = findAllWithType(result, Header);
+        const ONE = 1;
         expect(renderedSources).to.have.lengthOf(ONE);
     });
     it("should have logo ", () => {
-        let div = result.props.children[0];
-        let image = div.props.children[0].props;
+        const div = result.props.children[0];
+        const image = div.props.children[0].props;
         expect(div.type).to.equals("div");
         expect(div.props.className).to.equals("header");
         expect(image.className).to.equals("header__logo");

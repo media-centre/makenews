@@ -5,7 +5,7 @@ import sinon from "sinon";
 import * as FetchClient from "../src/util/FetchClient";
 
 describe("LuceneClient", () => {
-    let sandbox = sinon.sandbox.create();
+    const sandbox = sinon.sandbox.create();
 
     afterEach("LuceneClient", () => {
         sandbox.restore();
@@ -13,11 +13,11 @@ describe("LuceneClient", () => {
 
     describe("searchDocuments", () => {
         it("should fetch the documents", async() => {
-            let query = {
+            const query = {
                 "q": "name:my"
             };
 
-            let expectedDocs = {
+            const expectedDocs = {
                 "q": "name:my",
                 "fetch_duration": 15,
                 "total_rows": 2,
@@ -36,10 +36,10 @@ describe("LuceneClient", () => {
                 }]
             };
             sandbox.stub(ApplicationConfig, "instance").returns({ "searchEngineUrl": () => "http://db.url" });
-            let url = "http://db.url/testDb/_design/test/myView";
-            let fetchClientMock = sandbox.mock(FetchClient).expects("getRequest").withArgs(url)
+            const url = "http://db.url/testDb/_design/test/myView";
+            const fetchClientMock = sandbox.mock(FetchClient).expects("getRequest").withArgs(url)
                 .returns(Promise.resolve(expectedDocs));
-            let resultDocs = await searchDocuments("testDb", "_design/test/myView", query);
+            const resultDocs = await searchDocuments("testDb", "_design/test/myView", query);
             fetchClientMock.verify();
             assert.deepEqual(resultDocs, expectedDocs);
         });

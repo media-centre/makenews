@@ -15,18 +15,18 @@ describe("GetStoriesRoute", () => {
         });
 
         it("should return array of documents", async() => {
-            let documents = { "docs": {
+            const documents = { "docs": {
                 "title": "title2",
                 "_id": "1234",
                 "rev": "1234"
             } };
             sandbox.mock(StoryRequestHandler).expects("getStories").returns(Promise.resolve(documents));
-            let addStory = new GetStoriesRoute({
+            const addStory = new GetStoriesRoute({
                 "cookies": {
                     "AuthSession": "test_session"
                 }
             }, {});
-            let result = await addStory.handle();
+            const result = await addStory.handle();
             assert.deepEqual(documents, result);
         });
     });

@@ -33,7 +33,7 @@ export function fetchFacebookSources(keyword, type, sourceType, props = {}) {
             const sources = getState().sourceResults.data;
             const response = await _getFbSources(keyword, type, sources, props);
             if (response.data.length) {
-                let configuredSources = getState().configuredSources[sourceType.toLowerCase()];
+                const configuredSources = getState().configuredSources[sourceType.toLowerCase()];
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, response.data, configuredSources);
                 dispatch(facebookSourcesReceived(response, keyword, sourceType));
@@ -49,7 +49,7 @@ export function fetchFacebookSources(keyword, type, sourceType, props = {}) {
 async function _getFbSources(keyword, type, sources, props) {
     let response = { "data": [] };
     if (keyword) {
-        let ajaxClient = AjaxClient.instance("/facebook-sources", false);
+        const ajaxClient = AjaxClient.instance("/facebook-sources", false);
         const headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"

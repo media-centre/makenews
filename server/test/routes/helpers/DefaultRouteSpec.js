@@ -9,7 +9,9 @@ import { expect } from "chai";
 
 
 describe("DefaultRoute", () => {
-    let request = null, response = null, next = null;
+    let request = null;
+    let response = null;
+    let next = null;
     beforeEach("DefaultRoute", () => {
         request = {
             "cookies": {
@@ -69,7 +71,8 @@ describe("DefaultRoute", () => {
     });
 
     describe("handle", () => {
-        let couchSessionStub = null, sandbox = null;
+        let couchSessionStub = null;
+        let sandbox = null;
 
         beforeEach("handle", () => {
             sandbox = sinon.sandbox.create();
@@ -81,15 +84,15 @@ describe("DefaultRoute", () => {
         });
 
         it("should proceed to nextSpy if the url is in whiteList", () => {
-            let nextSpy = sinon.spy();
+            const nextSpy = sinon.spy();
             new DefaultRoute(request, response, nextSpy).handle();
             expect(nextSpy.called).to.be.ok;
         });
 
         it("should go through authentication if the url is not in whiteList", () => {
             request.originalUrl = "/test_url";
-            let nextSpy = sinon.spy();
-            let promise = new Promise((resolve) => {
+            const nextSpy = sinon.spy();
+            const promise = new Promise((resolve) => {
                 resolve("test_user");
             });
             couchSessionStub.withArgs(request.cookies.AuthSession).returns(promise);
@@ -99,14 +102,14 @@ describe("DefaultRoute", () => {
 
         it("should raise authorization error if the token is not valid", () => {
             request.originalUrl = "/test_url";
-            let nextSpy = sinon.spy();
+            const nextSpy = sinon.spy();
             couchSessionStub.withArgs(request.cookies.AuthSession).returns(Promise.reject(""));
             new DefaultRoute(request, response, nextSpy).handle();
 
         });
 
         it("should raise authorization error if there is no token in request", () => {
-            let nextSpy = sinon.spy();
+            const nextSpy = sinon.spy();
             request = {
                 "cookies": {},
                 "originalUrl": "test_url"

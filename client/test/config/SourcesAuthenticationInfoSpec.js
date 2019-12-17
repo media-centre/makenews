@@ -29,7 +29,7 @@ describe("SourcesAuthenticationInfo", () => {
     });
 
     it("should return the default state when there is no action type", () => {
-        let response = sourcesAuthenticationInfo({}, {});
+        const response = sourcesAuthenticationInfo({}, {});
         assert.deepEqual(response, {});
     });
 });

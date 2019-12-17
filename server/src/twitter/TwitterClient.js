@@ -7,7 +7,9 @@ import DateUtils from "../util/DateUtil";
 import { maxFeedsPerRequest } from "./../util/Constants";
 import R from "ramda"; //eslint-disable-line id-length
 
-export const searchApi = "/search/tweets.json", userApi = "/statuses/user_timeline.json", FEEDS_COUNT = 100;
+export const searchApi = "/search/tweets.json";
+const userApi = "/statuses/user_timeline.json";
+const FEEDS_COUNT = 100;
 const twitterTypes = { "TAG": "tag", "USER": "user" };
 export default class TwitterClient {
 
@@ -46,7 +48,7 @@ export default class TwitterClient {
     }
 
     async recursivelyFetchTweets(url, oauth, tokenInfo, twitterMaxFeedsLimit, feeds = []) {
-        let feedsData = { "docs": feeds };
+        const feedsData = { "docs": feeds };
         try {
             const tweets = await this.requestTweets(url, oauth, tokenInfo);
             const feedsAccumulator = feeds.concat(tweets);
@@ -76,16 +78,16 @@ export default class TwitterClient {
     }
 
     async getAccessTokenAndSecret(userName) {
-        let tokenDocumentId = userName + "_twitterToken";
+        const tokenDocumentId = userName + "_twitterToken";
         const adminDetails = ApplicationConfig.instance().adminDetails();
         try {
-            let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
-            let fetchedDocument = await dbInstance.getDocument(tokenDocumentId);
+            const dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+            const fetchedDocument = await dbInstance.getDocument(tokenDocumentId);
             TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter access token for user %s.", userName);
             return ([fetchedDocument.oauthAccessToken, fetchedDocument.oauthAccessTokenSecret]);
         } catch (error) {
             TwitterClient.logger().error("TwitterClient:: access token not found for user %s.", userName);
-            let err = "Not authenticated with twitter";
+            const err = "Not authenticated with twitter";
             throw err;
         }
     }
@@ -95,7 +97,7 @@ export default class TwitterClient {
     }
 
     _getTwitterTimestampFormat(timestamp) {
-        let dateObj = new Date(timestamp);
+        const dateObj = new Date(timestamp);
         return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate(); //eslint-disable-line no-magic-numbers
     }
 
@@ -115,12 +117,12 @@ export default class TwitterClient {
     }
 
     async fetchHandles(userName, keyword, page = 1, preFirstId) { //eslint-disable-line no-magic-numbers
-        let handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}&count=12`;
+        const handlesWithKeyApi = `${this._baseUrl()}/users/search.json?q=${keyword}&page=${page}&count=12`;
         const parsedData = await this._getTwitterData(handlesWithKeyApi, userName);
 
         if (parsedData.length && preFirstId !== parsedData[0].id_str) { //eslint-disable-line no-magic-numbers
-            let parseData = TwitterParser.instance().parseHandle(parsedData);
-            let resultData = {
+            const parseData = TwitterParser.instance().parseHandle(parsedData);
+            const resultData = {
                 "docs": parseData,
                 "paging": { "page": page + 1 }, //eslint-disable-line no-magic-numbers
                 "twitterPreFirstId": parseData[0].id //eslint-disable-line no-magic-numbers

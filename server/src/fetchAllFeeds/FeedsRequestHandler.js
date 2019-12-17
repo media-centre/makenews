@@ -11,8 +11,8 @@ export default class FeedsRequestHandler {
     }
 
     async fetchFeeds(authSession, offset, filter) {
-        let couchClient = CouchClient.instance(authSession);
-        let selector = {
+        const couchClient = CouchClient.instance(authSession);
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "feed"
@@ -38,7 +38,7 @@ export default class FeedsRequestHandler {
             "skip": offset
         };
         if(filter && filter.sources) {
-            let sourceFilters = [];
+            const sourceFilters = [];
             this.prepareSourceFilter("web", filter.sources, sourceFilters);
             this.prepareSourceFilter("facebook", filter.sources, sourceFilters);
             this.prepareSourceFilter("twitter", filter.sources, sourceFilters);
@@ -50,7 +50,7 @@ export default class FeedsRequestHandler {
     prepareSourceFilter(sourceType, sources = {}, sourceFilters) {
         const sourceIds = sources[sourceType];
         if(sourceIds) {
-            let sourceFilter = { "sourceType": { "$eq": sourceType } };
+            const sourceFilter = { "sourceType": { "$eq": sourceType } };
             const [sourceId] = sourceIds;
             if(sourceId) {
                 sourceFilter.sourceId = { "$in": sourceIds };
@@ -83,7 +83,7 @@ export default class FeedsRequestHandler {
             const dbName = userDetails.getUser(authSession).dbName;
             const response = await searchDocuments(dbName, "_design/feedSearch/by_document", query);
 
-            let result = {};
+            const result = {};
             result.docs = response.rows.reduce((acc, row) => {
                 if (sourceType === NEWSBOARD_SOURCE_TYPES.bookmark || !row.doc.sourceDeleted) {
                     acc.push(row.doc);

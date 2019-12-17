@@ -5,7 +5,8 @@ import sinon from "sinon";
 
 describe("DeleteCollectionRoute", () => {
     describe("validate", () => {
-        const collection = "bsjzueer1_1jshguejsnmgjeu", authSession = "test_token";
+        const collection = "bsjzueer1_1jshguejsnmgjeu";
+        const authSession = "test_token";
         it("should return error message of missing params if collection Name is empty", () => {
             const request = {
                 "cookies": { "AuthSession": authSession },

@@ -22,7 +22,8 @@ describe("AdminDbClient", () => {
 
     describe("instance", () => {
         it("if admin session exists return existing couchClient", (done) => {
-            let obj = { "instance": "test" }, userName = "test";
+            const obj = { "instance": "test" };
+            const userName = "test";
             sandbox.stub(AdminDbClient, "getDbInstance").withArgs(userName).returns(obj);
             sandbox.stub(AdminDbClient, "isSessionExpired").withArgs(userName).returns(false);
             AdminDbClient.instance(userName).then((response) => {
@@ -54,9 +55,9 @@ describe("AdminDbClient", () => {
 
     describe("createUser", () => {
         it("should call put with _users/user", () => {
-            let adminDbClient = new AdminDbClient("admin", "token1");
-            let putMock = sandbox.mock(adminDbClient).expects("put");
-            let body = { "_id": "org.couchdb.user:test", "name": "test", "roles": [], "type": "user", "password": "password", "generated": true };
+            const adminDbClient = new AdminDbClient("admin", "token1");
+            const putMock = sandbox.mock(adminDbClient).expects("put");
+            const body = { "_id": "org.couchdb.user:test", "name": "test", "roles": [], "type": "user", "password": "password", "generated": true };
             putMock.withArgs("/_users/org.couchdb.user:test", body);
             adminDbClient.createUser("test", "password");
             putMock.verify();
@@ -65,8 +66,8 @@ describe("AdminDbClient", () => {
 
     describe("createDb", () => {
         it("should call put with /dbName", () => {
-            let adminDbClient = new AdminDbClient("admin", "token1");
-            let putMock = sandbox.mock(adminDbClient).expects("put");
+            const adminDbClient = new AdminDbClient("admin", "token1");
+            const putMock = sandbox.mock(adminDbClient).expects("put");
             putMock.withArgs("/testdb");
             adminDbClient.createDb("testdb");
             putMock.verify();
@@ -75,9 +76,9 @@ describe("AdminDbClient", () => {
 
     describe("setPermissions", () => {
         it("should call put with ", () => {
-            let adminDbClient = new AdminDbClient("admin", "token1");
-            let putMock = sandbox.mock(adminDbClient).expects("put");
-            let body = { "admins": { "names": [], "roles": [] }, "members": { "names": ["test"], "roles": [] } };
+            const adminDbClient = new AdminDbClient("admin", "token1");
+            const putMock = sandbox.mock(adminDbClient).expects("put");
+            const body = { "admins": { "names": [], "roles": [] }, "members": { "names": ["test"], "roles": [] } };
             putMock.withArgs("/testdb/_security", body);
             adminDbClient.setPermissions("test", "testdb");
             putMock.verify();

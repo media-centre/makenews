@@ -13,8 +13,10 @@ import Locale from "./../../../src/js/utils/Locale";
 
 describe("EditStory", () => {
 
-    let renderer = null, sandbox = null, renderedOutput = null,
-        story = { "_id": "id", "_rev": "rev", "title": "title", "body": "body" };
+    let renderer = null;
+    let sandbox = null;
+    let renderedOutput = null;
+    const story = { "_id": "id", "_rev": "rev", "title": "title", "body": "body" };
     const anonymousFun = () => {};
 
     beforeEach("EditStory", () => {
@@ -58,16 +60,16 @@ describe("EditStory", () => {
     });
 
     it("should have div with editor-container with three children", () => {
-        let [editor] = renderedOutput.props.children;
+        const [editor] = renderedOutput.props.children;
 
         assert.equal(editor.props.className, "editor-container");
         assert.equal(renderedOutput.props.children.length, 3); //eslint-disable-line no-magic-numbers
     });
 
     it("should have button element with back as class", () => {
-        let [editor] = renderedOutput.props.children;
-        let [toolbar] = editor.props.children;
-        let [button] = toolbar.props.children;
+        const [editor] = renderedOutput.props.children;
+        const [toolbar] = editor.props.children;
+        const [button] = toolbar.props.children;
 
         assert.equal(toolbar.props.className, "editor-toolbar");
         assert.equal(button.type, "button");
@@ -76,9 +78,9 @@ describe("EditStory", () => {
     });
 
     it("should have button element with save as class", () => {
-        let [editor] = renderedOutput.props.children;
-        let [toolbar] = editor.props.children;
-        let [, , button] = toolbar.props.children;
+        const [editor] = renderedOutput.props.children;
+        const [toolbar] = editor.props.children;
+        const [, , button] = toolbar.props.children;
 
         assert.equal(button.type, "button");
         assert.equal(button.ref, "saveButton");
@@ -87,8 +89,8 @@ describe("EditStory", () => {
     });
 
     it("should have input element with story-title as class", () => {
-        let [editor] = renderedOutput.props.children;
-        let [, inputContainer] = editor.props.children;
+        const [editor] = renderedOutput.props.children;
+        const [, inputContainer] = editor.props.children;
         const inputElement = inputContainer.props.children;
 
         assert.equal(inputContainer.props.className, "title-bar");
@@ -98,7 +100,7 @@ describe("EditStory", () => {
     });
 
     it("should have export icon", () => {
-        let source = findWithClass(renderedOutput, "fa fa-share export-icon");
+        const source = findWithClass(renderedOutput, "fa fa-share export-icon");
 
         assert.isDefined(source);
     });
@@ -128,14 +130,14 @@ describe("EditStory", () => {
     });
 
     it("should have FeedContainer component", () => {
-        let source = findAllWithType(renderedOutput, FeedContainer);
-        let [feedContainer] = source;
+        const source = findAllWithType(renderedOutput, FeedContainer);
+        const [feedContainer] = source;
         assert.isDefined(feedContainer);
     });
 
     it("should have tabs component", () => {
-        let source = findAllWithType(renderedOutput, NewsBoardTabs);
-        let [tabs] = source;
+        const source = findAllWithType(renderedOutput, NewsBoardTabs);
+        const [tabs] = source;
         assert.isDefined(tabs);
     });
 

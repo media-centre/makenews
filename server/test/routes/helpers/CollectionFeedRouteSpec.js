@@ -5,7 +5,9 @@ import sinon from "sinon";
 
 describe("CollectionFeedsRoute", () => {
     describe("validate", () => {
-        const offset = 0, collection = "bsjzueer1_1jshguejsnmgjeu", authSession = "test_token";
+        const offset = 0;
+        const collection = "bsjzueer1_1jshguejsnmgjeu";
+        const authSession = "test_token";
         it("should return error message of missing params if collection Name  is empty", () => {
             const request = {
                 "cookies": { "AuthSession": authSession },
@@ -35,7 +37,8 @@ describe("CollectionFeedsRoute", () => {
 
     describe("handle", () => {
         let sandbox = null;
-        const authSession = "test_token", offset = 0;
+        const authSession = "test_token";
+        const offset = 0;
 
         beforeEach("handle", () => {
             sandbox = sinon.sandbox.create();

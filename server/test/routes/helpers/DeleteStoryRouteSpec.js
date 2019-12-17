@@ -6,7 +6,7 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("DeleteStoryRoute", () => {
-    let sandbox = sinon.sandbox.create();
+    const sandbox = sinon.sandbox.create();
 
     beforeEach("DeleteStoryRoute", () => {
         sandbox.stub(RouteLogger, "instance").returns(LogTestHelper.instance());
@@ -17,7 +17,7 @@ describe("DeleteStoryRoute", () => {
     });
 
     it("should validate id", async() => {
-        let result = await new DeleteStoryRoute({
+        const result = await new DeleteStoryRoute({
             "body": {
                 "id": "id_1"
             },
@@ -30,7 +30,7 @@ describe("DeleteStoryRoute", () => {
     });
 
     it("should validate id and give a message if id is not there", async() => {
-        let result = await new DeleteStoryRoute({
+        const result = await new DeleteStoryRoute({
             "body": { },
             "cookies": {
                 "AuthSession": "test_session"
@@ -41,7 +41,8 @@ describe("DeleteStoryRoute", () => {
     });
 
     it("should call deleteStory", async() => {
-        const id = "id_1", authSession = "test_session";
+        const id = "id_1";
+        const authSession = "test_session";
         const couchClientInstance = new CouchClient(authSession, "db name");
         const saveDocumentMock = sandbox.mock(couchClientInstance)
             .expects("deleteDocument")
@@ -49,7 +50,7 @@ describe("DeleteStoryRoute", () => {
             .returns(Promise.resolve({ "ok": true }));
         sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClientInstance);
 
-        let result = await new DeleteStoryRoute({
+        const result = await new DeleteStoryRoute({
             "body": {
                 id
             },

@@ -8,7 +8,7 @@ export default class CryptUtil {
             throw new Error("algorithm or key or digest can not be empty");
         }
 
-        let appSecretProof = crypto.createHmac(algorithm, key);
+        const appSecretProof = crypto.createHmac(algorithm, key);
         appSecretProof.setEncoding(digest);
         if(data) {
             appSecretProof.write(data);

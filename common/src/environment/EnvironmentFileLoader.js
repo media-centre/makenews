@@ -12,8 +12,8 @@ export default class EnvironmentFileLoader {
         if(this.config && this.config[fullPath]) {
             return this.config[fullPath];
         }
-        let environment = environmentParam || process.env.NODE_ENV || "development";
-        let environmentConfigJson = JSON.parse(fs.readFileSync(fullPath, "utf8"));
+        const environment = environmentParam || process.env.NODE_ENV || "development";
+        const environmentConfigJson = JSON.parse(fs.readFileSync(fullPath, "utf8"));
         this.config = this.config || {};
         this.config[fullPath] = new EnvironmentReader(environmentConfigJson, environment);
         return this.config[fullPath];

@@ -46,7 +46,7 @@ class ConfiguredPane extends Component {
     }
 
     _searchInSources() {
-        let value = this.refs.configSourcesSearch.refs.input.value;
+        const value = this.refs.configSourcesSearch.refs.input.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 

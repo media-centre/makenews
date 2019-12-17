@@ -11,7 +11,7 @@ export default class CouchClient {
     }
 
     async getUserName() {
-        let response = await this.get("/_session");
+        const response = await this.get("/_session");
         return response.userCtx.name;
     }
 
@@ -25,7 +25,7 @@ export default class CouchClient {
         if(dbName) {
             this.dbName = dbName;
         } else if(accessToken) {
-            let userInfo = userDetails.getUser(accessToken);
+            const userInfo = userDetails.getUser(accessToken);
             if(userInfo) {
                 this.dbName = userInfo.dbName;
             }
@@ -67,7 +67,7 @@ export default class CouchClient {
     async deleteDocument(documentId, revision) {
         let rev = revision;
         if(!rev) {
-            let doc = await this.getDocument(documentId);
+            const doc = await this.getDocument(documentId);
             rev = doc._rev;
         }
         const url = `${this.dbUrl}/${this.dbName}/${documentId}?rev=${rev}`;
@@ -163,7 +163,7 @@ export default class CouchClient {
             (error, response) => {
                 if (NodeErrorHandler.noError(error)) {
                     if (response.statusCode === HttpResponseHandler.codes.OK) {
-                        let userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
+                        const userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
                         CouchClient.logger().debug("CouchClient:: successful response from database.");
                         resolve(userDbs);
                     } else {

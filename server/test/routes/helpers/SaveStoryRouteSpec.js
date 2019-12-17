@@ -50,13 +50,13 @@ describe("SaveStoryRoute", () => {
 
     describe("handle", () => {
         it("should return success response for add story", async() => {
-            let successObject = {
+            const successObject = {
                 "ok": true,
                 "_id": "1234",
                 "rev": "1234"
             };
             sandbox.mock(storyRequestHandler).expects("saveStory").returns(Promise.resolve(successObject));
-            let result = await new SaveStoryRoute({
+            const result = await new SaveStoryRoute({
                 "body": {
                     "title": "title1"
                 },
@@ -68,8 +68,8 @@ describe("SaveStoryRoute", () => {
         });
 
         it("should throw an error if the add story rejects with an error", async() => {
-            let mockobj = sandbox.mock(storyRequestHandler).expects("saveStory").returns(Promise.reject("Unable to add the story"));
-            let saveStory = new SaveStoryRoute({
+            const mockobj = sandbox.mock(storyRequestHandler).expects("saveStory").returns(Promise.reject("Unable to add the story"));
+            const saveStory = new SaveStoryRoute({
                 "body": {
                     "title": "title1"
                 },
@@ -86,8 +86,8 @@ describe("SaveStoryRoute", () => {
         });
 
         it("should throw an error if story title already exists", async() => {
-            let mockobj = sandbox.mock(storyRequestHandler).expects("saveStory").returns(Promise.reject("Story title already exist"));
-            let saveStory = new SaveStoryRoute({
+            const mockobj = sandbox.mock(storyRequestHandler).expects("saveStory").returns(Promise.reject("Story title already exist"));
+            const saveStory = new SaveStoryRoute({
                 "body": {
                     "title": "title1"
                 },

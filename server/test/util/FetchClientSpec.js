@@ -7,24 +7,25 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 describe("FetchClient", () => {
     describe("getRequest", () => {
         it("should call get and get the response if status 200", async() => {
-            let url = "http://mytest.com";
-            let params = { "q": "key" };
-            let expectedResponse = {
+            const url = "http://mytest.com";
+            const params = { "q": "key" };
+            const expectedResponse = {
                 "data": [{ "id": 1, "url": "http://test.com" }]
             };
             nock(url)
                 .get("/?q=key")
                 .reply(HttpResponseHandler.codes.OK, expectedResponse);
-            let response = await getRequest(url, params);
+            const response = await getRequest(url, params);
             assert.deepEqual(response, expectedResponse);
         });
 
         it("should throw error if status is not 200", async() => {
-            let url = "http://mytest.com", params = { "q": "key" };
-            let error = {
+            const url = "http://mytest.com";
+            const params = { "q": "key" };
+            const error = {
                 "message": "missing"
             };
-            let status = HttpResponseHandler.codes.BAD_REQUEST;
+            const status = HttpResponseHandler.codes.BAD_REQUEST;
             nock(url)
                 .get("/?q=key")
                 .reply(status, error);

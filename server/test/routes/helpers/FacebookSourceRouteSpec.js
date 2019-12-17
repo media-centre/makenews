@@ -8,8 +8,9 @@ import { userDetails } from "../../../src/Factory";
 import { isRejected } from "../../helpers/AsyncTestHelper";
 
 describe("FacebookSourceRoutes", () => {
-    let sandbox = sinon.sandbox.create();
-    let keyword = "journalist", type = fbSourceTypesToFetch.page;
+    const sandbox = sinon.sandbox.create();
+    const keyword = "journalist";
+    let type = fbSourceTypesToFetch.page;
 
     afterEach("FacebookSourceRoutes", () => {
         sandbox.restore();
@@ -17,7 +18,7 @@ describe("FacebookSourceRoutes", () => {
 
     describe("validate", () => {
         it("should reject the request if type is missing", () => {
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": { },
                 "cookies": { "AuthSession": "token" }
             }, {});
@@ -25,7 +26,7 @@ describe("FacebookSourceRoutes", () => {
         });
 
         it("should reject the request if invalid type is passed", () => {
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": { "type": "mypage", "keyword": "filt" },
                 "cookies": { "AuthSession": "token" }
             }, {});
@@ -33,7 +34,7 @@ describe("FacebookSourceRoutes", () => {
         });
         
         it("should reject the request if keyword is missing", () => {
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": { "type": "page" },
                 "cookies": { "AuthSession": "token" }
             }, {});
@@ -43,7 +44,8 @@ describe("FacebookSourceRoutes", () => {
     });
 
     describe("handle", () => {
-        let facebookAccessToken = "accessToken", facebookAccessTokenMock = null;
+        let facebookAccessToken = "accessToken";
+        let facebookAccessTokenMock = null;
 
         beforeEach("searchSources", () => {
             facebookAccessToken = new FacebookAccessToken();
@@ -53,7 +55,7 @@ describe("FacebookSourceRoutes", () => {
 
         });
         it("should reject the request if access token is missing", () => {
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
                     "type": "user",
                     "keyword": "keyword"
@@ -67,7 +69,7 @@ describe("FacebookSourceRoutes", () => {
 
         it("should throw error if any problem from getting pages from facebook", async() => {
 
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
                     "keyword": keyword,
                     "type": type,
@@ -76,15 +78,15 @@ describe("FacebookSourceRoutes", () => {
                 "cookies": { "AuthSession": "token" }
             }, {});
 
-            let accessToken = "token";
+            const accessToken = "token";
 
-            let params = {
+            const params = {
                 "q": keyword,
                 "type": type
             };
 
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookAccessToken, "getAccessToken").withArgs("user").returns(Promise.resolve(accessToken));
@@ -95,7 +97,7 @@ describe("FacebookSourceRoutes", () => {
         });
 
         it("should get the facebook profiles", async() => {
-            let profiles = [{
+            const profiles = [{
                 "id": "7dsEdsA8",
                 "name": "Maha Arjun",
                 "picture": {
@@ -106,7 +108,7 @@ describe("FacebookSourceRoutes", () => {
                 }
             }];
 
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
                     "keyword": keyword,
                     "type": "profile",
@@ -115,15 +117,15 @@ describe("FacebookSourceRoutes", () => {
                 "cookies": { "AuthSession": "token" }
             }, {});
 
-            let accessToken = "token";
+            const accessToken = "token";
 
-            let params = {
+            const params = {
                 "q": keyword,
                 "type": fbSourceTypesToFetch.profile
             };
 
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
@@ -134,17 +136,17 @@ describe("FacebookSourceRoutes", () => {
         });
 
         it("should get the facebook pages", async() => {
-            let pages = { "data": [
+            const pages = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
-            let params = {
+            const params = {
                 "q": keyword,
                 "type": fbSourceTypesToFetch.page
             };
 
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
                     "keyword": keyword,
                     "type": fbSourceTypesToFetch.page,
@@ -153,10 +155,10 @@ describe("FacebookSourceRoutes", () => {
                 "cookies": { "AuthSession": "token" }
             }, {});
 
-            let accessToken = "token";
+            const accessToken = "token";
 
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")
@@ -168,17 +170,17 @@ describe("FacebookSourceRoutes", () => {
 
         it("should get the facebook groups", async() => {
             type = "group";
-            let groups = { "data": [
+            const groups = { "data": [
                 { "name": "The Hindu", "id": "163974433696568" },
                 { "name": "The Hindu Business Line", "id": "60573550946" },
                 { "name": "The Hindu Temple of Canton", "id": "148163135208246" }] };
 
-            let params = {
+            const params = {
                 "q": keyword,
                 "type": fbSourceTypesToFetch.group
             };
 
-            let facebookRouteHelper = new FacebookSourceRoute({
+            const facebookRouteHelper = new FacebookSourceRoute({
                 "body": {
                     "keyword": keyword,
                     "type": fbSourceTypesToFetch.group,
@@ -187,10 +189,10 @@ describe("FacebookSourceRoutes", () => {
                 "cookies": { "AuthSession": "token" }
             }, {});
 
-            let accessToken = "token";
+            const accessToken = "token";
 
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
-            let facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandlerMock = sandbox.mock(FacebookRequestHandler);
             facebookRequestHandlerMock.expects("instance").withArgs(accessToken).returns(facebookRequestHandler);
 
             sandbox.stub(facebookRequestHandler, "fetchSourceUrls")

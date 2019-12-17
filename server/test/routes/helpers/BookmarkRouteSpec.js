@@ -6,8 +6,13 @@ import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 describe("BookmarkRoute", () => {
-    let sandbox = null, response = null, request = null, bookmarkRoute = null;
-    let authSession = null, docId = null, status = true;
+    let sandbox = null;
+    let response = null;
+    let request = null;
+    let bookmarkRoute = null;
+    let authSession = null;
+    let docId = null;
+    const status = true;
     beforeEach("BookmarkRoute", () => {
         docId = "documentID";
         authSession = "AuthSession";
@@ -30,7 +35,7 @@ describe("BookmarkRoute", () => {
     });
 
     it("should bookmark the feed if docId is valid", async() => {
-        let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("bookmarkTheDocument")
+        const bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("bookmarkTheDocument")
             .withExactArgs(authSession, docId, status)
             .returns(Promise.resolve({ "ok": true }));
 
@@ -41,7 +46,7 @@ describe("BookmarkRoute", () => {
     });
 
     it("should throw error if update is not successful", async() => {
-        let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("bookmarkTheDocument")
+        const bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("bookmarkTheDocument")
             .withExactArgs(authSession, docId, status)
             .returns(Promise.reject({ "error": "conflict" }));
 

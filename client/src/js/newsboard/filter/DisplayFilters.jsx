@@ -39,12 +39,12 @@ export class DisplayFilters extends Component {
     }
 
     initSelectedSources() {
-        let { web, facebook, twitter } = this.props.currentFilterSource;
+        const { web, facebook, twitter } = this.props.currentFilterSource;
         selectedSources = { "web": new Set(web), "facebook": new Set(facebook), "twitter": new Set(twitter) };
     }
 
     _renderSources(sourceType, searchKey) {
-        let configuredSourceDOM = (source) =>
+        const configuredSourceDOM = (source) =>
             (<li className="filter-source" key={source._id}>
                 <input type="checkbox" role="checkbox" name={sourceType} title={source.name} value={source._id}
                     onClick={this.sourceClick} defaultChecked={this.hasChecked(source._id, sourceType)}
@@ -52,8 +52,8 @@ export class DisplayFilters extends Component {
                 <span className="source__title">{source.name}</span>
             </li>);
         if(searchKey) {
-            let key = searchKey.toUpperCase();
-            let configuredSources = source => source && source.name && source.name.toUpperCase().match(key);
+            const key = searchKey.toUpperCase();
+            const configuredSources = source => source && source.name && source.name.toUpperCase().match(key);
             return R.pipe(
                 R.filter(configuredSources),
                 R.map(configuredSourceDOM)
@@ -68,7 +68,7 @@ export class DisplayFilters extends Component {
     }
 
     sourceClick(eventObj) {
-        let { name, value } = eventObj.target;
+        const { name, value } = eventObj.target;
         if(selectedSources[sourceTypes[name]].has(value)) {
             selectedSources[sourceTypes[name]].delete(value);
         } else {
@@ -77,12 +77,12 @@ export class DisplayFilters extends Component {
     }
 
     searchInSources() {
-        let value = this.refs.filterSearch.refs.input.value;
+        const value = this.refs.filterSearch.refs.input.value;
         this.props.dispatch(searchInConfiguredSources(value));
     }
 
     applyFilter() {
-        let sourceFilters = {};
+        const sourceFilters = {};
         sourceFilters.web = [...selectedSources.web];
         sourceFilters.facebook = [...selectedSources.facebook];
         sourceFilters.twitter = [...selectedSources.twitter].map((source) => {

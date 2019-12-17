@@ -6,8 +6,12 @@ import { assert } from "chai";
 import HttpResponseHandler from "../../../../common/src/HttpResponseHandler";
 
 describe("BookmarkedFeedsRoute", () => {
-    let sandbox = null, response = null, request = null;
-    let bookmarkedFeedsRoute = null, authSession = null, offset = 1;
+    let sandbox = null;
+    let response = null;
+    let request = null;
+    let bookmarkedFeedsRoute = null;
+    let authSession = null;
+    const offset = 1;
     beforeEach("BookmarkedFeedsRoute", () => {
         authSession = "AuthSession";
         response = mockResponse();
@@ -28,7 +32,7 @@ describe("BookmarkedFeedsRoute", () => {
     });
 
     it("should get the bookmarked feeds from database", async() => {
-        let feeds = {
+        const feeds = {
             "docs": [
                 {
                     "_id": "1",
@@ -66,7 +70,7 @@ describe("BookmarkedFeedsRoute", () => {
     });
 
     it("should throw error if fetching bookmarked feeds is failed", async() => {
-        let bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("getBookmarkedFeeds")
+        const bookmarkHandlerMock = sandbox.mock(BookmarkRequestHandler).expects("getBookmarkedFeeds")
             .withExactArgs(authSession, offset)
             .returns(Promise.reject("error"));
 

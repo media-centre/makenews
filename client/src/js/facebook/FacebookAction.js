@@ -9,10 +9,10 @@ export function updateTokenExpiredInfo(isValid) {
 }
 
 export async function isFBTokenExpired() {
-    let ajaxClient = AjaxClient.instance("/facebook-token-expired");
+    const ajaxClient = AjaxClient.instance("/facebook-token-expired");
     let isExpired = false;
     try {
-        let response = await ajaxClient.get();
+        const response = await ajaxClient.get();
         isExpired = !response.isExpired;
     } catch(err) {
         //ignore error

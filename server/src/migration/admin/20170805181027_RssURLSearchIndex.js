@@ -10,7 +10,7 @@ export default class IndexDocument {
     async up() {
         try {
             Migration.logger(this.dbName).info("RssURLSearchIndex::up - started");
-            let indexDoc = {
+            const indexDoc = {
                 "_id": "_design/webUrlSearch",
                 "fulltext": {
                     "by_name": {

@@ -27,7 +27,8 @@ export default class FacebookLogin {
     }
 
     loadSDK(document, source, id) {
-        let js = null, fjs = R.head(document.getElementsByTagName(source));
+        let js = null;
+        const fjs = R.head(document.getElementsByTagName(source));
         if (!document.getElementById(id)) {
             js = document.createElement(source); js.id = id;
             js.src = "https://connect.facebook.net/en_US/sdk.js";
@@ -44,7 +45,7 @@ export default class FacebookLogin {
                             "Accept": "application/json",
                             "Content-type": "application/json"
                         };
-                        let ajaxClient = AjaxClient.instance("/facebook-set-token");
+                        const ajaxClient = AjaxClient.instance("/facebook-set-token");
                         ajaxClient.post(headers, { "accessToken": response.authResponse.accessToken }).then(res => {
                             resolve(res.expires_after);
                         });

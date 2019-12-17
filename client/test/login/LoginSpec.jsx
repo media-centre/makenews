@@ -10,7 +10,9 @@ import React from "react";
 import "../helper/TestHelper";
 
 describe("login component", () => {
-    let onSubmitCallback = null, loginComponent = null, loginStrings = null;
+    let onSubmitCallback = null;
+    let loginComponent = null;
+    let loginStrings = null;
 
     before("render and locate element", () => {
         loginStrings = {

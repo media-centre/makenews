@@ -89,23 +89,23 @@ export const sourceResults = (state = sourceResultsInitialState, action = {}) =>
 export const configuredSources = (state = { "profiles": [], "pages": [], "groups": [], "twitter": [], "web": [] }, action = {}) => {
     switch (action.type) {
     case FACEBOOK_ADD_PROFILE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        const sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "profiles": state.profiles.concat(sources) });
     }
     case FACEBOOK_ADD_PAGE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        const sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "pages": state.pages.concat(sources) });
     }
     case FACEBOOK_ADD_GROUP: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        const sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "groups": state.groups.concat(sources) });
     }
     case WEB_ADD_SOURCE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        const sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "web": state.web.concat(sources) });
     }
     case TWITTER_ADD_SOURCE: {
-        let sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
+        const sources = R.map(source => Object.assign({}, source, { "_id": source.id }), action.sources);
         return Object.assign({}, state, { "twitter": state.twitter.concat(sources) });
     }
     case GOT_CONFIGURED_SOURCES: {

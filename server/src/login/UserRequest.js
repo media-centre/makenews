@@ -58,16 +58,16 @@ export async function markAsVisitedUser(token, userName) {
         const couchClient = CouchClient.instance(token, "_users");
         const documentId = "org.couchdb.user:" + userName;
         const couchClientUser = CouchClient.instance(token);
-        let selector = {
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "source"
                 }
             }
         };
-        let configuredSources = await couchClientUser.findDocuments(selector);
+        const configuredSources = await couchClientUser.findDocuments(selector);
         if(configuredSources.docs.length) {
-            let userData = await couchClient.getDocument(documentId);
+            const userData = await couchClient.getDocument(documentId);
             userData.visitedUser = true;
             await couchClient.updateDocument(userData);
             return true;

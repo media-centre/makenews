@@ -10,7 +10,10 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 describe("NewsBoardTab", () => {
-    let sandbox = null, store = null, newsBoardTab = null, currentTab = null;
+    let sandbox = null;
+    let store = null;
+    let newsBoardTab = null;
+    let currentTab = null;
 
     beforeEach("NewsBoardTab", () => {
         currentTab = "web";

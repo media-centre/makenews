@@ -16,17 +16,17 @@ describe("TwitterTokenRoute", () => {
         });
 
         it("should return the twitterAuthentication as true if document is present in the database", () => {
-            let twitterToken = new TwitterToken();
+            const twitterToken = new TwitterToken();
             sandbox.stub(TwitterToken, "instance").returns(twitterToken);
-            let tokenMock = sandbox.mock(twitterToken).expects("isPresent").withArgs("test_session").returns(Promise.resolve(true));
-            let response = { "status": () => {}, "json": () => {} };
-            let request = {
+            const tokenMock = sandbox.mock(twitterToken).expects("isPresent").withArgs("test_session").returns(Promise.resolve(true));
+            const response = { "status": () => {}, "json": () => {} };
+            const request = {
                 "cookies": { "AuthSession": "test_session" }
             };
-            let responseMock = sandbox.mock(response);
+            const responseMock = sandbox.mock(response);
             responseMock.expects("status").withArgs(HttpResponseHandler.codes.OK);
             responseMock.expects("json").withArgs({ "twitterAuthenticated": true });
-            let twitterTokenRoute = new TwitterTokenRoute(request, response);
+            const twitterTokenRoute = new TwitterTokenRoute(request, response);
             return Promise.resolve(twitterTokenRoute.handle()).then(() => {
                 tokenMock.verify();
                 responseMock.verify();

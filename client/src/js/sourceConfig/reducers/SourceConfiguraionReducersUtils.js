@@ -5,8 +5,8 @@ function _addSourceProps(source, propertyToCompare) {
 
 export function markSourcesAsAdded(sources, sourcesToConfigure, propertyToCompare) {
     if(sourcesToConfigure.length === 1 && sources.length) { //eslint-disable-line no-magic-numbers
-        let [sourceToConfigure] = sourcesToConfigure;
-        let addedSource = sources.find(source => source[propertyToCompare] === sourceToConfigure[propertyToCompare]);
+        const [sourceToConfigure] = sourcesToConfigure;
+        const addedSource = sources.find(source => source[propertyToCompare] === sourceToConfigure[propertyToCompare]);
         if(addedSource) {
             _addSourceProps(addedSource, propertyToCompare);
             return sources;

@@ -8,7 +8,8 @@ import sinon from "sinon";
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("StoryCards", () => {
-    let storyBoardCards = null, stories = null;
+    let storyBoardCards = null;
+    let stories = null;
     const sandbox = sinon.sandbox.create();
     const anonymousFun = () => {};
 
@@ -34,12 +35,12 @@ describe("StoryCards", () => {
     });
 
     it("should have the stories based on props input", () => {
-        let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card");
+        const storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card");
         assert.strictEqual(2, storiesList.length); //eslint-disable-line no-magic-numbers
     });
 
     it("should have the remove icon", () => {
-        let storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i.delete-icon");
+        const storiesList = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card i.delete-icon");
         assert.strictEqual(2, storiesList.length); //eslint-disable-line no-magic-numbers
         assert.isNull(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
     });
@@ -49,9 +50,9 @@ describe("StoryCards", () => {
             <StoryCards stories = {stories} dispatch={anonymousFun}/>
         );
 
-        let storiesList = ReactDOM.findDOMNode(storyBoardCards1).querySelectorAll("ul li.added-card i.delete-icon");
-        let [story1] = storiesList;
-        let deleteMock = sinon.mock(storyBoardCards1).expects("_showDeleteConfirmPopup");
+        const storiesList = ReactDOM.findDOMNode(storyBoardCards1).querySelectorAll("ul li.added-card i.delete-icon");
+        const [story1] = storiesList;
+        const deleteMock = sinon.mock(storyBoardCards1).expects("_showDeleteConfirmPopup");
         TestUtils.Simulate.click(story1);
         assert.isDefined(ReactDOM.findDOMNode(storyBoardCards).querySelector("confirm-mask"));
         assert.strictEqual(story1.className, "fa fa-remove icon delete-icon");
@@ -60,7 +61,7 @@ describe("StoryCards", () => {
 
     it("should have story name", () => {
         const [nodeList] = ReactDOM.findDOMNode(storyBoardCards).querySelectorAll("ul li.added-card a.navigation-link div.card i");
-        let storyTitle = nodeList.textContent;
+        const storyTitle = nodeList.textContent;
         assert.strictEqual("title1", storyTitle);
     });
 

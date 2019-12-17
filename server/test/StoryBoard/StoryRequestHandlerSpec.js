@@ -13,12 +13,12 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("getStory", () => {
-        const authSession = "Access Token",
-            dbName = "dbName",
-            couchClientInstanceMock = new CouchClient(authSession, dbName);
+        const authSession = "Access Token";
+        const dbName = "dbName";
+        const couchClientInstanceMock = new CouchClient(authSession, dbName);
 
         it("should find the document of docType story and id", async() => {
-            let resultDoc = {
+            const resultDoc = {
                 "_id": "id",
                 "title": "title",
                 "_rev": "rev"
@@ -27,7 +27,7 @@ describe("StoryRequestHandler", () => {
                 .withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock)
                 .expects("getDocument").withArgs("id").returns(Promise.resolve(resultDoc));
-            let expectedDocs = await StoryRequestHandler.getStory("id", authSession);
+            const expectedDocs = await StoryRequestHandler.getStory("id", authSession);
             assert.deepEqual(resultDoc, expectedDocs);
         });
 
@@ -45,10 +45,11 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("getStories", () => {
-        const authSession = "Access Token",
-            dbName = "dbName",
-            couchClientInstanceMock = new CouchClient(authSession, dbName);
-        let result = null, query = null;
+        const authSession = "Access Token";
+        const dbName = "dbName";
+        const couchClientInstanceMock = new CouchClient(authSession, dbName);
+        let result = null;
+        let query = null;
 
         it("should find the documents of docType story", async() => {
             result = {
@@ -73,38 +74,38 @@ describe("StoryRequestHandler", () => {
 
             sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments").withArgs(query).returns(Promise.resolve(result));
-            let expectedDocs = await StoryRequestHandler.getStories(authSession);
+            const expectedDocs = await StoryRequestHandler.getStories(authSession);
             assert.deepEqual(result, expectedDocs);
         });
     });
 
     describe("getStoryWithTitle", () => {
-        const authSession = "Access Token",
-            dbName = "dbName",
-            query = {
-                "selector": {
-                    "docType": {
-                        "$eq": "story"
-                    },
-                    "title": {
-                        "$eq": "title"
-                    }
+        const authSession = "Access Token";
+        const dbName = "dbName";
+        const query = {
+            "selector": {
+                "docType": {
+                    "$eq": "story"
+                },
+                "title": {
+                    "$eq": "title"
                 }
-            },
-            couchClientInstanceMock = new CouchClient(authSession, dbName);
+            }
+        };
+        const couchClientInstanceMock = new CouchClient(authSession, dbName);
         let result = null;
 
         it("should return documents which have same title and doctype is story", async() => {
-            let title = "title";
+            const title = "title";
             result = { "docs": [{ "_id": "id", "title": title }] };
             sandbox.mock(CouchClient).expects("instance").withArgs(authSession).returns(couchClientInstanceMock);
             sandbox.mock(couchClientInstanceMock).expects("findDocuments").withArgs(query).returns(Promise.resolve(result));
-            let expectedResult = await StoryRequestHandler.getStoryWithTitle(title, authSession);
+            const expectedResult = await StoryRequestHandler.getStoryWithTitle(title, authSession);
             assert.strictEqual(result, expectedResult);
         });
 
         it("should reject with error if find documents reject with an error", async() => {
-            let title = "title";
+            const title = "title";
             result = { "docs": [{ "_id": "id", "title": title }] };
             sandbox.mock(CouchClient).expects("instance")
                 .withArgs(authSession).returns(couchClientInstanceMock);
@@ -119,7 +120,9 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("saveStory", () => {
-        let couchClientInstance = null, authSession = null, story = null;
+        let couchClientInstance = null;
+        let authSession = null;
+        let story = null;
 
         beforeEach("saveStory", () => {
             authSession = "auth session";
@@ -135,12 +138,12 @@ describe("StoryRequestHandler", () => {
         it("should return ok on success response from db", async() => {
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance).twice();
-            let updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
+            const updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
                 .withExactArgs(story).returns({ "ok": true });
-            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+            const findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
                 .returns({ "docs": [] });
             try {
-                let response = await StoryRequestHandler.saveStory(story, authSession);
+                const response = await StoryRequestHandler.saveStory(story, authSession);
                 assert.deepEqual(response, { "ok": true });
                 updateDocMock.verify();
                 findDocMock.verify();
@@ -152,7 +155,7 @@ describe("StoryRequestHandler", () => {
         it("should throw if title is already exists", async() => {
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance);
-            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+            const findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
                 .returns({ "docs": [{ "_id": "id" }] });
             try {
                 await StoryRequestHandler.saveStory(story, authSession);
@@ -166,12 +169,12 @@ describe("StoryRequestHandler", () => {
             story._id = "id";
             sandbox.mock(CouchClient).expects("instance")
                 .withExactArgs(authSession).returns(couchClientInstance).twice();
-            let findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
+            const findDocMock = sandbox.mock(couchClientInstance).expects("findDocuments")
                 .returns({ "docs": [{ "_id": "id" }] });
-            let updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
+            const updateDocMock = sandbox.mock(couchClientInstance).expects("updateDocument")
                 .withExactArgs(story).returns({ "ok": true });
             try {
-                let response = await StoryRequestHandler.saveStory(story, authSession);
+                const response = await StoryRequestHandler.saveStory(story, authSession);
                 assert.deepEqual(response, { "ok": true });
                 findDocMock.verify();
                 updateDocMock.verify();
@@ -182,8 +185,9 @@ describe("StoryRequestHandler", () => {
     });
 
     describe("deleteStory", () => {
-        const id = "test_1", authSession = "auth session",
-            couchClientInstance = new CouchClient(authSession, "db name");
+        const id = "test_1";
+        const authSession = "auth session";
+        const couchClientInstance = new CouchClient(authSession, "db name");
         let deleteDocumentMock = null;
 
         beforeEach("deleteStory", () => {

@@ -35,7 +35,7 @@ export default class DefaultRoute extends Route {
     }
 
     _handleFailure() {
-        let error = {};
+        const error = {};
         error.status = HttpResponseHandler.codes.UNAUTHORIZED;
         error.message = "session expired";
         this.next(error);
@@ -46,7 +46,7 @@ export default class DefaultRoute extends Route {
             throw new Error("url can not be empty");
         }
 
-        let whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/user_db/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
+        const whitelistUrls = [/^\/$/g, /^\/login$/g, /^\/renew_session$/g, /^\/user_db/g, /^\/app-min.js$/g, /^\/app.css$/g, /^\/images\/.*/g, /^\/fonts\/.*/g, /^\/config\/.*\.js$/];
         return whitelistUrls.filter((item) => {
             return this.url.match(item);
         }).length > 0; //eslint-disable-line no-magic-numbers

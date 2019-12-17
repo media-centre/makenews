@@ -6,7 +6,8 @@ import Locale from "./../../src/js/utils/Locale";
 import sinon from "sinon";
 
 describe("Help", () => {
-    let helpDom = null, FAQs = null;
+    let helpDom = null;
+    let FAQs = null;
     const sandbox = sinon.sandbox.create();
     beforeEach("Help", () => {
         FAQs = [{

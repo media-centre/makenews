@@ -5,7 +5,7 @@ export default class Locale {
         if(!language) {
             throw new Error("language can not be null");
         }
-        let appWindowInstance = AppWindow.instance();
+        const appWindowInstance = AppWindow.instance();
         switch(language) {
         case Locale.languages.ENGLISH:
             return appWindowInstance.get("appEn");

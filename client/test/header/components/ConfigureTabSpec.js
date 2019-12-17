@@ -11,10 +11,10 @@ describe("ConfigureTab", () => {
         configureTab = TestUtils.renderIntoDocument(<ConfigureTab name="test" url="/test" currentHeaderTab="test" />);
     });
     it("should have link to url", () => {
-        let linkElement = TestUtils.scryRenderedComponentsWithType(configureTab, Link);
-        let linkProps = linkElement[0].props; //eslint-disable-line no-magic-numbers
-        let link = linkProps.children.props;
-        let image = link.children.props;
+        const linkElement = TestUtils.scryRenderedComponentsWithType(configureTab, Link);
+        const linkProps = linkElement[0].props; //eslint-disable-line no-magic-numbers
+        const link = linkProps.children.props;
+        const image = link.children.props;
         assert.strictEqual(linkProps.to, "/test");
         assert.strictEqual(linkProps.children.props.className, "header-tabs--configure active");
         assert.strictEqual(link.children.props.className, "header-tabs--configure__image");

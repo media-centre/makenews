@@ -28,9 +28,9 @@ describe("TwitterParser", () => {
         });
 
         it("should return handle with specific fields", () => {
-            let twitterParser = TwitterParser.instance();
-            let actualHandle = twitterParser.parseHandle(handleFromTwitter);
-            let expectedHandle = [{
+            const twitterParser = TwitterParser.instance();
+            const actualHandle = twitterParser.parseHandle(handleFromTwitter);
+            const expectedHandle = [{
                 "id": "123",
                 "picture": {
                     "data": {
@@ -66,8 +66,8 @@ describe("TwitterParser", () => {
         });
 
         it("should return tweets with the desired format of description type", ()=> {
-            let sourceId = "123";
-            let actualTweet = [{
+            const sourceId = "123";
+            const actualTweet = [{
                 "metadata": {
                     "result_type": "recent"
                 },
@@ -82,7 +82,7 @@ describe("TwitterParser", () => {
                 }
             }];
 
-            let expectedTweet = [{
+            const expectedTweet = [{
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
@@ -95,13 +95,13 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
         it("should return tweets with the desired format of type image content", ()=> {
-            let sourceId = "123";
-            let actualTweet = [{
+            const sourceId = "123";
+            const actualTweet = [{
                 "metadata": {
                     "result_type": "recent"
                 },
@@ -117,7 +117,7 @@ describe("TwitterParser", () => {
                 }
             }];
 
-            let expectedTweet = [{
+            const expectedTweet = [{
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
@@ -130,13 +130,13 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
         it("should return tweets with the desired format of type gallery", ()=> {
-            let sourceId = "123";
-            let actualTweet = [{
+            const sourceId = "123";
+            const actualTweet = [{
                 "metadata": {
                     "result_type": "recent"
                 },
@@ -153,7 +153,7 @@ describe("TwitterParser", () => {
                 }
             }];
 
-            let expectedTweet = [{
+            const expectedTweet = [{
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
@@ -175,13 +175,13 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
         it("should return tweets with the videos if tweet contains extended entities", ()=> {
-            let sourceId = "123";
-            let actualTweet = [{
+            const sourceId = "123";
+            const actualTweet = [{
                 "metadata": {
                     "result_type": "recent"
                 },
@@ -202,7 +202,7 @@ describe("TwitterParser", () => {
                 }
             }];
 
-            let expectedTweet = [{
+            const expectedTweet = [{
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
@@ -230,7 +230,7 @@ describe("TwitterParser", () => {
                     }],
                 "sourceId": sourceId
             }];
-            let newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
     });

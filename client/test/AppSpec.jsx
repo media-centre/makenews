@@ -10,11 +10,11 @@ import { findAllWithType } from "react-shallow-testutils";
 
 describe("app component", function() {
     it("should have two children in properties", function() {
-        let children = [<App key="1" children={[]} />, <App key="2" children={[]} />];
-        let renderer = TestUtils.createRenderer();
+        const children = [<App key="1" children={[]} />, <App key="2" children={[]} />];
+        const renderer = TestUtils.createRenderer();
         renderer.render(<App children={children}/>);
-        let result = renderer.getRenderOutput();
-        let renderedChildren = findAllWithType(result, App);
+        const result = renderer.getRenderOutput();
+        const renderedChildren = findAllWithType(result, App);
         assert.strictEqual(renderedChildren.length, 2); // eslint-disable-line no-magic-numbers
     });
 });

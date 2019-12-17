@@ -40,8 +40,11 @@ describe("AddUrl Actions", () => {
     });
 
     describe("AddRssUrl", () => {
-        let message = null, url = null;
-        let ajaxClientInstance = null, ajaxClientMock = null, postMock = null;
+        const message = null;
+        let url = null;
+        let ajaxClientInstance = null;
+        let ajaxClientMock = null;
+        let postMock = null;
 
         beforeEach("AddRssUrl", () => {
             ajaxClientInstance = AjaxClient.instance("/add-url", true);

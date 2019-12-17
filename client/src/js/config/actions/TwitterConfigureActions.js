@@ -21,13 +21,13 @@ export function gotTwitterSourceResults(sources, keyword, currentTab) {
 }
 
 export function fetchTwitterSources(keyword, paging = {}, twitterPreFirstId = 0) { //eslint-disable-line no-magic-numbers
-    let ajaxClient = keyword ? AjaxClient.instance("/twitter-handles") : AjaxClient.instance("/twitter-followings");
+    const ajaxClient = keyword ? AjaxClient.instance("/twitter-handles") : AjaxClient.instance("/twitter-followings");
     return async(dispatch, getState) => {
         dispatch(fetchingSources);
         try {
-            let data = await ajaxClient.get({ keyword, ...paging, twitterPreFirstId });
+            const data = await ajaxClient.get({ keyword, ...paging, twitterPreFirstId });
             if(data.docs.length) {
-                let configuredSources = getState().configuredSources.twitter;
+                const configuredSources = getState().configuredSources.twitter;
                 const cmp = (first, second) => first.id === second._id;
                 intersectionWith(cmp, data.docs, configuredSources);
                 dispatch(gotTwitterSourceResults(data, keyword, "twitter"));

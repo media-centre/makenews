@@ -14,8 +14,10 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 import sinon from "sinon";
 
 describe("FacebookRequestHandler", () => {
-    const accessToken = "test_token", appSecretKey = "test_secret",
-        appSecretProof = "test_secret_proof", appId = "test_app_id";
+    const accessToken = "test_token";
+    const appSecretKey = "test_secret";
+    const appSecretProof = "test_secret_proof";
+    const appId = "test_app_id";
     before("FacebookRequestHandler", () => {
         sinon.stub(FacebookRequestHandler, "logger").returns(LogTestHelper.instance());
 
@@ -34,7 +36,7 @@ describe("FacebookRequestHandler", () => {
 
     describe("CouchClient", () => {
         it("should throw error if the access token is empty", () => {
-            let facebookRequestHandlerFunc = () => {
+            const facebookRequestHandlerFunc = () => {
                 return new FacebookRequestHandler(null);
             };
             assert.throw(facebookRequestHandlerFunc, Error, "access token can not be empty");
@@ -43,9 +45,9 @@ describe("FacebookRequestHandler", () => {
 
     describe("appSecretProof", () => {
         it("should get the encrypted access key for a facebook client access token and secret key", () => {
-            let cryptUtilMock = sinon.mock(CryptUtil).expects("hmac");
+            const cryptUtilMock = sinon.mock(CryptUtil).expects("hmac");
             cryptUtilMock.withArgs("sha256", appSecretKey, "hex", accessToken);
-            let facebookRequestHandler = new FacebookRequestHandler(accessToken);
+            const facebookRequestHandler = new FacebookRequestHandler(accessToken);
             sinon.stub(facebookRequestHandler, "appSecretKey").returns(appSecretKey);
             facebookRequestHandler.appSecretProof();
             cryptUtilMock.verify();
@@ -73,8 +75,12 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("fetchFeeds", () => {
-        let facebookClient = null, sourceId = null, facebookRequestHandler = null;
-        let facebookClientPagePostsMock = null, response = null, requiredFields = null;
+        let facebookClient = null;
+        let sourceId = null;
+        let facebookRequestHandler = null;
+        let facebookClientPagePostsMock = null;
+        let response = null;
+        let requiredFields = null;
         let optionsJson = null;
         beforeEach("fetchFeeds", () => {
             response = {
@@ -140,11 +146,15 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("setToken", () => {
-        let sandbox = null, facebookRequestHandler = null, facebookClientPagePostsMock = null, currentTime = 123486, milliSeconds = 1000;
+        let sandbox = null;
+        let facebookRequestHandler = null;
+        let facebookClientPagePostsMock = null;
+        const currentTime = 123486;
+        const milliSeconds = 1000;
 
         beforeEach("setToken", () => {
             sandbox = sinon.sandbox.create();
-            let facebookClient = new FacebookClient(accessToken, appSecretProof, appId);
+            const facebookClient = new FacebookClient(accessToken, appSecretProof, appId);
             sandbox.stub(FacebookClient, "instance").withArgs(accessToken, appSecretProof, appId).returns(facebookClient);
             facebookClientPagePostsMock = sandbox.mock(facebookClient).expects("getLongLivedToken");
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
@@ -158,16 +168,17 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should create document for long lived token if there is no document", async() => {
-            const expiresIn = 12345, expiredAfter = 12468486;
+            const expiresIn = 12345;
+            const expiredAfter = 12468486;
             const tokenResponse = { "expires_in": expiresIn };
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
-            let adminDbClient = new AdminDbClient();
+            const adminDbClient = new AdminDbClient();
             sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
             sandbox.mock(userDetails).expects("getUser").returns({ "userName": "userName" });
             sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.reject("error occured while getting the document"));
             sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
             try {
-                let response = await facebookRequestHandler.setToken("test");
+                const response = await facebookRequestHandler.setToken("test");
                 assert.equal(response, currentTime + (tokenResponse.expires_in * milliSeconds));
             } catch (error) {
                 assert.fail(error);
@@ -176,29 +187,29 @@ describe("FacebookRequestHandler", () => {
 
         it("should update document for long lived token if document is there", async() => {
             const expiresIn = 12345;
-            let document = {
+            const document = {
                 "access_token": "accessToken",
                 "token_type": "tokenType",
                 "expires_in": expiresIn,
                 "expired_after": 345
             };
-            let tokenResponse = {
+            const tokenResponse = {
                 "access_token": "accessToken",
                 "token_type": "tokenType",
                 "expires_in": expiresIn,
                 "expired_after": 345
             };
             facebookClientPagePostsMock.returns(Promise.resolve(tokenResponse));
-            let expiredAfter = 345;
-            let couchClient = new CouchClient();
-            let adminDbClient = new AdminDbClient();
+            const expiredAfter = 345;
+            const couchClient = new CouchClient();
+            const adminDbClient = new AdminDbClient();
             sandbox.mock(AdminDbClient).expects("instance").returns(Promise.resolve(adminDbClient));
             sandbox.mock(CouchClient).expects("instance").returns(couchClient);
             sandbox.mock(adminDbClient).expects("getDocument").returns(Promise.resolve(document));
             sandbox.mock(facebookRequestHandler).expects("saveToken").returns(Promise.resolve(expiredAfter));
             sandbox.mock(userDetails).expects("getUser").withArgs("test").returns({ "userName": "userName" });
             try {
-                let response = await facebookRequestHandler.setToken("test");
+                const response = await facebookRequestHandler.setToken("test");
                 assert.equal(response, expiredAfter);
             } catch (error) {
                 assert.fail(error);
@@ -217,7 +228,9 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("fetchProfiles", () => {
-        let sandbox = null, facebookClient = null, facebookRequestHandler = null;
+        let sandbox = null;
+        let facebookClient = null;
+        let facebookRequestHandler = null;
         beforeEach("", () => {
             sandbox = sinon.sandbox.create();
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
@@ -231,7 +244,7 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("should get the facebook profiles", (done) => {
-            let profiles = {
+            const profiles = {
                 "data": [{
                     "id": "7dsEdsA8",
                     "name": "Maha Arjun",
@@ -272,7 +285,10 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("fetchSourceUrls", () => {
-        let sandbox = null, keyword = "TheHindu", type = "page", facebookRequstHandler = null;
+        let sandbox = null;
+        const keyword = "TheHindu";
+        const type = "page";
+        let facebookRequstHandler = null;
         let facebookClientInstance = null;
 
         beforeEach("fetchSourceUrls", () => {
@@ -377,7 +393,7 @@ describe("FacebookRequestHandler", () => {
         });
 
         it("_getPagingParams should return paging parameters", () => {
-            let result = {
+            const result = {
                 "__after_id": "123",
                 "limit": "21",
                 "offset": "20"
@@ -388,7 +404,11 @@ describe("FacebookRequestHandler", () => {
     });
 
     describe("saveToken", () => {
-        let facebookRequestHandler = null, couchClient = null, tokenDocument = null, documentId = null, sandbox = null;
+        let facebookRequestHandler = null;
+        let couchClient = null;
+        let tokenDocument = null;
+        let documentId = null;
+        let sandbox = null;
         beforeEach("saveToken", () => {
             sandbox = sinon.sandbox.create();
             facebookRequestHandler = new FacebookRequestHandler(accessToken);
@@ -416,7 +436,7 @@ describe("FacebookRequestHandler", () => {
 
         it("should return expired_after when saveDocument is successful", async() => {
             sandbox.mock(couchClient).expects("saveDocument").returns(Promise.resolve("successfully saved"));
-            let response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
+            const response = await facebookRequestHandler.saveToken(couchClient, documentId, tokenDocument);
             assert.equal(tokenDocument.expired_after, response);
         });
     });

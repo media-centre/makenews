@@ -11,7 +11,8 @@ import R from "ramda"; //eslint-disable-line id-length
 import DateUtil from "../util/DateUtil";
 import { SOURCES_PER_REQUEST } from "./../util/Constants";
 
-const FEEDS_NOT_FOUND = "feeds_not_found", httpIndex = 8;
+const FEEDS_NOT_FOUND = "feeds_not_found";
+const httpIndex = 8;
 const NOT_FOUND_INDEX = -1;
 
 export default class RssClient {
@@ -32,7 +33,7 @@ export default class RssClient {
             rssUrl = url.substring(0, url.indexOf("/", httpIndex)) + rssUrl; //eslint-disable-line no-param-reassign, no-magic-numbers
         }
         try {
-            let feeds = await this.getRssData(rssUrl);
+            const feeds = await this.getRssData(rssUrl);
             feeds.url = rssUrl;
             return feeds;
         } catch (rssError) {
@@ -41,15 +42,15 @@ export default class RssClient {
     }
 
     async crawlForRssUrl(root, url) { //eslint-disable-line consistent-return
-        let links = new Set();
+        const links = new Set();
         let rssUrl = url.substring(0, url.indexOf("/", httpIndex)); //eslint-disable-line no-magic-numbers
-        let relativeLinks = root("a[href^='/']");
+        const relativeLinks = root("a[href^='/']");
         relativeLinks.each(function() {
             links.add(rssUrl + root(this).attr("href"));
         });
         rssUrl = rssUrl.replace(/.*?:\/\//g, "");
         rssUrl = rssUrl.replace("www.", "");
-        let absoluteLinks = root("a[href*='" + rssUrl + "']");
+        const absoluteLinks = root("a[href*='" + rssUrl + "']");
         absoluteLinks.each(function() {
             links.add(root(this).attr("href"));
         });
@@ -63,12 +64,12 @@ export default class RssClient {
     }
 
     async getCrawledRssData(links, url) { //eslint-disable-line consistent-return
-        let linksIterator = links.values();
+        const linksIterator = links.values();
         let link = linksIterator.next().value;
         /* TODO: remove the loop statement*/ //eslint-disable-line
         while (link) { //eslint-disable-line no-loops/no-loops
             try {
-                let feeds = await this.getRssData(link, false);
+                const feeds = await this.getRssData(link, false);
                 feeds.url = link;
                 return feeds;
             } catch (error) {
@@ -83,17 +84,17 @@ export default class RssClient {
     }
 
     async crawlRssList(link, error, url) {
-        let rssPath = link.substring(link.lastIndexOf("/"));
-        let errorMessage = { "message": "no rss found" };
+        const rssPath = link.substring(link.lastIndexOf("/"));
+        const errorMessage = { "message": "no rss found" };
         if ((rssPath.indexOf("rss")) !== NOT_FOUND_INDEX) {
-            let rssListRoot = cheerio.load(error.data);
+            const rssListRoot = cheerio.load(error.data);
             let urlPath = url.substring(url.lastIndexOf("/"));
             urlPath = urlPath.replace(/\.[\w]*$/g, "");
-            let rssListLink = rssListRoot("a[href$='" + urlPath + "']").attr("href") ||
+            const rssListLink = rssListRoot("a[href$='" + urlPath + "']").attr("href") ||
                 rssListRoot("a[href$='" + urlPath + ".rss']").attr("href") ||
                 rssListRoot("a[href$='" + urlPath + ".xml']").attr("href");
             if (rssListLink) {
-                let rssFeeds = await this.getRssData(rssListLink, false);
+                const rssFeeds = await this.getRssData(rssListLink, false);
                 rssFeeds.url = rssListLink;
                 return rssFeeds;
             }
@@ -104,7 +105,7 @@ export default class RssClient {
     getRssData(url) {
         return new Promise((resolve, reject) => {
             let data = null;
-            let requestToUrl = request.get({
+            const requestToUrl = request.get({
                 "uri": url,
                 "timeout": 6000
             }, (error, response, body) => {
@@ -116,7 +117,7 @@ export default class RssClient {
             });
             requestToUrl.on("response", function(res) {
                 if (res.statusCode === HttpResponseHandler.codes.OK) {
-                    let rssParser = new RssParser(this);
+                    const rssParser = new RssParser(this);
                     rssParser.parse(url).then(feeds => {
                         RssClient.logger().debug("RssClient:: successfully fetched feeds for %s.", url);
                         resolve({ "docs": feeds.items, "title": feeds.meta.title, "paging": { "since": DateUtil.getCurrentTimeInSeconds() } });
@@ -138,9 +139,9 @@ export default class RssClient {
             return await this.getRssData(url);
         } catch (error) {
             if (error.message === FEEDS_NOT_FOUND) {
-                let root = cheerio.load(error.data);
-                let rssLink = root("link[type ^= 'application/rss+xml']");
-                let rssUrl = rssLink.attr("href");
+                const root = cheerio.load(error.data);
+                const rssLink = root("link[type ^= 'application/rss+xml']");
+                const rssUrl = rssLink.attr("href");
                 if (rssLink && rssLink.length) {
                     return await this.getFeedsFromRssUrl(rssUrl, url);
                 }
@@ -154,8 +155,8 @@ export default class RssClient {
     async addURL(url, accessToken) {
         const response = await this.fetchRssFeeds(url);
         const name = response.title;
-        let document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
-        let existingUrl = await this.addUrlToCommon(document);
+        const document = { "name": name, "url": url, "docType": "source", "sourceType": "web" };
+        const existingUrl = await this.addUrlToCommon(document);
 
         if(existingUrl) {
             document.url = existingUrl;
@@ -165,7 +166,7 @@ export default class RssClient {
     }
 
     async addUrlToCommon(document) { //eslint-disable-line consistent-return
-        let url = document.url;
+        const url = document.url;
 
         let strippedUrl = url.replace(/.*:?\/\/(www.)?/, "");
         if(url.endsWith("/")) {
@@ -176,7 +177,7 @@ export default class RssClient {
             `https://${strippedUrl}`, `https://${strippedUrl}/`, `https://www.${strippedUrl}`, `https://www.${strippedUrl}/`];
 
         const adminDetails = ApplicationConfig.instance().adminDetails();
-        let dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
+        const dbInstance = await AdminDbClient.instance(adminDetails.username, adminDetails.password, adminDetails.db);
 
         const selector = {
             "selector": {
@@ -211,7 +212,7 @@ export default class RssClient {
     }
 
     async addURLToUser(document, accessToken) {
-        let couchClient = CouchClient.instance(accessToken);
+        const couchClient = CouchClient.instance(accessToken);
 
         try {
             await couchClient.saveDocument(encodeURIComponent(document.url), document);
@@ -226,16 +227,16 @@ export default class RssClient {
     }
 
     async searchURL(keyword, skip) {
-        let result = {};
-        let queryString = keyword ? `name:${keyword}* OR url:${keyword}*` : "*:*";
+        const result = {};
+        const queryString = keyword ? `name:${keyword}* OR url:${keyword}*` : "*:*";
         try {
-            let query = {
+            const query = {
                 "q": queryString,
                 "limit": SOURCES_PER_REQUEST,
                 skip
             };
-            let dbName = ApplicationConfig.instance().adminDetails().db;
-            let response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
+            const dbName = ApplicationConfig.instance().adminDetails().db;
+            const response = await searchDocuments(dbName, "_design/webUrlSearch/by_name", query);
 
             result.docs = R.map(row => row.fields)(response.rows);
             result.paging = { "offset": (skip + SOURCES_PER_REQUEST) };
@@ -248,13 +249,13 @@ export default class RssClient {
     }
 
     handleUrlError(url, error) {
-        let errorMessage = { "message": `${url} is not a proper feed` };
+        const errorMessage = { "message": `${url} is not a proper feed` };
         RssClient.logger().error(`RssClient:: ${url} is not a proper feed url. Error: ${JSON.stringify(error)}`);
         throw errorMessage;
     }
 
     handleRequestError(url, error) {
-        let errorMessage = { "message": `Request failed for url: ${url}, error: ${JSON.stringify(error)}` };
+        const errorMessage = { "message": `Request failed for url: ${url}, error: ${JSON.stringify(error)}` };
         RssClient.logger().error(`RssClient:: Request failed for ${url}. Error: ${JSON.stringify(error)}`);
         throw errorMessage;
     }

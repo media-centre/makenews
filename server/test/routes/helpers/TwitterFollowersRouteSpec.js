@@ -9,7 +9,9 @@ import sinon from "sinon";
 
 describe("TwitterHandlesRoute", () => {
 
-    let sandbox = null, pageNumber = null, twitterPreFirstId = null;
+    let sandbox = null;
+    let pageNumber = null;
+    let twitterPreFirstId = null;
     beforeEach("TwitterHandlesRoute", () => {
         sandbox = sinon.sandbox.create();
         pageNumber = 1; //eslint-disable-line no-magic-numbers
@@ -22,8 +24,8 @@ describe("TwitterHandlesRoute", () => {
     });
 
     it("should return the handles data from the twitter user", async()=> {
-        let response = mockResponse();
-        let request = {
+        const response = mockResponse();
+        const request = {
             "cookies": {
                 "AuthSession": "Authsession"
             },
@@ -33,14 +35,14 @@ describe("TwitterHandlesRoute", () => {
                 "twitterPreFirstId": twitterPreFirstId
             }
         };
-        let data = {
+        const data = {
             "users": [{
                 "id": "test",
                 "name": "testAccount",
                 "url": "https:/t.co/ijad"
             }]
         };
-        let twitterRequestHandlerInstance = new TwitterRequestHandler();
+        const twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
         sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest").withExactArgs("Authsession", "test", pageNumber, twitterPreFirstId).returns(Promise.resolve(data));
 
@@ -50,9 +52,9 @@ describe("TwitterHandlesRoute", () => {
     });
 
     it("should return bad request if the if fetch handles reject with an error", async() => {
-        let response = mockResponse();
+        const response = mockResponse();
 
-        let request = {
+        const request = {
             "cookies": {
                 "AuthSession": "Authsession"
             },
@@ -62,7 +64,7 @@ describe("TwitterHandlesRoute", () => {
                 "twitterPreFirstId": twitterPreFirstId
             }
         };
-        let twitterRequestHandlerInstance = new TwitterRequestHandler();
+        const twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
         sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest")
             .withExactArgs("auth session", "test", pageNumber, twitterPreFirstId).returns(Promise.reject("error"));

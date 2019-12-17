@@ -10,8 +10,8 @@ export default class DateTimeUtil {
         return moment.utc(dateString).local().format("llll");
     }
     static getUTCDateAndTime(dateString) {
-        let date = new Date(dateString);
-        let dateToISO = isNaN(date.getTime()) ? dateString : date.toISOString();
+        const date = new Date(dateString);
+        const dateToISO = isNaN(date.getTime()) ? dateString : date.toISOString();
         return moment(dateToISO).utc().format();
     }
     static getTimestamp(dateString) {
@@ -29,12 +29,12 @@ export default class DateTimeUtil {
     }
 
     static getLocalTime(dateString) {
-        let DAY_CHARS = 4;
-        let timeStamp = new Date(dateString);
+        const DAY_CHARS = 4;
+        const timeStamp = new Date(dateString);
         let date = timeStamp.toDateString();
         date = date.substring(DAY_CHARS, date.length);
-        let time = timeStamp.toLocaleTimeString();
-        let formatedDate = date + ", " + time + " IST";
+        const time = timeStamp.toLocaleTimeString();
+        const formatedDate = date + ", " + time + " IST";
         return formatedDate;
     }
 }

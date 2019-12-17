@@ -8,11 +8,13 @@ import { assert } from "chai";
 import { userDetails } from "./../../src/Factory";
 import DateUtil from "./../../src/util/DateUtil";
 
-let sandbox = null, authSession = "test_authSession", userName = "test";
+let sandbox = null;
+const authSession = "test_authSession";
+const userName = "test";
 describe("FacebookTokenDocument", () => {
     beforeEach("FacebookTokenDocument", () => {
         sandbox = sinon.sandbox.create();
-        let userDetailsMock = sandbox.mock(userDetails).expects("getUser");
+        const userDetailsMock = sandbox.mock(userDetails).expects("getUser");
         userDetailsMock.withArgs(authSession).returns({ userName });
     });
 
@@ -21,23 +23,25 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("GetTokenExpiresTime", () => {
-        let adminDbMock = null, adminDbInstance = null, appConfigMock = null;
+        let adminDbMock = null;
+        let adminDbInstance = null;
+        let appConfigMock = null;
         beforeEach("GetTokenExpiresTime", () => {
-            let adminDetails = {
+            const adminDetails = {
                 "adminDetails": {
                     "username": "test",
                     "password": "password",
                     "db": "test"
                 }
             };
-            let appConfig = new ApplicationConfig();
+            const appConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(appConfig);
             appConfigMock = sandbox.mock(appConfig).expects("adminDetails");
             appConfigMock.returns({ adminDetails });
             adminDbInstance = new AdminDbClient();
             adminDbMock = sandbox.mock(AdminDbClient).expects("instance").withExactArgs(adminDetails.username, adminDetails.password, adminDetails.db);
             adminDbMock.returns(Promise.resolve(adminDbInstance));
-            let couchClient = new CouchClient();
+            const couchClient = new CouchClient();
             sandbox.stub(CouchClient, "instance").withArgs(authSession).returns(couchClient);
             sandbox.mock(couchClient).expects("getUserName").returns(Promise.resolve(adminDetails.username));
             sandbox.stub(FacebookTokenDocument, "logger").returns(LogTestHelper.instance());
@@ -86,9 +90,9 @@ describe("FacebookTokenDocument", () => {
         });
 
         it("should return true when there is an error from getting info", async() => {
-            let getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
+            const getDocumentMock = sandbox.mock(adminDbInstance).expects("getDocument");
             getDocumentMock.returns(Promise.reject("no document in db"));
-            let facebookTokenDocument = new FacebookTokenDocument();
+            const facebookTokenDocument = new FacebookTokenDocument();
 
             const isExpired = await facebookTokenDocument.isExpired(authSession);
 
@@ -100,7 +104,10 @@ describe("FacebookTokenDocument", () => {
     });
 
     describe("getAdminDBInstance", () => {
-        let appConfigMock = null, adminDbInstance = null, adminDbMock = null, adminDetails = null;
+        let appConfigMock = null;
+        let adminDbInstance = null;
+        let adminDbMock = null;
+        let adminDetails = null;
 
         beforeEach("getAdminDBInstance", () => {
             adminDetails = {
@@ -113,7 +120,7 @@ describe("FacebookTokenDocument", () => {
         });
 
         it("should get admin db instance", async() => {
-            let appConfig = new ApplicationConfig();
+            const appConfig = new ApplicationConfig();
             sandbox.stub(ApplicationConfig, "instance").returns(appConfig);
             appConfigMock = sandbox.mock(appConfig).expects("adminDetails");
             appConfigMock.returns({ adminDetails });
@@ -129,8 +136,8 @@ describe("FacebookTokenDocument", () => {
     describe("GetUserDocument", () => {
         it("should get the user document for given user authSession", async() => {
 
-            let facebookId = "_facebookToken";
-            let documentId = await getUserDocumentId(authSession, facebookId);
+            const facebookId = "_facebookToken";
+            const documentId = await getUserDocumentId(authSession, facebookId);
             assert.equal(documentId, userName + "_facebookToken");
         });
     });

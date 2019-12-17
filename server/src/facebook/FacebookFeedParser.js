@@ -5,9 +5,9 @@ export function parseFacebookPosts(sourceId, posts = []) {
 
 function _parsePost(sourceId, post) {
     const noIndex = -1;
-    let facebookRegex = /^https:\/\/www\.facebook\.com/;
-    let postId = post.id.split("_");
-    let feedDocument = {
+    const facebookRegex = /^https:\/\/www\.facebook\.com/;
+    const postId = post.id.split("_");
+    const feedDocument = {
         "_id": post.id,
         "docType": "feed",
         "type": "description",

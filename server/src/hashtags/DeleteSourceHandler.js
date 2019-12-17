@@ -27,17 +27,17 @@ export default class DeleteSourceHandler {
     }
 
     async deleteHashTags() {
-        let sourceDocuments = await this._fetchHashtagSources();
+        const sourceDocuments = await this._fetchHashtagSources();
         await this.deleteFeeds(sourceDocuments);
     }
 
     async deleteFeeds(sources) {
-        let sourceIds = sources.map(source => source._id);
+        const sourceIds = sources.map(source => source._id);
         const feedDocuments = await this._getFeedsFromSources(sourceIds);
-        let toBeDeleted = [];
-        let toBeMarked = [];
+        const toBeDeleted = [];
+        const toBeMarked = [];
         let currentFeedDoc = {};
-        let updatedCollectionFeedDocs = [];
+        const updatedCollectionFeedDocs = [];
 
         feedDocuments.forEach((feedDoc) => {
             if(feedDoc.docType === FEED_DOCTYPE) {
@@ -62,12 +62,12 @@ export default class DeleteSourceHandler {
             }
         });
 
-        let docsToBeDeleted = toBeDeleted.concat(sources);
+        const docsToBeDeleted = toBeDeleted.concat(sources);
         await this.couchClient.deleteBulkDocuments(docsToBeDeleted);
         try {
             const markedFeeds = await this.markAsSourceDeleted(toBeMarked);
             updatedCollectionFeedDocs.push(...markedFeeds);
-            let response = await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
+            const response = await this.couchClient.saveBulkDocuments({ "docs": updatedCollectionFeedDocs });
             if(response.length && response.filter((status) => status.error === "conflict").length) {
                 DeleteSourceHandler.logger().warn("Error updating the collection feed document, Error:: Document update conflict");
             }
@@ -144,10 +144,13 @@ export default class DeleteSourceHandler {
     }
 
     async deleteOldFeeds() {
-        let selector = null, docsObject = {}, docs = [], MONTH_DAYS = 30;
-        let currentDate = new Date();
+        let selector = null;
+        let docsObject = {};
+        let docs = [];
+        const MONTH_DAYS = 30;
+        const currentDate = new Date();
         currentDate.setDate(currentDate.getDate() - MONTH_DAYS);
-        let deleteDate = DateUtil.getUTCDateAndTime(currentDate);
+        const deleteDate = DateUtil.getUTCDateAndTime(currentDate);
         do { //eslint-disable-line no-loops/no-loops
             selector = {
                 "selector": {

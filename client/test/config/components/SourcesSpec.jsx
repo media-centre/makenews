@@ -11,8 +11,11 @@ import thunkMiddleware from "redux-thunk";
 import Spinner from "./../../../src/js/utils/components/Spinner";
 
 describe("Sources", () => {
-    let sources = null, sandbox = null;
-    let result = null, currentTab = null, store = null;
+    let sources = null;
+    let sandbox = null;
+    let result = null;
+    let currentTab = null;
+    let store = null;
 
     beforeEach("SourcePane", () => {
         sources = { "data": [
@@ -41,7 +44,7 @@ describe("Sources", () => {
                 <Sources />
             </Provider>);
 
-        let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Source);
+        const renderedSources = TestUtils.scryRenderedComponentsWithType(result, Source);
         expect(renderedSources).to.have.lengthOf(2); //eslint-disable-line no-magic-numbers
     });
 
@@ -56,7 +59,7 @@ describe("Sources", () => {
                 <Sources />
             </Provider>);
 
-        let renderedSources = TestUtils.scryRenderedComponentsWithType(result, Spinner);
+        const renderedSources = TestUtils.scryRenderedComponentsWithType(result, Spinner);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
     });
 
@@ -70,8 +73,8 @@ describe("Sources", () => {
             <Provider store={store}>
                 <Sources />
             </Provider>);
-        let renderedDOM = ReactDOM.findDOMNode(result);
-        let renderedParagraphs = renderedDOM.querySelectorAll("p");
+        const renderedDOM = ReactDOM.findDOMNode(result);
+        const renderedParagraphs = renderedDOM.querySelectorAll("p");
 
         expect(renderedDOM.children.length).to.equal(1); // eslint-disable-line no-magic-numbers
         expect(renderedParagraphs.length).to.equal(1); // eslint-disable-line no-magic-numbers
@@ -79,7 +82,7 @@ describe("Sources", () => {
     });
 
     xit("should have scroll event listener", () => {
-        var rootDomNode = ReactDOM.findDOMNode(result);
+        const rootDomNode = ReactDOM.findDOMNode(result);
         rootDomNode.scrollTop = 1500;
         TestUtils.Simulate.scroll(rootDomNode, {
             "target": rootDomNode

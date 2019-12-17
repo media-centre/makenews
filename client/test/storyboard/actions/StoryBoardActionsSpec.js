@@ -20,29 +20,29 @@ describe("StoryBoardActions", () => {
 
     describe("setStoryTitle", () => {
         it("should return an action type of ADD_STORY_TITLE and story with title and id", () => {
-            let action = { "type": StoryBoardActions.ADD_STORY_TITLE, story };
-            let expectedAction = StoryBoardActions.setStoryTitle(story);
+            const action = { "type": StoryBoardActions.ADD_STORY_TITLE, story };
+            const expectedAction = StoryBoardActions.setStoryTitle(story);
             assert.deepEqual(action, expectedAction);
         });
     });
 
     describe("clearStories", () => {
         it("should return an action type of CLEAR_STORIES", () => {
-            let action = { "type": StoryBoardActions.CLEAR_STORIES };
+            const action = { "type": StoryBoardActions.CLEAR_STORIES };
             assert.deepEqual(action, StoryBoardActions.clearStories);
         });
     });
 
     describe("getStories", () => {
         it("should dispatch set story title action with id and title", (done) => {
-            let action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id", "title": "title" } },
+            const action = [{ "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id", "title": "title" } },
                 { "type": StoryBoardActions.ADD_STORY_TITLE, "story": { "_id": "id2", "title": "title" } }];
-            let response = { "docs": [{ "_id": "id", "title": "title" }, { "_id": "id2", "title": "title" }] };
-            let ajaxClientInstance = AjaxClient.instance("/stories");
-            let ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
+            const response = { "docs": [{ "_id": "id", "title": "title" }, { "_id": "id2", "title": "title" }] };
+            const ajaxClientInstance = AjaxClient.instance("/stories");
+            const ajaxClientMock = sandbox.mock(AjaxClient).expects("instance")
                 .returns(ajaxClientInstance);
-            let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
-            let store = mockStore([], action, done);
+            const getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.resolve(response));
+            const store = mockStore([], action, done);
             store.dispatch(StoryBoardActions.getStories());
             ajaxClientMock.verify();
             getMock.verify();
@@ -62,9 +62,9 @@ describe("StoryBoardActions", () => {
                 }
             });
             const id = 2;
-            let action = [{ "type": StoryBoardActions.REMOVE_STORY, id }];
+            const action = [{ "type": StoryBoardActions.REMOVE_STORY, id }];
             const store = mockStore([{ "_id": 1 }, { "_id": id }, { "_id": 3 }], action, done);
-            let ajaxClientInstance = AjaxClient.instance("/delete-story");
+            const ajaxClientInstance = AjaxClient.instance("/delete-story");
             sandbox.stub(AjaxClient, "instance")
                 .returns(ajaxClientInstance);
             const postMock = sandbox.mock(ajaxClientInstance).expects("post")

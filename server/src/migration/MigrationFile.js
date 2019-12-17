@@ -12,11 +12,11 @@ export default class MigrationFile {
     }
     getMigratableFileClassNames(schemaVersion) {
 
-        let migrationPath = this.isAdmin ? MigrationFile.ADMIN_MIGRATION_FILES_PATH : MigrationFile.MIGRATION_FILES_PATH;
-        let fileNames = this.getFileNames(migrationPath);
-        let migratableClasses = [];
+        const migrationPath = this.isAdmin ? MigrationFile.ADMIN_MIGRATION_FILES_PATH : MigrationFile.MIGRATION_FILES_PATH;
+        const fileNames = this.getFileNames(migrationPath);
+        const migratableClasses = [];
         fileNames.forEach((fileName) => {
-            let timeStampAndFileName = this.split(fileName);
+            const timeStampAndFileName = this.split(fileName);
             if(moment(timeStampAndFileName[0], "YYYYMMDDHHmmss") > moment(schemaVersion, "YYYYMMDDHHmmss")) { // eslint-disable-line no-magic-numbers
                 migratableClasses.push(timeStampAndFileName);
             }
@@ -33,19 +33,19 @@ export default class MigrationFile {
     }
 
     split(fileName) {
-        let timeStamp = this._extractVersion(fileName);
+        const timeStamp = this._extractVersion(fileName);
         this._validateTimeStamp(timeStamp);
         return [timeStamp, this._extractFileName(fileName)];
     }
 
     _extractVersion(fileName) {
-        let fileNameAndVersion = fileName.split("_");
+        const fileNameAndVersion = fileName.split("_");
         return fileNameAndVersion[0]; // eslint-disable-line no-magic-numbers
     }
 
     _extractFileName(fileName) {
-        let fileNameAndVersion = fileName.split("_");
-        let fileNameWithJs = fileNameAndVersion[1].split("."); // eslint-disable-line no-magic-numbers
+        const fileNameAndVersion = fileName.split("_");
+        const fileNameWithJs = fileNameAndVersion[1].split("."); // eslint-disable-line no-magic-numbers
         return fileNameWithJs[0]; // eslint-disable-line no-magic-numbers
     }
 

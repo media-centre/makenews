@@ -8,7 +8,9 @@ import sinon from "sinon";
 import AppSessionStorage from "./../../../src/js/utils/AppSessionStorage";
 
 describe("UserProfileTab", () => {
-    let renderer = null, result = null, sandbox = sinon.sandbox.create();
+    let renderer = null;
+    let result = null;
+    const sandbox = sinon.sandbox.create();
 
     beforeEach("UserProfileTab", () => {
         renderer = TestUtils.createRenderer();
@@ -21,7 +23,7 @@ describe("UserProfileTab", () => {
     });
 
     it("should have User Profile component", () => {
-        let renderedSources = findAllWithType(result, UserProfile);
+        const renderedSources = findAllWithType(result, UserProfile);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
     });
 
@@ -31,7 +33,7 @@ describe("UserProfileTab", () => {
     });
 
     it("should have image", ()=> {
-        let [img] = result.props.children;
+        const [img] = result.props.children;
 
         expect(img.type).to.be.equals("span");
         expect(img.props.className).to.be.equals("user-profile__image");
@@ -40,7 +42,7 @@ describe("UserProfileTab", () => {
     });
 
     it("should have default name as user", ()=> {
-        let [, name] = result.props.children;
+        const [, name] = result.props.children;
 
         expect(name.type).to.be.equals("span");
         expect(name.props.className).to.be.equals("user-profile__name");
@@ -59,7 +61,7 @@ describe("UserProfileTab", () => {
     });
 
     it("should have down arrow", ()=> {
-        let [, , arrow] = result.props.children;
+        const [, , arrow] = result.props.children;
 
         expect(arrow.type).to.be.equals("span");
         expect(arrow.props.className).to.be.equals("user-profile__downarrow");
@@ -68,7 +70,7 @@ describe("UserProfileTab", () => {
     });
 
     it("should have dropdown", ()=> {
-        let [, , , dropdown] = result.props.children;
+        const [, , , dropdown] = result.props.children;
 
         expect(dropdown.type).to.be.equals("div");
         expect(dropdown.props.className).to.be.equals("user-profile__dropdown");

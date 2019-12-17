@@ -4,7 +4,7 @@ import { articleConfig } from "./../Factory";
 
 export function fetchArticleData(url) {
     return new Promise((resolve, reject) => {
-        let selector = {};
+        const selector = {};
 
         const domainExtract = /:\/\/(.[^/]+)/;
         const [, domain] = url.match(domainExtract);

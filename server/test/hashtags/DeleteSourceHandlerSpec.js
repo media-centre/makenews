@@ -6,7 +6,10 @@ import DateUtil from "../../src/util/DateUtil";
 import * as Constants from "./../../src/util/Constants";
 
 describe("DeleteSourceHandler", () => {
-    let deleteSourceHandler = null, sandbox = null, couchClient = null, accessToken = null;
+    let deleteSourceHandler = null;
+    let sandbox = null;
+    let couchClient = null;
+    let accessToken = null;
 
     beforeEach("DeleteSourceHandler", () => {
         accessToken = "accessToken";
@@ -32,22 +35,22 @@ describe("DeleteSourceHandler", () => {
         });
 
         it("should delete feeds of the given sources", async() => {
-            let sources = ["newsClick"];
-            let sourcesDoc = { "docs": [{ "_id": "source1" }] };
-            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" },
+            const sources = ["newsClick"];
+            const sourcesDoc = { "docs": [{ "_id": "source1" }] };
+            const feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" },
                 { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
                 { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" },
                 { "_id": "id30", "docType": "feed" }] };
 
-            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            const findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedDocs));
 
-            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
+            const saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            const deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
                 .withExactArgs([{ "_id": "id29", "docType": "feed" }, { "_id": "id30", "docType": "feed" }, { "_id": "source1" }]).returns(Promise.resolve({ "ok": true }));
 
-            let res = await deleteSourceHandler.deleteSources(sources);
+            const res = await deleteSourceHandler.deleteSources(sources);
 
             findMock.verify();
             saveMock.verify();
@@ -57,21 +60,21 @@ describe("DeleteSourceHandler", () => {
 
 
         it("should iterate the findDocuments if the current result is 25 ", async() => {
-            let sources = ["newsClick"];
-            let sourcesDoc = { "docs": [{ "_id": "source1" }] };
-            let firstResponse = { "docs": [{ "_id": "id1" }, { "_id": "id4" },
+            const sources = ["newsClick"];
+            const sourcesDoc = { "docs": [{ "_id": "source1" }] };
+            const firstResponse = { "docs": [{ "_id": "id1" }, { "_id": "id4" },
                 { "_id": "id5" }, { "_id": "id6" }, { "_id": "id7" }, { "_id": "id8" }, { "_id": "id9" }, { "_id": "id10" },
                 { "_id": "id11" }, { "_id": "id12" }, { "_id": "id13" }, { "_id": "id14" }, { "_id": "id15" }, { "_id": "id16" },
                 { "_id": "id17" }, { "_id": "id18" }, { "_id": "id19" }, { "_id": "id20" }, { "_id": "id21" }, { "_id": "id22" },
                 { "_id": "id23" }, { "_id": "id24" }, { "_id": "id25" }, { "_id": "id27" }, { "_id": "id28" }] };
-            let secondResponse = { "docs": [{ "_id": "id29" }, { "_id": "id30" }] };
+            const secondResponse = { "docs": [{ "_id": "id29" }, { "_id": "id30" }] };
 
-            let findDocs = sandbox.mock(couchClient).expects("findDocuments").thrice();
+            const findDocs = sandbox.mock(couchClient).expects("findDocuments").thrice();
             findDocs.onFirstCall().returns(Promise.resolve(firstResponse));
             findDocs.onSecondCall().returns(Promise.resolve(secondResponse));
             findDocs.onThirdCall().returns(Promise.resolve(sourcesDoc));
-            let saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            const saveDocs = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            const deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").returns(Promise.resolve({ "ok": true }));
             const response = await deleteSourceHandler.deleteSources(sources);
             deleteMock.verify();
             findDocs.verify();
@@ -90,12 +93,12 @@ describe("DeleteSourceHandler", () => {
                 "title": "title", "description": "description", "link": "link",
                 "tags": [], "sourceType": "web", "pubDate": "20170520", "sourceDeleted": true, "selectText": true };
 
-            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            const findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedsDoc));
 
-            let deleteBulkMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withArgs([feedDoc, { "_id": "newsclick" }]);
-            let saveBulkMock = sandbox.mock(couchClient).expects("saveBulkDocuments").withArgs({ "docs": [updatedDoc] });
+            const deleteBulkMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withArgs([feedDoc, { "_id": "newsclick" }]);
+            const saveBulkMock = sandbox.mock(couchClient).expects("saveBulkDocuments").withArgs({ "docs": [updatedDoc] });
 
             await deleteSourceHandler.deleteSources(sources);
 
@@ -107,14 +110,14 @@ describe("DeleteSourceHandler", () => {
 
     describe("deleteHashtags", () => {
         it("should delete feeds of the hashtags sources", async() => {
-            let sourcesDoc = { "docs": [{ "_id": "#abc" }] };
-            let feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
+            const sourcesDoc = { "docs": [{ "_id": "#abc" }] };
+            const feedDocs = { "docs": [{ "_id": "id29", "docType": "feed" }, { "_id": "id29-collection1", "docType": "collectionFeed", "feedId": "id29" },
                 { "_id": "id29-collection2", "docType": "collectionFeed", "feedId": "id29" }, { "_id": "id30", "docType": "feed" }] };
-            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            const findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(sourcesDoc));
             findMock.onSecondCall().returns(Promise.resolve(feedDocs));
-            let saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
+            const saveMock = sandbox.mock(couchClient).expects("saveBulkDocuments").returns(Promise.resolve({ "ok": true }));
+            const deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments")
                 .withExactArgs([{ "_id": "id29", "docType": "feed" }, { "_id": "id30", "docType": "feed" }, { "_id": "#abc" }]).returns(Promise.resolve({ "ok": true }));
             await deleteSourceHandler.deleteHashTags();
             findMock.verify();
@@ -125,7 +128,7 @@ describe("DeleteSourceHandler", () => {
 
     describe("deleteOldFeeds", () => {
         it("should delete all feeds whose published date is older than 30 days from the present day", async() => {
-            let docs = [
+            const docs = [
                 {
                     "images": [{ "url": "image url" }],
                     "videos": [{ "thumbnail": "video image url" }],
@@ -148,15 +151,15 @@ describe("DeleteSourceHandler", () => {
                     "bookmark": false,
                     "_id": "123"
                 }];
-            let data = {
+            const data = {
                 "docs": docs
             };
-            let getUTCDateAndTimeMock = sandbox.stub(DateUtil, "getUTCDateAndTime");
+            const getUTCDateAndTimeMock = sandbox.stub(DateUtil, "getUTCDateAndTime");
             getUTCDateAndTimeMock.returns("2017-03-27T14:07:37.000Z");
-            let findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
+            const findMock = sandbox.mock(couchClient).expects("findDocuments").twice();
             findMock.onFirstCall().returns(Promise.resolve(data));
             findMock.onSecondCall().returns(Promise.resolve({ "docs": [] }));
-            let deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs(docs).once();
+            const deleteMock = sandbox.mock(couchClient).expects("deleteBulkDocuments").withExactArgs(docs).once();
             await deleteSourceHandler.deleteOldFeeds(couchClient);
             findMock.verify();
             deleteMock.verify();

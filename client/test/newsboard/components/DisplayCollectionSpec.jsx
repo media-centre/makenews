@@ -12,7 +12,9 @@ import * as DisplayArticleActions from "../../../src/js/newsboard/actions/Displa
 import Locale from "./../../../src/js/utils/Locale";
 
 describe("Display Collections", () => {
-    let feeds = null, store = null, result = null;
+    let feeds = null;
+    let store = null;
+    let result = null;
     const sandbox = sinon.sandbox.create();
     const anonymousFun = () => {};
 
@@ -67,33 +69,33 @@ describe("Display Collections", () => {
     });
 
     it("should show popup when create new collection is clicked", () => {
-        let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
+        const createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
         TestUtils.Simulate.click(createCollectionElement);
         assert.isNotNull(TestUtils.findRenderedDOMComponentWithClass(result, "new-collection"));
     });
 
     it("should dispatch addToCollection when save button is clicked", () => {
-        let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
+        const createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
         TestUtils.Simulate.click(createCollectionElement);
-        let addToCollectionMock = sandbox.mock(DisplayArticleActions)
+        const addToCollectionMock = sandbox.mock(DisplayArticleActions)
             .expects("addToCollection")
             .returns({ "type": "" });
-        let displayFeedDOM = ReactDOM.findDOMNode(result);
-        let inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
+        const displayFeedDOM = ReactDOM.findDOMNode(result);
+        const inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
         inputBox.value = "collectionName";
-        let saveCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "save-collection");
+        const saveCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "save-collection");
         TestUtils.Simulate.click(saveCollectionElement);
         addToCollectionMock.verify();
     });
 
     it("should dispatch addToCollection on keyup", () => {
-        let createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
+        const createCollectionElement = TestUtils.findRenderedDOMComponentWithClass(result, "create_collection");
         TestUtils.Simulate.click(createCollectionElement);
-        let addToCollectionMock = sandbox.mock(DisplayArticleActions)
+        const addToCollectionMock = sandbox.mock(DisplayArticleActions)
             .expects("addToCollection")
             .returns({ "type": "" });
-        let displayFeedDOM = ReactDOM.findDOMNode(result);
-        let inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
+        const displayFeedDOM = ReactDOM.findDOMNode(result);
+        const inputBox = displayFeedDOM.querySelectorAll(".new-collection-input-box")[0]; //eslint-disable-line no-magic-numbers
         inputBox.value = "collectionName";
         TestUtils.Simulate.keyUp(inputBox, { "keyCode": 13 });
         addToCollectionMock.verify();
@@ -106,11 +108,11 @@ describe("Display Collections", () => {
     it("should render the filtered collection names only, after entering the keyword in searchbar", () => {
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 2); //eslint-disable-line no-magic-numbers
 
-        let displayFeedDom = ReactDOM.findDOMNode(result);
-        let inputBox = displayFeedDom.querySelector(".input-box input");
+        const displayFeedDom = ReactDOM.findDOMNode(result);
+        const inputBox = displayFeedDom.querySelector(".input-box input");
         inputBox.value = "politic";
         TestUtils.Simulate.keyUp(inputBox, { "key": "s" });
-        let collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
+        const collections = TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name");
 
         assert.equal(TestUtils.scryRenderedDOMComponentsWithClass(result, "collection-name").length, 1);//eslint-disable-line no-magic-numbers
         assert.equal(collections[0].textContent, "politics × "); //eslint-disable-line no-magic-numbers

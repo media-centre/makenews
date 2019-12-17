@@ -13,15 +13,15 @@ export default class TwitterHandlesRoute extends Route {
     }
 
     pageNumber() {
-        let ONE = 1;
-        let page = Number.parseInt(this.page, 10);
+        const ONE = 1;
+        const page = Number.parseInt(this.page, 10);
         return (Number.isInteger(page) && page >= ONE) ? page : ONE;
     }
 
     async handle() {
-        let twitterRequestHandler = TwitterRequestHandler.instance();
+        const twitterRequestHandler = TwitterRequestHandler.instance();
         try {
-            let data = await twitterRequestHandler.fetchHandlesRequest(this.authSession, this.keyword, this.pageNumber(), this.preFirstId);
+            const data = await twitterRequestHandler.fetchHandlesRequest(this.authSession, this.keyword, this.pageNumber(), this.preFirstId);
             RouteLogger.instance().debug("TwitterHandlesRoute:: successfully fetched twitter feeds for key");
             this._handleSuccess(data);
         } catch(error) {

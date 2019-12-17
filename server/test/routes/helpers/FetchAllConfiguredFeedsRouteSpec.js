@@ -8,8 +8,13 @@ import sinon from "sinon";
 
 describe("FetchAllConfiguredFeedsRoute", () => {
     describe("fetchFeeds", () => {
-        let authSession = null, fetchRequestHandlerInstance = null, feeds = null, request = null, response = null;
-        let offset = 0, sourceType = null;
+        let authSession = null;
+        let fetchRequestHandlerInstance = null;
+        let feeds = null;
+        let request = null;
+        let response = null;
+        const offset = 0;
+        let sourceType = null;
 
         beforeEach("fetch feeds", () => {
             sourceType = "web";
@@ -51,7 +56,7 @@ describe("FetchAllConfiguredFeedsRoute", () => {
             sinon.mock(fetchRequestHandlerInstance).expects("fetchFeeds").returns(Promise.resolve(feeds));
 
             response = mockResponse();
-            let fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
+            const fetchAllConfiguredFeedsRoute = new FetchAllConfiguredFeedsRoute(request, response, {});
             await fetchAllConfiguredFeedsRoute.fetchFeeds();
 
             assert.deepEqual(response.status(), HttpResponseHandler.codes.OK);

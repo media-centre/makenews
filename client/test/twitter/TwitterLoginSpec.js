@@ -17,17 +17,18 @@ describe("TwitterLogin", () => {
 
     describe("requestToken", () => {
         it("should not request to twitter if already authenticated", () => {
-            let clientCallbackUrl = "http://localhost:5000/#/twitterSuccess", serverUrl = "http://localhost:5000",
-                serverCallbackUrl = "http://localhost:5000/twitter-oauth-callback";
-            let appWindowMock = new AppWindow();
-            let appWindowInstanceMock = sandbox.mock(AppWindow).expects("instance");
+            const clientCallbackUrl = "http://localhost:5000/#/twitterSuccess";
+            const serverUrl = "http://localhost:5000";
+            const serverCallbackUrl = "http://localhost:5000/twitter-oauth-callback";
+            const appWindowMock = new AppWindow();
+            const appWindowInstanceMock = sandbox.mock(AppWindow).expects("instance");
             appWindowInstanceMock.returns(appWindowMock);
-            let appWindowGetMock = sandbox.mock(appWindowMock).expects("get");
+            const appWindowGetMock = sandbox.mock(appWindowMock).expects("get");
             appWindowGetMock.withExactArgs("serverUrl").returns(serverUrl);
-            let ajaxInstance = { "get": () => {} };
-            let ajaxMock = sandbox.mock(AjaxClient).expects("instance");
+            const ajaxInstance = { "get": () => {} };
+            const ajaxMock = sandbox.mock(AjaxClient).expects("instance");
             ajaxMock.withArgs("/twitter-request-token").returns(ajaxInstance);
-            let ajaxInstanceMock = sandbox.mock(ajaxInstance).expects("get");
+            const ajaxInstanceMock = sandbox.mock(ajaxInstance).expects("get");
             ajaxInstanceMock.withExactArgs({ clientCallbackUrl, serverCallbackUrl }).returns(Promise.resolve("response"));
             return Promise.resolve(TwitterLogin.instance().requestToken()).then(() => {
                 appWindowGetMock.verify();

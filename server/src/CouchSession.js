@@ -37,7 +37,7 @@ export default class CouchSession {
     }
 
     static authenticate(token) {
-        let authSessionToken = "AuthSession=" + token;
+        const authSessionToken = "AuthSession=" + token;
         return new Promise((resolve, reject) => {
             request.get({
                 "url": ApplicationConfig.instance().dbUrl() + "/_session",
@@ -46,13 +46,13 @@ export default class CouchSession {
                 }
             }, (error, response, body) => {
                 if(CouchSession.requestSuccessful(error, response)) {
-                    let userJson = JSON.parse(body);
+                    const userJson = JSON.parse(body);
                     CouchSession.logger().debug("CouchSession:: authenticating user successful.");
                     if(StringUtil.validNonEmptyString(userJson.userCtx.name)) {
                         if(response.headers["set-cookie"]) {
-                            let [authSessionCookie] = response.headers["set-cookie"];
-                            let [authSession] = authSessionCookie.split(";");
-                            let [, newToken] = authSession.split("=");
+                            const [authSessionCookie] = response.headers["set-cookie"];
+                            const [authSession] = authSessionCookie.split(";");
+                            const [, newToken] = authSession.split("=");
                             if(newToken !== token) { //eslint-disable-line max-depth
                                 userDetails.removeUser(token);
                                 userDetails.updateUser(newToken, userJson.userCtx.name);

@@ -4,11 +4,11 @@ import Migration from "./migration/Migration";
 import ApplicationConfig from "./config/ApplicationConfig";
 import CryptUtil from "./util/CryptUtil";
 
-var argv = require("yargs").argv;
+const argv = require("yargs").argv;
 
-let migrateDb = (dbName, token) => {
+const migrateDb = (dbName, token) => {
     console.log("migrating db...");
-    let migrationInstance = Migration.instance(dbName, token);
+    const migrationInstance = Migration.instance(dbName, token);
     migrationInstance.start().then(() => {
         console.log("migration complete.");
     }).catch(error => {
@@ -26,7 +26,7 @@ let migrateDb = (dbName, token) => {
 //     });
 // };
 
-let createDb = (dbInstance, userName, dbName) => {
+const createDb = (dbInstance, userName, dbName) => {
     console.log("creating user database...");
     dbInstance.createDb(dbName).then(() => {
         console.log("created user db.");
@@ -41,15 +41,16 @@ console.log("usage:: node dist/server/src/createUser.js [--admin_user_name='user
 console.log("usage:: node dist/server/src/createUser.js [--user_name='userName' --user_password='password']");
 console.log("usage:: node dist/server/src/createUser.js");
 
-let appConfig = new ApplicationConfig();
+const appConfig = new ApplicationConfig();
 
-let adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().username;
-let adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().password;
+const adminUserName = argv.admin_user_name ? argv.admin_user_name : appConfig.adminDetails().username;
+const adminPassword = argv.admin_password ? argv.admin_password : appConfig.adminDetails().password;
 
 console.log("User creation started.");
 AdminDbClient.instance(adminUserName, adminPassword, argv.user_name).then(dbInstance => {
-    let userName = argv.user_name, password = argv.user_password || Math.random().toString("36").slice("-8"),
-        dbName = CryptUtil.dbNameHash(argv.user_name);
+    const userName = argv.user_name;
+    const password = argv.user_password || Math.random().toString("36").slice("-8");
+    const dbName = CryptUtil.dbNameHash(argv.user_name);
     console.log("creating user...");
     dbInstance.createUser(userName, password).then(() => {
         console.log(`created user: ${userName} with password: ${password}`);

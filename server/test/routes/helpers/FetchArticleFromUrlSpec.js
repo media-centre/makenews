@@ -6,7 +6,7 @@ import sinon from "sinon";
 describe("FetchArticleFromUrl", () => {
     describe("validate", () => {
         it("should return error message of missing params if url parameter is not passed", () => {
-            let fetchArticle = new FetchArticleFromUrl({
+            const fetchArticle = new FetchArticleFromUrl({
                 "query": { }
             }, {});
 
@@ -27,7 +27,7 @@ describe("FetchArticleFromUrl", () => {
         });
 
         it("should get the HTML for a valid url", async() => {
-            let fetchArticle = new FetchArticleFromUrl({
+            const fetchArticle = new FetchArticleFromUrl({
                 "query": { "url": "http://some.url" }
             }, {});
 
@@ -39,7 +39,7 @@ describe("FetchArticleFromUrl", () => {
                         </div>`);
 
 
-            let expectedHTML = {
+            const expectedHTML = {
                 "markup": `<div>
                             Cricket
                             <p>Australia’s player of the year David Warner has welcomed a rest before touring India next month, saying it’s
@@ -47,7 +47,7 @@ describe("FetchArticleFromUrl", () => {
                         </div>`
             };
 
-            let article = await fetchArticle.handle();
+            const article = await fetchArticle.handle();
             expect(article).to.deep.equal(expectedHTML);
         });
     });

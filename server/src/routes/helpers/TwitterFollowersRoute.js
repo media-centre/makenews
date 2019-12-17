@@ -13,15 +13,15 @@ export default class TwitterFollowersRoute extends Route {
     }
 
     pageValue() {
-        let ONE = 1;
-        let page = Number.parseInt(this.page, 10);
+        const ONE = 1;
+        const page = Number.parseInt(this.page, 10);
         return (Number.isInteger(page) && page >= ONE) ? page : ONE;
     }
 
     async handle() { //eslint-disable-line consistent-return
-        let twitterRequestHandler = TwitterRequestHandler.instance();
+        const twitterRequestHandler = TwitterRequestHandler.instance();
         try {
-            let data = await twitterRequestHandler.fetchFollowersRequest(this.authSession, this.keyword, this.pageValue());
+            const data = await twitterRequestHandler.fetchFollowersRequest(this.authSession, this.keyword, this.pageValue());
             RouteLogger.instance().debug("TwitterFeedsRoute:: successfully fetched twitter feeds for key");
             this._handleSuccess(data);
         } catch(error){ //eslint-disable-line

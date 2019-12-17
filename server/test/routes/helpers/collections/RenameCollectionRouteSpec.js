@@ -5,8 +5,12 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("RenameCollectionRoute", () => {
-    let couchClient = null, authSession = null, sandbox = null, collectionReqHandler = null;
-    let renameCollection = null, request = null;
+    let couchClient = null;
+    let authSession = null;
+    let sandbox = null;
+    let collectionReqHandler = null;
+    let renameCollection = null;
+    let request = null;
 
     beforeEach("CollectionRoute", () => {
         sandbox = sinon.sandbox.create();

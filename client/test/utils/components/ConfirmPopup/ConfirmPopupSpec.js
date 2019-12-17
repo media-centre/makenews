@@ -9,7 +9,8 @@ import React from "react";
 import "../../../helper/TestHelper";
 import sinon from "sinon";
 
-let confirmPop = null, cancelCalled = null;
+let confirmPop = null;
+let cancelCalled = null;
 describe("ConfirmPopup", ()=> {
 
     function confirmCallback(event) {
@@ -51,7 +52,7 @@ describe("ConfirmPopup", ()=> {
         const sandbox = sinon.sandbox.create();
         const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
 
-        let confirmPopTest = TestUtils.renderIntoDocument(
+        const confirmPopTest = TestUtils.renderIntoDocument(
             <ConfirmPopup description={"Test description"} callback={confirmCallback} dispatch={anonymousFun}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.cancelButton);
@@ -68,7 +69,7 @@ describe("ConfirmPopup", ()=> {
         const sandbox = sinon.sandbox.create();
         const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
 
-        let confirmPopTest = TestUtils.renderIntoDocument(
+        const confirmPopTest = TestUtils.renderIntoDocument(
             <ConfirmPopup description={"Test description"} callback={confirmCallback} dispatch={anonymousFun}/>
         );
         TestUtils.Simulate.click(confirmPopTest.refs.confirmButton);

@@ -5,7 +5,11 @@ import TestUtils from "react-addons-test-utils";
 import { expect } from "chai";
 
 describe("Feed", () => {
-    let feed = null, renderer = null, feedDom = null, active = null, onToggle = null;
+    let feed = null;
+    let renderer = null;
+    let feedDom = null;
+    let active = null;
+    let onToggle = null;
     beforeEach("Feed", () => {
         feed = {
             "images": [{ "url": "image url", "thumbnail": "image url" }],
@@ -40,7 +44,7 @@ describe("Feed", () => {
     it("should have image with the given url", () => {
         feed.videos = [];
         feedDom = renderer.render(<Feed active={active} feed={feed} onToggle={onToggle}/>);
-        let img = feedDom.props.children[0].props.children;
+        const img = feedDom.props.children[0].props.children;
         expect(img.type).to.equals("img");
         expect(img.props.src).to.equals("image url");
     });
@@ -48,29 +52,29 @@ describe("Feed", () => {
     it("should have video thumbnail with the given url", () => {
         feed.images = [];
         feedDom = renderer.render(<Feed active={active} feed={feed} onToggle={onToggle}/>);
-        let img = feedDom.props.children[0].props.children;
+        const img = feedDom.props.children[0].props.children;
         expect(img.type).to.equals("img");
         expect(img.props.src).to.equals("video image url");
     });
 
     it("should have title ", () => {
-        let img = feedDom.props.children[1].props;
-        let title = img.children[0].props;
+        const img = feedDom.props.children[1].props;
+        const title = img.children[0].props;
 
         expect(title.className).to.equals("feed__title");
         expect(title.children).to.equals("Some Title");
     });
 
     it("should have description ", () => {
-        let img = feedDom.props.children[1].props;
-        let description = img.children[1].props;
+        const img = feedDom.props.children[1].props;
+        const description = img.children[1].props;
 
         expect(description.className).to.equals("feed__description");
         expect(description.children).to.equals("Some Description");
     });
 
     it("should have source ", () => {
-        let source = feedDom.props.children[2].props;
+        const source = feedDom.props.children[2].props;
 
         expect(source.className).to.equals("feed__source");
         expect(source.children[0].props.className).to.equals("source-type");
@@ -80,7 +84,7 @@ describe("Feed", () => {
     });
 
     it("should have media ", () => {
-        let media = feedDom.props.children[0].props;
+        const media = feedDom.props.children[0].props;
         expect(media.className).to.equals("feed__media");
     });
 });

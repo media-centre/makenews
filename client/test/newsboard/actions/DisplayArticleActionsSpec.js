@@ -135,14 +135,14 @@ describe("DisplayArticleActions", () => {
         });
 
         it("should dispatch article Received action after successful fetching article", (done) => {
-            let article = "Some Article";
-            let response = { "markup": article };
-            let ajaxClientInstance = AjaxClient.instance("/article");
+            const article = "Some Article";
+            const response = { "markup": article };
+            const ajaxClientInstance = AjaxClient.instance("/article");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-            let getMock = sandbox.mock(ajaxClientInstance).expects("get")
+            const getMock = sandbox.mock(ajaxClientInstance).expects("get")
                 .withArgs({ "url": "some url" }).returns(Promise.resolve(response));
 
-            let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
+            const store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
                 "type": WEB_ARTICLE_RECEIVED,
                 "article": article,
                 "isHTML": true
@@ -154,13 +154,13 @@ describe("DisplayArticleActions", () => {
 
         /* TODO: not able to fail the test with reason, when toastMock fails */ //eslint-disable-line
         it("should dispatch fetchingArticleFailed action ", (done) => {
-            let ajaxClientInstance = AjaxClient.instance("/article");
+            const ajaxClientInstance = AjaxClient.instance("/article");
             sandbox.mock(AjaxClient).expects("instance").returns(ajaxClientInstance);
-            let getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
-            let toastMock = sandbox.mock(Toast).expects("show")
+            const getMock = sandbox.mock(ajaxClientInstance).expects("get").returns(Promise.reject("some"));
+            const toastMock = sandbox.mock(Toast).expects("show")
                 .withArgs("Unable to get the article contents");
 
-            let store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
+            const store = mockStore({}, [{ "type": WEB_ARTICLE_REQUESTED }, {
                 "type": WEB_ARTICLE_RECEIVED,
                 "article": "some desc",
                 "isHTML": false
@@ -173,8 +173,13 @@ describe("DisplayArticleActions", () => {
     });
 
     describe("addToCollection", () => {
-        let collection = null, docId = null, article = null, body = null, ajaxClientInstance = null,
-            headers = null, response = null;
+        let collection = null;
+        let docId = null;
+        let article = null;
+        let body = null;
+        let ajaxClientInstance = null;
+        let headers = null;
+        let response = null;
 
         beforeEach("addToCollection", () => {
             collection = "collectionName";

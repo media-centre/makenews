@@ -8,8 +8,11 @@ import DeleteSourceHandler from "../../../src/hashtags/DeleteSourceHandler";
 
 
 describe("LoginRoute", () => {
-    let request = null, response = null, userName = null, password = null,
-        sandbox = sinon.sandbox.create();
+    let request = null;
+    let response = null;
+    let userName = null;
+    let password = null;
+    const sandbox = sinon.sandbox.create();
     beforeEach("LoginRoute", () => {
         userName = "test_user_name";
         password = "test_password";
@@ -20,8 +23,12 @@ describe("LoginRoute", () => {
     });
 
     describe("handle", () => {
-        let token = null, authSessionCookie = null, next = null,
-            userReqGetAuthSessionCookieMock = null, deleteHashMock = null, deleteOldFeedsMock = null;
+        let token = null;
+        let authSessionCookie = null;
+        const next = null;
+        let userReqGetAuthSessionCookieMock = null;
+        let deleteHashMock = null;
+        let deleteOldFeedsMock = null;
         beforeEach("handle", () => {
             request = {
                 "body": {
@@ -31,7 +38,7 @@ describe("LoginRoute", () => {
             };
             token = "dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA";
             authSessionCookie = `AuthSession=${token}; Version=1; Path=/; HttpOnly`;
-            let deleteHanlder = DeleteSourceHandler.instance(token);
+            const deleteHanlder = DeleteSourceHandler.instance(token);
             sandbox.mock(DeleteSourceHandler).expects("instance").returns(deleteHanlder);
             deleteHashMock = sandbox.mock(deleteHanlder).expects("deleteHashTags")
                 .returns(Promise.resolve({ "ok": true }));
@@ -94,7 +101,7 @@ describe("LoginRoute", () => {
 
             userReqGetAuthSessionCookieMock.returns(Promise.reject("error"));
 
-            let loginRoute = new LoginRoute(request, response, next);
+            const loginRoute = new LoginRoute(request, response, next);
             loginRoute.handle();
         });
 
@@ -182,7 +189,7 @@ describe("LoginRoute", () => {
 
             userReqGetAuthSessionCookieMock.returns(Promise.resolve(authSessionCookie));
 
-            let loginRoute = new LoginRoute(request, response, next);
+            const loginRoute = new LoginRoute(request, response, next);
             loginRoute.handle();
         });
     });

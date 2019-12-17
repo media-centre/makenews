@@ -24,7 +24,14 @@ describe("UserProfileActions", ()=> {
     });
 
     describe("changePassword", () => {
-        let url = null, headers = null, data = null, currentPassword = null, newPassword = null, ajaxClient = null, ajaxClientPostMock = null, verify = null;
+        let url = null;
+        let headers = null;
+        let data = null;
+        const currentPassword = null;
+        const newPassword = null;
+        let ajaxClient = null;
+        let ajaxClientPostMock = null;
+        let verify = null;
         beforeEach("changePassword", () => {
             url = "/change-password";
             headers = {

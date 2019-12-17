@@ -6,7 +6,8 @@ import { isRejected } from "./../helpers/AsyncTestHelper";
 import { assert } from "chai";
 
 describe("UserRequest", () => {
-    let userName = null, password = null;
+    let userName = null;
+    let password = null;
     let sandbox = null;
     before("UserRequest", () => {
         sandbox = sinon.sandbox.create();
@@ -19,7 +20,8 @@ describe("UserRequest", () => {
     });
 
     describe("getToken", () => {
-        let sessionCooke = null, couchSessionLoginMock = null;
+        let sessionCooke = null;
+        let couchSessionLoginMock = null;
         beforeEach("getToken", () => {
             sessionCooke = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
             couchSessionLoginMock = sandbox.mock(CouchSession).expects("login");
@@ -46,7 +48,8 @@ describe("UserRequest", () => {
     });
 
     describe("getAuthSessionCookie", () => {
-        let sessionCooke = null, couchSessionLoginMock = null;
+        let sessionCooke = null;
+        let couchSessionLoginMock = null;
         beforeEach("getAuthSessionCookie", () => {
             sessionCooke = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
             couchSessionLoginMock = sandbox.mock(CouchSession).expects("login");
@@ -69,7 +72,9 @@ describe("UserRequest", () => {
     });
 
     describe("updatePassword", () => {
-        let username = null, newPassword = null, currentPassword = null;
+        let username = null;
+        let newPassword = null;
+        let currentPassword = null;
         const token = "AuthSession=dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA; Version=1; Path=/; HttpOnly";
         beforeEach("updatePassword", () => {
             sandbox = sinon.sandbox.create();
@@ -112,7 +117,8 @@ describe("UserRequest", () => {
         });
 
         it("should get the user details", async() => {
-            const name = "test", token = "token";
+            const name = "test";
+            const token = "token";
             const expectedUserDetails = { "takenTour": false };
             const couchClient = new CouchClient(token, "_users");
             sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
@@ -126,7 +132,8 @@ describe("UserRequest", () => {
         });
 
         it("should reject with error if fetch fails", async() => {
-            const name = "test", token = "token";
+            const name = "test";
+            const token = "token";
             const couchClient = new CouchClient(token, "_users");
             sandbox.stub(CouchClient, "instance").withArgs(token, "_users").returns(couchClient);
             const getMock = sandbox.mock(couchClient).expects("get");
@@ -138,7 +145,8 @@ describe("UserRequest", () => {
     
     describe("MarkAsVisitedUser", () => {
         const token = "token";
-        let couchClient = null, couchClientUser = null;
+        let couchClient = null;
+        let couchClientUser = null;
         const updatedUserDetails = {
             "_id": "org.couchdb.user:test_user_name",
             "_rev": "12345",
@@ -155,7 +163,7 @@ describe("UserRequest", () => {
             sandbox = sinon.sandbox.create();
             couchClient = new CouchClient(token, "_users");
             couchClientUser = new CouchClient(token);
-            let couchInstanceMock = sandbox.mock(CouchClient).expects("instance").twice();
+            const couchInstanceMock = sandbox.mock(CouchClient).expects("instance").twice();
             couchInstanceMock.onFirstCall().returns(couchClient);
             couchInstanceMock.onSecondCall().returns(couchClientUser);
         });

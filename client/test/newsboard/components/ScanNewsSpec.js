@@ -6,20 +6,21 @@ import { findAllWithType } from "react-shallow-testutils";
 import { expect } from "chai";
 
 xdescribe("Scan News", () => {
-    let scanNews = null, result = null; //eslint-disable-line no-unused-vars
+    let result = null; //eslint-disable-line no-unused-vars
 
     beforeEach("Scan News", () => {
-        let dispatch = () => {};
-        let store = {
+        const dispatch = () => {};
+        const store = {
             "getState": ()=>{}
         };
-        let renderer = TestUtils.createRenderer();
-        scanNews = renderer.render(<ScanNews store = {store} dispatch={dispatch} />);
+        const renderer = TestUtils.createRenderer();
+        // eslint-disable-next-line react/jsx-no-bind
+        renderer.render(<ScanNews store = {store} dispatch={dispatch} />);
         result = renderer.getRenderOutput();
     });
 
     it("should have DisplayFeeds Component", () => {
-        let renderedSources = findAllWithType(result, DisplayFeeds);
+        const renderedSources = findAllWithType(result, DisplayFeeds);
         expect(renderedSources).to.have.lengthOf(1); //eslint-disable-line no-magic-numbers
     });
 });

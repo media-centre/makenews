@@ -7,19 +7,21 @@ import { assert } from "chai";
 describe("Twitter Actions", () => {
     describe("twitterTokenInformation", () => {
         it("it should return the action type and twitterAuthenticated value", () => {
-            let twitterAuthenticated = true;
-            let action = {
+            const twitterAuthenticated = true;
+            const action = {
                 "type": TWITTER_AUTHENTICATION,
                 "twitterAuthenticated": twitterAuthenticated
             };
-            let result = twitterTokenInformation(twitterAuthenticated);
+            const result = twitterTokenInformation(twitterAuthenticated);
             assert.strictEqual(result.type, action.type);
             assert.strictEqual(result.twitterAuthenticated, action.twitterAuthenticated);
         });
     });
 
     describe("twitterAuthentication", () => {
-        let sandbox = null, ajaxClient = null, ajaxGetmock = null;
+        let sandbox = null;
+        let ajaxClient = null;
+        let ajaxGetmock = null;
         beforeEach("twitterAuthentication", () => {
             sandbox = sinon.sandbox.create();
             ajaxClient = new AjaxClient("/twitter-token", false);
@@ -31,9 +33,9 @@ describe("Twitter Actions", () => {
         });
 
         it("should get the twitter authentication as true from the server", (done) => {
-            let twitterAuthenticated = true;
+            const twitterAuthenticated = true;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.resolve({ "twitterAuthenticated": twitterAuthenticated }));
-            let store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
+            const store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
             twitterAuthentication().then(func => {
                 store.dispatch(func);
                 ajaxGetmock.verify();
@@ -41,9 +43,9 @@ describe("Twitter Actions", () => {
         });
 
         it("should get the twitter authentication as false from the server", (done) => {
-            let twitterAuthenticated = false;
+            const twitterAuthenticated = false;
             ajaxGetmock = sandbox.mock(ajaxClient).expects("get").returns(Promise.reject({ "status": "badRequest" }));
-            let store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
+            const store = mockStore([], [{ "type": TWITTER_AUTHENTICATION, "twitterAuthenticated": twitterAuthenticated }], done);
             twitterAuthentication().then(func => {
                 store.dispatch(func);
                 ajaxGetmock.verify();

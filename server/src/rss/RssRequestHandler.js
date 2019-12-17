@@ -13,7 +13,7 @@ export default class RssRequestHandler {
 
     async fetchBatchRssFeedsRequest(url) {
         try {
-            let feeds = await this.rssClient().getRssData(url);
+            const feeds = await this.rssClient().getRssData(url);
             RssRequestHandler.logger().debug("RssRequestHandler:: successfully fetched feeds for %s.", url);
             return feeds;
         } catch (error) {
@@ -28,7 +28,7 @@ export default class RssRequestHandler {
 
     async searchUrl(key, offSetValue) {
         try {
-            let document = await this.rssClient().searchURL(key, offSetValue);
+            const document = await this.rssClient().searchURL(key, offSetValue);
             RssRequestHandler.logger().debug("RssRequestHandler:: Successfully fetched for given selector");
             return document;
         } catch (error) {

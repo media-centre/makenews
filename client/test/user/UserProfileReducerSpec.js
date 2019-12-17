@@ -6,7 +6,8 @@ import "../helper/TestHelper";
 import sinon from "sinon";
 
 describe("UserProfileReducer", ()=> {
-    let sandbox = null, appEn = null;
+    let sandbox = null;
+    let appEn = null;
     beforeEach("UserProfileReducer", () => {
         sandbox = sinon.sandbox.create();
         appEn = {

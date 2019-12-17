@@ -9,8 +9,8 @@ describe("ConfiguredSources", () => {
     const anonymousFun = () => {};
 
     it("should call renderSources with current sourceType and searchKey", () => {
-        let sourceFilter = TestUtils.createRenderer();
-        let renderSourceFun = (sourceType, searchKey) => {
+        const sourceFilter = TestUtils.createRenderer();
+        const renderSourceFun = (sourceType, searchKey) => {
             assert.strictEqual(sourceType, "twitter");
             assert.strictEqual(searchKey, "the");
         };

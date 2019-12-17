@@ -26,21 +26,21 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should return ${sourceConfigActions.GOT_CONFIGURED_SOURCES} action when it receives configured sources`, () => {
-            let sources = [{ "name": "Profile1" }, { "name": "Profile2" }];
-            let action = sourceConfigActions.configuredSourcesReceived(sources);
+            const sources = [{ "name": "Profile1" }, { "name": "Profile2" }];
+            const action = sourceConfigActions.configuredSourcesReceived(sources);
             expect(action.type).to.equal(sourceConfigActions.GOT_CONFIGURED_SOURCES);
             expect(action.sources).to.deep.equal(sources);
         });
 
         it(`should dispatch ${sourceConfigActions.GOT_CONFIGURED_SOURCES} once it gets the configured sources from server`, (done) => {
-            let sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
+            const sources = { "profiles": [{ "name": "Profile1" }, { "name": "Profile2" }],
                 "pages": [], "groups": [], "twitter": [], "web": [] };
 
-            let ajaxClient = AjaxClient.instance("/configure-sources");
+            const ajaxClient = AjaxClient.instance("/configure-sources");
             sandbox.mock(AjaxClient).expects("instance").withArgs("/configure-sources").returns(ajaxClient);
             sandbox.stub(ajaxClient, "get").withArgs().returns(Promise.resolve(sources));
 
-            let store = mockStore({}, [{ "type": sourceConfigActions.GOT_CONFIGURED_SOURCES, "sources": sources }], done);
+            const store = mockStore({}, [{ "type": sourceConfigActions.GOT_CONFIGURED_SOURCES, "sources": sources }], done);
             store.dispatch(sourceConfigActions.getConfiguredSources());
         });
     });
@@ -53,16 +53,17 @@ describe("SourceConfigurationActions", () => {
 
     describe("switch current Tab", () => {
         it("should return the FACEBOOK_CHANGE_CURRENT_TAB action", () => {
-            let currentTab = "Pages";
-            let facebookSourceTabSwitch = sourceConfigActions.switchSourceTab(currentTab);
+            const currentTab = "Pages";
+            const facebookSourceTabSwitch = sourceConfigActions.switchSourceTab(currentTab);
             expect(facebookSourceTabSwitch.type).to.equal(sourceConfigActions.CHANGE_CURRENT_SOURCE_TAB);
             expect(facebookSourceTabSwitch.currentTab).to.equal(currentTab);
         });
     });
 
     describe("getSources", () => {
-        let sandbox = null, twitterPreFirstId = null;
-        let keyword = "bla";
+        let sandbox = null;
+        let twitterPreFirstId = null;
+        const keyword = "bla";
         beforeEach("", () => {
             sandbox = sinon.sandbox.create();
             twitterPreFirstId = 0; //eslint-disable-line no-magic-numbers
@@ -73,28 +74,28 @@ describe("SourceConfigurationActions", () => {
         });
 
         it("should delegate to fetchFacebookSources for pages if sourceType is pages", () => {
-            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+            const fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
                 .withExactArgs(keyword, "page", FbActions.PAGES, {});
             sourceConfigActions.getSources(FbActions.PAGES, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchFacebookSources for groups if sourceType is groups", () => {
-            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+            const fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
                 .withExactArgs(keyword, "group", FbActions.GROUPS, {});
             sourceConfigActions.getSources(FbActions.GROUPS, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchFacebookSources for profiles if sourceType is profiles", () => {
-            let fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
+            const fetchFacebookPagesMock = sandbox.mock(FbActions).expects("fetchFacebookSources")
                 .withExactArgs(keyword, "profile", FbActions.PROFILES, {});
             sourceConfigActions.getSources(FbActions.PROFILES, keyword, {}, twitterPreFirstId);
             fetchFacebookPagesMock.verify();
         });
 
         it("should delegate to fetchTwitterSources", () => {
-            let fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources")
+            const fetchTwitterSourcesMock = sandbox.mock(TwitterConfigureActions).expects("fetchTwitterSources")
                 .withExactArgs(keyword, {}, twitterPreFirstId);
             sourceConfigActions.getSources("twitter", keyword, {}, twitterPreFirstId);
             fetchTwitterSourcesMock.verify();
@@ -102,7 +103,10 @@ describe("SourceConfigurationActions", () => {
     });
 
     describe("add source to configured list", () => {
-        let sandbox = null, sources = null, configuredSources = null, ajaxClient = null;
+        let sandbox = null;
+        let sources = null;
+        let configuredSources = null;
+        let ajaxClient = null;
 
         const headers = {
             "Accept": "application/json",
@@ -126,7 +130,7 @@ describe("SourceConfigurationActions", () => {
             const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
                 .withExactArgs(headers, { "sources": configuredSources, "type": "fb_profile" }).returns({ "ok": true });
 
-            let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }], done);
+            const store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.PROFILES, ...sources));
 
             ajaxPutMock.verify();
@@ -136,7 +140,7 @@ describe("SourceConfigurationActions", () => {
             const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
                 .withExactArgs(headers, { "sources": configuredSources, "type": "fb_page" }).returns({ "ok": true });
 
-            let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }], done);
+            const store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.PAGES, ...sources));
 
             ajaxPutMock.verify();
@@ -146,7 +150,7 @@ describe("SourceConfigurationActions", () => {
             const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
                 .withExactArgs(headers, { "sources": configuredSources, "type": "fb_group" }).returns({ "ok": true });
 
-            let store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }], done);
+            const store = mockStore({}, [{ "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(FbActions.GROUPS, ...sources));
 
             ajaxPutMock.verify();
@@ -156,7 +160,7 @@ describe("SourceConfigurationActions", () => {
             const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
                 .withExactArgs(headers, { sources, "type": "web" }).returns({ "ok": true });
 
-            let store = mockStore({}, [{ "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }], done);
+            const store = mockStore({}, [{ "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.WEB, ...sources));
 
             ajaxPutMock.verify();
@@ -166,21 +170,24 @@ describe("SourceConfigurationActions", () => {
             const ajaxPutMock = sandbox.mock(ajaxClient).expects("put")
                 .withExactArgs(headers, { "sources": configuredSources, "type": "twitter" }).returns({ "ok": true });
 
-            let store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": configuredSources }], done);
+            const store = mockStore({}, [{ "type": TwitterConfigureActions.TWITTER_ADD_SOURCE, "sources": configuredSources }], done);
             store.dispatch(sourceConfigActions.addSourceToConfigureList(sourceConfigActions.TWITTER, ...sources));
 
             ajaxPutMock.verify();
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} by default`, () => {
-            let event = sourceConfigActions.addSourceToConfigureList("", { "name": "something" });
+            const event = sourceConfigActions.addSourceToConfigureList("", { "name": "something" });
             expect(event.type).to.equal(FbActions.FACEBOOK_ADD_PROFILE);
             expect(event.sources).to.deep.equal([{ "name": "something" }]);
         });
     });
 
     describe("add all sources", () => {
-        let sandbox = null, appWindow = null, configuredSources = null, sources = null;
+        let sandbox = null;
+        let appWindow = null;
+        let configuredSources = null;
+        let sources = null;
         beforeEach("add all sources", () => {
             appWindow = new AppWindow();
             sandbox = sinon.sandbox.create();
@@ -199,66 +206,69 @@ describe("SourceConfigurationActions", () => {
         });
 
         it(`should dispatch ${WebConfigActions.WEB_ADD_SOURCE} for add all in web`, (done) => {
-            let actions = [
+            const actions = [
                 { "type": WebConfigActions.WEB_ADD_SOURCE, "sources": sources }
             ];
-            let getStore = {
+            const getStore = {
                 "sourceResults": {
                     "data": sources
                 },
                 "currentSourceTab": "web"
             };
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
 
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PROFILE} for add all in facebook profile`, (done) => {
-            let actions = [
+            const actions = [
                 { "type": FbActions.FACEBOOK_ADD_PROFILE, "sources": configuredSources }
             ];
-            let getStore = {
+            const getStore = {
                 "sourceResults": {
                     "data": sources
                 },
                 "currentSourceTab": "profiles"
             };
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_PAGE} for add all in facebook page`, (done) => {
-            let actions = [
+            const actions = [
                 { "type": FbActions.FACEBOOK_ADD_PAGE, "sources": configuredSources }
             ];
-            let getStore = {
+            const getStore = {
                 "sourceResults": {
                     "data": sources
                 },
                 "currentSourceTab": "pages"
             };
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
         });
 
         it(`should dispatch ${FbActions.FACEBOOK_ADD_GROUP} for add all in facebook group`, (done) => {
-            let actions = [
+            const actions = [
                 { "type": FbActions.FACEBOOK_ADD_GROUP, "sources": configuredSources }
             ];
-            let getStore = {
+            const getStore = {
                 "sourceResults": {
                     "data": sources
                 },
                 "currentSourceTab": "groups"
             };
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(sourceConfigActions.addAllSources());
         });
     });
 
     describe("deleteSource", () => {
-        let ajaxInstance = null, sandbox = null, configuredSources = null,
-            sourceToDelete = null, getStore = null;
+        let ajaxInstance = null;
+        let sandbox = null;
+        let configuredSources = null;
+        let sourceToDelete = null;
+        let getStore = null;
 
         beforeEach("deleteSource", () => {
             sandbox = sinon.sandbox.create();

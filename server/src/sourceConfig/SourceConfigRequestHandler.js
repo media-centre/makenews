@@ -8,15 +8,15 @@ export default class SourceConfigRequestHandler {
     }
 
     async addConfiguredSource(sourceType, sources, authSession) {
-        let couchClient = CouchClient.instance(authSession);
-        let data = this._getFormattedSources(sourceType, sources);
+        const couchClient = CouchClient.instance(authSession);
+        const data = this._getFormattedSources(sourceType, sources);
         await couchClient.saveBulkDocuments({ "docs": data });
         return { "ok": true };
     }
 
     async fetchConfiguredSources(authSession) {
-        let couchClient = CouchClient.instance(authSession);
-        let data = await couchClient.findDocuments({
+        const couchClient = CouchClient.instance(authSession);
+        const data = await couchClient.findDocuments({
             "selector": {
                 "docType": {
                     "$eq": "source"
@@ -28,8 +28,8 @@ export default class SourceConfigRequestHandler {
     }
 
     _getFormattedSources(sourceType, sources) {
-        let formatSources = source => {
-            let doc = {
+        const formatSources = source => {
+            const doc = {
                 "_id": source.url,
                 "name": source.name,
                 "docType": "source",
@@ -42,7 +42,7 @@ export default class SourceConfigRequestHandler {
             }
             return doc;
         };
-        let filterEmpty = source => {
+        const filterEmpty = source => {
             return !StringUtil.isEmptyString(source.url);
         };
         return R.pipe(
@@ -52,10 +52,10 @@ export default class SourceConfigRequestHandler {
     }
 
     _formatConfiguredSources(docs) {
-        let result = {
+        const result = {
             "profiles": [], "pages": [], "groups": [], "twitter": [], "web": []
         };
-        let configSourceTypes = {
+        const configSourceTypes = {
             "fb_profile": "profiles", "fb_page": "pages", "fb_group": "groups", "twitter": "twitter", "web": "web"
         };
 

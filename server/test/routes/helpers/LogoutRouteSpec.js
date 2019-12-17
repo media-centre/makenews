@@ -7,7 +7,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("LogoutRoute", () => {
-    let sandbox = sinon.sandbox.create();
+    const sandbox = sinon.sandbox.create();
     afterEach("LogoutRoute", () => {
         sandbox.restore();
     });
@@ -15,8 +15,8 @@ describe("LogoutRoute", () => {
     describe("handle", () => {
         it("should return response with empty AuthSession cookie", () => {
             const cookie = "AuthSession=;Version=1; Path=/; HttpOnly";
-            let userDetailsMock = sandbox.mock(userDetails).expects("removeUser");
-            let response = {
+            const userDetailsMock = sandbox.mock(userDetails).expects("removeUser");
+            const response = {
                 "status": (data) => {
                     expect(HttpResponseHandler.codes.OK).to.equal(data);
                     return response;
@@ -31,8 +31,8 @@ describe("LogoutRoute", () => {
                     userDetailsMock.verify();
                 }
             };
-            let request = { "cookies": { "AuthSession": "token1" } };
-            let next = {};
+            const request = { "cookies": { "AuthSession": "token1" } };
+            const next = {};
             userDetailsMock.withArgs("token1");
             new LogoutRoute(request, response, next).handle();
         });

@@ -7,7 +7,7 @@ import { assert } from "chai";
 
 describe("Add URL Document Route", () => {
     it("should return bad request if URL is not valid", async() => {
-        let request = {
+        const request = {
             "body": {
                 "url": ""
             },
@@ -15,7 +15,7 @@ describe("Add URL Document Route", () => {
                 "AuthSession": "test_session"
             }
         };
-        let response = mockResponse();
+        const response = mockResponse();
         await new AddURLDocumentRoute(request, response, {}).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
         assert.deepEqual(response.json(), { "message": "missing parameters" });
@@ -23,7 +23,7 @@ describe("Add URL Document Route", () => {
     });
 
     it("should return bad request if AuthSession is empty", async() => {
-        let request = {
+        const request = {
             "body": {
                 "url": "test"
             },
@@ -31,7 +31,7 @@ describe("Add URL Document Route", () => {
                 "AuthSession": ""
             }
         };
-        let response = mockResponse();
+        const response = mockResponse();
         await new AddURLDocumentRoute(request, response, {}).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.UNPROCESSABLE_ENTITY);
         assert.deepEqual(response.json(), { "message": "missing parameters" });
@@ -39,8 +39,8 @@ describe("Add URL Document Route", () => {
 
 
     it("should add document for correct request", async() => {
-        let sandbox = sinon.sandbox.create();
-        let request = {
+        const sandbox = sinon.sandbox.create();
+        const request = {
             "body": {
                 "url": "http://test.com/rss"
             },
@@ -49,11 +49,11 @@ describe("Add URL Document Route", () => {
             }
         };
 
-        let response = mockResponse();
+        const response = mockResponse();
 
-        let rssRequestHandlerInstance = new RssRequestHandler();
+        const rssRequestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
-        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
+        const requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
         requestHandlerMock.withArgs(request.body.url).returns(Promise.resolve({ "message": "URL added to Database" }));
 
         await new AddURLDocumentRoute(request, response, {}).handle();
@@ -63,8 +63,8 @@ describe("Add URL Document Route", () => {
     });
 
     it("should reject with error if add document throws an error", async() => {
-        let sandbox = sinon.sandbox.create();
-        let request = {
+        const sandbox = sinon.sandbox.create();
+        const request = {
             "body": {
                 "url": "http://test.com/rss"
             },
@@ -73,11 +73,11 @@ describe("Add URL Document Route", () => {
             }
         };
 
-        let response = mockResponse();
+        const response = mockResponse();
 
-        let rssRequestHandlerInstance = new RssRequestHandler();
+        const rssRequestHandlerInstance = new RssRequestHandler();
         sandbox.stub(RssRequestHandler, "instance").returns(rssRequestHandlerInstance);
-        let requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
+        const requestHandlerMock = sandbox.mock(rssRequestHandlerInstance).expects("addURL");
         requestHandlerMock.withArgs(request.body.url).returns(Promise.reject("URL already exists"));
 
         try {

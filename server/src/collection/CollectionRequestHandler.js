@@ -12,10 +12,10 @@ export default class CollectionRequestHandler {
 
     async updateCollection(collectionName, isNewCollection, docId, sourceId, selectedText = {}) {
         const selectedTextDocLength = Object.keys(selectedText).length;
-        let collectionDocs = await this.getCollectionDoc(collectionName);
+        const collectionDocs = await this.getCollectionDoc(collectionName);
         let collectionDocId = "";
         if(collectionDocs.docs.length) {
-            let [collectionDoc] = collectionDocs.docs;
+            const [collectionDoc] = collectionDocs.docs;
             collectionDocId = collectionDoc._id;
         }
 
@@ -111,7 +111,7 @@ export default class CollectionRequestHandler {
     }
 
     async getCollectionQuery(skipValue) {
-        let selector = {
+        const selector = {
             "selector": {
                 "docType": {
                     "$eq": "collection"

@@ -8,7 +8,12 @@ import SourceConfigRequestHandler from "./../../src/sourceConfig/SourceConfigReq
 import HttpResponseHandler from "../../../common/src/HttpResponseHandler";
 
 describe("TwitterRequestHandler", () => {
-    let sandbox = null, userName = null, userObj = null, keyword = null, page = null, preFirstId = null;
+    let sandbox = null;
+    let userName = null;
+    let userObj = null;
+    let keyword = null;
+    let page = null;
+    let preFirstId = null;
     describe("FetchHandlesRequest", () => {
 
         beforeEach("FetchHandlesRequest", () => {
@@ -26,7 +31,7 @@ describe("TwitterRequestHandler", () => {
         });
 
         it("should fetch handles list from the twitter", async() => {
-            let handles = {
+            const handles = {
                 "users": [{
                     "id": "test",
                     "name": "testAccount",
@@ -34,11 +39,11 @@ describe("TwitterRequestHandler", () => {
                 }]
             };
 
-            let twitterRequestHandler = new TwitterRequestHandler();
-            let twitterClientInstance = new TwitterClient();
+            const twitterRequestHandler = new TwitterRequestHandler();
+            const twitterClientInstance = new TwitterClient();
             sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
             sandbox.mock(twitterClientInstance).expects("fetchHandles").withExactArgs(userName, keyword, page, preFirstId).returns(Promise.resolve(handles));
-            let data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
+            const data = await twitterRequestHandler.fetchHandlesRequest(userName, keyword, page, preFirstId);
             assert.strictEqual(data, handles);
         });
     });
@@ -46,7 +51,8 @@ describe("TwitterRequestHandler", () => {
     describe("configureTwitterHandle", () => {
         const handle = "testUser";
         const authSession = "test_token";
-        let twitterRequestHandler = null, twitterClientInstance = null;
+        let twitterRequestHandler = null;
+        let twitterClientInstance = null;
         beforeEach("configureTwitterHandle", () => {
             sandbox = sinon.sandbox.create();
             userName = "testUser";
@@ -108,7 +114,9 @@ describe("TwitterRequestHandler", () => {
     });
 
     describe("FetchTweetsRequest", () => {
-        let authSesssion = null, twitterRequestHandler = null, twitterClientInstance = null;
+        let authSesssion = null;
+        let twitterRequestHandler = null;
+        let twitterClientInstance = null;
         beforeEach("FetchTweetsRequest", ()=> {
             userName = { "userName": "userName" };
             authSesssion = "AuthSession";
@@ -122,10 +130,10 @@ describe("TwitterRequestHandler", () => {
         });
 
         it("should fetch tweets from the twitter", async() => {
-            let url = "123344";
-            let timeStamp = 12345678;
+            const url = "123344";
+            const timeStamp = 12345678;
             const sinceId = "8123472382371882392";
-            let tweets = [{
+            const tweets = [{
                 "_id": "812574284300173312",
                 "docType": "feed",
                 "type": "description",
@@ -146,7 +154,7 @@ describe("TwitterRequestHandler", () => {
                 "pubDate": "2016-12-24T11:00:02Z",
                 "tags": ["startups", "startupindia"]
             }];
-            let getUserMock = sandbox.mock(userDetails).expects("getUser").withExactArgs(authSesssion).returns(userName);
+            const getUserMock = sandbox.mock(userDetails).expects("getUser").withExactArgs(authSesssion).returns(userName);
             sandbox.mock(TwitterClient).expects("instance").returns(twitterClientInstance);
             sandbox.mock(twitterClientInstance).expects("fetchTweets")
                 .withExactArgs(url, "userName", timeStamp, sinceId).returns(Promise.resolve(tweets));
@@ -157,7 +165,9 @@ describe("TwitterRequestHandler", () => {
     });
 
     describe("fetchFollowings", () => {
-        let twitterClient = null, twitterHandler = null, fetchFollowingMock = null;
+        let twitterClient = null;
+        let twitterHandler = null;
+        let fetchFollowingMock = null;
         userName = "userName";
         const nextCursor = -1;
         const authSession = "authSession";

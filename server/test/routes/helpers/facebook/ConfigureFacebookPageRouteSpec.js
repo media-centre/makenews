@@ -15,7 +15,7 @@ describe("ConfigureFacebookPageRoute", () => {
 
     describe("validate", () => {
         it("should reject the request if type is missing", () => {
-            let configureFbPageRoute = new ConfigureFacebookPageRoute({
+            const configureFbPageRoute = new ConfigureFacebookPageRoute({
                 "body": { },
                 "cookies": { "AuthSession": "token" }
             }, {});
@@ -24,7 +24,8 @@ describe("ConfigureFacebookPageRoute", () => {
     });
 
     describe("handle", () => {
-        let facebookAccessToken = "accessToken", facebookAccessTokenMock = null;
+        let facebookAccessToken = "accessToken";
+        let facebookAccessTokenMock = null;
         const pageUrl = "https://www.facebook.com/icc";
 
         beforeEach("handle", () => {

@@ -14,7 +14,7 @@ describe("FilterTab", () => {
     const anonymousFun = () => {};
 
     it("should have news-board-tab active class", () => {
-        let store = createStore(() => ({
+        const store = createStore(() => ({
             "currentFilter": "twitter"
         }), applyMiddleware(thunkMiddleware));
 
@@ -27,19 +27,19 @@ describe("FilterTab", () => {
     });
 
     it("should dispatch filterTabSwitch on click", () => {
-        let store = createStore(() => ({
+        const store = createStore(() => ({
             "currentFilter": "trending"
         }), applyMiddleware(thunkMiddleware));
 
-        let sandbox = sinon.sandbox.create();
+        const sandbox = sinon.sandbox.create();
 
         filterTab = TestUtils.renderIntoDocument(
             <Provider store= {store}>
                 <FilterTab dispatch={anonymousFun} sourceIcon={"twitter"} sourceType={"twitter"}/>
             </Provider>);
 
-        let filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
-        let newsBoardTab = TestUtils.findRenderedDOMComponentWithClass(filterTab, "news-board-tab");
+        const filterTabSwitchMock = sandbox.mock(FilterActions).expects("filterTabSwitch").returns({ "type": "" });
+        const newsBoardTab = TestUtils.findRenderedDOMComponentWithClass(filterTab, "news-board-tab");
         TestUtils.Simulate.click(newsBoardTab);
         assert.isNotNull(newsBoardTab);
         filterTabSwitchMock.verify();

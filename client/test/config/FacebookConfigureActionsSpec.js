@@ -25,7 +25,9 @@ describe("Facebook Configure Actions", () => {
     });
 
     describe("fetchFacebookSources", () => {
-        let sandbox = sinon.sandbox.create(), ajaxClient = null, ajaxClientMock = null;
+        const sandbox = sinon.sandbox.create();
+        let ajaxClient = null;
+        let ajaxClientMock = null;
         const currentTab = FBActions.PAGES;
         const headers = {
             "Accept": "application/json",
@@ -78,14 +80,14 @@ describe("Facebook Configure Actions", () => {
         });
 
         it("should dispatch configured pages with added property", (done) => {
-            let serverUrl = "/facebook-sources";
-            let pageName = "testPage";
-            let fbResponse = {
+            const serverUrl = "/facebook-sources";
+            const pageName = "testPage";
+            const fbResponse = {
                 "data": [{ "id": 1, "name": "testProfile" },
                     { "id": 2, "name": "testProfile2" }],
                 "paging": {}
             };
-            let sources = {
+            const sources = {
                 "data":
                 [{ "id": 1, "name": "testProfile", "added": true },
                     { "id": 2, "name": "testProfile2" }],
@@ -98,7 +100,7 @@ describe("Facebook Configure Actions", () => {
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
                 "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": "FACEBOOK_GOT_SOURCES", "sources": sources, currentTab }
             ];
@@ -115,21 +117,21 @@ describe("Facebook Configure Actions", () => {
                 }
             });
 
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
         it(`should dispatch ${FETCHING_SOURCE_RESULTS_FAILED} when the sources are empty`, (done) => {
-            let serverUrl = "/facebook-sources";
-            let pageName = "testPage";
-            let fbResponse = { "data": [], "paging": {} };
+            const serverUrl = "/facebook-sources";
+            const pageName = "testPage";
+            const fbResponse = { "data": [], "paging": {} };
 
             ajaxClient = AjaxClient.instance(serverUrl, false);
             sandbox.mock(AjaxClient).expects("instance").withArgs(serverUrl, false).returns(ajaxClient);
             ajaxClientMock = sandbox.mock(ajaxClient).expects("post").withArgs(headers, {
                 "keyword": pageName, "type": "page", "paging": {} });
             ajaxClientMock.returns(Promise.resolve(fbResponse));
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": FETCHING_SOURCE_RESULTS_FAILED, "keyword": pageName }
             ];
@@ -146,7 +148,7 @@ describe("Facebook Configure Actions", () => {
                 }
             });
 
-            let store = mockStore(getStore, actions, done);
+            const store = mockStore(getStore, actions, done);
             store.dispatch(FBActions.fetchFacebookSources(pageName, "page", FBActions.PAGES));
         });
 
@@ -155,12 +157,12 @@ describe("Facebook Configure Actions", () => {
             let paging; //eslint-disable-line init-declarations
             const keyword = "";
             const sources = { "data": FB_DEFAULT_SOURCES[type].data, paging, keyword };
-            let actions = [
+            const actions = [
                 { "type": FETCHING_SOURCE_RESULTS },
                 { "type": FBActions.FACEBOOK_GOT_SOURCES, "sources": sources, currentTab }
             ];
 
-            let store = mockStore({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }, actions, done);
+            const store = mockStore({ "configuredSources": { "pages": [] }, "sourceResults": { "data": [] } }, actions, done);
             store.dispatch(FBActions.fetchFacebookSources(keyword, "page", FBActions.PAGES));
         });
     });

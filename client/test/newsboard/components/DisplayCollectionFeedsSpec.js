@@ -46,15 +46,15 @@ describe("DisplayCollectionFeeds", () => {
         let renderer = null;
         beforeEach("Feeds", () => {
             renderer = TestUtils.createRenderer();
-            let collectionDOM = { "style": { "display": "none" } };
+            const collectionDOM = { "style": { "display": "none" } };
             renderer.render(
                 <DisplayCollectionFeeds collection = {{ "name": collectionName, "id": "collectionId" }} dispatch = {anonymousFun} feeds = {feeds} tab="Scan News" collectionsDOM={collectionDOM}/>);
             result = renderer.getRenderOutput();
         });
 
         it("should render the feeds", () => {
-            let renderedSources = findAllWithType(result, CollectionFeed);
-            let [source1, source2] = renderedSources;
+            const renderedSources = findAllWithType(result, CollectionFeed);
+            const [source1, source2] = renderedSources;
             assert.isDefined(source1);
             assert.isDefined(source2);
         });
@@ -65,7 +65,7 @@ describe("DisplayCollectionFeeds", () => {
         });
 
         it("should have display-collection class", () => {
-            let [, collection] = result.props.children;
+            const [, collection] = result.props.children;
 
             assert.equal(collection.type, "div");
             assert.equal(collection.ref, "collection");
@@ -73,23 +73,23 @@ describe("DisplayCollectionFeeds", () => {
         });
 
         it("should have header class", () => {
-            let [, collection] = result.props.children;
-            let [header] = collection.props.children;
+            const [, collection] = result.props.children;
+            const [header] = collection.props.children;
             assert.equal(header.type, "header");
             assert.equal(header.props.className, "collection-header");
         });
 
         it("should have collection-feeds class", () => {
-            let [, collection] = result.props.children;
-            let [, collectionFeeds] = collection.props.children;
+            const [, collection] = result.props.children;
+            const [, collectionFeeds] = collection.props.children;
 
             assert.equal(collectionFeeds.type, "div");
             assert.equal(collectionFeeds.props.className, "collection-feeds");
         });
 
         it("should have display Article", () => {
-            let renderedSources = findAllWithType(result, DisplayArticle);
-            let [source] = renderedSources;
+            const renderedSources = findAllWithType(result, DisplayArticle);
+            const [source] = renderedSources;
             assert.isDefined(source);
         });
     });
@@ -108,10 +108,10 @@ describe("DisplayCollectionFeeds", () => {
         });
 
         it("should have button class for all collections", () => {
-            let [, collection] = result.props.children;
-            let [header] = collection.props.children;
-            let allCollection = header.props.children;
-            let [arrow, text] = allCollection.props.children;
+            const [, collection] = result.props.children;
+            const [header] = collection.props.children;
+            const allCollection = header.props.children;
+            const [arrow, text] = allCollection.props.children;
 
             assert.equal(allCollection.type, "button");
             assert.equal(allCollection.props.className, "all-collections");

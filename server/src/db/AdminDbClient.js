@@ -3,7 +3,7 @@ import CouchClient from "../CouchClient";
 import DateUtil from "../util/DateUtil";
 import Logger, { logCategories } from "../logging/Logger";
 
-let dbInstanceMap = new Map();
+const dbInstanceMap = new Map();
 export default class AdminDbClient extends CouchClient {
 
     constructor(userName, token) {
@@ -59,12 +59,14 @@ export default class AdminDbClient extends CouchClient {
     }
 
     static getExpirationTime() {
-        let minutes = 5, seconds = 60, milliseconds = 1000;
+        const minutes = 5;
+        const seconds = 60;
+        const milliseconds = 1000;
         return DateUtil.getCurrentTime() + (minutes * seconds * milliseconds);
     }
 
     static isSessionExpired(userName) {
-        let dbInstance = AdminDbClient.getDbInstance(userName);
+        const dbInstance = AdminDbClient.getDbInstance(userName);
         if(!dbInstance) {
             return true;
         }

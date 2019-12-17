@@ -4,7 +4,8 @@ import sinon from "sinon";
 import { assert } from "chai";
 
 describe("AppSessionStorage", ()=> {
-    let key = null, value = null;
+    let key = null;
+    let value = null;
     before("AppSessionStorage", () => {
         key = "test_key";
         value = 1234; // eslint-disable-line no-magic-numbers
@@ -12,7 +13,7 @@ describe("AppSessionStorage", ()=> {
 
     describe("setItem", () => {
         it("should set the value with the given key", (done) => {
-            let sessionStorage = {
+            const sessionStorage = {
                 "setItem": (actualKey, actualValue) => {
                     assert.strictEqual(key, actualKey);
                     assert.strictEqual(value, actualValue);
@@ -20,30 +21,30 @@ describe("AppSessionStorage", ()=> {
                 }
             };
 
-            let appSessionStorage = new AppSessionStorage();
+            const appSessionStorage = new AppSessionStorage();
             sinon.stub(appSessionStorage, "getSessionStorage").returns(sessionStorage);
             appSessionStorage.setValue(key, value);
         });
 
         it("should throw an error if key is empty", () => {
-            let appSessionStorage = new AppSessionStorage();
-            let setValueFn = () => {
+            const appSessionStorage = new AppSessionStorage();
+            const setValueFn = () => {
                 appSessionStorage.setValue("  ", value);
             };
             assert.throw(setValueFn, "Key or value cannot be empty");
         });
 
         it("should throw an error if value is empty", () => {
-            let appSessionStorage = new AppSessionStorage();
-            let setValueFn = () => {
+            const appSessionStorage = new AppSessionStorage();
+            const setValueFn = () => {
                 appSessionStorage.setValue(key, "");
             };
             assert.throw(setValueFn, "Key or value cannot be empty");
         });
 
         it("should throw an error if value is undefined", () => {
-            let appSessionStorage = new AppSessionStorage();
-            let setValueFn = () => {
+            const appSessionStorage = new AppSessionStorage();
+            const setValueFn = () => {
                 appSessionStorage.setValue(key);
             };
             assert.throw(setValueFn, "Key or value cannot be empty");

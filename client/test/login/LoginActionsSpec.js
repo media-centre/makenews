@@ -25,7 +25,14 @@ describe("Loginactions", () => {
 });
 
 describe("LoginActions", () => {
-    let headers = null, data = null, userName = null, password = null, ajaxInstanceMock = null, ajaxPostMock = null, history = null, sandbox = null;
+    let headers = null;
+    let data = null;
+    let userName = null;
+    let password = null;
+    let ajaxInstanceMock = null;
+    let ajaxPostMock = null;
+    let history = null;
+    let sandbox = null;
     beforeEach("userLogin", () => {
         userName = "test_user";
         password = "test_password";
@@ -36,7 +43,7 @@ describe("LoginActions", () => {
         };
         data = { "username": userName, "password": password };
         sandbox = sinon.sandbox.create();
-        let ajaxInstance = new AjaxClient("/login", true);
+        const ajaxInstance = new AjaxClient("/login", true);
         ajaxInstanceMock = sandbox.mock(AjaxClient);
         ajaxInstanceMock.expects("instance").withArgs("/login").returns(ajaxInstance);
         ajaxPostMock = sandbox.mock(ajaxInstance).expects("post");
@@ -48,12 +55,13 @@ describe("LoginActions", () => {
     });
 
     describe("success", () => {
-        let historyMock = null, userSessionMock = null;
+        let historyMock = null;
+        let userSessionMock = null;
         const response = { "userName": userName, "dbParameters": { "remoteDbUrl": "http://localhost:5984" } };
         let appSessionStorage = null;
         beforeEach("userLogin", () => {
             appSessionStorage = new AppSessionStorage();
-            let userSession = new UserSession();
+            const userSession = new UserSession();
             sandbox.stub(UserSession, "instance").returns(userSession);
             userSessionMock = sandbox.mock(userSession).expects("init");
             historyMock = sandbox.mock(history).expects("push");

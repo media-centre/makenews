@@ -15,16 +15,16 @@ export default class Route {
     }
 
     async process() {
-        let routeClass = this.constructor.name;
-        let routeParams = Object.keys(this.request.query || {}).length
+        const routeClass = this.constructor.name;
+        const routeParams = Object.keys(this.request.query || {}).length
             ? this.request.query : this.request.body || "";
-        let message = this.validate();
+        const message = this.validate();
         if(message) {
             RouteLogger.instance().warn(`${routeClass}:: validation failed for parameters: [${routeParams}] with message: [${message}]`);
             this._handleInvalidRequest({ message });
         } else {
             try {
-                let response = await this.handle();
+                const response = await this.handle();
                 this._handleSuccess(response);
                 RouteLogger.instance().debug(`${routeClass}:: request processing completed successfully`);
             } catch (err) {
@@ -43,8 +43,8 @@ export default class Route {
     }
 
     validateNumber(numberString) {
-        let defaultNumber = 0;
-        let safeNumber = Number.parseInt(numberString, 10);
+        const defaultNumber = 0;
+        const safeNumber = Number.parseInt(numberString, 10);
         return (Number.isInteger(safeNumber) && safeNumber >= defaultNumber) ? safeNumber : defaultNumber;
     }
 
@@ -52,8 +52,8 @@ export default class Route {
         if(!this.request.body || !this.request.body.data || this.request.body.data.length === 0) { //eslint-disable-line no-magic-numbers
             return false;
         }
-        let errorItems = this.request.body.data.filter((item)=> { //eslint-disable-line consistent-return
-            let { timestamp, url, id } = item;
+        const errorItems = this.request.body.data.filter((item)=> { //eslint-disable-line consistent-return
+            const { timestamp, url, id } = item;
             return R.any(StringUtil.isEmptyString)([timestamp, url, id]);
         });
 

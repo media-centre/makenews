@@ -3,7 +3,7 @@ import { expect, assert } from "chai";
 import argv from "yargs";
 import config from "../config/application";
 
-let env = argv.client_environment || "default";
+const env = argv.client_environment || "default";
 describe("SecurityCheckSpec", () => {
     describe("SecurityCheck for x-powered-by:Express", () => {
         it("response to / should not have x-powered-by ", (done) => {
@@ -32,7 +32,7 @@ describe("SecurityCheckSpec", () => {
                 });
         });
         it("response to /login should   not have x-powered-by with login ", (done) => {
-            let user = { "username": "test", "password": "test" };
+            const user = { "username": "test", "password": "test" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)
@@ -72,7 +72,7 @@ describe("SecurityCheckSpec", () => {
                 });
         });
         it("response to /login should  have x-xss-protection 1; mode=block with login ", (done) => {
-            let user = { "username": "test", "password": "test" };
+            const user = { "username": "test", "password": "test" };
             request(config[env].serverIpAddress + ":" + config[env].serverPort)
                 .post("/login")
                 .send(user)

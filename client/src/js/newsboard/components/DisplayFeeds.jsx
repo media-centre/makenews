@@ -126,7 +126,7 @@ export class DisplayFeeds extends Component {
     }
 
     getMoreFeeds(sourceType) {
-        let callback = (result) => {
+        const callback = (result) => {
             this.offset = result.docsLength ? (this.offset + result.docsLength) : this.offset;
             this.hasMoreFeeds = result.hasMoreFeeds;
         };
@@ -138,7 +138,7 @@ export class DisplayFeeds extends Component {
             } else if(sourceType === "collections") {
                 this.props.dispatch(DisplayFeedActions.getAllCollections(this.offset, callback));
             } else {
-                let filter = {};
+                const filter = {};
                 if(sourceType === "trending") {
                     filter.sources = this.props.currentFilterSource;
                 } else {

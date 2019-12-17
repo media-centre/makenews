@@ -29,7 +29,7 @@ export function configuredSourcesReceived(sources) {
 export const clearSources = { "type": CLEAR_SOURCES };
 
 export function getConfiguredSources() {
-    let ajaxClient = AjaxClient.instance("/configure-sources");
+    const ajaxClient = AjaxClient.instance("/configure-sources");
     return async dispatch => {
         let sources = null;
         try {
@@ -44,23 +44,23 @@ export function getConfiguredSources() {
 export function addSourceToConfigureList(sourceType, ...sources) {
     switch (sourceType) {
     case FbActions.PROFILES: {
-        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
+        const configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "fb_profile", FbActions.FACEBOOK_ADD_PROFILE);
     }
     case FbActions.PAGES: {
-        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
+        const configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "fb_page", FbActions.FACEBOOK_ADD_PAGE);
     }
     case FbActions.GROUPS: {
-        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
+        const configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "fb_group", FbActions.FACEBOOK_ADD_GROUP);
     }
     case WEB: {
-        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
+        const configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "web", WebConfigActions.WEB_ADD_SOURCE);
     }
     case TWITTER: {
-        let configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
+        const configuredSources = sources.map(source => Object.assign({}, source, { "url": source.id }));
         return dispatch => addToConfiguredSources(dispatch, configuredSources, "twitter", TwitterConfigureActions.TWITTER_ADD_SOURCE);
     }
     default: {
@@ -91,9 +91,9 @@ async function addToConfiguredSources(dispatch, sources, sourceType, eventType) 
 
 export function addAllSources() {
     return (dispatch, getState) => {
-        let sourceType = getState().currentSourceTab;
-        let sources = getState().sourceResults.data;
-        let unConfiguredSources = R.reject(source => source.added, sources);
+        const sourceType = getState().currentSourceTab;
+        const sources = getState().sourceResults.data;
+        const unConfiguredSources = R.reject(source => source.added, sources);
         if(unConfiguredSources.length) {
             dispatch(addSourceToConfigureList(sourceType, ...unConfiguredSources));
         }

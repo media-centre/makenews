@@ -7,7 +7,9 @@ import ApplicationConfig from "../src/config/ApplicationConfig";
 import CouchSession from "../src/CouchSession";
 
 describe("FacebookRoutesSpec", () => {
-    let accessToken = null, applicationConfig = null, serverIp = null;
+    let accessToken = null;
+    let applicationConfig = null;
+    let serverIp = null;
     before("FacebookRoutesSpec", (done)=> {
         applicationConfig = new ApplicationConfig();
         serverIp = applicationConfig.serverIpAddress() + ":" + applicationConfig.serverPort();
@@ -21,8 +23,8 @@ describe("FacebookRoutesSpec", () => {
 
     describe("/facebook-set-token", () => {
         it("should set the token", (done) => {
-            let currentTime = new Date().getTime();
-            let expiresAfter = currentTime + (123456 * 1000);
+            const currentTime = new Date().getTime();
+            const expiresAfter = currentTime + (123456 * 1000);
             request(serverIp)
                 .post("/facebook-set-token")
                 .send({
@@ -30,7 +32,7 @@ describe("FacebookRoutesSpec", () => {
                 })
                 .set("Cookie", accessToken)
                 .end((err, res) => {
-                    let tokenDiff = Math.abs(res.body.expires_after - expiresAfter) < 1000;
+                    const tokenDiff = Math.abs(res.body.expires_after - expiresAfter) < 1000;
                     assert.isTrue(tokenDiff);
                     done();
                 });

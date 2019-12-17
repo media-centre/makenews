@@ -7,7 +7,7 @@ describe("Header Reducer", () => {
     });
 
     it("should return action with type and actions of write a story ", () => {
-        let action = { "type": "Write a Story", "currentHeaderTab": "Write a Story" };
+        const action = { "type": "Write a Story", "currentHeaderTab": "Write a Story" };
         expect(currentHeaderTab({}, action)).to.equals("Write a Story");
     });
 
