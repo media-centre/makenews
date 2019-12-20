@@ -55,6 +55,13 @@ node dist/server
 
 The application would start running on the configured ip address and port, for the default configuration, http://127.0.0.1:5000
 
+### 2.1. Running for development
+For easier development, the project uses gulp.js as a build system. In another terminal tab, run: 
+```
+gulp clean-start
+```
+This will build the whole project and gulp.js will keep monitoring the files and rebuild the project whenever a change occurs (so you don't have to rebuild it manually every time you change the code).
+
 * Additional Information: after running the server check both consoles(the console of the browser and the cmd prompt) for some errors.
 - In some cases, it is necessary to go to 127.0.0.1:5000 instead of localhost:5000, because of CORS, if you want to log in - it can give some errors in the console of the browser
 - In some other cases, after trying to login the process in the cmd prompt crashes because of the permissions. That's why you should sometimes start the server with sudo(just 'sudo node dist/server')
