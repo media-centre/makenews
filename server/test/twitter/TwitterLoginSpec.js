@@ -29,6 +29,20 @@ describe("TwitterLogin", () => {
         });
     });
 
+    it("should reject with the error message if oauthRequestToken returns error", () => {
+        sandbox.stub(TwitterLogin, "createOAuthInstance")
+            .returns({
+                "getOAuthRequestToken":
+                    (options, callback) => callback("error message")
+            });
+
+        return TwitterLogin.instance()
+            .then(() => assert.fail("It should reject, instead resolved"))
+            .catch(error => {
+                assert.strictEqual(error, "error message");
+            });
+    });
+
     it("should return instance with same oauthTokenSecret, serverCallbackUrl, clientCallbackUrl for a oauthToken", (done) => {
         const oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
         const oauthToken = "token";

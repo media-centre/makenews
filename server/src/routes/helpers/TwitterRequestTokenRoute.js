@@ -11,11 +11,15 @@ export default class TwitterRequestTokenRoute extends Route {
         this.serverCallbackUrl = this.request.query.serverCallbackUrl;
         this.clientCallbackUrl = this.request.query.clientCallbackUrl;
     }
-    
+
     handle() {
-        TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl }).then((instance) => {
-            RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user.");
-            this._handleSuccess({ "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
-        });
+        TwitterLogin.instance({ "serverCallbackUrl": this.serverCallbackUrl, "clientCallbackUrl": this.clientCallbackUrl })
+            .then(instance => {
+                RouteLogger.instance().debug("TwitterRequestTokenRoute:: fetching of twitter request token is successful for user.");
+                this._handleSuccess({ "authenticateUrl": ApplicationConfig.instance().twitter().authenticateUrl + "?oauth_token=" + instance.getOauthToken() });
+            }).catch(err => {
+                RouteLogger.instance().error(`TwitterRequestTokenRoute:: unable to fetch twitter request token :: ${err}`);
+                this._handleError("Unable to fetch the twitter request token");
+            });
     }
 }

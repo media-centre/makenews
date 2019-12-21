@@ -26,11 +26,14 @@ export default class TwitterLogin {
                 const twitterInstance = new TwitterLogin(options.previouslyFetchedOauthToken, tokenInfo.oauthTokenSecret, tokenInfo.clientCallbackUrl, options.accessToken);
                 resolve(twitterInstance);
             } else {
-                new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl).then(instance => {
-                    TwitterLogin.logger().debug("TwitterLogin:: creating twitter login instance.");
-                    oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl };
-                    resolve(instance);
-                });
+                new TwitterLogin()._requestTokenFromTwitter(options.serverCallbackUrl)
+                    .then(instance => {
+                        TwitterLogin.logger().debug("TwitterLogin:: creating twitter login instance.");
+                        oauthTokenMap[instance.oauthToken] = { "oauthTokenSecret": instance.oauthTokenSecret, "clientCallbackUrl": options.clientCallbackUrl };
+                        resolve(instance);
+                    }).catch(err => {
+                        reject(err);
+                    });
             }
         });
     }
@@ -72,7 +75,7 @@ export default class TwitterLogin {
             });
         });
     }
-    
+
     async saveToken(oauthAccessToken, oauthAccessTokenSecret) {
         const tokenDocumentId = await getUserDocumentId(this.accessToken, TWITTER_DOCUMENT_ID);
         const document = {
