@@ -17,9 +17,10 @@ describe("ConfirmPopup", ()=> {
         cancelCalled = event;
         return "Test Result";
     }
+    const sandbox = sinon.sandbox.create();
 
-    before(()=> {
-        sinon.stub(Locale, "applicationStrings").returns({ "messages": { "confirmPopup": {
+    beforeEach(()=> {
+        sandbox.stub(Locale, "applicationStrings").returns({ "messages": { "confirmPopup": {
             "ok": "OK",
             "confirm": "CONFIRM",
             "cancel": "CANCEL"
@@ -28,8 +29,10 @@ describe("ConfirmPopup", ()=> {
             <ConfirmPopup description={"Test description"} callback={confirmCallback}/>
         );
     });
+
     afterEach(() => {
         cancelCalled = null;
+        sandbox.restore();
     });
 
     it("should have description and callback as properties", ()=> {
@@ -49,7 +52,6 @@ describe("ConfirmPopup", ()=> {
 
     it("should trigger the callback on clicking cancel button", ()=> {
         const anonymousFun = () => {};
-        const sandbox = sinon.sandbox.create();
         const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
 
         const confirmPopTest = TestUtils.renderIntoDocument(
@@ -61,12 +63,10 @@ describe("ConfirmPopup", ()=> {
         assert.isFalse(cancelCalled);
 
         popUpMock.verify();
-        sandbox.restore();
     });
 
     it("should trigger the callback on clicking confirm button", ()=> {
         const anonymousFun = () => {};
-        const sandbox = sinon.sandbox.create();
         const popUpMock = sandbox.mock(HeaderActions).expects("popUp").returns({ "type": "", "message": "", "callback": () => {} });
 
         const confirmPopTest = TestUtils.renderIntoDocument(
@@ -78,7 +78,5 @@ describe("ConfirmPopup", ()=> {
         assert.isTrue(cancelCalled);
 
         popUpMock.verify();
-        sandbox.restore();
     });
-
 });

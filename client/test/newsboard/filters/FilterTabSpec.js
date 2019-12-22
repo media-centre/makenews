@@ -12,6 +12,11 @@ import { assert } from "chai";
 describe("FilterTab", () => {
     let filterTab = null;
     const anonymousFun = () => {};
+    const sandbox = sinon.sandbox.create();
+
+    afterEach(() => {
+        sandbox.restore();
+    });
 
     it("should have news-board-tab active class", () => {
         const store = createStore(() => ({
@@ -31,8 +36,6 @@ describe("FilterTab", () => {
             "currentFilter": "trending"
         }), applyMiddleware(thunkMiddleware));
 
-        const sandbox = sinon.sandbox.create();
-
         filterTab = TestUtils.renderIntoDocument(
             <Provider store= {store}>
                 <FilterTab dispatch={anonymousFun} sourceIcon={"twitter"} sourceType={"twitter"}/>
@@ -44,6 +47,4 @@ describe("FilterTab", () => {
         assert.isNotNull(newsBoardTab);
         filterTabSwitchMock.verify();
     });
-
-
 });
