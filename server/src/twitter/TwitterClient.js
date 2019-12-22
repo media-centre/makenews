@@ -27,7 +27,7 @@ export default class TwitterClient {
         const tokenInfo = await this.getAccessTokenAndSecret(userName);
         const searchUrl = type === twitterTypes.TAG
             ? `${this._baseUrl()}${searchApi}?q=${encodeURIComponent(url)}&count=${FEEDS_COUNT}&filter=retweets${timestampQuery}&since_id=${sinceId}`
-            : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&since_id=${sinceId}&user_id=${url}`;
+            : `${this._baseUrl()}${userApi}?count=${FEEDS_COUNT}&exclude_replies=true&include_rts=false${timestampQuery}&since_id=${sinceId}&user_id=${url}&tweet_mode=extended`;
         const oauth = TwitterLogin.createOAuthInstance();
         const twitterMaxFeedsLimit = ApplicationConfig.instance().twitter().maxFeeds;
 

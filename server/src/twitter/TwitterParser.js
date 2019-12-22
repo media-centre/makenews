@@ -34,7 +34,7 @@ export default class TwitterParser {
             "docType": "feed",
             "sourceType": "twitter",
             "description": "",
-            "title": tweet.text,
+            "title": tweet.full_text,
             "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
             "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
             "tags": [tweet.user.name].concat(this.hashTags(tweet.entities.hashtags)),

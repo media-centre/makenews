@@ -24,7 +24,6 @@ describe("TwitterParser", () => {
                     "profile_image_url_https": "https://pbs.twimg.com/profile_images/1718987370/cute-baby-girl-pics1_normal.jpg"
                 }
             ];
-
         });
 
         it("should return handle with specific fields", () => {
@@ -73,7 +72,7 @@ describe("TwitterParser", () => {
                 },
                 "created_at": "Fri Dec 11 11:41:56",
                 "id_str": "123457",
-                "text": "Hindu twitter text - 123457",
+                "full_text": "Hindu twitter text - 123457",
                 "entities": {
                     "hashtags": [{ "text": "tag1" }, { "text": "tag2" }]
                 },
@@ -107,7 +106,7 @@ describe("TwitterParser", () => {
                 },
                 "created_at": "Fri Dec 11 11:41:56",
                 "id_str": "123457",
-                "text": "Hindu twitter text - 123457",
+                "full_text": "Hindu twitter text - 123457",
                 "entities": {
                     "hashtags": [{ "text": "tag1" }, { "text": "tag2" }],
                     "media": [{ "media_url": "http://www.test.com", "media_url_https": "https://www.test.com" }]
@@ -142,7 +141,7 @@ describe("TwitterParser", () => {
                 },
                 "created_at": "Fri Dec 11 11:41:56",
                 "id_str": "123457",
-                "text": "Hindu twitter text - 123457",
+                "full_text": "Hindu twitter text - 123457",
                 "entities": {
                     "hashtags": [{ "text": "tag1" }, { "text": "tag2" }],
                     "media": [{ "media_url": "http://www.test1.com", "media_url_https": "https://www.test1.com" },
@@ -187,7 +186,7 @@ describe("TwitterParser", () => {
                 },
                 "created_at": "Fri Dec 11 11:41:56",
                 "id_str": "123457",
-                "text": "Hindu twitter text - 123457",
+                "full_text": "Hindu twitter text - 123457",
                 "entities": {
                     "hashtags": [{ "text": "tag1" }, { "text": "tag2" }],
                     "media": [{ "media_url": "http://www.test1.com", "media_url_https": "https://www.test1.com" },

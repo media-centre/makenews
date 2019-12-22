@@ -135,6 +135,7 @@ describe("TwitterClient", () => {
 
     describe("Fetch Tweets", () => {
         const twitterFeedPerReqLimit = Constants.maxFeedsPerRequest.twitter;
+        let twitterResponseFeeds = null;
         beforeEach(() => {
             sandbox = sinon.sandbox.create();
             twitterClient = new TwitterClient();
@@ -162,6 +163,30 @@ describe("TwitterClient", () => {
                 "HMAC-SHA1");
             twitterParser = TwitterParser.instance();
             Constants.maxFeedsPerRequest.twitter = 2;
+
+            twitterResponseFeeds = [{
+                "id": 835103042471096320,
+                "id_str": "835103042471096320",
+                "created_at": "Fri Dec 09 07:24:44 +0000 2016",
+                "full_text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                "user": {
+                    "name": "user1"
+                },
+                "entities": {
+                    "hashtags": [{ "text": "hash" }]
+                }
+            }, {
+                "id": 835103042474521902,
+                "id_str": "835103042474521902",
+                "created_at": "Fri Dec 08 07:14:44 +0000 2016",
+                "full_text": "This is my post",
+                "user": {
+                    "name": "user1"
+                },
+                "entities": {
+                    "hashtags": [{ "text": "hash" }]
+                }
+            }];
         });
 
         afterEach(() => {
@@ -193,7 +218,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=1&user_id=123")
+                .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=1&user_id=123&tweet_mode=extended")
                 .reply(HttpResponseHanlder.codes.OK, twitterRespone);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
@@ -236,7 +261,7 @@ describe("TwitterClient", () => {
                 "id": 835103042471096320,
                 "id_str": "835103042471096320",
                 "created_at": "fri dec 09 07:24:44 +0000 2016",
-                "text": "just posted a photo https://t.co/7x7kvw9plf",
+                "full_text": "just posted a photo https://t.co/7x7kvw9plf",
                 "user": {
                     "name": "user1"
                 },
@@ -246,7 +271,7 @@ describe("TwitterClient", () => {
             }];
 
             nock("https://api.twitter.com/1.1")
-                .get(`/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceid}&user_id=123`)
+                .get(`/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceid}&user_id=123&tweet_mode=extended`)
                 .reply(HttpResponseHanlder.codes.ok, twitterResponse);
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
@@ -293,7 +318,7 @@ describe("TwitterClient", () => {
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
-                    "tags": ["user1"],
+                    "tags": ["user1", "hash"],
                     "images": [],
                     "videos": [],
                     "sourceId": "123"
@@ -305,7 +330,7 @@ describe("TwitterClient", () => {
                     "title": "This is my post",
                     "link": "https://twitter.com/123/status/835103042474521902",
                     "pubDate": "2016-12-08T07:14:44.000Z",
-                    "tags": ["user1"],
+                    "tags": ["user1", "hash"],
                     "images": [],
                     "videos": [],
                     "sourceId": "123"
@@ -332,35 +357,13 @@ describe("TwitterClient", () => {
             const sinceId = "835103042471096320";
             const timestamp = 1483947627341;
 
-            const twitterResponse1 = [{
-                "id": 835103042471096320,
-                "id_str": "835103042471096320",
-                "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                "text": "Just posted a photo https://t.co/7X7kvw9Plf",
-                "user": {
-                    "name": "user1"
-                },
-                "entities": {
-                    "hashtags": []
-                }
-            }, {
-                "id": 835103042474521902,
-                "id_str": "835103042474521902",
-                "created_at": "Fri Dec 08 07:14:44 +0000 2016",
-                "text": "This is my post",
-                "user": {
-                    "name": "user1"
-                },
-                "entities": {
-                    "hashtags": []
-                }
-            }];
+            const twitterResponse1 = twitterResponseFeeds;
 
             const twitterResponse2 = [{
                 "id": 835103042471014222,
                 "id_str": "835103042471014222",
                 "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                "text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                "full_text": "Just posted a photo https://t.co/7X7kvw9Plf",
                 "user": {
                     "name": "user1"
                 },
@@ -369,7 +372,7 @@ describe("TwitterClient", () => {
                 }
             }];
 
-            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123`;
+            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123&tweet_mode=extended`;
             nock("https://api.twitter.com/1.1")
                 .get(url)
                 .reply(HttpResponseHanlder.codes.OK, twitterResponse1)
@@ -432,29 +435,7 @@ describe("TwitterClient", () => {
             const timestamp = 1483947627341;
 
             const twitterResponse1 = {
-                "statuses": [{
-                    "id": 835103042471096320,
-                    "id_str": "835103042471096320",
-                    "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }, {
-                    "id": 835103042474521902,
-                    "id_str": "835103042474521902",
-                    "created_at": "Fri Dec 08 07:14:44 +0000 2016",
-                    "text": "This is my post",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }],
+                "statuses": twitterResponseFeeds,
                 "search_metadata": {
                     "completed_in": 0.013,
                     "max_id": 835103042474521902,
@@ -472,7 +453,7 @@ describe("TwitterClient", () => {
                     "id": 835103042471014222,
                     "id_str": "835103042471014222",
                     "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                    "full_text": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "user": {
                         "name": "user1"
                     },
@@ -492,7 +473,7 @@ describe("TwitterClient", () => {
                 }
             };
 
-            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123`;
+            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123&tweet_mode=extended`;
             const lastTweetIndex = 1;
             nock("https://api.twitter.com/1.1")
                 .get(url)
@@ -568,29 +549,7 @@ describe("TwitterClient", () => {
             const timestamp = 1483947627341;
 
             const twitterResponse1 = {
-                "statuses": [{
-                    "id": 835103042471096320,
-                    "id_str": "835103042471096320",
-                    "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }, {
-                    "id": 835103042474521902,
-                    "id_str": "835103042474521902",
-                    "created_at": "Fri Dec 08 07:14:44 +0000 2016",
-                    "text": "This is my post",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }],
+                "statuses": twitterResponseFeeds,
                 "search_metadata": {
                     "completed_in": 0.013,
                     "max_id": 835103042474521902,
@@ -608,7 +567,7 @@ describe("TwitterClient", () => {
                     "id": 835103042471014222,
                     "id_str": "835103042471014222",
                     "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                    "full_text": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "user": {
                         "name": "user1"
                     },
@@ -619,7 +578,7 @@ describe("TwitterClient", () => {
                     "id": 835103042471013212,
                     "id_str": "835103042471013212",
                     "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                    "full_text": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "user": {
                         "name": "user1"
                     },
@@ -639,7 +598,7 @@ describe("TwitterClient", () => {
                 }
             };
 
-            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123`;
+            const url = `/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=${sinceId}&user_id=123&tweet_mode=extended`;
             const lastTweetIndex = 1;
             nock("https://api.twitter.com/1.1")
                 .get(url)
@@ -689,29 +648,7 @@ describe("TwitterClient", () => {
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
 
             const twitterResponse = {
-                "statuses": [{
-                    "id": 835103042471096320,
-                    "id_str": "835103042471096320",
-                    "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                    "text": "Just posted a photo https://t.co/7X7kvw9Plf",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }, {
-                    "id": 835103042474521902,
-                    "id_str": "835103042474521902",
-                    "created_at": "Fri Dec 08 07:14:44 +0000 2016",
-                    "text": "This is my post",
-                    "user": {
-                        "name": "user1"
-                    },
-                    "entities": {
-                        "hashtags": [{ "text": "hash" }]
-                    }
-                }],
+                "statuses": twitterResponseFeeds,
                 "search_metadata": {
                     "completed_in": 0.013,
                     "max_id": 835103042474521902,
@@ -821,7 +758,7 @@ describe("TwitterClient", () => {
                 `Requested user ${handle} not found`);
         });
     });
-    
+
     describe("Fetch Followings", () => {
         let twitterClientInstance = null;
         let getAccessMock = null;
