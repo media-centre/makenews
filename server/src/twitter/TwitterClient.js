@@ -2,7 +2,7 @@ import ApplicationConfig from "../../src/config/ApplicationConfig";
 import Logger from "../logging/Logger";
 import AdminDbClient from "../db/AdminDbClient";
 import TwitterLogin from "./TwitterLogin";
-import TwitterParser from "./TwitterParser";
+import { parseHandle, parseTweets } from "./TwitterParser";
 import DateUtils from "../util/DateUtil";
 import { maxFeedsPerRequest } from "./../util/Constants";
 import R from "ramda"; //eslint-disable-line id-length
@@ -35,7 +35,7 @@ export default class TwitterClient {
         if(tweets.error) {
             TwitterClient.logger().error("TwitterClient:: error fetching feeds for %s", url);
         }
-        const parsedTweets = TwitterParser.instance().parseTweets(url, tweets.docs);
+        const parsedTweets = parseTweets(url, tweets.docs);
         TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter feeds for %s", url);
         const respSinceId = parsedTweets.length ? R.head(parsedTweets)._id : sinceId;
         return {
@@ -121,7 +121,7 @@ export default class TwitterClient {
         const parsedData = await this._getTwitterData(handlesWithKeyApi, userName);
 
         if (parsedData.length && preFirstId !== parsedData[0].id_str) { //eslint-disable-line no-magic-numbers
-            const parseData = TwitterParser.instance().parseHandle(parsedData);
+            const parseData = parseHandle(parsedData);
             const resultData = {
                 "docs": parseData,
                 "paging": { "page": page + 1 }, //eslint-disable-line no-magic-numbers
@@ -144,9 +144,8 @@ export default class TwitterClient {
         const handlesApi = `${this._baseUrl()}/friends/list.json?cursor=${nextCursor}&count=40`;
         const parsedData = await this._getTwitterData(handlesApi, userName);
         if (parsedData.users.length) {
-            const parseData = TwitterParser.instance().parseHandle(parsedData.users);
             const resultData = {
-                "docs": parseData,
+                "docs": parseHandle(parsedData.users),
                 "paging": { "page": parsedData.next_cursor }
             };
             TwitterClient.logger().debug("TwitterClient:: successfully fetched twitter followings");

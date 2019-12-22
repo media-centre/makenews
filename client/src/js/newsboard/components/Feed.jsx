@@ -32,7 +32,7 @@ export default class Feed extends Component {
 
             <div className="feed__content">
                 <div className="feed__title">{feed.title}</div>
-                <div className="feed__description">{getHtmlContent(feed.description)}</div>
+                { feed.description && <div className="feed__description">{getHtmlContent(feed.description)}</div> }
             </div>
 
             <div className="feed__source">

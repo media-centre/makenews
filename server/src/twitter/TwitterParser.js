@@ -1,63 +1,44 @@
 import DateUtil from "../util/DateUtil";
-export default class TwitterParser {
-    static instance() {
-        return new TwitterParser();
-    }
+import { map } from "ramda";
 
-    parseHandle(handles) {
-        return handles.map(handle =>
-            ({
-                "id": handle.id_str,
-                "picture": {
-                    "data": {
-                        "url": handle.profile_image_url_https
-                    }
-                },
-                "name": handle.name
-            })
-        );
-    }
+const hashTags = map(tag => tag.text);
 
-    parseTweets(sourceId, tweets = []) {
-        return tweets.map(tweet => { //eslint-disable-line consistent-return
-            try {
-                return this.parseTweet(sourceId, tweet);
-            } catch(error) {
-                //no handling
-            }
-        });
-    }
+export function parseHandle(handles) {
+    return handles.map(handle =>
+        ({
+            "id": handle.id_str,
+            "picture": {
+                "data": {
+                    "url": handle.profile_image_url_https
+                }
+            },
+            "name": handle.name
+        })
+    );
+}
 
-    parseTweet(sourceId, tweet) {
-        const feedObj = {
-            "_id": tweet.id_str,
-            "docType": "feed",
-            "sourceType": "twitter",
-            "description": "",
-            "title": tweet.full_text,
-            "link": "https://twitter.com/" + sourceId + "/status/" + tweet.id_str,
-            "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
-            "tags": [tweet.user.name].concat(this.hashTags(tweet.entities.hashtags)),
-            "images": [],
-            "videos": [],
-            "sourceId": sourceId
-        };
-        const images = tweet.entities.media;
-        if(images) {
-            images.forEach(item => {
-                feedObj.images.push({ "url": item.media_url_https, "thumbnail": `${item.media_url_https}:thumb` });
-            });
-        }
+export function parseTweets(sourceId, tweets = []) {
+    return tweets.map(tweet => parseTweet(sourceId, tweet));
+}
 
-        const videos = tweet.extended_entities ? tweet.extended_entities.media : [];
-        videos.forEach(item => {
-            feedObj.videos.push({ "thumbnail": `${item.media_url_https}:thumb` });
-        });
+function parseTweet(sourceId, tweet) {
+    const images = (tweet.entities.media || []).map(
+        image => ({ "url": image.media_url_https, "thumbnail": `${image.media_url_https}:thumb` })
+    );
 
-        return feedObj;
-    }
+    const media = tweet.extended_entities ? tweet.extended_entities.media : [];
+    const videos = media.map(video => ({ "thumbnail": `${video.media_url_https}:thumb` }));
 
-    hashTags(hashtags) {
-        return hashtags.map(tag => tag.text);
-    }
+    return {
+        "_id": tweet.id_str,
+        "docType": "feed",
+        "sourceType": "twitter",
+        "title": tweet.full_text,
+        "link": `https://twitter.com/${sourceId}/status/${tweet.id_str}`,
+        "pubDate": tweet.created_at ? DateUtil.getUTCDateAndTime(tweet.created_at) : null,
+        "tags": [tweet.user.name].concat(hashTags(tweet.entities.hashtags || [])),
+        images,
+        videos,
+        sourceId
+    };
 }

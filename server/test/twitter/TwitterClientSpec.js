@@ -7,7 +7,7 @@ import nock from "nock";
 import ApplicationConfig from "../../src/config/ApplicationConfig";
 import LogTestHelper from "../helpers/LogTestHelper";
 import HttpResponseHanlder from "../../../common/src/HttpResponseHandler";
-import TwitterParser from "../../src/twitter/TwitterParser";
+import * as TwitterParser from "../../src/twitter/TwitterParser";
 import DateUtil from "../../src/util/DateUtil";
 import * as Constants from "./../../src/util/Constants";
 import { isRejected } from "./../helpers/AsyncTestHelper";
@@ -17,7 +17,6 @@ describe("TwitterClient", () => {
     let twitterClient = null;
     let tokenInfo = null;
     let oauth = null;
-    let twitterParser = null;
     const logger = LogTestHelper.instance();
     describe("FetchHandles", () => {
         let getAccessMock = null;
@@ -34,7 +33,6 @@ describe("TwitterClient", () => {
                 "1.0A",
                 null,
                 "HMAC-SHA1");
-            twitterParser = TwitterParser.instance();
         });
 
         afterEach(() => {
@@ -44,7 +42,6 @@ describe("TwitterClient", () => {
         it("should fetch handles from the twitter user", async() => {
             const parsedData = [{
                 "id": 1277389,
-                "id_str": 1277389,
                 "name": "testUser",
                 "picture": {
                     "data": {
@@ -60,8 +57,6 @@ describe("TwitterClient", () => {
 
             getAccessMock = sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
-            sandbox.mock(TwitterParser).expects("instance").returns(twitterParser);
-            sandbox.mock(twitterParser).expects("parseHandle").returns(parsedData);
 
             nock("https://api.twitter.com/1.1")
                 .get("/users/search.json?q=keyword&page=1&count=12")
@@ -69,17 +64,14 @@ describe("TwitterClient", () => {
                     "id": 1277389,
                     "id_str": 1277389,
                     "name": "testUser",
-                    "location": "india"
+                    "location": "india",
+                    "profile_image_url_https": "imagelink"
                 }]);
 
-            try {
-                const handles = await twitterClient.fetchHandles("userName", "keyword", 1, 0); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(resultData, handles);
-                getAccessMock.verify();
-                createOAuthMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const handles = await twitterClient.fetchHandles("userName", "keyword", 1, 0); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(resultData, handles);
+            getAccessMock.verify();
+            createOAuthMock.verify();
         });
 
         it("should return empty object if results are matching with previous result", async() => {
@@ -96,14 +88,10 @@ describe("TwitterClient", () => {
                     "name": "testUser",
                     "location": "india"
                 }]);
-            try {
-                const result = await twitterClient.fetchHandles("userName", "india", 1, 1277389); //eslint-disable-line no-magic-numbers
-                assert.deepEqual(resultData, result);
-                getAccessMock.verify();
-                createOAuthMock.verify();
-            } catch(error) {
-                assert.fail(error);
-            }
+            const result = await twitterClient.fetchHandles("userName", "india", 1, 1277389); //eslint-disable-line no-magic-numbers
+            assert.deepEqual(resultData, result);
+            getAccessMock.verify();
+            createOAuthMock.verify();
         });
 
         it("should reject with an error if oauth get returns error", async() => {
@@ -161,7 +149,6 @@ describe("TwitterClient", () => {
                 "1.0A",
                 null,
                 "HMAC-SHA1");
-            twitterParser = TwitterParser.instance();
             Constants.maxFeedsPerRequest.twitter = 2;
 
             twitterResponseFeeds = [{
@@ -199,37 +186,37 @@ describe("TwitterClient", () => {
                 "_id": 1277389,
                 "docType": "feed",
                 "sourceType": "twitter",
-                "pubDate": "Fri Dec 09 07:24:44 +0000 2016",
-                "description": "Just posted a photo https://t.co/7X7kvw9Plf"
+                "pubDate": "2016-12-09T07:24:44.000Z"
             }];
 
             //eslint-disable-next-line no-magic-numbers
             sandbox.stub(DateUtil, "getCurrentTimeInSeconds").returns(1487927102);
-            const expctedData = {
+            const expectedData = {
                 "docs": parsedTweets,
                 "paging": { "sinceId": 1277389, "since": 1487927102 }
             };
             const sourceId = "123";
-            const twitterRespone = [{
+            const twitterResponse = [{
                 "id": 1277389,
                 "id_str": 1277389,
                 "created_at": "Fri Dec 09 07:24:44 +0000 2016",
-                "text": "Just posted a photo https://t.co/7X7kvw9Plf"
+                "text": "Just posted a photo https://t.co/7X7kvw9Plf",
+                "entities": [],
+                "user": []
             }];
 
             nock("https://api.twitter.com/1.1")
                 .get("/statuses/user_timeline.json?count=100&exclude_replies=true&include_rts=false&since=2017-1-9&since_id=1&user_id=123&tweet_mode=extended")
-                .reply(HttpResponseHanlder.codes.OK, twitterRespone);
+                .reply(HttpResponseHanlder.codes.OK, twitterResponse);
 
             sandbox.mock(twitterClient).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
-            sandbox.mock(TwitterParser).expects("instance").returns(twitterParser);
-            sandbox.mock(twitterParser).expects("parseTweets")
-                .withExactArgs(sourceId, twitterRespone)
+            sandbox.mock(TwitterParser).expects("parseTweets")
+                .withExactArgs(sourceId, twitterResponse)
                 .returns(parsedTweets);
 
             const tweetData = await twitterClient.fetchTweets("123", "userName", 1483947627341); //eslint-disable-line no-magic-numbers
-            assert.deepEqual(tweetData, expctedData);
+            assert.deepEqual(tweetData, expectedData);
         });
 
         it("should fetch tweets for the given url with the since id", async() => {
@@ -238,7 +225,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471096320",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "just posted a photo https://t.co/7x7kvw9plf",
                     "link": "https://twitter.com/123/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -314,7 +300,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471096320",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -326,7 +311,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042474521902",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "This is my post",
                     "link": "https://twitter.com/123/status/835103042474521902",
                     "pubDate": "2016-12-08T07:14:44.000Z",
@@ -338,7 +322,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471014222",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471014222",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -391,7 +374,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471096320",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -403,7 +385,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042474521902",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "This is my post",
                     "link": "https://twitter.com/123/status/835103042474521902",
                     "pubDate": "2016-12-08T07:14:44.000Z",
@@ -415,7 +396,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471014222",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471014222",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -493,7 +473,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471096320",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -505,7 +484,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042474521902",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "This is my post",
                     "link": "https://twitter.com/123/status/835103042474521902",
                     "pubDate": "2016-12-08T07:14:44.000Z",
@@ -517,7 +495,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471014222",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471014222",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -529,7 +506,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471013212",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/123/status/835103042471013212",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -618,7 +594,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042471096320",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "Just posted a photo https://t.co/7X7kvw9Plf",
                     "link": "https://twitter.com/#dhoni/status/835103042471096320",
                     "pubDate": "2016-12-09T07:24:44.000Z",
@@ -630,7 +605,6 @@ describe("TwitterClient", () => {
                     "_id": "835103042474521902",
                     "docType": "feed",
                     "sourceType": "twitter",
-                    "description": "",
                     "title": "This is my post",
                     "link": "https://twitter.com/#dhoni/status/835103042474521902",
                     "pubDate": "2016-12-08T07:14:44.000Z",
@@ -708,7 +682,6 @@ describe("TwitterClient", () => {
                 "1.0A",
                 null,
                 "HMAC-SHA1");
-            twitterParser = TwitterParser.instance();
         });
 
         afterEach("FetchUserInfoFromHandle", () => {
@@ -777,7 +750,6 @@ describe("TwitterClient", () => {
                 "1.0A",
                 null,
                 "HMAC-SHA1");
-            twitterParser = TwitterParser.instance();
         });
 
         afterEach("Fetch Followings", () => {
@@ -803,8 +775,7 @@ describe("TwitterClient", () => {
 
             getAccessMock = sandbox.mock(twitterClientInstance).expects("getAccessTokenAndSecret").returns(Promise.resolve(tokenInfo));
             createOAuthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").returns(oauth);
-            sandbox.mock(TwitterParser).expects("instance").returns(twitterParser);
-            sandbox.mock(twitterParser).expects("parseHandle").returns(parsedData);
+            sandbox.mock(TwitterParser).expects("parseHandle").returns(parsedData);
 
             nock("https://api.twitter.com/1.1")
                 .get("/friends/list.json?cursor=-1&count=40")
@@ -857,6 +828,5 @@ describe("TwitterClient", () => {
             const result = await twitterClientInstance.fetchFollowings("username", nextCursor);
             assert.deepEqual(result, expectedData);
         });
-
     });
 });

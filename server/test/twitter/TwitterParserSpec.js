@@ -1,5 +1,5 @@
 import sinon from "sinon";
-import TwitterParser from "../../src/twitter/TwitterParser";
+import { parseHandle, parseTweets } from "../../src/twitter/TwitterParser";
 import { assert, expect } from "chai";
 import DateUtil from "../../src/util/DateUtil";
 
@@ -27,8 +27,7 @@ describe("TwitterParser", () => {
         });
 
         it("should return handle with specific fields", () => {
-            const twitterParser = TwitterParser.instance();
-            const actualHandle = twitterParser.parseHandle(handleFromTwitter);
+            const actualHandle = parseHandle(handleFromTwitter);
             const expectedHandle = [{
                 "id": "123",
                 "picture": {
@@ -52,10 +51,8 @@ describe("TwitterParser", () => {
 
     describe("parseTweets", () => {
 
-        let twitterParser = null;
         let sandbox = null;
         beforeEach("parseTweets", () => {
-            twitterParser = TwitterParser.instance();
             sandbox = sinon.sandbox.create();
             sandbox.stub(DateUtil, "getUTCDateAndTime").returns("2001-12-11T06:11:56.000Z");
         });
@@ -85,7 +82,6 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56.000Z",
@@ -94,7 +90,7 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
@@ -120,7 +116,6 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56.000Z",
@@ -129,7 +124,7 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
@@ -156,7 +151,6 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56.000Z",
@@ -174,7 +168,7 @@ describe("TwitterParser", () => {
                 "videos": [],
                 "sourceId": sourceId
             }];
-            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
 
@@ -205,7 +199,6 @@ describe("TwitterParser", () => {
                 "_id": "123457",
                 "docType": "feed",
                 "sourceType": "twitter",
-                "description": "",
                 "title": "Hindu twitter text - 123457",
                 "link": "https://twitter.com/123/status/123457",
                 "pubDate": "2001-12-11T06:11:56.000Z",
@@ -229,7 +222,7 @@ describe("TwitterParser", () => {
                     }],
                 "sourceId": sourceId
             }];
-            const newTweets = twitterParser.parseTweets(sourceId, actualTweet);
+            const newTweets = parseTweets(sourceId, actualTweet);
             expect(newTweets).to.deep.equal(expectedTweet);
         });
     });
