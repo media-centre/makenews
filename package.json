@@ -75,6 +75,7 @@
     "lint-staged": "^9.5.0",
     "mocha": "^6.2.0",
     "nock": "^10.0.6",
+    "nyc": "^14.1.1",
     "sinon": "^1.17.6",
     "supertest": "^4.0.2",
     "vinyl-buffer": "^1.0.1",
@@ -83,7 +84,9 @@
   "scripts": {
     "gulp": "gulp",
     "test": "TZ=UTC gulp test",
-    "lint": "eslint \"**/*.{js,jsx}\""
+    "lint": "eslint \"**/*.{js,jsx}\"",
+    "test:mocha": "TZ=UTC mocha",
+    "test:coverage": "TZ=UTC nyc mocha"
   },
   "husky": {
     "hooks": {
@@ -99,6 +102,35 @@
   "eslintIgnore": [
     "node_modules/",
     ".idea",
-    "dist"
-  ]
+    "dist",
+    ".nyc_output",
+    "coverage"
+  ],
+  "mocha": {
+    "require": [
+      "babel-register"
+    ],
+    "spec": [
+      "client/test/helper/*.js",
+      "server/test/helpers/*.js",
+      "client/test/**/*.js",
+      "client/test/**/*.jsx",
+      "common/test/**/*.js",
+      "server/test/**/*.js"
+    ]
+  },
+  "nyc": {
+    "exclude": [
+      "client/test/**/*.js",
+      "common/test/**/*.js",
+      "server/test/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  }
 }
