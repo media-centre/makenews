@@ -138,8 +138,8 @@ window.mediaCenter.storyAutoSaveTimeInterval = 300000; // time after which a sto
 ### 6.a Build and Tests:
 The procedure to build the application, and get your changes working, are 
 - `gulp build`
-- `gulp test`	
-- `gulp eslint`			//run static analyser
+- `npm test`	
+- `npm run lint`		//run static analyser
 - `gulp clean`			//cleaning dist folder
 
 *check the `gulpfile.js` for more gulp tasks*
