@@ -7,7 +7,7 @@ describe("AddUrl Reducer", () => {
         const action = { "type": ADD_URL_STATUS, "status": true };
         expect(showAddUrl({}, action)).to.be.true; //eslint-disable-line no-unused-expressions
     });
-    
+
     it("should have empty string in default case ", () => {
         expect(showAddUrl()).to.be.false; //eslint-disable-line no-unused-expressions
     });

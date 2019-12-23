@@ -11,6 +11,9 @@
     <a href="https://github.com/media-centre/makenews/actions">
         <img alt="Build Status" src="https://github.com/media-centre/makenews/workflows/Tests%20%26%20lint/badge.svg">
     </a>
+    <a href="https://coveralls.io/github/media-centre/makenews?branch=master">
+    	<img alt="Coverage Status" src="https://coveralls.io/repos/github/media-centre/makenews/badge.svg?branch=master" />
+    </a>
 </p>
 
 ## Pre Requisites:
