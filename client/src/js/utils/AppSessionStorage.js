@@ -21,7 +21,7 @@ export default class AppSessionStorage {
     }
 
     getSessionStorage() {
-        return sessionStorage;
+        return localStorage;
     }
 
     remove(key) {
