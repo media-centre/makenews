@@ -4,6 +4,7 @@ import RssURLSearchIndex from "./admin/20170805181027_RssURLSearchIndex";
 import RssURLIndex from "./admin/20170503141134_RssURLIndex";
 import FeedsSearchIndex from "./db/20170225114814_FeedsSearchIndex";
 import AppIndex from "./db/20170502164510_AppIndex";
+import PubDateIndex from "./db/20191223162216_PubDateIndex";
 import SchemaInfo from "./SchemaInfo";
 import MigrationFile from "./MigrationFile";
 import CouchSession from "../CouchSession";
@@ -114,6 +115,8 @@ export default class Migration {
             return new AppIndex(this.dbName, this.accessToken);
         case "FeedsSearchIndex" :
             return new FeedsSearchIndex(this.dbName, this.accessToken);
+        case "PubDateIndex":
+            return new PubDateIndex(this.dbName, this.accessToken);
         default :
             throw new Error("class name : " + className + " not found");
         }
