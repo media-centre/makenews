@@ -70,7 +70,6 @@
     "gulp-uglify": "^3.0.2",
     "history": "^3.0.0",
     "husky": "^3.1.0",
-    "istanbul": "^0.4.5",
     "jsdom": "^15.1.1",
     "lint-staged": "^9.5.0",
     "mocha": "^6.2.0",

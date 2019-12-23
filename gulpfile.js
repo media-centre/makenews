@@ -135,14 +135,6 @@ gulp.task("client:watch", function() {
 
 gulp.task("client:checkin-ready", gulp.series("client:test"));
 
-gulp.task("client:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.client.testPath + "/**/**/**/*.jsx  " + parameters.client.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
 //-------------------------------- functional tests --------------------------------------
 
 gulp.task("functional:test", function() {
@@ -177,14 +169,6 @@ gulp.task("common:clean", function() {
 });
 
 gulp.task("common:checkin-ready", gulp.series("common:test"));
-
-gulp.task("common:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " + parameters.common.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
@@ -232,14 +216,6 @@ gulp.task("server:watch", function() {
 });
 
 gulp.task("server:checkin-ready", gulp.series("server:test"));
-gulp.task("server:test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register -R spec " + parameters.server.testPath + "/**/**/**/*.js", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
 // ------------------------------- any other tasks ---------------------------------------
 
 gulp.task("other:copy-ansible-scripts", function() {
@@ -292,16 +268,5 @@ gulp.task("test", gulp.parallel("common:test", "client:test", "server:test"));
 
 gulp.task("watch", gulp.series("client:watch", "server:watch"));
 gulp.task("checkin-ready", gulp.series("common:checkin-ready", "client:checkin-ready", "server:checkin-ready"));
-
-gulp.task("test-coverage", (cb) => {
-    exec("./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register -R spec " +
-    parameters.server.testPath + "/**/**/**/**/**/*.js " +
-    parameters.common.testPath + "/**/**/**/**/**/*.js " +
-    parameters.client.testPath + "/**/**/**/**/**/*.js " + parameters.client.testPath + "/**/**/**/**/**/*.jsx ", (err, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
 
 gulp.task("clean-start", gulp.series("clean", "stop", "build", "start"));
