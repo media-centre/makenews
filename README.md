@@ -1,6 +1,17 @@
-# Makenews
-
 ![Makenews](/client/src/images/banner.png?raw=true)
+<h1 align="center">
+    Makenews
+</h1>
+
+<p align="center">
+    MakeNews is for journalists and newsrooms. It helps you track news from web and social media in real-time.
+</p>
+
+<p align="center">
+    <a href="https://github.com/media-centre/makenews/actions">
+        <img alt="Build Status" src="https://github.com/media-centre/makenews/workflows/Tests%20%26%20lint/badge.svg">
+    </a>
+</p>
 
 ## Pre Requisites:
 1. Install node(version >= 8.0) npm
