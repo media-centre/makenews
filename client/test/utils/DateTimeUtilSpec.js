@@ -37,7 +37,7 @@ describe("DateTimeUtil", ()=> {
             };
             sandbox.stub(moment, "utc").withArgs(timeStamp).returns(mock);
 
-            assert.strictEqual(DateTimeUtil.getLocalTimeFromUTC(timeStamp), "Tue, Jan 31, 2017 6:58 AM");
+            assert.strictEqual(DateTimeUtil.getLocalTimeFromUTC(timeStamp), "Tue, Jan 31, 2017 7:58 AM");
         });
     });
 });
