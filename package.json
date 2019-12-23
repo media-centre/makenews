@@ -85,8 +85,9 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "test": "TZ=UTC gulp test",
-    "lint": "eslint \"**/*.{js,jsx}\""
+    "lint": "eslint \"**/*.{js,jsx}\"",
+    "test": "TZ=UTC mocha",
+    "test:coverage": "TZ=UTC nyc mocha"
   },
   "husky": {
     "hooks": {
