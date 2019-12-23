@@ -4,7 +4,6 @@ const gulp = require("gulp");
 const sass = require("gulp-sass");
 const babelify = require("babelify");
 const babel = require("gulp-babel");
-const mocha = require("gulp-mocha");
 const exec = require("child_process").exec;
 const del = require("del");
 const cssnano = require("gulp-cssnano");
@@ -113,11 +112,6 @@ gulp.task("client:clean", function() {
     del(parameters.client.distFolder);
 });
 
-gulp.task("client:test", function() {
-    return gulp.src([parameters.client.testPath + "**/**/*.jsx", parameters.client.testPath + "**/**/*.js"], { "read": false })
-        .pipe(mocha({ "require": ["babel-core/register"] }));
-});
-
 gulp.task("client:build", gulp.series("client:copy-resources", "client:build-sources", "client:scss"));
 
 gulp.task("client:watch", function() {
@@ -129,11 +123,8 @@ gulp.task("client:watch", function() {
     gulp.watch(this.cssFilesPath, ["client:scss"]);
     gulp.watch(this.copyFilesPath, ["client:copy-resources"]);
     gulp.watch(this.jsFilesPath, ["client:build-sources"]);
-    gulp.watch(this.testJsFilesPath, ["client:test"]);
     gulp.watch(this.appPath, ["client:copy-resources"]);
 });
-
-gulp.task("client:checkin-ready", gulp.series("client:test"));
 
 //-------------------------------- functional tests --------------------------------------
 
@@ -153,22 +144,14 @@ gulp.task("common:copy-js", function() {
         .pipe(gulp.dest(parameters.common.distFolder + "/src"));
 });
 
-gulp.task("common:test", function() {
-    return gulp.src(parameters.common.testPath + "/**/**/*.js", { "read": false })
-        .pipe(mocha({ "require": ["babel-core/register"] }));
-});
-
 gulp.task("common:watch", () => {
-    gulp.watch(`${parameters.common.srcPath}/**/*.js`, ["common:copy-js", "common:test"]);
-    gulp.watch(`${parameters.common.testPath}/**/**/*.js`, ["common:test"]);
+    gulp.watch(`${parameters.common.srcPath}/**/*.js`, ["common:copy-js"]);
 });
 
 gulp.task("common:build", gulp.series("common:copy-js"));
 gulp.task("common:clean", function() {
     del(parameters.common.distFolder);
 });
-
-gulp.task("common:checkin-ready", gulp.series("common:test"));
 
 // -------------------------------server tasks -------------------------------------------
 gulp.task("server:copy-js", function() {
@@ -199,23 +182,16 @@ gulp.task("server:clean", function() {
     return del(parameters.server.distServerJsFolder + "/" + parameters.server.serverJsFile);
 });
 
-gulp.task("server:test", function() {
-    return gulp.src([parameters.client.testPath + "/helper/TestHelper.js", parameters.server.testPath + "**/**/*.js"], { "read": false })
-        .pipe(mocha({ "require": ["babel-core/register"] }));
-});
-
 gulp.task("server:build", gulp.series("server:copy-js"));
 
 gulp.task("server:watch", function() {
     this.srcPath = parameters.server.srcPath + "/**/*.js";
     this.serverJSFilePath = parameters.server.serverJsFile;
     this.testPath = parameters.server.testPath + "/**/*.js";
-    gulp.watch(this.srcPath, ["server:copy-js", "server:test"]);
+    gulp.watch(this.srcPath, ["server:copy-js"]);
     gulp.watch(this.serverJSFilePath, ["server:copy-js"]);
-    gulp.watch(this.testPath, ["server:test"]);
 });
 
-gulp.task("server:checkin-ready", gulp.series("server:test"));
 // ------------------------------- any other tasks ---------------------------------------
 
 gulp.task("other:copy-ansible-scripts", function() {
@@ -264,9 +240,7 @@ gulp.task("list", (cb) => {
 
 gulp.task("build", gulp.series("common:build", "client:build", "server:build", "other:copy-ansible-scripts"));
 gulp.task("clean", gulp.series("other:dist-clean"));
-gulp.task("test", gulp.parallel("common:test", "client:test", "server:test"));
 
 gulp.task("watch", gulp.series("client:watch", "server:watch"));
-gulp.task("checkin-ready", gulp.series("common:checkin-ready", "client:checkin-ready", "server:checkin-ready"));
 
 gulp.task("clean-start", gulp.series("clean", "stop", "build", "start"));
