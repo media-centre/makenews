@@ -1,10 +1,14 @@
 ### print the current version of curl
 curl -V
 
-###delete all users
-##change the http if your username in couchdb is not admin with
+
+##(x2)change the http if your username in couchdb is not admin with
 ## with password admin - ..//username:password@127...
 
+###get the table
+curl -X GET http://admin:admin@127.0.0.1:5984/_users
+
+###delete all users
 curl -X DELETE http://admin:admin@127.0.0.1:5984/_users
 
 ###delete certain user
