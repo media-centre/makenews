@@ -82,9 +82,11 @@ describe("UserRequest", () => {
             newPassword = "new_password";
             currentPassword = "current_password";
         });
+
         afterEach("updatePassword", () => {
             sandbox.restore();
         });
+
         it("should update the password if old passwords is correct", async() => {
             const couchSessionLogin = sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.resolve(token));
             sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.resolve("dmlrcmFtOjU2NDg5RTM5Osv-2eZkpte3JW8dkoMb1NzK7TmA"));
@@ -96,7 +98,6 @@ describe("UserRequest", () => {
 
         it("should not update the password if old password is incorrect", async() => {
             sandbox.mock(CouchSession).expects("login").withArgs(username, currentPassword).returns(Promise.reject("error"));
-            sandbox.mock(UserRequest).expects("getToken").withArgs(username, currentPassword).returns(Promise.reject("error"));
 
             await isRejected(UserRequest.updatePassword(username, newPassword, currentPassword), "login failed");
         });
@@ -142,7 +143,7 @@ describe("UserRequest", () => {
             await isRejected(UserRequest.getUserDetails(token, name), "error");
         });
     });
-    
+
     describe("MarkAsVisitedUser", () => {
         const token = "token";
         let couchClient = null;
@@ -166,6 +167,13 @@ describe("UserRequest", () => {
             const couchInstanceMock = sandbox.mock(CouchClient).expects("instance").twice();
             couchInstanceMock.onFirstCall().returns(couchClient);
             couchInstanceMock.onSecondCall().returns(couchClientUser);
+
+            const findDocumentMock = sandbox.mock(couchClientUser).expects("findDocuments");
+            findDocumentMock.returns(Promise.resolve({ "docs": [{
+                "_id": "newsclick.in",
+                "docType": "source",
+                "sourceType": "web"
+            }] }));
         });
 
         afterEach("MarkAsVisitedUser", () => {
@@ -174,7 +182,6 @@ describe("UserRequest", () => {
 
         it("should update the userDetails document with visitedUser as true and return success response", async() => {
             const getDocumentMock = sandbox.mock(couchClient).expects("getDocument");
-            const findDocumentMock = sandbox.mock(couchClientUser).expects("findDocuments");
             getDocumentMock.returns(Promise.resolve({
                 "_id": "org.couchdb.user:" + userName,
                 "_rev": "12345",
@@ -186,11 +193,6 @@ describe("UserRequest", () => {
                 "salt": "123324124124",
                 "type": "user"
             }));
-            findDocumentMock.returns(Promise.resolve({ "docs": [{
-                "_id": "newsclick.in",
-                "docType": "source",
-                "sourceType": "web"
-            }] }));
 
             sandbox.mock(couchClient).expects("updateDocument")
                 .returns(Promise.resolve(true));

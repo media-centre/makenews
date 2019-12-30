@@ -5,9 +5,9 @@ import CouchClient from "../CouchClient";
 const logger = () => Logger.instance("UserRequest");
 
 export async function getToken(username, password) {
-    try{
+    try {
         return await CouchSession.login(username, password);
-    }catch(error) {
+    } catch(error) {
         logger().error("UserRequest:getToken fatal error = %s", error);
         throw "login failed"; //eslint-disable-line no-throw-literal
     }
@@ -36,7 +36,7 @@ export async function updatePassword(username, newPassword, currentPassword) {
     try {
         const token = await getToken(username, currentPassword);
         return await CouchSession.updatePassword(username, newPassword, extractToken(token));
-    }catch(error) {
+    } catch(error) {
         logger().error("UserRequest:password updation error = %s", error);
         throw error;
     }

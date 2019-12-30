@@ -67,7 +67,7 @@ describe("TwitterHandlesRoute", () => {
         const twitterRequestHandlerInstance = new TwitterRequestHandler();
         sandbox.stub(TwitterRequestHandler, "instance").returns(twitterRequestHandlerInstance);
         sandbox.mock(twitterRequestHandlerInstance).expects("fetchHandlesRequest")
-            .withExactArgs("auth session", "test", pageNumber, twitterPreFirstId).returns(Promise.reject("error"));
+            .withExactArgs("Authsession", "test", pageNumber, twitterPreFirstId).returns(Promise.reject("error"));
 
         await new TwitterHandlesRoute(request, response).handle();
         assert.strictEqual(response.status(), HttpResponseHandler.codes.BAD_REQUEST);

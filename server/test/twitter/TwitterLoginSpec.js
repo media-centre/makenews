@@ -1,7 +1,6 @@
 /*eslint max-nested-callbacks:0, brace-style:0, no-shadow:0*/
 
 import TwitterLogin from "../../src/twitter/TwitterLogin";
-import ApplicationConfig from "../../src/config/ApplicationConfig";
 import CouchClient from "../../src/CouchClient";
 import AdminDbClient from "../../src/db/AdminDbClient";
 import LogTestHelper from "../helpers/LogTestHelper";
@@ -19,16 +18,6 @@ describe("TwitterLogin", () => {
         sandbox.restore();
     });
 
-
-    it("should initialise oauth with app consumer_key and consumer_secret", () => {
-        TwitterLogin.instance().then((twitterLogin) => {
-            assert.isDefined(twitterLogin.oauth, "oauth has been defined");
-            assert.strictEqual(twitterLogin.oauth._consumerKey, ApplicationConfig.instance().twitter().consumerKey);
-            assert.strictEqual(twitterLogin.oauth._consumerSecret, ApplicationConfig.instance().twitter().consumerSecret);
-
-        });
-    });
-
     it("should reject with the error message if oauthRequestToken returns error", () => {
         sandbox.stub(TwitterLogin, "createOAuthInstance")
             .returns({
@@ -41,6 +30,22 @@ describe("TwitterLogin", () => {
             .catch(error => {
                 assert.strictEqual(error, "error message");
             });
+    });
+
+    it("should return instance with oauthTokenSecret, oauthToken", () => {
+        const oauthMock = sandbox.mock(TwitterLogin).expects("createOAuthInstance").twice();
+        const oauthToken = "token";
+        const oauthTokenSecret = "secret";
+        const serverCallbackUrl = "serverUrl";
+        const clientCallbackUrl = "clientUrl";
+        oauthMock.returns({ "getOAuthRequestToken": (options, callback) => { callback(null, oauthToken, oauthTokenSecret); } });
+
+        const twitterLogin = TwitterLogin.instance({ "serverCallbackUrl": serverCallbackUrl, "clientCallbackUrl": clientCallbackUrl });
+
+        return twitterLogin.then(twitterInstance => {
+            assert.strictEqual(twitterInstance.oauthToken, oauthToken);
+            assert.strictEqual(twitterInstance.oauthTokenSecret, oauthTokenSecret);
+        });
     });
 
     it("should return instance with same oauthTokenSecret, serverCallbackUrl, clientCallbackUrl for a oauthToken", (done) => {

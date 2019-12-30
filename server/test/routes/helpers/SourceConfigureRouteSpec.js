@@ -42,7 +42,8 @@ describe("SourceConfigureRoute", () => {
                     } catch (error) {
                         done(error);
                     }
-                }
+                },
+                "json": () => {}
             };
 
             const sourceRoute = new SourceConfigureRoute({
@@ -109,13 +110,14 @@ describe("SourceConfigureRoute", () => {
                     } catch(error) {
                         done(error);
                     }
-                }
+                },
+                "json": () => {}
             };
 
             const configRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" },
                 "body": {
-                    "source": {},
+                    "sources": [],
                     "dbName": "",
                     "type": sourceTypes.fb_page
                 }
@@ -132,12 +134,13 @@ describe("SourceConfigureRoute", () => {
                     } catch(error) {
                         done(error);
                     }
-                }
+                },
+                "json": () => {}
             };
 
             const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
-                "body": { "source": {} },
+                "body": { "sources": [] },
                 "cookies": {}
             }, response);
             configRoute.addConfiguredSource(sourceType);
@@ -152,12 +155,13 @@ describe("SourceConfigureRoute", () => {
                     } catch(error) {
                         done(error);
                     }
-                }
+                },
+                "json": () => {}
             };
 
             const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
-                "body": { "source": {} },
+                "body": { "sources": [] },
                 "cookies": { "AuthSession": "session" }
             }, response);
             configRoute.addConfiguredSource(sourceType);
@@ -167,45 +171,46 @@ describe("SourceConfigureRoute", () => {
             const response = {
                 "status": (status) => {
                     try {
-                        assert.strictEqual(HttpResponseHandler.codes.UNPROCESSABLE_ENTITY, status);
+                        assert.strictEqual(status, HttpResponseHandler.codes.BAD_REQUEST);
                         done();
                     } catch(error) {
                         done(error);
                     }
-                }
+                },
+                "json": () => {}
             };
-            const source = { "name": "SourceName", "url": "http://source.url/" };
+            const sources = [{ "name": "SourceName", "url": "http://source.url/" }];
 
             const configRoute = new SourceConfigureRoute({
                 "query": { "dbName": "user" },
                 "cookies": { "AuthSession": "session" },
-                "body": { "source": source }
+                "body": { "sources": sources, "type": sourceTypes.fb_group }
             }, response);
 
             const configRequestHandler = new SourceConfigRequestHandler();
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(configRequestHandler);
 
-            const configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
-            configStub.withArgs(source, "user", "session").returns(Promise.reject("error fetching data"));
+            const configStub = sandbox.mock(configRequestHandler).expects("addConfiguredSource").once();
+            configStub.withArgs(sourceTypes[sourceTypes.fb_group], sources, "session").returns(Promise.reject("error fetching data"));
 
             configRoute.addConfiguredSource(sourceType);
         });
 
         it("should add the source to configured list", async() => {
             const data = { "ok": true, "id": "SourceName", "rev": "1-5df5bc8192a245443f7d71842804c5c7" };
-            const source = [{ "name": "SourceName", "url": "http://source.url/" }];
+            const sources = [{ "name": "SourceName", "url": "http://source.url/" }];
             const response = mockResponse();
 
             const facebookRoute = new SourceConfigureRoute({
                 "cookies": { "AuthSession": "session" },
-                "body": { "sources": source, "type": sourceTypes.fb_group }
+                "body": { "sources": sources, "type": sourceTypes.fb_group }
             }, response);
 
             const configRequestHandler = new SourceConfigRequestHandler("token");
             sandbox.mock(SourceConfigRequestHandler).expects("instance").returns(configRequestHandler);
 
             const configStub = sandbox.stub(configRequestHandler, "addConfiguredSource");
-            configStub.withArgs(sourceTypes[sourceTypes.fb_group], source, "session").returns(Promise.resolve(data));
+            configStub.withArgs(sourceTypes[sourceTypes.fb_group], sources, "session").returns(Promise.resolve(data));
 
             await facebookRoute.addConfiguredSource();
             assert.strictEqual(response.status(), HttpResponseHandler.codes.OK);
