@@ -268,16 +268,17 @@ describe("DisplayCollectionAction", () => {
 
         it("should show toast message on failed to rename the collection", async() => {
             const response = { "message": "unable to rename the Collection" };
-            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("unable to rename Collection");
+            const toastMock = sandbox.mock(Toast).expects("show").withExactArgs("unable to rename the Collection");
             const putMock = sandbox.mock(ajaxClientInstance).expects("put")
-                .withExactArgs({ collectionId, newCollectionName }).returns(Promise.reject(response));
+                .returns(Promise.reject(response));
 
-            try {
-                await renameCollection({ collectionId, newCollectionName });
-            } catch(error) {
-                toastMock.verify();
+            const renameCollectionAction = await renameCollection({ collectionId, newCollectionName });
+            renameCollectionAction();
+
+            return Promise.resolve().then(() => {
                 putMock.verify();
-            }
+                toastMock.verify();
+            });
         });
     });
 });

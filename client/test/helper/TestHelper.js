@@ -8,6 +8,8 @@ global.window = window;
 global.document = global.window.document;
 global.navigator = global.window.navigator;
 
+Object.defineProperty(window, "scrollTo", { "value": () => {}, "writable": true });
+
 global.sessionStorage = {
     "item": {},
     "getItem": function(key) {
