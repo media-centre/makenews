@@ -48,7 +48,7 @@ export class DisplayFilters extends Component {
         Object.entries(this.props.sources).map(([key, value]) => {
             value.forEach(elem => {
                 selectedSources[key].add(elem.url);
-            })
+            });
         });
     }
 
@@ -166,7 +166,8 @@ export class DisplayFilters extends Component {
                 }
 
                 <ConfiguredSources searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}
-                                   selectAllSources={this.selectAllSources()}/>
+                    selectAllSources={this.selectAllSources()}
+                />
 
                 <div className="controls">
                     <button id="cancelBtn" className="cancel-btn primary" onClick={this.cancelFilter}>{this.filterStrings.cancelButton}</button>
