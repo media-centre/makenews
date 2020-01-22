@@ -84,11 +84,7 @@ export default class CouchClient {
 
     async findDocuments(query, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
-        const response = await this.post(path, query, customHeaders);
-        if(response.warning) {
-            throw { "message": "No matching index found" }; //eslint-disable-line no-throw-literal
-        }
-        return response;
+        return await this.post(path, query, customHeaders);
     }
 
     createIndex(indexDoc, customHeaders = {}) {
