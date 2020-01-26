@@ -1,8 +1,8 @@
 import HttpResponseHandler from "../../common/src/HttpResponseHandler";
 import ApplicationConfig from "./config/ApplicationConfig";
-import {userDetails} from "./Factory";
+import { userDetails } from "./Factory";
 import NodeErrorHandler from "./NodeErrorHandler";
-import Logger, {logCategories} from "./logging/Logger";
+import Logger, { logCategories } from "./logging/Logger";
 import request from "request";
 
 export default class CouchClient {
@@ -56,7 +56,7 @@ export default class CouchClient {
             doc._deleted = true;
             return doc;
         });
-        return this.saveBulkDocuments({"docs": docsToDelete});
+        return this.saveBulkDocuments({ "docs": docsToDelete });
     }
 
     getDocument(documentId, customHeaders = {}) {
@@ -86,7 +86,7 @@ export default class CouchClient {
         const path = "/" + this.dbName + "/_find";
         const response = await this.post(path, query, customHeaders);
         if (response.warning) {
-            CouchClient.logger().debug("CouchClient:: " + response.warning);
+            CouchClient.logger().warn("CouchClient:: " + response.warning);
         }
         return response;
 
@@ -148,7 +148,7 @@ export default class CouchClient {
                 resolve(response.body);
             } else {
                 CouchClient.logger().debug(`unexpected response from the db with status ${response.statusCode} and Error: ${JSON.stringify(response.body)}`);
-                reject({"status": response.statusCode, "message": response.body});
+                reject({ "status": response.statusCode, "message": response.body });
             }
         } else {
             CouchClient.logger().debug(`Error from database. Error: ${JSON.stringify(error)}`);
@@ -159,23 +159,23 @@ export default class CouchClient {
     static getAllDbs() {
         return new Promise((resolve, reject) => {
             request.get({
-                    "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
-                },
-                (error, response) => {
-                    if (NodeErrorHandler.noError(error)) {
-                        if (response.statusCode === HttpResponseHandler.codes.OK) {
-                            const userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
-                            CouchClient.logger().debug("CouchClient:: successful response from database.");
-                            resolve(userDbs);
-                        } else {
-                            CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
-                            reject("unexpected response from the db");
-                        }
+                "uri": ApplicationConfig.instance().dbUrl() + "/_all_dbs"
+            },
+            (error, response) => {
+                if (NodeErrorHandler.noError(error)) {
+                    if (response.statusCode === HttpResponseHandler.codes.OK) {
+                        const userDbs = JSON.parse(response.body).filter(dbName => dbName !== "_replicator" && dbName !== "_users");
+                        CouchClient.logger().debug("CouchClient:: successful response from database.");
+                        resolve(userDbs);
                     } else {
-                        CouchClient.logger().debug("Error from database. Error: %s", error);
-                        reject(error);
+                        CouchClient.logger().debug("unexpected response from the db with status %s.", response.statusCode);
+                        reject("unexpected response from the db");
                     }
-                });
+                } else {
+                    CouchClient.logger().debug("Error from database. Error: %s", error);
+                    reject(error);
+                }
+            });
         });
     }
 
