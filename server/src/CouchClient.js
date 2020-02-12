@@ -22,11 +22,11 @@ export default class CouchClient {
     constructor(accessToken, dbName, dbUrl) {
         this.accessToken = accessToken;
         this.dbUrl = dbUrl || ApplicationConfig.instance().dbUrl();
-        if(dbName) {
+        if (dbName) {
             this.dbName = dbName;
-        } else if(accessToken) {
+        } else if (accessToken) {
             const userInfo = userDetails.getUser(accessToken);
-            if(userInfo) {
+            if (userInfo) {
                 this.dbName = userInfo.dbName;
             }
         }
@@ -66,7 +66,7 @@ export default class CouchClient {
 
     async deleteDocument(documentId, revision) {
         let rev = revision;
-        if(!rev) {
+        if (!rev) {
             const doc = await this.getDocument(documentId);
             rev = doc._rev;
         }
@@ -85,10 +85,11 @@ export default class CouchClient {
     async findDocuments(query, customHeaders = {}) {
         const path = "/" + this.dbName + "/_find";
         const response = await this.post(path, query, customHeaders);
-        if(response.warning) {
-            throw { "message": "No matching index found" }; //eslint-disable-line no-throw-literal
+        if (response.warning) {
+            CouchClient.logger().warn("CouchClient:: " + response.warning);
         }
         return response;
+
     }
 
     createIndex(indexDoc, customHeaders = {}) {
