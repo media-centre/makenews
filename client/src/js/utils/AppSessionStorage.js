@@ -21,7 +21,7 @@ export default class AppSessionStorage {
     }
 
     getLocalStorage() {
-        const windowGlobal = typeof window !== 'undefined' && window;
+        const windowGlobal = typeof window !== "undefined" && window;
         return windowGlobal.localStorage;
     }
 
