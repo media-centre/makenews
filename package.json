@@ -80,8 +80,11 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
+    "build": "gulp build",
     "gulp": "gulp",
     "lint": "eslint \"**/*.{js,jsx}\"",
+    "prestart": "npm run build",
+    "start": "node dist/server",
     "test": "TZ=UTC mocha",
     "test:coverage": "TZ=UTC nyc mocha"
   },
