@@ -134,7 +134,7 @@ describe("DisplayFeedReducer", () => {
         });
 
         it("should return web as current tab when newsBoardCurrentSourceTab called without any action type", () => {
-            expect(newsBoardCurrentSourceTab()).to.deep.equal("trending");
+            expect(newsBoardCurrentSourceTab()).to.deep.equal("web");
         });
     });
 

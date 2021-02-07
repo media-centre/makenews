@@ -25,6 +25,7 @@ export class ScanNews extends Component {
     componentWillMount() {
         const mainHeaderStrings = Locale.applicationStrings().messages.mainHeaderStrings;
         this.props.dispatch(setCurrentHeaderTab(mainHeaderStrings.newsBoard));
+        this.props.dispatch(filterTabSwitch("web"));
     }
 
     displayFilters() {

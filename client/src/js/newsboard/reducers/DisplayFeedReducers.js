@@ -62,7 +62,7 @@ export function selectedArticle(state = {}, action = {}) {
     }
 }
 
-export const newsBoardCurrentSourceTab = (state = newsBoardSourceTypes.trending, action = {}) => {
+export const newsBoardCurrentSourceTab = (state = newsBoardSourceTypes.web, action = {}) => {
     switch(action.type) {
     case NEWS_BOARD_CURRENT_TAB: {
         return action.currentTab;
