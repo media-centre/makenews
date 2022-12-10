@@ -9,7 +9,7 @@
     "body-parser": "^1.19.0",
     "cheerio": "^0.22.0",
     "cookie-parser": "^1.4.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "feedparser": "^2.2.9",
     "file-saver": "^1.3.3",
     "helmet": "^3.21.0",
