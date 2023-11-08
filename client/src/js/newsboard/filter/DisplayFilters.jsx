@@ -43,6 +43,15 @@ export class DisplayFilters extends Component {
         selectedSources = { "web": new Set(web), "facebook": new Set(facebook), "twitter": new Set(twitter) };
     }
 
+    selectAllSources() {
+        selectedSources = { "web": new Set(), "facebook": new Set(), "twitter": new Set() };
+        Object.entries(this.props.sources).map(([key, value]) => {
+            value.forEach(elem => {
+                selectedSources[key].add(elem.url);
+            });
+        });
+    }
+
     _renderSources(sourceType, searchKey) {
         const configuredSourceDOM = (source) =>
             (<li className="filter-source" key={source._id}>
@@ -156,7 +165,9 @@ export class DisplayFilters extends Component {
                     </div>
                 }
 
-                <ConfiguredSources searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}/>
+                <ConfiguredSources searchKeyword={this.props.searchKeyword} currentTab={this.props.currentTab} renderSources={this._renderSources}
+                    selectAllSources={this.selectAllSources()}
+                />
 
                 <div className="controls">
                     <button id="cancelBtn" className="cancel-btn primary" onClick={this.cancelFilter}>{this.filterStrings.cancelButton}</button>
